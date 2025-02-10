@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --siderbar-width: 12rem;
+    --header-height: 4rem;
+
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 12% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 97%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 95%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 210 40% 98%;
+
+    --card: 231, 11%, 12%;
+    --popover: 231, 11%, 12%;
+    --card-foreground: 210 40% 98%;
+    --popover-foreground: 210 40% 98%;
+
+    --border: 200, 8%, 16%;
+    --input: 200, 8%, 16%;
+    --ring: 200, 8%, 16%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+  }
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+.dp__theme_dark,
+.dp__theme_light {
+  --dp-background-color: theme("colors.card");
+  --dp-text-color: theme("colors.foreground");
+  --dp-primary-color: theme("colors.primary.DEFAULT");
+  --dp-border-color: theme("borderColor.DEFAULT");
+  --dp-border-color-hover: theme("borderColor.hover");
+}
+
+.x-highlight {
+  color: hsl(var(--warning));
+  background: transparent;
+  font-weight: bold;
+}
+
+/* 弹窗动画 */
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+.dialog-enter-from {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(-60deg) translateY(-30px);
+}
+.dialog-leave-to {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(60deg) translateY(30px);
+}
+
+/* 抖动动画 */
+.shake-animation {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+/* 滚动条 */
+@media (min-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-clip: content-box;
+    -webkit-background-clip: content-box;
+    background-color: hsl(var(--border));
+    transition: background 0.2s ease-in-out;
+  }
+}
