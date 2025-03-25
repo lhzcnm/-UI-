@@ -104,11 +104,22 @@ function handleJumperChange(e: Event) {
 </script>
 
 <template>
-  <div v-if="!hidden" class="flex items-center gap-2 whitespace-nowrap">
+  <div v-if="!hidden" class="flex items-center space-x-2 whitespace-nowrap">
     <template v-for="layout in layouts">
       <div v-if="layout === 'total'">
         共 {{ total }} 条
       </div>
+
+      <XPageSizes
+        v-if="layout === 'sizes'"
+        v-model="size" :sizes="sizes"
+      />
+
+      <XPageControl
+        v-if="layout === 'prev'"
+        type="prev" :disabled="isFirstPage"
+        @click="onPrev"
+      />
 
       <XPager
         v-if="layout === 'pager'"
@@ -124,12 +135,6 @@ function handleJumperChange(e: Event) {
       />
 
       <XPageControl
-        v-if="layout === 'prev'"
-        type="prev" :disabled="isFirstPage"
-        @click="onPrev"
-      />
-
-      <XPageControl
         v-if="layout === 'next'"
         type="next" :disabled="isLastPage || lastPage === 0"
         @click="onNext"
@@ -139,11 +144,6 @@ function handleJumperChange(e: Event) {
         v-if="layout === 'jumper'"
         :model-value="normalizedCurrent"
         @change="handleJumperChange"
-      />
-
-      <XPageSizes
-        v-if="layout === 'sizes'"
-        v-model="size" :sizes="sizes"
       />
     </template>
   </div>

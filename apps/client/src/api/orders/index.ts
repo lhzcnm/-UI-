@@ -1,0 +1,15 @@
+import type { OrderApi } from './types'
+import http from '@/utils/http'
+
+export * from './types'
+
+export const orderApi: OrderApi = {
+  item: (id) => http.get(`order/detail/${id}`),
+  list: (parmas) => http.post(`order/list`, parmas),
+
+  export: (parmas) => http.post(`order/export`, parmas),
+  verify: (codeId) => http.get(`order/verify/${codeId}`),
+
+  submit: (params) => http.post(`order/submit`, params),
+  submitExport: (params) => http.post(`order/submit/export`, params),
+}

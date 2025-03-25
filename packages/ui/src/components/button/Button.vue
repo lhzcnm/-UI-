@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import type { BtnProps } from './button'
 import { tv } from 'tailwind-variants'
+import { computed } from 'vue'
+import type { BtnProps } from './button'
 
 defineOptions({ name: 'XButton' })
 
@@ -9,10 +10,8 @@ const props = defineProps<BtnProps>()
 
 const button = tv({
   base: `
-    inline-flex items-center justify-center gap-2
-    text-base sm:text-sm whitespace-nowrap rounded-md
-    active:scale-[0.98] active:translate-y-[1px]
-    will-change-transform transition-colors duration-300
+    inline-flex items-center justify-center space-x-1.5
+    whitespace-nowrap rounded-md transition-colors
   `,
   variants: {
     color: {
@@ -29,11 +28,11 @@ const button = tv({
       ghost: 'bg-transparent',
     },
     disabled: {
-      true: 'pointer-events-none cursor-not-allowed',
+      true: 'pointer-events-none',
     },
     size: {
-      sm: 'h-7 px-3 text-xs',
-      md: 'h-10 px-4 sm:h-9',
+      sm: 'h-7 px-2 text-xs',
+      md: 'h-10 px-3 text-base sm:h-9 sm:text-sm',
     },
   },
   compoundVariants: [
@@ -157,31 +156,31 @@ const button = tv({
       variant: 'solid',
       color: 'primary',
       disabled: true,
-      class: 'bg-primary/50',
+      class: 'bg-primary/60',
     },
     {
       variant: 'solid',
       color: 'emerald',
       disabled: true,
-      class: 'bg-emerald-500/50',
+      class: 'bg-emerald-500/60',
     },
     {
       variant: 'solid',
       color: 'rose',
       disabled: true,
-      class: 'bg-rose-500/50',
+      class: 'bg-rose-500/60',
     },
     {
       variant: 'solid',
       color: 'amber',
       disabled: true,
-      class: 'bg-amber-500/50',
+      class: 'bg-amber-500/60',
     },
     {
       variant: 'solid',
       color: 'indigo',
       disabled: true,
-      class: 'bg-indigo-500/50',
+      class: 'bg-indigo-500/60',
     },
   ],
   defaultVariants: {
@@ -190,21 +189,27 @@ const button = tv({
     size: 'md',
   },
 })
+
+const isDisabled = computed(() => props.loading || props.disabled)
 </script>
 
 <template>
   <button
+    :disabled="isDisabled"
     :class="button({
       variant, color, size,
-      disabled: props.loading || props.disabled,
+      disabled: isDisabled,
       class: props.class,
     })"
-    :disabled="props.loading || props.disabled"
   >
-    <Icon icon="lucide:loader" v-if="props.loading" class="animate-spin" />
-    <template v-else>
-      <Component v-if="props.icon" :is="props.icon" />
-      <slot>{{ label }}</slot>
-    </template>
+    <Transition name="x-icon" mode="out-in">
+      <span v-if="loading" class="size-[1em]">
+        <Icon icon="lucide:loader" class="size-full animate-spin" />
+      </span>
+      <span v-else-if="icon" class="size-[1em]">
+        <Icon :icon="icon" class="size-full" />
+      </span>
+    </Transition>
+    <span><slot>{{ props.label }}</slot></span>
   </button>
 </template>

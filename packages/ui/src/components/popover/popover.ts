@@ -7,6 +7,7 @@ export interface XPopoverProps {
   placement?: Placement
   offset?: number
   arrow?: boolean
+  teleport?: boolean | string
 }
 
 export interface XPopoverSlots {

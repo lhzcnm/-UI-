@@ -1,0 +1,34 @@
+import type { TicketCreateForm, TicketItem, TicketReplyItem } from '@/api/tickets'
+import type { InjectionKey } from 'vue'
+
+import { TICKET_PRIORITY, TICKET_TYPE } from '@3un/shared/enums'
+
+export interface TicketStore {
+  tickets: TicketItem[]
+  replies: TicketReplyItem[]
+  createForm: TicketCreateForm
+  visibleCreate: boolean
+  index: number | undefined
+}
+
+type TicketStoreKey = InjectionKey<TicketStore>
+export const TICKET_STORE = Symbol('ticket-store') as TicketStoreKey
+
+interface Form {
+  create: TicketCreateForm
+}
+
+export const form: Form = {
+  create: {
+    priority: TICKET_PRIORITY.MEDIUM,
+    type: TICKET_TYPE.ORDER,
+    subject: '',
+    msg: '',
+  },
+}
+
+export function getAvatar(replyId: number | null, avatar: string) {
+  const mode = import.meta.env.MODE
+  if (replyId) return '/images/customer_service_avatar.png'
+  return avatar || `/${mode}/images/default_avatar.jpg`
+}

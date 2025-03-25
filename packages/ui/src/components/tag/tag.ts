@@ -1,5 +1,6 @@
 export interface XTagProps {
-  color?: 'gray' | 'emerald' | 'red' | 'blue'
+  color?: 'zinc' | 'emerald' | 'rose' | 'blue'
   shape?: 'square' | 'round' | 'default'
+  size?: 'sm' | 'md'
   label?: string
 }

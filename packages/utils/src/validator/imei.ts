@@ -1,12 +1,34 @@
+import { IMEI_REG } from '../constants/regexs'
+
 export class IMEIValidator {
 
   public static isValid(imei: string) {
     const cleanImei = imei.replace(/[ -]/g, '')
 
     if (!/^\d{15}$/.test(cleanImei)) return false
+
+    const prefix = cleanImei.slice(0, 2)
+    if (!['35', '99', '86', '01'].includes(prefix)) return false
     if (!this.validateLuhn(cleanImei)) return false
 
     return true
+  }
+
+  public static findAllImeis(str: string) {
+    if (!str.trim()) return []
+    const imeis: string[] = []
+
+    const matches = str.match(IMEI_REG)
+    if (!matches) return imeis
+
+    for (const match of matches) {
+      const cleanImei = match.replace(/[ -]/g, '')
+      if (this.isValid(cleanImei)) {
+        imeis.push(cleanImei)
+      }
+    }
+
+    return [...new Set(imeis)]
   }
 
   private static validateLuhn(imei: string): boolean {

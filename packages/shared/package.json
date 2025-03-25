@@ -1,10 +1,11 @@
 {
   "name": "@3un/shared",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "private": true,
   "exports": {
-    ".": "./index.ts",
-    "./*": "./modules/*.ts",
-    "./env": "./src/env.d.ts",
-    "./presets": "./src/presets.ts"
+    "./presets": "./src/presets.ts",
+    "./theme": "./src/theme.ts",
+    "./enums": "./src/enums.ts",
+    ".": "./index.ts"
   }
 }

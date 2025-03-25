@@ -15,6 +15,7 @@ const props = withDefaults(
     title: '',
     class: '',
     contentClass: '',
+    closeOnEscape: true,
     closeBtn: true,
     interact: true,
   },
@@ -58,7 +59,7 @@ function handleClose(force = false) {
   <Teleport to="body">
     <div
       :class="twMerge(
-        'fixed inset-0 z-50 overflow-y-auto',
+        'fixed top-0 bottom-0 left-0 right-0 z-50 overflow-y-auto',
         'flex flex-col items-center justify-center',
         'bg-gray-950/70 opacity-0 pointer-events-none',
         visible && 'opacity-100 pointer-events-auto',
@@ -66,14 +67,14 @@ function handleClose(force = false) {
       )"
       @click.self="handleClose(false)"
     >
-      <Transition name="dialog">
+      <Transition name="x-dialog">
         <div
           ref="dialog"
           v-show="visible"
           :class="twMerge(
-            'relative flex flex-col p-4 sm:p-6 w-full sm:max-w-sm',
+            'relative p-4 sm:p-6 w-[calc(100%-2rem)] sm:max-w-sm',
             'bg-card rounded-lg will-change-transform',
-            isShaking && 'shake-animation',
+            isShaking && 'x-shake-animation',
             props.contentClass,
           )"
           @keydown="handleTab"
@@ -99,7 +100,7 @@ function handleClose(force = false) {
           <slot>
             <div
               v-html="text"
-              class="py-4 max-h-[75vh] overflow-y-auto"
+              class="mb-4 max-h-[75vh] overflow-y-auto"
             />
           </slot>
 

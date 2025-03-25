@@ -7,7 +7,7 @@ const emit = defineEmits<XPagerEmits>()
 </script>
 
 <template>
-  <div class="flex items-center gap-2 text-center leading-7">
+  <div class="flex items-center space-x-2 text-center leading-7">
     <a
       href="javascript:void(0)"
       class="item min-w-9 h-9 p-1 bg-muted rounded shadow-sm"

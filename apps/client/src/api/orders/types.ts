@@ -1,0 +1,115 @@
+import type { ColDef, ICellRendererParams } from 'ag-grid-community'
+
+import type { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import type { IList, IPage, R } from '@3un/shared'
+
+export interface OrderApi {
+  item(id: number): R<Order>
+  list(data: OrderListParams): R<OrderListResponse>
+  export(data: OrderExportParams): R<string>
+
+  submit(data: OrderSubmitParams): R<OrderSubmitResult[]>
+  submitExport(data: OrderSubmitExportParams): R<string>
+
+  verify(id: number): R<void>
+}
+
+export interface Order {
+  id: number
+  serviceId: number
+  status: ORDER_STATUS
+  verify: ORDER_VERTIFY
+  imei: string
+  credits: number
+  remark: string
+  result: string
+  createTime: string
+}
+
+/** Table */
+export interface OrderTableView {
+  id: number
+  index: number
+  serviceId: number | null
+  serviceName: string | null
+  status: ORDER_STATUS
+  verify: ORDER_VERTIFY
+  imei: string
+  credits: number
+  remark: string
+  result: string
+  createTime: string
+}
+export type OrderSCRP<T = any> = ICellRendererParams<OrderTableView & T>
+export type OrderTableDefs = ColDef<OrderTableCol>[]
+export interface OrderTableCol {
+  id: number
+  index: number
+  service: string
+  imei: string
+  credits: number
+  status: ORDER_STATUS
+  verify: ORDER_VERTIFY
+  result: string
+  action: string
+  remark: string
+  createTime: string
+}
+
+/** List */
+export type OrderListResponse = IList<Order>
+export type OrderListParams = IPage & {
+  serviceId?: number
+  status?: ORDER_STATUS
+  imeiList?: string[]
+  startTime?: string
+  endTime?: string
+}
+export interface OrderSearchForm {
+  serviceId: number
+  status: ORDER_STATUS | 'all'
+  imei: string
+  startTime: string
+  endTime: string
+}
+
+/** Export */
+export interface OrderExportParams {
+  serviceId: number
+  status?: ORDER_STATUS
+  imeiList?: string[]
+  startTime?: string
+  endTime?: string
+}
+export interface OrderExportForm {
+  serviceId: number
+  imei: string
+  status: ORDER_STATUS | 'all'
+  startTime: string
+  endTime: string
+}
+
+/** Submit */
+export interface OrderSubmitParams {
+  serviceId: number
+  imeiList: string[]
+  isBulk: boolean
+  remark?: string
+}
+export interface OrderSubmitForm {
+  serviceId: number
+  groupId: number
+  imeiList: string
+  remark: string
+  isBulk: boolean
+}
+export interface OrderSubmitResult {
+  status: ORDER_STATUS
+  message: string
+  imei: string
+}
+export interface OrderSubmitExportParams {
+  orderIdList: number[]
+  imeiList: string[]
+  serviceId: number
+}

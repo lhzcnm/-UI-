@@ -11,11 +11,13 @@ export default {
 
         card: 'hsl(var(--card))',
         'card-foreground': 'hsl(var(--card-foreground))',
+        
         popover: 'hsl(var(--popover))',
         'popover-foreground': 'hsl(var(--popover-foreground))',
 
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
+        'input-hover': 'hsl(var(--input-hover))',
 
         primary: {
           DEFAULT: 'hsl(var(--primary))',
@@ -37,7 +39,7 @@ export default {
 
       borderColor: {
         DEFAULT: 'hsl(var(--border))',
-        hover: 'hsl(var(--ring))',
+        hover: 'hsl(var(--input-hover))',
       },
       ringColor: {
         DEFAULT: 'hsl(var(--ring))',

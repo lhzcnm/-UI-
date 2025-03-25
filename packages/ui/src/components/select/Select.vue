@@ -4,7 +4,7 @@ import { XPopover } from '../popover'
 import { XInput } from '../input'
 
 import type { XSelectProps, XSelectEmits, Option } from './select'
-import { XSelectKey } from './select'
+import { XSELECT_CONTEXT } from './select'
 import { twMerge } from 'tailwind-merge'
 
 defineOptions({ name: 'XSelect' })
@@ -21,7 +21,7 @@ const props = withDefaults(
 
 const emits = defineEmits<XSelectEmits>()
 const input = defineModel<string>('input', { default: '' })
-const model = defineModel<any>()
+const model = defineModel<string | number>()
 
 const open = ref(false)
 const options = ref<Option[]>([])
@@ -29,20 +29,31 @@ const displayText = computed(() => {
   const finded = options.value.findIndex(option =>
     option.value === model.value
   )
-  
+
   if (finded === -1) return props.placeholder
   return options.value[finded].label
 })
 
-provide(XSelectKey, {
-  model,
-  options,
-  handleClick: (value: any) => {
-    emits('selected', value)
-    model.value = value
-    open.value = false
-  },
-})
+provide(XSELECT_CONTEXT, { model, options })
+
+function handleClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const element = target.closest('[data-value]')
+
+  if (!element) return
+  const value = element.getAttribute('data-value')
+
+  if (!value) return
+  emits('selected', value)
+  model.value = isNumber(value) ? Number(value) : value
+  open.value = false
+}
+
+function isNumber(str: string) {
+  return str.trim() !== '' && 
+    !isNaN(Number(str)) &&
+    isFinite(Number(str))
+}
 </script>
 
 <template>
@@ -53,13 +64,13 @@ provide(XSelectKey, {
   >
     <template #trigger>
       <button
-        :class="twMerge(
-          'flex items-center justify-between gap-2',
-          'w-56 h-10 sm:h-9 px-3 bg-card text-sm text-foreground',
-          'border hover:border-hover rounded-md shadow-sm transition-colors',
-        )"
-        :style="{ width }"
         v-bind="$attrs"
+        :style="{ width }"
+        :class="twMerge(
+          'flex items-center justify-between space-x-2',
+          'w-56 h-10 sm:h-9 px-3 bg-card text-sm text-foreground',
+          'border hover:border-hover rounded-md transition-colors',
+        )"
       >
         <span class="truncate">{{ displayText }}</span>
         <Icon icon="lucide:chevron-down" class="flex-shrink-0 size-4" />
@@ -67,12 +78,12 @@ provide(XSelectKey, {
     </template>
 
     <div
+      :style="{ width }"
       :class="twMerge(
         'flex flex-col',
-        'bg-card border rounded-md shadow',
+        'bg-card border rounded-md shadow-lg',
         !width && 'min-w-56',
       )"
-      :style="{ width }"
     >
       <div v-if="props.filterable" class="p-2">
         <XInput
@@ -80,7 +91,10 @@ provide(XSelectKey, {
           :placeholder="inputPlaceholder"
         />
       </div>
-      <div class="flex flex-col gap-1 p-2 max-h-96 overflow-y-auto">
+      <div
+        class="flex flex-col space-y-1 p-1.5 max-h-96 overflow-y-auto"
+        @click="handleClick"
+      >
         <slot>
           <div
             :class="twMerge(

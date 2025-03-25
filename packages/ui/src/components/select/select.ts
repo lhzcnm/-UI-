@@ -3,15 +3,14 @@ import type { Placement } from '@floating-ui/vue'
 
 export interface Option {
   label: string
-  value: any
+  value: string | number
 }
 
 // Provider
-export const XSelectKey = Symbol('XSelectKey') as InjectionKey<XSelectContext>
+export const XSELECT_CONTEXT = Symbol('select-context') as InjectionKey<XSelectContext>
 export interface XSelectContext {
-  model: Ref<any>
+  model: Ref<string | number | undefined>
   options: Ref<Option[]>
-  handleClick: (value: any) => void
 }
 
 // Select
@@ -21,6 +20,7 @@ export interface XSelectProps {
   filterable?: boolean
   inputPlaceholder?: string
   placement?: Placement
+  multiple?: boolean
 }
 export interface XSelectEmits {
   (e: 'selected', value: any): void
@@ -33,8 +33,8 @@ export interface XSelectGroupProps {
 
 // SelectItem
 export interface XSelectItemProps {
+  value: string | number
   label?: string
-  value: any
-
+  className?: string
   activeClass?: string
 }

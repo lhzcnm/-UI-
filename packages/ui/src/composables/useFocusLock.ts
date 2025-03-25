@@ -22,7 +22,7 @@ export function useFocusLock(
       focusableElements.value = getFocusableElements(el)
       const input = el.querySelector<HTMLInputElement>('[autofocus]')
       if (input) input.focus()
-      else focusableElements.value[0].focus()
+      else focusableElements.value[0]?.focus()
     })
   })
 

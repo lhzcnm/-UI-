@@ -8,8 +8,8 @@ const value = defineModel<string | number>({ default: '' })
 
 const input = tv({
   base: `
-    w-full h-10 sm:h-9 rounded-md px-3
-    text-base sm:text-sm bg-transparent border shadow-sm
+    w-full h-10 sm:h-9 rounded-md px-3 shadow-sm
+    text-sm bg-transparent border border-input
     focus:outline-none focus:ring-1 focus:ring-primary
     hover:border-hover transition-colors
   `,
@@ -19,8 +19,6 @@ const input = tv({
 <template>
   <input
     v-model="value"
-    v-bind="$attrs"
-    :type="props.type"
     :class="input({ class: props.class })"
   />
 </template>

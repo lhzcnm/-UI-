@@ -1,18 +1,19 @@
-import type { Component } from 'vue'
+import type { ClassNameValue } from 'tailwind-merge'
+import type { IconifyIcon } from '@iconify/vue'
 
 export type BtnVariant = 'solid' | 'soft' | 'outline' | 'ghost'
 export type BtnColor = 'primary' | 'emerald' | 'rose' | 'amber' | 'indigo'
+export type BtnNativeType = 'button' | 'submit' | 'reset'
 export type BtnSize = 'sm' | 'md'
 
 export interface BtnProps {
-  class?: any
-  type?: 'button' | 'submit' | 'reset'
-
+  class?: ClassNameValue
+  type?: BtnNativeType
   variant?: BtnVariant
   color?: BtnColor
   size?: BtnSize
   label?: string
-  icon?: Component
+  icon?: string | IconifyIcon
   loading?: boolean
   disabled?: boolean
 }

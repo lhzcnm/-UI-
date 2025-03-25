@@ -1,0 +1,197 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+
+import { toast } from 'vue-sonner'
+import { twMerge } from 'tailwind-merge'
+
+import type { RechargeMethod } from '@/api/recharge'
+import { rechargeApi } from '@/api/recharge'
+
+const iStore = useSettingStore()
+const uStore = useUserStore()
+
+const customAmount = ref(0)
+const selectedAmount = ref(0)
+const selectedPayment = ref<RechargeMethod>('wxpay')
+
+const serviceFee = computed(() => {
+  const amount = selectedAmount.value || customAmount.value
+  return amount < 200 ? Number((amount * 0.01).toFixed(2)) : 0
+})
+
+const rechargeAmount = computed(() => {
+  return selectedAmount.value || customAmount.value
+})
+
+const amountList = [
+  { label: '10 元', value: 10 },
+  { label: '50 元', value: 50 },
+  { label: '100 元', value: 100 },
+  { label: '300 元', info: '免手续费', value: 200 },
+  { label: '500 元', info: '免手续费', value: 500 },
+  { label: '1000 元', info: '免手续费', value: 1000 },
+]
+
+function handleCustomAmount(value: string | number | undefined) {
+  if (!value) return
+
+  const numStr = value.toString().replace(/[^\d]/g, '')
+  const numValue = numStr ? parseInt(numStr) : 0
+
+  customAmount.value = numValue
+  selectedAmount.value = 0
+}
+
+function handleRecharge() {
+  const minAccount = +iStore.settings.minRechargeAmount
+  const maxAccount = +iStore.settings.maxRechargeAmount
+
+  if (rechargeAmount.value < minAccount) {
+    return toast.warning(`充值金额不能小于 ${minAccount} 元`)
+  }
+
+  if (rechargeAmount.value > maxAccount) {
+    return toast.warning(`充值金额不能大于 ${maxAccount} 元`)
+  }
+
+  const response = rechargeApi.create({
+    openId: uStore.info.openId,
+    type: selectedPayment.value,
+    amount: rechargeAmount.value,
+    id: 1,
+  })
+
+  response.then(({ data }) => {
+    if (selectedPayment.value === 'wxpay') {
+      const config = JSON.parse(data)
+      handleMobileWechatPay(config)
+    }
+    if (selectedPayment.value === 'alipay') {
+      window.location.href = `/alipay?goto=${data}`
+    }
+  })
+}
+
+function handleMobileWechatPay(config: WXInvokeConfig) {
+  if (typeof window.WeixinJSBridge === 'undefined') {
+    if (document.addEventListener) {
+      document.addEventListener(
+        'WeixinJSBridgeReady',
+        () => onBridgeReady(config),
+        false
+      )
+    }
+    return
+  }
+  onBridgeReady(config)
+}
+
+function onBridgeReady(config: WXInvokeConfig) {
+  config = { ...config, package: config.packageValue! }
+
+  window.WeixinJSBridge?.invoke(
+    'getBrandWCPayRequest', config,
+    (res) => {
+      if (res.err_msg === 'get_brand_wcpay_request:ok') {
+        window.WeixinJSBridge?.call('closeWindow')
+      }
+    }
+  )
+}
+</script>
+
+<template>
+  <div class="bg-card border p-4 rounded-md space-y-4">
+
+    <div class="space-y-3">
+      <h3 class="text-lg font-medium">充值金额</h3>
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">
+        <button
+          v-for="item in amountList" :key="item.value"
+          :class="twMerge(
+            'flex flex-col items-center justify-center space-y-1',
+            'h-16 rounded-md bg-card border',
+            selectedAmount === item.value && 'ring-2 ring-primary bg-primary/10',
+          )"
+          @click="selectedAmount = item.value"
+        >
+          <span>{{ item.label }}</span>
+          <span v-if="item.info" class="text-sm text-emerald-500">{{ item.info }}</span>
+        </button>
+      </div>
+      <div class="flex items-center space-x-2">
+        <XInput
+          placeholder="自定义充值金额"
+          :model-value="customAmount ? customAmount : ''"
+          @update:model-value="handleCustomAmount"
+        />
+        <span>元</span>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <h3 class="text-lg font-medium">支付方式</h3>
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
+        <button
+          :class="twMerge(
+            'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
+            selectedPayment === 'wxpay' && 'ring-2 ring-primary bg-primary/10',
+          )"
+          @click="selectedPayment = 'wxpay'"
+        >
+          <Icon icon="ri:wechat-pay-fill" class="size-6 text-emerald-500" />
+          <span>微信</span>
+        </button>
+        <button
+          :class="twMerge(
+            'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
+            selectedPayment === 'alipay' && 'ring-2 ring-primary bg-primary/10',
+          )"
+          @click="selectedPayment = 'alipay'"
+        >
+          <Icon icon="ri:alipay-fill" class="size-6 text-blue-500" />
+          <span>支付宝</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 充值说明 -->
+    <div
+      v-if="iStore.settings.enablePaymentInfo"
+      class="bg-secondary p-3 rounded-md"
+    >
+      <p class="mb-2 font-medium">充值说明：</p>
+      <div
+        class="text-sm text-secondary-foreground"
+        v-html="iStore.settings.paymentInfo"
+      />
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center justify-between text-sm text-secondary-foreground">
+        <span>充值金额</span>
+        <span>{{ rechargeAmount }} 元</span>
+      </div>
+      
+      <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-secondary-foreground">
+        <span>手续费(1%)</span>
+        <span>{{ serviceFee }} 元</span>
+      </div>
+      
+      <div class="flex items-center justify-between pt-2 border-t">
+        <span>应付金额</span>
+        <span class="text-lg font-medium text-rose-500">
+          {{ (rechargeAmount + serviceFee).toFixed(2) }} 元
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end">
+      <XButton
+        label="立即充值"
+        :disabled="selectedAmount === 0 && customAmount === 0"
+        @click="handleRecharge"
+      />
+    </div>
+  </div>
+</template>

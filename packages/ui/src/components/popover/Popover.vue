@@ -14,6 +14,7 @@ const props = withDefaults(
     arrow: false,
     closeOnClickOutside: false,
     closeOnEscape: true,
+    teleport: 'body',
   }
 )
 
@@ -78,7 +79,10 @@ if (props.closeOnEscape) {
 
 <template>
   <component :is="renderTrigger()" />
-  <Teleport to="body">
+  <Teleport
+    :to="typeof teleport === 'string' ? teleport : undefined"
+    :disabled="teleport === false"
+  >
     <Transition>
       <div
         v-show="open"

@@ -1,0 +1,131 @@
+<script setup lang="ts">
+import type { ServiceDetail } from '@/api/services'
+import PickService from './components/PickService.vue'
+
+import { twJoin } from 'tailwind-merge'
+import { usePage } from './utils/usePage'
+import { getCommonList } from '@/utils'
+
+const store = useServiceStore()
+const iStore = useSettingStore()
+
+await Promise.all([
+  store.getServices(),
+  iStore.getSettings(),
+])
+
+const commonList = getCommonList(store.services)
+const { totalPages, currentPage, pages, carouselRef, handleScroll, scrollToPage } = usePage()
+
+const router = useRouter()
+
+// Current open group
+const visible = ref(false)
+const current = ref<ServiceDetail>({
+  id      : 0,
+  title   : '',
+  children: [],
+})
+
+function handleServiceGroupClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const element = target.closest('[data-index]')
+
+  if (!element) return
+
+  const dataIndex = element.getAttribute('data-index')
+  const index = parseInt(dataIndex || '0')
+  const groups = pages.value[currentPage.value]
+
+  openGroupDialog(groups[index])
+}
+
+function openGroupDialog(group: ServiceDetail) {
+  current.value = group
+  visible.value = true
+}
+
+function handleServiceItemClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const element = target.closest('[data-id]')
+
+  if (!element) return
+
+  const dataId = element.getAttribute('data-id')
+  const id = parseInt(dataId || '0')
+
+  router.push(`/m/submit/${id}`)
+}
+</script>
+
+<template>
+  <div class="p-3">
+    <XBulletinBoard
+      v-if="iStore.settings.enableScrollingAnnc"
+      class="px-2 py-3 mb-4" :text="iStore.settings.scrollingAnnc"
+    />
+
+    <section v-if="commonList.length" class="mb-4">
+      <h2 class="text-lg font-bold mb-3">常用服务</h2>
+      <div class="space-y-2" @click="handleServiceItemClick">
+        <ServiceItemCard
+          v-for="item in commonList"
+          :key="item.id" :data="item"
+          :data-id="item.id"
+        />
+      </div>
+    </section>
+
+    <section class="my-4">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-bold">服务列表</h2>
+        <div class="space-x-2">
+          <button 
+            v-for="page in totalPages" :key="page - 1"
+            :class="twJoin(
+              'size-1.5 rounded-full transition-all duration-300',
+              currentPage === page - 1 ? 'bg-primary' : 'bg-zinc-300'
+            )"
+            @click="scrollToPage(page - 1)"
+          />
+        </div>
+      </div>
+      <div class="relative">
+        <div 
+          ref="carouselRef"
+          class="x-overflow-none overflow-x-auto snap-x snap-mandatory scroll-smooth"
+          style="scrollbar-width: none; -ms-overflow-style: none;"
+          @scroll="handleScroll"
+        >
+          <div class="flex w-full">
+            <div 
+              v-for="(page, pageIndex) in pages" :key="pageIndex"
+              class="space-y-2 w-[80%] flex-shrink-0 snap-start pr-2 last:pr-0"
+              @click="handleServiceGroupClick"
+            >
+              <ServiceGroupCard
+                v-for="(group, index) in page" :key="group.id" 
+                :group="group" :data-index="index"
+                class="w-full"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div 
+          v-show="currentPage < totalPages - 1"
+          :class="twJoin(
+            'absolute top-0 right-0 bottom-0 w-8',
+            'bg-gradient-to-l from-zinc-100 dark:from-zinc-950',
+            'to-[rgba(255,255,255,0)] pointer-events-none'
+          )"
+        />
+      </div>
+    </section>
+
+    <PickService
+      v-model="visible"
+      :group="current"
+    />
+  </div>
+</template>

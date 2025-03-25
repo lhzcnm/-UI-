@@ -1,0 +1,11 @@
+{
+  "name": "@3un/client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 3000",
+    "build": "vue-tsc -b && node build/index.js",
+    "preview": "vite preview"
+  }
+}

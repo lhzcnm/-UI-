@@ -1,0 +1,314 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+import { XPopover } from '../popover'
+import { XButton } from '../button'
+
+import 'dayjs/locale/zh-cn'
+import dayjs from 'dayjs'
+
+import { twMerge, twJoin } from 'tailwind-merge'
+
+import type {
+  DatePickerProps,
+  DatePickerEmits,
+  DatePickerRange,
+  DatePickerValue
+} from './date-picker'
+
+dayjs.locale('zh-cn')
+
+const props = withDefaults(
+  defineProps<DatePickerProps>(),
+  {
+    labelFormat: 'YYYY-MM-DD HH:mm:ss',
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    placeholder: '选择日期范围',
+  }
+)
+
+const emit = defineEmits<DatePickerEmits>()
+const startDate = defineModel<DatePickerValue>('start', { required: true })
+const endDate = defineModel<DatePickerValue>('end', { required: true })
+
+const isOpen = ref(false)
+
+const currentDate = shallowRef(dayjs())
+const today = currentDate.value.date()
+const month = currentDate.value.month()
+
+const tempStartDate = ref<DatePickerValue>(null)
+const tempEndDate = ref<DatePickerValue>(null)
+
+const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+
+const currentYear = computed(() => currentDate.value.year())
+const currentMonth = computed(() => currentDate.value.format('MMMM'))
+
+const isSelected = computed(() => startDate.value && endDate.value)
+
+const hoverDate = ref<Date | null>(null)
+
+const days = computed(() => {
+  const current = currentDate.value
+  
+  const firstDayOfMonth = current.startOf('month')
+  const lastDayOfMonth = current.endOf('month')
+  const daysFromPrevMonth = firstDayOfMonth.day()
+  const daysInMonth = lastDayOfMonth.date()
+
+  const days = []
+
+  // add days of previous month
+  for (let i = daysFromPrevMonth - 1; i >= 0; i--) {
+    const date = dayjs(firstDayOfMonth).subtract(i + 1, 'day')
+    days.push({
+      day: date.date(),
+      month: date.month(),
+      date: date.toDate(),
+      isCurrentMonth: false,
+    })
+  }
+
+  // add days of current month
+  for (let i = 0; i < daysInMonth; i++) {
+    const date = dayjs(firstDayOfMonth).add(i, 'day')
+    days.push({
+      day: date.date(),
+      month: date.month(),
+      date: date.toDate(),
+      isCurrentMonth: true,
+    })
+  }
+
+  // add days of next month, fill 42 cells (6 rows * 7 columns)
+  const daysRequired = 42 - days.length
+
+  for (let i = 1; i <= daysRequired; i++) {
+    const date = dayjs(lastDayOfMonth).add(i, 'day')
+    days.push({
+      day: date.date(),
+      month: date.month(),
+      date: date.toDate(),
+      isCurrentMonth: false,
+    })
+  }
+
+  return days
+})
+
+const daysWithState = computed(() => {
+  return days.value.map(item => ({
+    ...item,
+    ...getDayState(item.date)
+  }))
+})
+
+watch(isOpen, (value) => {
+  if (!value) return
+
+  tempStartDate.value = startDate.value
+  tempEndDate.value = endDate.value
+})
+
+function prevMonth() {
+  currentDate.value = currentDate.value.subtract(1, 'month')
+}
+
+function nextMonth() {
+  currentDate.value = currentDate.value.add(1, 'month')
+}
+
+function handleCalendarClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const dayElement = target.closest('[data-index]')
+
+  if (!dayElement) return
+  
+  const index = parseInt(dayElement.getAttribute('data-index') || '0')
+  const day = days.value[index]
+  
+  // only handle date click of current month
+  if (day && day.isCurrentMonth) {
+    selectDate(day.date)
+  }
+}
+
+function selectDate(curSelectedDate: Date) {
+  const selectedDate = dayjs(curSelectedDate)
+  
+  // if no start date is selected, or a complete range is selected, start a new selection
+  if (!tempStartDate.value || (tempStartDate.value && tempEndDate.value)) {
+    tempStartDate.value = selectedDate.toDate()
+    tempEndDate.value = null
+  }
+  // if start date is selected, select end date
+  else {
+    const start = dayjs(tempStartDate.value)
+
+    // if end date is same as start date
+    if (selectedDate.isSame(start, 'day')) {
+      return
+    }
+
+    // if end date is after selected date
+    else if (selectedDate.isAfter(start, 'day')) {
+      tempEndDate.value = selectedDate.toDate()
+    }
+    // else swap two dates (selected date is before start date)
+    else {
+      tempEndDate.value = tempStartDate.value
+      tempStartDate.value = selectedDate.toDate()
+    }
+  }
+}
+
+function getDayState(date: DatePickerValue) {
+  if (!tempStartDate.value && !tempEndDate.value) {
+    return { isSelected: false, isInRange: false, isHoverRange: false }
+  }
+
+  const current = dayjs(date)
+  const start = dayjs(tempStartDate.value)
+  const end = dayjs(tempEndDate.value)
+  
+  // compute hover range
+  let isHoverRange = false
+  if (tempStartDate.value && !tempEndDate.value && hoverDate.value) {
+    const hover = dayjs(hoverDate.value)
+
+    if (hover.isAfter(start)) {
+      isHoverRange = current.isAfter(start, 'day') &&
+       current.isBefore(hover, 'day') ||
+       current.isSame(hover, 'day')
+    }
+    else {
+      isHoverRange = current.isAfter(hover, 'day') &&
+        current.isBefore(start, 'day') ||
+        current.isSame(hover, 'day')
+    }
+  }
+
+  return {
+    isSelected: current.isSame(start, 'day') || current.isSame(end, 'day'),
+    isInRange: current.isAfter(start, 'day') && current.isBefore(end, 'day'),
+    isHoverRange
+  }
+}
+
+function handleDayMouseEnter(index: number) {
+  const day = days.value[index]
+  if (day && day.isCurrentMonth) {
+    hoverDate.value = day.date
+  }
+}
+
+function applySelection() {
+  const start = tempStartDate.value
+  const end = tempEndDate.value
+
+  if (!start || !end) {
+    startDate.value = null
+    endDate.value = null
+  }
+  else {
+    const startFmt = dayjs(start).format(props.valueFormat)
+    const endFmt = dayjs(end).format(props.valueFormat)
+
+    startDate.value = startFmt
+    endDate.value = endFmt
+  }
+
+  emit('apply', [startDate.value, endDate.value])
+  isOpen.value = false
+}
+
+function clearSelection() {
+  tempStartDate.value = null
+  tempEndDate.value = null
+}
+
+function formatDateDisplay(date: DatePickerRange) {
+  const start = dayjs(date[0])
+  const end = dayjs(date[1])
+
+  const startFmt = start.format(props.labelFormat)
+  const endFmt = end.format(props.labelFormat)
+
+  if (start.isSame(end, 'day')) return startFmt
+  else return `${startFmt} - ${endFmt}`
+}
+</script>
+
+<template>
+  <XPopover
+    v-model="isOpen"
+    placement="bottom-start"
+    closeOnEscape closeOnClickOutside
+    @closed="clearSelection"
+  >
+    <template #trigger>
+      <button
+        :class="twJoin(
+          'inline-flex items-center justify-between',
+          'space-x-2 w-full px-2.5 h-10 sm:h-9 bg-card',
+          'border hover:border-hover shadow-sm rounded cursor-pointer',
+        )"
+      >
+        <div class="flex-1 text-left text-sm">
+          <span v-if="!isSelected" class="text-muted-foreground">{{ placeholder }}</span>
+          <span v-else>{{ formatDateDisplay([startDate, endDate]) }}</span>
+        </div>
+        <Icon icon="lucide:calendar" class="size-4 text-muted-foreground" />
+      </button>
+    </template>
+
+    <div class="w-64 p-3 bg-card border shadow-lg rounded-lg">
+      <div class="flex justify-between items-center mb-2">
+        <button class="p-1 text-secondary-foreground rounded hover:bg-muted" @click="prevMonth">
+          <Icon icon="lucide:chevron-left" class="size-5" />
+        </button>
+        <div class="text-sm font-medium">{{ currentMonth }} {{ currentYear }}</div>
+        <button class="p-1 text-secondary-foreground rounded hover:bg-muted" @click="nextMonth">
+          <Icon icon="lucide:chevron-right" class="size-5" />
+        </button>
+      </div>
+
+      <div class="grid grid-cols-7 gap-1 mb-1">
+        <div
+          v-for="day in weekDays" :key="day"
+          class="p-1 text-center text-xs font-medium text-muted-foreground"
+        >
+          {{ day }}
+        </div>
+      </div>
+
+      <div
+        class="grid grid-cols-7 gap-1"
+        @click="handleCalendarClick"
+      >
+        <button
+          v-for="(item, index) in daysWithState" :key="index"
+          :tabindex="item.isCurrentMonth ? 0 : -1"
+          :data-index="index"
+          :class="twMerge(
+            'text-center p-1 text-sm rounded',
+            today === item.day && month === item.month && 'text-primary ring-1 ring-primary',
+            item.isCurrentMonth ? 'cursor-pointer hover:bg-muted' : 'text-muted-foreground pointer-events-none',
+            item.isSelected && !item.isInRange && 'bg-primary hover:bg-primary/80 text-white',
+            item.isInRange && !item.isSelected && 'bg-primary/10 hover:bg-primary/20',
+            item.isHoverRange && 'bg-primary/5 hover:bg-primary/15 ring-1 ring-primary/20',
+          )"
+          @mouseenter="handleDayMouseEnter(index)"
+          @mouseleave="hoverDate = null"
+        >
+          {{ item.day }}
+        </button>
+      </div>
+
+      <div class="flex justify-between pt-3 mt-2 border-t">
+        <XButton variant="outline" size="sm" label="清除" @click="clearSelection" />
+        <XButton label="确认" size="sm" @click="applySelection" />
+      </div>
+    </div>
+  </XPopover>
+</template>

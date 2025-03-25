@@ -2,6 +2,8 @@
 import type { TheEmptyProps } from './empty'
 import { twMerge } from 'tailwind-merge'
 
+defineOptions({ name: 'XEmpty' })
+
 withDefaults(
   defineProps<TheEmptyProps>(),
   {

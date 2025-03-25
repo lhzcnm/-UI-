@@ -1,0 +1,51 @@
+<script setup lang="ts">
+import RechargeForm from './components/RechargeForm.vue'
+import MembershipForm from './components/MembershipForm.vue'
+import RechargeHistory from './components/RechargeHistory.vue'
+import RechargeQrcode from './components/RechargeQrcode.vue'
+
+import type { SegmentedOption } from '@3un/ui'
+import type { RechargeStore, TabMode } from './utils'
+import { RECHARGE_STORE } from './utils'
+
+interface RechargeIndexProps {
+  tab?: TabMode
+}
+
+const props = defineProps<RechargeIndexProps>()
+const activeTab = ref<TabMode>(props.tab || 'recharge')
+
+const store: RechargeStore = reactive({
+  url: '',
+  visible: false,
+  isComplete: false,
+  timer: 0,
+})
+
+provide(RECHARGE_STORE, store)
+
+const options: SegmentedOption[] = [
+  { label: '余额充值', value: 'recharge', icon: 'lucide:wallet' },
+  { label: '开通会员', value: 'membership', icon: 'lucide:crown' }
+]
+</script>
+
+<template>
+  <div class="p-4 h-full flex space-x-4">
+    <section class="w-[30rem] shrink-0">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xl font-medium">积分充值</h2>
+        <XSegmented
+          v-model="activeTab"
+          :options="options"
+        />
+      </div>
+
+      <RechargeForm v-show="activeTab === 'recharge'" />
+      <MembershipForm v-show="activeTab === 'membership'" />
+      <RechargeQrcode />
+    </section>
+
+    <RechargeHistory />
+  </div>
+</template>

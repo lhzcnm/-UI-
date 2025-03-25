@@ -6,12 +6,12 @@ defineOptions({ name: 'XTag' })
 defineProps<XTagProps>()
 
 const tag = tv({
-  base: 'px-2 py-1 text-center text-xs shadow-sm',
+  base: 'px-2 py-1 text-center',
   variants: {
     color: {
-      gray: 'bg-gray-600/20 text-gray-600',
+      zinc: 'bg-zinc-600/20 text-zinc-600',
       emerald: 'bg-emerald-600/20 text-emerald-600',
-      red: 'bg-red-600/20 text-red-600',
+      rose: 'bg-rose-600/20 text-rose-600',
       blue: 'bg-blue-600/20 text-blue-600',
     },
     shape: {
@@ -19,16 +19,21 @@ const tag = tv({
       default: 'rounded-md',
       round: 'rounded-full',
     },
+    size: {
+      sm: 'px-2 py-0.5 text-[0.7rem]',
+      md: 'px-2 py-1 text-xs',
+    },
   },
   defaultVariants: {
-    color: 'gray',
+    color: 'zinc',
     shape: 'default',
+    size: 'md',
   },
 })
 </script>
 
 <template>
-  <span :class="tag({ color, shape })">
+  <span :class="tag({ color, shape, size })">
     <slot>{{ label }}</slot>
   </span>
 </template>
