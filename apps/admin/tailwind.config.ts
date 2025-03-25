@@ -13,6 +13,13 @@ export default withTV({
     uiContent,
   ],
   presets: [XPreset],
+  theme: {
+    extend: {
+      animation: {
+        'spin-slow': 'spin 5s linear infinite',
+      },
+    },
+  },
   safelist: [
     // use by ag-grid table
     'leading-6',

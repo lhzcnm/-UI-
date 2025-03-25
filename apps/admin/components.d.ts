@@ -11,6 +11,10 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheEmpty: typeof import('./src/components/TheEmpty.vue')['default']
+    TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
+    XButton: typeof import('@3un/ui')['XButton']
+    XInput: typeof import('@3un/ui')['XInput']
+    XSegmented: typeof import('@3un/ui')['XSegmented']
   }
 }

@@ -5,7 +5,13 @@ const desktop: RouteRecordRaw = {
   component: () => import('@/modules/desktop/index.vue'),
   children: [
     {
+      path: 'auth',
+      name: 'Auth',
+      component: () => import('@desktop/pages/auth/index02.vue'),
+    },
+    {
       path: 'dashboard',
+      name: 'Dashboard',
       component: () => import('@desktop/pages/dashboard/index.vue'),
     },
   ],

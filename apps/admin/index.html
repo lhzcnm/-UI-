@@ -11,9 +11,13 @@
     const html = document.documentElement
     const storedTheme = localStorage.getItem('theme')
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const applyTheme = storedTheme || (systemTheme ? 'dark' : 'light')
-
+    let applyTheme = storedTheme || (systemTheme ? 'dark' : 'light')
     storedTheme && localStorage.setItem('theme', applyTheme)
+
+    if (location.pathname.includes('/auth')) {
+      applyTheme = 'light'
+    }
+
     html.setAttribute('data-ag-theme-mode', applyTheme)
     html.classList.add(applyTheme)
   })()

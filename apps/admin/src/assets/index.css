@@ -3,3 +3,23 @@
 @import 'tailwindcss/utilities';
 
 @import '@3un/ui/index.css';
+
+/*
+  淡入淡出 - 缩放
+  used in:
+  auth/index.vue
+*/
+.fade-in-scale-enter-active {
+  @apply transition duration-300 ease-out;
+}
+.fade-in-scale-leave-active {
+  @apply transition duration-200 ease-in;
+}
+.fade-in-scale-enter-from,
+.fade-in-scale-leave-to {
+  @apply opacity-0 scale-95;
+}
+.fade-in-scale-enter-to,
+.fade-in-scale-leave-from {
+  @apply opacity-100 scale-100;
+}
