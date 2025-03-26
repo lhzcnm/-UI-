@@ -2,9 +2,10 @@
 import { encrypt } from '@3un/utils'
 import { toast } from 'vue-sonner'
 
-import type { LoginForm } from '@/api/auth'
 import { validate } from '@/utils'
-import authApi from '@/api/auth'
+
+import type { LoginForm } from '../api/types'
+import authApi from '../api'
 
 const remember = ref(false)
 const form: LoginForm = reactive({

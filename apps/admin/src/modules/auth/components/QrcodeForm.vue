@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import authApi from '@/api/auth'
+import authApi from '../api'
 
 const router = useRouter()
 
@@ -55,7 +55,7 @@ function wechatLogin() {
 </script>
 
 <template>
-  <div class="space-y-5 text-center">
+  <div class="space-y-5 text-center max-sm:mb-3">
     <div class="flex justify-center">
       <div class="size-48 rounded-md bg-white p-2 shadow-sm">
         <div 

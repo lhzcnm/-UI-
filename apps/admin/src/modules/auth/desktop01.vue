@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AccountForm from '@forms/auth/AccountForm.vue'
-import QrcodeForm from '@forms/auth/QrcodeForm.vue'
+import AccountForm from './components/AccountForm.vue'
+import QrcodeForm from './components/QrcodeForm.vue'
 import { Icon } from '@iconify/vue'
 
 import { twJoin } from 'tailwind-merge'

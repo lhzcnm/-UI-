@@ -8,12 +8,12 @@ const mobile: RouteRecordRaw = {
     {
       path: 'auth',
       name: 'Auth',
-      component: () => import('@mobile/pages/auth/index01.vue'),
+      component: () => import('@auth/mobile01.vue'),
     },
     {
       path: 'auth/key',
       name: 'AuthKey',
-      component: () => import('@mobile/pages/auth/index02.vue'),
+      component: () => import('@auth/mobile02.vue'),
     },
     {
       path: 'dashboard',

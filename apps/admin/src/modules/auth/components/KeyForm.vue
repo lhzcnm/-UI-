@@ -20,7 +20,7 @@ function handleLogin() {
     <div 
       :class="twJoin(
         'flex items-center justify-center',
-        'rounded-full pl-3 py-1 pr-1 transition-all',
+        'rounded-full pl-3 sm:pl-5 py-1 pr-1 transition-all',
         'bg-white/10 backdrop-blur-sm border border-white/20',
         'focus-within:ring-1 focus-within:ring-white/30 focus-within:border-white/40',
       )"

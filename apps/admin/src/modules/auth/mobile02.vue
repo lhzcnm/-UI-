@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import KeyForm from '@forms/auth/KeyForm.vue'
+import KeyForm from './components/KeyForm.vue'
 import { twJoin } from 'tailwind-merge'
 </script>
 

@@ -7,12 +7,12 @@ const desktop: RouteRecordRaw = {
     {
       path: 'auth',
       name: 'Auth',
-      component: () => import('@desktop/pages/auth/index01.vue'),
+      component: () => import('@auth/desktop01.vue'),
     },
     {
       path: 'auth/key',
       name: 'AuthKey',
-      component: () => import('@desktop/pages/auth/index02.vue'),
+      component: () => import('@auth/desktop02.vue'),
     },
     {
       path: 'dashboard',
