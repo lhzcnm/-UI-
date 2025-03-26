@@ -23,32 +23,3 @@
 .fade-in-scale-leave-from {
   @apply opacity-100 scale-100;
 }
-
-/* 流光动画 */
-@keyframes flow-light {
-  0% {
-    background-position: -100% 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
-}
-.flow-light-input {
-  position: relative;
-  overflow: hidden;
-}
-.flow-light-input::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  right: 0; bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: flow-light 3s linear infinite;
-  pointer-events: none;
-}

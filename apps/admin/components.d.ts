@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AccountForm: typeof import('./src/components/forms/auth/AccountForm.vue')['default']
+    KeyForm: typeof import('./src/components/forms/auth/KeyForm.vue')['default']
     QrcodeForm: typeof import('./src/components/forms/auth/QrcodeForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
