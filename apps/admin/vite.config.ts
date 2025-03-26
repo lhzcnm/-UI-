@@ -23,7 +23,8 @@ export default defineConfig({
       resolvers: [UIResolver()],
       globs: [
         'src/components/**/*.vue',
-        '!src/components/logo/*.vue',
+        '!src/components/logos/*.vue',
+        '!src/components/forms/**/*.vue',
         'src/modules/mobile/components/*.vue',
         'src/modules/desktop/components/*.vue',
       ],
@@ -36,6 +37,7 @@ export default defineConfig({
       '@desktop': resolve('./src/modules/desktop'),
       '@mobile': resolve('./src/modules/mobile'),
       '@other': resolve('./src/modules/other'),
+      '@forms': resolve('./src/components/forms'),
     },
   },
 })

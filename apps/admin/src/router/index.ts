@@ -16,7 +16,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const key = import.meta.env.VITE_TOKEN
+  const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key) || sessionStorage.getItem(key)
 
   // handle auth

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
+import { toast } from 'vue-sonner'
+
 import { randomNumber } from '@/utils'
 
-const key = ref('')
 const loginBg = randomLoginBg()
+const key = ref('')
 
 function randomLoginBg() {
   const baseUrl = import.meta.env.BASE_URL
@@ -13,7 +15,12 @@ function randomLoginBg() {
 }
 
 function handleLogin() {
-  console.log(key.value)
+  if (!key.value) {
+    toast.warning('请输入登录密钥')
+    return
+  }
+
+  // TODO: login logic
 }
 </script>
 

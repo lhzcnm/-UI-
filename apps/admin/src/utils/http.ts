@@ -15,7 +15,9 @@ const http = axios.create({
 
 http.interceptors.request.use(config => {
   const key = import.meta.env.VITE_ACCESS_TOKEN
-  const token = localStorage.getItem(key)
+  let token = localStorage.getItem(key)
+  if (!token) token = sessionStorage.getItem(key)
+
   config.headers.Authorization = token
   return config
 })
@@ -28,7 +30,8 @@ http.interceptors.response.use(
 function handleResponse(response: AxiosResponse) {
   const data = response.data
 
-  if (data.code === 200) return data
+  if (data instanceof Blob) return response
+  if (response.status === 200) return data
   return Promise.reject(data)
 }
 

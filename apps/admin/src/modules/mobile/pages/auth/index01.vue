@@ -1,14 +1,10 @@
 <script setup lang="ts">
+import AccountForm from '@forms/auth/AccountForm.vue'
+import QrcodeForm from '@forms/auth/QrcodeForm.vue'
 import { Icon } from '@iconify/vue'
-import { toast } from 'vue-sonner'
-import { randomNumber } from '@/utils'
-import { twJoin } from 'tailwind-merge'
 
-const loginForm = ref({
-  username: '',
-  password: '',
-  remember: false
-})
+import { twJoin } from 'tailwind-merge'
+import { randomNumber } from '@/utils'
 
 type LoginMethodOptions = {
   password: LoginMethodOption
@@ -22,6 +18,9 @@ interface LoginMethodOption {
 
 type LoginMethod = keyof LoginMethodOptions
 const loginMethod = ref<LoginMethod>('password')
+const isAccountLogin = computed(() => loginMethod.value === 'password')
+
+const loginBg = randomLoginBg()
 const loginMethods: LoginMethodOptions = {
   password: {
     name: '密码登录',
@@ -31,18 +30,6 @@ const loginMethods: LoginMethodOptions = {
     name: '微信登录',
     icon: 'lucide:keyboard',
   },
-}
-
-const loginBg = randomLoginBg()
-
-const isLoading = ref(false)
-async function handleLogin() {
-  isLoading.value = true
-  // TODO: login logic
-}
-
-function handleForgotPassword() {
-  toast.info('请联系管理员!')
 }
 
 function randomLoginBg() {
@@ -93,77 +80,8 @@ function toggleLoginMethod() {
         </div>
 
         <Transition name="fade-in-scale" mode="out-in">
-          <form
-            v-if="loginMethod === 'password'"
-            class="space-y-4"
-            @submit.prevent="handleLogin"
-          >
-            <div class="space-y-2">
-              <label
-                for="username"
-                class="block text-sm font-medium text-secondary-foreground"
-              >
-                用户名
-              </label>
-              <XInput 
-                id="username"
-                v-model="loginForm.username"
-                placeholder="请输入用户名"
-                class="bg-white/70 backdrop-blur-sm"
-              />
-            </div>
-            
-            <div class="space-y-2">
-              <label
-                for="password"
-                class="block text-sm font-medium text-secondary-foreground"
-              >
-                密码
-              </label>
-              <XInput 
-                id="password"
-                v-model="loginForm.password"
-                type="password"
-                placeholder="请输入密码"
-                class="bg-white/70 backdrop-blur-sm"
-              />
-            </div>
-
-            <div class="flex items-center justify-between">
-              <label class="flex items-center space-x-2">
-                <input 
-                  type="checkbox" 
-                  v-model="loginForm.remember"
-                  class="size-4"
-                />
-                <span class="text-sm text-secondary-foreground">记住我</span>
-              </label>
-              <a
-                href="javascript:void(0)"
-                class="text-sm text-primary hover:underline"
-                @click="handleForgotPassword"
-              >忘记密码?</a>
-            </div>
-
-            <XButton
-              type="submit"
-              class="w-full h-12 text-base"
-              :loading="isLoading"
-            >
-              登录
-            </XButton>
-          </form>
-
-          <div v-else class="space-y-4 text-center mb-6">
-            <div class="flex justify-center">
-              <div class="size-48 rounded-md bg-white p-2 shadow-sm">
-                <div class="flex size-full items-center justify-center rounded-md border-2 border-dashed border-zinc-200">
-                  <Icon icon="lucide:qr-code" class="size-16 text-zinc-300" />
-                </div>
-              </div>
-            </div>
-            <p class="text-sm text-secondary-foreground">微信扫一扫登录</p>
-          </div>
+          <AccountForm v-if="isAccountLogin" />
+          <QrcodeForm v-else />
         </Transition>
       </div>
     </div>

@@ -17,6 +17,7 @@
       "@desktop/*": ["src/modules/desktop/*"],
       "@mobile/*": ["src/modules/mobile/*"],
       "@other/*": ["src/modules/other/*"],
+      "@forms/*": ["src/components/forms/*"],
     }
   },
   "files": [
