@@ -89,7 +89,7 @@ function toggleLoginMethod() {
             <Icon icon="lucide:cog" class="size-10 text-white animate-spin-slow" />
           </div>
         </div>
-        <TheLogo size="2rem" />
+        <TheLogo height="2rem" />
       </div>
 
       <Transition name="fade-in-scale" mode="out-in">
