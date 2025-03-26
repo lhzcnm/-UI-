@@ -5,11 +5,10 @@ import { randomNumber } from '@/utils'
 
 const key = ref('')
 const loginBg = randomLoginBg()
-const name = import.meta.env.VITE_APP_NAME
 
 function randomLoginBg() {
   const baseUrl = import.meta.env.BASE_URL
-  const randomBg = randomNumber(1, 5)
+  const randomBg = randomNumber(1, 6)
   return `${baseUrl}images/login_bg0${randomBg}.jpg`
 }
 
@@ -26,30 +25,29 @@ function handleLogin() {
     <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
     <div class="relative z-10">
       <div class="flex flex-col items-center justify-center mb-8">
-        <h1 class="text-3xl font-bold font-mono">{{ name }}</h1>
+        <TheLogo height="2rem" class="text-white" />
       </div>
 
-      <div 
-        :class="twJoin(
-          'relative flex items-center justify-center',
-          'rounded-full pl-5 py-1 pr-1 transition-all',
-          'bg-white/10 backdrop-blur-sm border border-white/20',
-          'focus-within:ring-1 focus-within:ring-white/30 focus-within:border-white/40',
-        )"
-      >
-        <input
-          v-model="key"
-          class="w-72 bg-transparent outline-none font-mono placeholder:text-white/60"
-          placeholder="Login Key"
-        />
-        <button
-          type="button"
-          class="rounded-full bg-primary p-2"
-          @click="handleLogin"
+      <form @submit.prevent="handleLogin">
+        <div 
+          :class="twJoin(
+            'relative flex items-center justify-center',
+            'rounded-full pl-3 py-1 pr-1 transition-all',
+            'bg-white/10 backdrop-blur-sm border border-white/20',
+            'focus-within:ring-1 focus-within:ring-white/30 focus-within:border-white/40',
+            'flow-light-input'
+          )"
         >
-          <Icon icon="lucide:arrow-right" class="size-5 text-white" />
-        </button>
-      </div>
+          <input
+            v-model="key"
+            class="w-72 bg-transparent outline-none font-mono placeholder:text-white/60"
+            autofocus placeholder="Login Key"
+          />
+          <button type="submit" class="relative z-10 rounded-full bg-primary p-2">
+            <Icon icon="lucide:arrow-right" class="size-5 text-white" />
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>

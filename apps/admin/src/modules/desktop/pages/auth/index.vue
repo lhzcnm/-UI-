@@ -2,6 +2,7 @@
 import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 import { randomNumber } from '@/utils'
+import { twJoin } from 'tailwind-merge'
 
 const loginForm = ref({
   username: '',
@@ -32,7 +33,6 @@ const loginMethods: LoginMethodOptions = {
   },
 }
 
-const name = import.meta.env.VITE_APP_NAME
 const loginBg = randomLoginBg()
 
 const isLoading = ref(false)
@@ -47,7 +47,7 @@ function handleForgotPassword() {
 
 function randomLoginBg() {
   const baseUrl = import.meta.env.BASE_URL
-  const randomBg = randomNumber(1, 5)
+  const randomBg = randomNumber(1, 6)
   return `${baseUrl}images/login_bg0${randomBg}.jpg`
 }
 
@@ -62,7 +62,13 @@ function toggleLoginMethod() {
     class="flex flex-col items-center justify-center h-screen w-full bg-cover bg-center" 
     :style="{ backgroundImage: `url(${loginBg})` }"
   >
-    <div class="relative overflow-hidden w-full max-w-md rounded-xl bg-white/80 p-8 shadow-2xl backdrop-blur-md">
+    <div
+      :class="twJoin(
+        'relative overflow-hidden w-full max-w-md',
+        'p-8 border rounded-xl bg-white/80',
+        'shadow-2xl shadow-primary/20 backdrop-blur-md'
+      )"
+    >
       <div class="absolute right-0 top-0 z-20">
         <a
           href="javascript:void(0)"
@@ -83,13 +89,18 @@ function toggleLoginMethod() {
             <Icon icon="lucide:cog" class="size-10 text-white animate-spin-slow" />
           </div>
         </div>
-        <h1 class="text-2xl font-bold font-mono">{{ name }}</h1>
+        <TheLogo size="2rem" />
       </div>
 
       <Transition name="fade-in-scale" mode="out-in">
         <div v-if="loginMethod === 'password'" class="space-y-4">
           <div class="space-y-2">
-            <label for="username" class="block text-sm font-medium text-secondary-foreground">用户名</label>
+            <label
+              for="username"
+              class="block text-sm font-medium text-secondary-foreground"
+            >
+              用户名
+            </label>
             <XInput 
               id="username"
               v-model="loginForm.username"
@@ -99,7 +110,12 @@ function toggleLoginMethod() {
           </div>
           
           <div class="space-y-2">
-            <label for="password" class="block text-sm font-medium text-secondary-foreground">密码</label>
+            <label
+              for="password"
+              class="block text-sm font-medium text-secondary-foreground"
+            >
+              密码
+            </label>
             <XInput 
               id="password"
               v-model="loginForm.password"
