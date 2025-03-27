@@ -43,7 +43,7 @@ const currentPath = computed(() => {
           v-if="!item.hide"
           :to="item.path"
           :class="twMerge(
-            'flex-1 flex flex-col items-center justify-center text-secondary-foreground',
+            'flex-1 flex flex-col items-center justify-center text-muted-foreground',
             currentPath === item.path && 'text-primary'
           )"
           @dblclick="$router.go(0)"

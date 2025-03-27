@@ -67,7 +67,7 @@ function isNumber(str: string) {
         v-bind="$attrs"
         :style="{ width }"
         :class="twMerge(
-          'flex items-center justify-between space-x-2',
+          'flex items-center justify-between space-x-2 shadow-sm',
           'w-56 h-10 sm:h-9 px-3 bg-card text-sm text-foreground',
           'border hover:border-hover rounded-md transition-colors',
         )"

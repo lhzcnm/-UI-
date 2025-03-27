@@ -15,6 +15,13 @@ export default withTV({
   presets: [XPreset],
   theme: {
     extend: {
+      width: {
+        sidebar: 'var(--sidebar-width)',
+      },
+      height: {
+        header: 'var(--header-height)',
+        container: 'calc(100vh - var(--header-height))',
+      },
       animation: {
         'spin-slow': 'spin 5s linear infinite',
       },

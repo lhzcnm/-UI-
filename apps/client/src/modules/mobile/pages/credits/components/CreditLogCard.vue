@@ -53,7 +53,7 @@ const amountText = computed(() => {
       </div>
     </div>
 
-    <div class="space-y-1 p-2 bg-secondary overflow-x-auto rounded-lg text-xs text-muted-foreground">
+    <div class="space-y-1 p-2 bg-muted overflow-x-auto rounded-lg text-xs text-muted-foreground">
       <template v-if="item.packageId">
         <div class="truncate">
           服务: {{ item.packageId }} - {{ item.packageTitle }}

@@ -1,14 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import notFound from './routes/404'
-import desktop from './routes/desktop'
-import mobile from './routes/mobile'
+import auth     from './routes/auth'
+import desktop  from './routes/desktop'
+import mobile   from './routes/mobile'
 import { ua } from '@3un/utils'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     notFound,
+    ...auth,
     ua.isMobile
       ? mobile
       : desktop,

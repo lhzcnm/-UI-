@@ -430,7 +430,7 @@ function handlePushMsgChange(value: boolean) {
           v-model="form.imei" rows="5"
           placeholder="IMEI/SN，一行一个&#13;&#10;支持导入 txt、csv、xlsx、xls 文件"
         />
-        <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-secondary-foreground">
+        <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
           <Icon icon="svg-spinners:270-ring" class="text-primary" />
         </div>
       </div>

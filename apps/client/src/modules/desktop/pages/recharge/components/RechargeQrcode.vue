@@ -91,7 +91,7 @@ function handleClose() {
           </div>
         </div>
 
-        <div class="text-center text-sm text-secondary-foreground">
+        <div class="text-center text-sm text-muted-foreground">
           <div v-if="!isExpired">二维码有效期：{{ formatTime(countdown) }}</div>
           <div>请使用微信扫码完成支付</div>
         </div>

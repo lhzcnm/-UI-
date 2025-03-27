@@ -59,7 +59,7 @@ function onNext() {
     <div
       :class="twMerge(
         'flex items-center justify-center space-x-1.5 min-w-20 h-9 p-1',
-        'text-center leading-7 bg-secondary rounded',
+        'text-center leading-7 bg-muted rounded',
       )"
     >
       <span>{{ normalizedCurrent }}</span>

@@ -6,13 +6,20 @@ interface BackHeaderProps {
 }
 
 defineProps<BackHeaderProps>()
+const router = useRouter()
+
+function goBack() {
+  const isNotEmpty = window.history.length > 1
+  if (isNotEmpty) router.back()
+  else router.push('/')
+}
 </script>
 
 <template>
   <section class="relative flex items-center h-mobile-header border-b bg-card">
     <button
-      class="inline-flex items-center ml-3 text-secondary-foreground"
-      @click="$router.back()"
+      class="inline-flex items-center ml-3 text-muted-foreground"
+      @click="goBack"
     >
       <Icon icon="lucide:chevron-left" class="size-7" />
     </button>

@@ -65,7 +65,7 @@ function handleForgotPassword() {
     <div class="space-y-2">
       <label
         for="username"
-        class="block text-sm font-medium text-secondary-foreground"
+        class="block text-sm font-medium text-muted-foreground"
       >
         用户名
       </label>
@@ -80,7 +80,7 @@ function handleForgotPassword() {
     <div class="space-y-2">
       <label
         for="password"
-        class="block text-sm font-medium text-secondary-foreground"
+        class="block text-sm font-medium text-muted-foreground"
       >
         密码
       </label>
@@ -100,7 +100,7 @@ function handleForgotPassword() {
           v-model="remember"
           class="size-4"
         />
-        <span class="text-sm text-secondary-foreground">记住我</span>
+        <span class="text-sm text-muted-foreground">记住我</span>
       </label>
       <a
         href="javascript:void(0)"

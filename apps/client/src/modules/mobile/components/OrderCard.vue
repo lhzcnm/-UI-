@@ -105,13 +105,13 @@ function handleCopy() {
 
     <div class="text-sm">
       <div class="flex items-start">
-        <span class="text-secondary-foreground shrink-0">处理服务：</span>
+        <span class="text-muted-foreground shrink-0">处理服务：</span>
         <span class="font-medium break-all">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">
         <div class="flex items-center">
-          <span class="text-secondary-foreground shrink-0">数据来源：</span>
+          <span class="text-muted-foreground shrink-0">数据来源：</span>
           <span class="font-medium font-mono">{{ order.imei }}</span>
         </div>
         <button
@@ -127,12 +127,12 @@ function handleCopy() {
       </div>
 
       <div v-if="order.createTime" class="flex items-center">
-        <span class="text-secondary-foreground shrink-0">提交时间：</span>
+        <span class="text-muted-foreground shrink-0">提交时间：</span>
         <span class="font-medium">{{ order.createTime }}</span>
       </div>
 
       <div class="flex items-center">
-        <span class="text-secondary-foreground shrink-0">消耗积分：</span>
+        <span class="text-muted-foreground shrink-0">消耗积分：</span>
         <span
           :class="twJoin(
             'font-medium text-rose-500',
@@ -147,11 +147,11 @@ function handleCopy() {
 
     <div class="text-sm">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-secondary-foreground">订单结果：</span>
+        <span class="text-muted-foreground">订单结果：</span>
         <div class="flex items-center space-x-3">
           <button
             v-if="!isSubmit && status.isProcessing"
-            class="inline-flex items-center space-x-0.5 text-secondary-foreground"
+            class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="handleRefresh"
           >
             <Icon icon="lucide:refresh-cw" class="size-4" />
@@ -160,7 +160,7 @@ function handleCopy() {
 
           <button
             v-if="verify.isNormal && status.isSuccess"
-            class="inline-flex items-center space-x-0.5 text-secondary-foreground"
+            class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="handleVerify"
           >
             <Icon icon="lucide:info" class="size-4" />
@@ -169,7 +169,7 @@ function handleCopy() {
 
           <button
             v-if="status.isSuccess"
-            class="inline-flex items-center space-x-0.5 text-secondary-foreground"
+            class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="handleCopy"
           >
             <Icon icon="lucide:clipboard-copy" class="size-4" />
@@ -179,14 +179,14 @@ function handleCopy() {
       </div>
 
       <div
-        class="bg-secondary rounded p-3 whitespace-pre-line overflow-x-auto"
+        class="bg-muted rounded p-3 whitespace-pre-line overflow-x-auto"
         v-html="order.result"
       />
     </div>
 
     <div class="text-sm" v-if="order.remark">
-      <div class="text-secondary-foreground mb-1.5">订单备注：</div>
-      <div class="bg-secondary rounded p-3">
+      <div class="text-muted-foreground mb-1.5">订单备注：</div>
+      <div class="bg-muted rounded p-3">
         {{ order.remark }}
       </div>
     </div>

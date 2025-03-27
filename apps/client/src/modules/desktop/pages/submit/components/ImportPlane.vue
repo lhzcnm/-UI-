@@ -95,7 +95,7 @@ async function handleFile(file: File) {
       <div class="flex items-center justify-between space-x-2">
         <a
           href="javascript:void(0)" title="查看正确的 IMEI/SN"
-          class="text-sm text-gray-500 hover:bg-secondary rounded-md px-2 py-1 -ml-2"
+          class="text-sm text-gray-500 hover:bg-muted rounded-md px-2 py-1 -ml-2"
           @click="imei = validImeiList.join('\n')"
         >
           <span class="mr-1">有效数量</span>

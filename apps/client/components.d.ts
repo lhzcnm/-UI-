@@ -51,7 +51,6 @@ declare module 'vue' {
     XSimplePagination: typeof import('@3un/ui')['XSimplePagination']
     XSliderCaptcha: typeof import('@3un/ui')['XSliderCaptcha']
     XSwitch: typeof import('@3un/ui')['XSwitch']
-    XTable: typeof import('@3un/ui')['XTable']
     XTag: typeof import('@3un/ui')['XTag']
     XTextarea: typeof import('@3un/ui')['XTextarea']
   }

@@ -8,13 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AccountForm: typeof import('./src/components/forms/auth/AccountForm.vue')['default']
-    KeyForm: typeof import('./src/components/forms/auth/KeyForm.vue')['default']
-    QrcodeForm: typeof import('./src/components/forms/auth/QrcodeForm.vue')['default']
+    Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SanHe: typeof import('./src/components/logos/SanHe.vue')['default']
+    Sidebar: typeof import('./src/modules/desktop/components/Sidebar.vue')['default']
     TheEmpty: typeof import('./src/components/TheEmpty.vue')['default']
+    TheHeader: typeof import('./src/modules/desktop/components/TheHeader.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
     XButton: typeof import('@3un/ui')['XButton']

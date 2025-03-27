@@ -264,11 +264,11 @@ function formatDateDisplay(date: DatePickerRange) {
 
     <div class="w-64 p-3 bg-card border shadow-lg rounded-lg">
       <div class="flex justify-between items-center mb-2">
-        <button class="p-1 text-secondary-foreground rounded hover:bg-muted" @click="prevMonth">
+        <button class="p-1 text-muted-foreground rounded hover:bg-muted" @click="prevMonth">
           <Icon icon="lucide:chevron-left" class="size-5" />
         </button>
         <div class="text-sm font-medium">{{ currentMonth }} {{ currentYear }}</div>
-        <button class="p-1 text-secondary-foreground rounded hover:bg-muted" @click="nextMonth">
+        <button class="p-1 text-muted-foreground rounded hover:bg-muted" @click="nextMonth">
           <Icon icon="lucide:chevron-right" class="size-5" />
         </button>
       </div>

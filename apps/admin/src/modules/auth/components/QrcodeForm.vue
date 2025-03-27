@@ -83,6 +83,6 @@ function wechatLogin() {
         </div>
       </div>
     </div>
-    <p class="text-sm text-secondary-foreground">微信扫一扫登录</p>
+    <p class="text-sm text-muted-foreground">微信扫一扫登录</p>
   </div>
 </template>

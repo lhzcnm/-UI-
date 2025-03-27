@@ -17,11 +17,11 @@ const other: RouteRecordRaw[] = [
     name: 'OrderInfo',
     component: () => import('@/modules/other/OrderInfo.vue'),
   },
-  {
-    path: '/test',
-    name: 'Test',
-    component: () => import('@/modules/other/Test.vue'),
-  },
+  // {
+  //   path: '/test',
+  //   name: 'Test',
+  //   component: () => import('@/modules/other/Test.vue'),
+  // },
 ]
 
 export default other

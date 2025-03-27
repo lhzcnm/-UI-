@@ -148,22 +148,22 @@ function checkRecharge() {
     <!-- 充值说明 -->
     <div
       v-if="iStore.settings.enablePaymentInfo"
-      class="bg-secondary p-3 rounded-md"
+      class="bg-muted p-3 rounded-md"
     >
       <p class="mb-2 font-medium">充值说明：</p>
       <div
-        class="text-sm text-secondary-foreground"
+        class="text-sm text-muted-foreground"
         v-html="iStore.settings.paymentInfo"
       />
     </div>
 
     <div class="space-y-2">
-      <div class="flex items-center justify-between text-sm text-secondary-foreground">
+      <div class="flex items-center justify-between text-sm text-muted-foreground">
         <span>充值金额</span>
         <span>{{ rechargeAmount }} 元</span>
       </div>
       
-      <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-secondary-foreground">
+      <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
         <span>手续费(1%)</span>
         <span>{{ serviceFee }} 元</span>
       </div>

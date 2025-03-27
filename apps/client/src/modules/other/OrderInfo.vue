@@ -41,16 +41,18 @@ async function getOrder() {
 </script>
 
 <template>
-  <div class="max-w-xl mx-auto p-3 min-h-screen bg-zinc-100 dark:bg-zinc-950">
-    <Fallback v-if="loading" />
-
-    <template v-else>
-      <OrderCard v-if="order" :order="order" />
-      <div v-else class="p-8 text-center text-secondary-foreground">
-        未找到订单信息
-      </div>
-
-      <BaseFooter />
-    </template>
+  <div class="min-h-screen bg-zinc-100 dark:bg-zinc-950">
+    <div class="max-w-xl mx-auto p-3">
+      <Fallback v-if="loading" />
+  
+      <template v-else>
+        <OrderCard v-if="order" :order="order" />
+        <div v-else class="p-8 text-center text-muted-foreground">
+          未找到订单信息
+        </div>
+  
+        <BaseFooter />
+      </template>
+    </div>
   </div>
 </template>

@@ -75,7 +75,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 5px;
     background-clip: content-box;
     -webkit-background-clip: content-box;
-    background-color: hsl(var(--secondary));
+    background-color: hsl(var(--muted));
     transition: background 0.2s ease-in-out;
   }
 }

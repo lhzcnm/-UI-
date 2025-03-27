@@ -165,7 +165,7 @@ async function handleOpenBulkCheckApi() {
     <section class="mb-4 bg-card rounded-lg divide-y">
       <button
         v-for="option in operationOptions" :key="option.action"
-        class="w-full flex items-center p-4 text-secondary-foreground"
+        class="w-full flex items-center p-4 text-muted-foreground"
         @click="$router.push(`/m/${option.action}`)"
       >
         <Icon :icon="option.icon" class="size-5 mr-2" />
@@ -177,7 +177,7 @@ async function handleOpenBulkCheckApi() {
     <section class="mb-4 bg-card rounded-lg divide-y">
       <button
         v-for="option in settingOptions" :key="option.action"
-        class="w-full flex items-center p-4 text-secondary-foreground"
+        class="w-full flex items-center p-4 text-muted-foreground"
         @click="showForm(option.action as Action)"
       >
         <Icon :icon="option.icon" class="size-5 mr-2" />

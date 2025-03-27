@@ -52,7 +52,7 @@ onMounted(async () => {
         <div v-if="service.mustRead">
           <h2 class="text-lg font-semibold mb-2">服务说明</h2>
           <div
-            class="bg-secondary rounded-lg p-3"
+            class="bg-muted rounded-lg p-3"
             v-html="service.mustRead || '暂无服务说明'"
           />
         </div>

@@ -42,7 +42,7 @@ router.beforeEach(async (to) => {
     iStore.originUrl = window.location.href
     await handleWxAuthCallback(code)
     if (isOtherPath) return true
-    return '/m'
+    return to.path
   }
 
   // handle other path

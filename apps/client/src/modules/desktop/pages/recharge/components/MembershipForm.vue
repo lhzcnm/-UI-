@@ -147,7 +147,7 @@ function isSamePrice(item: MemberPackage) {
     <div class="space-y-3 overflow-y-auto max-h-[400px]">
       <div class="flex items-center justify-between">
         <h3 class="text-lg text-amber-600">会员权益</h3>
-        <span class="text-xs text-muted-foreground bg-secondary/70 px-2 py-1 rounded-full">
+        <span class="text-xs text-muted-foreground bg-muted/70 px-2 py-1 rounded-full">
           开通会员即可享受
         </span>
       </div>
@@ -173,7 +173,7 @@ function isSamePrice(item: MemberPackage) {
             </div>
 
             <div
-              v-if="isSamePrice(item)"
+              v-if="!isSamePrice(item)"
               class="flex items-center text-rose-500"
             >
               <Icon icon="lucide:dollar-sign" />

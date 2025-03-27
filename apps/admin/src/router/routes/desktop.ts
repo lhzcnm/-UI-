@@ -1,23 +1,41 @@
 import type { RouteRecordRaw } from 'vue-router'
 
+import users    from './desktop/users'
+import orders   from './desktop/orders'
+import service  from './desktop/service'
+import recharge from './desktop/recharge'
+import logs     from './desktop/logs'
+
 const desktop: RouteRecordRaw = {
   path: '/',
-  component: () => import('@/modules/desktop/index.vue'),
+  name: 'Desktop',
+  redirect: '/dashboard',
+  component: () => import('@desktop/index.vue'),
   children: [
-    {
-      path: 'auth',
-      name: 'Auth',
-      component: () => import('@auth/desktop01.vue'),
-    },
-    {
-      path: 'auth/key',
-      name: 'AuthKey',
-      component: () => import('@auth/desktop02.vue'),
-    },
+    ...orders,
+    ...users,
+    ...service,
+    ...recharge,
+    ...logs,
     {
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@desktop/pages/dashboard/index.vue'),
+    },
+    {
+      path: 'tickets',
+      name: 'Tickets',
+      component: () => import('@desktop/pages/tickets/index.vue'),
+    },
+    {
+      path: 'interface',
+      name: 'Interface',
+      component: () => import('@desktop/pages/interface/index.vue'),
+    },
+    {
+      path: 'intercept',
+      name: 'Intercept',
+      component: () => import('@desktop/pages/intercept/index.vue'),
     },
   ],
 }

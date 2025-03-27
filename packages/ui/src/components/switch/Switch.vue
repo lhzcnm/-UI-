@@ -62,7 +62,7 @@ function handleKeyDown(event: KeyboardEvent) {
         'after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 ',
       )"
     />
-    <span class="inline-block ml-2 text-sm text-secondary-foreground">
+    <span class="inline-block ml-2 text-sm text-muted-foreground">
       <slot>{{ label }}</slot>
     </span>
   </label>

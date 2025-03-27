@@ -80,7 +80,7 @@ const store = useUserStore()
             <Icon icon="lucide:shield-plus" class="size-4" />
             <span>个人信息</span>
           </div>
-          <div class="text-sm text-secondary-foreground">
+          <div class="text-sm text-muted-foreground">
             <div class="font-mono">微信：{{ maskText(store.info.openId, 8, 18) || '未绑定' }}</div>
             <div>手机：{{ store.info.phone || '未绑定' }}</div>
             <div>邮箱：{{ store.info.email || '未绑定' }}</div>

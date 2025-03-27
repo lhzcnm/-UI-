@@ -25,7 +25,7 @@ defineProps<FormFieldProps>()
 
     <input
       :value="value" :type="type" readonly
-      class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-secondary"
+      class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted"
     />
   </div>
 </template>

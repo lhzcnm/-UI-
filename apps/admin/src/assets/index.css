@@ -4,6 +4,33 @@
 
 @import '@3un/ui/index.css';
 
+@layer base {
+  :root {
+    --header-height: 3.25rem;
+    --sidebar-width: 16rem;
+  }
+}
+
+/* 滚动条 */
+@media (min-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 12px; height: 12px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 3px solid transparent;
+
+    background-clip: content-box;
+    -webkit-background-clip: content-box;
+    background-color: hsl(var(--border));
+    transition: background 0.2s ease-in-out;
+  }
+}
+
 /*
   淡入淡出 - 缩放
   used in:
@@ -22,4 +49,19 @@
 .fade-in-scale-enter-to,
 .fade-in-scale-leave-from {
   @apply opacity-100 scale-100;
+}
+
+/*
+  淡入淡出
+  used in:
+  desktop/index.vue
+  mobile/index.vue
+*/
+.fade-in-enter-active,
+.fade-in-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-in-enter-from,
+.fade-in-leave-to {
+  opacity: 0;
 }
