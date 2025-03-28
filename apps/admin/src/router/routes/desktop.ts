@@ -5,6 +5,7 @@ import orders   from './desktop/orders'
 import service  from './desktop/service'
 import recharge from './desktop/recharge'
 import logs     from './desktop/logs'
+import wechart  from './desktop/wechart'
 
 const desktop: RouteRecordRaw = {
   path: '/',
@@ -16,6 +17,7 @@ const desktop: RouteRecordRaw = {
     ...users,
     ...service,
     ...recharge,
+    ...wechart,
     ...logs,
     {
       path: 'dashboard',

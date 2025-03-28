@@ -49,8 +49,8 @@ const button = tv({
       variant: 'outline',
       color: 'primary',
       class: `
-        ring-primary bg-white text-primary hover:bg-primary/10
-        dark:bg-background dark:hover:bg-primary/30
+        ring-primary text-primary bg-background/50
+        hover:bg-primary/10 dark:hover:bg-primary/30
       `,
     },
     {
@@ -72,8 +72,8 @@ const button = tv({
       variant: 'outline',
       color: 'emerald',
       class: `
-        ring-emerald-500 bg-white text-emerald-500 hover:bg-emerald-500/10
-        dark:bg-background dark:hover:bg-emerald-500/30
+        ring-emerald-500 bg-background/50 text-emerald-500 
+        hover:bg-emerald-500/10 dark:hover:bg-emerald-500/30
       `,
     },
     {
@@ -95,8 +95,8 @@ const button = tv({
       variant: 'outline',
       color: 'amber',
       class: `
-        ring-amber-600 bg-white text-amber-600 hover:bg-amber-600/10
-        dark:bg-background dark:hover:bg-amber-600/30
+        ring-amber-600 bg-background/50 text-amber-600
+        hover:bg-amber-600/10 dark:hover:bg-amber-600/30
       `,
     },
     {
@@ -118,8 +118,8 @@ const button = tv({
       variant: 'outline',
       color: 'rose',
       class: `
-        ring-rose-600 bg-white text-rose-600 hover:bg-rose-600/10
-        dark:bg-background dark:hover:bg-rose-600/30
+        ring-rose-600 bg-background/50 text-rose-600
+        hover:bg-rose-600/10 dark:hover:bg-rose-600/30
       `,
     },
     {
@@ -141,8 +141,8 @@ const button = tv({
       variant: 'outline',
       color: 'indigo',
       class: `
-        ring-indigo-500 bg-white text-indigo-500 hover:bg-indigo-500/10
-        dark:bg-background dark:hover:bg-indigo-500/30
+        ring-indigo-500 bg-background/50 text-indigo-500
+        hover:bg-indigo-500/10 dark:hover:bg-indigo-500/30
       `,
     },
     {

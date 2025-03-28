@@ -29,7 +29,7 @@ const amountList = [
   { label: '10 元', value: 10 },
   { label: '50 元', value: 50 },
   { label: '100 元', value: 100 },
-  { label: '300 元', info: '免手续费', value: 200 },
+  { label: '200 元', info: '免手续费', value: 200 },
   { label: '500 元', info: '免手续费', value: 500 },
   { label: '1000 元', info: '免手续费', value: 1000 },
 ]
@@ -145,7 +145,6 @@ function checkRecharge() {
       </div>
     </div>
     
-    <!-- 充值说明 -->
     <div
       v-if="iStore.settings.enablePaymentInfo"
       class="bg-muted p-3 rounded-md"

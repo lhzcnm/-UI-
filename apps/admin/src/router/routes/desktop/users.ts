@@ -8,13 +8,18 @@ const users: RouteRecordRaw[] = [
   },
   {
     path: 'users/admin',
-    name: 'allAdmin',
+    name: 'AllAdmin',
     component: () => import('@desktop/pages/users/admin.vue'),
   },
   {
     path: 'users/level',
     name: 'AllLevel',
     component: () => import('@desktop/pages/users/level.vue'),
+  },
+  {
+    path: 'users/paid',
+    name: 'AllPaid',
+    component: () => import('@desktop/pages/users/paid.vue'),
   },
 ]
 

@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { THEME } from '@3un/shared/theme'
+import { twMerge } from 'tailwind-merge'
+
+interface ThemeProps {
+  ghost?: boolean
+}
+
+const props = defineProps<ThemeProps>()
 
 const theme = inject(THEME)!
 const html = document.documentElement
@@ -18,7 +25,12 @@ const toggleTheme = () => {
 
 <template>
   <button
-    class="p-2 rounded-full bg-muted text-muted-foreground hover:bg-accent transition-colors duration-300"
+    :class="twMerge(
+      'p-2 rounded-full text-muted-foreground transition-colors',
+      props.ghost
+        ? 'bg-transparent hover:bg-muted'
+        : 'bg-muted hover:bg-accent',
+    )"
     aria-label="Toggle theme"
     @click="toggleTheme"
   >

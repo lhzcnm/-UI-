@@ -18,8 +18,8 @@ const tableTheme = themeQuartz
   )
   .withParams(
     {
-      headerBackgroundColor: '#18181B',
-      backgroundColor: '#18181B',
+      headerBackgroundColor: '#1b1c22',
+      backgroundColor: '#1b1c22',
     },
     'dark',
   )

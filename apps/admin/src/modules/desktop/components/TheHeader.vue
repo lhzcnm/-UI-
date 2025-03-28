@@ -27,6 +27,10 @@ function handleClickHome() {
     </div>
     <div class="flex items-center space-x-1">
       <TheTheme ghost />
+
+      <button class="p-2 rounded-full hover:bg-muted text-muted-foreground">
+        <Icon icon="lucide:bell" class="size-5" />
+      </button>
       <button class="p-2 rounded-full hover:bg-muted text-muted-foreground">
         <Icon icon="lucide:settings" class="size-5" />
       </button>
