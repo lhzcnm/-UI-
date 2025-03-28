@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { XPopoverProps, XPopoverSlots, XPopoverEmits } from './popover'
-import { useFloating, offset, flip, shift } from '@floating-ui/vue'
+import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
 import { onClickOutside, useEventListener } from '@vueuse/core'
 import { useFocusLock } from '@/composables/useFocusLock'
+import { twMerge } from 'tailwind-merge'
 
 defineOptions({ name: 'XPopover' })
 
@@ -15,23 +16,48 @@ const props = withDefaults(
     closeOnClickOutside: false,
     closeOnEscape: true,
     teleport: 'body',
+    trigger: 'click',
+    hoverDelay: 200,
+    animation: true,
   }
 )
 
 const emit = defineEmits<XPopoverEmits>()
 const slots = defineSlots<XPopoverSlots>()
 const open = defineModel<boolean>({ required: true })
+
 const floating = ref<HTMLElement | null>(null)
 const trigger = ref<HTMLElement | null>(null)
+
+const hoverTimeout = ref<number>()
+const currentPlacement = ref(props.placement)
 
 const renderTrigger = () => {
   if (!slots.trigger) return null
   const triggerContent = slots.trigger()[0]
+  const eventHandlers: Record<string, () => void> = {}
+
+  if (props.trigger === 'click') {
+    eventHandlers.onClick = () => open.value = !open.value
+  }
+  else if (props.trigger === 'hover') {
+    eventHandlers.onMouseenter = () => {
+      if (hoverTimeout.value) clearTimeout(hoverTimeout.value)
+      open.value = true
+    }
+    eventHandlers.onMouseleave = () => {
+      hoverTimeout.value = window.setTimeout(() => 
+        open.value = false,
+        props.hoverDelay
+      )
+    }
+  }
+
   const triggerVNode = h(
     triggerContent.type as Component,
     {
       ref: trigger,
-      onClick: () => open.value = !open.value,
+      ...eventHandlers,
       ...triggerContent.props
     },
     triggerContent.children as VNode[]
@@ -40,11 +66,14 @@ const renderTrigger = () => {
   return triggerVNode
 }
 
-const { floatingStyles } = useFloating(
+const { handleTab } = useFocusLock(open, floating)
+
+const { floatingStyles, placement } = useFloating(
   trigger, floating,
   {
     open,
     placement: props.placement,
+    whileElementsMounted: autoUpdate,
     middleware: [
       offset(props.offset),
       flip(),
@@ -53,9 +82,18 @@ const { floatingStyles } = useFloating(
   }
 )
 
-const { handleTab } = useFocusLock(open, floating)
+watch(placement, (newPlacement) => {
+  currentPlacement.value = newPlacement
+  updateTransformOrigin()
+})
 
-watch(open, (val) => !val && emit('closed'), { flush: 'post' })
+watch(
+  open,
+  (val) => !val && emit('closed'),
+  { flush: 'post' }
+)
+
+onMounted(() => updateTransformOrigin())
 
 onClickOutside(
   floating,
@@ -75,25 +113,87 @@ if (props.closeOnEscape) {
     }
   }
 }
+
+function updateTransformOrigin() {
+  const origins = {
+    'top': 'bottom',
+    'top-start': 'bottom left',
+    'top-end': 'bottom right',
+
+    'right': 'left',
+    'right-start': 'left top',
+    'right-end': 'left bottom',
+
+    'bottom': 'top',
+    'bottom-start': 'top left',
+    'bottom-end': 'top right',
+
+    'left': 'right',
+    'left-start': 'right top',
+    'left-end': 'right bottom',
+  }
+
+  const origin = origins[currentPlacement.value] || 'top'
+
+  nextTick(() => {
+    if (!floating.value) return
+    const style = floating.value.style
+    style.setProperty('--x-popover-origin', origin)
+  })
+}
+
+function handleMouseEnter() {
+  if (props.trigger === 'hover') {
+    window.clearTimeout(hoverTimeout.value)
+    open.value = true
+  }
+}
+
+function handleMouseLeave() {
+  if (props.trigger === 'hover') {
+    hoverTimeout.value = window.setTimeout(
+      () => open.value = false,
+      props.hoverDelay
+    )
+  }
+}
+
+function getTeleportTo() {
+  const isString = typeof props.teleport === 'string'
+  if (isString) return props.teleport
+  return props.teleport || 'body'
+}
 </script>
 
 <template>
   <component :is="renderTrigger()" />
   <Teleport
-    :to="typeof teleport === 'string' ? teleport : undefined"
+    :to="getTeleportTo()"
     :disabled="teleport === false"
   >
-    <Transition>
-      <div
-        v-show="open"
-        ref="floating"
-        class="z-50"
-        :style="floatingStyles"
-        :aria-modal="true"
-        @keydown="handleTab"
+    <div
+      ref="floating"
+      class="z-50"
+      :style="floatingStyles"
+      :aria-modal="true"
+      @keydown="handleTab"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
+    >
+      <Transition 
+        name="x-popover" appear
+        :disabled="!props.animation"
       >
-        <slot />
-      </div>
-    </Transition>
+        <div
+          v-show="open"
+          :class="twMerge(
+            'bg-card border rounded-md shadow-lg',
+            props.contentClass
+          )"
+        >
+          <slot />
+        </div>
+      </Transition>
+    </div>
   </Teleport>
 </template>

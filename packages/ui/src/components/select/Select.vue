@@ -79,11 +79,10 @@ function isNumber(str: string) {
 
     <div
       :style="{ width }"
-      :class="twMerge(
+      :class="[
         'flex flex-col',
-        'bg-card border rounded-md shadow-lg',
         !width && 'min-w-56',
-      )"
+      ]"
     >
       <div v-if="props.filterable" class="p-2">
         <XInput

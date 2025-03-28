@@ -5,6 +5,7 @@ import FormField from './FormField.vue'
 import UserCard from './UserCard.vue'
 
 import type { Action } from '../types'
+import { twJoin } from 'tailwind-merge'
 
 const store = useUserStore()
 
@@ -66,7 +67,10 @@ function closeForm() {
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-medium">{{ activeTitle }}</h3>
             <button
-              class="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-primary/20"
+              :class="twJoin(
+                'p-2 text-muted-foreground rounded-full',
+                'hover:text-primary hover:bg-primary/20',
+              )"
               @click="closeForm"
             >
               <Icon icon="lucide:x" class="size-4" />
