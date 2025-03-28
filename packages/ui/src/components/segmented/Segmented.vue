@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
-import type { SegmentedProps } from './segmented'
+
+import type { SegmentedProps, SegmentedEmits } from './segmented'
 import { twMerge } from 'tailwind-merge'
 
 defineOptions({ name: 'XSegmented' })
 
 const props = defineProps<SegmentedProps>()
-const active = defineModel({ required: true })
+const emit = defineEmits<SegmentedEmits>()
+const active = defineModel<string | number>({ required: true })
 
 const segmented = tv({
   slots: {
@@ -54,6 +56,11 @@ const segmented = tv({
 
 const sg = segmented({ color: props.color, size: props.size })
 const activeIndex = computed(() => props.options.findIndex((opt) => opt.value === active.value))
+
+function handleClick(value: string | number) {
+  active.value = value
+  emit('change', value)
+}
 </script>
 
 <template>
@@ -71,7 +78,7 @@ const activeIndex = computed(() => props.options.findIndex((opt) => opt.value ==
         v-for="option in options"
         :key="option.value" type="button"
         :class="twMerge(sg.button(), active === option.value && sg.activeButton())"
-        @click="active = option.value"
+        @click="handleClick(option.value)"
       >
         <Icon
           v-if="option.icon"

@@ -10,3 +10,7 @@ export interface SegmentedOption {
   value: string | number
   icon?: string
 }
+
+export interface SegmentedEmits {
+  (e: 'change', value: string | number): void
+}
