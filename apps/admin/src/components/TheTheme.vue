@@ -33,7 +33,7 @@ const toggleTheme = () => {
     aria-label="Toggle theme"
     @click="toggleTheme"
   >
-    <Icon icon="hugeicons:moon-02" v-if="theme.isDark" class="size-5" />
-    <Icon icon="hugeicons:sun-03" v-else class="size-5" />
+    <Icon icon="lucide:moon" v-if="theme.isDark" class="size-5" />
+    <Icon icon="lucide:sun" v-else class="size-5" />
   </button>
 </template>

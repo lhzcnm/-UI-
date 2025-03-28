@@ -1,8 +1,7 @@
-import type { BreadcrumbItem } from '@/types'
 import { defineStore } from 'pinia'
 
 export const useSystemStore = defineStore('systemStore', () => {
-  const breadcrumbItems = ref<BreadcrumbItem[]>([])
+  const breadcrumbItems = ref<string[]>([])
   const showSidebar = ref(true)
 
   function toggleSidebar() {

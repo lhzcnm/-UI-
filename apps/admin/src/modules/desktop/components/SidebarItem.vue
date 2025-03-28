@@ -2,7 +2,7 @@
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
-import type { SidebarMenu } from '@/utils'
+import type { SidebarMenu, SidebarMenuChild } from '@/utils'
 import { EXPANDED_MENUS } from '@/utils'
 
 interface SidebarItemProps {
@@ -14,6 +14,7 @@ const expandedMenus = inject<Ref<string[]>>(EXPANDED_MENUS)!
 
 const router = useRouter()
 const route = useRoute()
+const iStore = useSystemStore()
 
 function toggleExpand(path: string) {
   const index = expandedMenus.value.indexOf(path)
@@ -30,7 +31,13 @@ function handleClick(menu: SidebarMenu) {
     return
   }
 
+  // no children, update breadcrumb
+  iStore.breadcrumbItems = [menu.label]
   router.push(menu.path)
+}
+
+function handleChildClick(child: SidebarMenuChild, parentLabel: string) {
+  iStore.breadcrumbItems = [parentLabel, child.label]
 }
 
 const isExpanded = computed(() => 
@@ -78,6 +85,7 @@ const isActive = computed(() => {
               'rounded-md hover:bg-muted hover:text-accent-foreground',
               route.path === child.path && 'bg-muted text-accent-foreground',
             )"
+            @click="handleChildClick(child, menu.label)"
           >
             <span>{{ child.label }}</span>
             <Badge v-if="child.badge" :value="child.badge" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 
 interface HeaderProps {
   isFullscreen: boolean
@@ -27,12 +28,14 @@ const iStore = useSystemStore()
       >
         <Icon :icon="iStore.showSidebar ? 'lucide:panel-left-close' : 'lucide:panel-left-open'" class="size-5" />
       </button>
+
+      <Breadcrumb :items="iStore.breadcrumbItems" />
     </div>
 
     <div class="flex items-center space-x-1">
       <button
         class="p-2 rounded-full hover:bg-muted text-muted-foreground"
-        accesskey="s"
+        accesskey="k"
       >
         <Icon icon="lucide:search" class="size-5" />
       </button>

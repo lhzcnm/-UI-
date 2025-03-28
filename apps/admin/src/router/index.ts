@@ -5,6 +5,7 @@ import auth     from './routes/auth'
 import desktop  from './routes/desktop'
 import mobile   from './routes/mobile'
 import { ua } from '@3un/utils'
+import { menus } from '@/utils'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -39,6 +40,54 @@ router.beforeEach((to) => {
     if (!token) return '/auth'
     return to.path.replace('/m', '')
   }
+})
+
+// handle breadcrumb
+router.afterEach((to) => {
+  // only handle non auth route
+  if (to.path.includes('auth')) return
+
+  const store = useSystemStore()
+
+  // extract breadcrumb info from route path
+  let pathParts = to.path.split('/').filter(Boolean)
+  if (ua.isMobile) pathParts = pathParts.slice(1)
+
+  if (pathParts.length === 0) {
+    store.breadcrumbItems = ['仪表盘']
+    return
+  }
+
+  // find matching menu item by path
+  const firstLevel = pathParts[0]
+  let breadcrumbItems: string[] = []
+
+  // find main menu by path
+  const mainMenu = menus
+    .find(menu => menu.path === `/${firstLevel}`)
+
+  if (mainMenu) {
+    if (!mainMenu.children || pathParts.length === 1) {
+      // no child menu or only one level path
+      breadcrumbItems = [mainMenu.label]
+    }
+    else if (pathParts.length > 1) {
+      // has child menu and has second level path
+      const secondLevel = pathParts[1]
+      const childMenu = mainMenu.children
+        .find(child => child.path === secondLevel)
+      
+      breadcrumbItems = [mainMenu.label]
+      if (childMenu) breadcrumbItems.push(childMenu.label)
+    }
+  } else {
+    // no matching menu item, use path name as breadcrumb
+    const firstChar = firstLevel.charAt(0).toUpperCase()
+    const rest = firstLevel.slice(1)
+    breadcrumbItems = [firstChar + rest]
+  }
+
+  store.breadcrumbItems = breadcrumbItems
 })
 
 export default router
