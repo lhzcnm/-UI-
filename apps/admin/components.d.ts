@@ -9,7 +9,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Badge: typeof import('./src/components/Badge.vue')['default']
-    Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

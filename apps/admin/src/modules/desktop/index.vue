@@ -4,14 +4,24 @@ import TheHeader from './components/TheHeader.vue'
 import { useFullscreen } from '@vueuse/core'
 
 const route = useRoute()
+const iStore = useSystemStore()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const { isFullscreen, toggle } = useFullscreen(rootRef)
 </script>
 
 <template>
-  <div ref="root" class="flex h-screen bg-background">
-    <Sidebar />
-    <div class="flex-1 flex flex-col">
+  <div ref="root" class="h-screen bg-background">
+    <Transition name="sidebar">
+      <Sidebar
+        v-if="iStore.showSidebar"
+        class="fixed top-0 left-0 z-20 h-screen"
+      />
+    </Transition>
+
+    <div
+      class="flex flex-col"
+      :class="{ 'ml-sidebar': iStore.showSidebar }"
+    >
       <TheHeader
         :is-fullscreen="isFullscreen"
         :toggle-fullscreen="toggle"

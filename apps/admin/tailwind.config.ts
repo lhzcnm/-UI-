@@ -22,6 +22,9 @@ export default withTV({
         header: 'var(--header-height)',
         container: 'calc(100vh - var(--header-height))',
       },
+      margin: {
+        sidebar: 'var(--sidebar-width)',
+      },
       animation: {
         'spin-slow': 'spin 5s linear infinite',
       },

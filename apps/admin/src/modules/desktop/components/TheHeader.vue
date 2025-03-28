@@ -9,29 +9,42 @@ interface HeaderProps {
 
 defineProps<HeaderProps>()
 
-const router = useRouter()
-const systemStore = useSystemStore()
-
-function handleClickHome() {
-  systemStore.breadcrumbItems = []
-  router.push('/')
-}
+const iStore = useSystemStore()
 </script>
 
 <template>
   <div
     :class="twJoin(
       'flex justify-between items-center',
-      'w-full px-3 h-header border-b',
+      'w-full px-1 h-header border-b',
     )"
   >
-    <div class="flex items-center space-x-2">
-      <Breadcrumb
-        :items="systemStore.breadcrumbItems"
-        @click-home="handleClickHome"
-      />
-    </div>
     <div class="flex items-center space-x-1">
+      <button
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground transition-transform"
+        @click="iStore.toggleSidebar"
+        accesskey="b"
+      >
+        <Icon :icon="iStore.showSidebar ? 'lucide:panel-left-close' : 'lucide:panel-left-open'" class="size-5" />
+      </button>
+    </div>
+
+    <div class="flex items-center space-x-1">
+      <button
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        accesskey="s"
+      >
+        <Icon icon="lucide:search" class="size-5" />
+      </button>
+
+      <button
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        accesskey="m"
+      >
+        <Icon icon="lucide:bell" class="size-5" />
+      </button>
+
+      <hr class="h-6 w-px bg-border" />
       <TheTheme ghost />
 
       <button
@@ -43,12 +56,7 @@ function handleClickHome() {
           class="size-5"
         />
       </button>
-      <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
-        accesskey="b"
-      >
-        <Icon icon="lucide:bell" class="size-5" />
-      </button>
+
       <hr class="h-6 w-px bg-border" />
       <button
         class="p-2 rounded-full hover:bg-muted text-muted-foreground"

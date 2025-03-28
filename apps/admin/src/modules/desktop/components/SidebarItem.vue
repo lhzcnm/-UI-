@@ -32,6 +32,15 @@ function handleClick(menu: SidebarMenu) {
 
   router.push(menu.path)
 }
+
+const isExpanded = computed(() => 
+  expandedMenus.value.includes(menu.path)
+)
+
+const isActive = computed(() => {
+  if (!menu.children) return route.path === menu.path
+  return !isExpanded.value && route.path.startsWith(menu.path)
+})
 </script>
 
 <template>
@@ -40,7 +49,7 @@ function handleClick(menu: SidebarMenu) {
       :class="twJoin(
         'flex items-center justify-between w-full px-3 h-8',
         'rounded-md hover:bg-muted hover:text-accent-foreground',
-        !menu.children && $route.path === menu.path && 'bg-muted text-accent-foreground',
+        isActive && 'bg-muted text-accent-foreground',
       )"
       @click="handleClick(menu)"
     >
@@ -57,7 +66,7 @@ function handleClick(menu: SidebarMenu) {
     </button>
 
     <div
-      v-show="menu.children && expandedMenus.includes(menu.path)"
+      v-show="menu.children && isExpanded"
       class="mx-5 mt-1 pl-2 text-sm border-l border-dashed"
     >
       <ul class="flex flex-col space-y-1">
