@@ -16,6 +16,11 @@ const service: RouteRecordRaw[] = [
     name: 'AllField',
     component: () => import('@desktop/pages/service/fields.vue'),
   },
+  {
+    path: 'service/unlock',
+    name: 'Unlock',
+    component: () => import('@desktop/pages/service/unlock.vue'),
+  },
 ]
 
 export default service

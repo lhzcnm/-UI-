@@ -2,6 +2,13 @@
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
+interface HeaderProps {
+  isFullscreen: boolean
+  toggleFullscreen: () => void
+}
+
+defineProps<HeaderProps>()
+
 const router = useRouter()
 const systemStore = useSystemStore()
 
@@ -16,7 +23,6 @@ function handleClickHome() {
     :class="twJoin(
       'flex justify-between items-center',
       'w-full px-3 h-header border-b',
-      'bg-opacity-50 backdrop-blur-sm',
     )"
   >
     <div class="flex items-center space-x-2">
@@ -28,10 +34,26 @@ function handleClickHome() {
     <div class="flex items-center space-x-1">
       <TheTheme ghost />
 
-      <button class="p-2 rounded-full hover:bg-muted text-muted-foreground">
+      <button
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        @click="toggleFullscreen"
+      >
+        <Icon
+          :icon="isFullscreen ? 'lucide:minimize' : 'lucide:maximize'"
+          class="size-5"
+        />
+      </button>
+      <button
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        accesskey="b"
+      >
         <Icon icon="lucide:bell" class="size-5" />
       </button>
-      <button class="p-2 rounded-full hover:bg-muted text-muted-foreground">
+      <hr class="h-6 w-px bg-border" />
+      <button
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        accesskey="s"
+      >
         <Icon icon="lucide:settings" class="size-5" />
       </button>
     </div>

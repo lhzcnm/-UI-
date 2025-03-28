@@ -25,6 +25,7 @@ const toggleTheme = () => {
 
 <template>
   <button
+    accesskey="t"
     :class="twMerge(
       'p-2 rounded-full text-muted-foreground transition-colors duration-300',
       props.ghost ? 'bg-transparent hover:bg-muted' : 'bg-muted hover:bg-accent',
