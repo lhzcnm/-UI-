@@ -25,9 +25,11 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'vue',
+        'dayjs',
         'vue-router',
         '@iconify/vue',
         '@floating-ui/vue',
+        '@vueuse/core',
         'tailwind-merge',
         'tailwind-variants',
       ],

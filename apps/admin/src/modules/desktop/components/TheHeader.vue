@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import Breadcrumb from '@/components/Breadcrumb.vue'
+import SearchPlane from './SearchPlane.vue'
+
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
-import Breadcrumb from '@/components/Breadcrumb.vue'
 
 interface HeaderProps {
   isFullscreen: boolean
@@ -11,6 +13,7 @@ interface HeaderProps {
 defineProps<HeaderProps>()
 
 const iStore = useSystemStore()
+const visibleSearch = ref(false)
 </script>
 
 <template>
@@ -34,15 +37,16 @@ const iStore = useSystemStore()
 
     <div class="flex items-center space-x-1">
       <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
         accesskey="k"
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        @click="visibleSearch = true"
       >
         <Icon icon="lucide:search" class="size-5" />
       </button>
 
       <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
         accesskey="m"
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
       >
         <Icon icon="lucide:bell" class="size-5" />
       </button>
@@ -62,11 +66,13 @@ const iStore = useSystemStore()
 
       <hr class="h-6 w-px bg-border" />
       <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
         accesskey="s"
+        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
       >
         <Icon icon="lucide:settings" class="size-5" />
       </button>
     </div>
+
+    <SearchPlane v-model="visibleSearch" />
   </div>
 </template>

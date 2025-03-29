@@ -39,20 +39,15 @@ provide(XSELECT_CONTEXT, { model, options })
 function handleClick(event: MouseEvent) {
   const target = event.target as HTMLElement
   const element = target.closest('[data-value]')
-
   if (!element) return
-  const value = element.getAttribute('data-value')
 
-  if (!value) return
+  let value = element.getAttribute('data-value') as any
+  if (!isNaN(Number(value))) value = Number(value)
+  else value = value as string
+
   emits('selected', value)
-  model.value = isNumber(value) ? Number(value) : value
+  model.value = value
   open.value = false
-}
-
-function isNumber(str: string) {
-  return str.trim() !== '' && 
-    !isNaN(Number(str)) &&
-    isFinite(Number(str))
 }
 </script>
 

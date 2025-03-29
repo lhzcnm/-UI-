@@ -1,4 +1,4 @@
-import type { OrderTableDefs, OrderSCRP } from '@/api/orders'
+import type { OrderTableDefs, OrderSCRP, OrderTableView } from '@/api/orders'
 import type { ColDef } from 'ag-grid-community'
 
 import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
@@ -17,8 +17,8 @@ export const defaultColumns: OrderTableDefs = [
   {
     field: 'service',
     headerName: '服务',
-    cellRenderer: ({ data }: OrderSCRP) => {
-      const id = data?.serviceId ?? 0
+    valueFormatter: ({ data }) => {
+      const id = (data as any).serviceId ?? 0
       const service = store.services.get(id)
       const title = service?.title ?? '找不到服务'
       return `${id} - ${title}`

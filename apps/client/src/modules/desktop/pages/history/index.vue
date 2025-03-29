@@ -79,6 +79,7 @@ function openExport() {
       :rowData="store.orders.list"
       :columnDefs="columns"
       :defaultColDef="columnOpts"
+      suppressRowHoverHighlight
       class="h-[calc(100%-3rem)]"
     />
 

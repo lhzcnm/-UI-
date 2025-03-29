@@ -7,6 +7,13 @@ const route = useRoute()
 const iStore = useSystemStore()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const { isFullscreen, toggle } = useFullscreen(rootRef)
+
+const store = useServiceStore()
+
+await Promise.all([
+  store.getItems(),
+  store.getGroups(),
+])
 </script>
 
 <template>

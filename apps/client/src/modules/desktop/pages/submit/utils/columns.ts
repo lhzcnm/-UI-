@@ -15,11 +15,10 @@ export const defaultColumns: OrderTableDefs = [
     field: 'service',
     headerName: '服务',
     width: 220,
-    cellRenderer: ({ data }: OrderSCRP) => {
-      if (data && data.serviceId) {
-        const id = data.serviceId
-        const title = data.serviceName
-        return `${id} - ${title}`
+    valueFormatter: ({ data }) => {
+      if (data && (data as any).serviceId) {
+        const { serviceId, serviceName } = data as any
+        return `${serviceId} - ${serviceName}`
       }
 
       return '请选择服务'

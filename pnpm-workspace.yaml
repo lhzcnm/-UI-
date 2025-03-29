@@ -4,4 +4,5 @@ packages:
   - script
 onlyBuiltDependencies:
   - esbuild
+  - javascript-obfuscator
   - vue-demi

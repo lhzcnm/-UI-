@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
-import { computed } from 'vue'
+
 import type { BtnProps } from './button'
 
 defineOptions({ name: 'XButton' })

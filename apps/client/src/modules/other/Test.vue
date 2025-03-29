@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import type { TableColumn } from '@3un/ui'
+import type { TableColumn } from '@3un/ui'
 import { XTag, XButton } from '@3un/ui'
 
 import type { Order, OrderListResponse } from '@/api/orders'
@@ -39,7 +39,7 @@ async function getList(pageVal: number, limitVal: number) {
   orders.value = data
 }
 
-const columns = [
+const columns: TableColumn[] = [
   { key: 'id', title: 'ID', width: 108, },
   {
     key: 'service',
@@ -137,6 +137,7 @@ const columns = [
         ]"
       />
     </section>
+
     <XTable
       v-model:selected-list="selectedList"
       :data="orders.list" :columns="columns"

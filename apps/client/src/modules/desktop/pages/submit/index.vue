@@ -55,7 +55,9 @@ await handleSelected(selectedId.value)
 async function handleSelected(value: number) {
   if (!value) return
 
+  // handle reselect service
   if (rawOrders.value.length > 0 && imeis.value.length > 0) {
+    console.log('reselect service', value, imeis.value, comments.value)
     rawOrders.value = processWaitList(value, imeis.value, comments.value)
     submited.value = false
   }
@@ -73,7 +75,7 @@ async function handleSelected(value: number) {
       width: width,
       cellClass: 'leading-6 py-1',
       cellRenderer: ({ data }: OrderSCRP) => {
-        return data?.[field] || '-'
+        return data ? (data as any)[field] : '-'
       },
     })
   }

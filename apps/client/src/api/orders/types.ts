@@ -40,7 +40,7 @@ export interface OrderTableView {
   result: string
   createTime: string
 }
-export type OrderSCRP<T = any> = ICellRendererParams<OrderTableView & T>
+export type OrderSCRP = ICellRendererParams<OrderTableView>
 export type OrderTableDefs = ColDef<OrderTableCol>[]
 export interface OrderTableCol {
   id: number

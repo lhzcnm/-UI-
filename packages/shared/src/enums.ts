@@ -1,6 +1,11 @@
 export type Colors = 'zinc' | 'emerald' | 'rose' | 'blue'
 type StatusMap = Record<number, { color: Colors, label: string }>
 
+export enum ACTIVE_STATUS {
+  TRUE  = 1,
+  FALSE = 0,
+}
+
 // Imei Type
 export enum IMEI_TYPE {
   NONE = 5,
