@@ -2,20 +2,21 @@
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import MustRead from './components/MustRead.vue'
+import type { TableColumn } from '@3un/ui';
+import { XTag, XButton } from '@3un/ui'
 
-import type { ColDef } from 'ag-grid-community'
-import { AgGridVue } from 'ag-grid-vue3'
+
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
 
-import type { Order, OrderTableView, OrderSubmitResult, OrderSCRP } from '@/api/orders'
+import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
 import type { Service } from '@/api/services'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
 
-import tableTheme from '@desktop/utils/table'
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
-import { defaultColumns, columnOpts } from './utils/columns'
+
+import { ORDER_STATUS,ORDER_STATUS_MAP, ORDER_VERTIFY } from '@3un/shared/enums'
+
 import { downloadURL } from '@3un/utils'
 
 const props = defineProps<{ id: string }>()
@@ -28,7 +29,6 @@ const page = ref(1)
 const pageSize = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
-const columns = shallowRef<ColDef[]>(defaultColumns)
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
@@ -65,30 +65,26 @@ async function handleSelected(value: number) {
   const { data } = await serviceApi.header(value)
   if (data.length === 0) return
 
-  const serviceCols: ColDef[] = []
+  const serviceCols: TableColumn[] = []
   for (const item of data) {
     const { name, width } = item
     const field = hash(name)
     serviceCols.push({
-      field: field,
-      headerName: name,
+      key: field,
+      title: name,
       width: width,
-      cellClass: 'leading-6 py-1',
-      cellRenderer: ({ data }: OrderSCRP) => {
-        return data ? (data as any)[field] : '-'
+      tdClassName: 'leading-6 py-1',
+      render: (_: any, row: any) => {
+        return row ? row[field] ?? '-' :'-';
       },
     })
   }
 
-  const len = defaultColumns.length
-  const frontCols = defaultColumns.slice(0, len - 2)
-  const endCols = defaultColumns.slice(-1)
+  const len = columns.length
+  const frontCols = columns.slice(0, len - 2)
+  const endCols = columns.slice(-1)
 
-  columns.value = [
-    ...frontCols,
-    ...serviceCols,
-    ...endCols,
-  ] as ColDef[]
+  columns.splice(0, columns.length, ...frontCols, ...serviceCols, ...endCols);
 }
 
 function handleImport(imeiList: string[], remark: string) {
@@ -193,7 +189,8 @@ function submitOrder(service: Service) {
 }
 
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
-  const errMsgCol = columns.value[5].field!
+  const resultColumn = columns.find(col => col.key === 'result');
+  const errMsgCol = resultColumn ? resultColumn.key : 'result';
   const result = []
 
   for (let item of data) {
@@ -218,7 +215,8 @@ function handleOrder(rawData: string) {
 
   const index = imeis.value.indexOf(data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
-  const resultCol = columns.value[5].field
+  const resultColumn = columns.find(col => col.key === 'result');
+  const resultCol = resultColumn ? resultColumn.key : 'result';
   const hasResult = resultCol === 'result'
 
   rawOrders.value[index] = {
@@ -292,6 +290,48 @@ function handlePushMsgChange(value: boolean) {
 
   if (!confirm) pushMsg.value = true
 }
+
+const columns: TableColumn[] = [
+  { key: 'index', title: '序号', width: 64 },
+  {
+    key: 'service',
+    title: '服务',
+    width: 220,
+    render: (_: any, row: OrderTableView) => {
+      if (!row) return '请选择服务';
+      if (row.serviceId) {
+        return `${row.serviceId} - ${row.serviceName}`;
+      }
+      return '请选择服务';
+    },
+  },
+  { key: 'imei', title: 'IMEI/SN', width: 164 },
+  { key: 'credits', title: '积分', width: 88 },
+  {
+    key: 'status',
+    title: '订单状态',
+    width: 128,
+    render: (_: any, row: OrderTableView) => {
+      const id = row?.status || ORDER_STATUS.WAIT;
+      const tag = ORDER_STATUS_MAP[id];
+      return h(XTag, {
+        color: tag?.color,
+        label: tag?.label,
+      });
+    },
+  },
+  {
+    key: 'result',
+    title: '订单结果',
+    flex: true,
+    width: 300,
+    tdClassName: 'leading-6 py-1',
+    render: (_: any, row: OrderTableView) => {
+      return row?.result ?? '-';
+    },
+  },
+  { key: 'remark', title: '备注', width: 180, flex: true },
+];
 </script>
 
 <template>
@@ -326,13 +366,15 @@ function handlePushMsgChange(value: boolean) {
         hideOnSinglePage
       />
     </section>
-    <AgGridVue
-      :theme="tableTheme"
-      :rowData="orders"
-      :columnDefs="columns"
-      :defaultColDef="columnOpts"
+  
+    <XTable
+      v-if="!submitLoading"
+      :data="orders"
+      :columns="columns"
+      row-key="index"
       class="h-[calc(100%-3rem)]"
     />
+
 
     <MustRead
       v-model="mustReadVisible"
