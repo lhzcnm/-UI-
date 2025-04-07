@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import type { ClassNameValue } from 'tailwind-merge'
 import { Icon } from '@iconify/vue'
-import { twJoin } from 'tailwind-merge'
+import { twJoin, twMerge } from 'tailwind-merge'
 import { menus, tools, EXPANDED_MENUS } from '@/utils'
 
+interface SidebarProps {
+  class: ClassNameValue
+}
+
+const props = defineProps<SidebarProps>()
 const expandedMenus = ref<string[]>([])
 provide(EXPANDED_MENUS, expandedMenus)
 
@@ -29,13 +35,18 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <aside class="flex flex-col w-sidebar border-r border-dashed">
+  <aside
+    :class="twMerge(
+      'flex flex-col w-sidebar bg-background border-r border-dashed',
+      props.class
+    )"
+  >
     <div class="flex items-center px-4 h-header">
       <TheLogo height="1.5rem" />
     </div>
 
     <nav class="flex-1 overflow-y-auto p-2 text-muted-foreground">
-      <ul class="flex flex-col space-y-1">
+      <ul class="flex flex-col sm:space-y-1">
         <SidebarItem
           v-for="menu in _menus"
           :key="menu.path"
@@ -44,11 +55,11 @@ onBeforeMount(() => {
       </ul>
 
       <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">工具</p>
-      <ul class="flex flex-col space-y-1">
+      <ul class="flex flex-col sm:space-y-1">
         <li v-for="tool in tools" :key="tool.path">
           <button
             :class="twJoin(
-              'flex items-center justify-between w-full px-3 h-8',
+              'flex items-center justify-between w-full px-3 h-10 sm:h-8',
               'rounded-md hover:bg-muted hover:text-accent-foreground',
             )"
           >

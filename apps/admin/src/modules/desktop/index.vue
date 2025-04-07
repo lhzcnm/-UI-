@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Sidebar from './components/Sidebar.vue'
 import TheHeader from './components/TheHeader.vue'
 import { useFullscreen } from '@vueuse/core'
 

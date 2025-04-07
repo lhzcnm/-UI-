@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { twJoin } from 'tailwind-merge'
+import { twMerge } from 'tailwind-merge'
 
 interface BreadcrumbProps {
   items: string[]
@@ -18,16 +18,9 @@ const lastIndex = computed(() => props.items.length - 1)
       </span>
 
       <span
-        v-if="index === lastIndex"
-        class="px-1.5 py-0.5 font-medium"
-      >
-        {{ item }}
-      </span>
-      <span
-        v-else
-        :class="twJoin(
-          'px-1.5 py-0.5 text-muted-foreground rounded-md transition-colors',
-          'hover:text-foreground hover:bg-muted cursor-pointer',
+        :class="twMerge(
+          'px-1.5 py-0.5 font-medium cursor-default text-muted-foreground',
+          index === lastIndex && 'text-foreground',
         )"
       >
         {{ item }}
