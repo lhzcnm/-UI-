@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { XButton } from '@3un/ui'
+
 import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { stripHtml } from '@3un/utils'
+import { ref } from 'vue'
+import { useClipboard, useThrottleFn } from '@vueuse/core'
+import { toast } from 'vue-sonner'
+
 import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
-import { toast } from 'vue-sonner'
-import { useClipboard, useThrottleFn } from '@vueuse/core'
-import { stripHtml } from '@3un/utils'
-import {  ref } from 'vue'
 import { HISTORY_STORE } from '../utils'
 
 const props = defineProps<{

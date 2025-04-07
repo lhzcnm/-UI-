@@ -1,4 +1,5 @@
 import type { TableColumn } from '@3un/ui'
+
 import type { CreditLogItem } from '@/api/user'
 
 export const columns: TableColumn[] = [

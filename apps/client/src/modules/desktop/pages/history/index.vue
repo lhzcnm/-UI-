@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
-import { columns } from './utils/columns'
-
-import { orderApi } from '@/api/orders'
+import { XButton } from '@3un/ui'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { XButton } from '@3un/ui'
+import { columns } from './utils/columns'
+import { orderApi } from '@/api/orders'
 
 const page = ref(1)
 const pageSize = ref(20)

@@ -2,21 +2,19 @@
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import MustRead from './components/MustRead.vue'
-import type { TableColumn } from '@3un/ui'
-import {XButton } from '@3un/ui'
-import { createDefaultColumns, mergeColumns } from './utils/columns'
+import { XButton } from '@3un/ui'
 
+import type { TableColumn } from '@3un/ui'
+import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
 
 import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
+import { orderApi } from '@/api/orders'
 import type { Service } from '@/api/services'
 import { serviceApi } from '@/api/services'
-import { orderApi } from '@/api/orders'
-
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
-
-import { downloadURL } from '@3un/utils'
+import { createDefaultColumns, mergeColumns } from './utils/columns'
 
 const props = defineProps<{ id: string }>()
 

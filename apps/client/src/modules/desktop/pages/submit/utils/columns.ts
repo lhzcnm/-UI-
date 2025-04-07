@@ -1,7 +1,9 @@
-import type { TableColumn } from '@3un/ui'
 import { XTag } from '@3un/ui'
-import type { OrderTableView } from '@/api/orders'
+
+import type { TableColumn } from '@3un/ui'
 import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/shared/enums'
+
+import type { OrderTableView } from '@/api/orders'
 
 /**
  * 创建默认列定义

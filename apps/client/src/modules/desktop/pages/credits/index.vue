@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { userApi } from '@/api/user'
 import type { CreditLogsResponse } from '@/api/user'
+import { userApi } from '@/api/user'
 import { columns } from './utils/columns'
 
 const page = ref(1)

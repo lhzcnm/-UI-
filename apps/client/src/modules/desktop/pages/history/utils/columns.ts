@@ -1,7 +1,9 @@
-import type { TableColumn } from '@3un/ui'
-import { XTag } from '@3un/ui'
 import TableActions from '../components/TableActions.vue'
+import { XTag } from '@3un/ui'
+
+import type { TableColumn } from '@3un/ui'
 import { ORDER_STATUS_MAP, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
+
 import type { Order } from '@/api/orders'
 
 const serviceStore = useServiceStore()
