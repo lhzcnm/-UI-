@@ -2,9 +2,9 @@
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import MustRead from './components/MustRead.vue'
-import type { TableColumn } from '@3un/ui';
-import { XTag, XButton } from '@3un/ui'
-
+import type { TableColumn } from '@3un/ui'
+import {XButton } from '@3un/ui'
+import { createDefaultColumns, mergeColumns } from './utils/columns'
 
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
@@ -14,8 +14,7 @@ import type { Service } from '@/api/services'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
 
-
-import { ORDER_STATUS,ORDER_STATUS_MAP, ORDER_VERTIFY } from '@3un/shared/enums'
+import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
 
 import { downloadURL } from '@3un/utils'
 
@@ -29,6 +28,8 @@ const page = ref(1)
 const pageSize = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
+
+const columns = shallowRef<TableColumn[]>(createDefaultColumns())
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
@@ -45,7 +46,7 @@ const selectedId = ref(+props.id)
 const orders = computed(() => {
   return rawOrders.value.slice(
     (page.value - 1) * pageSize.value,
-    page.value * pageSize.value,
+    page.value * pageSize.value
   )
 })
 
@@ -75,16 +76,12 @@ async function handleSelected(value: number) {
       width: width,
       tdClassName: 'leading-6 py-1',
       render: (_: any, row: any) => {
-        return row ? row[field] ?? '-' :'-';
-      },
+        return row ? row[field] ?? '-' : '-'
+      }
     })
   }
 
-  const len = columns.length
-  const frontCols = columns.slice(0, len - 2)
-  const endCols = columns.slice(-1)
-
-  columns.splice(0, columns.length, ...frontCols, ...serviceCols, ...endCols);
+  columns.value = mergeColumns(serviceCols)
 }
 
 function handleImport(imeiList: string[], remark: string) {
@@ -110,7 +107,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       imei: imeiList[i],
       remark: remark,
       result: '',
-      createTime: '',
+      createTime: ''
     })
   }
 
@@ -132,7 +129,7 @@ function handleSubmit() {
 function submitQueryOrder(service: Service) {
   const { data, status } = connect({
     serviceId: service.id,
-    type: 'order',
+    type: 'order'
   })
 
   watch(
@@ -163,7 +160,7 @@ function submitOrder(service: Service) {
     serviceId: service.id,
     imeiList: imeis.value,
     remark: comments.value,
-    isBulk: !pushMsg.value,
+    isBulk: !pushMsg.value
   }
 
   const response = orderApi.submit(params)
@@ -171,7 +168,7 @@ function submitOrder(service: Service) {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success('提交成功，请稍后前往“我的订单”页面查看')
+      toast.success('提交成功，请稍后前往"我的订单"页面查看')
       return
     }
 
@@ -189,8 +186,8 @@ function submitOrder(service: Service) {
 }
 
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
-  const resultColumn = columns.find(col => col.key === 'result');
-  const errMsgCol = resultColumn ? resultColumn.key : 'result';
+ 
+  const errMsgCol = columns.value[5].key
   const result = []
 
   for (let item of data) {
@@ -215,8 +212,8 @@ function handleOrder(rawData: string) {
 
   const index = imeis.value.indexOf(data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
-  const resultColumn = columns.find(col => col.key === 'result');
-  const resultCol = resultColumn ? resultColumn.key : 'result';
+
+  const resultCol = columns.value[5].key
   const hasResult = resultCol === 'result'
 
   rawOrders.value[index] = {
@@ -224,7 +221,7 @@ function handleOrder(rawData: string) {
     ...(hasResult && { result: data.result }),
     ...(!hasResult && processOrderResult(data.result)),
     status: data.status,
-    id: data.id,
+    id: data.id
   }
 }
 
@@ -290,48 +287,6 @@ function handlePushMsgChange(value: boolean) {
 
   if (!confirm) pushMsg.value = true
 }
-
-const columns: TableColumn[] = [
-  { key: 'index', title: '序号', width: 64 },
-  {
-    key: 'service',
-    title: '服务',
-    width: 220,
-    render: (_: any, row: OrderTableView) => {
-      if (!row) return '请选择服务';
-      if (row.serviceId) {
-        return `${row.serviceId} - ${row.serviceName}`;
-      }
-      return '请选择服务';
-    },
-  },
-  { key: 'imei', title: 'IMEI/SN', width: 164 },
-  { key: 'credits', title: '积分', width: 88 },
-  {
-    key: 'status',
-    title: '订单状态',
-    width: 128,
-    render: (_: any, row: OrderTableView) => {
-      const id = row?.status || ORDER_STATUS.WAIT;
-      const tag = ORDER_STATUS_MAP[id];
-      return h(XTag, {
-        color: tag?.color,
-        label: tag?.label,
-      });
-    },
-  },
-  {
-    key: 'result',
-    title: '订单结果',
-    flex: true,
-    width: 300,
-    tdClassName: 'leading-6 py-1',
-    render: (_: any, row: OrderTableView) => {
-      return row?.result ?? '-';
-    },
-  },
-  { key: 'remark', title: '备注', width: 180, flex: true },
-];
 </script>
 
 <template>
@@ -368,13 +323,11 @@ const columns: TableColumn[] = [
     </section>
   
     <XTable
-      v-if="!submitLoading"
       :data="orders"
       :columns="columns"
       row-key="index"
       class="h-[calc(100%-3rem)]"
     />
-
 
     <MustRead
       v-model="mustReadVisible"
