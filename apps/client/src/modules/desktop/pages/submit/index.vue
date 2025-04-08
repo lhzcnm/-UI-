@@ -2,7 +2,6 @@
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import MustRead from './components/MustRead.vue'
-import { XButton } from '@3un/ui'
 
 import type { TableColumn } from '@3un/ui'
 import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
@@ -10,11 +9,11 @@ import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
 
-import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
-import { orderApi } from '@/api/orders'
 import type { Service } from '@/api/services'
+import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
+import { getDefaultColumns, mergeColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
-import { createDefaultColumns, mergeColumns } from './utils/columns'
+import { orderApi } from '@/api/orders'
 
 const props = defineProps<{ id: string }>()
 
@@ -23,11 +22,10 @@ const store = useServiceStore()
 const { connect, close } = useWsStore()
 
 const page = ref(1)
-const pageSize = ref(50)
+const limit = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
-
-const columns = shallowRef<TableColumn[]>(createDefaultColumns())
+const columns = shallowRef<TableColumn[]>(getDefaultColumns())
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
@@ -43,8 +41,8 @@ const selectedId = ref(+props.id)
 
 const orders = computed(() => {
   return rawOrders.value.slice(
-    (page.value - 1) * pageSize.value,
-    page.value * pageSize.value
+    (page.value - 1) * limit.value,
+    page.value * limit.value
   )
 })
 
@@ -56,25 +54,33 @@ async function handleSelected(value: number) {
 
   // handle reselect service
   if (rawOrders.value.length > 0 && imeis.value.length > 0) {
-    console.log('reselect service', value, imeis.value, comments.value)
     rawOrders.value = processWaitList(value, imeis.value, comments.value)
     submited.value = false
   }
 
+  await handleServiceCols(value)
+}
+
+async function handleServiceCols(value: number) {
   const { data } = await serviceApi.header(value)
-  if (data.length === 0) return
+
+  if (data.length === 0) {
+    columns.value = getDefaultColumns()
+    return
+  }
 
   const serviceCols: TableColumn[] = []
   for (const item of data) {
     const { name, width } = item
     const field = hash(name)
+
     serviceCols.push({
       key: field,
       title: name,
       width: width,
       tdClassName: 'leading-6 py-1',
       render: (_: any, row: any) => {
-        return row ? row[field] ?? '-' : '-'
+        return h('span', { innerHTML: row[field] })
       }
     })
   }
@@ -184,7 +190,6 @@ function submitOrder(service: Service) {
 }
 
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
- 
   const errMsgCol = columns.value[5].key
   const result = []
 
@@ -301,7 +306,7 @@ function handlePushMsgChange(value: boolean) {
         <XButton label="导出" color="emerald" @click="handleExport" />
         <XButton label="清空" color="rose" @click="reset" />
         <XButton
-          v-if="mustRead" variant="outline"
+          v-show="mustRead" variant="outline"
           label="服务说明" color="amber"
           @click="mustReadVisible = true"
         />
@@ -314,7 +319,7 @@ function handlePushMsgChange(value: boolean) {
 
       <XPagination
         v-model="page"
-        v-model:size="pageSize"
+        v-model:size="limit"
         :total="rawOrders.length"
         hideOnSinglePage
       />

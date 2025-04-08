@@ -145,7 +145,7 @@ const handleRowDblClick = rowClickWrapper('row-dblclick')
         </tr>
       </thead>
       <tbody
-        class="h-96"
+        :class="{ 'h-96': !data.length }"
         @click="handleRowClick"
         @dblclick="handleRowDblClick"
       >
