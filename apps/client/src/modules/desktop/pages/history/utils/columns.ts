@@ -8,26 +8,18 @@ import type { Order } from '@/api/orders'
 
 const serviceStore = useServiceStore()
 
-let isServiceLoaded = false
-async function ensureServicesLoaded() {
-  if (!isServiceLoaded) {
-    await serviceStore.getServices()
-    isServiceLoaded = true
-  }
-}
-
 export const columns: TableColumn[] = [
   { key: 'id', title: 'ID', width: 108 },
   {
     key: 'service',
     title: '服务',
     width: 220,
-    render: async (_, row: Order) => {
-      await ensureServicesLoaded()
+    render: (_: any, row: Order) => {
       const service = serviceStore.services.get(row.serviceId)
+
       if (!service) return '未知'
       return `${service.id} - ${service.title}`
-    }
+    },
   },
   { key: 'imei', title: 'IMEI/SN', width: 168 },
   { key: 'credits', title: '积分', width: 68 },

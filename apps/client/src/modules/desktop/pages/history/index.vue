@@ -8,6 +8,7 @@ import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { columns } from './utils/columns'
 import { orderApi } from '@/api/orders'
 
+const serviceStore = useServiceStore()
 const page = ref(1)
 const pageSize = ref(20)
 
@@ -21,6 +22,8 @@ const store: HistoryStore = reactive({
 
 provide(HISTORY_STORE, store)
 
+await serviceStore.getServices()
+
 watch(
   [page, pageSize],
   async ([pageVal, pageSizeVal]) => {
@@ -28,7 +31,7 @@ watch(
     const response = await orderApi.list({
       pageSize: pageSizeVal,
       page: pageVal,
-      ...params
+      ...params,
     })
     store.orders = response.data
   },
