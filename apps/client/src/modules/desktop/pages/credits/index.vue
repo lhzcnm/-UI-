@@ -5,9 +5,12 @@ import { columns } from './utils/columns'
 
 const page = ref(1)
 const pageSize = ref(20)
-
 const loading = ref(false)
+
 const creditLogs = ref<CreditLogsResponse>()
+
+const serviceStore = useServiceStore()
+await serviceStore.getServices()
 
 watch(
   [page, pageSize],

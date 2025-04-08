@@ -1,6 +1,7 @@
 import type { TableColumn } from '@3un/ui'
-
 import type { CreditLogItem } from '@/api/user'
+
+const store = useServiceStore()
 
 export const columns: TableColumn[] = [
   {
@@ -8,13 +9,9 @@ export const columns: TableColumn[] = [
     title: '项目',
     width: 220,
     render: (_, row: CreditLogItem) => {
-      if (!row) return '-'
-      if (row.packageId) {
-        const id = row.packageId ?? 0
-        const title = row.packageTitle ?? '找不到服务'
-        return `${id} - ${title}`
-      }
-      return '积分充值'
+      if (!row.packageId) return '积分充值'
+      const service = store.services.get(row.packageId)!
+      return `${service.id} - ${service.title}`
     }
   },
   {
@@ -26,12 +23,13 @@ export const columns: TableColumn[] = [
     key: 'credits',
     title: '变动金额',
     width: 108,
-    render: (_, row: CreditLogItem) => {
-      if (!row) return '-'
-      const isSubmit = row.description.includes('订单提交')
-      const value = isSubmit ? `-${row.credits}` : `+${row.credits}`
-      const color = isSubmit ? 'text-rose-500' : 'text-emerald-500'
-      return h('span', { class: color }, value)
+    render: (value: number, row: CreditLogItem) => {
+      const isSubmit = /订单提交|Code Request/.test(row.description)
+      const isReduce = isSubmit || row.description === '管理员扣除积分'
+      const label = isReduce ? `-${Math.abs(value)}` : `+${value}`
+      const color = isReduce ? 'text-rose-500' : 'text-emerald-500'
+
+      return h('span', { class: color }, label)
     }
   },
   {

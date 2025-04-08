@@ -2,9 +2,13 @@ import TableActions from '../components/TableActions.vue'
 import { XTag } from '@3un/ui'
 
 import type { TableColumn } from '@3un/ui'
-import { ORDER_STATUS_MAP, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
-
 import type { Order } from '@/api/orders'
+import {
+  ORDER_STATUS,
+  ORDER_STATUS_MAP,
+  ORDER_VERTIFY,
+  ORDER_VERTIFY_MAP
+} from '@3un/shared/enums'
 
 const serviceStore = useServiceStore()
 
@@ -17,7 +21,7 @@ export const columns: TableColumn[] = [
     render: (_: any, row: Order) => {
       const service = serviceStore.services.get(row.serviceId)
 
-      if (!service) return '未知'
+      if (!service) return '服务不存在'
       return `${service.id} - ${service.title}`
     },
   },
@@ -27,24 +31,18 @@ export const columns: TableColumn[] = [
     key: 'status',
     title: '订单状态',
     width: 98,
-    render: (value: any) => {
+    render: (value: ORDER_STATUS) => {
       const tag = ORDER_STATUS_MAP[value]
-      return h(XTag, {
-        color: tag?.color,
-        label: tag?.label
-      })
+      return h(XTag, tag)
     }
   },
   {
     key: 'verify',
     title: '验证状态',
     width: 98,
-    render: (value: any) => {
+    render: (value: ORDER_VERTIFY) => {
       const tag = ORDER_VERTIFY_MAP[value]
-      return h(XTag, {
-        color: tag?.color,
-        label: tag?.label
-      })
+      return h(XTag, tag)
     }
   },
   {
@@ -52,7 +50,7 @@ export const columns: TableColumn[] = [
     title: '订单结果',
     width: 320,
     tdClassName: 'leading-6 py-1',
-    render: (value: any) => {
+    render: (value: string) => {
       return h('div', { innerHTML: value })
     }
   },
