@@ -3,11 +3,11 @@ export interface SidebarMenu {
   path: string
   icon: string
   badge?: number
-  match: string[] | string
+  match?: string[] | string
   children?: SidebarMenuChild[]
 }
 export interface SidebarMenuChild {
-  match: string[] | string
+  match?: string[] | string
   label: string
   path: string
   icon?: string
@@ -25,7 +25,6 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:users',
     label: '用户管理',
     path: '/users',
-    match: 'yonghuguanli',
     children: [
       { label: '会员', match: 'huiyuan', path: 'all' },
       { label: '管理员', match: 'guanliyuan', icon: 'lucide:smile', path: 'admin' },
@@ -37,7 +36,6 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:package-2',
     label: '服务管理',
     path: '/service',
-    match: 'fuwuguanli',
     children: [
       { label: '字段分割', match: 'zifuangengfen', icon: 'lucide:square-split-horizontal', path: 'fields' },
       { label: '解锁推荐', match: 'jiesuojianyi', icon: 'lucide:flame', path: 'unlock' },
@@ -49,7 +47,6 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:shopping-bag',
     label: '订单管理',
     path: '/orders',
-    match: 'dingdanguanli',
     children: [
       { label: '全部订单', match: 'quandingdan', path: 'all' },
       { label: '订单验证', match: 'dingdanyanzheng', path: 'verify', icon: 'lucide:check-circle', badge: 9 },
@@ -61,7 +58,6 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:credit-card',
     label: '充值管理',
     path: '/recharge',
-    match: 'chongzhiguanli',
     children: [
       { label: '会员充值', match: 'huiyuanchongzhi', path: 'all' },
       { label: '今日充值', match: 'jinritianchongzhi', icon: 'lucide:calendar-days', path: 'today' },
@@ -72,7 +68,6 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:hard-drive',
     label: '日志管理',
     path: '/logs',
-    match: 'rizhiguanli',
     children: [
       { label: '用户登录日志', match: 'yonghudengluri', path: 'user' },
       { label: '管理员登录日志', match: 'guanliyuandengluri', icon: 'lucide:paw-print', path: 'admin' },
@@ -82,7 +77,6 @@ export const menus: SidebarMenu[] = [
     icon: 'ph:wechat-logo',
     label: '微信管理',
     path: '/wechart',
-    match: 'weixinguanli',
     children: [
       { label: '菜单栏', match: 'caidanlan', path: 'menu' },
       { label: '客服消息', match: 'kefuxiaoxi', icon: 'lucide:message-circle-more', path: 'message' },

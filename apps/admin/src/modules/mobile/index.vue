@@ -1,6 +1,45 @@
+<script setup lang="ts">
+import TheHeader from './components/TheHeader.vue'
+import Fallback from '@/components/Fallback.vue'
+import { twJoin } from 'tailwind-merge'
+
+const iStore = useSystemStore()
+const route = useRoute()
+</script>
+
 <template>
-  <div class="flex flex-col items-center justify-center h-screen">
-    <TheLogo height="2rem" class="mb-12" />
-    <RouterView />
+  <div class="flex flex-col h-screen">
+    <TheHeader />
+    <RouterView v-slot="{ Component }" :key="route.path">
+      <main v-if="Component" class="flex-1 overflow-y-auto">
+        <Transition name="fade-in" mode="out-in">
+          <Suspense>
+            <component :is="Component" />
+
+            <template #fallback>
+              <Fallback />
+            </template>
+          </Suspense>
+        </Transition>
+      </main>
+    </RouterView>
+
+    <!-- siderbar -->
+    <Transition name="fade-in">
+      <div
+        v-if="iStore.showSidebar"
+        class=" absolute top-0 left-0 size-full bg-black/80"
+        @click="iStore.showSidebar = false"
+      />
+    </Transition>
+    <Transition name="slide-left">
+      <Sidebar
+        v-if="iStore.showSidebar"
+        :class="twJoin(
+          'fixed top-0 left-0 z-20 w-[80%]',
+          'will-change-transform h-screen border-solid'
+        )"
+      />
+    </Transition>
   </div>
 </template>

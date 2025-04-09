@@ -54,7 +54,7 @@ const isActive = computed(() => {
   <li>
     <button
       :class="twJoin(
-        'flex items-center justify-between w-full px-3 h-8',
+        'flex items-center justify-between w-full px-3 h-10 sm:h-8',
         'rounded-md hover:bg-muted hover:text-accent-foreground',
         isActive && 'bg-muted text-accent-foreground',
       )"
@@ -76,12 +76,12 @@ const isActive = computed(() => {
       v-show="menu.children && isExpanded"
       class="mx-5 mt-1 pl-2 text-sm border-l border-dashed"
     >
-      <ul class="flex flex-col space-y-1">
+      <ul class="flex flex-col">
         <li v-for="child in menu.children" :key="child.path">
           <RouterLink
             :to="child.path"
             :class="twJoin(
-              'flex items-center px-3 h-7 space-x-1',
+              'flex items-center px-3 h-9 sm:h-7 space-x-1',
               'rounded-md hover:bg-muted hover:text-accent-foreground',
               route.path === child.path && 'bg-muted text-accent-foreground',
             )"

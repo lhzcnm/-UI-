@@ -21,9 +21,6 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --input-hover: 214.3 31.8% 82.6%; */
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --input-hover: 240 5.9% 82.6%;
@@ -48,9 +45,6 @@
     --card-foreground: 210 40% 98%;
     --popover-foreground: 210 40% 98%;
 
-    /* --border: 200, 8%, 18%;
-    --input: 220, 8%, 26%;
-    --input-hover: 200, 8%, 32%; */
     --border: 240 3.7% 18%;
     --input: 240 3.7% 26%;
     --input-hover: 240 3.7% 25%;
@@ -136,4 +130,13 @@
 .sidebar-leave-from {
   transform: translateX(0);
   opacity: 1;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(-100%);
 }

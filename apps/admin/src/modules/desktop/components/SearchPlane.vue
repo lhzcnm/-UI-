@@ -32,16 +32,8 @@ const _menus = menus.map(menu => {
 })
 
 const rawOptions: Options<SidebarMenuChild>[] = [
-  {
-    label: '工具',
-    value: 'tool',
-    children: tools,
-  },
-  {
-    label: '路由',
-    value: 'route',
-    children: _menus.flat(),
-  },
+  { label: '工具', value: 'tool', children: tools },
+  { label: '路由', value: 'route', children: _menus.flat() },
 ]
 
 const options = computed<SearchOptions[]>(() => {
@@ -78,6 +70,7 @@ function getRouteOptions(searchTerm: string) {
       const path = child.path.toLowerCase()
       if (path.includes(searchTerm)) return true
 
+      if (!child.match) return false
       if (Array.isArray(child.match)) {
         return child.match.some((match) =>
           match.toLowerCase().includes(searchTerm)
@@ -125,8 +118,11 @@ function handleCommand(command: string, event: MouseEvent) {
     v-model="visible"
     content-class="sm:max-w-md p-0 sm:p-0 border"
   >
-    <div class="relative border-b p-1 text-muted-foreground">
-      <Icon icon="lucide:search" class="size-5 absolute left-3 top-1/2 -translate-y-1/2" />
+    <div class="relative border-b p-1">
+      <Icon
+        icon="lucide:search"
+        class="size-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+      />
       <input
         v-model="search" placeholder="请输入..."
         :class="twJoin(
