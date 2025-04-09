@@ -1,8 +1,8 @@
 export interface TableColumn {
   key: string
   title?: string
+  minWidth?: number
   width?: number
-  flex?: boolean
   visible?: boolean
   thClassName?: string
   tdClassName?: string
@@ -25,4 +25,5 @@ export interface TableProps {
 export interface TableEmits {
   (e: 'row-click', row: any, index: number): void
   (e: 'row-dblclick', row: any, index: number): void
+  (e: 'select-change', list: any[]): void
 }

@@ -1,57 +1,58 @@
-import type { OrderTableDefs, OrderSCRP } from '@/api/orders'
-import type { ColDef } from 'ag-grid-community'
+import { XTag } from '@3un/ui'
 
+import type { TableColumn } from '@3un/ui'
+import type { OrderTableView } from '@/api/orders'
 import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/shared/enums'
-import TheTag from '@desktop/components/TheTag.vue'
 
-export const columnOpts: ColDef = {
-  resizable: false,
-  sortable: false,
-}
-
-export const defaultColumns: OrderTableDefs = [
-  { field: 'index', headerName: '序号', width: 64 },
+export const getDefaultColumns = (): TableColumn[] => ([
   {
-    field: 'service',
-    headerName: '服务',
+    key: 'index',
+    title: '序号',
+    align: 'center',
+    width: 64
+  },
+  {
+    key: 'service',
+    title: '服务',
     width: 220,
-    valueFormatter: ({ data }) => {
-      if (data && (data as any).serviceId) {
-        const { serviceId, serviceName } = data as any
-        return `${serviceId} - ${serviceName}`
-      }
-
-      return '请选择服务'
-    },
+    render: (_: any, row: OrderTableView) => {
+      if (!row || !row.serviceId) return '请选择服务'
+      return `${row.serviceId} - ${row.serviceName}`
+    }
   },
-  { field: 'imei', headerName: 'IMEI/SN', width: 164 },
-  { field: 'credits', headerName: '积分', width: 88 },
+  { key: 'imei', title: 'IMEI/SN', width: 164 },
+  { key: 'credits', title: '积分', width: 88 },
   {
-    field: 'status',
-    headerName: '订单状态',
+    key: 'status',
+    title: '订单状态',
     width: 128,
-    cellRenderer: TheTag,
-    cellRendererParams: ({ data }: OrderSCRP) => {
-      const id = data?.status || ORDER_STATUS.WAIT
-      return ORDER_STATUS_MAP[id]
-    },
+    render: (value: ORDER_STATUS) => {
+      const id = value || ORDER_STATUS.WAIT
+      const tag = ORDER_STATUS_MAP[id]
+      return h(XTag, tag)
+    }
   },
   {
-    field: 'result',
-    headerName: '订单结果',
-    flex: 1,
+    key: 'result',
+    title: '订单结果',
     minWidth: 300,
-    wrapText: true,
-    autoHeight: true,
-    cellClass: 'leading-6 py-1',
-    cellRenderer: ({ data }: OrderSCRP) => {
-      return data?.result ?? '-'
-    },
+    tdClassName: 'leading-6 py-1',
+    render: (value: string) => {
+      return h('span', { innerHTML: value })
+    }
   },
-  {
-    field: 'remark',
-    headerName: '备注',
-    minWidth: 180,
-    flex: 1,
-  },
-]
+  { key: 'remark', title: '备注', minWidth: 180 }
+])
+
+export function mergeColumns(serviceCols: TableColumn[]): TableColumn[] {
+  const defaultCols = getDefaultColumns()
+  const len = defaultCols.length
+  const frontCols = defaultCols.slice(0, len - 2)
+  const endCols = defaultCols.slice(-1)
+
+  return [
+    ...frontCols,
+    ...serviceCols,
+    ...endCols
+  ]
+}

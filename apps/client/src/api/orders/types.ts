@@ -1,4 +1,4 @@
-import type { ColDef, ICellRendererParams } from 'ag-grid-community'
+
 
 import type { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
 import type { IList, IPage, R } from '@3un/shared'
@@ -38,21 +38,6 @@ export interface OrderTableView {
   credits: number
   remark: string
   result: string
-  createTime: string
-}
-export type OrderSCRP = ICellRendererParams<OrderTableView>
-export type OrderTableDefs = ColDef<OrderTableCol>[]
-export interface OrderTableCol {
-  id: number
-  index: number
-  service: string
-  imei: string
-  credits: number
-  status: ORDER_STATUS
-  verify: ORDER_VERTIFY
-  result: string
-  action: string
-  remark: string
   createTime: string
 }
 

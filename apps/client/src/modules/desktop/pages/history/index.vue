@@ -1,26 +1,24 @@
 <script setup lang="ts">
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
-import type { ColDef } from 'ag-grid-community'
-import { AgGridVue } from 'ag-grid-vue3'
-
-import tableTheme from '@desktop/utils/table'
-import { orderApi } from '@/api/orders'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { defaultColumns, columnOpts } from './utils/columns'
+import { columns } from './utils/columns'
+import { orderApi } from '@/api/orders'
+
+const serviceStore = useServiceStore()
+await serviceStore.getServices()
 
 const page = ref(1)
 const pageSize = ref(20)
 
-const columns = ref<ColDef[]>(defaultColumns)
 const store: HistoryStore = reactive({
   orders: { list: [], page: 1, total: 0, pageSize: 20 },
   searchForm: { ...form.search },
   exportForm: { ...form.export },
   visibleSearch: false,
-  visibleExport: false,
+  visibleExport: false
 })
 
 provide(HISTORY_STORE, store)
@@ -29,16 +27,14 @@ watch(
   [page, pageSize],
   async ([pageVal, pageSizeVal]) => {
     const params = formatOrderParams(store.searchForm)
-
     const response = await orderApi.list({
       pageSize: pageSizeVal,
       page: pageVal,
       ...params,
     })
-
     store.orders = response.data
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 function openSearch() {
@@ -74,12 +70,10 @@ function openExport() {
       />
     </section>
 
-    <AgGridVue
-      :theme="tableTheme"
-      :rowData="store.orders.list"
-      :columnDefs="columns"
-      :defaultColDef="columnOpts"
-      suppressRowHoverHighlight
+    <XTable
+      :data="store.orders.list"
+      :columns="columns"
+      row-key="id"
       class="h-[calc(100%-3rem)]"
     />
 

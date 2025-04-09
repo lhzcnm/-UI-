@@ -1,70 +1,67 @@
-import type { OrderTableDefs, OrderSCRP, OrderTableView } from '@/api/orders'
-import type { ColDef } from 'ag-grid-community'
+import TableActions from '../components/TableActions.vue'
+import { XTag } from '@3un/ui'
 
-import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
-import TableAction from '../components/TableAction.vue'
-import TheTag from '@desktop/components/TheTag.vue'
+import type { TableColumn } from '@3un/ui'
+import type { Order } from '@/api/orders'
+import {
+  ORDER_STATUS,
+  ORDER_STATUS_MAP,
+  ORDER_VERTIFY,
+  ORDER_VERTIFY_MAP
+} from '@3un/shared/enums'
 
-const store = useServiceStore()
+const serviceStore = useServiceStore()
 
-export const columnOpts: ColDef = {
-  resizable: false,
-  sortable: false,
-}
-
-export const defaultColumns: OrderTableDefs = [
-  { field: 'id', headerName: 'ID', width: 108 },
+export const columns: TableColumn[] = [
+  { key: 'id', title: 'ID', width: 108 },
   {
-    field: 'service',
-    headerName: '服务',
-    valueFormatter: ({ data }) => {
-      const id = (data as any).serviceId ?? 0
-      const service = store.services.get(id)
-      const title = service?.title ?? '找不到服务'
-      return `${id} - ${title}`
+    key: 'service',
+    title: '服务',
+    width: 220,
+    render: (_: any, row: Order) => {
+      const service = serviceStore.services.get(row.serviceId)
+
+      if (!service) return '服务不存在'
+      return `${service.id} - ${service.title}`
     },
   },
-  { field: 'imei', headerName: 'IMEI/SN', resizable: false, width: 164 },
-  { field: 'credits', headerName: '积分', resizable: false, width: 88 },
+  { key: 'imei', title: 'IMEI/SN', width: 158 },
+  { key: 'credits', title: '积分', width: 58 },
   {
-    field: 'status',
-    headerName: '订单状态',
-    width: 128,
-    cellRenderer: TheTag,
-    cellRendererParams: ({ data }: OrderSCRP) => {
-      const id = data?.status ?? ORDER_STATUS.WAIT
-      return ORDER_STATUS_MAP[id]
-    },
+    key: 'status',
+    title: '订单状态',
+    width: 88,
+    render: (value: ORDER_STATUS) => {
+      const tag = ORDER_STATUS_MAP[value]
+      return h(XTag, tag)
+    }
   },
   {
-    field: 'verify',
-    headerName: '验证状态',
-    width: 128,
-    cellRenderer: TheTag,
-    cellRendererParams: ({ data }: OrderSCRP) => {
-      const id = data?.verify ?? ORDER_VERTIFY.NORMAL
-      return ORDER_VERTIFY_MAP[id]
-    },
+    key: 'verify',
+    title: '验证状态',
+    width: 88,
+    render: (value: ORDER_VERTIFY) => {
+      const tag = ORDER_VERTIFY_MAP[value]
+      return h(XTag, tag)
+    }
   },
   {
-    field: 'result',
-    headerName: '订单结果',
-    flex: 1,
+    key: 'result',
+    title: '订单结果',
     minWidth: 300,
-    wrapText: true,
-    autoHeight: true,
-    cellClass: 'leading-6 py-1',
-    cellRenderer: ({ data }: OrderSCRP) => {
-      return data?.result ?? '-'
-    },
+    tdClassName: 'leading-6 py-1',
+    render: (value: string) => {
+      return h('div', { innerHTML: value })
+    }
   },
-  { field: 'remark', headerName: '备注', minWidth: 180 },
+  { key: 'remark', title: '备注', minWidth: 180, },
   {
-    field: 'action',
-    headerName: '操作',
-    pinned: 'right',
+    key: 'action',
+    title: '操作',
+    fixed: 'right',
     width: 280,
-    cellRenderer: TableAction,
-    cellRendererParams: ({ data }: OrderSCRP) => data,
-  },
+    render: (_, row: Order) => {
+      return h(TableActions, { row })
+    }
+  }
 ]

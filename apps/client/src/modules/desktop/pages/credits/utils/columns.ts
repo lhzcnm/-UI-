@@ -1,76 +1,60 @@
-import type { ColDef, ICellRendererParams } from 'ag-grid-community'
+import type { TableColumn } from '@3un/ui'
 import type { CreditLogItem } from '@/api/user'
 
-type SCRP = ICellRendererParams<CreditLogItem>
-interface TableCreditLogItem {
-  service: string
-  imeiNo: string
-  ip: string
-  credits: number
-  creditsLeft: string
-  description: string
-  historyDtTm: string
-  comments: string
-}
+const store = useServiceStore()
 
-const columns: ColDef<TableCreditLogItem>[] = [
+export const columns: TableColumn[] = [
   {
-    field: 'service',
-    headerName: '项目',
-    minWidth: 220,
-    cellRenderer: (params: SCRP) => {
-      if (!params.data) return '-'
-      if (params.data.packageId) {
-        const id = params.data.packageId ?? 0
-        const title = params.data.packageTitle ?? '找不到服务'
-        return `${id} - ${title}`
-      }
-      return '积分充值'
-    },
+    key: 'service',
+    title: '项目',
+    width: 220,
+    render: (_, row: CreditLogItem) => {
+      if (!row.packageId) return '积分充值'
+      const service = store.services.get(row.packageId)!
+      return `${service.id} - ${service.title}`
+    }
   },
   {
-    headerName: 'IMEI',
-    field: 'imeiNo',
-    minWidth: 180,
+    key: 'imeiNo',
+    title: 'IMEI',
+    width: 180
   },
   {
-    headerName: '变动金额',
-    field: 'credits',
-    minWidth: 108,
-    cellRenderer: (params: SCRP) => {
-      if (!params.data) return '-'
-      const isSubmit = params.data.description.includes('订单提交')
-      const value = isSubmit ? `-${params.data.credits}` : `+${params.data.credits}`
-      const color = isSubmit ? 'text-rose-500' : 'text-emerald-500'
-      return `<span class="${color}">${value}</span>`
-    },
+    key: 'credits',
+    title: '变动金额',
+    width: 108,
+    render: (value: number, row: CreditLogItem) => {
+      const isSubmit = /订单提交|Code Request/.test(row.description)
+      const isReduce = isSubmit || row.description === '管理员扣除积分'
+      const label = isReduce ? `-${Math.abs(value)}` : `+${value}`
+      const color = isReduce ? 'text-rose-500' : 'text-emerald-500'
+
+      return h('span', { class: color }, label)
+    }
   },
   {
-    headerName: '余额',
-    field: 'creditsLeft',
-    minWidth: 64,
+    key: 'creditsLeft',
+    title: '余额',
+    width: 64
   },
   {
-    headerName: '变更原因',
-    field: 'description',
-    minWidth: 220,
+    key: 'description',
+    title: '变更原因',
+    width: 280
   },
   {
-    headerName: '变更时间',
-    field: 'historyDtTm',
-    minWidth: 180,
+    key: 'historyDtTm',
+    title: '变更时间',
+    width: 180
   },
   {
-    headerName: 'IP',
-    field: 'ip',
-    minWidth: 180,
+    key: 'ip',
+    title: 'IP',
+    width: 180
   },
   {
-    headerName: '备注',
-    field: 'comments',
-    minWidth: 180,
-    flex: 1,
-  },
+    key: 'comments',
+    title: '备注',
+    minWidth: 180
+  }
 ]
-
-export default columns

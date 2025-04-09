@@ -5,6 +5,9 @@ import { twJoin } from 'tailwind-merge'
 import type { CreditLogsResponse } from '@/api/user'
 import { userApi } from '@/api/user'
 
+const serviceStore = useServiceStore()
+await serviceStore.getServices()
+
 const page = ref(1)
 const pageSize = ref(20)
 const loading = ref(false)

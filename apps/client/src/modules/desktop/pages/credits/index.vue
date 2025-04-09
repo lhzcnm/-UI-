@@ -1,31 +1,29 @@
 <script setup lang="ts">
-import { AgGridVue } from 'ag-grid-vue3'
-import tableTheme from '@desktop/utils/table'
-import defaultColumns from './utils/columns'
-
 import type { CreditLogsResponse } from '@/api/user'
 import { userApi } from '@/api/user'
+import { columns } from './utils/columns'
 
 const page = ref(1)
 const pageSize = ref(20)
-
 const loading = ref(false)
+
 const creditLogs = ref<CreditLogsResponse>()
+
+const serviceStore = useServiceStore()
+await serviceStore.getServices()
 
 watch(
   [page, pageSize],
   async ([pageVal, pageSizeVal]) => {
     loading.value = true
-
     const response = await userApi.creditLogs({
       pageSize: pageSizeVal,
-      page: pageVal,
+      page: pageVal
     })
-
     creditLogs.value = response.data
     loading.value = false
   },
-  { immediate: true },
+  { immediate: true }
 )
 </script>
 
@@ -36,23 +34,16 @@ watch(
         v-model="page"
         v-model:size="pageSize"
         :total="creditLogs?.total ?? 0"
-        :layouts="[
-          'total',
-          'sizes',
-          'prev',
-          'pager',
-          'next',
-          'jumper',
-        ]"
+        :layouts="['total', 'sizes', 'prev', 'pager', 'next', 'jumper']"
       />
     </section>
 
-    <AgGridVue
-      :theme="tableTheme"
-      :rowData="creditLogs?.list ?? []"
-      :columnDefs="defaultColumns"
+    <XTable
+      v-if="creditLogs && !loading"
+      :data="creditLogs.list"
+      :columns="columns"
+      row-key="historyId"
       class="h-[calc(100%-3rem)]"
-      :loading="loading"
     />
   </div>
 </template>

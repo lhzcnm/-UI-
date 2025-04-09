@@ -2,19 +2,19 @@
 import type { CreditLogItem } from '@/api/user'
 import { twMerge } from 'tailwind-merge'
 
-const props = defineProps<{ item: CreditLogItem }>()
+const { item } = defineProps<{ item: CreditLogItem }>()
+const store = useServiceStore()
 
-const isSubmit = computed(() => props.item.description.includes('订单提交'))
-const title = computed(() => {
-  if (isSubmit.value) return '服务消费'
-  if (props.item.packageId) return '服务退款'
+const isSubmit = /订单提交|Code Request/.test(item.description)
+const amountText = isSubmit ? `-${Math.abs(item.credits)}` : `+${item.credits}`
+const service = item.packageId && store.services.get(item.packageId)
+const title = getTitle()
+
+function getTitle() {
+  if (isSubmit) return '服务消费'
+  if (item.packageId) return '服务退款'
   return '积分充值'
-})
-
-const amountText = computed(() => {
-  if (isSubmit.value) return `-${props.item.credits}`
-  return `+${props.item.credits}`
-})
+}
 </script>
 
 <template>
@@ -54,9 +54,9 @@ const amountText = computed(() => {
     </div>
 
     <div class="space-y-1 p-2 bg-muted overflow-x-auto rounded-lg text-xs text-muted-foreground">
-      <template v-if="item.packageId">
+      <template v-if="service && item.packageId">
         <div class="truncate">
-          服务: {{ item.packageId }} - {{ item.packageTitle }}
+          服务: {{ item.packageId }} - {{ service.title }}
         </div>
         <div>IMEI/SN: <span class="font-mono">{{ item.imeiNo }}</span></div>
       </template>

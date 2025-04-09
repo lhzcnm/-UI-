@@ -3,20 +3,17 @@ import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import MustRead from './components/MustRead.vue'
 
-import type { ColDef } from 'ag-grid-community'
-import { AgGridVue } from 'ag-grid-vue3'
+import type { TableColumn } from '@3un/ui'
+import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
 
-import type { Order, OrderTableView, OrderSubmitResult, OrderSCRP } from '@/api/orders'
 import type { Service } from '@/api/services'
+import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
+import { getDefaultColumns, mergeColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
-
-import tableTheme from '@desktop/utils/table'
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
-import { defaultColumns, columnOpts } from './utils/columns'
-import { downloadURL } from '@3un/utils'
 
 const props = defineProps<{ id: string }>()
 
@@ -25,10 +22,10 @@ const store = useServiceStore()
 const { connect, close } = useWsStore()
 
 const page = ref(1)
-const pageSize = ref(50)
+const limit = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
-const columns = shallowRef<ColDef[]>(defaultColumns)
+const columns = shallowRef<TableColumn[]>(getDefaultColumns())
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
@@ -44,8 +41,8 @@ const selectedId = ref(+props.id)
 
 const orders = computed(() => {
   return rawOrders.value.slice(
-    (page.value - 1) * pageSize.value,
-    page.value * pageSize.value,
+    (page.value - 1) * limit.value,
+    page.value * limit.value
   )
 })
 
@@ -57,38 +54,38 @@ async function handleSelected(value: number) {
 
   // handle reselect service
   if (rawOrders.value.length > 0 && imeis.value.length > 0) {
-    console.log('reselect service', value, imeis.value, comments.value)
     rawOrders.value = processWaitList(value, imeis.value, comments.value)
     submited.value = false
   }
 
-  const { data } = await serviceApi.header(value)
-  if (data.length === 0) return
+  await handleServiceCols(value)
+}
 
-  const serviceCols: ColDef[] = []
+async function handleServiceCols(value: number) {
+  const { data } = await serviceApi.header(value)
+
+  if (data.length === 0) {
+    columns.value = getDefaultColumns()
+    return
+  }
+
+  const serviceCols: TableColumn[] = []
   for (const item of data) {
     const { name, width } = item
     const field = hash(name)
+
     serviceCols.push({
-      field: field,
-      headerName: name,
+      key: field,
+      title: name,
       width: width,
-      cellClass: 'leading-6 py-1',
-      cellRenderer: ({ data }: OrderSCRP) => {
-        return data ? (data as any)[field] : '-'
-      },
+      tdClassName: 'leading-6 py-1',
+      render: (_: any, row: any) => {
+        return h('span', { innerHTML: row[field] })
+      }
     })
   }
 
-  const len = defaultColumns.length
-  const frontCols = defaultColumns.slice(0, len - 2)
-  const endCols = defaultColumns.slice(-1)
-
-  columns.value = [
-    ...frontCols,
-    ...serviceCols,
-    ...endCols,
-  ] as ColDef[]
+  columns.value = mergeColumns(serviceCols)
 }
 
 function handleImport(imeiList: string[], remark: string) {
@@ -114,7 +111,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       imei: imeiList[i],
       remark: remark,
       result: '',
-      createTime: '',
+      createTime: ''
     })
   }
 
@@ -136,7 +133,7 @@ function handleSubmit() {
 function submitQueryOrder(service: Service) {
   const { data, status } = connect({
     serviceId: service.id,
-    type: 'order',
+    type: 'order'
   })
 
   watch(
@@ -167,7 +164,7 @@ function submitOrder(service: Service) {
     serviceId: service.id,
     imeiList: imeis.value,
     remark: comments.value,
-    isBulk: !pushMsg.value,
+    isBulk: !pushMsg.value
   }
 
   const response = orderApi.submit(params)
@@ -175,7 +172,7 @@ function submitOrder(service: Service) {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success('提交成功，请稍后前往“我的订单”页面查看')
+      toast.success('提交成功，请稍后前往"我的订单"页面查看')
       return
     }
 
@@ -193,7 +190,7 @@ function submitOrder(service: Service) {
 }
 
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
-  const errMsgCol = columns.value[5].field!
+  const errMsgCol = columns.value[5].key
   const result = []
 
   for (let item of data) {
@@ -218,7 +215,8 @@ function handleOrder(rawData: string) {
 
   const index = imeis.value.indexOf(data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
-  const resultCol = columns.value[5].field
+
+  const resultCol = columns.value[5].key
   const hasResult = resultCol === 'result'
 
   rawOrders.value[index] = {
@@ -226,7 +224,7 @@ function handleOrder(rawData: string) {
     ...(hasResult && { result: data.result }),
     ...(!hasResult && processOrderResult(data.result)),
     status: data.status,
-    id: data.id,
+    id: data.id
   }
 }
 
@@ -308,7 +306,7 @@ function handlePushMsgChange(value: boolean) {
         <XButton label="导出" color="emerald" @click="handleExport" />
         <XButton label="清空" color="rose" @click="reset" />
         <XButton
-          v-if="mustRead" variant="outline"
+          v-show="mustRead" variant="outline"
           label="服务说明" color="amber"
           @click="mustReadVisible = true"
         />
@@ -321,16 +319,16 @@ function handlePushMsgChange(value: boolean) {
 
       <XPagination
         v-model="page"
-        v-model:size="pageSize"
+        v-model:size="limit"
         :total="rawOrders.length"
         hideOnSinglePage
       />
     </section>
-    <AgGridVue
-      :theme="tableTheme"
-      :rowData="orders"
-      :columnDefs="columns"
-      :defaultColDef="columnOpts"
+  
+    <XTable
+      :data="orders"
+      :columns="columns"
+      row-key="index"
       class="h-[calc(100%-3rem)]"
     />
 
