@@ -8,7 +8,6 @@ interface ImportMetaEnv {
   // Api
   readonly VITE_API_URL: string
   readonly VITE_WS_URL: string
-  readonly VITE_OCR_URL: string
 
   // Storage
   readonly VITE_ACCESS_TOKEN: string

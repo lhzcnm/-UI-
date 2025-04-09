@@ -5,7 +5,6 @@ import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 import { twJoin } from 'tailwind-merge'
 import * as XLSX from 'xlsx'
-import axios from 'axios'
 
 import type { SubmitStore } from './utils'
 import type { Service } from '@/api/services'
@@ -17,6 +16,7 @@ import { IMEI_TYPE, ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
 
 import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
+import { wxApi } from '@/api/wx'
 
 const props = defineProps<{ id: string }>()
 
@@ -128,7 +128,6 @@ function handleImei(text = '') {
 
 function handlePhoto() {
   if (!store.serviceId) return toast.warning('请先选择服务')
-  const url = import.meta.env.VITE_OCR_URL
 
   window.wx.chooseImage({
     sizeType: ['original'],
@@ -143,10 +142,9 @@ function handlePhoto() {
         const formData = new FormData()
         formData.append('file', file)
 
-        const response = axios.postForm(url, formData)
+        const response = wxApi.ocr(formData)
         response.then(({ data }) => {
-          const result = data.result as string[]
-          const imeiList = handleImei(result.join()).join('\n')
+          const imeiList = handleImei(data).join('\n')
           const trimed = form.imei.trim()
 
           form.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
@@ -159,7 +157,6 @@ function handlePhoto() {
 
 function handlePickImage() {
   if (!store.serviceId) return toast.warning('请先选择服务')
-  const url = import.meta.env.VITE_OCR_URL
 
   window.wx.chooseImage({
     count: 9,
@@ -175,11 +172,11 @@ function handlePickImage() {
         const formData = new FormData()
         formData.append('file', file)
 
-        const response = await axios.postForm(url, formData)
-        return response.data.result as string[]
+        const response = await wxApi.ocr(formData)
+        return response.data
       }))
 
-      const ocrText = result.flat().join()
+      const ocrText = result.toString()
       const imeiList = handleImei(ocrText).join('\n')
       const trimed = form.imei.trim()
 
