@@ -32,11 +32,11 @@ export const columns: TableColumn[] = [
       return h('span', { class: color }, label)
     }
   },
-  {
-    key: 'creditsLeft',
-    title: '余额',
-    width: 64
-  },
+  // {
+  //   key: 'creditsLeft',
+  //   title: '余额',
+  //   width: 64
+  // },
   {
     key: 'description',
     title: '变更原因',

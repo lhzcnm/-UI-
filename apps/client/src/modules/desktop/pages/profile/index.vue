@@ -8,6 +8,7 @@ const store = useUserStore()
 await store.getInfo(true)
 
 const chatVisible = ref(false)
+const mode = import.meta.env.VITE_APP_MODE
 
 const qrcode = computed(() => {
   const mode = import.meta.env.VITE_APP_MODE
@@ -50,7 +51,7 @@ const qrcode = computed(() => {
 
         <div class="flex items-start gap-4 mt-4">
           <ApiInfo />
-          <AppInfo />
+          <AppInfo v-if="mode === 'SanHe'" />
         </div>
       </section>
     </div>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 function download(platform: string) {
-  const site = location.origin
+  const baseUrl = import.meta.env.VITE_API_URL
   const type = platform === 'windows' ? 1 : 2
-  location.href = `${site}/api/oss/download/${type}`
+  location.href = `${baseUrl}/oss/download/${type}`
 }
 </script>
 
