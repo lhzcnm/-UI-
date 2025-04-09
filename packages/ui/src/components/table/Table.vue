@@ -43,26 +43,38 @@ const minWidthOpt = computed(() => {
     const col = mergeColumns.value[i]
     if (col.minWidth && result.sumWidth > 0) {
       const rate = col.minWidth / result.sumWidth
-      result[i] = parseFloat(rate.toFixed(2))
+      result[i] = parseFloat(rate.toFixed(4))
     }
   }
 
   return result
 })
 
-const fixedWidth = mergeColumns.value
-  .reduce((pre, cur) => pre + (cur.width || 0), 0)
+let stopObserver: any = null
 
-if (minWidthOpt.value.count > 0 && fixedWidth > 0) {
-  const sumWidth = minWidthOpt.value.sumWidth
-  const tableMinWidth = fixedWidth + sumWidth
+watch(
+  () => props.columns.length,
+  () => tableWidthObserver(),
+  { immediate: true }
+)
 
-  useResizeObserver(rootRef, (entries) => {
-    const width = entries[0].contentRect.width
+function tableWidthObserver() {
+  stopObserver && stopObserver()
+  const fixedWidth = mergeColumns.value
+    .reduce((pre, cur) => pre + (cur.width || 0), 0)
 
-    tableWidth.value = Math.max(width, tableMinWidth)
-    scalableWidth.value = tableWidth.value - fixedWidth
-  })
+  if (minWidthOpt.value.count > 0 && fixedWidth > 0) {
+    const sumWidth = minWidthOpt.value.sumWidth
+    const tableMinWidth = fixedWidth + sumWidth
+    const { stop } = useResizeObserver(rootRef, (entries) => {
+      const width = entries[0].contentRect.width
+
+      tableWidth.value = Math.max(width, tableMinWidth)
+      scalableWidth.value = tableWidth.value - fixedWidth
+    })
+
+    stopObserver = stop
+  }
 }
 
 function renderSelectionTh(rows: any[]) {
@@ -168,8 +180,8 @@ function getColWidth(column: TableColumn, idx: number) {
   if (column.width) return column.width
   if (column.minWidth) {
     const scaleFactor = minWidthOpt.value[idx]
-    const width = (scaleFactor * scalableWidth.value).toFixed(2)
-    return Math.max(parseFloat(width), column.minWidth)
+    const width = scaleFactor * scalableWidth.value
+    return Math.max(+width.toFixed(2), column.minWidth)
   }
 
   return 0
@@ -203,7 +215,7 @@ function getColWidth(column: TableColumn, idx: number) {
         @dblclick="handleRowDblClick"
       >
         <tr v-if="data.length === 0" class="text-center" data-index="-1">
-          <td :colspan="columns.length" class="min-h-24">
+          <td :colspan="mergeColumns.length" class="min-h-24">
             {{ emptyText || '这里空空如也' }}
           </td>
         </tr>

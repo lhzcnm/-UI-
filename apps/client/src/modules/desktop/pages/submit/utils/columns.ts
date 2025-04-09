@@ -35,7 +35,7 @@ export const getDefaultColumns = (): TableColumn[] => ([
   {
     key: 'result',
     title: '订单结果',
-    minWidth: 300,
+    minWidth: 320,
     tdClassName: 'leading-6 py-1',
     render: (value: string) => {
       return h('span', { innerHTML: value })

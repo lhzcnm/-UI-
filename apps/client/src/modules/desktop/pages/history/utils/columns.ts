@@ -48,8 +48,7 @@ export const columns: TableColumn[] = [
   {
     key: 'result',
     title: '订单结果',
-    minWidth: 300,
-    tdClassName: 'leading-6 py-1',
+    minWidth: 320,
     render: (value: string) => {
       return h('div', { innerHTML: value })
     }

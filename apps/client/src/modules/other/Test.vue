@@ -3,7 +3,7 @@ import type { TableColumn } from '@3un/ui'
 import { XTag, XButton } from '@3un/ui'
 
 import type { Order, OrderListResponse } from '@/api/orders'
-import { ORDER_STATUS_MAP, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
+import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
 import { orderApi } from '@/api/orders'
 
 const serviceStore = useServiceStore()
@@ -14,7 +14,6 @@ const orders = ref<OrderListResponse>({
   total: 0,
 })
 
-const selectedList = ref<Order[]>([])
 const page = ref(1)
 const limit = ref(5)
 
@@ -40,7 +39,7 @@ async function getList(pageVal: number, limitVal: number) {
 }
 
 const columns: TableColumn[] = [
-  { key: 'id', title: 'ID', width: 98, },
+  { key: 'id', title: 'ID', width: 98 },
   {
     key: 'service',
     title: '服务',
@@ -48,45 +47,39 @@ const columns: TableColumn[] = [
     render: (_: any, row: Order) => {
       const service = serviceStore.services.get(row.serviceId)
 
-      if (!service) return '未知'
+      if (!service) return '服务不存在'
       return `${service.id} - ${service.title}`
     },
   },
-  { key: 'imei', title: 'IMEI/SN', width: 148, },
-  { key: 'credits', title: '积分', width: 48, },
+  { key: 'imei', title: 'IMEI/SN', width: 158 },
+  { key: 'credits', title: '积分', width: 58 },
   {
     key: 'status',
     title: '订单状态',
     width: 88,
-    render: (value: any) => {
+    render: (value: ORDER_STATUS) => {
       const tag = ORDER_STATUS_MAP[value]
-      return h(XTag, {
-        color: tag?.color,
-        label: tag?.label,
-      })
-    },
+      return h(XTag, tag)
+    }
   },
   {
     key: 'verify',
     title: '验证状态',
     width: 88,
-    render: (value: any) => {
+    render: (value: ORDER_VERTIFY) => {
       const tag = ORDER_VERTIFY_MAP[value]
-      return h(XTag, {
-        color: tag?.color,
-        label: tag?.label,
-      })
-    },
+      return h(XTag, tag)
+    }
   },
   {
     key: 'result',
     title: '订单结果',
-    minWidth: 320,
-    render: (value: any) => {
+    minWidth: 300,
+    render: (value: string) => {
       return h('div', { innerHTML: value })
-    },
+    }
   },
-  { key: 'remark', title: '备注', minWidth: 180 },
+  { key: 'remark', title: '备注', minWidth: 180, },
   {
     key: 'action',
     title: '操作',
@@ -105,7 +98,7 @@ const columns: TableColumn[] = [
         }),
       ]
     },
-  },
+  }
 ]
 </script>
 
@@ -137,10 +130,8 @@ const columns: TableColumn[] = [
     </section>
 
     <XTable
-      v-model:selected-list="selectedList"
       :data="orders.list" :columns="columns"
-      selection row-key="id" selected-key="id"
-      class="h-[calc(100vh-7rem)]"
+      row-key="id" class="h-[calc(100vh-7rem)]"
     />
   </div>
 </template>
