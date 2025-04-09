@@ -40,7 +40,7 @@ export const columns: TableColumn[] = [
   {
     key: 'description',
     title: '变更原因',
-    width: 220
+    width: 280
   },
   {
     key: 'historyDtTm',
@@ -55,6 +55,6 @@ export const columns: TableColumn[] = [
   {
     key: 'comments',
     title: '备注',
-    width: 180
+    minWidth: 180
   }
 ]

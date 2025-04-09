@@ -25,12 +25,12 @@ export const columns: TableColumn[] = [
       return `${service.id} - ${service.title}`
     },
   },
-  { key: 'imei', title: 'IMEI/SN', width: 168 },
-  { key: 'credits', title: '积分', width: 68 },
+  { key: 'imei', title: 'IMEI/SN', width: 158 },
+  { key: 'credits', title: '积分', width: 58 },
   {
     key: 'status',
     title: '订单状态',
-    width: 98,
+    width: 88,
     render: (value: ORDER_STATUS) => {
       const tag = ORDER_STATUS_MAP[value]
       return h(XTag, tag)
@@ -39,7 +39,7 @@ export const columns: TableColumn[] = [
   {
     key: 'verify',
     title: '验证状态',
-    width: 98,
+    width: 88,
     render: (value: ORDER_VERTIFY) => {
       const tag = ORDER_VERTIFY_MAP[value]
       return h(XTag, tag)
@@ -48,13 +48,13 @@ export const columns: TableColumn[] = [
   {
     key: 'result',
     title: '订单结果',
-    width: 320,
+    minWidth: 300,
     tdClassName: 'leading-6 py-1',
     render: (value: string) => {
       return h('div', { innerHTML: value })
     }
   },
-  { key: 'remark', title: '备注', width: 180 },
+  { key: 'remark', title: '备注', minWidth: 180, },
   {
     key: 'action',
     title: '操作',

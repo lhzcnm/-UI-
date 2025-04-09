@@ -35,13 +35,13 @@ export const getDefaultColumns = (): TableColumn[] => ([
   {
     key: 'result',
     title: '订单结果',
-    width: 300,
+    minWidth: 300,
     tdClassName: 'leading-6 py-1',
     render: (value: string) => {
       return h('span', { innerHTML: value })
     }
   },
-  { key: 'remark', title: '备注', width: 180 }
+  { key: 'remark', title: '备注', minWidth: 180 }
 ])
 
 export function mergeColumns(serviceCols: TableColumn[]): TableColumn[] {
