@@ -20,12 +20,12 @@ export const getDefaultColumns = (): TableColumn[] => ([
       return `${row.serviceId} - ${row.serviceName}`
     }
   },
-  { key: 'imei', title: 'IMEI/SN', width: 164 },
-  { key: 'credits', title: '积分', width: 88 },
+  { key: 'imei', title: 'IMEI/SN', width: 158 },
+  { key: 'credits', title: '积分', width: 58 },
   {
     key: 'status',
     title: '订单状态',
-    width: 128,
+    width: 88,
     render: (value: ORDER_STATUS) => {
       const id = value || ORDER_STATUS.WAIT
       const tag = ORDER_STATUS_MAP[id]

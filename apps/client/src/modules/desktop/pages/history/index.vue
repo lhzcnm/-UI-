@@ -14,7 +14,7 @@ const page = ref(1)
 const pageSize = ref(20)
 
 const store: HistoryStore = reactive({
-  orders: { list: [], page: 1, total: 0, pageSize: 20 },
+  orders: form.orders,
   searchForm: { ...form.search },
   exportForm: { ...form.export },
   visibleSearch: false,
@@ -61,10 +61,10 @@ function openExport() {
         :total="store.orders.total"
         :layouts="[
           'total',
-          'sizes',
           'prev',
           'pager',
           'next',
+          'sizes',
           'jumper',
         ]"
       />

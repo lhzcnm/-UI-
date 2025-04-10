@@ -13,7 +13,7 @@ import {
 const serviceStore = useServiceStore()
 
 export const columns: TableColumn[] = [
-  { key: 'id', title: 'ID', width: 108 },
+  { key: 'id', title: '订单号', width: 98 },
   {
     key: 'service',
     title: '服务',
@@ -58,9 +58,9 @@ export const columns: TableColumn[] = [
     key: 'action',
     title: '操作',
     fixed: 'right',
-    width: 280,
-    render: (_, row: Order) => {
-      return h(TableActions, { row })
+    width: 200,
+    render: (_, row: Order, index) => {
+      return h(TableActions, { row, index })
     }
   }
 ]

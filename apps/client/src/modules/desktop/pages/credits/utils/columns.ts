@@ -22,7 +22,7 @@ export const columns: TableColumn[] = [
   {
     key: 'credits',
     title: '变动金额',
-    width: 108,
+    width: 88,
     render: (value: number, row: CreditLogItem) => {
       const isSubmit = /订单提交|Code Request/.test(row.description)
       const isReduce = isSubmit || row.description === '管理员扣除积分'

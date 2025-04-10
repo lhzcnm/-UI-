@@ -5,9 +5,9 @@ import { columns } from './utils/columns'
 
 const page = ref(1)
 const pageSize = ref(20)
-const loading = ref(false)
 
-const creditLogs = ref<CreditLogsResponse>()
+const response = { list: [], page: 1, pageSize: 20, total: 0 }
+const creditLogs = ref<CreditLogsResponse>(response)
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -15,13 +15,11 @@ await serviceStore.getServices()
 watch(
   [page, pageSize],
   async ([pageVal, pageSizeVal]) => {
-    loading.value = true
     const response = await userApi.creditLogs({
       pageSize: pageSizeVal,
       page: pageVal
     })
     creditLogs.value = response.data
-    loading.value = false
   },
   { immediate: true }
 )
@@ -33,13 +31,12 @@ watch(
       <XPagination
         v-model="page"
         v-model:size="pageSize"
-        :total="creditLogs?.total ?? 0"
+        :total="creditLogs.total"
         :layouts="['total', 'sizes', 'prev', 'pager', 'next', 'jumper']"
       />
     </section>
 
     <XTable
-      v-if="creditLogs && !loading"
       :data="creditLogs.list"
       :columns="columns"
       row-key="historyId"
