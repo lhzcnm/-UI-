@@ -14,6 +14,7 @@ defineProps<HeaderProps>()
 
 const iStore = useSystemStore()
 const visibleSearch = ref(false)
+const visibleSetting = ref(true)
 </script>
 
 <template>
@@ -68,11 +69,13 @@ const visibleSearch = ref(false)
       <button
         accesskey="s"
         class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        @click="visibleSetting = true"
       >
         <Icon icon="lucide:settings" class="size-5" />
       </button>
     </div>
 
     <SearchPlane v-model="visibleSearch" />
+    <SettingPlane v-model="visibleSetting" />
   </div>
 </template>

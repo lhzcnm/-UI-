@@ -243,6 +243,7 @@ function formatDateDisplay(date: DatePickerRange) {
   <XPopover
     v-model="isOpen"
     placement="bottom-start"
+    content-class="w-64 p-3"
     closeOnEscape closeOnClickOutside
     @closed="clearSelection"
   >
@@ -262,53 +263,51 @@ function formatDateDisplay(date: DatePickerRange) {
       </button>
     </template>
 
-    <div class="w-64 p-3 bg-card border shadow-lg rounded-lg">
-      <div class="flex justify-between items-center mb-2">
-        <button class="p-1 text-muted-foreground rounded hover:bg-muted" @click="prevMonth">
-          <Icon icon="lucide:chevron-left" class="size-5" />
-        </button>
-        <div class="text-sm font-medium">{{ currentMonth }} {{ currentYear }}</div>
-        <button class="p-1 text-muted-foreground rounded hover:bg-muted" @click="nextMonth">
-          <Icon icon="lucide:chevron-right" class="size-5" />
-        </button>
-      </div>
+    <div class="flex justify-between items-center mb-2">
+      <button class="p-1 text-muted-foreground rounded hover:bg-muted" @click="prevMonth">
+        <Icon icon="lucide:chevron-left" class="size-5" />
+      </button>
+      <div class="text-sm font-medium">{{ currentMonth }} {{ currentYear }}</div>
+      <button class="p-1 text-muted-foreground rounded hover:bg-muted" @click="nextMonth">
+        <Icon icon="lucide:chevron-right" class="size-5" />
+      </button>
+    </div>
 
-      <div class="grid grid-cols-7 gap-1 mb-1">
-        <div
-          v-for="day in weekDays" :key="day"
-          class="p-1 text-center text-xs font-medium text-muted-foreground"
-        >
-          {{ day }}
-        </div>
-      </div>
-
+    <div class="grid grid-cols-7 gap-1 mb-1">
       <div
-        class="grid grid-cols-7 gap-1"
-        @click="handleCalendarClick"
+        v-for="day in weekDays" :key="day"
+        class="p-1 text-center text-xs font-medium text-muted-foreground"
       >
-        <button
-          v-for="(item, index) in daysWithState" :key="index"
-          :tabindex="item.isCurrentMonth ? 0 : -1"
-          :data-index="index"
-          :class="twMerge(
-            'text-center p-1 text-sm rounded',
-            today === item.day && month === item.month && 'text-primary ring-1 ring-primary',
-            item.isCurrentMonth ? 'cursor-pointer hover:bg-muted' : 'text-muted-foreground pointer-events-none',
-            item.isSelected && !item.isInRange && 'bg-primary hover:bg-primary/80 text-white',
-            item.isInRange && !item.isSelected && 'bg-primary/10 hover:bg-primary/20',
-            item.isHoverRange && 'bg-primary/5 hover:bg-primary/15 ring-1 ring-primary/20',
-          )"
-          @mouseenter="handleDayMouseEnter(index)"
-          @mouseleave="hoverDate = null"
-        >
-          {{ item.day }}
-        </button>
+        {{ day }}
       </div>
+    </div>
 
-      <div class="flex justify-between pt-3 mt-2 border-t">
-        <XButton variant="outline" size="sm" label="清除" @click="clearSelection" />
-        <XButton label="确认" size="sm" @click="applySelection" />
-      </div>
+    <div
+      class="grid grid-cols-7 gap-1"
+      @click="handleCalendarClick"
+    >
+      <button
+        v-for="(item, index) in daysWithState" :key="index"
+        :tabindex="item.isCurrentMonth ? 0 : -1"
+        :data-index="index"
+        :class="twMerge(
+          'text-center p-1 text-sm rounded',
+          today === item.day && month === item.month && 'text-primary ring-1 ring-primary',
+          item.isCurrentMonth ? 'cursor-pointer hover:bg-muted' : 'text-muted-foreground pointer-events-none',
+          item.isSelected && !item.isInRange && 'bg-primary hover:bg-primary/80 text-white',
+          item.isInRange && !item.isSelected && 'bg-primary/10 hover:bg-primary/20',
+          item.isHoverRange && 'bg-primary/5 hover:bg-primary/15 ring-1 ring-primary/20',
+        )"
+        @mouseenter="handleDayMouseEnter(index)"
+        @mouseleave="hoverDate = null"
+      >
+        {{ item.day }}
+      </button>
+    </div>
+
+    <div class="flex justify-between pt-3 mt-2 border-t">
+      <XButton variant="outline" size="sm" label="清除" @click="clearSelection" />
+      <XButton label="确认" size="sm" @click="applySelection" />
     </div>
   </XPopover>
 </template>

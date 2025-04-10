@@ -66,11 +66,12 @@ function highlightText(text: string, keyword: string) {
     >
       <XSelectItem
         v-for="service in detail.children" :key="service.id"
-        active-class="border-l-[5px] border-blue-500 italic"
         :value="service.id" :label="service.title"
       >
-        <span v-html="getDisplayText(service)"></span>
-        <span>{{ service.price }}</span>
+        <div class="flex-1 flex items-center justify-between space-x-3">
+          <span v-html="getDisplayText(service)"></span>
+          <span class="text-primary">￥{{ service.price }}</span>
+        </div>
       </XSelectItem>
     </XSelectGroup>
   </XSelect>

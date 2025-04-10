@@ -2,16 +2,22 @@
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
 
+import { useClipboard } from '@vueuse/core'
+
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { columns } from './utils/columns'
 import { orderApi } from '@/api/orders'
+import { toast } from 'vue-sonner'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
 
 const page = ref(1)
 const pageSize = ref(20)
+
+const selectRows = ref<string[]>([])
+const { copy } = useClipboard({ legacy: true })
 
 const store: HistoryStore = reactive({
   orders: form.orders,
@@ -45,6 +51,16 @@ function openExport() {
   store.exportForm = { ...form.export }
   store.visibleExport = true
 }
+
+function handleCopy() {
+  if (selectRows.value.length === 0) {
+    toast.warning('请先选择要复制的行')
+    return
+  }
+
+  copy(selectRows.value.join('\n'))
+  toast.success('已复制到剪贴板')
+}
 </script>
 
 <template>
@@ -53,6 +69,7 @@ function openExport() {
       <div class="space-x-2 whitespace-nowrap">
         <XButton label="搜索" @click="openSearch" />
         <XButton color="emerald" label="导出" @click="openExport" />
+        <XButton color="amber" variant="outline" label="复制 IMEI/SN" @click="handleCopy" />
       </div>
 
       <XPagination
@@ -73,8 +90,10 @@ function openExport() {
     <XTable
       :data="store.orders.list"
       :columns="columns"
-      row-key="id"
       class="h-[calc(100%-3rem)]"
+      row-key="id" selection
+      selected-key="imei"
+      @select-change="selectRows = $event"
     />
 
     <SearchOrder />

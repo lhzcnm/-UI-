@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { XPopover } from '../popover'
-import { XInput } from '../input'
 
 import type { XSelectProps, XSelectEmits, Option } from './select'
 import { XSELECT_CONTEXT } from './select'
@@ -79,11 +78,17 @@ function handleClick(event: MouseEvent) {
         !width && 'min-w-56',
       ]"
     >
-      <div v-if="props.filterable" class="p-2">
-        <XInput
-          v-model="input" autofocus
+      <div
+        v-if="props.filterable"
+        class="relative flex items-center space-x-2 py-2 px-3 border-b"
+      >
+        <Icon icon="lucide:search" class="size-4 text-muted-foreground" />
+        <input
+          v-model="input"
+          autofocus type="text"
+          class="flex-1 text-sm bg-transparent border-none outline-0 focus:outline-none"
           :placeholder="inputPlaceholder"
-        />
+        >
       </div>
       <div
         class="flex flex-col space-y-1 p-1.5 max-h-96 overflow-y-auto"

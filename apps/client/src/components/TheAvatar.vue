@@ -4,7 +4,7 @@ const uStore = useUserStore()
 const avatar = computed(() => {
   const mode = import.meta.env.VITE_APP_MODE
   if (uStore.info.avatar) return uStore.info.avatar
-  return `/${mode}/images/default_avatar.jpg`
+  return `/${mode}/default_avatar.jpg`
 })
 </script>
 

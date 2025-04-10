@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ClassNameValue } from 'tailwind-merge'
-import { Icon } from '@iconify/vue'
 import { twJoin, twMerge } from 'tailwind-merge'
+import { Icon } from '@iconify/vue'
+
 import { menus, tools, EXPANDED_MENUS } from '@/utils'
 
 interface SidebarProps {
@@ -37,7 +38,7 @@ onBeforeMount(() => {
 <template>
   <aside
     :class="twMerge(
-      'flex flex-col w-sidebar bg-background border-r border-dashed',
+      'flex flex-col bg-background border-r border-dashed',
       props.class
     )"
   >

@@ -148,6 +148,7 @@ async function verifyCaptcha() {
     captchaValidId.value = result.data
     emits('verified', result.data)
   } catch (error) {
+    console.error('Captcha verification failed:', error)
     position.value = 0
     refresh()
   }

@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 import { useResizeObserver } from '@vueuse/core'
 
 import type { TableProps, TableEmits, TableColumn } from './table'
+import { ua } from '@3un/utils'
 
 defineOptions({ name: 'XTable' })
 
@@ -10,8 +11,14 @@ const props = defineProps<TableProps>()
 const emit = defineEmits<TableEmits>()
 
 const selectedList = ref(new Set<any>())
-// const rootRef = useTemplateRef('rootRef')
 const rootRef = shallowRef<HTMLElement | null>()
+const rootClientOpt = ref({
+  hasHRoll: false,
+  hasVRoll: false,
+  height: 0,
+  width: 0,
+})
+
 const scalableWidth = ref(0)
 const tableWidth = ref(0)
 
@@ -68,9 +75,16 @@ function tableWidthObserver() {
     const tableMinWidth = fixedWidth + sumWidth
     const { stop } = useResizeObserver(rootRef, (entries) => {
       const width = entries[0].contentRect.width
+      const target = entries[0].target
 
       tableWidth.value = Math.max(width, tableMinWidth)
       scalableWidth.value = tableWidth.value - fixedWidth
+      rootClientOpt.value = {
+        width: target.clientWidth,
+        height: target.clientHeight,
+        hasHRoll: target.scrollWidth > target.clientWidth,
+        hasVRoll: target.scrollHeight > target.clientHeight,
+      }
     })
 
     stopObserver = stop
@@ -89,6 +103,7 @@ function renderSelectionTh(rows: any[]) {
 
   return h('input', {
     type: 'checkbox',
+    name: 'select-all',
     class: 'size-4 align-middle',
     checked: allSelected,
     onChange: (e: InputEvent) => {
@@ -107,6 +122,7 @@ function renderSelectionTd(_: any, row: any) {
 
   return h('input', {
     type: 'checkbox',
+    name: 'row-select',
     class: 'size-4 align-middle',
     checked: selectedList.value.has(key),
     onChange: (e: InputEvent) => {
@@ -190,6 +206,18 @@ function getColWidth(column: TableColumn, idx: number) {
 
 <template>
   <div ref="rootRef" class="border rounded-lg bg-card overflow-auto">
+    <div
+      v-if="ua.browser !== 'Firefox'"
+      class="fixed z-10 pointer-events-none"
+      :class="{
+        'border-b': rootClientOpt.hasHRoll,
+        'border-r': rootClientOpt.hasVRoll,
+      }"
+      :style="{
+        width: `${rootClientOpt.width}px`,
+        height: `${rootClientOpt.height}px`,
+      }"
+    />
     <table
       :style="`width: ${tableWidth}px`"
       class="w-full table-fixed border-separate border-spacing-0 text-sm"

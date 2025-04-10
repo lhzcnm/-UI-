@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import type { DialogProps, DialogEmits } from './dialog'
-import { useFocusLock } from '@/composables/useFocusLock'
 import { useEventListener } from '@vueuse/core'
 import { twMerge } from 'tailwind-merge'
+
+import type { DialogProps, DialogEmits } from './dialog'
+import { useFocusLock } from '@/composables/useFocusLock'
 
 defineOptions({ name: 'XDialog' })
 

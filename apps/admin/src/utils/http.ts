@@ -36,15 +36,17 @@ function handleResponse(response: AxiosResponse) {
 }
 
 function handleHttpError(error: AxiosError<CR<null>>) {
-  const { data, status } = error.response!
-  const options = {
-    400: () => toast.warning(data.message),
-    401: () => handleUnauthorized(),
-    500: () => toast.error('服务器异常'),
+  if (error.response) {
+    const { data, status } = error.response
+    const options = {
+      400: () => toast.warning(data.message),
+      401: () => handleUnauthorized(),
+      500: () => toast.error('服务器异常'),
+    }
+  
+    options[status as keyof typeof options]()
+    return Promise.reject(error)
   }
-
-  options[status as keyof typeof options]()
-  return Promise.reject(error)
 }
 
 async function handleUnauthorized() {

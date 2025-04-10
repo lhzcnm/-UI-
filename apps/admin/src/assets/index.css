@@ -11,7 +11,7 @@
   }
 }
 
-@layer base {
+/* @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -56,7 +56,7 @@
     --accent: 240 3.7% 18%;
     --accent-foreground: 0 0% 98%;
   }
-}
+} */
 
 /* 滚动条 */
 @media (min-width: 640px) {

@@ -39,7 +39,7 @@ async function getList(pageVal: number, limitVal: number) {
 }
 
 const columns: TableColumn[] = [
-  { key: 'id', title: 'ID', width: 98 },
+  { key: 'id', title: '订单号', width: 98 },
   {
     key: 'service',
     title: '服务',
@@ -74,7 +74,7 @@ const columns: TableColumn[] = [
   {
     key: 'result',
     title: '订单结果',
-    minWidth: 300,
+    minWidth: 320,
     render: (value: string) => {
       return h('div', { innerHTML: value })
     }
@@ -106,11 +106,10 @@ const columns: TableColumn[] = [
   <div class="mx-8 mt-8">
     <section class="flex items-center justify-between mb-3">
       <div class="flex items-center gap-2">
-        <XSelect multiple>
+        <XSelect>
           <XSelectItem
             v-for="column in columns" :key="column.key"
             :value="column.key" :label="column.title"
-            active-class="border-l-4 border-blue-500 italic"
           />
         </XSelect>
       </div>
@@ -131,7 +130,8 @@ const columns: TableColumn[] = [
 
     <XTable
       :data="orders.list" :columns="columns"
-      row-key="id" class="h-[calc(100vh-7rem)]"
+      row-key="id" selection
+      class="h-[calc(100vh-7rem)]"
     />
   </div>
 </template>

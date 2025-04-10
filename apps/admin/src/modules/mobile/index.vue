@@ -36,7 +36,7 @@ const route = useRoute()
       <Sidebar
         v-if="iStore.showSidebar"
         :class="twJoin(
-          'fixed top-0 left-0 z-20 w-[80%]',
+          'fixed top-0 left-0 z-20 w-[75%]',
           'will-change-transform h-screen border-solid'
         )"
       />

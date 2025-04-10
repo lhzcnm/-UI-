@@ -20,7 +20,7 @@ await Promise.all([
     <Transition name="sidebar">
       <Sidebar
         v-if="iStore.showSidebar"
-        class="fixed top-0 left-0 z-20 h-screen"
+        class="fixed top-0 left-0 z-20 w-sidebar h-screen"
       />
     </Transition>
 
