@@ -20,7 +20,7 @@ interface Form {
 }
 
 const searchForm: OrderSearchForm = {
-  status: 'all',
+  status: -1,
   serviceId: 0,
   imei: '',
   startTime: '',
@@ -41,7 +41,7 @@ export const form: Form = {
 export function formatOrderParams(form: OrderSearchForm) {
   const { status, startTime, endTime, imei } = form
   const imeiList = formatImeiType5(imei)
-  const isAll = status === 'all'
+  const isAll = status === -1
 
   return {
     status: isAll ? undefined : status,

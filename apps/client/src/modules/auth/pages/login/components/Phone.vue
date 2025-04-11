@@ -45,6 +45,8 @@ defineExpose({
       localStorage.setItem(key, data)
       await router.push('/')
     })
+
+    response.catch(() => visible.value = false)
   }
 })
 </script>

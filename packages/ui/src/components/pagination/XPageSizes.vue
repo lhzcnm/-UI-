@@ -11,7 +11,6 @@ const selected = defineModel<number>()
     <XSelectItem
       v-for="size in sizes" :key="size"
       :value="size" :label="`${size} 条/页`"
-      active-class="bg-blue-500 text-zinc-100 rounded"
     />
   </XSelect>
 </template>

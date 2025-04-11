@@ -27,7 +27,6 @@ export default defineConfig({
         'vue',
         'dayjs',
         'vue-router',
-        '@3un/utils',
         '@iconify/vue',
         '@floating-ui/vue',
         '@vueuse/core',

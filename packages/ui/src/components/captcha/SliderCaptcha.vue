@@ -25,7 +25,11 @@ let trackList: TrackList[] = []
 const bgRef = useTemplateRef('backgroundImageRef')
 const templateRef = useTemplateRef('templateImageRef')
 
-watch(visible, val => val && refresh())
+watch(visible, val => {
+  if (!val) return
+  position.value = 0
+  refresh()
+})
 
 function refresh() {
   const response = props.refresh()
@@ -148,7 +152,6 @@ async function verifyCaptcha() {
     captchaValidId.value = result.data
     emits('verified', result.data)
   } catch (error) {
-    console.error('Captcha verification failed:', error)
     position.value = 0
     refresh()
   }

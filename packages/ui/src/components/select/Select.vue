@@ -24,6 +24,7 @@ const model = defineModel<string | number>()
 
 const open = ref(false)
 const options = ref<Option[]>([])
+
 const displayText = computed(() => {
   const finded = options.value.findIndex(option =>
     option.value === model.value
@@ -41,7 +42,7 @@ function handleClick(event: MouseEvent) {
   if (!element) return
 
   let value = element.getAttribute('data-value') as any
-  if (!isNaN(Number(value))) value = Number(value)
+  if (typeof model.value === 'number' && !isNaN(Number(value))) value = Number(value)
   else value = value as string
 
   emits('selected', value)

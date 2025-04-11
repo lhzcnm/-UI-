@@ -52,7 +52,7 @@ export type OrderListParams = IPage & {
 }
 export interface OrderSearchForm {
   serviceId: number
-  status: ORDER_STATUS | 'all'
+  status: ORDER_STATUS | -1
   imei: string
   startTime: string
   endTime: string
@@ -69,7 +69,7 @@ export interface OrderExportParams {
 export interface OrderExportForm {
   serviceId: number
   imei: string
-  status: ORDER_STATUS | 'all'
+  status: ORDER_STATUS | -1
   startTime: string
   endTime: string
 }

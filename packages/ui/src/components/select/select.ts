@@ -1,4 +1,4 @@
-import type { InjectionKey, Ref } from 'vue'
+import type { InjectionKey, Ref, VNode } from 'vue'
 import type { Placement } from '@floating-ui/vue'
 
 export interface Option {
@@ -16,11 +16,12 @@ export interface XSelectContext {
 // Select
 export interface XSelectProps {
   width?: string
-  placeholder?: string
   filterable?: boolean
-  inputPlaceholder?: string
   placement?: Placement
   multiple?: boolean
+  placeholder?: string
+  inputPlaceholder?: string
+  disabled?: boolean
 }
 export interface XSelectEmits {
   (e: 'selected', value: any): void
@@ -37,4 +38,7 @@ export interface XSelectItemProps {
   label?: string
   className?: string
   activeClass?: string
+}
+export interface XSelectItemSlots {
+  default: () => VNode[]
 }

@@ -21,7 +21,7 @@ const form = defineModel<OrderSearchForm>({ required: true })
         placeholder="请选择订单状态"
         width="336px"
       >
-        <XSelectItem value="all" label="全部" />
+        <XSelectItem :value="-1" label="全部" />
         <XSelectItem
           v-for="item in ORDER_STATUS_LIST" :key="item.value"
           :value="item.value" :label="item.label"

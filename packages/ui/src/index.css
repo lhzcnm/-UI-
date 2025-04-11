@@ -1,50 +1,3 @@
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --popover: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --input-hover: 240 5.9% 82.6%;
-    --ring: 221.2 83.2% 53.3%;
-
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --accent: 240 4.8% 90%;
-    --accent-foreground: 240 5.9% 10%;
-  }
-
-  .dark {
-    --background: 0 8% 42%;
-    --foreground: 210 40% 98%;
-
-    --card: 231, 11%, 12%;
-    --popover: 231, 11%, 12%;
-    --card-foreground: 210 40% 98%;
-    --popover-foreground: 210 40% 98%;
-
-    --border: 240 3.7% 18%;
-    --input: 240 3.7% 26%;
-    --input-hover: 240 3.7% 25%;
-    --ring: 200, 8%, 16%;
-
-    --muted: 231, 11%, 12%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 18%;
-    --accent-foreground: 0 0% 98%;
-  }
-}
-
 body {
   @apply bg-background text-foreground;
 }
@@ -103,17 +56,13 @@ body {
   transform: scale(1) rotate(0);
 }
 
-/* Popover动画 */
-.x-popover-enter-active {
-  transition: all 0.2s ease-out;
-}
+/* Popover 动画 */
+.x-popover-enter-active,
 .x-popover-leave-active {
-  transition: all 0.15s ease-in;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: var(--x-popover-origin, top);
 }
-.x-popover-enter-from {
-  opacity: 0;
-  transform: scale(0.95);
-}
+.x-popover-enter-from,
 .x-popover-leave-to {
   opacity: 0;
   transform: scale(0.95);

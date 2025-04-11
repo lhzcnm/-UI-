@@ -51,6 +51,7 @@ function handleKeyDown(event: KeyboardEvent) {
       v-model="toggle"
       :id="id"
       type="checkbox"
+      tabindex="-1"
       class="sr-only peer"
       @change="handleChange"
     />

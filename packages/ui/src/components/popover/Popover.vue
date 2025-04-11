@@ -77,7 +77,7 @@ const { floatingStyles, placement } = useFloating(
     middleware: [
       offset(props.offset),
       flip(),
-      shift()
+      shift(),
     ]
   }
 )
@@ -116,19 +116,19 @@ if (props.closeOnEscape) {
 
 function updateTransformOrigin() {
   const origins = {
-    'top': 'bottom',
+    'top': 'bottom center',
     'top-start': 'bottom left',
     'top-end': 'bottom right',
 
-    'right': 'left',
+    'right': 'left center',
     'right-start': 'left top',
     'right-end': 'left bottom',
 
-    'bottom': 'top',
+    'bottom': 'top center',
     'bottom-start': 'top left',
     'bottom-end': 'top right',
 
-    'left': 'right',
+    'left': 'right cenetr',
     'left-start': 'right top',
     'left-end': 'right bottom',
   }

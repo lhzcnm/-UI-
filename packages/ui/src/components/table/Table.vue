@@ -3,7 +3,6 @@ import { twMerge } from 'tailwind-merge'
 import { useResizeObserver } from '@vueuse/core'
 
 import type { TableProps, TableEmits, TableColumn } from './table'
-import { ua } from '@3un/utils'
 
 defineOptions({ name: 'XTable' })
 
@@ -21,6 +20,11 @@ const rootClientOpt = ref({
 
 const scalableWidth = ref(0)
 const tableWidth = ref(0)
+
+const isFirefox = computed(() => {
+  const ua = navigator.userAgent.toLowerCase()
+  return /firefox/.test(ua) && !/seamonkey/.test(ua)
+})
 
 const mergeColumns = computed(() => {
   if (!props.selection) return props.columns
@@ -207,7 +211,7 @@ function getColWidth(column: TableColumn, idx: number) {
 <template>
   <div ref="rootRef" class="border rounded-lg bg-card overflow-auto">
     <div
-      v-if="ua.browser !== 'Firefox'"
+      v-if="!isFirefox"
       class="fixed z-10 pointer-events-none"
       :class="{
         'border-b': rootClientOpt.hasHRoll,

@@ -28,7 +28,7 @@ export default defineConfig({
         'src/modules/desktop/components/*.vue',
       ],
     }),
-    visualizer() as PluginOption,
+    visualizer({ filename: './dist/stats.html' }) as PluginOption,
   ],
   resolve: {
     alias: {

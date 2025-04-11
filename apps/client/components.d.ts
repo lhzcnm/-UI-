@@ -48,6 +48,7 @@ declare module 'vue' {
     XSelect: typeof import('@3un/ui')['XSelect']
     XSelectGroup: typeof import('@3un/ui')['XSelectGroup']
     XSelectItem: typeof import('@3un/ui')['XSelectItem']
+    XSelectOption: typeof import('@3un/ui')['XSelectOption']
     XSimplePagination: typeof import('@3un/ui')['XSimplePagination']
     XSliderCaptcha: typeof import('@3un/ui')['XSliderCaptcha']
     XSwitch: typeof import('@3un/ui')['XSwitch']
