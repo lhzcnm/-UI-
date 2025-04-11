@@ -9,12 +9,6 @@ const store = useUserStore()
 const isEditName = ref(false)
 const editName = ref(store.info.userName)
 
-const avatar = computed(() => {
-  const mode = import.meta.env.MODE
-  if (store.info.avatar) return store.info.avatar
-  return `/${mode}/images/default_avatar.jpg`
-})
-
 function handleEditName() {
   if (!USERNAME_REG.test(editName.value)) {
     toast.error('请输入正确的账号')
@@ -32,9 +26,7 @@ function handleCancelEditName() {
 
 <template>
   <div class="flex items-center space-x-3">
-    <div class="size-20 rounded-full border overflow-hidden">
-      <img :src="avatar" alt="Avatar" class="size-full object-cover">
-    </div>
+    <TheAvatar class="size-20 cursor-default" />
     <div class="h-full">
       <div class="flex items-center space-x-2 mb-1.5">
         <template v-if="!isEditName">
