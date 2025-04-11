@@ -26,6 +26,8 @@ const selectedPayment = ref<RechargeMethod>('wxpay')
 
 const memberPkg = ref<MemberPackage[]>([])
 const memberList = ref<MembershipItem[]>([])
+const pkgTotalAmount = ref(0)
+
 const store = inject(RECHARGE_STORE)!
 
 await Promise.all([
@@ -47,8 +49,14 @@ async function getMemberList() {
 }
 
 async function getMemberPkg() {
-  const response = await memberApi.memberPkg()
-  memberPkg.value = response.data
+  const { data } = await memberApi.memberPkg()
+  const total = data.reduce((total, item) => {
+    if (!item.freeCount || !item.price) return total
+    return total + item.price * item.freeCount
+  }, 0)
+
+  pkgTotalAmount.value = total * 30
+  memberPkg.value = data
 }
 
 function handleRecharge() {
@@ -147,8 +155,8 @@ function isSamePrice(item: MemberPackage) {
     <div class="space-y-3 overflow-y-auto max-h-[400px]">
       <div class="flex items-center justify-between">
         <h3 class="text-lg text-amber-600">会员权益</h3>
-        <span class="text-xs text-muted-foreground bg-muted/70 px-2 py-1 rounded-full">
-          开通会员即可享受
+        <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+          每月最高将为您节省：<b class="text-rose-500">{{ pkgTotalAmount }}元</b>
         </span>
       </div>
 
@@ -162,26 +170,15 @@ function isSamePrice(item: MemberPackage) {
           </div>
 
           <div class="flex justify-between space-x-2 mt-1 text-sm">
-            <div
-              v-if="item.freeCount"
-              class="flex items-center text-primary"
-            >
-              <Icon icon="ri:time-line" />
-              <span class="ml-1">
-                免费使用 <b>{{ item.freeCount }} 次/天</b>
-              </span>
-            </div>
-
-            <div
-              v-if="!isSamePrice(item)"
-              class="flex items-center text-rose-500"
-            >
-              <Icon icon="lucide:dollar-sign" />
-              <span>优惠价<b>{{ item.price }}</b></span>
-              <span class="ml-1.5 text-xs text-muted-foreground align-sub">
-                原价{{ serviceStore.services.get(item.id)!.price }}
-              </span>
-            </div>
+            <p v-if="item.freeCount" class="text-muted-foreground">
+              <span>原价{{ item.price }}元/次。现在</span>
+              <span class="text-primary font-bold">每天 {{ item.freeCount }} 次</span>
+              <span>免费查询</span>
+              <div v-if="!isSamePrice(item)">
+                <span>超过 {{ item.freeCount }} 次，则使用</span>
+                <span>优惠价{{ item.price }}/次</span>
+              </div>
+            </p>
           </div>
         </div>
       </div>

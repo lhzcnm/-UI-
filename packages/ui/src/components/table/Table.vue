@@ -212,7 +212,7 @@ function getColWidth(column: TableColumn, idx: number) {
   <div ref="rootRef" class="border rounded-lg bg-card overflow-auto">
     <div
       v-if="!isFirefox"
-      class="fixed z-10 pointer-events-none"
+      class="fixed z-20 pointer-events-none"
       :class="{
         'border-b': rootClientOpt.hasHRoll,
         'border-r': rootClientOpt.hasVRoll,

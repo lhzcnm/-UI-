@@ -20,6 +20,8 @@ export function findAllIMEIAndSNs(str: string) {
 
     match = match.toLocaleUpperCase()
     if (SNValidator.isValid(match)) {
+      if (match.length === 11) 
+        match = match.slice(1)
       result.push(match)
     }
   }
