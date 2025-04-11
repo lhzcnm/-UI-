@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { CreditLogItem } from '@/api/user'
-import { twMerge } from 'tailwind-merge'
+import { twMerge, twJoin } from 'tailwind-merge'
 
 const { item } = defineProps<{ item: CreditLogItem }>()
 const store = useServiceStore()
 
 const isSubmit = /订单提交|Code Request/.test(item.description)
-const amountText = isSubmit ? `-${Math.abs(item.credits)}` : `+${item.credits}`
+const isReduce = isSubmit || item.description === '管理员扣除积分'
+const amountText = isReduce ? `-${Math.abs(item.credits)}` : `+${item.credits}`
 const service = item.packageId && store.services.get(item.packageId)
 const title = getTitle()
 
@@ -39,7 +40,7 @@ function getTitle() {
         <div
           :class="twMerge(
             'text-lg font-bold text-emerald-500',
-            isSubmit && 'text-rose-500',
+            isReduce && 'text-rose-500',
           )"
         >
           {{ amountText }}
@@ -53,7 +54,13 @@ function getTitle() {
       </div>
     </div>
 
-    <div class="space-y-1 p-2 bg-muted overflow-x-auto rounded-lg text-xs text-muted-foreground">
+    <div
+      :class="twJoin(
+        'space-y-1 p-2 bg-muted overflow-x-auto',
+        'rounded-lg text-xs text-muted-foreground',
+        'empty:hidden'
+      )"
+    >
       <template v-if="service && item.packageId">
         <div class="truncate">
           服务: {{ item.packageId }} - {{ service.title }}

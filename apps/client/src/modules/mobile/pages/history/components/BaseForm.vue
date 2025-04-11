@@ -16,7 +16,7 @@ const options = computed(() => {
 })
 
 const statusOptions = [
-  { label: '全部', value: 'all' },
+  { label: '全部', value: -1 },
   { label: '成功', value: ORDER_STATUS.SUCCESS },
   { label: '失败', value: ORDER_STATUS.FAILED },
   { label: '处理中', value: ORDER_STATUS.PROCESSING },
@@ -52,7 +52,7 @@ const statusOptions = [
       <XSegmented
         v-model="form.status"
         :options="statusOptions"
-        default-value="all"
+        :default-value="-1"
       />
     </div>
 

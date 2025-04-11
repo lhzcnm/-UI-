@@ -58,8 +58,18 @@ const handleRefresh = useThrottleFn(() => {
 }, 500)
 
 function handleVerify() {
+  const { id, createTime } = order.value
+  const createUnix = new Date(createTime).getTime()
+  const diff = Date.now() - createUnix
+  const daysDiff = diff / (24 * 3600 * 1000)
+
+  if (daysDiff > 3) {
+    toast.info('订单超过 3 天，不支持验证结果')
+    return
+  }
+
   window.confirm('确定开启验证吗？') && (() => {
-    orderApi.verify(order.value.id).then(() => {
+    orderApi.verify(id).then(() => {
       order.value.verify = ORDER_VERTIFY.REPLIED
       toast.success('已提交验证')
     })
