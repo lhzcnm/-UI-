@@ -2,7 +2,7 @@
 import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 
-import { encrypt } from '@3un/utils'
+import { encrypt, USERNAME_REG, PASSWORD_REG } from '@3un/utils'
 import { validate, VERIFY_MSG } from '@/utils'
 
 import type { LoginMode } from '../types'
@@ -22,7 +22,12 @@ function rules(data: typeof form) {
   const { username, password } = data
   return [
     { rule: !!username.trim(), message: VERIFY_MSG.USERNAME },
+    { rule: username.length >=6 && username.length <= 16, message: VERIFY_MSG.USERNAME_LENGTH },
+    { rule: USERNAME_REG.test(username), message: VERIFY_MSG.USERNAME_FORMAT },
+    
     { rule: !!password.trim(), message: VERIFY_MSG.PASSWORD },
+    { rule: password.length >= 8 && password.length <= 18, message: VERIFY_MSG.PASSWORD_LENGTH },
+    { rule: PASSWORD_REG.test(password), message: VERIFY_MSG.PASSWORD_FORMAT },
   ]
 }
 

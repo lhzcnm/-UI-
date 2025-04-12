@@ -28,7 +28,7 @@ export const form: Form = {
 }
 
 export function getAvatar(replyId: number | null, avatar: string) {
-  const mode = import.meta.env.MODE
+  const mode = import.meta.env.VITE_APP_MODE
   if (replyId) return '/images/customer_service_avatar.png'
-  return avatar || `/${mode}/images/default_avatar.jpg`
+  return avatar || `/${mode}/default_avatar.jpg`
 }

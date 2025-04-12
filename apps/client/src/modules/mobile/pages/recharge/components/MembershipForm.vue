@@ -171,7 +171,7 @@ function isSamePrice(item: MemberPackage) {
           class="py-2 first:pt-0"
         >
           <div class="truncate">
-            {{ item.id }} - {{ serviceStore.services.get(item.id)!.title }}
+            {{ item.id }} - {{ serviceStore.services.get(item.id)?.title }}
           </div>
 
           <div class="space-y-2 mt-1 text-sm">
