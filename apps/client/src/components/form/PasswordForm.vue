@@ -67,7 +67,7 @@ async function submitForm() {
 </script>
 
 <template>
-  <form class="space-y-2" @submit.prevent="submitForm">
+  <form class="space-y-2" @submit.prevent="submitForm" autocomplete="off">
     <XInput v-model="form.target" placeholder="请输入手机号或邮箱" />
     <div class="flex space-x-2">
       <XInput v-model="form.code" placeholder="请输入验证码" />

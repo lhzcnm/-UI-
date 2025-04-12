@@ -1,8 +1,8 @@
 // Captcha must be exactly 6 digits.
 export const CAPTCHA_REG = /^\d{6}$/
 
-// Username must be between 2 and 12 characters, and can contain Chinese characters, letters, and numbers.
-export const USERNAME_REG = /^[\u4E00-\u9FA5a-z0-9]{2,12}$/i
+// Username must be between 6 and 16 characters, can contain letters, numbers, and underscores.
+export const USERNAME_REG = /^[0-9\w]{6,16}$/i
 
 // User password must be between 8 and 18 characters, contain at least one letter, one number, supports special characters.
 export const PASSWORD_REG = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+-=[\]{}|;:,.<>?]{8,18}$/

@@ -24,7 +24,8 @@ export interface UserApi {
 
 export interface UserInfo {
   userId: number
-  userName: string
+  username: string
+  nickname: string
   email: string
   phone: string
   avatar: string

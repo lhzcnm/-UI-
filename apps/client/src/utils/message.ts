@@ -10,8 +10,8 @@ export enum VERIFY_MSG {
   CODE = '验证码不能为空',
   CODE_FORMAT = '验证码格式不正确',
 
-  USERNAME = '用户名不能为空',
-  USERNAME_FORMAT = '用户名格式不正确',
+  USERNAME = '账号不能为空',
+  USERNAME_FORMAT = '账号格式不正确',
 
   PASSWORD = '密码不能为空',
   PASSWORD_FORMAT = '密码格式不正确',

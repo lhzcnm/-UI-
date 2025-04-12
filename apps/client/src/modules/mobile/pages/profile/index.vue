@@ -10,6 +10,8 @@ import { maskText } from '@/utils'
 import { ua } from '@3un/utils'
 
 const store = useUserStore()
+const iStore = useSettingStore()
+
 await store.getInfo(true)
 
 const order = store.info.userOrder
@@ -41,6 +43,11 @@ const settingOptions = [
     icon: 'lucide:key',
     action: 'password',
   },
+  {
+    label: '修改登录账号',
+    icon: 'lucide:user',
+    action: 'account',
+  },
   !ua.isWechat && {
     label: '微信绑定',
     icon: 'hugeicons:wechat',
@@ -53,10 +60,15 @@ const visibleForm = ref(false)
 const activeForm = ref<Action | null>(null)
 
 const activeTitle = computed(() => {
-  if (activeForm.value === 'phone') return '修改手机号'
-  if (activeForm.value === 'email') return '修改邮箱'
-  if (activeForm.value === 'wechat') return '微信绑定'
-  return '修改密码'
+  const options = {
+    account: '修改登录账号',
+    password: '修改密码',
+    phone: '修改手机号',
+    email: '修改邮箱',
+    wechat: '微信绑定',
+  }
+
+  return options[activeForm.value as Action]
 })
 
 const { copy, copied } = useClipboard({ legacy: true })
@@ -95,7 +107,9 @@ async function handleOpenBulkCheckApi() {
         <TheAvatar class="size-16" />
 
         <div class="flex-1">
-          <div class="text-xl font-medium mb-1.5">{{ store.info.userName }}</div>
+          <div class="text-xl font-medium mb-1.5">
+            {{ store.info.nickname || iStore.settings.title }}
+          </div>
           <div class="space-x-2">
             <XTag color="blue">ID: {{ store.info.userId }}</XTag>
             <XTag color="rose">{{ store.info.pricePlan }}</XTag>
@@ -159,7 +173,10 @@ async function handleOpenBulkCheckApi() {
       </div>
     </section>
     <section v-else class="mb-3 p-4 bg-card rounded-lg text-center">
-      <XButton color="emerald" label="开通批量查询 API KEY" @click="handleOpenBulkCheckApi" />
+      <XButton
+        color="emerald" label="开通批量查询 API KEY"
+        @click="handleOpenBulkCheckApi"
+      />
     </section>
 
     <section class="mb-4 bg-card rounded-lg divide-y">
@@ -205,6 +222,11 @@ async function handleOpenBulkCheckApi() {
         v-else-if="activeForm === 'wechat' && !ua.isWechat"
         :on-close="closeForm"
         class="p-3 space-y-3"
+      />
+      <AccountForm
+        v-else-if="activeForm === 'account'"
+        :on-close="closeForm"
+        class="p-3"
       />
       <PasswordForm
         v-else

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import BaseInfo from './components/BaseInfo.vue'
-import DataInfo from './components/DataInfo.vue'
-import ApiInfo from './components/ApiInfo.vue'
-import AppInfo from './components/AppInfo.vue'
+import FormCard from './components/FormCard.vue'
+import DataCard from './components/DataCard.vue'
+import BulkApiCard from './components/BulkApiCard.vue'
+import AppCard from './components/AppCard.vue'
 
 const store = useUserStore()
 await store.getInfo(true)
@@ -44,17 +44,14 @@ const qrcode = computed(() => {
     </div>
 
     <div class="flex items-start space-x-4">
-      <BaseInfo />
-
+      <FormCard />
       <section class="flex-1">
-        <DataInfo />
-
+        <DataCard />
         <div class="flex items-start gap-4 mt-4">
-          <ApiInfo />
-          <AppInfo v-if="mode === 'SanHe'" />
+          <BulkApiCard />
+          <AppCard v-if="mode === 'SanHe'" />
         </div>
       </section>
     </div>
-
   </div>
 </template>

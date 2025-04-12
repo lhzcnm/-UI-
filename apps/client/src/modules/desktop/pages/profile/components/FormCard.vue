@@ -11,10 +11,15 @@ const store = useUserStore()
 
 const activeForm = ref<Action | null>(null)
 const activeTitle = computed(() => {
-  if (activeForm.value === 'phone') return '修改手机号'
-  if (activeForm.value === 'email') return '修改邮箱'
-  if (activeForm.value === 'wechat') return '微信绑定'
-  return '修改密码'
+  const options = {
+    account: '账号修改',
+    password: '密码修改',
+    phone: '手机号修改',
+    email: '邮箱修改',
+    wechat: '微信绑定',
+  }
+
+  return options[activeForm.value as Action]
 })
 
 function showForm(type: Action) {
@@ -31,6 +36,13 @@ function closeForm() {
     <UserCard />
 
     <div class="relative mt-4">
+      <FormField
+        label="账号" class="mb-4"
+        action-text="修改"
+        :value="store.info.username"
+        @action="showForm('account')"
+      />
+
       <FormField
         label="微信" class="mb-4"
         :value="store.info.openId ? '已绑定' : '未绑定'"
@@ -78,6 +90,7 @@ function closeForm() {
           </div>
 
           <WechatForm v-if="activeForm === 'wechat'" />
+          <AccountForm v-else-if="activeForm === 'account'" :on-close="closeForm" />
           <PhoneForm v-else-if="activeForm === 'phone'" :on-close="closeForm" />
           <EmailForm v-else-if="activeForm === 'email'" :on-close="closeForm" />
           <PasswordForm v-else :on-close="closeForm" />
