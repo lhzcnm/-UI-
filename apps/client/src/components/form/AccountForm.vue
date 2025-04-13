@@ -9,14 +9,15 @@ const store = useUserStore()
 const account = ref('')
 
 async function submitForm() {
+  const username = account.value.trim()
   const rules = [
-    { rule: !!account.value.trim(), message: VERIFY_MSG.USERNAME },
-    { rule: account.value.length < 6, message: '账号长度不得低于6位' },
-    { rule: USERNAME_REG.test(account.value), message: VERIFY_MSG.USERNAME_FORMAT },
+    { rule: !!username, message: VERIFY_MSG.USERNAME },
+    { rule: username.length >= 6 && username.length <= 16, message: VERIFY_MSG.USERNAME_LENGTH },
+    { rule: USERNAME_REG.test(username), message: VERIFY_MSG.USERNAME_FORMAT },
   ]
 
   if (!validate(rules)) return
-  store.updateName(account.value)
+  store.updateName(username)
 
   toast.success('修改成功')
   props.onClose()
@@ -27,7 +28,7 @@ async function submitForm() {
   <form class="space-y-4" @submit.prevent="submitForm">
     <div>
       <p class="mb-3">当前账号：<b>{{ store.info.username }}</b></p>
-      <XInput v-model="account" placeholder="请输入登录的账号" />
+      <XInput v-model="account" name="username" placeholder="请输入登录的账号" />
     </div>
     <XButton type="submit" class="w-full">确定</XButton>
   </form>

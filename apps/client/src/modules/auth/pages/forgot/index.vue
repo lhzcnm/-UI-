@@ -28,8 +28,8 @@ async function sendCaptcha() {
   ]
 
   if (!validate(ruleValid)) return
-  if (isPhone) authApi.sms(form.target)
-  else authApi.email(form.target)
+  if (isPhone) await authApi.sms(form.target)
+  else await authApi.email(form.target)
   startCountdown()
 }
 
@@ -45,6 +45,7 @@ function rules(data: typeof form) {
     { rule: CAPTCHA_REG.test(code), message: VERIFY_MSG.CODE },
 
     { rule: !!password, message: VERIFY_MSG.PASSWORD },
+    { rule: /\d|\w/.test(password), message: VERIFY_MSG.PASSWORD_LESS },
     { rule: PASSWORD_REG.test(password), message: VERIFY_MSG.PASSWORD_FORMAT },
 
     { rule: password === confirmPassword, message: VERIFY_MSG.PASSWORD_CONFIRM },

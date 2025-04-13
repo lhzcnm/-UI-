@@ -55,7 +55,9 @@ const segmented = tv({
 })
 
 const sg = segmented({ color: props.color, size: props.size })
-const activeIndex = computed(() => props.options.findIndex((opt) => opt.value === active.value))
+const activeIndex = computed(() => props.options
+  .findIndex((opt) => opt.value === active.value)
+)
 
 function handleClick(value: string | number) {
   active.value = value

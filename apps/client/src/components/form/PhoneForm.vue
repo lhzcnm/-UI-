@@ -55,7 +55,7 @@ async function submitForm() {
     <XInput v-model="phoneForm.phone" type="tel" placeholder="请输入手机号" />
     <div class="flex space-x-2">
       <XInput v-model="phoneForm.code" placeholder="请输入验证码" />
-      <XButton type="button" :disabled="isRunning" @click="sendCode">
+      <XButton type="button" :disabled="isRunning" @click.prevent="sendCode">
         {{ isRunning ? `${count} 秒后重发` : '获取验证码' }}
       </XButton>
     </div>

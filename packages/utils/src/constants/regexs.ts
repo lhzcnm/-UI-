@@ -5,7 +5,7 @@ export const CAPTCHA_REG = /^\d{6}$/
 export const USERNAME_REG = /^[0-9\w]{6,16}$/i
 
 // User password must be between 8 and 18 characters, contain at least one letter, one number, supports special characters.
-export const PASSWORD_REG = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+-=[\]{}|;:,.<>?]{8,18}$/
+export const PASSWORD_REG = /^(?=.*\w)(?=.*\d)[\w\d!@#$%^&*()+-=[\]{}|;:,.<>?]{8,18}$/
 
 // Email must match the standard email format.
 export const EMAIL_REG = /^[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i

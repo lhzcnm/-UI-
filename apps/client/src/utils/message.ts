@@ -16,6 +16,7 @@ export enum VERIFY_MSG {
   USERNAME_FORMAT = '账号格式不正确',
 
   PASSWORD = '密码不能为空',
+  PASSWORD_LESS = '密码至少含有一位数字、字母',
   PASSWORD_LENGTH = '密码长度在 8-18 位之间',
   PASSWORD_FORMAT = '密码格式不正确',
   PASSWORD_CONFIRM = '两次密码不一致',
