@@ -1,7 +1,6 @@
 import { withTV } from 'tailwind-variants/transformer'
+import { preset } from '@3un/ui/preset'
 import { resolve } from 'node:path'
-
-import XPreset from '@3un/shared/presets'
 
 const uiPath = resolve('../../packages/ui')
 const uiContent = resolve(uiPath, 'src/**/*.vue')
@@ -12,7 +11,7 @@ export default withTV({
     './src/**/*.{vue,ts}',
     uiContent,
   ],
-  presets: [XPreset],
+  presets: [preset],
   theme: {
     extend: {
       width: {

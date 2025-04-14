@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import Imports from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { UIResolver } from '@3un/ui'
+import { UIResolver } from '@3un/ui/resolver'
 
 function resolve(path: string) {
   return fileURLToPath(new URL(path, import.meta.url))
