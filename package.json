@@ -12,6 +12,14 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./preset": {
+      "import": "./dist/preset.js",
+      "types": "./dist/preset.d.ts"
+    },
+    "./resolver": {
+      "import": "./dist/resolver.js",
+      "types": "./dist/resolver.d.ts"
+    },
     "./*": "./dist/*"
   },
   "dependencies": {
