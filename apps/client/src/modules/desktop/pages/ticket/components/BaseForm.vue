@@ -13,7 +13,6 @@ const form = defineModel<TicketCreateForm>({ required: true })
         <XSelectItem
           v-for="item in TICKET_TYPE_LIST" :key="item.value"
           :value="item.value" :label="item.label"
-          active-class="bg-blue-500 text-zinc-100 rounded"
         />
       </XSelect>
     </div>
@@ -24,7 +23,6 @@ const form = defineModel<TicketCreateForm>({ required: true })
         <XSelectItem
           v-for="item in TICKET_PRIORITY_LIST" :key="item.value"
           :value="item.value" :label="item.label"
-          active-class="bg-blue-500 text-zinc-100 rounded"
         />
       </XSelect>
     </div>
