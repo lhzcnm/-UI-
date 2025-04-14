@@ -1,0 +1,39 @@
+{
+  "name": "@3un/ui",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.8.0",
+  "scripts": {
+    "build": "vite build"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": "./dist/*"
+  },
+  "dependencies": {
+    "@floating-ui/vue": "^1.1.6",
+    "@vueuse/core": "^13.0.0",
+    "dayjs": "^1.11.13",
+    "tailwind-merge": "2.5.4",
+    "tailwind-variants": "0.3.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@iconify/vue": "^4.3.0",
+    "@types/node": "20",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "tailwindcss": "3",
+    "typescript": "~5.7.2",
+    "unplugin-auto-import": "^19.1.1",
+    "unplugin-vue-components": "^28.4.1",
+    "vite-plugin-dts": "^4.5.3",
+    "vite": "^6.2.0"
+  }
+}
