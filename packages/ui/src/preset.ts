@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss'
 
-export default {
+export const preset: Config = {
   darkMode: 'class',
   content: [],
   theme: {
@@ -51,4 +51,4 @@ export default {
       }
     },
   },
-} satisfies Config
+}
