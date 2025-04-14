@@ -1,8 +1,8 @@
 import { withTV } from 'tailwind-variants/transformer'
-import XPreset from './presets'
+import { preset } from './src/preset'
 
 export default withTV({
   darkMode: 'class',
   content: ['src/**/*.vue'],
-  presets: [XPreset],
+  presets: [preset],
 })
