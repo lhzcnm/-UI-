@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     vue(),
     Imports({ imports: ['vue'] }),
-    dts({ rollupTypes: true }),
+    dts({ rollupTypes: true, }),
   ],
   resolve: {
     alias: {
@@ -18,9 +18,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: [
+        resolve(__dirname, 'src/index.ts'),
+        resolve(__dirname, 'src/preset.ts'),
+        resolve(__dirname, 'src/resolver.ts')
+      ],
       formats: ['es'],
-      fileName: 'index',
     },
     rollupOptions: {
       external: [
@@ -32,6 +35,9 @@ export default defineConfig({
         'tailwind-merge',
         'tailwind-variants',
       ],
+      output: {
+        assetFileNames: 'index.css'
+      }
     },
   },
 })
