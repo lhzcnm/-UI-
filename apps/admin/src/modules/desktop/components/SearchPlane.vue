@@ -5,7 +5,7 @@ import ServiceSearchItem from './ServiceSearchItem.vue'
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
-import type { ServiceView } from '@/interface/services'
+import type { Service } from '@/inters/services'
 import type { SidebarMenuChild } from '@/utils/sidebar'
 import { menus, tools } from '@/utils/sidebar'
 
@@ -15,7 +15,7 @@ interface Options<T = any> {
   children: T[]
 }
 
-type SearchOptions = Options<SidebarMenuChild | ServiceView>
+type SearchOptions = Options<SidebarMenuChild | Service>
 
 const visible = defineModel<boolean>({ required: true })
 
@@ -152,7 +152,7 @@ function handleCommand(command: string, event: MouseEvent) {
           </template>
           <template v-else>
             <ServiceSearchItem
-              v-for="child in (option as Options<ServiceView>).children"
+              v-for="child in (option as Options<Service>).children"
               :key="child.packageId"
               :data-id="child.packageId"
               :child="child"

@@ -1,56 +1,31 @@
-import type { ServiceApi } from './types'
+import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams } from '@/inters/services'
+import { zService, zServiceGroup } from '@/inters/services'
 import http from '@/utils/http'
 
-export * from './types'
+type ServicesFn = () => Promise<Service[]>
+export const getServices: ServicesFn = async () => {
+  const { data } = await http.get<any[]>('/service')
+  return data.map((item) => zService.parse(item))
+}
 
-export const serviceApi: ServiceApi = {
-  convertModel: data => ({
-    apiId: data.apiId,
-    apiName: data.apiName,
-    categoryId: data.categoryId,
-    disablePackage: data.disablePackage,
-    duplicateImeiNotAllowed: data.duplicateImeiNotAllowed,
-    externalNetworkId: data.externalNetworkId,
-    imeiFieldType: data.imeiFieldType,
-    mustRead: data.mustRead,
-    mustReadLocal: data.mustReadLocal,
-    packageId: data.packageId,
-    packageOrderBy: data.packageOrderBy,
-    packagePrice: data.packagePrice,
-    packageTitle: data.packageTitle,
-    packageTitleLocal: data.packageTitleLocal,
-    pushMsg: data.pushMsg,
-    timeTaken: data.timeTaken,
-    timeTakenLocal: data.timeTakenLocal,
-    testimonials: data.testimonials,
-    isNew: data.isNew,
-    isHot: data.isHot,
-    isUnlock: data.isUnlock,
-  }),
-  convertGroupModel: data => ({
-    category: data.category,
-    categoryId: data.categoryId,
-    categoryLocal: data.categoryLocal,
-    disableCategory: data.disableCategory,
-    orderBy: data.orderBy,
-  }),
+type ServiceCreateFn = (body: ServiceCreateParams) => Promise<Service>
+export const createService: ServiceCreateFn = async (body) => {
+  const { data } = await http.post('/service', body)
+  return zService.parse(data)
+}
 
-  items: () => http.get('service'),
-  createService: data => http.post('service', data),
-  updateService: data => http.put('service', data),
-  deleteService: id => http.delete(`service/${id}`),
-  cleanPrice: id => http.delete(`service/clean/${id}`),
+type ServiceUpdateFn = (body: ServiceUpdateParams) => Promise<number>
+export const updateService: ServiceUpdateFn = async (body) => {
+  return (await http.put('/service', body)).data
+}
 
-  syncList: (id) => http.get(`api/list/${id}`),
-  serviceSync: data => http.put('api/service/edit', data),
+type ServiceDeleteFn = (id: number) => Promise<void>
+export const deleteService: ServiceDeleteFn = async (id) => {
+  await http.delete(`/service/${id}`)
+}
 
-  groups: () => http.get('service/group'),
-  createGroup: data => http.post('service/group', data),
-  updateGroup: data => http.put('service/group', data),
-  deleteGroup: id => http.delete(`service/group/${id}`),
-
-  fields: params => http.get('services/field', { params }),
-  createField: data => http.post('services/field', data),
-  updateField: data => http.put('services/field', data),
-  deleteField: data => http.delete('services/field', { data }),
+type ServiceGroupsFn = () => Promise<ServiceGroup[]>
+export const getServiceGroups: ServiceGroupsFn = async () => {
+  const { data } = await http.get<any[]>('/service/group')
+  return data.map((item) => zServiceGroup.parse(item))
 }

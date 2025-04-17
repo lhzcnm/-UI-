@@ -12,54 +12,6 @@ const search = ref('')
     </section>
 
     <section class="space-y-3 mb-12">
-      <h2 class="text-xl font-mono font-bold">Button</h2>
-      <div class="flex gap-2">
-        <XButton label="Button" />
-        <XButton variant="outline">Button</XButton>
-        <XButton variant="soft">Button</XButton>
-        <XButton variant="ghost">Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <XButton color="emerald">Button</XButton>
-        <XButton color="emerald" variant="outline">Button</XButton>
-        <XButton color="emerald" variant="soft">Button</XButton>
-        <XButton color="emerald" variant="ghost">Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <XButton color="amber">Button</XButton>
-        <XButton color="amber" variant="outline">Button</XButton>
-        <XButton color="amber" variant="soft">Button</XButton>
-        <XButton color="amber" variant="ghost">Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <XButton color="rose">Button</XButton>
-        <XButton color="rose" variant="outline">Button</XButton>
-        <XButton color="rose" variant="soft">Button</XButton>
-        <XButton color="rose" variant="ghost">Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <XButton color="indigo">Button</XButton>
-        <XButton color="indigo" variant="outline">Button</XButton>
-        <XButton color="indigo" variant="soft">Button</XButton>
-        <XButton color="indigo" variant="ghost">Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <!-- icon -->
-        <XButton icon="lucide:download">Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <!-- disable & loading -->
-        <XButton disabled>Button</XButton>
-        <XButton loading>Button</XButton>
-      </div>
-      <div class="flex gap-2">
-        <!-- size -->
-        <XButton>Button</XButton>
-        <XButton size="sm">Button</XButton>
-      </div>
-    </section>
-
-    <section class="space-y-3 mb-12">
       <h2 class="text-xl font-mono font-bold">Input & Textarea</h2>
       <div class="space-y-2">
         <XInput placeholder="Input" />

@@ -14,14 +14,14 @@ defineProps<HeaderProps>()
 
 const iStore = useSystemStore()
 const visibleSearch = ref(false)
-const visibleSetting = ref(true)
+const visibleSetting = ref(false)
 </script>
 
 <template>
   <div
     :class="twJoin(
       'flex justify-between items-center',
-      'w-full px-1 h-header border-b',
+      'w-full px-1 h-header',
     )"
   >
     <div class="flex items-center space-x-1">

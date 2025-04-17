@@ -10,7 +10,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     Badge: typeof import('./src/components/Badge.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
+    DesktopHeader: typeof import('./src/modules/desktop/components/DesktopHeader.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
+    FormField: typeof import('./src/modules/desktop/components/FormField.vue')['default']
+    MobileHeader: typeof import('./src/modules/mobile/components/MobileHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     RouteSearchItem: typeof import('./src/modules/desktop/components/RouteSearchItem.vue')['default']
@@ -22,9 +25,13 @@ declare module 'vue' {
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SidebarItem: typeof import('./src/components/SidebarItem.vue')['default']
     TheEmpty: typeof import('./src/components/TheEmpty.vue')['default']
-    TheHeader: typeof import('./src/modules/desktop/components/TheHeader.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
+    XButton: typeof import('@3un/ui')['XButton']
     XDialog: typeof import('@3un/ui')['XDialog']
+    XInput: typeof import('@3un/ui')['XInput']
+    XSelect: typeof import('@3un/ui')['XSelect']
+    XSelectItem: typeof import('@3un/ui')['XSelectItem']
+    XTable: typeof import('@3un/ui')['XTable']
   }
 }

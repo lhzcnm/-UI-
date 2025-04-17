@@ -29,4 +29,10 @@ export default withTV({
       },
     },
   },
+  safelist: [
+    // used by the x-table align prop
+    'text-left',
+    'text-right',
+    'text-center',
+  ]
 })

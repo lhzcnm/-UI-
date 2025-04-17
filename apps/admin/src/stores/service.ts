@@ -1,51 +1,45 @@
-import type { ServiceGroupView, ServiceView } from '@/interface/services'
+import type { Service, ServiceGroup } from '@/inters/services'
+import { getServiceGroups, getServices } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
-import { serviceApi } from '@/api/services'
 import { defineStore } from 'pinia'
 
-export const useServiceStore = defineStore('serviceStore', () => {
-  const GROUP_KEY = import.meta.env.VITE_SERVICE_GROUPS
-  const ITEM_KEY = import.meta.env.VITE_SERVICE_ITEMS
+export const useServiceStore = defineStore('service', () => {
+  const groups = ref<ServiceGroup[]>([])
+  const items = ref<Service[]>([])
+  const groupMap = ref(new Map<number, ServiceGroup>())
+  const itemMap = ref(new Map<number, Service>())
 
-  const titles = ref<Map<number, string>>(new Map())
-  const groups = ref<ServiceGroupView[]>([])
-  const items = ref<ServiceView[]>([])
-
-  function updateTitles(data: ServiceView[]) {
-    titles.value.clear()
-
-    data.forEach(item => titles.value.set(
-      item.packageId,
-      item.packageTitle
-    ))
-  }
-
-  async function getItems(force = false) {
+  async function getItems() {
     const data = await useFetchWithCache({
-      fetchData: serviceApi.items,
-      key: ITEM_KEY,
-      force,
+      fetchData: getServices,
+      key: 'services',
     })
 
-    updateTitles(data)
-    items.value = data.map(item => serviceApi.convertModel(item))
+    itemMap.value.clear()
+    itemMap.value = new Map(data
+      .map(item => [item.packageId, item]))
+
+    items.value = data
   }
 
-  async function getGroups(force = false) {
+  async function getGroups() {
     const data = await useFetchWithCache({
-      fetchData: serviceApi.groups,
-      key: GROUP_KEY,
-      force,
+      fetchData: getServiceGroups,
+      key: 'groups',
     })
 
-    groups.value = data.map(item => serviceApi.convertGroupModel(item))
+    groupMap.value.clear()
+    groupMap.value = new Map(data
+      .map(item => [item.categoryId, item]))
+
+    groups.value = data
   }
 
   return {
-    titles,
     groups,
+    groupMap,
     items,
-
+    itemMap,
     getItems,
     getGroups,
   }

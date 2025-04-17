@@ -11,7 +11,7 @@ export interface FetchWithCacheOptions<T> {
   waitTime?: number
   cacheDuration?: number
   storageType?: StorageType
-  fetchData: () => R<T>
+  fetchData: () => Promise<T>
   onUpdate?: (data: T) => void
   onError?: (error: Error) => void
 }
@@ -69,7 +69,7 @@ export async function useFetchWithCache<T>(
     }
 
     const fetchStart = Date.now()
-    const { data } = await fetchData()
+    const data = await fetchData()
     const fetchTime = Date.now() - fetchStart
     const _waitTime = fetchTime < waitTime ? waitTime - fetchTime : 0
 
@@ -84,7 +84,6 @@ export async function useFetchWithCache<T>(
     return new Promise((resolve) => {
       setTimeout(() => resolve(data), _waitTime)
     })
-
   } catch (error) {
     onError?.(error as Error)
     throw error

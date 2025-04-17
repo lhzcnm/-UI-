@@ -58,6 +58,20 @@
   }
 }
 
+.noto-serif-sc {
+  font-family: "Noto Serif SC", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.noto-sans-sc {
+  font-family: "Noto Sans SC", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
 /* 滚动条 */
 @media (min-width: 640px) {
   ::-webkit-scrollbar {

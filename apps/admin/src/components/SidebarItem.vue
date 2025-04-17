@@ -76,7 +76,7 @@ const isActive = computed(() => {
       v-show="menu.children && isExpanded"
       class="mx-5 mt-1 pl-2 text-sm border-l border-dashed"
     >
-      <ul class="flex flex-col">
+      <ul class="flex flex-col sm:space-y-1">
         <li v-for="child in menu.children" :key="child.path">
           <RouterLink
             :to="child.path"

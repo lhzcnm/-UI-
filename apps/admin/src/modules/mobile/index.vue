@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import TheHeader from './components/TheHeader.vue'
 import Fallback from '@/components/Fallback.vue'
 import { twJoin } from 'tailwind-merge'
 
@@ -9,7 +8,7 @@ const route = useRoute()
 
 <template>
   <div class="flex flex-col h-screen">
-    <TheHeader />
+    <MobileHeader />
     <RouterView v-slot="{ Component }" :key="route.path">
       <main v-if="Component" class="flex-1 overflow-y-auto">
         <Transition name="fade-in" mode="out-in">

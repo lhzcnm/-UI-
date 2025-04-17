@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import TheHeader from './components/TheHeader.vue'
 import { useFullscreen } from '@vueuse/core'
 
 const route = useRoute()
@@ -28,7 +27,7 @@ await Promise.all([
       class="flex flex-col"
       :class="{ 'ml-sidebar': iStore.showSidebar }"
     >
-      <TheHeader
+      <DesktopHeader
         :is-fullscreen="isFullscreen"
         :toggle-fullscreen="toggle"
       />

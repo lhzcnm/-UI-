@@ -10,7 +10,7 @@ export const useSettingStore = defineStore('settingStore', () => {
   const originUrl = ref('')
 
   async function getSettings() {
-    const data = await useFetchWithCache({
+    const { data } = await useFetchWithCache({
       fetchData: settingApi.get,
       key,
     })

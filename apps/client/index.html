@@ -17,7 +17,6 @@
     const applyTheme = storedTheme || (systemTheme ? 'dark' : 'light')
 
     storedTheme && localStorage.setItem('theme', applyTheme)
-    html.setAttribute('data-ag-theme-mode', applyTheme)
     html.classList.add(applyTheme)
   })()
   </script>

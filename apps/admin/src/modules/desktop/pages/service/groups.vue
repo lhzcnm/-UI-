@@ -1,5 +1,19 @@
+<script setup lang="ts">
+import { columns } from './utils/columnGroup'
+
+const store = useServiceStore()
+</script>
+
 <template>
-  <div>
-    <h1>服务组</h1>
+  <div class="px-3">
+    <section class="my-3">
+      <x-button>新增服务组</x-button>
+    </section>
+
+    <XTable
+      :data="store.groups"
+      :columns="columns"
+      class="bg-none h-[calc(100vh-8rem)]"
+    />
   </div>
 </template>

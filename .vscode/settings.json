@@ -1,11 +1,13 @@
 {
+  // "tailwindCSS.experimental.classRegex": [
+  //   ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  // ],
+
   "files.exclude": {
-    // "**/node_modules": true,
+    "**/node_modules": true,
+    "packages/**/dist": true,
   },
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  "tailwindCSS.experimental.classRegex": [
-    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
-  ]
 }

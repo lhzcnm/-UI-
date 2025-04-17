@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ua } from '@3un/utils'
 
-export const useSystemStore = defineStore('systemStore', () => {
+export const useSystemStore = defineStore('system', () => {
   const breadcrumbItems = ref<string[]>([])
   const showSidebar = ref(ua.isDesktop)
 

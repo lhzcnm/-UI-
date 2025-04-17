@@ -38,7 +38,7 @@ onBeforeMount(() => {
 <template>
   <aside
     :class="twMerge(
-      'flex flex-col bg-background border-r border-dashed',
+      'flex flex-col bg-background',
       props.class
     )"
   >

@@ -12,18 +12,18 @@ export const useServiceStore = defineStore('serviceStore', () => {
   const services = shallowRef<Map<number, Service>>(new Map())
 
   async function getServices() {
-    const _details = await useFetchWithCache({
+    const { data } = await useFetchWithCache({
       fetchData: serviceApi.list, key: sKey
     })
 
     services.value.clear()
-    for (const item of _details) {
+    for (const item of data) {
       for (const service of item.children) {
         services.value.set(service.id, service)
       }
     }
 
-    details.value = _details
+    details.value = data
   }
 
   function addRecentService(id: number) {
