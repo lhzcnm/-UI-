@@ -13,6 +13,7 @@ const store: ServiceStore = reactive({
   updateForm: zServiceForm.parse({}),
   visableCreate: false,
   visableUpdate: false,
+  index: undefined,
   page: 1,
   limit: 20,
 })

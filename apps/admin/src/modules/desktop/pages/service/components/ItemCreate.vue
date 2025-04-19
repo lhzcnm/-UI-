@@ -18,7 +18,7 @@ const store = inject(SERVICE_STORE)!
 
     <template #footer>
       <div class="flex space-x-2 justify-end mt-3">
-        <XButton variant="soft">取消</XButton>
+        <XButton variant="soft" @click="store.visableCreate = false">取消</XButton>
         <XButton>新增</XButton>
       </div>
     </template>

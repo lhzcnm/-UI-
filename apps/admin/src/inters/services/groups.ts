@@ -14,3 +14,9 @@ export const zServiceGroup = z.interface({
   // metaTags: z.string().default(''),
   // seoUrlName: z.string().default(''),
 })
+
+export const zServiceGroupForm = zServiceGroup.omit({ categoryId: true })
+export type ServiceGroupCreateParams = z.infer<typeof zServiceGroupForm>
+
+const zServiceGroupUpdateParams = zServiceGroup.extend(zServiceGroupForm.partial())
+export type ServiceGroupUpdateParams = z.infer<typeof zServiceGroupUpdateParams>

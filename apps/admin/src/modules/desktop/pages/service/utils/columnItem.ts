@@ -1,7 +1,10 @@
 import { XButton, XInput, XSwitch, type ColDef } from '@3un/ui'
 import type { Service } from '@/inters/services'
+import { SERVICE_STORE } from '.'
+import { updateService } from '@/api/services'
+import { toast } from 'vue-sonner'
 
-const store =  useServiceStore()
+const serviceStore =  useServiceStore()
 export const columns: ColDef<Service> = [
   {
     key: 'packageId',
@@ -13,7 +16,7 @@ export const columns: ColDef<Service> = [
     title: '所在服务组',
     width: 180,
     render: (value) => {
-      const group = store.groupMap.get(value)
+      const group = serviceStore.groupMap.get(value)
       return group ? group.category : '未知'
     }
   },
@@ -27,7 +30,9 @@ export const columns: ColDef<Service> = [
     title: '服务 API',
     width: 200,
     render(value) {
-      const api = store.items.find(item => item.apiId === value)
+      const api = serviceStore.items
+        .find(item => item.apiId === value)
+
       return h(
         'a',
         {
@@ -67,16 +72,25 @@ export const columns: ColDef<Service> = [
     },
   },
   {
-    key: 'disableCategory',
+    key: 'disablePackage',
     title: '禁用',
     width: 168,
-    render(value, row) {
+    render(value, row, index) {
       return h(
         XSwitch,
         {
           modelValue: value,
-          'onUpdate:modelValue': (val) => {
-            row.disablePackage = val
+          'onUpdate:modelValue': async (val) => {
+            const response = updateService({
+              packageId: row.packageId,
+              disablePackage: val,
+            })
+            const current = serviceStore.items[index]
+            response.then(() => current.disablePackage = val)
+            response.catch(() => {
+              toast.warning('禁用失败')
+              current.disablePackage = !val
+            })
           },
         },
       )
@@ -88,7 +102,14 @@ export const columns: ColDef<Service> = [
     width: 64,
     fixed: 'right',
     render: (_, row, index) => {
-      return h(XButton, { size: 'sm' }, () => '编辑')
+      const store = inject(SERVICE_STORE)!
+      const onClick = () => {
+        store.index = index
+        store.updateForm = row
+        store.visableUpdate = true
+      }
+
+      return h(XButton, { size: 'sm', onClick }, () => '编辑')
     }
   }
 ]

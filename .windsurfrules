@@ -1,0 +1,7 @@
+1. 本项目为 web:spa:vue3
+2. 请在我开始输入时候才给出建议
+3. 请遵守我的代码风格
+4. 使用 tailwindcss v3
+5. 对于较长的 class, 使用 tailwindMerge 的 `twMerge` 或 `twJoin` 换行
+6. .vue 文件 总是使用 `<script setup lang="ts">` 在最前面
+7. 最多一个空行

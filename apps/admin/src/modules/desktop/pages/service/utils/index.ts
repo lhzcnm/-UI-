@@ -6,6 +6,7 @@ export interface ServiceStore {
   updateForm: ServiceCreateParams
   visableCreate: boolean
   visableUpdate: boolean
+  index: number | undefined
   page: number
   limit: number
 }

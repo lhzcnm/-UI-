@@ -1,6 +1,9 @@
 import type { ServiceGroup } from '@/inters/services'
 import { XButton, XInput, XSwitch, type ColDef } from "@3un/ui"
+import { updateServiceGroup } from '@/api/services'
+import { toast } from 'vue-sonner'
 
+const serviceStore =  useServiceStore()
 export const columns: ColDef<ServiceGroup> = [ 
   {
     key: 'categoryId',
@@ -37,13 +40,22 @@ export const columns: ColDef<ServiceGroup> = [
     key: 'disableCategory',
     title: '禁用',
     width: 168,
-    render(value, row) {
+    render(value, row, index) {
       return h(
         XSwitch,
         {
           modelValue: value,
-          'onUpdate:modelValue': (val) => {
-            row.disableCategory = val
+          'onUpdate:modelValue': async (val) => {
+            const response = updateServiceGroup({
+              categoryId: row.categoryId,
+              disableCategory: val,
+            })
+            const current = serviceStore.groups[index]
+            response.then(() => current.disableCategory = val)
+            response.catch(() => {
+              toast.warning('禁用失败')
+              current.disableCategory = !val
+            })
           },
         },
       )

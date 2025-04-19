@@ -2,17 +2,20 @@ import type { Service, ServiceGroup } from '@/inters/services'
 import { getServiceGroups, getServices } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
 import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
 
 export const useServiceStore = defineStore('service', () => {
-  const groups = ref<ServiceGroup[]>([])
-  const items = ref<Service[]>([])
+  const groups = useStorage<ServiceGroup[]>('groups', [])
+  const items = useStorage<Service[]>('services', [])
+
   const groupMap = ref(new Map<number, ServiceGroup>())
   const itemMap = ref(new Map<number, Service>())
 
-  async function getItems() {
+  async function getItems(force = false) {
     const data = await useFetchWithCache({
       fetchData: getServices,
       key: 'services',
+      force: force,
     })
 
     itemMap.value.clear()
@@ -22,10 +25,11 @@ export const useServiceStore = defineStore('service', () => {
     items.value = data
   }
 
-  async function getGroups() {
+  async function getGroups(force = false) {
     const data = await useFetchWithCache({
       fetchData: getServiceGroups,
       key: 'groups',
+      force: force,
     })
 
     groupMap.value.clear()
