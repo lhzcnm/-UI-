@@ -17,7 +17,6 @@ const toggleTheme = () => {
   const target = theme.value.isDark ? 'dark' : 'light'
 
   localStorage.setItem('theme', target)
-  html.setAttribute('data-ag-theme-mode', target)
   html.className = html.className.replace(theme.value.name, target)
   theme.value.name = target
 }

@@ -90,9 +90,9 @@ function handleCopy() {
     )"
   >
     <div class="flex items-center justify-between space-x-3">
-      <span 
-        v-if="isSubmit" 
-        :class="twMerge(
+      <span
+        v-if="isSubmit"
+        :class="twJoin(
           'relative flex items-center justify-center',
           'min-w-[32px] h-[32px] px-2',
           'bg-gradient-to-br from-primary/80 to-primary/40',
@@ -125,9 +125,8 @@ function handleCopy() {
           <span class="font-medium font-mono">{{ order.imei }}</span>
         </div>
         <button
-          :class="twMerge(
-            'p-1.5 text-zinc-400 hover:text-zinc-600',
-            'dark:text-zinc-500 dark:hover:text-zinc-300',
+          :class="twJoin(
+            'p-1.5 text-muted-foreground',
             'opacity-0 group-hover:opacity-100 transition-opacity',
           )"
           @click="copy(order.imei)"
@@ -145,7 +144,7 @@ function handleCopy() {
         <span class="text-muted-foreground shrink-0">消耗积分：</span>
         <span
           :class="twJoin(
-            'font-medium text-rose-500',
+            'font-medium text-red-600',
             status.isFailed && 'line-through',
           )"
         >

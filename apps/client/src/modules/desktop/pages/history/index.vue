@@ -14,7 +14,7 @@ const serviceStore = useServiceStore()
 await serviceStore.getServices()
 
 const page = ref(1)
-const pageSize = ref(20)
+const limit = ref(20)
 
 const selectRows = ref<string[]>([])
 const { copy } = useClipboard({ legacy: true })
@@ -30,7 +30,7 @@ const store: HistoryStore = reactive({
 provide(HISTORY_STORE, store)
 
 watch(
-  [page, pageSize],
+  [page, limit],
   async ([pageVal, pageSizeVal]) => {
     const params = formatOrderParams(store.searchForm)
     const response = await orderApi.list({
@@ -68,13 +68,13 @@ function handleCopy() {
     <section class="flex justify-between space-x-2 mb-3">
       <div class="space-x-2 whitespace-nowrap">
         <XButton label="搜索" @click="openSearch" />
-        <XButton color="emerald" label="导出" @click="openExport" />
+        <XButton color="teal" label="导出" @click="openExport" />
         <XButton color="amber" variant="outline" label="复制 IMEI/SN" @click="handleCopy" />
       </div>
 
       <XPagination
         v-model="page"
-        v-model:size="pageSize"
+        v-model:limit="limit"
         :total="store.orders.total"
         :layouts="[
           'total',

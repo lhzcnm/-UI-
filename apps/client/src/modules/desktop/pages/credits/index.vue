@@ -4,7 +4,7 @@ import { userApi } from '@/api/user'
 import { columns } from './utils/columns'
 
 const page = ref(1)
-const pageSize = ref(20)
+const limit = ref(20)
 
 const response = { list: [], page: 1, pageSize: 20, total: 0 }
 const creditLogs = ref<CreditLogsResponse>(response)
@@ -13,7 +13,7 @@ const serviceStore = useServiceStore()
 await serviceStore.getServices()
 
 watch(
-  [page, pageSize],
+  [page, limit],
   async ([pageVal, pageSizeVal]) => {
     const response = await userApi.creditLogs({
       pageSize: pageSizeVal,
@@ -30,7 +30,7 @@ watch(
     <section class="space-x-2 mb-3">
       <XPagination
         v-model="page"
-        v-model:size="pageSize"
+        v-model:limit="limit"
         :total="creditLogs.total"
         :layouts="['total', 'sizes', 'prev', 'pager', 'next', 'jumper']"
       />

@@ -20,8 +20,8 @@ const store = useUserStore()
           <span class="text-sm text-muted-foreground">￥</span>
         </div>
         <div class="space-x-3 text-sm mt-2">
-          <span class="text-emerald-500">充值总额 {{ store.info.totalReceipts }}</span>
-          <span class="text-amber-500">锁定积分 {{ store.info.rechargeCount }}</span>
+          <span class="text-teal-600">充值总额 {{ store.info.totalReceipts }}</span>
+          <span class="text-amber-600">锁定积分 {{ store.info.rechargeCount }}</span>
         </div>
       </div>
       <div class="border rounded-lg p-4">
@@ -38,8 +38,8 @@ const store = useUserStore()
           <span class="text-sm text-muted-foreground">个</span>
         </div>
         <div class="space-x-3 text-sm mt-2">
-          <span class="text-emerald-500">成功 {{ store.info.userOrder.success }}</span>
-          <span class="text-rose-500">失败 {{ store.info.userOrder.failed }}</span>
+          <span class="text-teal-600">成功 {{ store.info.userOrder.success }}</span>
+          <span class="text-red-600">失败 {{ store.info.userOrder.failed }}</span>
         </div>
       </div>
       <div class="border rounded-lg p-4">

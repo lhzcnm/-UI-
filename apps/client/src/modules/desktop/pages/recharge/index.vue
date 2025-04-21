@@ -4,7 +4,7 @@ import MembershipForm from './components/MembershipForm.vue'
 import RechargeHistory from './components/RechargeHistory.vue'
 import RechargeQrcode from './components/RechargeQrcode.vue'
 
-import type { SegmentedOption } from '@3un/ui'
+import type { XSegmentedOption } from '@3un/ui'
 import type { RechargeStore, TabMode } from './utils'
 import { RECHARGE_STORE } from './utils'
 
@@ -24,7 +24,7 @@ const store: RechargeStore = reactive({
 
 provide(RECHARGE_STORE, store)
 
-const options: SegmentedOption[] = [
+const options: XSegmentedOption[] = [
   { label: '余额充值', value: 'recharge', icon: 'lucide:wallet' },
   { label: '开通会员', value: 'membership', icon: 'lucide:crown' }
 ]

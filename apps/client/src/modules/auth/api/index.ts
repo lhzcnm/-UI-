@@ -7,6 +7,13 @@ const authApi: AuthApi = {
 
   getCaptcha: () => http.get('auth/captcha-refresh'),
   checkCaptcha: (params) => http.post('auth/captcha-check', params),
+
+  getQrcode: () => http.get('auth/qrcode'),
+	accountLogin: params => http.post('auth/login/account', params),
+	phoneLogin: params => http.post('auth/login/phone', params),
+	checkQrcode: (nonce) => http.post(`auth/qrcode/${nonce}`),
+  
+  forgotPsw: (params) => http.put('auth/forgot-psw', params),
 }
 
 export default authApi

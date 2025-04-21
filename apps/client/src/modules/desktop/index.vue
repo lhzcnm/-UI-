@@ -65,7 +65,7 @@ watch(visibility, (cur, prev) => {
     :text="popupAnnc" :close-btn="false"
   >
     <template #footer>
-      <div class="flex justify-end gap-2">
+      <div class="flex justify-end">
         <XButton @click="visible = false">
           朕知道了
         </XButton>

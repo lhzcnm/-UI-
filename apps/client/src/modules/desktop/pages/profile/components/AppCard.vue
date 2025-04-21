@@ -18,7 +18,7 @@ function download(platform: string) {
 
       <XButton
         icon="fa-brands:apple" label="macOS 下载"
-        variant="outline" color="rose"
+        variant="outline" color="red"
         @click="download('macos')"
       />
     </div>

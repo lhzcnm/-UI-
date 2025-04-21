@@ -1,10 +1,9 @@
+import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/shared/enums'
+import type { OrderTableView } from '@/api/orders'
+import type { XTableColumn } from '@3un/ui'
 import { XTag } from '@3un/ui'
 
-import type { TableColumn } from '@3un/ui'
-import type { OrderTableView } from '@/api/orders'
-import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/shared/enums'
-
-export const getDefaultColumns = (): TableColumn[] => ([
+export const getDefaultColumns = (): XTableColumn[] => ([
   {
     key: 'index',
     title: '序号',
@@ -44,7 +43,7 @@ export const getDefaultColumns = (): TableColumn[] => ([
   { key: 'remark', title: '备注', minWidth: 180 }
 ])
 
-export function mergeColumns(serviceCols: TableColumn[]): TableColumn[] {
+export function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   const defaultCols = getDefaultColumns()
   const len = defaultCols.length
   const frontCols = defaultCols.slice(0, len - 2)

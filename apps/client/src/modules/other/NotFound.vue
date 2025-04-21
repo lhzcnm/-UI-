@@ -1,7 +1,21 @@
+<script setup lang="ts">
+import { twJoin } from 'tailwind-merge'
+</script>
+
 <template>
-  <div class="-mt-32 h-screen">
-    <TheEmpty image="/images/not_found.png" image-class="border rounded-lg">
-      <RouterLink to="/" class="text-muted-foreground underline">返回首页</RouterLink>
-    </TheEmpty>
+  <div
+    :class="twJoin(
+      'flex items-center justify-center',
+      '-mt-32 h-screen text-muted-foreground'
+    )"
+  >
+    <XEmpty
+      src="/images/not_found.png"
+      :ui="{ image: 'bg-card border rounded-lg' }"
+    >
+      <RouterLink to="/" class="block mt-2 text-center">
+        返回首页
+      </RouterLink>
+    </XEmpty>
   </div>
 </template>

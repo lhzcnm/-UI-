@@ -24,20 +24,18 @@ const qrcode = computed(() => {
       <div class="flex items-center space-x-2">
         <XPopover
           v-model="chatVisible" trigger="hover"
-          content-class="p-4"
+          :ui="{ content: 'p-4' }"
         >
           <template #trigger>
-            <XButton color="indigo" icon="lucide:headset">
-              联系客服
-            </XButton>
+            <XButton icon="lucide:headset" label="联系客服" />
           </template>
-  
+
           <div class="w-64 border rounded overflow-hidden">
             <img :src="qrcode" alt="客服二维码" draggable="false" class="size-full">
           </div>
         </XPopover>
         <XButton
-          label="安全退出" color="rose"
+          label="安全退出" color="red"
           @click="store.logout"
         />
       </div>

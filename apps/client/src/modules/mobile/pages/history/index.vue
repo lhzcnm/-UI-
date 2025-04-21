@@ -55,7 +55,7 @@ watch(
     >
       <div class="space-x-2">
         <XButton label="搜索" @click="store.visibleSearch = true" />
-        <XButton label="导出" color="emerald" @click="store.visibleExport = true" />
+        <XButton label="导出" color="teal" @click="store.visibleExport = true" />
       </div>
 
       <XSimplePagination

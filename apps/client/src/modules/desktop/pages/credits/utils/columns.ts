@@ -1,9 +1,9 @@
-import type { TableColumn } from '@3un/ui'
+import type { XTableColumn } from '@3un/ui'
 import type { CreditLogItem } from '@/api/user'
 
 const store = useServiceStore()
 
-export const columns: TableColumn[] = [
+export const columns: XTableColumn[] = [
   {
     key: 'service',
     title: '项目',
@@ -26,17 +26,21 @@ export const columns: TableColumn[] = [
     render: (value: number, row: CreditLogItem) => {
       const isSubmit = /订单提交|Code Request/.test(row.description)
       const isReduce = isSubmit || row.description === '管理员扣除积分'
-      const label = isReduce ? `-${Math.abs(value)}` : `+${value}`
-      const color = isReduce ? 'text-rose-500' : 'text-emerald-500'
+      let label = Math.abs(value).toString()
+      let color
+
+      if (isReduce) {
+        if (value > 0) label = `-${label}`
+        color = 'text-red-600' 
+      }
+      else {
+        color = 'text-teal-600'
+        label = `+${label}`
+      }
 
       return h('span', { class: color }, label)
     }
   },
-  // {
-  //   key: 'creditsLeft',
-  //   title: '余额',
-  //   width: 64
-  // },
   {
     key: 'description',
     title: '变更原因',

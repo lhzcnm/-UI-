@@ -2,7 +2,7 @@
 import RechargeForm from './components/RechargeForm.vue'
 import MembershipForm from './components/MembershipForm.vue'
 
-import type { SegmentedOption } from '@3un/ui'
+import type { XSegmentedOption } from '@3un/ui'
 import type { TabMode } from './utils'
 
 interface RechargeMobileProps {
@@ -15,7 +15,7 @@ const activeTab = ref<TabMode>(props.tab || 'recharge')
 const iStore = useSettingStore()
 await iStore.getSettings()
 
-const options: SegmentedOption[] = [
+const options: XSegmentedOption[] = [
   { label: '余额充值', value: 'recharge', icon: 'lucide:wallet' },
   { label: '开通会员', value: 'membership', icon: 'lucide:crown' }
 ]

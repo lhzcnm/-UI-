@@ -32,12 +32,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve('./src'),
-      '@auth': resolve('./src/modules/auth'),
-      '@desktop': resolve('./src/modules/desktop'),
-      '@mobile': resolve('./src/modules/mobile'),
-      '@other': resolve('./src/modules/other'),
-      '@jweixin': resolve('./src/assets/jweixin'),
+      '@': resolve('src'),
+      '@auth': resolve('src/modules/auth'),
+      '@desktop': resolve('src/modules/desktop'),
+      '@mobile': resolve('src/modules/mobile'),
+      '@other': resolve('src/modules/other'),
+      '@jweixin': resolve('src/assets/jweixin'),
     },
   },
 })

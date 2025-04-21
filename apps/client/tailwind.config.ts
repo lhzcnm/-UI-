@@ -3,12 +3,12 @@ import { preset } from '@3un/ui/preset'
 import { resolve } from 'node:path'
 
 const uiPath = resolve('../../packages/ui')
-const uiContent = resolve(uiPath, 'src/**/*.vue')
+const uiContent = resolve(uiPath, 'src/**/*.{vue,ts}')
 
 export default withTV({
   content: [
-    './index.html',
-    './src/**/*.{vue,ts}',
+    'index.html',
+    'src/**/*.{vue,ts}',
     uiContent,
   ],
   presets: [preset],
@@ -51,9 +51,4 @@ export default withTV({
       },
     },
   },
-  safelist: [
-    // use by ag-grid table
-    'leading-6',
-    'py-1',
-  ],
 })

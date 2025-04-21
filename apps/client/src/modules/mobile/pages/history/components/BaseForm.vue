@@ -65,7 +65,7 @@ const statusOptions = [
     </div>
 
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-muted-foreground">IMEI/SN：</label>
+      <label class="inline-block mb-1 text-sm text-muted-foreground">IMEI/SN:</label>
       <XTextarea
         v-model="form.imei" rows="4"
         placeholder="IMEI/SN"

@@ -9,7 +9,7 @@ const store = useUserStore()
 <template>
   <SlideRight title="我的账户">
     <div class="px-6 mt-3">
-      <div class="bg-gradient-to-r from-zinc-700 to-zinc-900 dark:from-zinc-600 dark:to-zinc-800 text-white rounded-xl p-5 shadow-lg">
+      <div class="bg-gradient-to-r from-neutral-700 to-neutral-900 dark:from-neutral-600 dark:to-neutral-800 text-white rounded-xl p-5 shadow-lg">
         <div class="flex items-center space-x-2 text-sm opacity-80">
           <Icon icon="lucide:wallet" class="size-5" />
           <span>可用余额</span>
@@ -20,7 +20,7 @@ const store = useUserStore()
         </div>
         <div class="flex justify-between mt-3 text-sm">
           <div>充值总额 <span class="font-semibold">{{ store.info.totalReceipts }}</span></div>
-          <div>锁定积分 <span class="font-semibold text-amber-400 dark:text-amber-300">{{ store.info.rechargeCount }}</span></div>
+          <div>锁定积分 <span class="font-semibold text-amber-600 dark:text-amber-300">{{ store.info.rechargeCount }}</span></div>
         </div>
       </div>
     </div>
@@ -39,8 +39,8 @@ const store = useUserStore()
             <span class="text-sm text-muted-foreground ml-1">个</span>
           </div>
           <div class="flex justify-between mt-2 text-xs">
-            <span class="text-emerald-500">成功 {{ store.info.userOrder.success }}</span>
-            <span class="text-rose-500">失败 {{ store.info.userOrder.failed }}</span>
+            <span class="text-teal-600">成功 {{ store.info.userOrder.success }}</span>
+            <span class="text-red-600">失败 {{ store.info.userOrder.failed }}</span>
           </div>
         </div>
 
@@ -93,7 +93,7 @@ const store = useUserStore()
     <div v-if="!ua.isMobile" class="p-6 mb-4">
       <XButton
         icon="lucide:log-out"
-        label="退出登录" color="rose"
+        label="退出登录" color="red"
         variant="soft" class="w-full"
         @click="store.logout"
       />

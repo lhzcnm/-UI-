@@ -71,7 +71,7 @@ function handleClose() {
     <Transition mode="out-in" class="fade-in-scale">
       <div v-if="!store.isComplete" class="flex flex-col items-center justify-center space-y-4 p-4">
         <div class="flex space-x-1 items-center">
-          <Icon icon="ri:wechat-pay-fill" class="size-9 text-emerald-500" />
+          <Icon icon="ri:wechat-pay-fill" class="size-9 text-teal-600" />
           <div class="text-2xl font-medium">微信支付</div>
         </div>
 
@@ -100,11 +100,11 @@ function handleClose() {
         <div class="relative">
           <Icon 
             icon="ri:checkbox-circle-fill" 
-            class="size-16 text-emerald-500 animate-scale-check"
+            class="size-16 text-teal-600 animate-scale-check"
           />
-          <div class="absolute top-0 bottom-0 left-0 right-0 size-16 rounded-full border-4 border-emerald-500 animate-circle-expand" />
+          <div class="absolute top-0 bottom-0 left-0 right-0 size-16 rounded-full border-4 border-teal-600 animate-circle-expand" />
         </div>
-        <div class="text-xl font-medium text-emerald-500 opacity-0 animate-fade-up">支付成功</div>
+        <div class="text-xl font-medium text-teal-600 opacity-0 animate-fade-up">支付成功</div>
       </div>
     </Transition>
   </XDialog>

@@ -79,7 +79,7 @@ function handleCopy() {
 <template>
   <div class="space-x-1 pt-1">
     <XButton
-      color="emerald" label="复制结果"
+      color="teal" label="复制结果"
       size="sm" @click="handleCopy"
     />
  

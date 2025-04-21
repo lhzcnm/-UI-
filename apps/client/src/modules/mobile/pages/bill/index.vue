@@ -4,7 +4,7 @@ import { userApi } from '@/api/user'
 import { twJoin } from 'tailwind-merge'
 
 const page = ref(1)
-const pageSize = ref(20)
+const limit = ref(20)
 
 const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
 const bills = ref<InvoicesResponse>(IPage)
@@ -13,7 +13,7 @@ watch(
   page,
   async (value) => {
     const { data } = await userApi.invoices({
-      pageSize: pageSize.value,
+      pageSize: limit.value,
       page: value,
     })
 
@@ -35,7 +35,7 @@ watch(
     >
       <XSimplePagination
         v-model="page"
-        :page-size="pageSize"
+        :page-size="limit"
         :total="bills.total"
       />
       <span class="text-sm text-muted-foreground">

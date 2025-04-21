@@ -13,7 +13,7 @@ const iStore = useSettingStore()
 
       <div class="space-x-2">
         <XTag color="blue" :label="`ID:${store.info.userId}`" />
-        <XTag color="rose" :label="store.info.pricePlan" />
+        <XTag color="red" :label="store.info.pricePlan" />
       </div>
     </div>
   </div>

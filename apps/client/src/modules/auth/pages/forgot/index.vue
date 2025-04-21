@@ -3,11 +3,9 @@ import { toast } from 'vue-sonner'
 
 import { PASSWORD_REG, EMAIL_REG, PHONE_REG, CAPTCHA_REG, encrypt, useCountdown } from '@3un/utils'
 
-import type { ForgotPswForm } from './types'
+import type { ForgotPswForm } from '@auth/types'
 import { VERIFY_MSG, validate } from '@/utils'
-
 import authApi from '@auth/api'
-import forgotApi from './api'
 
 const router = useRouter()
 const { count, isRunning, startCountdown } = useCountdown()
@@ -62,7 +60,7 @@ async function resetPassword() {
   if (!password) return
 
   try {
-    await forgotApi.forgotPsw({
+    await authApi.forgotPsw({
       target: form.target,
       code: form.code,
       password,

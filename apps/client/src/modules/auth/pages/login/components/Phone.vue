@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { LoginMode } from '../types'
+import type { LoginMode } from '@auth/types'
 import { useCountdown, CAPTCHA_REG } from '@3un/utils'
 import { validate, VERIFY_MSG } from '@/utils'
 
 import authApi from '@auth/api'
-import loginApi from '../api'
 
 const mode = defineModel<LoginMode>({ required: true })
 const visible = defineModel<boolean>('visible', { required: true })
@@ -39,7 +38,7 @@ defineExpose({
   login(id: string) {
     const body = { phone: form.phone, code: form.code, id }
     const key = import.meta.env.VITE_ACCESS_TOKEN
-    const response = loginApi.phoneLogin(body)
+    const response = authApi.phoneLogin(body)
 
     response.then(async ({ data }) => {
       localStorage.setItem(key, data)

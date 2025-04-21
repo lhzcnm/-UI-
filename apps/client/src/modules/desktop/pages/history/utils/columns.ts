@@ -1,18 +1,13 @@
+import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
 import TableActions from '../components/TableActions.vue'
 import { XTag } from '@3un/ui'
 
-import type { TableColumn } from '@3un/ui'
+import type { XTableColumn } from '@3un/ui'
 import type { Order } from '@/api/orders'
-import {
-  ORDER_STATUS,
-  ORDER_STATUS_MAP,
-  ORDER_VERTIFY,
-  ORDER_VERTIFY_MAP
-} from '@3un/shared/enums'
 
 const serviceStore = useServiceStore()
 
-export const columns: TableColumn[] = [
+export const columns: XTableColumn[] = [
   { key: 'id', title: '订单号', width: 98 },
   {
     key: 'service',
@@ -40,8 +35,9 @@ export const columns: TableColumn[] = [
     key: 'verify',
     title: '验证状态',
     width: 88,
-    render: (value: ORDER_VERTIFY) => {
+    render(value: ORDER_VERTIFY) {
       const tag = ORDER_VERTIFY_MAP[value]
+      console.log(tag, value)
       return h(XTag, tag)
     }
   },
@@ -49,17 +45,18 @@ export const columns: TableColumn[] = [
     key: 'result',
     title: '订单结果',
     minWidth: 320,
-    render: (value: string) => {
+    render(value: string) {
       return h('div', { innerHTML: value })
     }
   },
-  { key: 'remark', title: '备注', minWidth: 180, },
+  { key: 'createTime', title: '提交时间', minWidth: 148, },
+  { key: 'remark', title: '备注', minWidth: 168, },
   {
     key: 'action',
     title: '操作',
     fixed: 'right',
     width: 200,
-    render: (_, row: Order, index) => {
+    render(_, row: Order, index) {
       return h(TableActions, { row, index })
     }
   }

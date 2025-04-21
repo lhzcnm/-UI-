@@ -30,10 +30,10 @@ defineProps<TicketItemProps>()
         <span
           class="size-1.5 rounded-full"
           :class="{
-            'bg-emerald-500': ticket.type === TICKET_TYPE.RECHARGE,
-            'bg-blue-500': ticket.type === TICKET_TYPE.ORDER
+            'bg-teal-600': ticket.type === TICKET_TYPE.RECHARGE,
+            'bg-blue-600': ticket.type === TICKET_TYPE.ORDER
           }"
-        ></span>
+        />
         <span class="text-muted-foreground">
           {{ TICKET_TYPE_MAP[ticket.type].label }}
         </span>

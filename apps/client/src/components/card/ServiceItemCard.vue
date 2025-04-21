@@ -17,15 +17,13 @@ const { data } = defineProps<{ data: ServiceView }>()
           v-if="data.isNew" 
           :class="twJoin(
             'px-2 py-0.5 text-xs font-semibold text-white',
-            'bg-gradient-to-b from-blue-500 via-blue-600 to-blue-700 rounded-full shadow-sm'
+            'bg-gradient-to-r from-teal-600 to-blue-600 rounded-full shadow-sm'
           )"
-        >
-          新!
-        </span>
+        >新!</span>
       </h3>
       <div class="flex justify-end text-xs">
-        <XTag color="rose">积分 {{ data.price }}</XTag>
-        <XTag color="emerald" class="ml-1">{{ data.taken }}</XTag>
+        <XTag color="red">积分 {{ data.price }}</XTag>
+        <XTag color="teal" class="ml-1">{{ data.taken }}</XTag>
       </div>
     </div>
     <div class="text-sm text-muted-foreground mt-1" v-html="data.title" />

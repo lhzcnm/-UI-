@@ -41,7 +41,10 @@ async function getWxConfig() {
     <MobileHeader v-show="!route.meta.hideHeader"/>
 
     <RouterView v-slot="{ Component }" :key="route.path">
-      <main id="main" v-if="Component" class="flex-1 overflow-y-auto bg-zinc-100 dark:bg-zinc-950">
+      <main
+        v-if="Component" id="main"
+        class="flex-1 overflow-y-auto bg-neutral-100 dark:bg-black"
+      >
         <Transition name="fade-in" mode="out-in">
           <Suspense>
             <component :is="Component" />

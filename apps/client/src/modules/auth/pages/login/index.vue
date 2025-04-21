@@ -3,7 +3,7 @@ import Account from './components/Account.vue'
 import Phone from './components/Phone.vue'
 import WeChat from './components/WeChat.vue'
 
-import type { LoginMode } from './types'
+import type { LoginMode } from '@auth/types'
 import authApi from '@auth/api'
 
 const phoneRef = useTemplateRef('phoneRef')
@@ -41,7 +41,7 @@ function doLogin(id: string) {
       v-model="loginMode"
     />
 
-    <XSliderCaptcha
+    <XCaptchaSlider
       v-model="visible"
       :refresh="authApi.getCaptcha"
       :verify="authApi.checkCaptcha"

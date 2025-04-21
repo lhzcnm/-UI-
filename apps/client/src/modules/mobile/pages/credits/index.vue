@@ -9,7 +9,7 @@ const serviceStore = useServiceStore()
 await serviceStore.getServices()
 
 const page = ref(1)
-const pageSize = ref(20)
+const limit = ref(20)
 const loading = ref(false)
 
 const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
@@ -20,7 +20,7 @@ watch(
   async (value) => {
     loading.value = true
     const { data } = await userApi.creditLogs({
-      pageSize: pageSize.value,
+      pageSize: limit.value,
       page: value,
     })
 
@@ -45,7 +45,7 @@ watch(
       >
         <XSimplePagination
           v-model="page"
-          :page-size="pageSize"
+          :page-size="limit"
           :total="logs.total"
         />
         <span class="text-sm text-muted-foreground">

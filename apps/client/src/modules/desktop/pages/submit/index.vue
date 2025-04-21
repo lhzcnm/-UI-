@@ -3,7 +3,7 @@ import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import MustRead from './components/MustRead.vue'
 
-import type { TableColumn } from '@3un/ui'
+import type { XTableColumn } from '@3un/ui'
 import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
 import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
@@ -25,7 +25,7 @@ const page = ref(1)
 const limit = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
-const columns = shallowRef<TableColumn[]>(getDefaultColumns())
+const columns = shallowRef<XTableColumn[]>(getDefaultColumns())
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
@@ -69,7 +69,7 @@ async function handleServiceCols(value: number) {
     return
   }
 
-  const serviceCols: TableColumn[] = []
+  const serviceCols: XTableColumn[] = []
   for (const item of data) {
     const { name, width } = item
     const field = hash(name)
@@ -303,8 +303,8 @@ function handlePushMsgChange(value: boolean) {
         />
 
         <XButton label="提交" :loading="submitLoading" @click="handleSubmit" />
-        <XButton label="导出" color="emerald" @click="handleExport" />
-        <XButton label="清空" color="rose" @click="reset" />
+        <XButton label="导出" color="teal" @click="handleExport" />
+        <XButton label="清空" color="red" @click="reset" />
         <XButton
           v-show="mustRead" variant="outline"
           label="服务说明" color="amber"
@@ -319,7 +319,7 @@ function handlePushMsgChange(value: boolean) {
 
       <XPagination
         v-model="page"
-        v-model:size="limit"
+        v-model:limit="limit"
         :total="rawOrders.length"
         hideOnSinglePage
       />

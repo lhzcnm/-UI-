@@ -81,7 +81,6 @@ async function clean(mode) {
 
 function manualChunks(id) {
   if (id.includes('qrcode') || id.includes('dijkstrajs')) return 'qrcode'
-  if (id.includes('ag-grid')) return 'ag-grid'
   if (id.includes('jsencrypt')) return 'jsencrypt'
   if (id.includes('xlsx')) return 'xlsx'
 

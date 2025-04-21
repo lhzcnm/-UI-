@@ -116,7 +116,7 @@ function onBridgeReady(config: WXInvokeConfig) {
           @click="selectedAmount = item.value"
         >
           <span>{{ item.label }}</span>
-          <span v-if="item.info" class="text-sm text-emerald-500">{{ item.info }}</span>
+          <span v-if="item.info" class="text-sm text-teal-600">{{ item.info }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
@@ -139,7 +139,7 @@ function onBridgeReady(config: WXInvokeConfig) {
           )"
           @click="selectedPayment = 'wxpay'"
         >
-          <Icon icon="ri:wechat-pay-fill" class="size-6 text-emerald-500" />
+          <Icon icon="ri:wechat-pay-fill" class="size-6 text-teal-600" />
           <span>微信</span>
         </button>
         <button
@@ -149,7 +149,7 @@ function onBridgeReady(config: WXInvokeConfig) {
           )"
           @click="selectedPayment = 'alipay'"
         >
-          <Icon icon="ri:alipay-fill" class="size-6 text-blue-500" />
+          <Icon icon="ri:alipay-fill" class="size-6 text-blue-600" />
           <span>支付宝</span>
         </button>
       </div>
@@ -179,7 +179,7 @@ function onBridgeReady(config: WXInvokeConfig) {
       
       <div class="flex items-center justify-between pt-2 border-t">
         <span>应付金额</span>
-        <span class="text-lg font-medium text-rose-500">
+        <span class="text-lg font-medium text-red-600">
           {{ (rechargeAmount + serviceFee).toFixed(2) }} 元
         </span>
       </div>

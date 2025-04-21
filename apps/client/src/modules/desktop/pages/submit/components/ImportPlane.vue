@@ -79,10 +79,10 @@ async function handleFile(file: File) {
 <template>
   <XPopover v-model="open" @closed="handleClosed">
     <template #trigger>
-      <XButton label="导入" color="indigo" :disabled="!selectedId" />
+      <XButton label="导入" color="amber" :disabled="!selectedId" />
     </template>
 
-    <div class="space-y-3 w-80 p-4 bg-card border rounded-lg shadow-lg">
+    <div class="space-y-3 w-80 p-4">
       <XTextarea
         v-model="imei"
         rows="10" autofocus
@@ -95,7 +95,7 @@ async function handleFile(file: File) {
       <div class="flex items-center justify-between space-x-2">
         <a
           href="javascript:void(0)" title="查看正确的 IMEI/SN"
-          class="text-sm text-gray-500 hover:bg-muted rounded-md px-2 py-1 -ml-2"
+          class="text-sm text-muted-foreground hover:bg-muted rounded-md px-2 py-1 -ml-2"
           @click="imei = validImeiList.join('\n')"
         >
           <span class="mr-1">有效数量</span>

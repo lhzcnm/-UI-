@@ -41,7 +41,7 @@ async function getOrder() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-zinc-100 dark:bg-zinc-950">
+  <div class="min-h-screen bg-neutral-100 dark:bg-black">
     <div class="max-w-xl mx-auto p-3">
       <Fallback v-if="loading" />
   

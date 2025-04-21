@@ -47,9 +47,8 @@ function handleReset() {
     <template #footer>
       <div class="flex justify-between space-x-2 mt-4">
         <XButton
-          label="重置"
-          color="emerald"
           :loading="submitLoading"
+          label="重置" color="teal"
           @click="handleReset"
         />
         <div class="space-x-2">

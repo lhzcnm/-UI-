@@ -84,7 +84,7 @@ function handleServiceItemClick(event: MouseEvent) {
             v-for="page in totalPages" :key="page - 1"
             :class="twJoin(
               'size-1.5 rounded-full transition-all duration-300',
-              currentPage === page - 1 ? 'bg-primary' : 'bg-zinc-300'
+              currentPage === page - 1 ? 'bg-primary' : 'bg-neutral-300'
             )"
             @click="scrollToPage(page - 1)"
           />
@@ -116,7 +116,7 @@ function handleServiceItemClick(event: MouseEvent) {
           v-show="currentPage < totalPages - 1"
           :class="twJoin(
             'absolute top-0 right-0 bottom-0 w-8',
-            'bg-gradient-to-l from-zinc-100 dark:from-zinc-950',
+            'bg-gradient-to-l from-neutral-100 dark:from-black',
             'to-[rgba(255,255,255,0)] pointer-events-none'
           )"
         />
