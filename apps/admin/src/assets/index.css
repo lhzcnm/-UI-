@@ -13,56 +13,46 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 98%; /* zinc 50 */
+    --foreground: 0 0% 18%; /* zinc 900 */
 
-    --card: 0 0% 100%;
-    --popover: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --card: 0, 0%, 100%; /* white */
+    --popover: 0, 0%, 100%; /* white */
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --input-hover: 240 5.9% 82.6%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 0, 0%, 89%; /* zinc 300 */
+    --input: 0, 0%, 89%; /* zinc 300 */
+    --input-hover: 0 0% 81%; /* zinc 400 */
 
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 207 54% 51%; /* blue 600 */
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 0 0% 95%; /* zinc 200 */
+    --muted-foreground: 0 0% 51%; /* zinc 600 */
 
-    --accent: 240 4.8% 90%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 0 0% 89%; /* zinc 300 */
+    --accent-foreground: 0 0% 51%; /* zinc 600 */
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 0%; /* black */
+    --foreground: 0 0% 89%; /* zinc 300 */
 
-    --card: 231, 11%, 12%;
-    --popover: 231, 11%, 12%;
-    --card-foreground: 210 40% 98%;
-    --popover-foreground: 210 40% 98%;
+    --card: 0 0% 8%; /* zinc 950 */
+    --popover: 0 0% 0%; /* zinc 950 */
 
-    --border: 240 3.7% 18%;
-    --input: 240 3.7% 26%;
-    --input-hover: 240 3.7% 25%;
-    --ring: 200, 8%, 16%;
+    --border: 0 0% 18%; /* zinc 900 */
+    --input: 0 0% 18%; /* zinc 900 */
+    --input-hover: 0 0% 29%; /* zinc 800 */
 
-    --muted: 240 3.7% 12.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 0 0% 18%; /* zinc 900 */
+    --muted-foreground: 0 0% 51%; /* zinc 500 */
 
-    --accent: 240 3.7% 18%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 0 0% 29%; /* zinc 800 */
+    --accent-foreground: 0 0% 65%; /* zinc 500 */
   }
 }
 
-.noto-serif-sc {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+body {
+  @apply bg-background text-foreground;
 }
 
 .noto-sans-sc {
@@ -72,23 +62,26 @@
   font-style: normal;
 }
 
-/* 滚动条 */
+/* Scrollbar */
 @media (min-width: 640px) {
   ::-webkit-scrollbar {
-    width: 12px; height: 12px;
+    width: 10px; height: 10px;
     background-color: transparent;
   }
   ::-webkit-scrollbar-corner {
     background-color: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    border: 3px solid transparent;
+    border-radius: 4px;
+    border: 2px solid transparent;
 
     background-clip: content-box;
     -webkit-background-clip: content-box;
     background-color: hsl(var(--border));
     transition: background 0.2s ease-in-out;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--input-hover));
   }
 }
 

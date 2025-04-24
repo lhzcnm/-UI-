@@ -55,8 +55,8 @@ const isActive = computed(() => {
     <button
       :class="twJoin(
         'flex items-center justify-between w-full px-3 h-10 sm:h-8',
-        'rounded-md hover:bg-muted hover:text-accent-foreground',
-        isActive && 'bg-muted text-accent-foreground',
+        'rounded-md hover:bg-primary hover:text-white transition-colors',
+        isActive && 'bg-primary text-white',
       )"
       @click="handleClick(menu)"
     >
@@ -81,9 +81,9 @@ const isActive = computed(() => {
           <RouterLink
             :to="child.path"
             :class="twJoin(
-              'flex items-center px-3 h-9 sm:h-7 space-x-1',
-              'rounded-md hover:bg-muted hover:text-accent-foreground',
-              route.path === child.path && 'bg-muted text-accent-foreground',
+              'flex items-center px-3 h-9 sm:h-7 space-x-1 transition-colors',
+              'rounded-md hover:bg-primary hover:text-white',
+              route.path === child.path && 'bg-primary text-white',
             )"
             @click="handleChildClick(child, menu.label)"
           >

@@ -34,7 +34,7 @@ const displayItems = computed(() => {
       <XButton label="新增服务" @click="store.visableCreate = true" />
       <XPagination
         v-model="store.page"
-        v-model:size="store.limit"
+        v-model:limit="store.limit"
         :total="serviceStore.items.length"
         :layouts="['total', 'prev', 'pager', 'next', 'sizes']"
       />
@@ -42,7 +42,7 @@ const displayItems = computed(() => {
     <XTable
       :data="displayItems"
       :columns="columns"
-      class="!bg-background h-[calc(100vh-8rem)]"
+      class="relative overflow-hidden h-[calc(100vh-8rem)]"
     />
 
     <ItemCreate />

@@ -21,7 +21,7 @@ const visibleSetting = ref(false)
   <div
     :class="twJoin(
       'flex justify-between items-center',
-      'w-full px-1 h-header',
+      'w-full px-1 h-header border-b',
     )"
   >
     <div class="flex items-center space-x-1">

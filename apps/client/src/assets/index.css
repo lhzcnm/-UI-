@@ -16,41 +16,45 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* white */
-    --foreground: 0 0% 18%; /* neutral 900 */
+    --primary: 217 91% 60%; /* blue 500 */
+    --success: 160 84% 39%; /* emerald 500 */
+    --warning: 38 92% 50%; /* amber 500 */
+    --danger: 350 89% 60%; /* rose 500 */
+    --info: 240 4% 16%; /* zinc 800 */
 
-    --card: 0, 0%, 100%; /* white */
-    --popover: 0, 0%, 100%; /* white */
+    --background: 0 0% 98%; /* zinc 50 */
+    --foreground: 240 4% 16%; /* zinc 800 */
 
-    --border: 0, 0%, 89%; /* neutral 300 */
-    --input: 0, 0%, 89%; /* neutral 300 */
-    --input-hover: 0 0% 81%; /* neutral 400 */
+    --card: 0 0% 100%; /* white */
+    --popover: 0 0% 100%; /* white */
 
-    --primary: 207 54% 51%; /* blue 600 */
+    --border: 240, 6%, 90%; /* zinc 200 */
+    --input: 240 6% 90%; /* zinc 200 */
+    --input-hover: 240 5% 84%; /* zinc 300 */
 
-    --muted: 0 0% 95%; /* neutral 200 */
-    --muted-foreground: 0 0% 51%; /* neutral 600 */
+    --muted: 240 6% 90%; /* zinc 200 */
+    --muted-foreground: 240 4% 46%; /* zinc 500 */
 
-    --accent: 0 0% 89%; /* neutral 300 */
-    --accent-foreground: 0 0% 51%; /* neutral 600 */
+    --accent: 240 5% 84%; /* zinc 300 */
+    --accent-foreground: 240 4% 46%; /* zinc 500 */
   }
 
   .dark {
     --background: 0 0% 0%; /* black */
-    --foreground: 0 0% 89%; /* neutral 300 */
+    --foreground: 0 0% 89%; /* zinc 300 */
 
-    --card: 0 0% 8%; /* neutral 950 */
-    --popover: 0 0% 0%; /* neutral 950 */
+    --card: 0 0% 8%; /* zinc 950 */
+    --popover: 0 0% 0%; /* zinc 950 */
 
-    --border: 0 0% 18%; /* neutral 900 */
-    --input: 0 0% 18%; /* neutral 900 */
-    --input-hover: 0 0% 29%; /* neutral 800 */
+    --border: 0 0% 18%; /* zinc 900 */
+    --input: 0 0% 18%; /* zinc 900 */
+    --input-hover: 0 0% 29%; /* zinc 800 */
 
-    --muted: 0 0% 18%; /* neutral 900 */
-    --muted-foreground: 0 0% 51%; /* neutral 500 */
+    --muted: 0 0% 18%; /* zinc 900 */
+    --muted-foreground: 0 0% 51%; /* zinc 500 */
 
-    --accent: 0 0% 29%; /* neutral 800 */
-    --accent-foreground: 0 0% 65%; /* neutral 500 */
+    --accent: 0 0% 29%; /* zinc 800 */
+    --accent-foreground: 0 0% 65%; /* zinc 500 */
   }
 }
 

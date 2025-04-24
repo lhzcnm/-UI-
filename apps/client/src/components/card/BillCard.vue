@@ -33,7 +33,7 @@ defineProps<{ item: InvoiceItem }>()
         </div>
         <p
           :class="twMerge(
-            'text-lg font-semibold text-teal-600',
+            'text-lg font-semibold text-emerald-500',
             isNaN(Number(item.credits)) && 'text-sm'
           )"
         >

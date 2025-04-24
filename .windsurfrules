@@ -1,7 +1,45 @@
-1. 本项目为 web:spa:vue3
-2. 请在我开始输入时候才给出建议
-3. 请遵守我的代码风格
-4. 使用 tailwindcss v3
-5. 对于较长的 class, 使用 tailwindMerge 的 `twMerge` 或 `twJoin` 换行
-6. .vue 文件 总是使用 `<script setup lang="ts">` 在最前面
-7. 最多一个空行
+# Windsurf Rules
+
+## 项目技术架构
+monorepo(pnpm) + submodules
+
+1. 技术栈: vue3 + typescript + tailwindcss v3 + vite
+2. 自研组件库。`@3un/ui` 在项目的 `packages/ui` 中
+3. 使用 `@iconify/vue` 图标库，主要使用 `lucide` 图标集
+
+## 代码规范
+1. .vue 文件 总是使用 `<script setup lang="ts">`，并且位于在最前面
+2. 对于较长的 class, 使用 tailwindMerge 的 `twMerge` 或 `twJoin` 换行
+3. 请遵守我的代码风格(2 空格，无分号)
+4. 最多一个空行
+
+## 导入格式规范
+
+主要分三大部分：
+ - 手动导入的组件
+ - 库(ts类型导入的在最前)
+ - 其他本地导入(ts类型导入在最前)
+
+每部分的导入之间用一个空行分隔。
+
+例如：
+
+```ts
+import SelectService from '@desktop/components/SelectService.vue'
+import ImportPlane from './components/ImportPlane.vue'
+import MustRead from './components/MustRead.vue'
+
+import type { XTableColumn } from '@3un/ui'
+import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { downloadURL } from '@3un/utils'
+import { toast } from 'vue-sonner'
+import { hash } from 'ohash'
+
+import type { Service } from '@/api/services'
+import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
+import { getDefaultColumns, mergeColumns } from './utils/columns'
+import { serviceApi } from '@/api/services'
+import { orderApi } from '@/api/orders'
+```
+
+注意: css 文件导入总是在最前面

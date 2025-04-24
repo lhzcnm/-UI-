@@ -123,7 +123,7 @@ function isSamePrice(item: MemberPackage) {
           <div class="mt-1 text-lg text-primary">{{ item.amount }}元</div>
           <span 
             v-if="+item.saveAmount > 0" 
-            class="absolute -top-2 -right-2 px-2 py-0.5 text-xs bg-red-600 text-white rounded-full"
+            class="absolute -top-2 -right-2 px-2 py-0.5 text-xs bg-rose-500 text-white rounded-full"
           >
             省{{ item.saveAmount }}元
           </span>
@@ -141,7 +141,7 @@ function isSamePrice(item: MemberPackage) {
           )"
           @click="selectedPayment = 'wxpay'"
         >
-          <Icon icon="ri:wechat-pay-fill" class="size-6 text-teal-600" />
+          <Icon icon="ri:wechat-pay-fill" class="size-6 text-emerald-500" />
           <span>微信</span>
         </button>
         <button
@@ -159,9 +159,9 @@ function isSamePrice(item: MemberPackage) {
 
     <div class="space-y-3 overflow-y-auto max-h-[400px]">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg text-amber-600">会员权益</h3>
+        <h3 class="text-lg text-amber-500">会员权益</h3>
         <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-          每月最高将为您节省：<b class="text-red-600">{{ pkgTotalAmount }}元</b>
+          每月最高将为您节省：<b class="text-rose-500">{{ pkgTotalAmount }}元</b>
         </span>
       </div>
 

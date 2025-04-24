@@ -116,7 +116,7 @@ function handleCommand(command: string, event: MouseEvent) {
 <template>
   <XDialog
     v-model="visible"
-    content-class="sm:max-w-md p-0 sm:p-0 border"
+    :ui="{ base: 'sm:max-w-md p-0 sm:p-0 border' }"
   >
     <div class="relative border-b p-1">
       <Icon

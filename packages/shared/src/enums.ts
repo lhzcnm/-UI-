@@ -22,7 +22,7 @@ export enum PAYMENT_STATUS {
   PAID   = 2,
 }
 export const PAYMENT_STATUS_MAP: StatusMap = {
-  [PAYMENT_STATUS.UNPAID] : { color: 'neutral', label: '未支付' },
+  [PAYMENT_STATUS.UNPAID] : { color: 'zinc', label: '未支付' },
   [PAYMENT_STATUS.PAID]   : { color: 'teal', label: '已支付' },
 }
 
@@ -42,7 +42,7 @@ export enum ORDER_STATUS {
   PROCESSING  = 4,
 }
 export const ORDER_STATUS_MAP: StatusMap = {
-  [ORDER_STATUS.WAIT]    : { color: 'neutral', label: '等待提交' },
+  [ORDER_STATUS.WAIT]    : { color: 'zinc', label: '等待提交' },
   [ORDER_STATUS.SUCCESS] : { color: 'teal', label: '处理成功' },
   [ORDER_STATUS.FAILED]    : { color: 'red', label: '处理失败' },
   [ORDER_STATUS.PROCESSING] : { color: 'blue', label: '正在处理' },
@@ -62,7 +62,7 @@ export enum ORDER_VERTIFY {
   REFUNDED  = 3,
 }
 export const ORDER_VERTIFY_MAP: StatusMap = {
-  [ORDER_VERTIFY.NORMAL]    : { color: 'neutral', label: '正常' },
+  [ORDER_VERTIFY.NORMAL]    : { color: 'zinc', label: '正常' },
   [ORDER_VERTIFY.REPLIED]   : { color: 'blue', label: '已反馈' },
   [ORDER_VERTIFY.SOLVED]    : { color: 'teal', label: '已解决' },
   [ORDER_VERTIFY.REFUNDED]  : { color: 'red', label: '已退款' },
@@ -81,7 +81,7 @@ export enum TICKET_STATUS {
   SOLVED  = 2,
 }
 export const TICKET_STATUS_MAP: StatusMap = {
-  [TICKET_STATUS.WAIT]    : { color: 'neutral', label: '未处理' },
+  [TICKET_STATUS.WAIT]    : { color: 'zinc', label: '未处理' },
   [TICKET_STATUS.PROCESS] : { color: 'blue', label: '处理中' },
   [TICKET_STATUS.SOLVED]  : { color: 'teal', label: '已解决' },
 }
@@ -95,7 +95,7 @@ export enum TICKET_PRIORITY {
 export const TICKET_PRIORITY_MAP: StatusMap = {
   [TICKET_PRIORITY.HIGH] : { color: 'red', label: '紧急' },
   [TICKET_PRIORITY.MEDIUM] : { color: 'blue', label: '普通' },
-  [TICKET_PRIORITY.LOW] : { color: 'neutral', label: '可以等待' },
+  [TICKET_PRIORITY.LOW] : { color: 'zinc', label: '可以等待' },
 }
 export const TICKET_PRIORITY_LIST = [
   { value: TICKET_PRIORITY.HIGH, label: '紧急' },

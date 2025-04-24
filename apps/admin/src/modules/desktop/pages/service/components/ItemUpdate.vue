@@ -8,7 +8,7 @@ const store = inject(SERVICE_STORE)!
 <template>
   <XDialog
     v-model="store.visableUpdate"
-    content-class="sm:max-w-lg"
+    :ui="{ base: 'sm:max-w-lg' }"
     :interact="false"
     title="更新服务"
   >

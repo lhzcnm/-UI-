@@ -1,11 +1,11 @@
-import { XButton, XInput, XSwitch, type ColDef } from '@3un/ui'
+import { XButton, XInput, XSwitch, type XColDef } from '@3un/ui'
 import type { Service } from '@/inters/services'
 import { SERVICE_STORE } from '.'
 import { updateService } from '@/api/services'
 import { toast } from 'vue-sonner'
 
 const serviceStore =  useServiceStore()
-export const columns: ColDef<Service> = [
+export const columns: XColDef<Service> = [
   {
     key: 'packageId',
     title: '服务ID',
@@ -37,7 +37,7 @@ export const columns: ColDef<Service> = [
         'a',
         {
           href: 'javascript:void(0)',
-          class: 'hover:text-emerald-600 underline'
+          class: 'hover:text-emerald-500 underline'
         },
         api?.apiName || '编辑'
       )

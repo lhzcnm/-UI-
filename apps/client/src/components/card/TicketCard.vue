@@ -30,7 +30,7 @@ defineProps<TicketItemProps>()
         <span
           class="size-1.5 rounded-full"
           :class="{
-            'bg-teal-600': ticket.type === TICKET_TYPE.RECHARGE,
+            'bg-emerald-500': ticket.type === TICKET_TYPE.RECHARGE,
             'bg-blue-600': ticket.type === TICKET_TYPE.ORDER
           }"
         />

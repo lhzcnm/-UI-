@@ -43,7 +43,7 @@ async function getWxConfig() {
     <RouterView v-slot="{ Component }" :key="route.path">
       <main
         v-if="Component" id="main"
-        class="flex-1 overflow-y-auto bg-neutral-100 dark:bg-black"
+        class="flex-1 overflow-y-auto bg-zinc-100 dark:bg-black"
       >
         <Transition name="fade-in" mode="out-in">
           <Suspense>

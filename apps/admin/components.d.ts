@@ -24,7 +24,6 @@ declare module 'vue' {
     SettingPlane: typeof import('./src/modules/desktop/components/SettingPlane.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SidebarItem: typeof import('./src/components/SidebarItem.vue')['default']
-    TheEmpty: typeof import('./src/components/TheEmpty.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
     XButton: typeof import('@3un/ui')['XButton']

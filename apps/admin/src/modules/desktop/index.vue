@@ -24,7 +24,7 @@ await Promise.all([
     </Transition>
 
     <div
-      class="flex flex-col"
+      class="flex flex-col bg-card"
       :class="{ 'ml-sidebar': iStore.showSidebar }"
     >
       <DesktopHeader

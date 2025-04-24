@@ -38,7 +38,7 @@ onBeforeMount(() => {
 <template>
   <aside
     :class="twMerge(
-      'flex flex-col bg-background',
+      'flex flex-col bg-background border-r',
       props.class
     )"
   >
@@ -61,7 +61,7 @@ onBeforeMount(() => {
           <button
             :class="twJoin(
               'flex items-center justify-between w-full px-3 h-10 sm:h-8',
-              'rounded-md hover:bg-muted hover:text-accent-foreground',
+              'rounded-md hover:bg-primary hover:text-white transition-colors',
             )"
           >
             <div class="flex items-center space-x-2">

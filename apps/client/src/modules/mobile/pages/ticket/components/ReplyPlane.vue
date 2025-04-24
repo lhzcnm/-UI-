@@ -66,7 +66,7 @@ function handleSubmit() {
           />
           <div
             :class="twMerge(
-              'max-w-[80%] p-3 mx-2 rounded-lg bg-teal-600/20',
+              'max-w-[80%] p-3 mx-2 rounded-lg bg-emerald-500/20',
               reply.replyId === null && 'bg-primary/20',
             )"
           >
