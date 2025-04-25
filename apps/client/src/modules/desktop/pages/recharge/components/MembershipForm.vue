@@ -136,7 +136,7 @@ function isSamePrice(item: MemberPackage) {
           )"
           @click="selectedPayment = 'wxpay'"
         >
-          <Icon icon="ri:wechat-pay-fill" class="size-6 text-emerald-500" />
+          <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
           <span>微信</span>
         </button>
         <button
@@ -146,7 +146,7 @@ function isSamePrice(item: MemberPackage) {
           )"
           @click="selectedPayment = 'alipay'"
         >
-          <Icon icon="ri:alipay-fill" class="size-6 text-blue-600" />
+          <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
           <span>支付宝</span>
         </button>
       </div>
@@ -154,9 +154,9 @@ function isSamePrice(item: MemberPackage) {
 
     <div class="space-y-3 overflow-y-auto max-h-[400px]">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg text-amber-500">会员权益</h3>
+        <h3 class="text-lg text-warning">会员权益</h3>
         <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-          每月最高将为您节省：<b class="text-rose-500">{{ pkgTotalAmount }}元</b>
+          每月最高将为您节省：<b class="text-danger">{{ pkgTotalAmount }}元</b>
         </span>
       </div>
 

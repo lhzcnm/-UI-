@@ -42,7 +42,7 @@ const displayItems = computed(() => {
     <XTable
       :data="displayItems"
       :columns="columns"
-      class="relative overflow-hidden h-[calc(100vh-8rem)]"
+      class="h-[calc(100vh-8rem)]"
     />
 
     <ItemCreate />

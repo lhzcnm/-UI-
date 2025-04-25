@@ -106,7 +106,7 @@ function checkRecharge() {
           @click="selectedAmount = item.value"
         >
           <span>{{ item.label }}</span>
-          <span v-if="item.info" class="text-sm text-emerald-500">{{ item.info }}</span>
+          <span v-if="item.info" class="text-sm text-success">{{ item.info }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
@@ -129,7 +129,7 @@ function checkRecharge() {
           )"
           @click="selectedPayment = 'wxpay'"
         >
-          <Icon icon="ri:wechat-pay-fill" class="size-6 text-emerald-500" />
+          <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
           <span>微信</span>
         </button>
         <button
@@ -139,7 +139,7 @@ function checkRecharge() {
           )"
           @click="selectedPayment = 'alipay'"
         >
-          <Icon icon="ri:alipay-fill" class="size-6 text-blue-600" />
+          <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
           <span>支付宝</span>
         </button>
       </div>
@@ -169,7 +169,7 @@ function checkRecharge() {
       
       <div class="flex items-center justify-between pt-2 border-t">
         <span>应付金额</span>
-        <span class="text-lg font-medium text-rose-500">
+        <span class="text-lg font-medium text-danger">
           {{ (rechargeAmount + serviceFee).toFixed(2) }} 元
         </span>
       </div>

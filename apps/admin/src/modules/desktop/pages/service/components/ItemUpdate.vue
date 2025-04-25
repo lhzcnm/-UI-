@@ -12,7 +12,7 @@ const store = inject(SERVICE_STORE)!
     :interact="false"
     title="更新服务"
   >
-    <div class="max-h-[75vh] overflow-y-auto">
+    <div class="max-h-[75vh] pr-1 overflow-y-auto">
       <ItemForm v-model="store.updateForm" />
     </div>
 

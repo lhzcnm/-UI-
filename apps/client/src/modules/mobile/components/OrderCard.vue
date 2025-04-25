@@ -144,7 +144,7 @@ function handleCopy() {
         <span class="text-muted-foreground shrink-0">消耗积分：</span>
         <span
           :class="twJoin(
-            'font-medium text-rose-500',
+            'font-medium text-danger',
             status.isFailed && 'line-through',
           )"
         >

@@ -63,6 +63,7 @@ function handleServiceItemClick(event: MouseEvent) {
     <XBulletinBoard
       v-if="iStore.settings.enableScrollingAnnc"
       class="px-2 py-3 mb-4" :text="iStore.settings.scrollingAnnc"
+      :style="{ '--bg': 'hsl(var(--card))' }"
     />
 
     <section v-if="commonList.length" class="mb-4">

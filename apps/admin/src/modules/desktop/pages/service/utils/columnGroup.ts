@@ -1,10 +1,10 @@
 import type { ServiceGroup } from '@/inters/services'
-import { XButton, XInput, XSwitch, type ColDef } from "@3un/ui"
+import { XButton, XInput, XSwitch, type XColDef } from "@3un/ui"
 import { updateServiceGroup } from '@/api/services'
 import { toast } from 'vue-sonner'
 
 const serviceStore =  useServiceStore()
-export const columns: ColDef<ServiceGroup> = [ 
+export const columns: XColDef<ServiceGroup> = [ 
   {
     key: 'categoryId',
     title: '服务组ID',
@@ -69,7 +69,7 @@ export const columns: ColDef<ServiceGroup> = [
     render: () => {
       return [
         h(XButton, { size: 'sm' }, () => '编辑'),
-        h(XButton, { size: 'sm', color: 'emerald' }, () => '查看服务'),
+        h(XButton, { size: 'sm', color: 'success' }, () => '查看服务'),
       ]
     }
   }

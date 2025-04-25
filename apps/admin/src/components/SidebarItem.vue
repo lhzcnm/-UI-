@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { twJoin } from 'tailwind-merge'
+import { twMerge } from 'tailwind-merge'
 
 import type { SidebarMenu, SidebarMenuChild } from '@/utils'
 import { EXPANDED_MENUS } from '@/utils'
@@ -53,10 +53,10 @@ const isActive = computed(() => {
 <template>
   <li>
     <button
-      :class="twJoin(
+      :class="twMerge(
         'flex items-center justify-between w-full px-3 h-10 sm:h-8',
-        'rounded-md hover:bg-primary hover:text-white transition-colors',
-        isActive && 'bg-primary text-white',
+        'rounded hover:bg-accent transition-colors',
+        isActive && 'bg-primary/20 text-primary hover:bg-primary/20',
       )"
       @click="handleClick(menu)"
     >
@@ -80,10 +80,10 @@ const isActive = computed(() => {
         <li v-for="child in menu.children" :key="child.path">
           <RouterLink
             :to="child.path"
-            :class="twJoin(
-              'flex items-center px-3 h-9 sm:h-7 space-x-1 transition-colors',
-              'rounded-md hover:bg-primary hover:text-white',
-              route.path === child.path && 'bg-primary text-white',
+            :class="twMerge(
+              'flex items-center px-3 h-9 sm:h-7 space-x-1',
+              'rounded hover:bg-accent transition-colors',
+              route.path === child.path && 'bg-primary/20 text-primary hover:bg-primary/20',
             )"
             @click="handleChildClick(child, menu.label)"
           >

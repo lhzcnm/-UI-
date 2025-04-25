@@ -442,7 +442,7 @@ function handlePushMsgChange(value: boolean) {
       <div v-if="ua.isWechat" class="flex items-center justify-between space-x-2">
         <XButton
           class="w-full" label="选择图片"
-          color="teal" icon="lucide:image-up" @click="handlePickImage"
+          color="success" icon="lucide:image-up" @click="handlePickImage"
         />
         <XButton
           class="w-full" label="拍照识别"

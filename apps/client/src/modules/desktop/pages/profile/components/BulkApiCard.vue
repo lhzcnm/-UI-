@@ -40,12 +40,12 @@ async function handleOpenBulkCheckApi() {
 
       <div class="space-x-2">
         <XButton icon="lucide:refresh-cw" label="刷新" @click="handleRefresh" />
-        <XButton icon="lucide:copy" label="复制" color="teal" @click="handleCopy" />
+        <XButton icon="lucide:copy" label="复制" color="success" @click="handleCopy" />
       </div>      
     </div>
 
     <div v-else class="flex justify-center">
-      <XButton color="teal" label="开通批量查询 API KEY" @click="handleOpenBulkCheckApi" />
+      <XButton color="success" label="开通批量查询 API KEY" @click="handleOpenBulkCheckApi" />
     </div>
   </div>
 </template>

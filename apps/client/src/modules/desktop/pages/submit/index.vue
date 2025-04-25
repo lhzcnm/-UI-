@@ -303,11 +303,11 @@ function handlePushMsgChange(value: boolean) {
         />
 
         <XButton label="提交" :loading="submitLoading" @click="handleSubmit" />
-        <XButton label="导出" color="teal" @click="handleExport" />
-        <XButton label="清空" color="red" @click="reset" />
+        <XButton label="导出" color="success" @click="handleExport" />
+        <XButton label="清空" color="danger" @click="reset" />
         <XButton
           v-show="mustRead" variant="outline"
-          label="服务说明" color="amber"
+          label="服务说明" color="warning"
           @click="mustReadVisible = true"
         />
 

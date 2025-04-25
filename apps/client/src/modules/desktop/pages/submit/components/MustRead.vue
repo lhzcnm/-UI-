@@ -15,7 +15,7 @@ const visible = defineModel<boolean>({ required: true })
     <template #footer>
       <div class="flex justify-end mt-3">
         <XButton
-          label="朕已知晓" color="amber"
+          label="朕已知晓" color="warning"
           @click="visible = false"
         />
       </div>

@@ -13,16 +13,16 @@ const options = [
 <template>
   <XDialog
     v-model="visible" title="设置"
-    content-class="sm:max-w-2xl"
+    :ui="{ base: 'sm:max-w-2xl' }"
   >
     <div class="w-32 h-96">
       <ul class="space-y-1">
         <li v-for="item in options" :key="item.value">
           <button
             :class="twJoin(
-              'flex items-center justify-between w-full px-3 h-10 sm:h-8',
-              'rounded-md hover:bg-muted hover:text-accent-foreground',
-              tab === item.value && 'bg-muted text-accent-foreground',
+              'flex items-center justify-between w-full px-2 h-10 sm:h-8',
+              'rounded-md hover:bg-primary/20 transition-colors',
+              tab === item.value && 'bg-primary/20 text-primary hover:bg-primary/20',
             )"
           >
             {{ item.label }}

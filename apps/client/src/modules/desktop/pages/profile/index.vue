@@ -35,7 +35,7 @@ const qrcode = computed(() => {
           </div>
         </XPopover>
         <XButton
-          label="安全退出" color="red"
+          label="安全退出" color="danger"
           @click="store.logout"
         />
       </div>

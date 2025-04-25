@@ -16,6 +16,7 @@ export default withTV({
     extend: {
       width: {
         sidebar: 'var(--sidebar-width)',
+        container: 'calc(100vw - var(--siderbar-w))',
       },
       height: {
         header: 'var(--header-height)',

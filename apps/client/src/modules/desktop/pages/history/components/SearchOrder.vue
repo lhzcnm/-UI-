@@ -48,7 +48,7 @@ function handleReset() {
       <div class="flex justify-between space-x-2 mt-4">
         <XButton
           :loading="submitLoading"
-          label="重置" color="teal"
+          label="重置" color="success"
           @click="handleReset"
         />
         <div class="space-x-2">

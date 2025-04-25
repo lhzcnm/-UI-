@@ -111,8 +111,8 @@ async function handleOpenBulkCheckApi() {
             {{ store.info.nickname || iStore.settings.title }}
           </div>
           <div class="space-x-2">
-            <XTag color="blue">ID: {{ store.info.userId }}</XTag>
-            <XTag color="red">{{ store.info.pricePlan }}</XTag>
+            <XTag>ID: {{ store.info.userId }}</XTag>
+            <XTag color="danger">{{ store.info.pricePlan }}</XTag>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@ async function handleOpenBulkCheckApi() {
       <div class="flex space-x-2 mt-4">
         <XButton
           class="w-full" icon="lucide:dollar-sign"
-          variant="soft" color="red"
+          variant="soft" color="danger"
           @click="$router.push('/m/credits')"
         >
           账单
@@ -167,14 +167,14 @@ async function handleOpenBulkCheckApi() {
           @click="handleRefresh"
         />
         <XButton
-          icon="lucide:copy" class="flex-1" color="teal" label="复制"
+          icon="lucide:copy" class="flex-1" color="success" label="复制"
           @click="copy(store.info.bulkCheckApi)"
         />
       </div>
     </section>
     <section v-else class="mb-3 p-4 bg-card rounded-lg text-center">
       <XButton
-        color="teal" label="开通批量查询 API KEY"
+        color="success" label="开通批量查询 API KEY"
         @click="handleOpenBulkCheckApi"
       />
     </section>

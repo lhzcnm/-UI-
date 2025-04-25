@@ -11,6 +11,7 @@ export const zService = z.interface({
   apiName: z.nullable(z.string()).default(null),
   packagePrice: z.number().default(0),
 
+  tmpTitle: z.string().default(''),
   packageTitle: z.string().default(''),
   packageTitleLocal: z.string().default(''),
 
@@ -46,7 +47,6 @@ export const zService = z.interface({
   // packageDetailLocal: z.string().default(''),
   // seoUrlName: z.string(),
   // sl3lbf: z.boolean(),
-  // tmpTitle: z.string(),
   // toolForUnlockBase: z.string(),
 })
 

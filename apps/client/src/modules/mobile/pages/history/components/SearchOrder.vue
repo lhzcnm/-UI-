@@ -40,7 +40,7 @@ function handleReset() {
   >
     <BaseForm v-model="store.searchForm" class="px-4" />
     <div class="flex justify-end space-x-2 p-4">
-      <XButton color="teal" variant="soft" @click="handleReset">重置表单</XButton>
+      <XButton color="success" variant="soft" @click="handleReset">重置表单</XButton>
       <XButton :loading="submitLoading" @click="handleSubmit">搜索订单</XButton>
     </div>
   </TheModal>

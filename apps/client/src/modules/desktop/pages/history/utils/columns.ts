@@ -37,7 +37,6 @@ export const columns: XTableColumn[] = [
     width: 88,
     render(value: ORDER_VERTIFY) {
       const tag = ORDER_VERTIFY_MAP[value]
-      console.log(tag, value)
       return h(XTag, tag)
     }
   },

@@ -45,6 +45,7 @@ function handleServiceItemClick(event: MouseEvent) {
     <XBulletinBoard
       v-if="store.settings.enableScrollingAnnc"
       class="mb-4" :text="store.settings.scrollingAnnc"
+      :style="{ '--bg': 'hsl(var(--card))' }"
     />
 
     <section class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]">

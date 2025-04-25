@@ -39,8 +39,8 @@ const store = useUserStore()
             <span class="text-sm text-muted-foreground ml-1">个</span>
           </div>
           <div class="flex justify-between mt-2 text-xs">
-            <span class="text-emerald-500">成功 {{ store.info.userOrder.success }}</span>
-            <span class="text-rose-500">失败 {{ store.info.userOrder.failed }}</span>
+            <span class="text-success">成功 {{ store.info.userOrder.success }}</span>
+            <span class="text-danger">失败 {{ store.info.userOrder.failed }}</span>
           </div>
         </div>
 
@@ -93,7 +93,7 @@ const store = useUserStore()
     <div v-if="!ua.isMobile" class="p-6 mb-4">
       <XButton
         icon="lucide:log-out"
-        label="退出登录" color="red"
+        label="退出登录" color="danger"
         variant="soft" class="w-full"
         @click="store.logout"
       />

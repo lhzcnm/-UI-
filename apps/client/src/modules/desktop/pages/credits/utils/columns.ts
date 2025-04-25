@@ -31,10 +31,10 @@ export const columns: XTableColumn[] = [
 
       if (isReduce) {
         if (value > 0) label = `-${label}`
-        color = 'text-rose-500' 
+        color = 'text-danger' 
       }
       else {
-        color = 'text-emerald-500'
+        color = 'text-success'
         label = `+${label}`
       }
 

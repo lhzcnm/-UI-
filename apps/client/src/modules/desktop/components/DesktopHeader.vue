@@ -15,7 +15,7 @@ const uStore = useUserStore()
           to="/recharge"
           :class="twJoin(
             'flex items-center space-x-2 px-3 py-2 shadow',
-            'bg-teal-500 text-white rounded-full'
+            'bg-success text-white rounded-full'
           )"
         >
           <Icon icon="hugeicons:bitcoin-bag" class="size-5" />

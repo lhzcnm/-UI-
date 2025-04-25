@@ -68,8 +68,8 @@ function handleCopy() {
     <section class="flex justify-between space-x-2 mb-3">
       <div class="space-x-2 whitespace-nowrap">
         <XButton label="搜索" @click="openSearch" />
-        <XButton color="teal" label="导出" @click="openExport" />
-        <XButton color="amber" variant="outline" label="复制 IMEI/SN" @click="handleCopy" />
+        <XButton color="success" label="导出" @click="openExport" />
+        <XButton color="warning" variant="outline" label="复制 IMEI/SN" @click="handleCopy" />
       </div>
 
       <XPagination

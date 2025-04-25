@@ -47,7 +47,7 @@ function handleExport() {
   <TheModal v-model="store.visible" title="订单结果">
     <section class="relative px-4 pb-3 flex justify-between items-center">
       <XButton
-        color="emerald"
+        color="success"
         label="导出"
         :loading="exportLoading"
         @click="handleExport"
@@ -64,7 +64,7 @@ function handleExport() {
             v-show="progress < 110"
             :class="twJoin(
               'size-full relative transition-transform duration-300',
-              'bg-emerald-500 flow-light-effect overflow-hidden'
+              'bg-success flow-light-effect overflow-hidden'
             )"
             :style="{ width: `${progress}%` }"
           >

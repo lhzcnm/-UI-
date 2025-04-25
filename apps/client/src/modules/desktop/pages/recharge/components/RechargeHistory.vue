@@ -36,7 +36,7 @@ function handleExport() {
   <section class="flex-1 min-w-max bg-card border rounded-md">
     <div class="flex items-center justify-between p-4">
       <XButton
-        icon="lucide:arrow-down-to-line" label="导出记录" color="teal"
+        icon="lucide:arrow-down-to-line" label="导出记录" color="success"
         :loading="loading" @click="handleExport"
       />
       <XPagination

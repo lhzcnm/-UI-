@@ -43,7 +43,7 @@ function handleClose() {
   >
     <BaseForm v-model="store.exportForm" class="px-4" />
     <div class="flex justify-end p-4">
-      <XButton color="teal" :loading="submitLoading" @click="handleSubmit">导出订单</XButton>
+      <XButton color="success" :loading="submitLoading" @click="handleSubmit">导出订单</XButton>
     </div>
   </TheModal>
 </template>

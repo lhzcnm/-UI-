@@ -39,8 +39,8 @@ function getTitle() {
         <span class="text-sm">变动金额</span>
         <div
           :class="twMerge(
-            'text-lg font-bold text-emerald-500',
-            isReduce && 'text-rose-500',
+            'text-lg font-bold text-success',
+            isReduce && 'text-danger',
           )"
         >
           {{ amountText }}

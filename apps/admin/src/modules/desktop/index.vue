@@ -24,7 +24,7 @@ await Promise.all([
     </Transition>
 
     <div
-      class="flex flex-col bg-card"
+      class="bg-card"
       :class="{ 'ml-sidebar': iStore.showSidebar }"
     >
       <DesktopHeader
@@ -34,7 +34,7 @@ await Promise.all([
       <RouterView v-slot="{ Component }" :key="route.path">
         <main
           v-if="Component" ref="mainRef"
-          class="flex-1 overflow-y-auto"
+          class="h-container overflow-y-auto"
         >
           <Transition name="fade-in" mode="out-in">
             <Suspense>
