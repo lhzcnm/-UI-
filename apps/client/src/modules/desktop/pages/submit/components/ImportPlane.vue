@@ -79,7 +79,7 @@ async function handleFile(file: File) {
 <template>
   <XPopover v-model="open" @closed="handleClosed">
     <template #trigger>
-      <XButton label="导入" color="warning" :disabled="!selectedId" />
+      <XButton label="导入" :disabled="!selectedId" />
     </template>
 
     <div class="space-y-3 w-80 p-4">

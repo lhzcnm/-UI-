@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import RouteSearchItem from './RouteSearchItem.vue'
-import ServiceSearchItem from './ServiceSearchItem.vue'
+import SearchRouteItem from './SearchRouteItem.vue'
+import SearchServiceItem from './SearchServiceItem.vue'
 
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
@@ -143,7 +143,7 @@ function handleCommand(command: string, event: MouseEvent) {
           @click.stop="handleCommand(option.value, $event)"
         >
           <template v-if="['route', 'tool'].includes(option.value)">
-            <RouteSearchItem
+            <SearchRouteItem
               v-for="child in (option as Options<SidebarMenuChild>).children"
               :key="child.path"
               :data-path="child.path"
@@ -151,7 +151,7 @@ function handleCommand(command: string, event: MouseEvent) {
             />
           </template>
           <template v-else>
-            <ServiceSearchItem
+            <SearchServiceItem
               v-for="child in (option as Options<Service>).children"
               :key="child.packageId"
               :data-id="child.packageId"

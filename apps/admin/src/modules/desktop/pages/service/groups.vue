@@ -5,7 +5,7 @@ const store = useServiceStore()
 </script>
 
 <template>
-  <div class="px-3">
+  <div class="px-3 mb-3">
     <section class="my-3">
       <x-button>新增服务组</x-button>
     </section>
@@ -13,7 +13,6 @@ const store = useServiceStore()
     <XTable
       :data="store.groups"
       :columns="columns"
-      class="bg-none h-[calc(100vh-8rem)]"
     />
   </div>
 </template>

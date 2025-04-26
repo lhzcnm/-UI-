@@ -27,7 +27,7 @@ const route = useRoute()
     <Transition name="fade-in">
       <div
         v-if="iStore.showSidebar"
-        class=" absolute top-0 left-0 size-full bg-black/80"
+        class="absolute top-0 left-0 size-full bg-black/80"
         @click="iStore.showSidebar = false"
       />
     </Transition>

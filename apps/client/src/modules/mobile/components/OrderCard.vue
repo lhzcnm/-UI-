@@ -95,13 +95,13 @@ function handleCopy() {
         :class="twJoin(
           'relative flex items-center justify-center',
           'min-w-[32px] h-[32px] px-2',
+          'text-white font-bold rounded-lg text-sm',
           'bg-gradient-to-br from-primary/80 to-primary/40',
-          'text-white font-bold',
-          'rounded-lg text-sm',
+          'shadow-lg shadow-primary/20 backdrop-blur-sm',
+
           'before:absolute before:top-0 bottom-0 left-0 right-0 before:rounded-lg',
           'before:border-2 before:border-primary/30 before:border-r-primary/60',
           'before:transform before:rotate-3 before:z-[-1]',
-          'shadow-lg shadow-primary/20 backdrop-blur-sm',
         )"
       >
         <span class="transform -rotate-3">{{ index }}</span>

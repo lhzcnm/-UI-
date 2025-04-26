@@ -39,7 +39,7 @@ const visibleSetting = ref(false)
     <div class="flex items-center space-x-1">
       <button
         accesskey="k"
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
         @click="visibleSearch = true"
       >
         <Icon icon="lucide:search" class="size-5" />
@@ -47,7 +47,7 @@ const visibleSetting = ref(false)
 
       <button
         accesskey="m"
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
       >
         <Icon icon="lucide:bell" class="size-5" />
       </button>
@@ -56,7 +56,7 @@ const visibleSetting = ref(false)
       <TheTheme ghost />
 
       <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
         @click="toggleFullscreen"
       >
         <Icon
@@ -68,7 +68,7 @@ const visibleSetting = ref(false)
       <hr class="h-6 w-px bg-border" />
       <button
         accesskey="s"
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
         @click="visibleSetting = true"
       >
         <Icon icon="lucide:settings" class="size-5" />

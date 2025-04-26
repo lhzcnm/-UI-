@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useFullscreen } from '@vueuse/core'
+import { twJoin } from 'tailwind-merge'
 
 const route = useRoute()
 const iStore = useSystemStore()
@@ -15,16 +16,19 @@ await Promise.all([
 </script>
 
 <template>
-  <div ref="root" class="h-screen bg-background">
-    <Transition name="sidebar">
+  <div ref="root" class="h-screen">
+    <Transition name="slide-left">
       <Sidebar
         v-if="iStore.showSidebar"
-        class="fixed top-0 left-0 z-20 w-sidebar h-screen"
+        :class="twJoin(
+          'fixed top-0 left-0 z-20',
+          'w-sidebar h-screen'
+        )"
       />
     </Transition>
 
     <div
-      class="bg-card"
+      class="bg-white dark:bg-background"
       :class="{ 'ml-sidebar': iStore.showSidebar }"
     >
       <DesktopHeader

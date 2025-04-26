@@ -25,6 +25,9 @@ export default withTV({
       margin: {
         sidebar: 'var(--sidebar-width)',
       },
+      backgroundColor: {
+        sidebar: 'var(--sidebar-bg)',
+      },
       animation: {
         'spin-slow': 'spin 5s linear infinite',
       },

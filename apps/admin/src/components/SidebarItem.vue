@@ -55,8 +55,8 @@ const isActive = computed(() => {
     <button
       :class="twMerge(
         'flex items-center justify-between w-full px-3 h-10 sm:h-8',
-        'rounded hover:bg-accent transition-colors',
-        isActive && 'bg-primary/20 text-primary hover:bg-primary/20',
+        'rounded hover:bg-accent/15 hover:text-foreground transition-colors',
+        isActive && 'bg-accent/15 text-foreground',
       )"
       @click="handleClick(menu)"
     >
@@ -82,8 +82,8 @@ const isActive = computed(() => {
             :to="child.path"
             :class="twMerge(
               'flex items-center px-3 h-9 sm:h-7 space-x-1',
-              'rounded hover:bg-accent transition-colors',
-              route.path === child.path && 'bg-primary/20 text-primary hover:bg-primary/20',
+              'rounded hover:bg-accent/15 hover:text-foreground transition-colors',
+              route.path === child.path && 'bg-accent/15 text-foreground',
             )"
             @click="handleChildClick(child, menu.label)"
           >

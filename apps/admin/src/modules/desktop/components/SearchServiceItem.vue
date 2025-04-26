@@ -2,10 +2,10 @@
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
-import type { ServiceView } from '@/interface/services'
+import type { Service } from '@/inters/services'
 
 interface RouteSearchItemProps {
-  child: ServiceView
+  child: Service
 }
 
 defineProps<RouteSearchItemProps>()
@@ -16,8 +16,7 @@ defineProps<RouteSearchItemProps>()
     <button
       :class="twJoin(
         'flex justify-between space-x-2 w-full rounded-md p-1.5 text-left group',
-        'focus:bg-muted dark:focus:bg-accent/50 focus:outline-none',
-        'hover:bg-muted dark:hover:bg-accent/50',
+        'hover:bg-muted focus:bg-muted dark:focus:bg-accent/50 focus:outline-none',
       )"
     >
       <div class="flex items-center space-x-2 overflow-hidden">

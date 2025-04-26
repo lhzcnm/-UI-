@@ -38,6 +38,7 @@ const options: XSegmentedOption[] = [
         <XSegmented
           v-model="activeTab"
           :options="options"
+          class="bg-card"
         />
       </div>
 

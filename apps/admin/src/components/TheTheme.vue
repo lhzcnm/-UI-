@@ -17,7 +17,6 @@ const toggleTheme = () => {
   const target = theme.value.isDark ? 'dark' : 'light'
 
   localStorage.setItem('theme', target)
-  html.setAttribute('data-ag-theme-mode', target)
   html.className = html.className.replace(theme.value.name, target)
   theme.value.name = target
 }
@@ -27,8 +26,8 @@ const toggleTheme = () => {
   <button
     accesskey="t"
     :class="twMerge(
-      'p-2 rounded-full text-muted-foreground transition-colors duration-300',
-      props.ghost ? 'bg-transparent hover:bg-muted' : 'bg-muted hover:bg-accent',
+      'p-2 rounded-full text-muted-foreground hover:text-foreground transition-colors duration-300',
+      props.ghost ? 'bg-transparent hover:bg-muted' : 'bg-muted hover:bg-accent/20',
     )"
     aria-label="Toggle theme"
     @click="toggleTheme"

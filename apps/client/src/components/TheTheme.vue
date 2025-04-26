@@ -24,16 +24,15 @@ const toggleTheme = () => {
 
 <template>
   <button
+    accesskey="t"
     :class="twMerge(
-      'p-2 rounded-full text-muted-foreground transition-colors',
-      props.ghost
-        ? 'bg-transparent hover:bg-muted'
-        : 'bg-muted hover:bg-accent',
+      'p-2 rounded-full text-muted-foreground transition-colors duration-300',
+      props.ghost ? 'bg-transparent hover:bg-muted' : 'bg-muted hover:bg-accent/20',
     )"
     aria-label="Toggle theme"
     @click="toggleTheme"
   >
-    <Icon icon="hugeicons:moon-02" v-if="theme.isDark" class="size-5" />
-    <Icon icon="hugeicons:sun-03" v-else class="size-5" />
+    <Icon icon="lucide:moon" v-if="theme.isDark" class="size-5" />
+    <Icon icon="lucide:sun" v-else class="size-5" />
   </button>
 </template>

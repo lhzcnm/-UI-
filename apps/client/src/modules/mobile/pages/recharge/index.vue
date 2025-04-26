@@ -25,7 +25,7 @@ const options: XSegmentedOption[] = [
   <div class="h-full">
     <BackHeader title="积分充值" />
     <div class="px-3 pb-6 h-[calc(100%-var(--mobile-header-h))] overflow-y-auto">
-      <XSegmented class="my-3" v-model="activeTab" :options="options" />
+      <XSegmented class="my-3 bg-card" v-model="activeTab" :options="options" />
 
       <RechargeForm v-show="activeTab === 'recharge'" />
       <MembershipForm v-show="activeTab === 'membership'" />

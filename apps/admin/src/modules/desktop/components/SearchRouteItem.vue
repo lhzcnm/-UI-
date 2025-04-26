@@ -15,8 +15,7 @@ defineProps<RouteSearchItemProps>()
     <button
       :class="twJoin(
         'flex justify-between w-full rounded-md p-1.5 group',
-        'focus:bg-muted dark:focus:bg-accent/50 focus:outline-none',
-        'hover:bg-muted dark:hover:bg-accent/50',
+        'hover:bg-muted/90 focus:bg-muted focus:outline-none',
       )"
     >
       <div class="flex items-center space-x-2">

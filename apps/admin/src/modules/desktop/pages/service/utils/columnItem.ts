@@ -44,6 +44,11 @@ export const columns: XColDef<Service> = [
     }
   },
   {
+    key: 'tmpTitle',
+    title: '服务简称',
+    width: 220,
+  },
+  {
     key: 'packageTitle',
     title: '服务名称',
     minWidth: 220,

@@ -32,7 +32,7 @@ watch(visible, (value) => !value && emit('close'))
         v-if="visible"
         :class="twMerge(
           'fixed left-0 right-0 bottom-0 z-50 will-change-transform',
-          'h-[90%] bg-popover rounded-t-[10px] overflow-y-auto',
+          'h-[90%] bg-card rounded-t-[10px] overflow-y-auto',
           props.class,
         )"
       >
