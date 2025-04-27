@@ -17,11 +17,10 @@
     let applyTheme = storedTheme || (systemTheme ? 'dark' : 'light')
     storedTheme && localStorage.setItem('theme', applyTheme)
 
-    if (location.pathname.includes('/auth')) {
-      applyTheme = 'light'
-    }
+    const isLogined = localStorage.getItem('%VITE_ACCESS_TOKEN%')
+    const isAuth = !isLogined || location.pathname.includes('/auth')
+    if (isAuth) applyTheme = 'light'
 
-    html.setAttribute('data-ag-theme-mode', applyTheme)
     html.classList.add(applyTheme)
   })()
   </script>
