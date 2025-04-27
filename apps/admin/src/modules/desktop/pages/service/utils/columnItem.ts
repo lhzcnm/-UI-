@@ -1,8 +1,7 @@
 import { XButton, XInput, XSwitch, type XColDef } from '@3un/ui'
 import type { Service } from '@/inters/services'
-import { SERVICE_STORE } from '.'
 import { updateService } from '@/api/services'
-import { toast } from 'vue-sonner'
+import { SERVICE_STORE } from '.'
 
 const serviceStore =  useServiceStore()
 export const columns: XColDef<Service> = [
@@ -37,7 +36,7 @@ export const columns: XColDef<Service> = [
         'a',
         {
           href: 'javascript:void(0)',
-          class: 'hover:text-emerald-500 underline'
+          class: 'hover:text-success underline'
         },
         api?.apiName || '编辑'
       )
@@ -64,13 +63,13 @@ export const columns: XColDef<Service> = [
     key: 'packageOrderBy',
     title: '排序',
     width: 128,
-    render(value, row) {
+    render(value, _, index) {
       return h(
         XInput,
         {
           modelValue: value,
           'onUpdate:modelValue': (val) => {
-            row.packageOrderBy = +val
+            serviceStore.items[index].packageOrderBy = +val
           },
         },
       )
@@ -92,10 +91,6 @@ export const columns: XColDef<Service> = [
             })
             const current = serviceStore.items[index]
             response.then(() => current.disablePackage = val)
-            response.catch(() => {
-              toast.warning('禁用失败')
-              current.disablePackage = !val
-            })
           },
         },
       )
@@ -110,8 +105,8 @@ export const columns: XColDef<Service> = [
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
         store.index = index
-        store.updateForm = row
-        store.visableUpdate = true
+        store.form = row
+        store.visable = true
       }
 
       return h(XButton, { size: 'sm', onClick }, () => '编辑')

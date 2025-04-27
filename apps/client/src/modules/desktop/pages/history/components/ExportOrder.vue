@@ -31,7 +31,7 @@ function handleSubmit() {
 <template>
   <XDialog
     v-model="store.visibleExport"
-    :close-on-escape="false"
+    :close-on-esc="false"
     :mask-closable="false"
     title="导出订单"
   >

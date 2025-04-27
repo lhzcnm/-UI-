@@ -2,11 +2,9 @@ import type { ServiceCreateParams } from '@/inters/services'
 import type { InjectionKey } from "vue"
 
 export interface ServiceStore {
-  createForm: ServiceCreateParams
-  updateForm: ServiceCreateParams
-  visableCreate: boolean
-  visableUpdate: boolean
+  form: ServiceCreateParams
   index: number | undefined
+  visable: boolean
   page: number
   limit: number
 }

@@ -24,7 +24,7 @@ function handleSubmit() {
 <template>
   <XDialog
     v-model="store.visibleCreate"
-    :close-on-escape="false"
+    :close-on-esc="false"
     :mask-closable="false"
     title="创建工单"
   >

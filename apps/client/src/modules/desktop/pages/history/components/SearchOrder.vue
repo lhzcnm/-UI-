@@ -38,7 +38,7 @@ function handleReset() {
 <template>
   <XDialog
     v-model="store.visibleSearch"
-    :close-on-escape="false"
+    :close-on-esc="false"
     :mask-closable="false"
     title="搜索订单"
   >

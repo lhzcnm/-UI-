@@ -13,6 +13,7 @@ const store = useServiceStore()
     <XTable
       :data="store.groups"
       :columns="columns"
+      class="h-[calc(100vh-8rem)]"
     />
   </div>
 </template>

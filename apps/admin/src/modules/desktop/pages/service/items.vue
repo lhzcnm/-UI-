@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import ItemCreate from './components/ItemCreate.vue'
-import ItemUpdate from './components/ItemUpdate.vue'
-
+import ItemForm from './components/ItemForm.vue'
 import { zServiceForm } from '@/inters/services'
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { columns } from './utils/columnItem'
@@ -9,11 +7,9 @@ import { XPagination } from '@3un/ui'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
-  createForm: zServiceForm.parse({}),
-  updateForm: zServiceForm.parse({}),
-  visableCreate: false,
-  visableUpdate: false,
+  form: zServiceForm.parse({}),
   index: undefined,
+  visable: false,
   page: 1,
   limit: 20,
 })
@@ -26,12 +22,18 @@ const displayItems = computed(() => {
     store.page * store.limit
   )
 })
+
+function openCreate() {
+  store.visable = true
+  store.form = zServiceForm.parse({})
+  store.index = undefined
+}
 </script>
 
 <template>
   <div class="px-3 mb-3">
     <section class="flex justify-between my-3">
-      <XButton label="新增服务" @click="store.visableCreate = true" />
+      <XButton label="新增服务" @click="openCreate" />
       <XPagination
         v-model="store.page"
         v-model:limit="store.limit"
@@ -42,9 +44,9 @@ const displayItems = computed(() => {
     <XTable
       :data="displayItems"
       :columns="columns"
+      class="h-[calc(100vh-8rem)]"
     />
 
-    <ItemCreate />
-    <ItemUpdate />
+    <ItemForm />
   </div>
 </template>

@@ -1,8 +1,8 @@
 import type { Service, ServiceGroup } from '@/inters/services'
 import { getServiceGroups, getServices } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
-import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
+import { defineStore } from 'pinia'
 
 export const useServiceStore = defineStore('service', () => {
   const groups = useStorage<ServiceGroup[]>('groups', [])

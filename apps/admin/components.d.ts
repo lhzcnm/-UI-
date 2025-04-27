@@ -26,6 +26,7 @@ declare module 'vue' {
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
     XButton: typeof import('@3un/ui')['XButton']
     XDialog: typeof import('@3un/ui')['XDialog']
+    XDrawer: typeof import('@3un/ui')['XDrawer']
     XEmpty: typeof import('@3un/ui')['XEmpty']
     XInput: typeof import('@3un/ui')['XInput']
     XSelect: typeof import('@3un/ui')['XSelect']
