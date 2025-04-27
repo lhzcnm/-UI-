@@ -25,7 +25,7 @@ function handleSubmit() {
   <XDialog
     v-model="store.visibleCreate"
     :close-on-escape="false"
-    :interact="false"
+    :mask-closable="false"
     title="创建工单"
   >
     <BaseForm v-model="store.createForm" />

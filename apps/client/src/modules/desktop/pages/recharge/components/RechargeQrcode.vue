@@ -55,7 +55,7 @@ function handleClose() {
 <template>
   <XDialog 
     v-model="store.visible" 
-    :interact="store.isComplete"
+    :mask-closable="store.isComplete"
   >
     <button
       class="absolute top-2 right-2"

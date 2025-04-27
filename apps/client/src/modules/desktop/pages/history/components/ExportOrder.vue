@@ -32,7 +32,7 @@ function handleSubmit() {
   <XDialog
     v-model="store.visibleExport"
     :close-on-escape="false"
-    :interact="false"
+    :mask-closable="false"
     title="导出订单"
   >
     <BaseForm v-model="store.exportForm" />

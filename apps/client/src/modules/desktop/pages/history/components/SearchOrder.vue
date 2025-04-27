@@ -39,7 +39,7 @@ function handleReset() {
   <XDialog
     v-model="store.visibleSearch"
     :close-on-escape="false"
-    :interact="false"
+    :mask-closable="false"
     title="搜索订单"
   >
     <BaseForm v-model="store.searchForm" />
