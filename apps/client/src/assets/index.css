@@ -39,7 +39,6 @@
   }
 
   .dark {
-    --primary: 221 83% 53%; /* blue 600 */
     --success: 161 94% 30%; /* emerald 600 */
     --warning: 32 95% 44%; /* amber 600 */
     --danger: 347 77% 50%; /* rose 600 */

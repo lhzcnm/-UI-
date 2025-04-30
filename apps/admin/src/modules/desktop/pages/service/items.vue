@@ -31,7 +31,7 @@ function openCreate() {
 </script>
 
 <template>
-  <div class="px-3 mb-3">
+  <div class="px-3">
     <section class="flex justify-between my-3">
       <XButton label="新增服务" @click="openCreate" />
       <XPagination

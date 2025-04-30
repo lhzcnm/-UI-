@@ -52,11 +52,11 @@ function handleUpdate() {
   })
 
   response.then(() => {
-    Object.assign(
-      serviceStore.items[store.index!],
-      { ...current, ...store.form }
-    )
+    const { page, limit, index } = store
+    const idx = (page - 1) * limit + index!
+    const updated = { ...current, ...store.form }
 
+    serviceStore.items[idx] = updated
     store.visable = false
   })
 

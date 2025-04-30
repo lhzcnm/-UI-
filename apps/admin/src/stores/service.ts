@@ -5,8 +5,8 @@ import { useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 
 export const useServiceStore = defineStore('service', () => {
-  const groups = useStorage<ServiceGroup[]>('groups', [])
-  const items = useStorage<Service[]>('services', [])
+  const groups = useStorage<ServiceGroup[]>('groups', [], sessionStorage)
+  const items = useStorage<Service[]>('services', [], sessionStorage)
 
   const groupMap = ref(new Map<number, ServiceGroup>())
   const itemMap = ref(new Map<number, Service>())

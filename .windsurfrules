@@ -8,10 +8,11 @@ monorepo(pnpm) + submodules
 3. 使用 `@iconify/vue` 图标库，主要使用 `lucide` 图标集
 
 ## 代码规范
-1. .vue 文件 总是使用 `<script setup lang="ts">`，并且位于在最前面
-2. 对于较长的 class, 使用 tailwindMerge 的 `twMerge` 或 `twJoin` 换行
-3. 请遵守我的代码风格(2 空格，无分号)
-4. 最多一个空行
+1. 不要破坏性地删除我的代码！！！
+2. .vue 文件 总是使用 `<script setup lang="ts">`，并且位于在最前面
+3. 对于较长的 class, 使用 tailwindMerge 的 `twMerge` 或 `twJoin` 换行
+4. 请遵守我的代码风格(2 空格，无分号)
+5. 最多一个空行
 
 ## 导入格式规范
 

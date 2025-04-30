@@ -36,7 +36,7 @@ export const columns: XColDef<Service> = [
         'a',
         {
           href: 'javascript:void(0)',
-          class: 'hover:text-success underline'
+          class: 'hover:text-success underline',
         },
         api?.apiName || '编辑'
       )
@@ -63,37 +63,44 @@ export const columns: XColDef<Service> = [
     key: 'packageOrderBy',
     title: '排序',
     width: 128,
-    render(value, _, index) {
-      return h(
-        XInput,
-        {
-          modelValue: value,
-          'onUpdate:modelValue': (val) => {
-            serviceStore.items[index].packageOrderBy = +val
-          },
+    render(value, row) {
+      return h(XInput, {
+        modelValue: value,
+        'onUpdate:modelValue': (val) => {
+          const oldVal = row.packageOrderBy
+          const response = updateService({
+            packageId: row.packageId,
+            packageOrderBy: +val,
+          })
+
+          row.packageOrderBy = +val
+          response.catch(() => {
+            setTimeout(() => row.packageOrderBy = oldVal, 1000)
+          })
         },
-      )
+      })
     },
   },
   {
     key: 'disablePackage',
     title: '禁用',
     width: 168,
-    render(value, row, index) {
-      return h(
-        XSwitch,
-        {
-          modelValue: value,
-          'onUpdate:modelValue': async (val) => {
-            const response = updateService({
-              packageId: row.packageId,
-              disablePackage: val,
-            })
-            const current = serviceStore.items[index]
-            response.then(() => current.disablePackage = val)
-          },
+    render(value, row) {
+      return h(XSwitch, {
+        modelValue: value,
+        'onUpdate:modelValue': async (val) => {
+          const oldVal = row.disablePackage
+          const response = updateService({
+            packageId: row.packageId,
+            disablePackage: val,
+          })
+
+          row.disablePackage = val
+          response.catch(() => {
+            setTimeout(() => row.disablePackage = oldVal, 1000)
+          })
         },
-      )
+      })
     },
   },
   {
@@ -104,11 +111,10 @@ export const columns: XColDef<Service> = [
     render: (_, row, index) => {
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
+        store.form = { ...row }
         store.index = index
-        store.form = row
         store.visable = true
       }
-
       return h(XButton, { size: 'sm', onClick }, () => '编辑')
     }
   }
