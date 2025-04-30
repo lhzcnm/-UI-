@@ -39,6 +39,11 @@ const desktop: RouteRecordRaw = {
       name: 'Intercept',
       component: () => import('@desktop/pages/intercept/index.vue'),
     },
+    {
+      path: 'editor',
+      name: 'Editor',
+      component: () => import('@desktop/pages/editor/index.vue'),
+    },
   ],
 }
 

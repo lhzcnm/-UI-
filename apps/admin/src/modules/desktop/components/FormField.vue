@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { twJoin } from 'tailwind-merge'
+import { tv } from 'tailwind-variants'
 
 interface FormFieldProps {
   label: string
@@ -18,27 +19,40 @@ withDefaults(
     variant: 'horizontal'
   }
 )
+
+const style = tv({
+  slots: {
+    base: 'flex py-4 first:pt-0 last:pb-0 border-dashed',
+    title: 'text-base font-semibold',
+    desc: 'text-sm text-muted-foreground',
+  },
+  variants: {
+    variant: {
+      vertical: {
+        base: 'flex-col space-y-2'
+      },
+      horizontal: {
+        base: 'space-x-1'
+      }
+    },
+    required: {
+      true: {
+        title: 'before:content-[\'*\'] before:text-rose-500 before:text-sm'
+      }
+    }
+  }
+})
+
+const b = style()
 </script>
 
 <template>
-  <div
-    :class="twJoin(
-      'flex space-x-1 py-4 first:pt-0 last:pb-0 border-dashed',
-      variant === 'vertical' && 'flex-col space-y-2',
-    )"
-  >
+  <div :class="b.base({ variant })">
     <div class="flex-1">
-      <p
-        :class="twJoin(
-          'text-base font-semibold',
-          required && 'before:content-[\'*\'] before:text-rose-500 before:text-sm'
-        )"
-      >
-        {{ label }}
-      </p>
+      <p :class="b.title({ required })">{{ label }}</p>
       <span
         v-if="variant === 'horizontal'"
-        class="text-sm text-muted-foreground"
+        :class="b.desc()"
       >
         {{ description }}
       </span>

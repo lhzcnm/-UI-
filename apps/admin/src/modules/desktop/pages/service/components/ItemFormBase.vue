@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ServiceCreateParams } from '@/inters/services'
-import { IMEI_TYPE } from '@3un/shared/enums';
-import { XRadio, XSwitch } from '@3un/ui';
+import { IMEI_TYPE } from '@3un/shared/enums'
+import { XRadio, XSwitch } from '@3un/ui'
 
 const form = defineModel<ServiceCreateParams>({ required: true })
 const store = useServiceStore()
@@ -27,8 +27,18 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
+      label="服务简写"
+      description="用于桌面端程序"
+      required
+    >
+      <XInput
+        v-model="form.tmpTitle"
+        placeholder="服务简写"
+      />
+    </FormField>
+    <FormField
       label="服务名称"
-      description="用户可见名称"
+      description="服务完整的中文名称"
       required
     >
       <XInput
@@ -38,33 +48,12 @@ const store = useServiceStore()
     </FormField>
     <FormField
       label="服务名称(英文)"
-      description="用户可见名称"
+      description="服务完整的英文名称"
       required
     >
       <XInput
         v-model="form.packageTitleLocal"
         placeholder="服务英文名称"
-      />
-    </FormField>
-
-    <FormField
-      label="处理时间"
-      description="例如: 1-10s"
-      required
-    >
-      <XInput
-        v-model="form.timeTaken"
-        placeholder="处理时间"
-      />
-    </FormField>
-    <FormField
-      label="处理时间(英文)"
-      description="例如: 1-10s"
-      required
-    >
-      <XInput
-        v-model="form.timeTakenLocal"
-        placeholder="处理时间EN"
       />
     </FormField>
 
@@ -80,16 +69,24 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
-      label="提交类型"
-      description="提交类型"
-      required variant="vertical"
+      label="处理时间"
+      description="1-15s、5min、24h、3 days"
+      required
     >
-      <div class="flex space-x-6">
-        <XRadio v-model="form.imeiFieldType" name="imeiType" :value="IMEI_TYPE.NONE" label="不限制" />
-        <XRadio v-model="form.imeiFieldType" name="imeiType" :value="IMEI_TYPE.IMEI" label="IMEI" />
-        <XRadio v-model="form.imeiFieldType" name="imeiType" :value="IMEI_TYPE.SN" label="SN" />
-        <XRadio v-model="form.imeiFieldType" name="imeiType" :value="IMEI_TYPE.IMEI_OR_SN" label="IMEI OR SN" />
-      </div>
+      <XInput
+        v-model="form.timeTaken"
+        placeholder="处理时间"
+      />
+    </FormField>
+    <FormField
+      label="处理时间(英文)"
+      description="1-15s、5min、24h、3 days"
+      required
+    >
+      <XInput
+        v-model="form.timeTakenLocal"
+        placeholder="处理时间EN"
+      />
     </FormField>
 
     <FormField
@@ -100,6 +97,59 @@ const store = useServiceStore()
         v-model.number="form.packageOrderBy"
         placeholder="排序数值"
       />
+    </FormField>
+
+    <FormField
+      label="提交类型"
+      description="提交类型"
+      variant="vertical"
+    >
+      <div class="flex space-x-6">
+        <XRadio
+          v-model="form.imeiFieldType"
+          :value="IMEI_TYPE.NONE"
+          name="imeiType" label="不限制"
+        />
+        <XRadio
+          v-model="form.imeiFieldType"
+          name="imeiType"
+          :value="IMEI_TYPE.IMEI"
+          label="IMEI"
+        />
+        <XRadio
+          v-model="form.imeiFieldType"
+          :value="IMEI_TYPE.SN"
+          name="imeiType" label="SN"
+        />
+        <XRadio
+          v-model="form.imeiFieldType"
+          :value="IMEI_TYPE.IMEI_OR_SN"
+          name="imeiType" label="IMEI OR SN"
+        />
+      </div>
+    </FormField>
+
+    <FormField
+      label="服务说明"
+      description="中文服务说明"
+      :content-flex="false"
+    >
+      <XButton>编辑</XButton>
+    </FormField>
+    <FormField
+      label="服务说明EN"
+      description="英文服务说明"
+      :content-flex="false"
+    >
+      <XButton>编辑</XButton>
+    </FormField>
+
+    <FormField
+      label="重置价格"
+      description="所有用户恢复原价"
+      :content-flex="false"
+    >
+      <XButton color="danger">重置</XButton>
     </FormField>
 
     <FormField

@@ -119,7 +119,7 @@ export const tools: SidebarMenu[] = [
   {
     icon: 'lucide:remove-formatting',
     label: '富文本编辑',
-    path: '/rich-text-editor',
+    path: '/editor',
     match: 'fuwenbenbianji',
   },
 ]
