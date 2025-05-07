@@ -1,5 +1,5 @@
 import { XButton, XInput, XSwitch, type XColDef } from '@3un/ui'
-import type { Service } from '@/inters/services'
+import { zService, type Service } from '@/inters/services'
 import { updateService } from '@/api/services'
 import { SERVICE_STORE } from '.'
 
@@ -108,13 +108,13 @@ export const columns: XColDef<Service> = [
     title: '操作',
     width: 64,
     fixed: 'right',
-    render: (_, row, index) => {
+    render: (_, row) => {
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
-        store.form = { ...row }
-        store.index = index
+        store.form = zService.parse(row)
         store.visable = true
       }
+      
       return h(XButton, { size: 'sm', onClick }, () => '编辑')
     }
   }

@@ -17,3 +17,6 @@ export interface IList<T> {
   total: number
   pageSize: number
 }
+
+// Form mode
+export type FormMode = 'create' | 'update'

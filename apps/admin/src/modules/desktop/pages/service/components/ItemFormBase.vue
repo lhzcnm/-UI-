@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ServiceCreateParams } from '@/inters/services'
+import type { Service } from '@/inters/services'
 import { IMEI_TYPE } from '@3un/shared/enums'
 import { XRadio, XSwitch } from '@3un/ui'
 
-const form = defineModel<ServiceCreateParams>({ required: true })
+const form = defineModel<Service>({ required: true })
 const store = useServiceStore()
 </script>
 
@@ -134,14 +134,14 @@ const store = useServiceStore()
       description="中文服务说明"
       :content-flex="false"
     >
-      <XButton>编辑</XButton>
+      <XButton icon="lucide:edit">编辑</XButton>
     </FormField>
     <FormField
       label="服务说明EN"
       description="英文服务说明"
       :content-flex="false"
     >
-      <XButton>编辑</XButton>
+      <XButton icon="lucide:edit">编辑</XButton>
     </FormField>
 
     <FormField
@@ -149,7 +149,7 @@ const store = useServiceStore()
       description="所有用户恢复原价"
       :content-flex="false"
     >
-      <XButton color="danger">重置</XButton>
+      <XButton icon="lucide:database-backup" color="danger">重置</XButton>
     </FormField>
 
     <FormField

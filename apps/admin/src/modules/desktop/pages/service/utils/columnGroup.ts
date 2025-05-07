@@ -1,9 +1,8 @@
-import type { ServiceGroup } from '@/inters/services'
+import { zServiceGroup, type ServiceGroup } from '@/inters/services'
 import { XButton, XInput, XSwitch, type XColDef } from "@3un/ui"
 import { updateServiceGroup } from '@/api/services'
-import { toast } from 'vue-sonner'
+import { GROUP_STORE } from '.'
 
-const serviceStore =  useServiceStore()
 export const columns: XColDef<ServiceGroup> = [ 
   {
     key: 'categoryId',
@@ -25,40 +24,43 @@ export const columns: XColDef<ServiceGroup> = [
     title: '排序(值越大越靠前)',
     minWidth: 180,
     render(value, row) {
-      return h(
-        XInput,
-        {
-          modelValue: value,
-          'onUpdate:modelValue': (val) => {
-            row.orderBy = +val
-          },
+      return h(XInput, {
+        modelValue: value,
+        'onUpdate:modelValue': (val) => {
+          const oldVal = row.orderBy
+          const response = updateServiceGroup({
+            categoryId: row.categoryId,
+            orderBy: +val,
+          })
+
+          row.orderBy = +val
+          response.catch(() => {
+            setTimeout(() => row.orderBy = oldVal, 1000)
+          })
         },
-      )
+      })
     },
   },
   {
     key: 'disableCategory',
     title: '禁用',
     width: 168,
-    render(value, row, index) {
-      return h(
-        XSwitch,
-        {
-          modelValue: value,
-          'onUpdate:modelValue': async (val) => {
-            const response = updateServiceGroup({
-              categoryId: row.categoryId,
-              disableCategory: val,
-            })
-            const current = serviceStore.groups[index]
-            response.then(() => current.disableCategory = val)
-            response.catch(() => {
-              toast.warning('禁用失败')
-              current.disableCategory = !val
-            })
-          },
+    render(value, row) {
+      return h(XSwitch, {
+        modelValue: value,
+        'onUpdate:modelValue': async (val) => {
+          const oldVal = row.disableCategory
+          const response = updateServiceGroup({
+            categoryId: row.categoryId,
+            disableCategory: val,
+          })
+          
+          row.disableCategory = val
+          response.catch(() => {
+            setTimeout(() => row.disableCategory = oldVal, 1000)
+          })
         },
-      )
+      })
     },
   },
   {
@@ -66,9 +68,15 @@ export const columns: XColDef<ServiceGroup> = [
     title: '操作',
     width: 164,
     fixed: 'right',
-    render: () => {
+    render: (_, row) => {
+      const store = inject(GROUP_STORE)!
+      const onClick = () => {
+        store.form = zServiceGroup.parse(row)
+        store.visable = true
+      }
+
       return [
-        h(XButton, { size: 'sm' }, () => '编辑'),
+        h(XButton, { size: 'sm', onClick }, () => '编辑'),
         h(XButton, { size: 'sm', color: 'success' }, () => '查看服务'),
       ]
     }

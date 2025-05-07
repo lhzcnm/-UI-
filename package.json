@@ -1,7 +1,7 @@
 {
   "name": "@3un/monorepo",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "prepare": "pnpm build:utils && pnpm build:ui",
     "build:utils": "pnpm -F @3un/utils build",

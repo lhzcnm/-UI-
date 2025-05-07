@@ -50,8 +50,8 @@ export const zService = z.interface({
   // toolForUnlockBase: z.string(),
 })
 
-export const zServiceForm = zService.omit({ packageId: true })
-export type ServiceCreateParams = z.infer<typeof zServiceForm>
+const zServiceCreateForm = zService.omit({ packageId: true })
+export type ServiceCreateParams = z.infer<typeof zServiceCreateForm>
 
-const zServiceUpdateParams = zService.extend(zServiceForm.partial())
+const zServiceUpdateParams = zService.extend(zServiceCreateForm.partial())
 export type ServiceUpdateParams = z.infer<typeof zServiceUpdateParams>

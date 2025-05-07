@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import ItemFormBase from './ItemFormBase.vue'
-import { SERVICE_STORE } from '../utils'
+import GroupFormBase from './groupFormBase.vue'
+import { GROUP_STORE } from '../utils'
 
 import type { FormMode } from '@3un/shared'
 
-import { createService, deleteService, updateService } from '@/api/services'
-import { zService } from '@/inters/services'
+import { createServiceGroup, deleteServiceGroup, updateServiceGroup } from '@/api/services'
+import { zServiceGroup } from '@/inters/services'
 
-const store = inject(SERVICE_STORE)!
+const store = inject(GROUP_STORE)!
 const options = {
   create: {
-    title: '新增服务',
+    title: '新增服务组',
     submitText: '新增',
   },
   update: {
-    title: '编辑服务',
+    title: '编辑服务组',
     submitText: '保存',
   },
 }
 
-const isCreate = computed(() => store.form.packageId === 0)
+const isCreate = computed(() => store.form.categoryId === 0)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
 const serviceStore = useServiceStore()
@@ -33,11 +33,11 @@ function handleSubmit() {
 }
 
 function handleCreate() {
-  const response = createService(store.form)
+  const response = createServiceGroup(store.form)
 
   response.then((data) => {
-    const item = zService.parse(data)
-    serviceStore.items.push(item)
+    const item = zServiceGroup.parse(data)
+    serviceStore.groups.push(item)
     store.visable = false
   })
 
@@ -47,14 +47,14 @@ function handleCreate() {
 }
 
 function handleUpdate() {
-  const response = updateService(store.form)
+  const response = updateServiceGroup(store.form)
 
   response.then(() => {
-    const id = store.form.packageId
-    const idx = serviceStore.items
-      .findIndex(item => item.packageId === id)
+    const id = store.form.categoryId
+    const idx = serviceStore.groups
+      .findIndex(item => item.categoryId === id)
 
-    serviceStore.items[idx] = store.form
+    serviceStore.groups[idx] = store.form
     store.visable = false
   })
 
@@ -66,25 +66,25 @@ function handleUpdate() {
 function handleDelete() {
   if (!window.confirm('确定要删除该服务吗？')) return
 
-  const id = store.form.packageId
-  deleteService(id).then(() => {
-    const idx = serviceStore.items
-      .findIndex(item => item.packageId === id)
+  const id = store.form.categoryId
+  deleteServiceGroup(id).then(() => {
+    const idx = serviceStore.groups
+      .findIndex(item => item.categoryId === id)
 
-    serviceStore.items.splice(idx, 1)
+    serviceStore.groups.splice(idx, 1)
     store.visable = false
   })
 }
 </script>
 
 <template>
-  <XDrawer
+  <XDialog
     v-model="store.visable"
-    width="500px" :title="options[mode].title"
+    :title="options[mode].title"
   >
-    <ItemFormBase v-model="store.form" />
+    <GroupFormBase v-model="store.form" />
     <template #footer>
-      <div class="flex justify-between p-4 border-t">
+      <div class="flex justify-between pt-4">
         <XButton
           v-show="!isCreate"
           color="danger"
@@ -99,5 +99,5 @@ function handleDelete() {
         </div>
       </div>
     </template>
-  </XDrawer>
+  </XDialog>
 </template>

@@ -5,7 +5,7 @@ export const zServiceGroup = z.interface({
   categoryId: z.number().default(0),
   category: z.string().default(''),
   categoryLocal: z.string().default(''),
-  disableCategory: z.number().transform(v => !!v),
+  disableCategory: z.boolean().default(false),
   orderBy: z.number().default(0),
 
   // ⬇️ 废弃字段

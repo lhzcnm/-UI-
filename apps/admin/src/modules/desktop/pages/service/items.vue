@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import ItemForm from './components/ItemForm.vue'
-import { zServiceForm } from '@/inters/services'
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { columns } from './utils/columnItem'
+
 import { XPagination } from '@3un/ui'
+import { zService } from '@/inters/services'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
-  form: zServiceForm.parse({}),
-  index: undefined,
+  form: zService.parse({}),
   visable: false,
   page: 1,
   limit: 20,
@@ -24,9 +24,8 @@ const displayItems = computed(() => {
 })
 
 function openCreate() {
+  store.form = zService.parse({})
   store.visable = true
-  store.form = zServiceForm.parse({})
-  store.index = undefined
 }
 </script>
 
@@ -44,7 +43,7 @@ function openCreate() {
     <XTable
       :data="displayItems"
       :columns="columns"
-      class="h-[calc(100vh-8rem)]"
+      class="h-[calc(100vh-7.75rem)]"
     />
 
     <ItemForm />

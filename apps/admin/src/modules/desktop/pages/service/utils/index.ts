@@ -1,12 +1,18 @@
-import type { ServiceCreateParams } from '@/inters/services'
+import type { Service, ServiceGroup } from '@/inters/services'
 import type { InjectionKey } from "vue"
 
+type IK<T> = InjectionKey<T>
+
+export const SERVICE_STORE: IK<ServiceStore> = Symbol('service')
 export interface ServiceStore {
-  form: ServiceCreateParams
-  index: number | undefined
+  form: Service
   visable: boolean
   page: number
   limit: number
 }
 
-export const SERVICE_STORE: InjectionKey<ServiceStore> = Symbol('SERVICE_STORE')
+export const GROUP_STORE: IK<ServiceGroupStore> = Symbol('group')
+export interface ServiceGroupStore {
+  form: ServiceGroup
+  visable: boolean
+}

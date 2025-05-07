@@ -36,15 +36,15 @@ export enum SHOP_NAME {
 
 // Order
 export enum ORDER_STATUS {
-  WAIT     = 1,
-  SUCCESS  = 2,
-  FAILED     = 3,
+  WAIT        = 1,
+  SUCCESS     = 2,
+  FAILED      = 3,
   PROCESSING  = 4,
 }
 export const ORDER_STATUS_MAP: StatusMap = {
-  [ORDER_STATUS.WAIT]    : { color: 'info', label: '等待提交' },
-  [ORDER_STATUS.SUCCESS] : { color: 'success', label: '处理成功' },
-  [ORDER_STATUS.FAILED]    : { color: 'danger', label: '处理失败' },
+  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交' },
+  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功' },
+  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败' },
   [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理' },
 }
 export const ORDER_STATUS_LIST = [
