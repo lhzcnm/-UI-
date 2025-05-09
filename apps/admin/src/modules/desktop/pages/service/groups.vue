@@ -9,14 +9,14 @@ import { zServiceGroup } from '@/inters/services'
 const serviceStore = useServiceStore()
 const store: ServiceGroupStore = reactive({
   form: zServiceGroup.parse({}),
-  visable: false,
+  visible: false,
 })
 
 provide(GROUP_STORE, store)
 
 function openCreate() {
   store.form = zServiceGroup.parse({})
-  store.visable = true
+  store.visible = true
 }
 </script>
 

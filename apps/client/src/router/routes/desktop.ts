@@ -17,6 +17,11 @@ const home: RouteRecordRaw = {
       props: true,
     },
     {
+      path: 'device',
+      name: 'Device',
+      component: () => import('@desktop/pages/device/index.vue'),
+    },
+    {
       path: 'history',
       name: 'History',
       component: () => import('@desktop/pages/history/index.vue'),

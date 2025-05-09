@@ -48,8 +48,8 @@ export const columns: XTableColumn[] = [
       return h('div', { innerHTML: value })
     }
   },
-  { key: 'createTime', title: '提交时间', minWidth: 148, },
-  { key: 'remark', title: '备注', minWidth: 168, },
+  { key: 'createTime', title: '提交时间', width: 148, },
+  { key: 'remark', title: '备注', width: 168, },
   {
     key: 'action',
     title: '操作',

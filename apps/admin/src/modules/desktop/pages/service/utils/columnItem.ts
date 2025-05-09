@@ -112,7 +112,7 @@ export const columns: XColDef<Service> = [
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
         store.form = zService.parse(row)
-        store.visable = true
+        store.visible = true
       }
       
       return h(XButton, { size: 'sm', onClick }, () => '编辑')

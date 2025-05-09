@@ -1,4 +1,9 @@
-# Windsurf Rules
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Rules
 
 ## 项目技术架构
 monorepo(pnpm) + submodules
@@ -9,10 +14,11 @@ monorepo(pnpm) + submodules
 
 ## 代码规范
 1. 不要破坏性地删除我的代码！！！
-2. .vue 文件 总是使用 `<script setup lang="ts">`，并且位于在最前面
+2. .vue 文件 总是使用 `<script setup lang="ts">`，并且位于文件顶部
 3. 对于较长的 class, 使用 tailwindMerge 的 `twMerge` 或 `twJoin` 换行
-4. 请遵守我的代码风格(2 空格，无分号)
-5. 最多一个空行
+4. 禁止在 .vue 文件 的 `<script>` 块里面使用箭头函数来定义函数
+5. 请遵守我的代码风格(2 空格，无分号)
+6. 最多一个空行
 
 ## 导入格式规范
 
@@ -44,3 +50,4 @@ import { orderApi } from '@/api/orders'
 ```
 
 注意: css 文件导入总是在最前面
+

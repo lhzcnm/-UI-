@@ -9,7 +9,7 @@ import { zService } from '@/inters/services'
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
   form: zService.parse({}),
-  visable: false,
+  visible: false,
   page: 1,
   limit: 20,
 })
@@ -25,7 +25,7 @@ const displayItems = computed(() => {
 
 function openCreate() {
   store.form = zService.parse({})
-  store.visable = true
+  store.visible = true
 }
 </script>
 

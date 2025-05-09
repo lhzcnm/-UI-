@@ -6,7 +6,7 @@ type IK<T> = InjectionKey<T>
 export const SERVICE_STORE: IK<ServiceStore> = Symbol('service')
 export interface ServiceStore {
   form: Service
-  visable: boolean
+  visible: boolean
   page: number
   limit: number
 }
@@ -14,5 +14,5 @@ export interface ServiceStore {
 export const GROUP_STORE: IK<ServiceGroupStore> = Symbol('group')
 export interface ServiceGroupStore {
   form: ServiceGroup
-  visable: boolean
+  visible: boolean
 }

@@ -38,7 +38,7 @@ function handleCreate() {
   response.then((data) => {
     const item = zServiceGroup.parse(data)
     serviceStore.groups.push(item)
-    store.visable = false
+    store.visible = false
   })
 
   response.finally(() => {
@@ -55,7 +55,7 @@ function handleUpdate() {
       .findIndex(item => item.categoryId === id)
 
     serviceStore.groups[idx] = store.form
-    store.visable = false
+    store.visible = false
   })
 
   response.finally(() => {
@@ -72,14 +72,14 @@ function handleDelete() {
       .findIndex(item => item.categoryId === id)
 
     serviceStore.groups.splice(idx, 1)
-    store.visable = false
+    store.visible = false
   })
 }
 </script>
 
 <template>
   <XDialog
-    v-model="store.visable"
+    v-model="store.visible"
     :title="options[mode].title"
   >
     <GroupFormBase v-model="store.form" />
@@ -94,7 +94,7 @@ function handleDelete() {
           删除服务
         </XButton>
         <div class="ml-auto space-x-2">
-          <XButton variant="soft" @click="store.visable = false">取消</XButton>
+          <XButton variant="soft" @click="store.visible = false">取消</XButton>
           <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
         </div>
       </div>
