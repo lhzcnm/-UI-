@@ -1,97 +1,89 @@
 <script setup lang="ts">
-import type { DeviceInfo } from '../types'
+import { DEVICE_STORE } from '../utils'
 
-interface DeviceInfoGridProps {
-  deviceInfo: DeviceInfo
-}
-
-defineProps<DeviceInfoGridProps>()
+const store = inject(DEVICE_STORE)!
 </script>
 
 <template>
   <div class="grid grid-cols-2 gap-12 p-4 bg-card">
-    <div class="space-y-1">
-      <div class="info-row flex justify-between">
+    <div class="space-y-1 whitespace-nowrap">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">序列号</span>
-        <span>{{ deviceInfo.serialNumber }}</span>
+        <span>{{ store.info.SerialNumber }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">越狱状态</span>
-        <span>{{ deviceInfo.jailbreakStatus }}</span>
+        <span>{{ store.info.SIMStatus }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">主板序号</span>
-        <span>{{ deviceInfo.boardNumber }}</span>
+        <span>{{ store.info.WirelessBoardSerialNumber }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">串号</span>
-        <span>{{ deviceInfo.imei }}</span>
+        <span>{{ store.info.InternationalMobileEquipmentIdentity }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">ECID</span>
-        <span>{{ deviceInfo.ecid }}</span>
+        <span>{{ store.info.InternationalMobileEquipmentIdentity }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">系统版本</span>
-        <span>{{ deviceInfo.osVersion }}</span>
+        <span>{{ store.info.ProductVersion }} ({{ store.info.BuildVersion }})</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">屏幕厂商</span>
-        <span>{{ deviceInfo.screenManufacturer }}</span>
+        <span>{{ store.info.ProductName }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">UDID</span>
-        <span>{{ deviceInfo.udid }}</span>
+        <span>{{ store.info.UniqueDeviceID }}</span>
       </div>
     </div>
 
-    <div class="space-y-1">
-      <div class="info-row flex justify-between">
+    <div class="space-y-1 whitespace-nowrap">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">型号号码</span>
-        <span>{{ deviceInfo.modelNumber }}</span>
+        <span>{{ store.info.ModelNumber }} {{ store.info.RegionInfo }}</span>
       </div>
-      <div class="info-row flex justify-between">
+      <div class="flex justify-between">
         <span class="text-muted-foreground">激活状态</span>
-        <span>{{ deviceInfo.activationStatus }}</span>
+        <span>{{ store.info.ActivationState }}</span>
       </div>
-      <div class="info-row flex justify-between items-center">
+      <div class="flex justify-between items-center">
         <span class="text-muted-foreground">iCloud</span>
         <div class="flex items-center">
-          <span>{{ deviceInfo.icloud }}</span>
-          <a href="#" class="ml-4 text-primary">iCloud 详情</a>
+          <span>查询中...</span>
+          <a href="#" class="ml-2 text-primary">iCloud 详情</a>
         </div>
       </div>
-      <div class="info-row flex justify-between items-center">
+      <div class="flex justify-between items-center">
         <span class="text-muted-foreground">保修期限</span>
         <div class="flex items-center">
-          <span>{{ deviceInfo.warranty }}</span>
-          <a href="#" class="ml-4 text-blue-500">立即查询</a>
+          <span>查询中...</span>
+          <a href="#" class="ml-2 text-primary">立即查询</a>
         </div>
       </div>
-      <div class="info-row flex justify-between items-center">
+      <div class="flex justify-between items-center">
         <span class="text-muted-foreground">WIFI</span>
         <div class="flex items-center">
-          <span>{{ deviceInfo.wifi }}</span>
-          <a href="#" class="ml-4 text-primary">查看详情</a>
+          <span>{{ store.info.WiFiAddress }}</span>
+          <a href="#" class="ml-2 text-primary">查看详情</a>
         </div>
       </div>
-      <div class="info-row flex justify-between items-center">
+      <div class="flex justify-between items-center">
         <span class="text-muted-foreground">CPU</span>
         <div class="flex items-center">
-          <span>{{ deviceInfo.cpu }}</span>
-          <a href="#" class="ml-4 text-primary">查看详情</a>
+          <span>{{ store.info.CPUArchitecture }}</span>
+          <a href="#" class="ml-2 text-primary">查看详情</a>
         </div>
       </div>
-      <div class="info-row flex justify-between items-center">
+      <div class="flex justify-between items-center">
         <span class="text-muted-foreground">崩溃分析</span>
         <div class="flex items-center">
-          <span>{{ deviceInfo.crashAnalysis }}</span>
-          <a href="#" class="ml-4 text-primary">崩溃详情</a>
+          <span>分析中...</span>
+          <a href="#" class="ml-2 text-primary">崩溃详情</a>
         </div>
-      </div>
-      <div class="info-row flex justify-between items-center">
-        <span class="text-muted-foreground"></span>
-        <a href="#" class="text-primary">设备详情</a>
       </div>
     </div>
   </div>
