@@ -32,6 +32,14 @@
 //   "TotalSystemCapacity": 6479745024
 // }
 
+// TotalDiskCapacity (16 GB)
+// ├── TotalSystemCapacity (~6.03 GB)      → 系统用
+// ├── TotalDataCapacity (~9.44 GB)        → 用于数据存储
+// │   ├── AmountDataReserved (~200 MB)
+// │   └── AmountDataAvailable (~306 MB)
+// └── AmountRestoreAvailable (~6.53 GB)   → 可能是额外预留恢复区
+
+
 export interface DeviceInfo {
   DeviceName: string
   DeviceColor: string

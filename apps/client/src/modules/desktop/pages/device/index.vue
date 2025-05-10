@@ -3,7 +3,8 @@ import DevicePhoneDisplay from './components/DevicePhoneDisplay.vue'
 import DeviceInfoHeader from './components/DeviceInfoHeader.vue'
 import DeviceInfoGrid from './components/DeviceInfoGrid.vue'
 import DeviceBatteryInfo from './components/DeviceBatteryInfo.vue'
-import DeviceInfoTabs from './components/DeviceInfoTabs.vue'
+import DeviceDiskInfo from './components/DeviceDiskInfo.vue'
+
 import type { DeviceInfo } from './types'
 import type { DeviceStore } from './utils'
 import { DEVICE_STORE } from './utils'
@@ -28,14 +29,14 @@ async function getDeviceInfo() {
     <DevicePhoneDisplay />
 
     <div class="flex-1 py-4">
-      <div class=" max-w-4xl overflow-hidden border rounded-lg mb-4">
+      <div class="overflow-hidden border rounded-lg mb-4">
         <DeviceInfoHeader />
         <DeviceInfoGrid />
       </div>
 
       <div class="flex space-x-4">
         <DeviceBatteryInfo />
-        <DeviceInfoTabs />
+        <DeviceDiskInfo />
       </div>
     </div>
   </div>
