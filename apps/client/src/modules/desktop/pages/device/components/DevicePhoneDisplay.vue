@@ -9,8 +9,24 @@ const b = tv({
   ],
 })
 
-const currentTime = ref('19:45')
-const currentDate = ref('5月8日 星期四')
+const currentTime = ref(getCurrentTime())
+const currentDate = ref(getCurrentDate())
+
+function getCurrentTime() {
+  const now = new Date()
+  const hours = now.getHours().toString().padStart(2, '0')
+  const minutes = now.getMinutes().toString().padStart(2, '0')
+  return `${hours}:${minutes}`
+}
+
+function getCurrentDate() {
+  const now = new Date()
+  const day = now.getDate()
+  const month = now.getMonth() + 1
+  const weekday = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()]
+  
+  return `${month}月${day}日 星期${weekday}`
+}
 
 function handleRestart() {
   console.log('Restarting device...')

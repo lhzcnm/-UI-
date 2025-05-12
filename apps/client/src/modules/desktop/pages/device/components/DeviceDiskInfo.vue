@@ -3,6 +3,16 @@ import { DEVICE_STORE } from '../utils'
 
 const store = inject(DEVICE_STORE)!
 
+const totalDiskCapacity = formatFileSize(store.info.TotalDiskCapacity)
+const totalSystemCapacity = formatFileSize(store.info.TotalSystemCapacity)
+const totalDataCapacity = formatFileSize(store.info.TotalDataCapacity)
+const amountDataAvailable = formatFileSize(store.info.AmountDataAvailable)
+
+// const totalDiskCapacityPercentage = getPercentage(store.info.TotalDiskCapacity, store.info.TotalDiskCapacity)
+const totalSystemCapacityPercentage = getPercentage(store.info.TotalSystemCapacity, store.info.TotalDiskCapacity)
+const totalDataCapacityPercentage = getPercentage(store.info.TotalDataCapacity, store.info.TotalDiskCapacity)
+const amountDataAvailablePercentage = getPercentage(store.info.AmountDataAvailable, store.info.TotalDiskCapacity)
+
 function formatFileSize(bytes: number) {
   if (bytes === 0) return '0 B'
   
@@ -24,9 +34,9 @@ function getPercentage(part: number, total: number) {
       <div>
         <div class="flex justify-between mb-1">
           <span class="text-sm">总容量</span>
-          <span class="text-sm">{{ formatFileSize(store.info.TotalDiskCapacity) }}</span>
+          <span class="text-sm">{{ totalDiskCapacity }}</span>
         </div>
-        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
           <div class="bg-primary h-full rounded-full" style="width: 100%"></div>
         </div>
       </div>
@@ -34,39 +44,48 @@ function getPercentage(part: number, total: number) {
       <div>
         <div class="flex justify-between mb-1">
           <span class="text-sm">系统占用</span>
-          <span class="text-sm">{{ formatFileSize(store.info.TotalSystemCapacity) }} ({{ getPercentage(store.info.TotalSystemCapacity, store.info.TotalDiskCapacity) }}%)</span>
+          <span class="text-sm">
+            {{ totalSystemCapacity }}
+            ({{ totalSystemCapacityPercentage }}%)
+          </span>
         </div>
-        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
           <div
             class="bg-orange-500 h-full rounded-full"
-            :style="{ width: `${getPercentage(store.info.TotalSystemCapacity, store.info.TotalDiskCapacity)}%` }"
-          ></div>
+            :style="{ width: `${totalSystemCapacityPercentage}%` }"
+          />
         </div>
       </div>
 
       <div>
         <div class="flex justify-between mb-1">
           <span class="text-sm">用户数据</span>
-          <span class="text-sm">{{ formatFileSize(store.info.TotalDataCapacity) }} ({{ getPercentage(store.info.TotalDataCapacity, store.info.TotalDiskCapacity) }}%)</span>
+          <span class="text-sm">
+            {{ totalDataCapacity }}
+            ({{ totalDataCapacityPercentage }}%)
+          </span>
         </div>
-        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
           <div
-            class="bg-blue-500 h-full rounded-full"
-            :style="{ width: `${getPercentage(store.info.TotalDataCapacity, store.info.TotalDiskCapacity)}%` }"
-          ></div>
+            class="bg-primary h-full rounded-full"
+            :style="{ width: `${totalDataCapacityPercentage}%` }"
+          />
         </div>
       </div>
 
       <div>
         <div class="flex justify-between mb-1">
           <span class="text-sm">可用空间</span>
-          <span class="text-sm">{{ formatFileSize(store.info.AmountDataAvailable) }} ({{ getPercentage(store.info.AmountDataAvailable, store.info.TotalDiskCapacity) }}%)</span>
+          <span class="text-sm">
+            {{ amountDataAvailable }}
+            ({{ amountDataAvailablePercentage }}%)
+          </span>
         </div>
-        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
           <div
-            class="bg-green-500 h-full rounded-full"
-            :style="{ width: `${getPercentage(store.info.AmountDataAvailable, store.info.TotalDiskCapacity)}%` }"
-          ></div>
+            class="bg-success h-full rounded-full"
+            :style="{ width: `${amountDataAvailablePercentage}%` }"
+          />
         </div>
       </div>
     </div>
