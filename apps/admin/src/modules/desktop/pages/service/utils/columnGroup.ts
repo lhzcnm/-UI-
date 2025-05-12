@@ -44,7 +44,7 @@ export const columns: XColDef<ServiceGroup> = [
   {
     key: 'disableCategory',
     title: '禁用',
-    width: 168,
+    width: 98,
     render(value, row) {
       return h(XSwitch, {
         modelValue: value,
@@ -66,13 +66,13 @@ export const columns: XColDef<ServiceGroup> = [
   {
     key: 'action',
     title: '操作',
-    width: 164,
+    width: 134,
     fixed: 'right',
     render: (_, row) => {
       const store = inject(GROUP_STORE)!
       const onClick = () => {
         store.form = zServiceGroup.parse(row)
-        store.visable = true
+        store.visible = true
       }
 
       return [

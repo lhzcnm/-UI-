@@ -17,7 +17,7 @@ const { data } = defineProps<{ data: ServiceView }>()
           v-if="data.isNew" 
           :class="twJoin(
             'px-2 py-0.5 text-xs font-semibold text-white',
-            'bg-gradient-to-r from-success to-primary rounded-full shadow-sm'
+            'bg-gradient-to-b from-primary to-blue-600 rounded-full shadow-sm'
           )"
         >新!</span>
       </h3>

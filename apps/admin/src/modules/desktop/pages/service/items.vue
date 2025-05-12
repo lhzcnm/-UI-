@@ -30,9 +30,9 @@ function openCreate() {
 </script>
 
 <template>
-  <div class="px-3">
-    <section class="flex justify-between my-3">
-      <XButton label="新增服务" @click="openCreate" />
+  <div>
+    <section class="flex justify-between p-3 border-b">
+      <XButton icon="lucide:circle-plus" label="新增服务" @click="openCreate" />
       <XPagination
         v-model="store.page"
         v-model:limit="store.limit"
@@ -40,11 +40,14 @@ function openCreate() {
         :layouts="['total', 'prev', 'pager', 'next', 'sizes']"
       />
     </section>
-    <XTable
-      :data="displayItems"
-      :columns="columns"
-      class="h-[calc(100vh-7.75rem)]"
-    />
+
+    <div class="p-3">
+      <XTable
+        :data="displayItems"
+        :columns="columns"
+        class="border h-[calc(100vh-8.75rem)]"
+      />
+    </div>
 
     <ItemForm />
   </div>

@@ -27,10 +27,7 @@ await Promise.all([
       />
     </Transition>
 
-    <div
-      class="bg-white dark:bg-background"
-      :class="{ 'ml-sidebar': iStore.showSidebar }"
-    >
+    <div :class="{ 'ml-sidebar': iStore.showSidebar }">
       <DesktopHeader
         :is-fullscreen="isFullscreen"
         :toggle-fullscreen="toggle"

@@ -17,7 +17,6 @@ const store = useServiceStore()
       <XSelect
         v-model="form.categoryId"
         placeholder="请选择服务组"
-        class="w-full"
       >
         <XSelectItem
           v-for="item in store.groups" :key="item.categoryId"

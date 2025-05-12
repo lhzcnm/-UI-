@@ -84,7 +84,7 @@ function handleDelete() {
   >
     <GroupFormBase v-model="store.form" />
     <template #footer>
-      <div class="flex justify-between pt-4">
+      <div class="flex justify-between mt-4">
         <XButton
           v-show="!isCreate"
           color="danger"

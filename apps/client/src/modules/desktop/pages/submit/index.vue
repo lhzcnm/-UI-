@@ -329,7 +329,7 @@ function handlePushMsgChange(value: boolean) {
       :data="orders"
       :columns="columns"
       row-key="index"
-      class="h-[calc(100%-3rem)]"
+      class="h-[calc(100%-3rem)] border"
     />
 
     <MustRead

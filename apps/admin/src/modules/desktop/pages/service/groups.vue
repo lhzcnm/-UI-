@@ -21,21 +21,18 @@ function openCreate() {
 </script>
 
 <template>
-  <div class="px-3">
-    <section class="my-3">
-      <XButton
-        icon="lucide:circle-plus"
-        @click="openCreate"
-      >
-        新增服务组
-      </XButton>
+  <div>
+    <section class="flex justify-between p-3 border-b">
+      <XButton icon="lucide:circle-plus" label="新增服务组" @click="openCreate" />
     </section>
 
-    <XTable
-      :data="serviceStore.groups"
-      :columns="columns"
-      class="h-[calc(100vh-8rem)]"
-    />
+    <div class="p-3">
+      <XTable
+        :data="serviceStore.groups"
+        :columns="columns"
+        class="border h-[calc(100vh-8.75rem)]"
+      />
+    </div>
 
     <GroupForm />
   </div>

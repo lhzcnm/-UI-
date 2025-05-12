@@ -38,21 +38,17 @@ onBeforeMount(() => {
 <template>
   <aside
     :class="twMerge(
-      'flex flex-col bg-sidebar border-r',
+      'flex flex-col bg-background border-r',
       props.class
     )"
   >
     <div class="flex items-center px-4 h-header">
-      <TheLogo height="1.5rem" />
+      <TheLogo height="1.75rem" />
     </div>
 
     <nav class="flex-1 overflow-y-auto p-2 text-muted-foreground">
       <ul class="flex flex-col sm:space-y-1">
-        <SidebarItem
-          v-for="menu in _menus"
-          :key="menu.path"
-          :menu="menu"
-        />
+        <SidebarItem v-for="menu in _menus" :key="menu.path" :menu="menu" />
       </ul>
 
       <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">工具</p>

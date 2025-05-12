@@ -84,7 +84,7 @@ export const columns: XColDef<Service> = [
   {
     key: 'disablePackage',
     title: '禁用',
-    width: 168,
+    width: 128,
     render(value, row) {
       return h(XSwitch, {
         modelValue: value,

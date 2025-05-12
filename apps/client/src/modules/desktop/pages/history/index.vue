@@ -90,7 +90,7 @@ function handleCopy() {
     <XTable
       :data="store.orders.list"
       :columns="columns"
-      class="h-[calc(100%-3rem)]"
+      class="h-[calc(100%-3rem)] border"
       row-key="id" selection
       selected-key="imei"
       @select-change="selectRows = $event"

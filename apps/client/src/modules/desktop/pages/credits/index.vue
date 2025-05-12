@@ -40,7 +40,7 @@ watch(
       :data="creditLogs.list"
       :columns="columns"
       row-key="historyId"
-      class="h-[calc(100%-3rem)]"
+      class="h-[calc(100%-3rem)] border"
     />
   </div>
 </template>
