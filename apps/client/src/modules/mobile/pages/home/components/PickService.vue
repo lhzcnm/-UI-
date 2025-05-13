@@ -56,7 +56,7 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <TheModal v-model="visible" :title="group.title" @close="search = ''">
-    <XInput v-model="search" placeholder="搜索服务" class="w-64 m-4 mt-0" />
+    <XInput v-model="search" placeholder="搜索服务" clearable ui-root="w-64 m-4 mt-0" />
     <div
       class="space-y-4 px-4 h-[calc(90vh-8.25rem)] overflow-y-auto"
       @click="handleClick"

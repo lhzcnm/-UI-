@@ -24,7 +24,7 @@ const qrcode = computed(() => {
       <div class="flex items-center space-x-2">
         <XPopover
           v-model="chatVisible" trigger="hover"
-          :ui="{ content: 'p-4' }"
+          ui-content="p-4"
         >
           <template #trigger>
             <XButton icon="lucide:headset" label="联系客服" />

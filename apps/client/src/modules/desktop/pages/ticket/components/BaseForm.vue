@@ -9,7 +9,7 @@ const form = defineModel<TicketCreateForm>({ required: true })
   <form class="space-y-4" @submit.prevent>
     <div class="space-y-1">
       <label class="text-muted-foreground text-sm">工单类型</label>
-      <XSelect v-model="form.type" width="336px">
+      <XSelect v-model="form.type">
         <XSelectItem
           v-for="item in TICKET_TYPE_LIST" :key="item.value"
           :value="item.value" :label="item.label"
@@ -19,7 +19,7 @@ const form = defineModel<TicketCreateForm>({ required: true })
 
     <div class="space-y-1">
       <label class="text-muted-foreground text-sm">工单紧急程度</label>
-      <XSelect v-model="form.priority" width="336px">
+      <XSelect v-model="form.priority">
         <XSelectItem
           v-for="item in TICKET_PRIORITY_LIST" :key="item.value"
           :value="item.value" :label="item.label"

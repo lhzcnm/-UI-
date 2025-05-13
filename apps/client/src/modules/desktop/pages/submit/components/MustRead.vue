@@ -9,8 +9,10 @@ const visible = defineModel<boolean>({ required: true })
 
 <template>
   <XDialog
-    v-model="visible" :text="mustRead || ''"
-    title="服务说明" :close-btn="false"
+    v-model="visible"
+    title="服务说明"
+    :text="mustRead || ''"
+    :close-btn="false"
   >
     <template #footer>
       <div class="flex justify-end mt-3">

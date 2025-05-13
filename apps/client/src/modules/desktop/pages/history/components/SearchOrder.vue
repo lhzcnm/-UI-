@@ -31,7 +31,6 @@ function handleSubmit() {
 
 function handleReset() {
   store.searchForm = { ...form.search }
-  console.log(store.searchForm)
 }
 </script>
 

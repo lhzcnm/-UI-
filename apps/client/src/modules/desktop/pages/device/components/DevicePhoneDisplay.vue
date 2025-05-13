@@ -43,9 +43,9 @@ function handleRefresh() {
 
 <template>
   <div class="w-96 py-4 pr-4">
-    <div class="relative max-w-xs h-[605px] mx-auto">
+    <div class="relative h-[605px] mx-auto">
       <img src="/images/device.png" alt="Device Mockup" class="absolute z-10 size-full">
-      <div class="relative size-full px-4 py-3.5">
+      <div class="absolute top-10 bottom-10 right-10 left-10 px-4 py-3.5">
         <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>
         <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-3xl font-bold">{{ currentTime }}</div>
         <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm">{{ currentDate }}</div>

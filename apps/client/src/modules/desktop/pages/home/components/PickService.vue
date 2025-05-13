@@ -57,11 +57,11 @@ function handleClick(event: MouseEvent) {
 <template>
   <XDialog
     v-model="visible" title="服务列表"
-    :ui="{ base: 'sm:max-w-screen-md' }"
+    ui-root="sm:max-w-screen-md"
     @close="search = ''"
   >
     <div class="space-y-4">
-      <XInput v-model="search" placeholder="搜索服务" class="w-64" autofocus />
+      <XInput v-model="search" placeholder="搜索服务" ui-root="w-64" autofocus clearable />
       <div class="h-[min(calc(100vh-240px),600px)] overflow-y-auto" type="auto">
         <div
           class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]"

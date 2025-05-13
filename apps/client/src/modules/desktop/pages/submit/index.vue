@@ -252,7 +252,12 @@ function handleCount() {
 function handleExport() {
   const ids = rawOrders.value.map((item) => item.id)
   if (!selectedId.value || !ids?.length) {
-    toast.warning('请选择服务')
+    toast.warning('订单列表为空')
+    return
+  }
+
+  if (!submited.value) {
+    toast.warning('订单未提交，无法导出')
     return
   }
 
@@ -296,7 +301,11 @@ function handlePushMsgChange(value: boolean) {
   <div class="p-4 h-full">
     <section class="flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
-        <SelectService v-model="selectedId" @selected="handleSelected" />
+        <SelectService
+          v-model="selectedId"
+          ui-trigger="w-52"
+          @selected="handleSelected"
+        />
         <ImportPlane
           :selected-id="selectedId"
           @submit="handleImport"

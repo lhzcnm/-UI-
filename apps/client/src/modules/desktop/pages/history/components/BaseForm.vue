@@ -10,7 +10,7 @@ const form = defineModel<OrderSearchForm>({ required: true })
   <form class="space-y-4" @submit.prevent>
     <div class="space-y-1">
       <label class="text-muted-foreground text-sm">服务</label>
-      <SelectService width="336px" v-model="form.serviceId" />
+      <SelectService v-model="form.serviceId" />
     </div>
 
     <div class="space-y-1">
@@ -19,7 +19,6 @@ const form = defineModel<OrderSearchForm>({ required: true })
         v-model="form.status"
         :teleport="false"
         placeholder="请选择订单状态"
-        width="336px"
       >
         <XSelectItem :value="-1" label="全部" />
         <XSelectItem

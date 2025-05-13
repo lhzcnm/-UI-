@@ -69,7 +69,7 @@ function handleCopy() {
       <div class="space-x-2 whitespace-nowrap">
         <XButton label="搜索" @click="openSearch" />
         <XButton color="success" label="导出" @click="openExport" />
-        <XButton color="warning" variant="outline" label="复制 IMEI/SN" @click="handleCopy" />
+        <XButton variant="soft" label="复制 IMEI" @click="handleCopy" />
       </div>
 
       <XPagination
