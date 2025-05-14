@@ -1,4 +1,4 @@
-import { XButton, XInput, XSwitch, type XColDef } from '@3un/ui'
+import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { zService, type Service } from '@/inters/services'
 import { updateService } from '@/api/services'
 import { SERVICE_STORE } from '.'
@@ -64,7 +64,8 @@ export const columns: XColDef<Service> = [
     title: '排序',
     width: 128,
     render(value, row) {
-      return h(XInput, {
+      return h(XInputNumber, {
+        size: 'sm',
         modelValue: value,
         'onUpdate:modelValue': (val) => {
           const oldVal = row.packageOrderBy

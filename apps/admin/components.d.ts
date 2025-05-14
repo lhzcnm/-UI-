@@ -30,6 +30,7 @@ declare module 'vue' {
     XDrawer: typeof import('@3un/ui')['XDrawer']
     XEmpty: typeof import('@3un/ui')['XEmpty']
     XInput: typeof import('@3un/ui')['XInput']
+    XInputNumber: typeof import('@3un/ui')['XInputNumber']
     XSelect: typeof import('@3un/ui')['XSelect']
     XSelectItem: typeof import('@3un/ui')['XSelectItem']
     XSwitch: typeof import('@3un/ui')['XSwitch']

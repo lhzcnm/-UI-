@@ -1,5 +1,5 @@
 import { zServiceGroup, type ServiceGroup } from '@/inters/services'
-import { XButton, XInput, XSwitch, type XColDef } from "@3un/ui"
+import { XButton, XInputNumber, XSwitch, type XColDef } from "@3un/ui"
 import { updateServiceGroup } from '@/api/services'
 import { GROUP_STORE } from '.'
 
@@ -24,7 +24,8 @@ export const columns: XColDef<ServiceGroup> = [
     title: '排序(值越大越靠前)',
     minWidth: 180,
     render(value, row) {
-      return h(XInput, {
+      return h(XInputNumber, {
+        size: 'sm',
         modelValue: value,
         'onUpdate:modelValue': (val) => {
           const oldVal = row.orderBy

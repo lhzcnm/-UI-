@@ -92,9 +92,9 @@ const store = useServiceStore()
       label="排序"
       description="值越大越靠前"
     >
-      <XInput
+      <XInputNumber
         v-model.number="form.packageOrderBy"
-        placeholder="排序数值"
+        :step="1" placeholder="排序数值"
       />
     </FormField>
 

@@ -132,6 +132,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 }
 
+/* 动画 */
+.x-animate-bounce {
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 /* 淡入淡出 */
 .fade-in-enter-active,
 .fade-in-leave-active {

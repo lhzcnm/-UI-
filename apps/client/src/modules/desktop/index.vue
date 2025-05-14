@@ -61,7 +61,7 @@ watch(visibility, (cur, prev) => {
     </RouterView>
   </div>
 
-  <XDialog
+  <!-- <XDialog
     v-model="visible" title="公告"
     :text="popupAnnc" :close-btn="false"
   >
@@ -72,5 +72,5 @@ watch(visibility, (cur, prev) => {
         </XButton>
       </div>
     </template>
-  </XDialog>
+  </XDialog> -->
 </template>
