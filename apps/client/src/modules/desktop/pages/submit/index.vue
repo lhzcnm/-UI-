@@ -46,8 +46,12 @@ const orders = computed(() => {
   )
 })
 
-// Initialize service fields
-await handleSelected(selectedId.value)
+// Initialize
+await Promise.all([
+  store.getServices(),
+  // Initialize service fields
+  handleSelected(selectedId.value),
+])
 
 async function handleSelected(value: number) {
   if (!value) return

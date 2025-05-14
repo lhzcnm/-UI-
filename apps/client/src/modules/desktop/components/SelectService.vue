@@ -3,7 +3,6 @@ import type { Service, ServiceDetail } from '@/api/services'
 import type { XSelectEmits } from '@3un/ui'
 
 const store = useServiceStore()
-await store.getServices()
 
 const modal = defineModel<number>()
 const emits = defineEmits<XSelectEmits>()
