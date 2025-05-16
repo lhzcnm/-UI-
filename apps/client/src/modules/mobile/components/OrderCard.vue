@@ -25,7 +25,7 @@ interface OrderCardProps {
 const props = defineProps<OrderCardProps>()
 const { isSubmit, class: className } = props
 
-const order = toRef(props, 'order')
+const order = ref(props.order)
 const serviceStore = useServiceStore()
 const serviceName = computed(() => {
   const id = order.value.serviceId
@@ -51,9 +51,9 @@ const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success('复制成功'))
 
 const handleRefresh = useThrottleFn(() => {
-  orderApi.item(order.value.id).then((res) => {
+  orderApi.item(order.value.id).then((response) => {
+    order.value = response.data
     toast.success('刷新成功')
-    order.value = res.data
   })
 }, 500)
 
@@ -189,7 +189,7 @@ function handleCopy() {
 
       <div
         class="bg-muted rounded p-3 whitespace-pre-line overflow-x-auto"
-        v-html="order.result"
+        v-html="order.result.trim() || '订单处理中...'"
       />
     </div>
 

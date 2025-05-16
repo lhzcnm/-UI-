@@ -12,8 +12,9 @@ export const useServiceStore = defineStore('serviceStore', () => {
   const services = shallowRef<Map<number, Service>>(new Map())
 
   async function getServices() {
-    const { data } = await useFetchWithCache({
-      fetchData: serviceApi.list, key: sKey
+    const data = await useFetchWithCache({
+      fetchData: async () => (await serviceApi.list()).data,
+      key: sKey,
     })
 
     services.value.clear()

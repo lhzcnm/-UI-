@@ -9,8 +9,8 @@ export const useUserStore = defineStore('userStore', () => {
   const info = ref() as Ref<UserInfo>
 
   async function getInfo(force = false) {
-    const { data } = await useFetchWithCache({
-      fetchData: userApi.info,
+    const data = await useFetchWithCache({
+      fetchData: async () => (await userApi.info()).data,
       key: uKey,
       force,
     })
