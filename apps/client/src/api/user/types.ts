@@ -33,6 +33,7 @@ export interface UserInfo {
   credits: string
   address: string
   pricePlan: string
+  pricePlanId: number
   memberExp: string
   usageDays: number
   bulkCheckApi: string

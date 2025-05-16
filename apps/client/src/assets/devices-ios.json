@@ -1,0 +1,476 @@
+{
+	"iPad2,2": {
+		"Name": "iPad 2th Gen Wi-Fi + Cellular",
+		"Chip": "A5"
+	},
+	"iPad2,6": {
+		"Name": "iPad mini Wi-Fi + Cellular",
+		"Chip": "A5"
+	},
+	"iPad2,7": {
+		"Name": "iPad mini Wi-Fi + Cellular",
+		"Chip": "A5"
+	},
+	"iPad3,2": {
+		"Name": "iPad 3th Gen Wi-Fi + Cellular",
+		"Chip": "A5X"
+	},
+	"iPad3,3": {
+		"Name": "iPad 3th Gen Wi-Fi + Cellular",
+		"Chip": "A5X"
+	},
+	"iPad3,5": {
+		"Name": "iPad 4th Gen Wi-Fi + Cellular",
+		"Chip": "A6X"
+	},
+	"iPad3,6": {
+		"Name": "iPad 4th Gen Wi-Fi + Cellular MM",
+		"Chip": "A6X"
+	},
+	"iPad4,2": {
+		"Name": "iPad Air Wi-Fi + Cellular",
+		"Chip": "A7"
+	},
+	"iPad4,3": {
+		"Name": "iPad Air Wi-Fi + Cellular",
+		"Chip": "A7"
+	},
+	"iPad4,5": {
+		"Name": "iPad Mini 2nd Gen Wi-Fi + Cellular",
+		"Chip": "A7"
+	},
+	"iPad4,6": {
+		"Name": "iPad Mini 2nd Gen Wi-Fi + Cellular",
+		"Chip": "A7"
+	},
+	"iPad4,8": {
+		"Name": "iPad mini 3th Gen Wi-Fi + Cellular",
+		"Chip": "A7"
+	},
+	"iPad4,9": {
+		"Name": "iPad mini 3th Gen Wi-Fi + Cellular",
+		"Chip": "A7"
+	},
+	"iPad5,2": {
+		"Name": "iPad mini 4 Wi-Fi + Cellular",
+		"Chip": "A8"
+	},
+	"iPad5,4": {
+		"Name": "iPad Air 2nd Gen Wi-Fi + Cellular",
+		"Chip": "A8X"
+	},
+	"iPad6,12": {
+		"Name": "iPad 5th Gen Wi-Fi + Cellular",
+		"Chip": "A9"
+	},
+	"iPad6,4": {
+		"Name": "iPad Pro 9.7-inch Wi-Fi + Cellular",
+		"Chip": "A9X"
+	},
+	"iPad6,8": {
+		"Name": "iPad Pro 12.9-inch Wi-Fi + Cellular",
+		"Chip": "A9X"
+	},
+	"iPad7,12": {
+		"Name": "iPad 7th Gen 10.2-inch Wi-Fi + Cellular",
+		"Chip": "A10 FUSION"
+	},
+	"iPad7,2": {
+		"Name": "iPad Pro 12.9-inch 2nd Gen Wi-Fi + Cellular",
+		"Chip": "A10X FUSION"
+	},
+	"iPad7,4": {
+		"Name": "iPad Pro 10.5-inch Wi-Fi + Cellular",
+		"Chip": "A10X FUSION"
+	},
+	"iPad7,6": [{
+			"Name": "iPad 6th Gen Wi-Fi + Cellular",
+			"Chip": "A10 FUSION"
+		},
+		{
+			"Name": "iPad 6th Gen 12.9 Wi-Fi + Cellular",
+			"Chip": "M2"
+		}
+	],
+	"iPad8,3": {
+		"Name": "iPad Pro 11-inch Wi-Fi + Cellular",
+		"Chip": "A12X BIONIC"
+	},
+	"iPad8,4": {
+		"Name": "iPad Pro 11-inch Wi-Fi + Cellular",
+		"Chip": "A12X BIONIC"
+	},
+	"iPad8,7": {
+		"Name": "iPad Pro 12.9-inch 3rd Gen Wi-Fi + Cellular",
+		"Chip": "A12X BIONIC"
+	},
+	"iPad8,10": {
+		"Name": "iPad Pro 11-inch 2nd Gen Wi-Fi + Cellular",
+		"Chip": "A12Z BIONIC"
+	},
+	"iPad8,12": {
+		"Name": "iPad Pro 12.9-inch 4th Gen Wi-Fi + Cellular",
+		"Chip": "A12Z BIONIC"
+	},
+	"iPad11,2": {
+		"Name": "iPad mini 5th Gen Wi-Fi + Cellular",
+		"Chip": "A12 BIONIC"
+	},
+	"iPad11,4": {
+		"Name": "iPad Air 3rd Gen Wi-Fi + Cellular",
+		"Chip": "A12 BIONIC"
+	},
+	"iPad11,7": {
+		"Name": "iPad 8th Gen Wi-Fi + Cellular",
+		"Chip": "A14 BIONIC"
+	},
+	"iPad12,2": {
+		"Name": "iPad 9th Gen Wi-Fi + Cellular",
+		"Chip": "A13 BIONIC"
+	},
+	"iPad13,2": {
+		"Name": "iPad Air 4th Gen Wi-Fi + Cellular",
+		"Chip": "A14 BIONIC"
+	},
+	"iPad13,6": {
+		"Name": "iPad Pro 11-inch 3rd Gen Wi-Fi + Cellular",
+		"Chip": "M1"
+	},
+	"iPad13,9": [{
+			"Name": "iPad Pro 12.9 4th Gen Wi-Fi + Cellular",
+			"Chip": "A12Z BIONIC"
+		},
+		{
+			"Name": "iPad Pro 12.9 5th Gen Wi-Fi + Cellular",
+			"Chip": "M1"
+		}
+	],
+	"iPad13,17": {
+		"Name": "iPad Air 5th Gen Wi-Fi + Cellular",
+		"Chip": "M1"
+	},
+	"iPad13,19": {
+		"Name": "iPad 10th Gen Wi-Fi + Cellular",
+		"Chip": "A14 BIONIC"
+	},
+	"iPad14,2": {
+		"Name": "iPad mini 6th Gen Wi-Fi + Cellular",
+		"Chip": "A15 BIONIC"
+	},
+	"iPad14,4": {
+		"Name": "iPad Pro 11-inch 4th Gen Wi-Fi + Cellular",
+		"Chip": "M2"
+	},
+	"iPad14,6": {
+		"Name": "iPad Pro 12.9-inch 6th Gen Wi-Fi + Cellular",
+		"Chip": "M2"
+	},
+	"iPhone1,1": {
+		"Name": "iPhone",
+		"Chip": ""
+	},
+	"iPhone1,2": [{
+			"Name": "iPhone 2G",
+			"Chip": ""
+		},
+		{
+			"Name": "iPhone 3G",
+			"Chip": ""
+		}
+	],
+	"iPhone2,1": {
+		"Name": "iPhone 3GS",
+		"Chip": ""
+	},
+	"iPhone3,1": {
+		"Name": "iPhone 4",
+		"Chip": "A4"
+	},
+	"iPhone4,1": {
+		"Name": "iPhone 4S",
+		"Chip": "A5"
+	},
+	"iPhone5,1": {
+		"Name": "iPhone 5",
+		"Chip": "A6"
+	},
+	"iPhone5,2": {
+		"Name": "iPhone 5",
+		"Chip": "A6"
+	},
+	"iPhone5,3": {
+		"Name": "iPhone 5C",
+		"Chip": "A6"
+	},
+	"iPhone5,4": {
+		"Name": "iPhone 5C",
+		"Chip": "A6"
+	},
+	"iPhone6,1": {
+		"Name": "iPhone 5S",
+		"Chip": "A7"
+	},
+	"iPhone6,2": {
+		"Name": "iPhone 5S",
+		"Chip": "A7"
+	},
+	"iPhone7,1": {
+		"Name": "iPhone 6 Plus",
+		"Chip": "A8"
+	},
+	"iPhone7,2": {
+		"Name": "iPhone 6",
+		"Chip": "A8"
+	},
+	"iPhone8,1": {
+		"Name": "iPhone 6S",
+		"Chip": "A9"
+	},
+	"iPhone8,2": {
+		"Name": "iPhone 6S Plus",
+		"Chip": "A9"
+	},
+	"iPhone8,4": {
+		"Name": "iPhone SE",
+		"Chip": "A9"
+	},
+	"iPhone9,1": {
+		"Name": "iPhone 7",
+		"Chip": "A10 FUSION"
+	},
+	"iPhone9,2": {
+		"Name": "iPhone 7 Plus",
+		"Chip": "A10 FUSION"
+	},
+	"iPhone9,3": {
+		"Name": "iPhone 7",
+		"Chip": "A10 FUSION"
+	},
+	"iPhone9,4": {
+		"Name": "iPhone 7 Plus",
+		"Chip": "A10 FUSION"
+	},
+	"iPhone10,1": {
+		"Name": "iPhone 8",
+		"Chip": "A11 BIONIC"
+	},
+	"iPhone10,2": {
+		"Name": "iPhone 8 Plus",
+		"Chip": "A11 BIONIC"
+	},
+	"iPhone10,3": {
+		"Name": "iPhone X",
+		"Chip": "A11 BIONIC"
+	},
+	"iPhone10,4": {
+		"Name": "iPhone 8",
+		"Chip": "A11 BIONIC"
+	},
+	"iPhone10,5": {
+		"Name": "iPhone 8 Plus",
+		"Chip": "A11 BIONIC"
+	},
+	"iPhone10,6": {
+		"Name": "iPhone X",
+		"Chip": "A11 BIONIC"
+	},
+	"iPhone11,2": {
+		"Name": "iPhone XS",
+		"Chip": "A12 BIONIC"
+	},
+	"iPhone11,6": {
+		"Name": "iPhone XS MAX",
+		"Chip": "A12 BIONIC"
+	},
+	"iPhone11,8": {
+		"Name": "iPhone XR",
+		"Chip": "A12 BIONIC"
+	},
+	"iPhone12,1": {
+		"Name": "iPhone 11",
+		"Chip": "A13 BIONIC"
+	},
+	"iPhone12,3": {
+		"Name": "iPhone 11 Pro",
+		"Chip": "A13 BIONIC"
+	},
+	"iPhone12,5": {
+		"Name": "iPhone 11 Pro Max",
+		"Chip": "A13 BIONIC"
+	},
+	"iPhone12,8": {
+		"Name": "iPhone SE2",
+		"Chip": "A13 BIONIC"
+	},
+	"iPhone13,1": {
+		"Name": "iPhone 12 mini",
+		"Chip": "A14 BIONIC"
+	},
+	"iPhone13,2": {
+		"Name": "iPhone 12",
+		"Chip": "A14 BIONIC"
+	},
+	"iPhone13,3": {
+		"Name": "iPhone 12 Pro",
+		"Chip": "A14 BIONIC"
+	},
+	"iPhone13,4": {
+		"Name": "iPhone 12 Pro Max",
+		"Chip": "A14 BIONIC"
+	},
+	"iPhone14,2": {
+		"Name": "iPhone 13 Pro",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone14,3": {
+		"Name": "iPhone 13 Pro Max",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone14,4": {
+		"Name": "iPhone 13 mini",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone14,5": {
+		"Name": "iPhone 13",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone14,6": {
+		"Name": "iPhone SE3",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone14,7": {
+		"Name": "iPhone 14",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone14,8": {
+		"Name": "iPhone 14 Plus",
+		"Chip": "A15 BIONIC"
+	},
+	"iPhone15,2": {
+		"Name": "iPhone 14 Pro",
+		"Chip": "A16 BIONIC"
+	},
+	"iPhone15,3": {
+		"Name": "iPhone 14 Pro Max",
+		"Chip": "A16 BIONIC"
+	},
+	"iPhone15,4": {
+		"Name": "iPhone 15",
+		"Chip": "A16 BIONIC"
+	},
+	"iPhone15,5": {
+		"Name": "iPhone 15 Plus",
+		"Chip": "A16 BIONIC"
+	},
+	"iPhone16,1": {
+		"Name": "iPhone 15 Pro",
+		"Chip": "A17 PRO"
+	},
+	"iPhone16,2": {
+		"Name": "iPhone 15 Pro Max",
+		"Chip": "A17 PRO"
+	},
+	"iPhone17,1": {
+		"Name": "iPhone 16 Pro",
+		"Chip": "A18 PRO"
+	},
+	"iPhone17,2": {
+		"Name": "iPhone 16 Pro Max",
+		"Chip": "A18 PRO"
+	},
+	"iPhone17,3": {
+		"Name": "iPhone 16",
+		"Chip": "A18"
+	},
+	"iPhone17,4": {
+		"Name": "iPhone 16 Plus",
+		"Chip": "A18"
+	},
+	"iPhone17,5": {
+		"Name": "iPhone 16E",
+		"Chip": "A18"
+	},
+	"Watch3,1": [{
+			"Name": "Watch Series 3 38mm (3rd gen)",
+			"Chip": "S3"
+		},
+		{
+			"Name": "Watch S3 38 Demo",
+			"Chip": "S3"
+		}
+	],
+	"Watch3,2": [{
+			"Name": "Watch Series 3 42mm (3rd gen)",
+			"Chip": "S3"
+		},
+		{
+			"Name": "Watch S3 42 Demo",
+			"Chip": "S3"
+		}
+	],
+	"Watch4,3": {
+		"Name": "Watch Series 4 40mm (4th gen)",
+		"Chip": "S4"
+	},
+	"Watch4,4": {
+		"Name": "Watch Series 4 44mm (4th gen)",
+		"Chip": "S4"
+	},
+	"Watch5,3": {
+		"Name": "Watch Series 5 40mm",
+		"Chip": "S5"
+	},
+	"Watch5,4": {
+		"Name": "Watch Series 5 44mm",
+		"Chip": "S5"
+	},
+	"Watch5,11": {
+		"Name": "Watch SE GPS + Cellular 40mm (1st gen)",
+		"Chip": "S5"
+	},
+	"Watch5,12": {
+		"Name": "Watch SE GPS + Cellular 44mm (1st gen)",
+		"Chip": "S5"
+	},
+	"Watch6,3": {
+		"Name": "Watch Series 6 GPS + Cellular 40mm",
+		"Chip": "S6"
+	},
+	"Watch6,4": {
+		"Name": "Watch Series 6 GPS + Cellular 44mm",
+		"Chip": "S6"
+	},
+	"Watch6,8": {
+		"Name": "Watch Series 7 GPS + Cellular 41mm",
+		"Chip": "S7"
+	},
+	"Watch6,9": {
+		"Name": "Watch Series 7 GPS + Cellular 45mm",
+		"Chip": "S7"
+	},
+	"Watch6,12": {
+		"Name": "Watch SE GPS + Cellular 40mm (2nd gen)",
+		"Chip": "S8"
+	},
+	"Watch6,13": {
+		"Name": "Watch SE GPS + Cellular 44mm (2nd gen)",
+		"Chip": "S8"
+	},
+	"Watch6,16": {
+		"Name": "Watch Series 8 GPS + Cellular 41mm",
+		"Chip": "S8"
+	},
+	"Watch6,17": {
+		"Name": "Watch Series 8 GPS + Cellular 45mm",
+		"Chip": "S8"
+	},
+	"Watch6,18": [{
+			"Name": "Watch Ultra 49mm",
+			"Chip": "S8"
+		},
+		{
+			"Name": "Watch Ultra 2 49mm",
+			"Chip": "S9"
+		}
+	]
+}

@@ -2,6 +2,7 @@
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
 import { DEVICE_STORE, deviceConfig } from '../utils'
+import { useThrottleFn } from '@vueuse/core'
 
 const b = tv({
   base: [
@@ -14,6 +15,52 @@ const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
 const store = inject(DEVICE_STORE)!
+
+const deviceMockup = {
+  iPhone8: {
+    image: '/images/device_8p.png',
+    imageHeight: '512px',
+    imageRadius: 0,
+    left: '17px',
+    top: '59px',
+    width: '222px',
+    height: '393px',
+  },
+  iPhonex: {
+    image: '/images/device_13pm.png',
+    imageHeight: '516px',
+    imageRadius: 0,
+    left: '14px',
+    top: '13px',
+    width: '227px',
+    height: '490px',
+  },
+  iPhone11: {
+    image: '/images/device_14pm.png',
+    imageHeight: '524px',
+    imageRadius: '10px',
+    left: '11px',
+    top: '10px',
+    width: '234px',
+    height: '504px',
+  },
+}
+
+const handleRefresh = useThrottleFn(onRefresh, 1000)
+const handleRestart = useThrottleFn(onRestart, 1000)
+const handleShutdown = useThrottleFn(onShutdown, 1000)
+
+const deviceImage = computed(() => {
+  const matched = store.deviceChip.Name.match(/^iPhone (\d+)/)
+  return deviceMockup[getDeviceType(matched)]
+})
+
+function getDeviceType(matched: RegExpMatchArray | null) {
+  if (matched && Number(matched[1]) <= 8) return 'iPhone8'
+  if (matched && Number(matched[1]) >= 11) return 'iPhone11'
+
+  return 'iPhonex'
+}
 
 function getCurrentTime() {
   const now = new Date()
@@ -31,7 +78,8 @@ function getCurrentDate() {
   return `${month}月${day}日 星期${weekday}`
 }
 
-async function handleRestart() {
+async function onRestart() {
+  // TODO: loading
   try {
     await fetch(`${deviceConfig.api}/reboot`)
     console.log('Restarting device...')
@@ -41,7 +89,8 @@ async function handleRestart() {
   }
 }
 
-async function handleShutdown() {
+async function onShutdown() {
+  // TODO: loading
   try {
     await fetch(`${deviceConfig.api}/shutdown`)
     console.log('Shutting down device...')
@@ -51,7 +100,7 @@ async function handleShutdown() {
   }
 }
 
-async function handleRefresh() {
+async function onRefresh() {
   try {
     const response = await fetch(`${deviceConfig.api}/screenshot`)
     const blob = await response.blob()
@@ -71,19 +120,33 @@ function handleImageLoad() {
 </script>
 
 <template>
-  <div class="w-96 pr-4">
-    <div class="relative max-w-xs h-[550px] mx-auto">
+  <div class="w-96">
+    <div
+      class="relative w-64 mx-auto"
+      :style="{ height: deviceImage.imageHeight }"
+    >
       <img
-        src="/images/device.png" alt="Device Mockup"
-        class="absolute z-10 size-full drop-shadow-2xl"
+        :src="deviceImage.image" alt="Device Mockup"
+        class="absolute z-10 drop-shadow-2xl"
+        draggable="false"
       >
 
-      <div class="absolute size-full px-4 py-3.5">
+      <div
+        class="absolute overflow-hidden"
+        :style="{
+          left: deviceImage.left,
+          top: deviceImage.top,
+          width: deviceImage.width,
+          height: deviceImage.height,
+          borderRadius: deviceImage.imageRadius,
+        }"
+      >
         <img
           v-if="store.screenshot"
           :src="store.screenshot"
           alt="Device Screenshot"
           class="size-full"
+          draggable="false"
           @load="handleImageLoad"
         >
         <template v-else>
@@ -94,7 +157,7 @@ function handleImageLoad() {
       </div>
     </div>
 
-    <div class="flex justify-center space-x-4 mt-3 text-muted-foreground">
+    <div class="flex justify-center space-x-4 mt-6 text-muted-foreground">
       <button :class="b()" @click="handleRestart">
         <Icon icon="lucide:rotate-cw" />
         <span>重启</span>

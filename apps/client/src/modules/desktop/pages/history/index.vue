@@ -29,9 +29,13 @@ const store: HistoryStore = reactive({
 
 provide(HISTORY_STORE, store)
 
+const loading = ref(false)
+
 watch(
   [page, limit],
   async ([pageVal, pageSizeVal]) => {
+    loading.value = true
+
     const params = formatOrderParams(store.searchForm)
     const response = await orderApi.list({
       pageSize: pageSizeVal,
@@ -39,6 +43,7 @@ watch(
       ...params,
     })
     store.orders = response.data
+    loading.value = false
   },
   { immediate: true }
 )
@@ -90,9 +95,10 @@ function handleCopy() {
     <XTable
       :data="store.orders.list"
       :columns="columns"
+      :loading="loading"
+      row-key="id"
+      selected-key="imei" selection
       class="h-[calc(100%-3rem)] border"
-      row-key="id" selection
-      selected-key="imei"
       @select-change="selectRows = $event"
     />
 

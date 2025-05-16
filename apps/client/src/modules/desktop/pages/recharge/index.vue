@@ -13,7 +13,6 @@ interface RechargeIndexProps {
 }
 
 const props = defineProps<RechargeIndexProps>()
-const activeTab = ref<TabMode>(props.tab || 'recharge')
 
 const store: RechargeStore = reactive({
   url: '',
@@ -23,6 +22,8 @@ const store: RechargeStore = reactive({
 })
 
 provide(RECHARGE_STORE, store)
+
+const activeTab = ref<TabMode>(props.tab || 'recharge')
 
 const options: XSegmentedOption[] = [
   { label: '余额充值', value: 'recharge', icon: 'lucide:wallet' },

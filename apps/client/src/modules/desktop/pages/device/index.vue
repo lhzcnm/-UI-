@@ -4,18 +4,25 @@ import DeviceInfoHeader from './components/DeviceInfoHeader.vue'
 import DeviceInfoGrid from './components/DeviceInfoGrid.vue'
 import DeviceBatteryInfo from './components/DeviceBatteryInfo.vue'
 import DeviceDiskInfo from './components/DeviceDiskInfo.vue'
-import DeviceAction from './components/DeviceAction.vue'
+import WaitConnect from './components/WaitConnect.vue'
+import PluginDownload from './components/PluginDownload.vue'
 
 import { useWebSocket } from '@vueuse/core'
-import { Icon } from '@iconify/vue'
 
-import type { DeviceInfo } from './types'
 import type { DeviceStore } from './utils'
+import type { DeviceInfo, BatteryInfo } from './types'
 import { DEVICE_STORE, ConnStatus, deviceConfig } from './utils'
+
+import devicesIos from '@/assets/devices-ios.json'
 
 const store = reactive<DeviceStore>({
   status: ConnStatus.IDLE,
   info: {} as DeviceInfo,
+  battery: {} as BatteryInfo,
+  deviceChip: {
+    Name: '',
+    Chip: '',
+  },
   screenshot: '',
   ws: null,
 })
@@ -26,6 +33,11 @@ await getDeviceInfo()
 async function getDeviceInfo() {
   try {
     await checkPlugin()
+    await Promise.all([
+      getScreenshot(),
+      getBatteryInfo(),
+    ])
+
     const { data } = useWebSocket(deviceConfig.ws)
 
     watch(data, (value) => {
@@ -37,11 +49,10 @@ async function getDeviceInfo() {
       store.status = ConnStatus.CONNECTED
       store.info = JSON.parse(value)
 
-      const response = fetch(`${deviceConfig.api}/screenshot`)
-      response.then(async (res) => {
-        const blob = await res.blob()
-        store.screenshot = URL.createObjectURL(blob)
-      })
+      type DeviceType = keyof typeof devicesIos
+      const device = devicesIos[store.info.ProductType as DeviceType]
+      if (Array.isArray(device)) store.deviceChip = device[0]
+      else store.deviceChip = device
     })
   }
   catch (error) {
@@ -58,76 +69,51 @@ async function checkPlugin() {
   })
 }
 
-function handleDownload() {}
+async function getScreenshot() {
+  const response = await fetch(`${deviceConfig.api}/screenshot`)
+  const blob = await response.blob()
+  store.screenshot = URL.createObjectURL(blob)
+}
+
+async function getBatteryInfo() {
+  const response = await fetch(`${deviceConfig.api}/battery`)
+  const { data } = await response.json()
+  store.battery = data
+}
 </script>
 
 <template>
   <div class="relative p-4 h-full">
-    <div v-show="store.status === ConnStatus.CONNECTED" class="flex">
-      <DevicePhoneDisplay />
-  
-      <div class="flex-1 py-4">
-        <div class="overflow-hidden border rounded-lg mb-4">
-          <DeviceInfoHeader />
-          <DeviceInfoGrid />
-        </div>
-  
-        <div class="flex flex-wrap space-x-4">
-          <DeviceBatteryInfo />
-          <DeviceDiskInfo />
-          <DeviceAction />
-        </div>
-
-      </div>
-    </div>
-
-    <transition name="fade">
-      <div
+    <TransitionGroup name="fade-in">
+      <WaitConnect
         v-if="store.status === ConnStatus.IDLE || store.status === ConnStatus.DISCONNECTED"
-        class="absolute inset-0 z-50 flex items-center justify-center flex-col h-full bg-background"
-      >
-        <div class="relative -mt-72">
-          <div class="absolute inset-0 animate-pulse bg-primary/10 rounded-full blur-xl"></div>
-          <div class="relative border-2 border-dashed border-primary/30 rounded-full p-6 bg-background/50 backdrop-blur-sm">
-            <Icon icon="lucide:unlink" class="text-7xl text-primary x-animate-bounce" />
-          </div>
-        </div>
-        <div class="mt-12 text-center space-y-4">
-          <h2 class="text-2xl font-semibold text-foreground">等待 iPhone 连接</h2>
-          <p class="text-base text-muted-foreground max-w-md">
-            请使用 USB 线连接 iPhone 到电脑<br>并确保已启用"信任此电脑"。
-          </p>
-        </div>
-      </div>
-    </transition>
+        key="waiting"
+      />
 
-    <transition name="fade">
-      <div
+      <PluginDownload
         v-if="store.status === ConnStatus.PLUGIN_NOT_INSTALLED"
-        class="absolute inset-0 z-50 flex items-center justify-center flex-col h-full bg-background"
+        key="plugin"
+      />
+
+      <div
+        v-if="store.status === ConnStatus.CONNECTED"
+        key="connected"
+        class="flex"
       >
-        <div class="relative -mt-72">
-          <div class="absolute inset-0 animate-pulse bg-primary/10 rounded-full blur-xl"></div>
-          <div class="relative border-2 border-dashed border-primary/30 rounded-full p-6 bg-background/50 backdrop-blur-sm">
-            <Icon icon="lucide:shield-alert" class="text-7xl text-primary" />
+        <DevicePhoneDisplay />
+
+        <div class="flex-1 min-w-[800px] max-w-screen-lg py-4">
+          <div class="overflow-hidden border rounded-lg mb-4">
+            <DeviceInfoHeader />
+            <DeviceInfoGrid />
+          </div>
+
+          <div class="flex flex-wrap space-x-4">
+            <DeviceBatteryInfo class="flex-1" />
+            <DeviceDiskInfo class="flex-1" />
           </div>
         </div>
-        <div class="mt-12 text-center space-y-4">
-          <h2 class="text-2xl font-semibold text-foreground">
-            未检测到插件运行
-          </h2>
-          <p class="text-base text-muted-foreground max-w-md">
-            如果插件未运行，请先启动插件，再刷新页面。<br>
-            如果插件未安装，请点击下方按钮下载安装插件。
-          </p>
-          <XButton
-            icon="lucide:arrow-down-to-line"
-            @click="handleDownload"
-          >
-            下载插件
-          </XButton>
-        </div>
       </div>
-    </transition>
+    </TransitionGroup>
   </div>
 </template>

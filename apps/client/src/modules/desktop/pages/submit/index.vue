@@ -177,7 +177,6 @@ function submitOrder(service: Service) {
 
     if (service.isUnlock) {
       toast.success('提交成功，请稍后前往"我的订单"页面查看')
-      return
     }
 
     renderSubmitOrderResult(data)

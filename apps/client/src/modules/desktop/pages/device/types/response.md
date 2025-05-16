@@ -2,7 +2,7 @@
 
 ```json
 {
-  "DeviceName": "iPhone",
+  "DeviceName": "sanhe的iPhone",
   "DeviceColor": "#e4e7e8",
   "DeviceClass": "iPhone",
   "ProductVersion": "14.4.2",
@@ -24,15 +24,38 @@
   "ActivationState": "Activated",
   "HardwareModel": "N71mAP",
   "InternationalMobileEquipmentIdentity": "355697070274075",
-  "BatteryCurrentCapacity": 94,
+  "BatteryCurrentCapacity": 100,
   "BatteryIsCharging": true,
-  "AmountDataAvailable": 321785856,
+  "AmountDataAvailable": 1059500032,
   "AmountDataReserved": 209715200,
-  "AmountRestoreAvailable": 7011246080,
-  "TotalDataAvailable": 703242240,
+  "AmountRestoreAvailable": 7748960256,
+  "TotalDataAvailable": 1440956416,
   "TotalDataCapacity": 9499238400,
   "TotalDiskCapacity": 16000000000,
-  "TotalSystemCapacity": 6479745024
+  "TotalSystemCapacity": 6479745024,
+  "UniqueChipID": 8528367184505894,
+  "CloudBackupEnabled": false,
+  "LastCloudBackupTZ": "GMT+8",
+  "LastiTunesBackupDate": 768820089,
+  "LastiTunesBackupTZ": "GMT+8",
+  "Version": "2.0",
+  "WillEncrypt": false,
+  "Bookmarks": {
+    "AccountNames": [],
+    "Sources": []
+  },
+  "Calendars": {
+    "AccountNames": [],
+    "Sources": []
+  },
+  "Contacts": {
+    "AccountNames": [],
+    "Sources": []
+  },
+  "Notes": {
+    "AccountNames": [],
+    "Sources": []
+  }
 }
 ```
 

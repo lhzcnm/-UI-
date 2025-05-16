@@ -41,9 +41,14 @@ watch(copied, (value) => value && toast.success('复制成功'))
 const handleRefresh = useThrottleFn(() => {
   orderApi.item(row.id).then(({ data }) => {
     toast.success('刷新成功')
+
+    if (data.status === ORDER_STATUS.SUCCESS) {
+      focreHide.value = true
+    }
+
     store.orders.list[index] = {
       ...store.orders.list[index],
-      result: data.result
+      ...data
     }
   })
 }, 500)
@@ -91,7 +96,7 @@ function handleCopy() {
     />
 
     <XButton
-      v-if="status.isProcessing"
+      v-if="status.isProcessing && !focreHide"
       label="刷新" size="sm"
       @click="handleRefresh"
     />

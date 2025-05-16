@@ -31,6 +31,29 @@ export interface DeviceInfo {
   TotalDataCapacity: number
   TotalDiskCapacity: number
   TotalSystemCapacity: number
+  UniqueChipID: number
+  CloudBackupEnabled: boolean
+  LastCloudBackupTZ: string
+  LastiTunesBackupDate: number
+  LastiTunesBackupTZ: string
+  Version: string
+  WillEncrypt: boolean
+  Bookmarks: {
+    AccountNames: string[]
+    Sources: string[]
+  }
+  Calendars: {
+    AccountNames: string[]
+    Sources: string[]
+  }
+  Contacts: {
+    AccountNames: string[]
+    Sources: string[]
+  }
+  Notes: {
+    AccountNames: string[]
+    Sources: string[]
+  }
 }
 
 // GET /battery

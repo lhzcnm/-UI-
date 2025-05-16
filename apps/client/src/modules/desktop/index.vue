@@ -21,7 +21,12 @@ const visible = ref(enablePopupAnnc)
 const menus = [
   { label: '首页',    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
   { label: '订单查询', path: '/submit', icon: 'iconoir:atom' },
-  { label: '我的设备', path: '/device', icon: 'iconoir:laptop-charging' },
+  {
+    label: '我的设备',
+    path: '/device',
+    icon: 'iconoir:laptop-charging',
+    hide: uStore.info.pricePlanId < 3,
+  },
   { label: '我的订单', path: '/history', icon: 'iconoir:page-flip' },
   { label: '积分充值', path: '/recharge', icon: 'iconoir:credit-card' },
   { label: '积分记录', path: '/credits', icon: 'iconoir:bitcoin-rotate-out' },

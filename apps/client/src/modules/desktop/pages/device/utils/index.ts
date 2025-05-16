@@ -1,13 +1,13 @@
 import type { InjectionKey } from "vue"
-import type { DeviceInfo } from "../types"
+import type { DeviceInfo, BatteryInfo } from "../types"
 
 export const DEVICE_STORE: InjectionKey<DeviceStore> = Symbol('deviceStore')
 
 export enum ConnStatus {
-  IDLE = 'idle', // 未连接
-  CONNECTED = 'connected', // 已连接
-  DISCONNECTED = 'disconnected', // 已断开
-  PLUGIN_NOT_INSTALLED = 'plugin_not_installed', // 插件未安装
+  IDLE = 'idle',
+  CONNECTED = 'connected',
+  DISCONNECTED = 'disconnected',
+  PLUGIN_NOT_INSTALLED = 'plugin_not_installed',
 }
 
 export interface DeviceStore {
@@ -15,6 +15,11 @@ export interface DeviceStore {
   status: ConnStatus
   info: DeviceInfo
   screenshot: string
+  battery: BatteryInfo
+  deviceChip: {
+    Name: string
+    Chip: string
+  }
 }
 
 export const deviceConfig = {

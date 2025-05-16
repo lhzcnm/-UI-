@@ -8,6 +8,7 @@ const limit = ref(20)
 
 const response = { list: [], page: 1, pageSize: 20, total: 0 }
 const creditLogs = ref<CreditLogsResponse>(response)
+const loading = ref(false)
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -15,11 +16,13 @@ await serviceStore.getServices()
 watch(
   [page, limit],
   async ([pageVal, pageSizeVal]) => {
+    loading.value = true
     const response = await userApi.creditLogs({
       pageSize: pageSizeVal,
       page: pageVal
     })
     creditLogs.value = response.data
+    loading.value = false
   },
   { immediate: true }
 )
@@ -39,6 +42,7 @@ watch(
     <XTable
       :data="creditLogs.list"
       :columns="columns"
+      :loading="loading"
       row-key="historyId"
       class="h-[calc(100%-3rem)] border"
     />
