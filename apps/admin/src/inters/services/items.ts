@@ -1,4 +1,5 @@
 import { IMEI_TYPE } from '@3un/shared/enums'
+import type { WithId } from '@3un/shared'
 import * as z from 'zod'
 
 export type Service = z.infer<typeof zService>
@@ -50,8 +51,9 @@ export const zService = z.interface({
   // toolForUnlockBase: z.string(),
 })
 
-const zServiceCreateForm = zService.omit({ packageId: true })
-export type ServiceCreateParams = z.infer<typeof zServiceCreateForm>
+// Form
+export const zServiceForm = zService.omit({ packageId: true })
 
-const zServiceUpdateParams = zService.extend(zServiceCreateForm.partial())
-export type ServiceUpdateParams = z.infer<typeof zServiceUpdateParams>
+// Create & Update
+export type ServiceCreateParams = z.infer<typeof zServiceForm>
+export type ServiceUpdateParams = WithId<ServiceCreateParams, 'packageId'>

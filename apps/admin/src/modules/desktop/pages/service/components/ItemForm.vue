@@ -19,7 +19,7 @@ const options = {
   },
 }
 
-const isCreate = computed(() => store.form.packageId === 0)
+const isCreate = computed(() => store.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
 const serviceStore = useServiceStore()
@@ -33,12 +33,12 @@ function handleSubmit() {
 }
 
 function handleCreate() {
-  const response = createService(store.form)
+  const response = createService(store.formBase)
 
   response.then((data) => {
     const item = zService.parse(data)
     serviceStore.items.push(item)
-    store.visible = false
+    store.visibleBase = false
   })
 
   response.finally(() => {
@@ -47,15 +47,14 @@ function handleCreate() {
 }
 
 function handleUpdate() {
-  const response = updateService(store.form)
+  const item = serviceStore.items[store.index!]
+  const body = { ...store.formBase, packageId: item.packageId }
+
+  const response = updateService(body)
 
   response.then(() => {
-    const id = store.form.packageId
-    const idx = serviceStore.items
-      .findIndex(item => item.packageId === id)
-
-    serviceStore.items[idx] = store.form
-    store.visible = false
+    serviceStore.items[store.index!] = body
+    store.visibleBase = false
   })
 
   response.finally(() => {
@@ -66,23 +65,20 @@ function handleUpdate() {
 function handleDelete() {
   if (!window.confirm('确定要删除该服务吗？')) return
 
-  const id = store.form.packageId
-  deleteService(id).then(() => {
-    const idx = serviceStore.items
-      .findIndex(item => item.packageId === id)
-
-    serviceStore.items.splice(idx, 1)
-    store.visible = false
+  const item = serviceStore.items[store.index!]
+  deleteService(item.packageId).then(() => {
+    serviceStore.items.splice(store.index!, 1)
+    store.visibleBase = false
   })
 }
 </script>
 
 <template>
   <XDrawer
-    v-model="store.visible"
+    v-model="store.visibleBase"
     width="500px" :title="options[mode].title"
   >
-    <ItemFormBase v-model="store.form" />
+    <ItemFormBase v-model="store.formBase" />
     <template #footer>
       <div class="flex justify-between p-4 border-t">
         <XButton
@@ -94,7 +90,7 @@ function handleDelete() {
           删除服务
         </XButton>
         <div class="ml-auto space-x-2">
-          <XButton variant="soft" @click="store.visible = false">取消</XButton>
+          <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
           <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
         </div>
       </div>

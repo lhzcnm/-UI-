@@ -8,8 +8,8 @@ export interface CR<T = any> {
 
 // Pagination
 export interface IPage {
-  page: number
   pageSize?: number
+  page: number
 }
 export interface IList<T> {
   list: T[]
@@ -20,3 +20,5 @@ export interface IList<T> {
 
 // Form mode
 export type FormMode = 'create' | 'update'
+
+export type WithId<T, ID extends string> = Partial<T> & { [key in ID]: number }

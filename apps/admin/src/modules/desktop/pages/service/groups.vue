@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import GroupForm from './components/groupForm.vue'
 
+import { zServiceGroupForm } from '@/inters/services'
 import { GROUP_STORE, type ServiceGroupStore } from './utils'
 import { columns } from './utils/columnGroup'
 
-import { zServiceGroup } from '@/inters/services'
-
 const serviceStore = useServiceStore()
 const store: ServiceGroupStore = reactive({
-  form: zServiceGroup.parse({}),
-  visible: false,
+  formBase: zServiceGroupForm.parse({}),
+  visibleBase: false,
+  index: undefined,
 })
 
 provide(GROUP_STORE, store)
 
 function openCreate() {
-  store.form = zServiceGroup.parse({})
-  store.visible = true
+  store.formBase = zServiceGroupForm.parse({})
+  store.index = undefined
+  store.visibleBase = true
 }
 </script>
 

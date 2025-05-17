@@ -1,7 +1,10 @@
-import { zServiceGroup, type ServiceGroup } from '@/inters/services'
-import { XButton, XInputNumber, XSwitch, type XColDef } from "@3un/ui"
+import GroupAction from '../components/groupAction.vue'
+
+import type { XColDef } from '@3un/ui'
+import {  XInputNumber, XSwitch } from "@3un/ui"
+
+import type { ServiceGroup } from '@/inters/services'
 import { updateServiceGroup } from '@/api/services'
-import { GROUP_STORE } from '.'
 
 export const columns: XColDef<ServiceGroup> = [ 
   {
@@ -12,17 +15,17 @@ export const columns: XColDef<ServiceGroup> = [
   {
     key: 'category',
     title: '服务组名称',
-    width: 220,
+    minWidth: 220,
   },
   {
     key: 'categoryLocal',
     title: '服务组名称EN',
-    width: 320,
+    minWidth: 320,
   },
   {
     key: 'orderBy',
     title: '排序(值越大越靠前)',
-    minWidth: 180,
+    width: 164,
     render(value, row) {
       return h(XInputNumber, {
         size: 'sm',
@@ -49,6 +52,8 @@ export const columns: XColDef<ServiceGroup> = [
     render(value, row) {
       return h(XSwitch, {
         modelValue: value,
+        activeValue: 1,
+        inactiveValue: 0,
         'onUpdate:modelValue': async (val) => {
           const oldVal = row.disableCategory
           const response = updateServiceGroup({
@@ -67,19 +72,8 @@ export const columns: XColDef<ServiceGroup> = [
   {
     key: 'action',
     title: '操作',
-    width: 134,
+    width: 88,
     fixed: 'right',
-    render: (_, row) => {
-      const store = inject(GROUP_STORE)!
-      const onClick = () => {
-        store.form = zServiceGroup.parse(row)
-        store.visible = true
-      }
-
-      return [
-        h(XButton, { size: 'sm', onClick }, () => '编辑'),
-        h(XButton, { size: 'sm', color: 'success' }, () => '查看服务'),
-      ]
-    }
+    render: (_, row) => h(GroupAction, { row })
   }
 ]

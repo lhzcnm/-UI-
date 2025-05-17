@@ -19,6 +19,7 @@ type SearchOptions = Options<SidebarMenuChild | Service>
 
 const visible = defineModel<boolean>({ required: true })
 
+const route = useRoute()
 const router = useRouter()
 const store = useServiceStore()
 const search = ref('')
@@ -104,9 +105,12 @@ function handleCommand(command: string, event: MouseEvent) {
   if (command === 'service') {
     const target = event.target as HTMLElement
     const element = target.closest('[data-id]')
-    if (!element) return
-
-    // TODO: 跳转服务详情
+    const id = element!.getAttribute('data-id')
+    
+    router.push({
+      path: '/service/items',
+      query: { ...route.query, id },
+    })
   }
 
   visible.value = false
@@ -116,7 +120,7 @@ function handleCommand(command: string, event: MouseEvent) {
 <template>
   <XDialog
     v-model="visible"
-    :ui="{ base: 'sm:max-w-md p-0 sm:p-0 border' }"
+    uiRoot="sm:max-w-md p-0 sm:p-0 border"
   >
     <div class="relative border-b p-1">
       <Icon

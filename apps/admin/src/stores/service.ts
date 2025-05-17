@@ -1,4 +1,4 @@
-import type { Service, ServiceGroup } from '@/inters/services'
+import type { Service, ServiceDetail, ServiceGroup } from '@/inters/services'
 import { getServiceGroups, getServices } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
 import { useStorage } from '@vueuse/core'
@@ -10,6 +10,25 @@ export const useServiceStore = defineStore('service', () => {
 
   const groupMap = ref(new Map<number, ServiceGroup>())
   const itemMap = ref(new Map<number, Service>())
+
+  const details = computed(() => {
+    const list: ServiceDetail[] = []
+    for (const group of groups.value) {
+      const children: Service[] = []
+      
+      for (const item of items.value) {
+        if (item.categoryId === group.categoryId) {
+          children.push(item)
+        }
+      }
+
+      if (children.length) {
+        list.push({ ...group, children })
+      }
+    }
+
+    return list
+  })
 
   async function getItems(force = false) {
     const data = await useFetchWithCache({
@@ -44,6 +63,7 @@ export const useServiceStore = defineStore('service', () => {
     groupMap,
     items,
     itemMap,
+    details,
     getItems,
     getGroups,
   }

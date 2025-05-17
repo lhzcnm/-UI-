@@ -13,7 +13,7 @@ const options = [
 <template>
   <XDialog
     v-model="visible" title="设置"
-    :ui="{ base: 'sm:max-w-2xl' }"
+    uiRoot="sm:max-w-2xl"
   >
     <div class="w-32 h-96">
       <ul class="space-y-1">

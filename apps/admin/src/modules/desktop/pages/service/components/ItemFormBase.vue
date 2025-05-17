@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Service } from '@/inters/services'
+import type { ServiceCreateParams } from '@/inters/services'
 import { IMEI_TYPE } from '@3un/shared/enums'
 import { XRadio, XSwitch } from '@3un/ui'
 
-const form = defineModel<Service>({ required: true })
+const form = defineModel<ServiceCreateParams>({ required: true })
 const store = useServiceStore()
 </script>
 
@@ -61,9 +61,9 @@ const store = useServiceStore()
       description="最低 0.01"
       required
     >
-      <XInput
+      <XInputNumber
         v-model.number="form.packagePrice"
-        placeholder="服务价格"
+        :step="0.01" :min="0.01" :precision="2"
       />
     </FormField>
 
@@ -94,7 +94,7 @@ const store = useServiceStore()
     >
       <XInputNumber
         v-model.number="form.packageOrderBy"
-        :step="1" placeholder="排序数值"
+        :step="1"
       />
     </FormField>
 

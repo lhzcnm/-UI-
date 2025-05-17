@@ -1,29 +1,26 @@
 <script setup lang="ts">
-import GroupFormBase from './groupFormBase.vue'
-import { GROUP_STORE } from '../utils'
+import FieldFormBase from './FieldFormBase.vue'
+import { FIELD_STORE } from '../utils'
 
 import type { FormMode } from '@3un/shared'
+import { createServiceField, updateServiceField } from '@/api/services'
 
-import { createServiceGroup, updateServiceGroup } from '@/api/services'
-import { zServiceGroup } from '@/inters/services'
-
-const store = inject(GROUP_STORE)!
+const store = inject(FIELD_STORE)!
 const options = {
   create: {
-    title: '新增服务组',
+    title: '新增',
     submitText: '新增',
   },
   update: {
-    title: '编辑服务组',
+    title: '编辑',
     submitText: '保存',
   },
 }
 
+const loading = ref(false)
+
 const isCreate = computed(() => store.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
-
-const serviceStore = useServiceStore()
-const loading = ref(false)
 
 function handleSubmit() {
   loading.value = true
@@ -33,11 +30,10 @@ function handleSubmit() {
 }
 
 function handleCreate() {
-  const response = createServiceGroup(store.formBase)
+  const response = createServiceField(store.formBase)
 
-  response.then((data) => {
-    const item = zServiceGroup.parse(data)
-    serviceStore.groups.push(item)
+  response.then(() => {
+    store.refresh = !store.refresh
     store.visibleBase = false
   })
 
@@ -47,13 +43,15 @@ function handleCreate() {
 }
 
 function handleUpdate() {
-  const group = serviceStore.groups[store.index!]
-  const body = { ...store.formBase, categoryId: group.categoryId }
+  const body = {
+    ...store.formBase,
+    id: store.fields.list[store.index!].id,
+  }
 
-  const response = updateServiceGroup(body)
+  const response = updateServiceField(body)
 
   response.then(() => {
-    serviceStore.groups[store.index!] = body
+    store.fields.list[store.index!] = body
     store.visibleBase = false
   })
 
@@ -68,7 +66,7 @@ function handleUpdate() {
     v-model="store.visibleBase"
     :title="options[mode].title"
   >
-    <GroupFormBase v-model="store.formBase" />
+    <FieldFormBase v-model="store.formBase" />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">
         <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>

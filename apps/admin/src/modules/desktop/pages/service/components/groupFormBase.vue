@@ -1,26 +1,30 @@
 <script setup lang="ts">
-import type { ServiceGroup } from '@/inters/services'
+import type { ServiceGroupCreateParams } from '@/inters/services'
 
-const form = defineModel<ServiceGroup>({ required: true })
+const form = defineModel<ServiceGroupCreateParams>({ required: true })
 </script>
 
 <template>
   <form class="space-y-3" @submit.prevent>
-    <div class="space-y-1">
-      <label class="text-sm">服务组名称</label>
+    <div>
+      <label class="text-sm mb-1">服务组名称</label>
       <XInput v-model="form.category" placeholder="服务组名称" />
     </div>
-    <div class="space-y-1">
-      <label class="text-sm">服务名称EN</label>
+    <div>
+      <label class="text-sm mb-1">服务名称EN</label>
       <XInput v-model="form.categoryLocal" placeholder="服务组英文名称" />
     </div>
-    <div class="space-y-1">
-      <label class="text-sm">排序</label>
+    <div>
+      <label class="text-sm mb-1">排序</label>
       <XInputNumber v-model="form.orderBy" :step="1" placeholder="排序数值" />
     </div>
-    <div class="space-y-1">
-      <label class="block text-sm">禁用服务组</label>
-      <XSwitch v-model="form.disableCategory" />
+    <div>
+      <label class="block text-sm mb-1">禁用服务组</label>
+      <XSwitch
+        v-model="form.disableCategory"
+        :active-value="1"
+        :inactive-value="0"
+      />
     </div>
   </form>
 </template>

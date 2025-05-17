@@ -16,7 +16,7 @@ export const columns: XColDef<Service> = [
     width: 180,
     render: (value) => {
       const group = serviceStore.groupMap.get(value)
-      return group ? group.category : '未知'
+      return group ? group.category : '默认服务组'
     }
   },
   {
@@ -45,7 +45,7 @@ export const columns: XColDef<Service> = [
   {
     key: 'tmpTitle',
     title: '服务简称',
-    width: 220,
+    minWidth: 220,
   },
   {
     key: 'packageTitle',
@@ -112,11 +112,13 @@ export const columns: XColDef<Service> = [
     render: (_, row) => {
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
-        store.form = zService.parse(row)
-        store.visible = true
+        store.formBase = zService.parse(row)
+        store.index = serviceStore.items
+          .findIndex(item => item.packageId === row.packageId)
+        store.visibleBase = true
       }
       
-      return h(XButton, { size: 'sm', onClick }, () => '编辑')
+      return h(XButton, { size: 'sm', label: '编辑', onClick })
     }
   }
 ]

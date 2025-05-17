@@ -1,5 +1,6 @@
-import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams } from '@/inters/services'
-import { zService, zServiceGroup } from '@/inters/services'
+import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList } from '@/inters/services'
+
+import { zService, zServiceField, zServiceGroup } from '@/inters/services'
 import http from '@/utils/http'
 
 // service
@@ -46,4 +47,27 @@ export const updateServiceGroup: ServiceGroupUpdateFn = async (body) => {
 type ServiceGroupDeleteFn = (id: number) => Promise<void>
 export const deleteServiceGroup: ServiceGroupDeleteFn = async (id) => {
   await http.delete(`/service/group/${id}`)
+}
+
+// service field
+type ServiceFieldListFn = (params: ServiceFieldListParams) => Promise<ServiceFieldList>
+export const getServiceFields: ServiceFieldListFn = async (params) => {
+  const { data } = await http.get<ServiceFieldList>('/services/field', { params })
+  return { ...data, list: data.list.map((item) => zServiceField.parse(item)) }
+}
+
+type ServiceFieldCreateFn = (body: ServiceFieldCreateParams) => Promise<ServiceField>
+export const createServiceField: ServiceFieldCreateFn = async (body) => {
+  const { data } = await http.post('/services/field', body)
+  return zServiceField.parse(data)
+}
+
+type ServiceFieldUpdateFn = (body: ServiceFieldUpdateParams) => Promise<number>
+export const updateServiceField: ServiceFieldUpdateFn = async (body) => {
+  return (await http.put('/services/field', body)).data
+}
+
+type ServiceFieldDeleteFn = (data: number[]) => Promise<void>
+export const deleteServiceField: ServiceFieldDeleteFn = async (data) => {
+  await http.delete(`/services/field`, { data })
 }
