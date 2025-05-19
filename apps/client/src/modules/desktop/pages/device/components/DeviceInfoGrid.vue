@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { DEVICE_STORE, deviceConfig } from '../utils'
+import http from '@/utils/http'
+
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
-
+import { Icon } from '@iconify/vue'
 
 const store = inject(DEVICE_STORE)!
 
@@ -10,10 +12,60 @@ const { copy, copied } = useClipboard()
 const isActivated = ref(store.info.ActivationState === 'Activated')
 watch(copied, (val) => val && toast.success('复制成功'))
 
+const loadings = reactive({
+  networkLock: false,
+  activationLock: false,
+})
+
+const queryStore = reactive({
+  networkLock: '--',
+  activationLock: '--',
+})
+
 async function handleActivation() {
   const suffix = isActivated.value ? 'deactivate' : 'activation'
   await fetch(`${deviceConfig.api}/${suffix}`)
   isActivated.value = !isActivated.value
+}
+
+function handleNetworkLock() {
+  loadings.networkLock = true
+  const response = http.post('/device/query', {
+    imei: store.info.InternationalMobileEquipmentIdentity,
+    imei2: store.info.InternationalMobileEquipmentIdentity2,
+    sn: store.info.SerialNumber,
+    serviceId: 9999,
+    type: 'NetworkLock',
+  })
+
+  response.then(({ data }) => {
+    const status = data === 'ON' ? '开启' : '关闭'
+    queryStore.networkLock = `${data} ${status}`
+  })
+
+  response.finally(() => {
+    loadings.networkLock = false
+  })
+}
+
+function handleActivationLock() {
+  loadings.activationLock = true
+  const response = http.post('/device/query', {
+    imei: store.info.InternationalMobileEquipmentIdentity,
+    imei2: store.info.InternationalMobileEquipmentIdentity2,
+    sn: store.info.SerialNumber,
+    serviceId: 8888,
+    type: 'ActivationLock',
+  })
+
+  response.then(({ data }) => {
+    const status = data === 'ON' ? '开启' : '关闭'
+    queryStore.activationLock = `${data} ${status}`
+  })
+
+  response.finally(() => {
+    loadings.activationLock = false
+  })
 }
 </script>
 
@@ -95,29 +147,42 @@ async function handleActivation() {
       <div class="flex items-center">
         <span class="inline-block w-20 text-muted-foreground">网络锁</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>{{ store.info.SIMStatus }}</span>
-          <button class="ml-2 text-primary">精准查询</button>
+          <span>{{ queryStore.networkLock }}</span>
+          <button
+            class="flex items-center space-x-1.5 ml-2 text-primary"
+            :disabled="loadings.networkLock"
+            @click="handleNetworkLock"
+          >
+            <Icon v-if="loadings.networkLock" icon="lucide:loader-2" class="animate-spin" />
+            <span>{{ loadings.networkLock ? '查询中...' : '立即查询' }}</span>
+          </button>
         </div>
       </div>
       <div class="flex items-center">
         <span class="inline-block w-20 text-muted-foreground">激活锁</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>--</span>
-          <button class="ml-2 text-primary">精准查询</button>
+          <span>{{ queryStore.activationLock }}</span>
+          <button
+            class="flex items-center space-x-1.5 ml-2 text-primary"
+            :disabled="loadings.activationLock"
+            @click="handleActivationLock"
+          >
+            <Icon v-if="loadings.activationLock" icon="lucide:loader-2" class="animate-spin" />
+            <span>{{ loadings.activationLock ? '查询中...' : '立即查询' }}</span>
+          </button>
         </div>
       </div>
       <div class="flex items-center">
         <span class="inline-block w-20 text-muted-foreground">保修期限</span>
         <div class="flex-1 flex items-center justify-between">
           <span>--</span>
-          <button class="ml-2 text-primary">精准查询</button>
+          <button class="ml-2 text-primary">立即查询</button>
         </div>
       </div>
       <div class="flex items-center">
         <span class="inline-block w-20 text-muted-foreground">iCloud</span>
         <div class="flex-1 flex items-center justify-between">
           <span>{{ store.info.CloudBackupEnabled ? '已开启' : '未开启' }}</span>
-          <!-- <button class="ml-2 text-primary">iCloud 详情</button> -->
         </div>
       </div>
       <div class="flex items-center">

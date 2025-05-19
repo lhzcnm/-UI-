@@ -22,6 +22,7 @@ export interface DeviceInfo {
   ActivationState: string
   HardwareModel: string
   InternationalMobileEquipmentIdentity: string
+  InternationalMobileEquipmentIdentity2: string
   BatteryCurrentCapacity: number
   BatteryIsCharging: boolean
   AmountDataAvailable: number

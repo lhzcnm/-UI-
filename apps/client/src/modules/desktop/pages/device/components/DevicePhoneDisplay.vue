@@ -79,7 +79,6 @@ function getCurrentDate() {
 }
 
 async function onRestart() {
-  // TODO: loading
   try {
     await fetch(`${deviceConfig.api}/reboot`)
     console.log('Restarting device...')
@@ -90,7 +89,6 @@ async function onRestart() {
 }
 
 async function onShutdown() {
-  // TODO: loading
   try {
     await fetch(`${deviceConfig.api}/shutdown`)
     console.log('Shutting down device...')
@@ -148,6 +146,7 @@ function handleImageLoad() {
           class="size-full"
           draggable="false"
           @load="handleImageLoad"
+          @error="store.screenshot = ''"
         >
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>

@@ -54,7 +54,7 @@ function highlightText(text: string, keyword: string) {
     v-model="modal"
     v-model:input="input"
     v-bind="$attrs"
-    filterable
+    filterable 
     placeholder="请选择服务"
     placement="bottom-start"
     @selected="emits('selected', $event)"

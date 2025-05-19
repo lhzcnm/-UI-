@@ -24,6 +24,7 @@
   "ActivationState": "Activated",
   "HardwareModel": "N71mAP",
   "InternationalMobileEquipmentIdentity": "355697070274075",
+  "InternationalMobileEquipmentIdentity2": "355697070274075",
   "BatteryCurrentCapacity": 100,
   "BatteryIsCharging": true,
   "AmountDataAvailable": 1059500032,
