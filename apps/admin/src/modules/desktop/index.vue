@@ -7,11 +7,13 @@ const iStore = useSystemStore()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const { isFullscreen, toggle } = useFullscreen(rootRef)
 
-const store = useServiceStore()
+const serviceStore = useServiceStore()
+const levelStore = useLevelStore()
 
 await Promise.all([
-  store.getItems(),
-  store.getGroups(),
+  serviceStore.getItems(),
+  serviceStore.getGroups(),
+  levelStore.getList(),
 ])
 </script>
 

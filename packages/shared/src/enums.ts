@@ -26,6 +26,29 @@ export const PAYMENT_STATUS_MAP: StatusMap = {
   [PAYMENT_STATUS.PAID]   : { color: 'success', label: '已支付' },
 }
 
+// Payment Method
+export enum PAYMENT_METHOD {
+  ADMIN = 5,
+  ALIPAY = 8,
+  WECHAT = 9,
+}
+
+// Submit Method
+export enum SUBMIT_METHOD {
+  NONE    = 0,
+  API     = 1,
+  DESKTOP = 2,
+  WECHAT  = 3,
+  WEB     = 4,
+}
+
+// API Type
+export enum API_TYPE {
+  REALTIME = 0,
+  DHRU     = 2,
+  CUSTOM   = 3,
+}
+
 // Shop
 export enum SHOP_NAME {
   CREDIT = 1,

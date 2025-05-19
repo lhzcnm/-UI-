@@ -1,8 +1,5 @@
 import type { ServiceField, ServiceFieldCreateParams, ServiceGroupCreateParams, ServiceCreateParams, UnlockCreateParams, Unlock } from '@/inters/services'
-import type { IList } from '@3un/shared'
-import type { InjectionKey } from "vue"
-
-type IK<T> = InjectionKey<T>
+import type { IList, IK } from '@3un/shared'
 
 // Service
 export const SERVICE_STORE: IK<ServiceStore> = Symbol('service')

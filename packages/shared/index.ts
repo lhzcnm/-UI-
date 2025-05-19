@@ -22,3 +22,4 @@ export interface IList<T> {
 export type FormMode = 'create' | 'update'
 
 export type WithId<T, ID extends string> = Partial<T> & { [key in ID]: number }
+export type IK<T> = InjectionKey<T>

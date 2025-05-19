@@ -5,7 +5,6 @@ import { GROUP_STORE } from '../utils'
 import type { FormMode } from '@3un/shared'
 
 import { createServiceGroup, updateServiceGroup } from '@/api/services'
-import { zServiceGroup } from '@/inters/services'
 
 const store = inject(GROUP_STORE)!
 const options = {
@@ -36,8 +35,7 @@ function handleCreate() {
   const response = createServiceGroup(store.formBase)
 
   response.then((data) => {
-    const item = zServiceGroup.parse(data)
-    serviceStore.groups.push(item)
+    serviceStore.groups.push(data)
     store.visibleBase = false
   })
 

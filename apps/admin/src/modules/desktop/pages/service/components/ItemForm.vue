@@ -5,7 +5,6 @@ import { SERVICE_STORE } from '../utils'
 import type { FormMode } from '@3un/shared'
 
 import { createService, deleteService, updateService } from '@/api/services'
-import { zService } from '@/inters/services'
 
 const store = inject(SERVICE_STORE)!
 const options = {
@@ -36,8 +35,7 @@ function handleCreate() {
   const response = createService(store.formBase)
 
   response.then((data) => {
-    const item = zService.parse(data)
-    serviceStore.items.push(item)
+    serviceStore.items.push(data)
     store.visibleBase = false
   })
 
