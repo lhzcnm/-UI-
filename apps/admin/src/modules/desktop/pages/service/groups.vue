@@ -31,6 +31,7 @@ function openCreate() {
       <XTable
         :data="serviceStore.groups"
         :columns="columns"
+        row-key="categoryId"
         class="border h-[calc(100vh-8.75rem)]"
       />
     </div>

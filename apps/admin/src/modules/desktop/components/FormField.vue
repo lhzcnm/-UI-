@@ -37,7 +37,7 @@ const style = tv({
     },
     required: {
       true: {
-        title: 'before:content-[\'*\'] before:text-rose-500 before:text-sm'
+        title: "before:content-['*'] before:text-rose-500 before:text-sm"
       }
     }
   }

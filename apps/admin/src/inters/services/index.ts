@@ -4,6 +4,7 @@ import type { Service } from './items'
 export * from './items'
 export * from './groups'
 export * from './fields'
+export * from './unlock'
 
 export interface ServiceDetail extends ServiceGroup {
   children: Service[]

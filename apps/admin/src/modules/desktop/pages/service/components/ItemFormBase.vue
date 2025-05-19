@@ -69,7 +69,7 @@ const store = useServiceStore()
 
     <FormField
       label="处理时间"
-      description="1-15s、5min、24h、3 days"
+      description="服务预计处理时间"
       required
     >
       <XInput
@@ -79,7 +79,7 @@ const store = useServiceStore()
     </FormField>
     <FormField
       label="处理时间(英文)"
-      description="1-15s、5min、24h、3 days"
+      description="服务预计处理时间"
       required
     >
       <XInput

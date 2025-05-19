@@ -16,7 +16,7 @@ export const columns: XColDef<ServiceField> = [
   {
     key: 'service',
     title: '服务',
-    width: 500,
+    minWidth: 280,
     render(_, row) {
       const service = serviceStore.itemMap.get(row.serviceId)!
       if (!service) return '服务不存在'
@@ -84,7 +84,7 @@ export const columns: XColDef<ServiceField> = [
   {
     key: 'action',
     title: '操作',
-    minWidth: 88,
+    width: 154,
     fixed: 'right',
     render: (_, row, index) => {
       return h(FieldAction, { row, index })

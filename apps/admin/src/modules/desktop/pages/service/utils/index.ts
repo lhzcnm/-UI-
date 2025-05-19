@@ -1,10 +1,10 @@
-import type { ServiceField, ServiceFieldCreateParams, ServiceGroupCreateParams, ServiceCreateParams } from '@/inters/services'
+import type { ServiceField, ServiceFieldCreateParams, ServiceGroupCreateParams, ServiceCreateParams, UnlockCreateParams, Unlock } from '@/inters/services'
 import type { IList } from '@3un/shared'
 import type { InjectionKey } from "vue"
 
 type IK<T> = InjectionKey<T>
 
-// 服务
+// Service
 export const SERVICE_STORE: IK<ServiceStore> = Symbol('service')
 export interface ServiceStore {
   formBase: ServiceCreateParams
@@ -14,11 +14,11 @@ export interface ServiceStore {
 }
 
 interface ServiceSearch {
-  categoryId: number
+  categoryId: number | undefined
   keyword: string
 }
 
-// 服务组
+// ServiceGroup
 export const GROUP_STORE: IK<ServiceGroupStore> = Symbol('group')
 export interface ServiceGroupStore {
   formBase: ServiceGroupCreateParams
@@ -26,7 +26,7 @@ export interface ServiceGroupStore {
   index: number | undefined
 }
 
-// 服务字段
+// ServiceField
 export const FIELD_STORE: IK<ServiceFieldStore> = Symbol('field')
 export interface ServiceFieldStore {
   fields: IList<ServiceField>
@@ -37,4 +37,14 @@ export interface ServiceFieldStore {
   refresh: boolean
   page: number
   limit: number
+}
+
+// Unlock
+export const UNLOCK_STORE: IK<UnlockStore> = Symbol('unlock')
+export interface UnlockStore {
+  unlocks: Unlock[]
+  formBase: UnlockCreateParams
+  visibleBase: boolean
+  visibleConvert: boolean
+  index: number | undefined
 }

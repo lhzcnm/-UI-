@@ -6,6 +6,7 @@ import { GROUP_STORE } from '../utils'
 
 interface GroupActionProps {
   row: ServiceGroup
+  index: number
 }
 
 const props = defineProps<GroupActionProps>()
@@ -33,19 +34,14 @@ function handleDelete() {
 
   const id = props.row.categoryId
   deleteServiceGroup(id).then(() => {
-    const idx = serviceStore.groups
-      .findIndex(item => item.categoryId === id)
-
-    serviceStore.groups.splice(idx, 1)
+    serviceStore.groups.splice(props.index, 1)
     store.visibleBase = false
   })
 }
 
 function handleUpdate() {
   store.formBase = zServiceGroup.parse(props.row)
-  store.index = serviceStore.groups
-    .findIndex(item => item.categoryId === props.row.categoryId)
-
+  store.index = props.index
   store.visibleBase = true
 }
 </script>

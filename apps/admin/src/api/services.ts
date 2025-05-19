@@ -1,6 +1,6 @@
-import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList } from '@/inters/services'
+import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams } from '@/inters/services'
 
-import { zService, zServiceField, zServiceGroup } from '@/inters/services'
+import { zService, zServiceField, zServiceGroup, zUnlock } from '@/inters/services'
 import http from '@/utils/http'
 
 // service
@@ -70,4 +70,27 @@ export const updateServiceField: ServiceFieldUpdateFn = async (body) => {
 type ServiceFieldDeleteFn = (data: number[]) => Promise<void>
 export const deleteServiceField: ServiceFieldDeleteFn = async (data) => {
   await http.delete(`/services/field`, { data })
+}
+
+// unlock
+type UnlockListFn = () => Promise<Unlock[]>
+export const getUnlockList: UnlockListFn = async () => {
+  const { data } = await http.get<Unlock[]>('/recommend')
+  return data.map((item) => zUnlock.parse(item))
+}
+
+type UnlockCreateFn = (body: UnlockCreateParams) => Promise<Unlock>
+export const createUnlock: UnlockCreateFn = async (body) => {
+  const { data } = await http.post('/recommend', body)
+  return zUnlock.parse(data)
+}
+
+type UnlockUpdateFn = (body: UnlockUpdateParams) => Promise<number>
+export const updateUnlock: UnlockUpdateFn = async (body) => {
+  return (await http.put('/recommend', body)).data
+}
+
+type UnlockDeleteFn = (id: number) => Promise<void>
+export const deleteUnlock: UnlockDeleteFn = async (id) => {
+  await http.delete(`/recommend/${id}`)
 }

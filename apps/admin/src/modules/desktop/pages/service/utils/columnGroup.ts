@@ -74,6 +74,6 @@ export const columns: XColDef<ServiceGroup> = [
     title: '操作',
     width: 88,
     fixed: 'right',
-    render: (_, row) => h(GroupAction, { row })
+    render: (_, row, index) => h(GroupAction, { row, index })
   }
 ]

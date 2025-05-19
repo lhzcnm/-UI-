@@ -77,7 +77,7 @@ function handleDelete() {
   <div>
     <section class="flex justify-between p-3 border-b">
       <div class="flex space-x-2">
-        <SelectService v-model="serviceId" clearable ui-trigger="w-64" />
+        <SelectService v-model="serviceId" clearable ui-trigger="w-56" />
         <XButton icon="lucide:circle-plus" label="新增" @click="openCreate" />
         <XButton color="danger" icon="lucide:trash" label="批量删除" @click="handleDelete" />
       </div>

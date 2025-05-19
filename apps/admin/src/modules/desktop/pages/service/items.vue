@@ -11,8 +11,8 @@ const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
   formBase: zServiceForm.parse({}),
   formSearch: {
-    categoryId: +(route.query.cid as string),
-    keyword: (route.query.id as string) || '',
+    categoryId: undefined,
+    keyword: '',
   },
   visibleBase: false,
   index: undefined,
@@ -24,9 +24,10 @@ watch(
   () => route.query,
   () => {
     const { cid, id } = route.query
-    store.formSearch.categoryId = +(cid as string)
+    store.formSearch.categoryId = cid ? +cid : undefined
     store.formSearch.keyword = (id as string) || ''
   },
+  { immediate: true }
 )
 
 const displayItems = computed(() => {
@@ -34,7 +35,7 @@ const displayItems = computed(() => {
   let { categoryId, keyword } = store.formSearch
   keyword = keyword.trim().toLowerCase()
 
-  if (categoryId) {
+  if (categoryId !== undefined) {
     items = items.filter(item => item.categoryId === categoryId)
   }
 

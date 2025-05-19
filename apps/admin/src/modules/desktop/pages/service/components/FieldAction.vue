@@ -29,6 +29,6 @@ function handleDelete() {
 </script>
 
 <template>
-  <XButton icon="lucide:pencil" size="sm" label="编辑" @click="openUpdate" />
+  <XButton icon="lucide:edit" size="sm" label="编辑" @click="openUpdate" />
   <XButton icon="lucide:trash" size="sm" color="danger" label="删除" @click="handleDelete" />
 </template>

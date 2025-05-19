@@ -39,5 +39,6 @@ declare module 'vue' {
     XSelectItem: typeof import('@3un/ui')['XSelectItem']
     XSwitch: typeof import('@3un/ui')['XSwitch']
     XTable: typeof import('@3un/ui')['XTable']
+    XTextarea: typeof import('@3un/ui')['XTextarea']
   }
 }
