@@ -33,6 +33,12 @@ export function useCountdown({
     startTime = store
   })
 
+  onBeforeUnmount(() => {
+    if (timerRef.value) {
+      window.clearInterval(timerRef.value)
+    }
+  })
+
   watch(count, (newCount) => {
     if (newCount <= 0) return clear()
     timerRef.value = window.setTimeout(() => count.value--, 1000)
@@ -42,12 +48,6 @@ export function useCountdown({
     if (timerRef.value) window.clearInterval(timerRef.value)
     sessionStorage.removeItem(storageKey)
   }
-
-  onBeforeUnmount(() => {
-    if (timerRef.value) {
-      window.clearInterval(timerRef.value)
-    }
-  })
 
   return {
     count,

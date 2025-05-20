@@ -1,5 +1,6 @@
 // GET /info
 export interface DeviceInfo {
+  DeviceID: number
   DeviceName: string
   DeviceColor: string
   DeviceClass: string
@@ -55,6 +56,24 @@ export interface DeviceInfo {
     AccountNames: string[]
     Sources: string[]
   }
+}
+
+export interface DeviceForm {
+  SerialNumber: string
+  InternationalMobileEquipmentIdentity: string
+  ModelNumber: string
+  RegionInfo: string
+  WirelessBoardSerialNumber: string
+  ProductVersion: string
+  BuildVersion: string
+  UniqueChipID: string
+  UniqueDeviceID: string
+  
+  ActivationState: string
+  NetworkLock: string
+  ActivationLock: string
+  iCloud: string
+  CPU: string
 }
 
 // GET /battery

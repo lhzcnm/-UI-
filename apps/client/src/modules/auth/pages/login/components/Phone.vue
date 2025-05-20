@@ -17,7 +17,7 @@ async function sendCaptcha() {
   const validRule = [{ rule: !!form.phone, message: VERIFY_MSG.PHONE }]
   if (!validate(validRule) || isRunning.value) return
 
-  authApi.sms(form.phone)
+  await authApi.sms(form.phone)
   startCountdown()
 }
 

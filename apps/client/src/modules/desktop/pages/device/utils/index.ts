@@ -1,5 +1,5 @@
+import type { DeviceInfo, BatteryInfo, DeviceForm } from "../types"
 import type { InjectionKey } from "vue"
-import type { DeviceInfo, BatteryInfo } from "../types"
 
 export const DEVICE_STORE: InjectionKey<DeviceStore> = Symbol('deviceStore')
 
@@ -11,15 +11,18 @@ export enum ConnStatus {
 }
 
 export interface DeviceStore {
-  ws: WebSocket | null
-  status: ConnStatus
-  info: DeviceInfo
-  screenshot: string
+  deviceChipMap: Map<string, DeviceChip>
+  deviceMap: Map<string, DeviceInfo>
+  infoMap: Map<string, DeviceForm>
   battery: BatteryInfo
-  deviceChip: {
-    Name: string
-    Chip: string
-  }
+  screenshot: string
+  status: ConnStatus
+  selectedDevice: string
+}
+
+interface DeviceChip {
+  Name: string
+  Chip: string
 }
 
 export const deviceConfig = {

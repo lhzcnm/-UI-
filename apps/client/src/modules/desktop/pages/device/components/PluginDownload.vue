@@ -18,9 +18,7 @@ import { Icon } from '@iconify/vue'
         如果插件未运行，请先启动插件，再刷新页面。<br>
         如果插件未安装，请点击下方按钮下载安装插件。
       </p>
-      <XButton
-        icon="lucide:arrow-down-to-line"
-      >
+      <XButton icon="lucide:arrow-down-to-line">
         下载插件
       </XButton>
     </div>

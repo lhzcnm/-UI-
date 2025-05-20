@@ -3,16 +3,16 @@ import { DEVICE_STORE } from '../utils'
 
 const store = inject(DEVICE_STORE)!
 const diskInfo = computed(() => {
-  const { TotalDiskCapacity, TotalSystemCapacity, TotalDataCapacity, AmountDataAvailable } = store.info
+  const info = store.deviceMap.get(store.selectedDevice)!
   return {
-    totalDiskCapacity: formatFileSize(TotalDiskCapacity),
-    totalSystemCapacity: formatFileSize(TotalSystemCapacity),
-    totalDataCapacity: formatFileSize(TotalDataCapacity),
-    amountDataAvailable: formatFileSize(AmountDataAvailable),
-    totalDiskCapacityPercentage: getPercentage(TotalDiskCapacity, TotalDiskCapacity),
-    totalSystemCapacityPercentage: getPercentage(TotalSystemCapacity, TotalDiskCapacity),
-    totalDataCapacityPercentage: getPercentage(TotalDataCapacity, TotalDiskCapacity),
-    amountDataAvailablePercentage: getPercentage(AmountDataAvailable, TotalDiskCapacity),
+    totalDiskCapacity: formatFileSize(info.TotalDiskCapacity),
+    totalSystemCapacity: formatFileSize(info.TotalSystemCapacity),
+    totalDataCapacity: formatFileSize(info.TotalDataCapacity),
+    amountDataAvailable: formatFileSize(info.AmountDataAvailable),
+    totalDiskCapacityPercentage: getPercentage(info.TotalDiskCapacity, info.TotalDiskCapacity),
+    totalSystemCapacityPercentage: getPercentage(info.TotalSystemCapacity, info.TotalDiskCapacity),
+    totalDataCapacityPercentage: getPercentage(info.TotalDataCapacity, info.TotalDiskCapacity),
+    amountDataAvailablePercentage: getPercentage(info.AmountDataAvailable, info.TotalDiskCapacity),
   }
 })
 

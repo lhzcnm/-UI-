@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { DEVICE_STORE } from '../utils'
-import type { DeviceInfo } from '../types'
 
 const store = inject(DEVICE_STORE)!
 
 const batteryInfo = computed(() => {
-  const info = store.info as DeviceInfo
+  const info = store.deviceMap.get(store.selectedDevice)!
   return {
     capacity: info.BatteryCurrentCapacity,
     isCharging: info.BatteryIsCharging,

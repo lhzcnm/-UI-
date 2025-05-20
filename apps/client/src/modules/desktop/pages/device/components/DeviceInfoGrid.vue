@@ -2,45 +2,67 @@
 import { DEVICE_STORE, deviceConfig } from '../utils'
 import http from '@/utils/http'
 
+import { tv } from 'tailwind-variants'
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import { Icon } from '@iconify/vue'
 
 const store = inject(DEVICE_STORE)!
+const uStore = useUserStore()
 
-const { copy, copied } = useClipboard()
-const isActivated = ref(store.info.ActivationState === 'Activated')
-watch(copied, (val) => val && toast.success('复制成功'))
+const { copy } = useClipboard({ legacy: true })
+const style = tv({
+  slots: {
+    label: 'inline-block w-20 text-muted-foreground',
+    value: 'cursor-pointer hover:text-primary active:text-primary/80',
+  },
+})
+
+const device = computed(() => store.deviceMap.get(store.selectedDevice)!)
+const info = computed(() => store.infoMap.get(store.selectedDevice)!)
+
+const isActivated = ref(device.value.ActivationState === 'Activated')
 
 const loadings = reactive({
   networkLock: false,
   activationLock: false,
 })
 
-const queryStore = reactive({
-  networkLock: '--',
-  activationLock: '--',
-})
-
 async function handleActivation() {
   const suffix = isActivated.value ? 'deactivate' : 'activation'
-  await fetch(`${deviceConfig.api}/${suffix}`)
+  const [_, uniqueId] = store.selectedDevice.split(':')
+  
+  await fetch(`${deviceConfig.api}/${suffix}/${uniqueId}`)
   isActivated.value = !isActivated.value
+  
+  const info = store.infoMap.get(store.selectedDevice)!
+  info.ActivationState = isActivated.value ? '已激活' : '未激活'
 }
 
 function handleNetworkLock() {
   loadings.networkLock = true
   const response = http.post('/device/query', {
-    imei: store.info.InternationalMobileEquipmentIdentity,
-    imei2: store.info.InternationalMobileEquipmentIdentity2,
-    sn: store.info.SerialNumber,
-    serviceId: 9999,
+    imei: device.value.InternationalMobileEquipmentIdentity,
+    imei2: device.value.InternationalMobileEquipmentIdentity2,
+    sn: device.value.SerialNumber,
+    serviceId: 1160,
     type: 'NetworkLock',
   })
 
   response.then(({ data }) => {
-    const status = data === 'ON' ? '开启' : '关闭'
-    queryStore.networkLock = `${data} ${status}`
+    const options = {
+      Unlocked: '无锁',
+      Locked: '有锁',
+      Lost: '丢失',
+      blocked: '不允许激活设备',
+      TryMeid: '需要重试'
+    }
+
+    const status = options[data as keyof typeof options]
+    const info = store.infoMap.get(store.selectedDevice)!
+    info.NetworkLock = `${data}(${status})`
+
+    uStore.updateCredit()
   })
 
   response.finally(() => {
@@ -51,103 +73,104 @@ function handleNetworkLock() {
 function handleActivationLock() {
   loadings.activationLock = true
   const response = http.post('/device/query', {
-    imei: store.info.InternationalMobileEquipmentIdentity,
-    imei2: store.info.InternationalMobileEquipmentIdentity2,
-    sn: store.info.SerialNumber,
-    serviceId: 8888,
+    imei: device.value.InternationalMobileEquipmentIdentity,
+    imei2: device.value.InternationalMobileEquipmentIdentity2,
+    sn: device.value.SerialNumber,
+    serviceId: 1161,
     type: 'ActivationLock',
   })
 
   response.then(({ data }) => {
-    const status = data === 'ON' ? '开启' : '关闭'
-    queryStore.activationLock = `${data} ${status}`
+    let status = '未知错误'
+    if (data === '开启') status = 'ON'
+    else if (data === '关闭') status = 'OFF'
+
+    const info = store.infoMap.get(store.selectedDevice)!
+    info.ActivationLock = `${status}(${data})`
+    uStore.updateCredit()
   })
 
   response.finally(() => {
     loadings.activationLock = false
   })
 }
+
+async function cp(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const text = target.textContent
+
+  if (text && text.trim()) {
+    await copy(text.trim())
+    toast.success('复制成功')
+  }
+}
+
+const b = style()
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-12 p-4 bg-card">
-    <div class="space-y-1 whitespace-nowrap">
+  <div class="flex gap-12 p-4 bg-card whitespace-nowrap">
+    <div class="flex-1 space-y-1">
       <div>
-        <span class="inline-block w-20 text-muted-foreground">序列号</span>
-        <span class="cursor-pointer hover:text-primary" @click="copy(store.info.SerialNumber)">
-          {{ store.info.SerialNumber }}
+        <span :class="b.label()">序列号</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.SerialNumber }}
         </span>
       </div>
       <div>
-        <span class="inline-block w-20 text-muted-foreground">串号</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(store.info.InternationalMobileEquipmentIdentity)"
-        >
-          {{ store.info.InternationalMobileEquipmentIdentity }}
+        <span :class="b.label()">串号</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.InternationalMobileEquipmentIdentity }}
         </span>
       </div>
       <div>
-        <span class="inline-block w-20 text-muted-foreground">型号号码</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(`${store.info.ModelNumber} ${store.info.RegionInfo}`)"
-        >
-          {{ store.info.ModelNumber }} {{ store.info.RegionInfo }}
+        <span :class="b.label()">型号号码</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.ModelNumber }} {{ info.RegionInfo }}
         </span>
       </div>
       <div>
-        <span class="inline-block w-20 text-muted-foreground">主板序号</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(store.info.WirelessBoardSerialNumber)"
-        >
-          {{ store.info.WirelessBoardSerialNumber }}
+        <span :class="b.label()">主板序号</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.WirelessBoardSerialNumber }}
         </span>
       </div>
       <div>
-        <span class="inline-block w-20 text-muted-foreground">系统版本</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(`${store.info.ProductVersion} (${store.info.BuildVersion})`)"
-        >
-          {{ store.info.ProductVersion }} ({{ store.info.BuildVersion }})
+        <span :class="b.label()">系统版本</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.ProductVersion }} ({{ info.BuildVersion }})
         </span>
       </div>
       <div>
-        <span class="inline-block w-20 text-muted-foreground">ECID</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(store.info.UniqueChipID.toString())"
-        >
-          {{ store.info.UniqueChipID }}
+        <span :class="b.label()">ECID</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.UniqueChipID }}
         </span>
       </div>
       <div>
-        <span class="inline-block w-20 text-muted-foreground">UDID</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(store.info.UniqueDeviceID)"
-        >
-          {{ store.info.UniqueDeviceID }}
+        <span :class="b.label()">UDID</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.UniqueDeviceID }}
         </span>
       </div>
     </div>
 
-    <div class="space-y-1 whitespace-nowrap">
+    <div class="flex-1 space-y-1">
       <div class="flex items-center">
-        <span class="inline-block w-20 text-muted-foreground">激活状态</span>
+        <span :class="b.label()">激活状态</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>{{ isActivated ? '已激活' : '未激活' }}</span>
+          <span :class="b.value()" @click="cp">
+            {{ info.ActivationState }}
+          </span>
           <button class="ml-2 text-primary" @click="handleActivation">
             {{ isActivated ? '反激活' : '激活' }}
           </button>
         </div>
       </div>
       <div class="flex items-center">
-        <span class="inline-block w-20 text-muted-foreground">网络锁</span>
+        <span :class="b.label()">网络锁</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>{{ queryStore.networkLock }}</span>
+          <span :class="b.value()" @click="cp">{{ info.NetworkLock }}</span>
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary"
             :disabled="loadings.networkLock"
@@ -159,9 +182,9 @@ function handleActivationLock() {
         </div>
       </div>
       <div class="flex items-center">
-        <span class="inline-block w-20 text-muted-foreground">激活锁</span>
+        <span :class="b.label()">激活锁</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>{{ queryStore.activationLock }}</span>
+          <span :class="b.value()" @click="cp">{{ info.ActivationLock }}</span>
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary"
             :disabled="loadings.activationLock"
@@ -173,25 +196,24 @@ function handleActivationLock() {
         </div>
       </div>
       <div class="flex items-center">
-        <span class="inline-block w-20 text-muted-foreground">保修期限</span>
+        <span :class="b.label()">保修期限</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>--</span>
+          <span :class="b.value()" @click="cp">--</span>
           <button class="ml-2 text-primary">立即查询</button>
         </div>
       </div>
       <div class="flex items-center">
-        <span class="inline-block w-20 text-muted-foreground">iCloud</span>
+        <span :class="b.label()">iCloud</span>
         <div class="flex-1 flex items-center justify-between">
-          <span>{{ store.info.CloudBackupEnabled ? '已开启' : '未开启' }}</span>
+          <span :class="b.value()" @click="cp">
+            {{ info.iCloud }}
+          </span>
         </div>
       </div>
       <div class="flex items-center">
-        <span class="inline-block w-20 text-muted-foreground">CPU</span>
-        <span
-          class="cursor-pointer hover:text-primary"
-          @click="copy(store.deviceChip.Chip)"
-        >
-          {{ store.deviceChip.Chip }}
+        <span :class="b.label()">CPU</span>
+        <span :class="b.value()" @click="cp">
+          {{ info.CPU }}
         </span>
       </div>
     </div>

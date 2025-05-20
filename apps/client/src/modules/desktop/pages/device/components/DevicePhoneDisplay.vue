@@ -15,6 +15,7 @@ const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
 const store = inject(DEVICE_STORE)!
+const apiUrl = deviceConfig.api
 
 const deviceMockup = {
   iPhone8: {
@@ -51,7 +52,8 @@ const handleRestart = useThrottleFn(onRestart, 1000)
 const handleShutdown = useThrottleFn(onShutdown, 1000)
 
 const deviceImage = computed(() => {
-  const matched = store.deviceChip.Name.match(/^iPhone (\d+)/)
+  const chip = store.deviceChipMap.get(store.selectedDevice)
+  const matched = chip ? chip.Name.match(/^iPhone (\d+)/) : null
   return deviceMockup[getDeviceType(matched)]
 })
 
@@ -79,35 +81,21 @@ function getCurrentDate() {
 }
 
 async function onRestart() {
-  try {
-    await fetch(`${deviceConfig.api}/reboot`)
-    console.log('Restarting device...')
-  }
-  catch (error) {
-    console.error(error)
-  }
+  const [_, uniqueId] = store.selectedDevice.split(':')
+  await fetch(`${apiUrl}/reboot/${uniqueId}`)
 }
 
 async function onShutdown() {
-  try {
-    await fetch(`${deviceConfig.api}/shutdown`)
-    console.log('Shutting down device...')
-  }
-  catch (error) {
-    console.error(error)
-  }
+  const [_, uniqueId] = store.selectedDevice.split(':')
+  await fetch(`${apiUrl}/shutdown/${uniqueId}`)
 }
 
 async function onRefresh() {
-  try {
-    const response = await fetch(`${deviceConfig.api}/screenshot`)
-    const blob = await response.blob()
+  const [_, uniqueId] = store.selectedDevice.split(':')
+  const response = await fetch(`${apiUrl}/screenshot/${uniqueId}`)
+  const blob = await response.blob()
 
-    store.screenshot = URL.createObjectURL(blob)
-  }
-  catch (error) {
-    console.error(error)
-  }
+  store.screenshot = URL.createObjectURL(blob)
 }
 
 function handleImageLoad() {
@@ -151,7 +139,7 @@ function handleImageLoad() {
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>
           <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-3xl font-bold">{{ currentTime }}</div>
-          <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm">{{ currentDate }}</div>
+          <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm mt-2">{{ currentDate }}</div>
         </template>
       </div>
     </div>

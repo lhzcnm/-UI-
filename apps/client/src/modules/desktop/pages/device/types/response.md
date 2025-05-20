@@ -2,6 +2,7 @@
 
 ```json
 {
+  "DeviceID": 65,
   "DeviceName": "sanhe的iPhone",
   "DeviceColor": "#e4e7e8",
   "DeviceClass": "iPhone",
