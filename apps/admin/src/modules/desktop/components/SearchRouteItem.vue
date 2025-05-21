@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
+
 import type { SidebarMenuChild } from '@/utils/sidebar'
 
 interface RouteSearchItemProps {

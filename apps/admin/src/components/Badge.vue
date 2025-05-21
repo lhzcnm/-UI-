@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { twJoin } from 'tailwind-merge'
+
 interface BadgeProps {
   value: number
 }

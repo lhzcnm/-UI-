@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Breadcrumb from '@/components/Breadcrumb.vue'
 import SearchPlane from './SearchPlane.vue'
 
 import { Icon } from '@iconify/vue'

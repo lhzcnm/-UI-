@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { xconfirm } from '@3un/shared/confirm'
+
 import type { ServiceField } from '@/inters/services'
 import { zServiceFieldForm } from '@/inters/services'
 import { deleteServiceField } from '@/api/services'
@@ -18,8 +20,8 @@ function openUpdate() {
   store.visibleBase = true
 }
 
-function handleDelete() {
-  if (!window.confirm('确定删除该字段吗？')) return
+async function handleDelete() {
+  if (!await xconfirm('确定删除该字段吗？')) return
 
   deleteServiceField([props.row.id]).then(() => {
     store.fields.list.splice(props.index, 1)

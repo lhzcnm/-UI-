@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { xconfirm } from '@3un/shared/confirm'
+
 import type { Unlock } from '@/inters/services'
 import { zUnlockForm } from '@/inters/services'
 import { deleteUnlock } from '@/api/services'
@@ -18,8 +20,8 @@ function openUpdate() {
   store.visibleBase = true
 }
 
-function handleDelete() {
-  if (!window.confirm('确定删除该“推荐解锁服务”吗？')) return
+async function handleDelete() {
+  if (!await xconfirm('确定删除该“推荐解锁服务”吗？')) return
 
   deleteUnlock(props.row.id).then(() => {
     store.unlocks.splice(props.index, 1)

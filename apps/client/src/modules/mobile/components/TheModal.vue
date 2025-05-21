@@ -23,7 +23,7 @@ watch(visible, (value) => !value && emit('close'))
     <Transition name="fade-in">
       <div
         v-if="visible"
-        class="fixed top-0 bottom-0 left-0 right-0 z-50 bg-black/40"
+        class="fixed top-0 bottom-0 left-0 right-0 z-30 bg-black/40"
         @click="visible = false"
       />
     </Transition>
@@ -31,7 +31,7 @@ watch(visible, (value) => !value && emit('close'))
       <div
         v-if="visible"
         :class="twMerge(
-          'fixed left-0 right-0 bottom-0 z-50 will-change-transform',
+          'fixed left-0 right-0 bottom-0 z-30 will-change-transform',
           'h-[90%] bg-card rounded-t-[10px] overflow-y-auto',
           props.class,
         )"

@@ -4,6 +4,7 @@ import SearchServiceItem from './SearchServiceItem.vue'
 
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
+import { isNumeric } from '@3un/ui'
 
 import type { Service } from '@/inters/services'
 import type { SidebarMenuChild } from '@/utils/sidebar'
@@ -42,7 +43,7 @@ const options = computed<SearchOptions[]>(() => {
   if (!searchTerm) return rawOptions
 
   // service
-  if (!isNaN(Number(searchTerm)) && searchTerm.length <= 4) {
+  if (isNumeric(searchTerm) && searchTerm.length <= 4) {
     return getSearchOptions(searchTerm)
   }
 

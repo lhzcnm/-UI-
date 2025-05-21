@@ -16,8 +16,8 @@ export const zService = z.interface({
   packageTitle: z.string().default(''),
   packageTitleLocal: z.string().default(''),
 
-  mustRead: z.string().default(''),
-  mustReadLocal: z.string().default(''),
+  mustRead: z.string().nullable().default(null),
+  mustReadLocal: z.string().nullable().default(null),
 
   timeTaken: z.string().default(''),
   timeTakenLocal: z.string().default(''),

@@ -23,6 +23,7 @@ declare module 'vue' {
     SettingPlane: typeof import('./src/modules/desktop/components/SettingPlane.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SidebarItem: typeof import('./src/components/SidebarItem.vue')['default']
+    TheConfirm: typeof import('./src/components/TheConfirm.vue')['default']
     TheEditor: typeof import('./src/components/TheEditor.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']

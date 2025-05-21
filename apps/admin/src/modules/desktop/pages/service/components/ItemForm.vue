@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import ItemFormBase from './ItemFormBase.vue'
-import { SERVICE_STORE } from '../utils'
 
 import type { FormMode } from '@3un/shared'
+import { xconfirm } from '@3un/shared/confirm'
 
 import { createService, deleteService, updateService } from '@/api/services'
+import { SERVICE_STORE } from '../utils'
 
 const store = inject(SERVICE_STORE)!
 const options = {
@@ -60,8 +61,8 @@ function handleUpdate() {
   })
 }
 
-function handleDelete() {
-  if (!window.confirm('确定要删除该服务吗？')) return
+async function handleDelete() {
+  if (!await xconfirm('确定要删除该服务吗？')) return
 
   const item = serviceStore.items[store.index!]
   deleteService(item.packageId).then(() => {

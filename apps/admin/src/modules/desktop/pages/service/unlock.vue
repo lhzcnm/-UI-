@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import UnlockForm from './components/UnlockForm.vue'
 import UnlockConvert from './components/UnlockConvert.vue'
-import { columns } from './utils/columnUnlock'
 
 import { zUnlockForm } from '@/inters/services'
 import { getUnlockList } from '@/api/services'
 
-import type { UnlockStore } from './utils'
-import { UNLOCK_STORE } from './utils'
+import { UNLOCK_STORE, type UnlockStore } from './utils'
+import { columns } from './utils/columnUnlock'
 
 const store: UnlockStore = reactive({
   formBase: zUnlockForm.parse({}),

@@ -62,24 +62,18 @@ export type User = z.infer<typeof zUser>
 
 // Search
 export const zUserSearchForm = z.interface({
-  userId: z.number().nullable().default(null),
-  pricePlanId: z.number().nullable().default(null),
-  userName: z.string().default(''),
-  nickName: z.string().default(''),
-  winxOpenid: z.string().default(''),
+  userId: z.number().optional(),
+  planId: z.number().optional(),
+  username: z.string().optional(),
+  nickname: z.string().optional(),
+  openId: z.string().optional(),
 })
 
 export type UserSearchForm = z.infer<typeof zUserSearchForm>
 
 // List
 export type UserList = IList<User>
-export interface UserListParams extends IPage {
-  userId?: number
-  pricePlanId?: number
-  userName?: string
-  nickName?: string
-  winxOpenid?: string
-}
+export interface UserListParams extends IPage, UserSearchForm {}
 
 // Form
 export const zUserForm = zUser.omit({

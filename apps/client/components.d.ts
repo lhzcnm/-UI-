@@ -30,6 +30,7 @@ declare module 'vue' {
     ServiceItemCard: typeof import('./src/components/card/ServiceItemCard.vue')['default']
     SlideRight: typeof import('./src/modules/mobile/components/SlideRight.vue')['default']
     TheAvatar: typeof import('./src/components/TheAvatar.vue')['default']
+    TheConfirm: typeof import('./src/components/TheConfirm.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheModal: typeof import('./src/modules/mobile/components/TheModal.vue')['default']
     TheSidebar: typeof import('./src/modules/desktop/components/TheSidebar.vue')['default']

@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { xconfirm } from '@3un/shared/confirm'
+
 import type { ServiceGroup } from '@/inters/services'
 import { deleteServiceGroup } from '@/api/services'
 import { zServiceGroup } from '@/inters/services'
 import { GROUP_STORE } from '../utils'
-
 interface GroupActionProps {
   row: ServiceGroup
   index: number
@@ -29,8 +30,8 @@ function handleView() {
   })
 }
 
-function handleDelete() {
-  if (!window.confirm('确定要删除该服务吗？')) return
+async function handleDelete() {
+  if (!await xconfirm('确定要删除该服务吗？')) return
 
   const id = props.row.categoryId
   deleteServiceGroup(id).then(() => {

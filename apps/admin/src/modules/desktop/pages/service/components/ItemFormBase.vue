@@ -9,15 +9,8 @@ const store = useServiceStore()
 
 <template>
   <form class="divide-y" @submit.prevent>
-    <FormField
-      label="所在服务组"
-      description="选择要添加到的服务组"
-      required
-    >
-      <XSelect
-        v-model="form.categoryId"
-        placeholder="请选择服务组"
-      >
+    <FormField label="所在服务组" desc="选择要添加到的服务组" required>
+      <XSelect v-model="form.categoryId" placeholder="请选择服务组">
         <XSelectItem
           v-for="item in store.groups" :key="item.categoryId"
           :value="item.categoryId" :label="item.category"
@@ -25,84 +18,38 @@ const store = useServiceStore()
       </XSelect>
     </FormField>
 
-    <FormField
-      label="服务简写"
-      description="用于桌面端程序"
-      required
-    >
-      <XInput
-        v-model="form.tmpTitle"
-        placeholder="服务简写"
-      />
-    </FormField>
-    <FormField
-      label="服务名称"
-      description="服务完整的中文名称"
-      required
-    >
-      <XInput
-        v-model="form.packageTitle"
-        placeholder="服务中文名称"
-      />
-    </FormField>
-    <FormField
-      label="服务名称(英文)"
-      description="服务完整的英文名称"
-      required
-    >
-      <XInput
-        v-model="form.packageTitleLocal"
-        placeholder="服务英文名称"
-      />
+    <FormField label="服务简写" desc="用于桌面端程序" required>
+      <XInput v-model="form.tmpTitle" placeholder="服务简写" />
     </FormField>
 
-    <FormField
-      label="服务价格"
-      description="最低 0.01"
-      required
-    >
+    <FormField label="服务名称" desc="服务中文名称" required>
+      <XInput v-model="form.packageTitle" placeholder="服务中文名称" />
+    </FormField>
+
+    <FormField label="服务名称(英文)" desc="服务英文名称" required>
+      <XInput v-model="form.packageTitleLocal" placeholder="服务英文名称" />
+    </FormField>
+
+    <FormField label="服务价格" desc="最低 0.01" required>
       <XInputNumber
         v-model.number="form.packagePrice"
         :step="0.01" :min="0.01" :precision="2"
       />
     </FormField>
 
-    <FormField
-      label="处理时间"
-      description="服务预计处理时间"
-      required
-    >
-      <XInput
-        v-model="form.timeTaken"
-        placeholder="处理时间"
-      />
-    </FormField>
-    <FormField
-      label="处理时间(英文)"
-      description="服务预计处理时间"
-      required
-    >
-      <XInput
-        v-model="form.timeTakenLocal"
-        placeholder="处理时间EN"
-      />
+    <FormField label="处理时间" desc="服务预计处理时间" required>
+      <XInput v-model="form.timeTaken" placeholder="处理时间" />
     </FormField>
 
-    <FormField
-      label="排序"
-      description="值越大越靠前"
-    >
-      <XInputNumber
-        v-model.number="form.packageOrderBy"
-        :step="1"
-      />
+    <FormField label="处理时间(英文)" desc="服务预计处理时间" required>
+      <XInput v-model="form.timeTakenLocal" placeholder="处理时间EN" />
     </FormField>
 
-    <FormField
-      label="提交类型"
-      description="提交类型"
-      variant="vertical"
-    >
+    <FormField label="排序" desc="值越大越靠前">
+      <XInputNumber v-model.number="form.packageOrderBy" :step="1" />
+    </FormField>
+
+    <FormField label="提交类型" desc="提交类型" variant="vertical">
       <div class="flex space-x-6">
         <XRadio
           v-model="form.imeiFieldType"
@@ -130,14 +77,15 @@ const store = useServiceStore()
 
     <FormField
       label="服务说明"
-      description="中文服务说明"
+      desc="中文服务说明"
       :content-flex="false"
     >
       <XButton icon="lucide:edit">编辑</XButton>
     </FormField>
+
     <FormField
       label="服务说明EN"
-      description="英文服务说明"
+      desc="英文服务说明"
       :content-flex="false"
     >
       <XButton icon="lucide:edit">编辑</XButton>
@@ -145,7 +93,7 @@ const store = useServiceStore()
 
     <FormField
       label="重置价格"
-      description="所有用户恢复原价"
+      desc="所有用户恢复原价"
       :content-flex="false"
     >
       <XButton icon="lucide:database-backup" color="danger">重置</XButton>
@@ -153,7 +101,7 @@ const store = useServiceStore()
 
     <FormField
       label="禁止重复提交"
-      description="上一个 IMEI 订单未完成时，不允许重复的 IMEI 提交"
+      desc="不允许重复的 IMEI 提交"
       :content-flex="false"
     >
       <XSwitch v-model="form.duplicateImeiNotAllowed" />
@@ -161,7 +109,7 @@ const store = useServiceStore()
 
     <FormField
       label="公众号推送消息"
-      description="如果开启，公众号将推送订单结果给用户"
+      desc="如果开启，公众号将推送订单结果给用户"
       :content-flex="false"
     >
       <XSwitch v-model="form.pushMsg" />
@@ -169,7 +117,7 @@ const store = useServiceStore()
 
     <FormField
       label="解锁服务"
-      description="该服务是否为解锁服务"
+      desc="该服务是否为解锁服务"
       :content-flex="false"
     >
       <XSwitch v-model="form.isUnlock" />
@@ -177,23 +125,23 @@ const store = useServiceStore()
 
     <FormField
       label="推荐服务"
-      description="如果开启，将在订单结果下面显示"
+      desc="如果开启，将在订单结果下面显示"
       :content-flex="false"
     >
       <XSwitch v-model="form.testimonials" />
     </FormField>
 
     <FormField
-      label="首页推荐"
-      description="如果开启，将在首页显示"
       :content-flex="false"
+      label="首页推荐"
+      desc="如果开启，将在首页显示"
     >
       <XSwitch v-model="form.isHot" />
     </FormField>
 
     <FormField
       label="新服务推荐"
-      description="如果开启，将显示新服务标记"
+      desc="如果开启，将显示新服务标记"
       :content-flex="false"
     >
       <XSwitch v-model="form.isNew" />
@@ -201,7 +149,7 @@ const store = useServiceStore()
 
     <FormField
       label="禁用服务"
-      description="禁用后，用户看不到也不能提交订单"
+      desc="禁用后，用户看不到也不能提交订单"
       :content-flex="false"
     >
       <XSwitch v-model="form.disablePackage" />

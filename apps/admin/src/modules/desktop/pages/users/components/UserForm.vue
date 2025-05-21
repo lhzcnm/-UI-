@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import GroupFormBase from './groupFormBase.vue'
+import UserFormBase from './UserFormBase.vue'
 
 import type { FormMode } from '@3un/shared'
 
-import { createServiceGroup, updateServiceGroup } from '@/api/services'
-import { GROUP_STORE } from '../utils'
+import { USER_STORE } from '../utils'
+import { createUser, updateUser } from '@/api/users'
 
-const store = inject(GROUP_STORE)!
+const store = inject(USER_STORE)!
 const options = {
   create: {
-    title: '新增服务组',
+    title: '新增',
     submitText: '新增',
   },
   update: {
-    title: '编辑服务组',
+    title: '编辑',
     submitText: '保存',
   },
 }
@@ -21,7 +21,6 @@ const options = {
 const isCreate = computed(() => store.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
-const serviceStore = useServiceStore()
 const loading = ref(false)
 
 function handleSubmit() {
@@ -32,10 +31,11 @@ function handleSubmit() {
 }
 
 function handleCreate() {
-  const response = createServiceGroup(store.formBase)
+  loading.value = true
 
-  response.then((data) => {
-    serviceStore.groups.push(data)
+  const response = createUser(store.formBase)
+  response.then(() => {
+    store.refresh = !store.refresh
     store.visibleBase = false
   })
 
@@ -45,13 +45,14 @@ function handleCreate() {
 }
 
 function handleUpdate() {
-  const group = serviceStore.groups[store.index!]
-  const body = { ...store.formBase, categoryId: group.categoryId }
+  loading.value = true
 
-  const response = updateServiceGroup(body)
+  const user = store.users.list[store.index!]
+  const body = { ...store.formBase, userId: user.userId }
+  const response = updateUser(body)
 
   response.then(() => {
-    serviceStore.groups[store.index!] = body
+    store.refresh = !store.refresh
     store.visibleBase = false
   })
 
@@ -62,16 +63,16 @@ function handleUpdate() {
 </script>
 
 <template>
-  <XDialog
+  <XDrawer
     v-model="store.visibleBase"
-    :title="options[mode].title"
+    width="500px" :title="options[mode].title"
   >
-    <GroupFormBase v-model="store.formBase" />
+    <UserFormBase v-model="store.formBase" />
     <template #footer>
-      <div class="flex justify-end space-x-2 mt-4">
+      <div class="flex justify-end space-x-2 p-4 border-t">
         <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
         <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
       </div>
     </template>
-  </XDialog>
+  </XDrawer>
 </template>

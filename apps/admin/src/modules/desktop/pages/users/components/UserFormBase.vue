@@ -1,0 +1,103 @@
+<script setup lang="ts">
+import type { UserCreateParams } from '@/inters/users'
+
+const form = defineModel<UserCreateParams>({ required: true })
+const levelStore = useLevelStore()
+</script>
+
+<template>
+  <form class="divide-y" @submit.prevent>
+    <FormField label="会员等级" desc="会员等级">
+      <XSelect v-model="form.pricePlanId" placeholder="会员等级">
+        <XSelectItem
+          v-for="level in levelStore.levels" :key="level.pricePlanId"
+          :value="level.pricePlanId" :label="level.pricePlan"
+        />
+      </XSelect>
+    </FormField>
+
+    <FormField label="用户账号" desc="6-16位数字、字母、下划线" required>
+      <XInput v-model="form.userName" placeholder="用户账号" />
+    </FormField>
+
+    <FormField label="用户昵称" desc="用户昵称，同步微信名称" required>
+      <XInput v-model="form.nickName" placeholder="用户昵称" />
+    </FormField>
+
+    <FormField label="密码" desc="8-18位密码。至少要包含一位数字和字母，支持特殊字符" required>
+      <XInput v-model="form.userPassword" placeholder="密码" />
+    </FormField>
+
+    <FormField label="微信ID" desc="微信ID">
+      <XInput v-model="form.weiXinOpenid" placeholder="微信ID" />
+    </FormField>
+
+    <FormField label="邮箱" desc="邮箱地址">
+      <XInput v-model="form.userEmail" placeholder="邮箱" />
+    </FormField>
+
+    <FormField label="手机号" desc="11位手机号">
+      <XInput v-model="form.phone" placeholder="手机号" />
+    </FormField>
+
+    <FormField label="API白名单" desc="仅允许这些IP使用API">
+      <XTextarea v-model="form.ips" placeholder="每行仅限一个IP" rows="4" />
+    </FormField>
+
+    <FormField label="登录白名单" desc="仅允许这些IP登录">
+      <XTextarea v-model="form.ip" placeholder="每行仅限一个IP" rows="4" />
+    </FormField>
+
+    <FormField label="备注" desc="备注信息">
+      <XTextarea v-model="form.comments" placeholder="备注" />
+    </FormField>
+
+    <FormField
+      label="网站管理员"
+      desc="开启后，用户可以登录网站后台"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.role" :active-value="1" :inactive-value="0" />
+    </FormField>
+
+    <FormField
+      label="经销商"
+      desc="开启后，用户可以登录经销商后台"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.userType" />
+    </FormField>
+
+    <FormField
+      label="开通 API"
+      desc="开启后，用户可以使用 API 提交订单"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.allowApi" />
+    </FormField>
+
+    <FormField
+      label="推送消息"
+      desc="开启后，用户可以收到公众号推送消息"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.pushMsg" />
+    </FormField>
+
+    <FormField
+      label="允许欠费"
+      desc="开启后，用户可以欠费使用"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.allowNegativeCredits" />
+    </FormField>
+
+    <FormField
+      label="禁用"
+      desc="开启后，用户无法登录、无法使用"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.disableUser" />
+    </FormField>
+  </form>
+</template>

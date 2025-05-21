@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Unlock } from '@/inters/services'
-import { UNLOCK_STORE } from '../utils'
 import { updateUnlock } from '@/api/services'
+import { UNLOCK_STORE } from '../utils'
 
 const store = inject(UNLOCK_STORE)!
 

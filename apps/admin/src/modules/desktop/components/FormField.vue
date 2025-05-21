@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 
 interface FormFieldProps {
   label: string
-  description: string
+  desc: string
   required?: boolean
   contentFlex?: boolean
   variant?: 'vertical' | 'horizontal'
@@ -13,8 +13,8 @@ interface FormFieldProps {
 withDefaults(
   defineProps<FormFieldProps>(),
   {
+    desc: '',
     required: false,
-    description: '',
     contentFlex: true,
     variant: 'horizontal'
   }
@@ -50,12 +50,7 @@ const b = style()
   <div :class="b.base({ variant })">
     <div class="flex-1">
       <p :class="b.title({ required })">{{ label }}</p>
-      <span
-        v-if="variant === 'horizontal'"
-        :class="b.desc()"
-      >
-        {{ description }}
-      </span>
+      <span v-if="variant === 'horizontal'" :class="b.desc()">{{ desc }}</span>
     </div>
     <div :class="twJoin(contentFlex && 'flex-1')">
       <slot />

@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { zUserExtraInfo, zUserForm, zUserSearchForm } from '@/inters/users'
+import UserForm from './components/UserForm.vue'
+import UserSearch from './components/UserSearch.vue'
+
 import type { UserListParams } from '@/inters/users'
+import { zUserExtraInfo, zUserForm, zUserSearchForm } from '@/inters/users'
+import { getUsers } from '@/api/users'
 
 import type { UsersStore } from './utils'
-import { USER_STORE } from './utils'
 import { columns } from './utils/columnUser'
-import { getUsers } from '@/api/users'
+import { USER_STORE } from './utils'
 
 const store: UsersStore = reactive({
   users: { list: [], page: 1, total: 0, pageSize: 20 },
@@ -31,7 +34,11 @@ watch(
     () => store.refresh,
   ],
   ([pageValue, limitValue]) => {
-    getList({ page: pageValue, pageSize: limitValue })
+    getList({
+      page: pageValue,
+      pageSize: limitValue,
+      ...store.formSearch,
+    })
   },
   { immediate: true },
 )
@@ -43,14 +50,25 @@ function getList(params: UserListParams) {
   response.then((data) => store.users = data)
   response.finally(() => loading.value = false)
 }
+
+function openCreate() {
+  store.formBase = zUserForm.parse({})
+  store.index = undefined
+  store.visibleBase = true
+}
+
+function openSearch() {
+  store.formSearch = zUserSearchForm.parse({})
+  store.visibleSearch = true
+}
 </script>
 
 <template>
   <div>
     <section class="flex justify-between p-3 border-b">
       <div class="flex space-x-2">
-        <XButton label="筛选" />
-        <XButton color="success" label="新增用户" />
+        <XButton label="筛选" @click="openSearch" />
+        <XButton color="success" label="新增用户" @click="openCreate" />
       </div>
 
       <XPagination
@@ -77,5 +95,8 @@ function getList(params: UserListParams) {
         class="border h-[calc(100vh-8.75rem)]"
       />
     </div>
+
+    <UserForm />
+    <UserSearch />
   </div>
 </template>
