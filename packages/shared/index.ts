@@ -1,3 +1,5 @@
+import type { InjectionKey } from 'vue'
+
 // Http
 export type R<T> = Promise<CR<T>>
 export interface CR<T = any> {

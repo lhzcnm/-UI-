@@ -4,6 +4,7 @@ import http from '@/utils/http'
 
 import { tv } from 'tailwind-variants'
 import { useClipboard } from '@vueuse/core'
+import { xconfirm } from '@3un/shared/confirm'
 import { toast } from 'vue-sonner'
 import { Icon } from '@iconify/vue'
 
@@ -26,6 +27,7 @@ const isActivated = ref(device.value.ActivationState === 'Activated')
 const loadings = reactive({
   networkLock: false,
   activationLock: false,
+  warranty: false,
 })
 
 async function handleActivation() {
@@ -39,7 +41,9 @@ async function handleActivation() {
   info.ActivationState = isActivated.value ? '已激活' : '未激活'
 }
 
-function handleNetworkLock() {
+async function handleNetworkLock() {
+  if (!await checkFreecount(1160)) return
+
   loadings.networkLock = true
   const response = http.post('/device/query', {
     imei: device.value.InternationalMobileEquipmentIdentity,
@@ -70,7 +74,9 @@ function handleNetworkLock() {
   })
 }
 
-function handleActivationLock() {
+async function handleActivationLock() {
+  if (! await checkFreecount(1161)) return
+
   loadings.activationLock = true
   const response = http.post('/device/query', {
     imei: device.value.InternationalMobileEquipmentIdentity,
@@ -93,6 +99,36 @@ function handleActivationLock() {
   response.finally(() => {
     loadings.activationLock = false
   })
+}
+
+async function handleWarranty() {
+  if (!await checkFreecount(1162)) return
+
+  loadings.warranty = true
+  const response = http.post('/device/query', {
+    sn: device.value.SerialNumber,
+    serviceId: 1162,
+    type: 'Warranty',
+  })
+
+  response.then(({ data }) => {
+    const info = store.infoMap.get(store.selectedDevice)!
+    info.Warranty = data
+    uStore.updateCredit()
+  })
+
+  response.finally(() => {
+    loadings.warranty = false
+  })
+}
+
+async function checkFreecount(id: number) {
+  const { data } = await http.get(`/device/query/${id}`)
+  if (data.freeCount > 0) return true
+  return await xconfirm`
+    当前账户该服务已无免费查询次数<br>
+    如果继续查询，将扣除 ${data.price} 积分
+  `
 }
 
 async function cp(event: MouseEvent) {
@@ -198,8 +234,15 @@ const b = style()
       <div class="flex items-center">
         <span :class="b.label()">保修期限</span>
         <div class="flex-1 flex items-center justify-between">
-          <span :class="b.value()" @click="cp">--</span>
-          <button class="ml-2 text-primary">立即查询</button>
+          <span :class="b.value()" @click="cp">{{ info.Warranty }}</span>
+          <button
+            class="flex items-center space-x-1.5 ml-2 text-primary"
+            :disabled="loadings.warranty"
+            @click="handleWarranty"
+          >
+            <Icon v-if="loadings.warranty" icon="lucide:loader-2" class="animate-spin" />
+            <span>{{ loadings.warranty ? '查询中...' : '立即查询' }}</span>
+          </button>
         </div>
       </div>
       <div class="flex items-center">

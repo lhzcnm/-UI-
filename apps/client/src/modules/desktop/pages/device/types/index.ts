@@ -72,6 +72,7 @@ export interface DeviceForm {
   ActivationState: string
   NetworkLock: string
   ActivationLock: string
+  Warranty: string
   iCloud: string
   CPU: string
 }

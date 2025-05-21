@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     "./presets": "./src/presets.ts",
+    "./confirm": "./src/confirm.ts",
     "./theme": "./src/theme.ts",
     "./enums": "./src/enums.ts",
     ".": "./index.ts"

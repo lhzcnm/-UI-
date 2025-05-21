@@ -13,6 +13,7 @@ import type { DeviceStore } from './utils'
 import type { BatteryInfo, DeviceInfo } from './types'
 import { DEVICE_STORE, ConnStatus, deviceConfig } from './utils'
 import devicesIos from '@/assets/devices-ios.json'
+import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
   deviceChipMap: new Map(),
@@ -36,11 +37,16 @@ const visible = computed(() => ({
 
 const { data } = useWebSocket(
   deviceConfig.ws,
-  { heartbeat: { interval: 30000 } },
+  {
+    heartbeat: {
+      interval: 30000,
+      pongTimeout: 3000,
+      responseMessage: 'pong',
+    },
+  },
 )
 
 watch(data, (value) => {
-  if (value === 'pong') return
   if (value.startsWith('disconnected:')) {
     handleDisconnect(value)
     return
@@ -68,10 +74,12 @@ watch(data, (value) => {
     UniqueDeviceID: data.UniqueDeviceID,
     ActivationState: data.ActivationState ? '已激活' : '未激活',
     iCloud: data.CloudBackupEnabled ? '已开启' : '未开启',
+    Warranty: '--',
     NetworkLock: '--',
     ActivationLock: '--',
   })
-
+  
+  http.post('/device/save', data)
   if (store.deviceMap.size === 1) {
     store.status = ConnStatus.CONNECTED
     store.selectedDevice = key
@@ -115,7 +123,7 @@ async function getBatteryInfo(id: string) {
 }
 
 function handleDisconnect(value: string) {
-  const deviceId = value.split(':')[0]
+  const deviceId = value.split(':')[1]
 
   for (const key of store.deviceMap.keys()) {
     const keyPrefix = key.split(':')[0]

@@ -4,23 +4,24 @@ import PickService from './components/PickService.vue'
 
 import { getCommonList } from '@/utils'
 
-const sStore = useServiceStore()
-const store = useSettingStore()
+const store = useServiceStore()
+const iStore = useSettingStore()
 
 await Promise.all([
-  sStore.getServices(),
-  store.getSettings(),
+  store.getServices(),
+  iStore.getSettings(),
 ])
 
 const router = useRouter()
-const visible = ref(false)
-const current = ref<ServiceDetail>({
-  id: 0,
-  title: '',
-  children: [],
-})
 
-const commonList = getCommonList(sStore.services)
+const defaultGroup = { id: 0, title: '', children: [] }
+const current = ref<ServiceDetail>(defaultGroup)
+const visible = ref(false)
+
+const { popupAnnc, enablePopupAnnc } = iStore.settings
+const visiblePopup = ref(enablePopupAnnc)
+
+const commonList = getCommonList(store.services)
 
 function openGroupDialog(group: ServiceDetail) {
   current.value = group
@@ -43,14 +44,14 @@ function handleServiceItemClick(event: MouseEvent) {
 <template>
   <div class="p-4">
     <XBulletinBoard
-      v-if="store.settings.enableScrollingAnnc"
-      class="mb-4" :text="store.settings.scrollingAnnc"
+      v-if="iStore.settings.enableScrollingAnnc"
+      class="mb-4" :text="iStore.settings.scrollingAnnc"
       :style="{ '--bg': 'hsl(var(--card))' }"
     />
 
     <section class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]">
       <ServiceGroupCard
-        v-for="group in sStore.details"
+        v-for="group in store.details"
         :key="group.id" :group="group"
         @click="openGroupDialog(group)"
       />
@@ -74,5 +75,18 @@ function handleServiceItemClick(event: MouseEvent) {
       v-model="visible"
       :group="current"
     />
+
+    <XDialog
+      v-model="visiblePopup" title="公告"
+      :text="popupAnnc" :close-btn="false"
+    >
+      <template #footer>
+        <div class="flex justify-end">
+          <XButton @click="visiblePopup = false">
+            朕知道了
+          </XButton>
+        </div>
+      </template>
+    </XDialog>
   </div>
 </template>

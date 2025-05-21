@@ -15,9 +15,6 @@ await Promise.all([
   uStore.getInfo(),
 ])
 
-const { popupAnnc, enablePopupAnnc, enableTricket } = iStore.settings
-const visible = ref(enablePopupAnnc)
-
 const menus = [
   { label: '首页',    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
   { label: '订单查询', path: '/submit', icon: 'iconoir:atom' },
@@ -34,7 +31,7 @@ const menus = [
     label: '我的工单',
     path: '/ticket',
     icon: 'iconoir:chat-lines',
-    hide: !enableTricket,
+    hide: !iStore.settings.enableTricket,
   },
   { label: '会员中心', path: '/profile', icon: 'iconoir:user' },
 ]
@@ -65,17 +62,4 @@ watch(visibility, (cur, prev) => {
       </main>
     </RouterView>
   </div>
-
-  <!-- <XDialog
-    v-model="visible" title="公告"
-    :text="popupAnnc" :close-btn="false"
-  >
-    <template #footer>
-      <div class="flex justify-end">
-        <XButton @click="visible = false">
-          朕知道了
-        </XButton>
-      </div>
-    </template>
-  </XDialog> -->
 </template>
