@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UnlockFormBase from './UnlockFormBase.vue'
+import UnlockFormBase from '@forms/service/UnlockFormBase.vue'
 
 import type { FormMode } from '@3un/shared'
 

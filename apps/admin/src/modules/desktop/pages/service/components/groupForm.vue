@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupFormBase from './groupFormBase.vue'
+import GroupFormBase from '@forms/service/groupFormBase.vue'
 
 import type { FormMode } from '@3un/shared'
 

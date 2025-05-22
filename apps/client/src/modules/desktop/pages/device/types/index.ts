@@ -18,6 +18,7 @@ export interface DeviceInfo {
   UniqueDeviceID: string
   WiFiAddress: string
   WirelessBoardSerialNumber: string
+  MLBSerialNumber: string
   BluetoothAddress: string
   BuildVersion: string
   ActivationState: string
@@ -40,22 +41,15 @@ export interface DeviceInfo {
   LastiTunesBackupTZ: string
   Version: string
   WillEncrypt: boolean
-  Bookmarks: {
-    AccountNames: string[]
-    Sources: string[]
-  }
-  Calendars: {
-    AccountNames: string[]
-    Sources: string[]
-  }
-  Contacts: {
-    AccountNames: string[]
-    Sources: string[]
-  }
-  Notes: {
-    AccountNames: string[]
-    Sources: string[]
-  }
+  Bookmarks: ICloudData
+  Calendars: ICloudData
+  Contacts: ICloudData
+  Notes: ICloudData
+}
+
+interface ICloudData {
+  AccountNames: string[]
+  Sources: string[]
 }
 
 export interface DeviceForm {
@@ -63,7 +57,7 @@ export interface DeviceForm {
   InternationalMobileEquipmentIdentity: string
   ModelNumber: string
   RegionInfo: string
-  WirelessBoardSerialNumber: string
+  MLBSerialNumber: string
   ProductVersion: string
   BuildVersion: string
   UniqueChipID: string
@@ -79,7 +73,11 @@ export interface DeviceForm {
 
 // GET /battery
 export interface BatteryInfo {
-  CycleCount: string
-  DesignCapacity: string
-  FullChargeCapacity: string
+  BatterySerialNumber: string
+  DesignCapacity: number
+  MaxCapacity: number
+  CycleCount: number
+  NominalChargeCapacity: number
+  FullAvailableCapacity: number
+  AbsoluteCapacity: number
 }

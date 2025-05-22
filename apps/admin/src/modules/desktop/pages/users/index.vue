@@ -3,20 +3,22 @@ import UserForm from './components/UserForm.vue'
 import UserSearch from './components/UserSearch.vue'
 
 import type { UserListParams } from '@/inters/users'
-import { zUserExtraInfo, zUserForm, zUserSearchForm } from '@/inters/users'
+import { zUserExtraInfo, zUserForm, zUserPointForm, zUserSearchForm } from '@/inters/users'
 import { getUsers } from '@/api/users'
 
 import type { UsersStore } from './utils'
-import { columns } from './utils/columnUser'
 import { USER_STORE } from './utils'
+import { columns } from './utils/columnUser'
 
 const store: UsersStore = reactive({
   users: { list: [], page: 1, total: 0, pageSize: 20 },
   extraInfo: zUserExtraInfo.parse({}),
   formBase: zUserForm.parse({}),
   formSearch: zUserSearchForm.parse({}),
+  formPoint: zUserPointForm.parse({}),
   visibleBase: false,
   visibleSearch: false,
+  visiblePoint: false,
   index: undefined,
   refresh: false,
   page: 1,
@@ -57,9 +59,10 @@ function openCreate() {
   store.visibleBase = true
 }
 
-function openSearch() {
+function resetSearch() {
   store.formSearch = zUserSearchForm.parse({})
-  store.visibleSearch = true
+  store.page = 1
+  store.refresh = !store.refresh
 }
 </script>
 
@@ -67,8 +70,9 @@ function openSearch() {
   <div>
     <section class="flex justify-between p-3 border-b">
       <div class="flex space-x-2">
-        <XButton label="筛选" @click="openSearch" />
-        <XButton color="success" label="新增用户" @click="openCreate" />
+        <XButton color="success" icon="lucide:plus" label="新增用户" @click="openCreate" />
+        <XButton icon="lucide:filter" label="筛选" @click="store.visibleSearch = true" />
+        <XButton icon="lucide:trash-2" label="清空筛选" color="danger" @click="resetSearch" />
       </div>
 
       <XPagination

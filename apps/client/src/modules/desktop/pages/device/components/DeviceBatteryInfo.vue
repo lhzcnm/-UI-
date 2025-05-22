@@ -31,9 +31,9 @@ const batteryIcon = computed(() => {
 
 const healthPercentage = computed(() => {
   if (!store.battery) return null
-  const design = parseInt(store.battery.DesignCapacity)
-  const current = parseInt(store.battery.FullChargeCapacity)
-  return Math.round((current / design) * 100)
+  const current = store.battery.NominalChargeCapacity
+  const design = store.battery.DesignCapacity
+  return ((current / design) * 100).toFixed(2)
 })
 </script>
 
@@ -47,11 +47,11 @@ const healthPercentage = computed(() => {
       </div>
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-1">
       <div class="flex items-center justify-between text-sm">
         <span class="text-muted-foreground">充电状态</span>
         <span class="font-medium">
-          {{ batteryInfo.isCharging ? '正在充电' : '正在放电' }}
+          {{ batteryInfo.capacity === 100 ? '电池满电' : '正在充电' }}
         </span>
       </div>
 
@@ -72,8 +72,18 @@ const healthPercentage = computed(() => {
         </div>
 
         <div class="flex items-center justify-between text-sm">
-          <span class="text-muted-foreground">当前满电容量</span>
-          <span class="font-medium">{{ store.battery.FullChargeCapacity }} mAh</span>
+          <span class="text-muted-foreground">绝对容量</span>
+          <span class="font-medium">{{ store.battery.AbsoluteCapacity }} mAh</span>
+        </div>
+
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-muted-foreground">满电容量</span>
+          <span class="font-medium">{{ store.battery.NominalChargeCapacity }} mAh</span>
+        </div>
+
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-muted-foreground">电池序列号</span>
+          <span class="font-medium">{{ store.battery.BatterySerialNumber }}</span>
         </div>
       </template>
     </div>

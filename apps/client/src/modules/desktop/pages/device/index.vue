@@ -16,13 +16,17 @@ import devicesIos from '@/assets/devices-ios.json'
 import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
+  battery: {} as BatteryInfo,
   deviceChipMap: new Map(),
   deviceMap: new Map(),
   infoMap: new Map(),
-  battery: {} as BatteryInfo,
-  status: ConnStatus.IDLE,
+  
   screenshot: '',
   selectedDevice: '',
+  status: ConnStatus.IDLE,
+
+  printPreview: '',
+  printPreviewVisible: false,
 })
 
 provide(DEVICE_STORE, store)
@@ -65,7 +69,7 @@ watch(data, (value) => {
     SerialNumber: data.SerialNumber,
     CPU: store.deviceChipMap.get(key)?.Chip || '--',
     InternationalMobileEquipmentIdentity: data.InternationalMobileEquipmentIdentity,
-    WirelessBoardSerialNumber: data.WirelessBoardSerialNumber,
+    MLBSerialNumber: data.MLBSerialNumber,
     ModelNumber: data.ModelNumber,
     RegionInfo: data.RegionInfo,
     ProductVersion: data.ProductVersion,

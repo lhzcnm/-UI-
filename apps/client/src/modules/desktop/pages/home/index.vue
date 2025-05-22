@@ -2,6 +2,8 @@
 import type { ServiceDetail } from '@/api/services'
 import PickService from './components/PickService.vue'
 
+import { xconfirm } from '@3un/shared/confirm'
+import { useStorage } from '@vueuse/core'
 import { getCommonList } from '@/utils'
 
 const store = useServiceStore()
@@ -19,7 +21,21 @@ const current = ref<ServiceDetail>(defaultGroup)
 const visible = ref(false)
 
 const { popupAnnc, enablePopupAnnc } = iStore.settings
-const visiblePopup = ref(enablePopupAnnc)
+const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
+
+onMounted(async () => {
+  if (!anncVisible.value) return
+  const result = await xconfirm({
+    title: '公告',
+    text: popupAnnc,
+    confirmText: '朕知道了',
+    cancelText: undefined,
+  })
+
+  if (result) {
+    anncVisible.value = false
+  }
+})
 
 const commonList = getCommonList(store.services)
 
@@ -75,18 +91,5 @@ function handleServiceItemClick(event: MouseEvent) {
       v-model="visible"
       :group="current"
     />
-
-    <XDialog
-      v-model="visiblePopup" title="公告"
-      :text="popupAnnc" :close-btn="false"
-    >
-      <template #footer>
-        <div class="flex justify-end">
-          <XButton @click="visiblePopup = false">
-            朕知道了
-          </XButton>
-        </div>
-      </template>
-    </XDialog>
   </div>
 </template>

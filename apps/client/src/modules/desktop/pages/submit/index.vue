@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
-import MustRead from './components/MustRead.vue'
 
 import type { XTableColumn } from '@3un/ui'
 import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
@@ -14,6 +13,7 @@ import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
 import { getDefaultColumns, mergeColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
+import { xconfirm } from '@3un/shared/confirm'
 
 const props = defineProps<{ id: string }>()
 
@@ -29,7 +29,6 @@ const columns = shallowRef<XTableColumn[]>(getDefaultColumns())
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
-const mustReadVisible = ref(false)
 const pushMsg = ref(true)
 
 let count = 0
@@ -289,14 +288,25 @@ const mustRead = computed(() => {
   return service ? service.mustRead : null
 })
 
-function handlePushMsgChange(value: boolean) {
+async function handlePushMsgChange(value: boolean) {
   if (value) return
-  const confirm = window.confirm(`
-    确定不接收公众号推送结果吗？\n
-    订单量较大时，建议关闭!
-  `)
 
-  if (!confirm) pushMsg.value = true
+  const result = await xconfirm`
+    确定不接收公众号推送结果吗？<br>
+    订单量较大时，建议关闭!
+  `
+  if (!result) pushMsg.value = true
+}
+
+async function handleMustRead() {
+  const result = await xconfirm({
+    title: '服务说明',
+    text: mustRead.value || '',
+    confirmText: '朕已知晓',
+    cancelText: undefined,
+  })
+
+  if (!result) pushMsg.value = true
 }
 </script>
 
@@ -320,7 +330,7 @@ function handlePushMsgChange(value: boolean) {
         <XButton
           v-show="mustRead" variant="outline"
           label="服务说明" color="warning"
-          @click="mustReadVisible = true"
+          @click="handleMustRead"
         />
 
         <XSwitch
@@ -342,11 +352,6 @@ function handlePushMsgChange(value: boolean) {
       :columns="columns"
       row-key="index"
       class="h-[calc(100%-3rem)] border"
-    />
-
-    <MustRead
-      v-model="mustReadVisible"
-      :must-read="mustRead"
     />
   </div>
 </template>

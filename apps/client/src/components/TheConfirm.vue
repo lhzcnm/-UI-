@@ -3,13 +3,15 @@ import type { ConfirmOptions } from '@3un/shared/confirm'
 import { registerConfirm } from '@3un/shared/confirm'
 import { isString } from '@3un/ui'
 
-const confirmVisible = ref(false)
-const confirmOptions = ref({
+const defaultOptions = {
   title: '提示',
   cancelText: '取消',
   confirmText: '确定',
   text: '',
-})
+}
+
+const confirmVisible = ref(false)
+const confirmOptions = ref(defaultOptions)
 
 let resolver: ((value: boolean) => void) | null = null
 
@@ -25,12 +27,9 @@ function handleCancel() {
 
 function confirm(options: string | ConfirmOptions) {
   if (isString(options)) options = { text: options }
-  confirmOptions.value = {
-    ...confirmOptions.value,
-    ...options
-  }
-
+  confirmOptions.value = { ...defaultOptions, ...options }
   confirmVisible.value = true
+
   return new Promise<boolean>((resolve) => resolver = resolve)
 }
 
@@ -48,7 +47,12 @@ registerConfirm(confirm)
   >
     <template #footer>
       <div class="flex justify-end space-x-2">
-        <XButton variant="soft" :label="confirmOptions.cancelText" @click="handleCancel" />
+        <XButton
+          v-show="confirmOptions.cancelText"
+          :label="confirmOptions.cancelText"
+          variant="soft"
+          @click="handleCancel"
+        />
         <XButton :label="confirmOptions.confirmText" @click="handleConfirm" />
       </div>
     </template>

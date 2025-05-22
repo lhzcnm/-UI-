@@ -11,13 +11,17 @@ export enum ConnStatus {
 }
 
 export interface DeviceStore {
+  battery: BatteryInfo
   deviceChipMap: Map<string, DeviceChip>
   deviceMap: Map<string, DeviceInfo>
   infoMap: Map<string, DeviceForm>
-  battery: BatteryInfo
+
   screenshot: string
   status: ConnStatus
   selectedDevice: string
+  
+  printPreview: string
+  printPreviewVisible: boolean
 }
 
 interface DeviceChip {

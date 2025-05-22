@@ -5,20 +5,24 @@ export type ConfirmOptions = {
   confirmText?: string
 }
 
-let confirmFn: ((text: string, options?: ConfirmOptions) => Promise<boolean>) | null = null
+let confirmFn: ((options: string | ConfirmOptions) => Promise<boolean>) | null = null
 
 export function registerConfirm(fn: typeof confirmFn) {
   confirmFn = fn
 }
 
-export function xconfirm(text: string, options?: ConfirmOptions): Promise<boolean>
 export function xconfirm(strings: TemplateStringsArray, ...values: any[]): Promise<boolean>
-export function xconfirm(first: string | TemplateStringsArray, ...rest: any[]): Promise<boolean> {
+export function xconfirm(options: string | ConfirmOptions): Promise<boolean>
+export function xconfirm(first: string | ConfirmOptions | TemplateStringsArray, ...values: any[]): Promise<boolean> {
   if (!confirmFn) throw new Error('confirmFn is not registered')
-  if (Array.isArray(first)) {
-    const text = first.reduce((acc, str, i) => acc + str + (rest[i] ?? ''), '')
+
+  if (Array.isArray(first) && 'raw' in first) {
+    const text = (first).reduce(
+      (acc, str, i) => acc + str + (values[i] ?? ''),
+      ''
+    )
     return confirmFn(text)
   }
 
-  return confirmFn(first as string, rest[0])
+  return confirmFn(first as string | ConfirmOptions)
 }

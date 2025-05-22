@@ -3,6 +3,9 @@ import type { ServiceDetail } from '@/api/services'
 import PickService from './components/PickService.vue'
 
 import { twJoin } from 'tailwind-merge'
+import { useStorage } from '@vueuse/core'
+import { xconfirm } from '@3un/shared/confirm'
+
 import { usePage } from './utils/usePage'
 import { getCommonList } from '@/utils'
 
@@ -13,6 +16,23 @@ await Promise.all([
   store.getServices(),
   iStore.getSettings(),
 ])
+
+const { popupAnnc, enablePopupAnnc } = iStore.settings
+const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
+
+onMounted(async () => {
+  if (!anncVisible.value) return
+  const result = await xconfirm({
+    title: '公告',
+    text: popupAnnc,
+    confirmText: '朕知道了',
+    cancelText: undefined,
+  })
+
+  if (result) {
+    anncVisible.value = false
+  }
+})
 
 const commonList = getCommonList(store.services)
 const { totalPages, currentPage, pages, carouselRef, handleScroll, scrollToPage } = usePage()

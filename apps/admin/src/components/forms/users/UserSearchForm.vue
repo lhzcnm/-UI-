@@ -12,6 +12,7 @@ const levelStore = useLevelStore()
       <XSelect
         v-model="form.planId"
         placeholder="请选择会员等级"
+        :default-value="undefined"
         clearable
       >
         <XSelectItem
@@ -19,11 +20,6 @@ const levelStore = useLevelStore()
           :value="level.pricePlanId" :label="level.pricePlan"
         />
       </XSelect>
-    </div>
-
-    <div>
-      <label class="block text-sm mb-1">用户ID</label>
-      <XInput v-model="form.userId" placeholder="用户ID" />
     </div>
 
     <div class="flex space-x-3">
@@ -35,6 +31,11 @@ const levelStore = useLevelStore()
         <label class="block text-sm mb-1">用户昵称</label>
         <XInput v-model="form.nickname" placeholder="用户昵称" />
       </div>
+    </div>
+
+    <div>
+      <label class="block text-sm mb-1">用户ID</label>
+      <XInput v-model="form.userId" placeholder="用户ID" />
     </div>
 
     <div>

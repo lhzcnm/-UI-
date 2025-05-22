@@ -17,8 +17,6 @@ await Promise.all([
   loadConfig && getWxConfig(),
 ])
 
-const visible = ref(iStore.settings.enablePopupAnnc)
-
 async function getWxConfig() {
   const url = (iStore.originUrl || location.href).split('#')[0]
   const encode = encodeURIComponent(url)
@@ -58,19 +56,5 @@ async function getWxConfig() {
     </RouterView>
 
     <MobileFooter v-show="!route.meta.hideFooter" />
-
-    <XDialog
-      v-model="visible" title="公告"
-      :text="iStore.settings.popupAnnc"
-      :close-btn="false"
-    >
-      <template #footer>
-        <div class="flex justify-end gap-2">
-          <XButton @click="visible = false">
-            朕知道了
-          </XButton>
-        </div>
-      </template>
-    </XDialog>
   </div>
 </template>

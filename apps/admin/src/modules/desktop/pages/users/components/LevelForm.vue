@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import UserFormBase from '@forms/users/UserFormBase.vue'
+import LevelFormBase from '@forms/level/LevelFormBase.vue'
 
 import type { FormMode } from '@3un/shared'
 
-import { USER_STORE } from '../utils'
-import { createUser, updateUser } from '@/api/users'
+import { LEVEL_STORE } from '../utils'
+import { createLevel, updateLevel } from '@/api/level'
 
-const store = inject(USER_STORE)!
+const store = inject(LEVEL_STORE)!
 const options = {
   create: {
     title: '新增',
@@ -21,6 +21,7 @@ const options = {
 const isCreate = computed(() => store.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
+const levelStore = useLevelStore()
 const loading = ref(false)
 
 function handleSubmit() {
@@ -33,9 +34,10 @@ function handleSubmit() {
 function handleCreate() {
   loading.value = true
 
-  const response = createUser(store.formBase)
-  response.then(() => {
-    store.refresh = !store.refresh
+  const response = createLevel(store.formBase)
+
+  response.then((data) => {
+    levelStore.levels.push(data)
     store.visibleBase = false
   })
 
@@ -47,12 +49,12 @@ function handleCreate() {
 function handleUpdate() {
   loading.value = true
 
-  const user = store.users.list[store.index!]
-  const body = { ...store.formBase, userId: user.userId }
-  const response = updateUser(body)
+  const level = levelStore.levels[store.index!]
+  const body = { ...store.formBase, pricePlanId: level.pricePlanId }
+  const response = updateLevel(body)
 
   response.then(() => {
-    store.refresh = !store.refresh
+    levelStore.levels[store.index!] = body
     store.visibleBase = false
   })
 
@@ -63,16 +65,16 @@ function handleUpdate() {
 </script>
 
 <template>
-  <XDrawer
+  <XDialog
     v-model="store.visibleBase"
-    width="500px" :title="options[mode].title"
+    :title="options[mode].title"
   >
-    <UserFormBase v-model="store.formBase" />
+    <LevelFormBase v-model="store.formBase" />
     <template #footer>
-      <div class="flex justify-end space-x-2 p-4 border-t">
+      <div class="flex justify-end space-x-2 mt-4">
         <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
         <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
       </div>
     </template>
-  </XDrawer>
+  </XDialog>
 </template>

@@ -9,5 +9,8 @@ const editor = useEditor({
 </script>
 
 <template>
-  <EditorContent :editor="editor" />
+  <EditorContent
+    :editor="editor"
+    class="border"
+  />
 </template>

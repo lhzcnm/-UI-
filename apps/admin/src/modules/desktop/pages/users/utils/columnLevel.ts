@@ -1,0 +1,55 @@
+import LevelAction from '../components/LevelAction.vue'
+
+import type { XColDef } from '@3un/ui'
+import { XSwitch } from '@3un/ui'
+
+import { updateLevel } from '@/api/level'
+import type { Level } from '@/inters/level'
+
+export const columns: XColDef<Level> = [
+  {
+    key: 'pricePlanId',
+    title: '等级ID',
+    width: 64,
+  },
+  {
+    key: 'pricePlan',
+    title: '等级名称(中文)',
+    minWidth: 128,
+  },
+  {
+    key: 'pricePlanLocal',
+    title: '等级名称(英文)',
+    minWidth: 128,
+  },
+  {
+    key: 'disablePricePlan',
+    title: '是否禁用',
+    width: 128,
+    render(value, row) {
+      return h(XSwitch, {
+        modelValue: value,
+        'onUpdate:modelValue': async (val) => {
+          const oldVal = row.disablePricePlan
+          const response = updateLevel({
+            pricePlanId: row.pricePlanId,
+            disablePricePlan: val,
+          })
+
+          row.disablePricePlan = val
+          response.catch(() => {
+            setTimeout(() => row.disablePricePlan = oldVal, 1000)
+          })
+        },
+      })
+    },
+  },
+  {
+    key: 'action',
+    title: '操作',
+    width: 128,
+    render(_, row, index) {
+      return h(LevelAction, { index, row })
+    },
+  },
+]

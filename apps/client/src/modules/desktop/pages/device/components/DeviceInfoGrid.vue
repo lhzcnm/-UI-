@@ -168,7 +168,7 @@ const b = style()
       <div>
         <span :class="b.label()">主板序号</span>
         <span :class="b.value()" @click="cp">
-          {{ info.WirelessBoardSerialNumber }}
+          {{ info.MLBSerialNumber }}
         </span>
       </div>
       <div>

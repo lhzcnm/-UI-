@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FieldFormBase from './FieldFormBase.vue'
+import FieldFormBase from '@forms/service/FieldFormBase.vue'
 
 import type { FormMode } from '@3un/shared'
 

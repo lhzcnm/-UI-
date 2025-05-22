@@ -32,6 +32,16 @@ export enum PAYMENT_METHOD {
   ALIPAY = 8,
   WECHAT = 9,
 }
+export const PAYMENT_METHOD_MAP: StatusMap = {
+  [PAYMENT_METHOD.ADMIN] : { color: 'info', label: '管理员充值' },
+  [PAYMENT_METHOD.ALIPAY] : { color: 'success', label: '支付宝' },
+  [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
+}
+export const PAYMENT_METHOD_LIST = [
+  { value: PAYMENT_METHOD.ADMIN, label: '管理员充值' },
+  { value: PAYMENT_METHOD.ALIPAY, label: '支付宝' },
+  { value: PAYMENT_METHOD.WECHAT, label: '微信' },
+]
 
 // Submit Method
 export enum SUBMIT_METHOD {

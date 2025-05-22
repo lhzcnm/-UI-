@@ -2,7 +2,6 @@ import type { ServiceField, ServiceFieldCreateParams, ServiceGroupCreateParams, 
 import type { IList, IK } from '@3un/shared'
 
 // Service
-export const SERVICE_STORE: IK<ServiceStore> = Symbol('service')
 export interface ServiceStore {
   formBase: ServiceCreateParams
   formSearch: ServiceSearch
@@ -16,7 +15,6 @@ interface ServiceSearch {
 }
 
 // ServiceGroup
-export const GROUP_STORE: IK<ServiceGroupStore> = Symbol('group')
 export interface ServiceGroupStore {
   formBase: ServiceGroupCreateParams
   visibleBase: boolean
@@ -24,7 +22,6 @@ export interface ServiceGroupStore {
 }
 
 // ServiceField
-export const FIELD_STORE: IK<ServiceFieldStore> = Symbol('field')
 export interface ServiceFieldStore {
   fields: IList<ServiceField>
   formBase: ServiceFieldCreateParams
@@ -37,7 +34,6 @@ export interface ServiceFieldStore {
 }
 
 // Unlock
-export const UNLOCK_STORE: IK<UnlockStore> = Symbol('unlock')
 export interface UnlockStore {
   unlocks: Unlock[]
   formBase: UnlockCreateParams
@@ -45,3 +41,9 @@ export interface UnlockStore {
   visibleConvert: boolean
   index: number | undefined
 }
+
+// Store
+export const SERVICE_STORE: IK<ServiceStore> = Symbol('service')
+export const GROUP_STORE: IK<ServiceGroupStore> = Symbol('group')
+export const FIELD_STORE: IK<ServiceFieldStore> = Symbol('field')
+export const UNLOCK_STORE: IK<UnlockStore> = Symbol('unlock')

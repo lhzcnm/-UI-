@@ -20,6 +20,7 @@
   "UniqueDeviceID": "485dc68a17797f7080f07642d16c85b9e9a39130",
   "WiFiAddress": "b4:8b:19:78:ea:1e",
   "WirelessBoardSerialNumber": "FA1BA4D0AE37",
+  "MLBSerialNumber": "FA1BA4D0AE37",
   "BluetoothAddress": "b4:8b:19:78:ea:1f",
   "BuildVersion": "18D70",
   "ActivationState": "Activated",
@@ -77,9 +78,13 @@ TotalDiskCapacity (16 GB)
   "code": 200,
   "data": null,
   "msg": {
-    "CycleCount": "610",
-    "DesignCapacity": "1690",
-    "FullChargeCapacity": "100"
+    "BatterySerialNumber": "F5D73712K4RG5NYB5", // 电池序列号
+    "NominalChargeCapacity": 2773,
+    "DesignCapacity": 1690, // 设计容量
+    "MaxCapacity": 780, // 最大容量
+    "CycleCount": 612, // 循环计数
+    "FullAvailableCapacity": 0, // 完全可用容量
+    "AbsoluteCapacity": 1316 // 绝对容量
   }
 }
 ```

@@ -5,7 +5,7 @@ import { twMerge, twJoin } from 'tailwind-merge'
 const { item } = defineProps<{ item: CreditLogItem }>()
 const store = useServiceStore()
 
-const isSubmit = /订单提交|Code Request/.test(item.description)
+const isSubmit = /订单提交|查询订单|Code Request/.test(item.description)
 const isReduce = isSubmit || item.description === '管理员扣除积分'
 const amountText = isReduce ? `-${Math.abs(item.credits)}` : `+${item.credits}`
 const service = item.packageId && store.services.get(item.packageId)
