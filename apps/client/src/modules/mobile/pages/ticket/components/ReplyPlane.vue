@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { twMerge } from 'tailwind-merge'
 
-import { TICKET_STATUS } from '@3un/shared/enums'
+import { TICKET_STATUS } from '@3un/utils'
 import { TICKET_STORE, getAvatar } from '../utils'
 import { ticketApi } from '@/api/tickets'
 import { toast } from 'vue-sonner'

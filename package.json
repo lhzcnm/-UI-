@@ -1,7 +1,7 @@
 {
   "name": "@3un/monorepo",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "prepare": "pnpm build:utils && pnpm build:ui",
     "build:utils": "pnpm -F @3un/utils build",
@@ -13,7 +13,7 @@
     "dev:admin": "pnpm -F @3un/admin dev"
   },
   "devDependencies": {
-    "@iconify/vue": "^4.3.0",
+    "@iconify/vue": "5",
     "@types/node": "22",
     "@types/postcss-import": "^14.0.3",
     "@vitejs/plugin-vue": "^5.2.4",

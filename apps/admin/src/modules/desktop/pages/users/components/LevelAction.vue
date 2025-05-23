@@ -3,7 +3,7 @@ import type { Level } from '@/inters/level'
 import { zLevelForm } from '@/inters/level'
 
 import type { XBtnSplitOptions } from '@3un/ui'
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 import { LEVEL_STORE } from '../utils'
 import { deleteLevel } from '@/api/level'
 

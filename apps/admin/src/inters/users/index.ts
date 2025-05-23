@@ -1,10 +1,11 @@
 import type { IList, WithId, IPage } from '@3un/shared'
-import { PAYMENT_METHOD } from '@3un/shared/enums'
+import { PAYMENT_METHOD } from '@3un/utils'
 import * as z from 'zod'
 
 export * from './extra'
 export * from './paid'
 export * from './service'
+export * from './admin'
 
 export const zUser = z.interface({
   userId: z.number().default(0),

@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import ItemFormBase from '@forms/service/ItemFormBase.vue'
+import { createService, deleteService, updateService } from '@/api/services'
 
 import type { FormMode } from '@3un/shared'
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 
-import { createService, deleteService, updateService } from '@/api/services'
 import { SERVICE_STORE } from '../utils'
 
-const store = inject(SERVICE_STORE)!
 const options = {
   create: {
     title: '新增服务',
@@ -19,10 +18,12 @@ const options = {
   },
 }
 
+const store = inject(SERVICE_STORE)!
+const serviceStore = useServiceStore()
+
 const isCreate = computed(() => store.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
-const serviceStore = useServiceStore()
 const loading = ref(false)
 
 function handleSubmit() {

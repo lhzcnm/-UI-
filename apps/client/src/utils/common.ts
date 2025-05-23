@@ -1,7 +1,7 @@
 import type { Service } from '@/api/services'
 
 import { IMEI_AND_SN_REG, IMEIValidator, SNValidator } from '@3un/utils'
-import { IMEI_TYPE } from '@3un/shared/enums'
+import { IMEI_TYPE } from '@3un/utils'
 
 export function findAllIMEIAndSNs(str: string) {
   if (!str.trim()) return []

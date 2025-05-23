@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
-import { DEVICE_STORE, deviceConfig } from '../utils'
+import { DEVICE_STORE, DEVICE_CONFIG } from '../utils'
 import { useThrottleFn } from '@vueuse/core'
 
 const b = tv({
@@ -15,7 +15,7 @@ const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
 const store = inject(DEVICE_STORE)!
-const apiUrl = deviceConfig.api
+const apiUrl = DEVICE_CONFIG.api
 
 const deviceMockup = {
   iPhone8: {
@@ -52,8 +52,8 @@ const handleRestart = useThrottleFn(onRestart, 1000)
 const handleShutdown = useThrottleFn(onShutdown, 1000)
 
 const deviceImage = computed(() => {
-  const chip = store.deviceChipMap.get(store.selectedDevice)
-  const matched = chip ? chip.Name.match(/^iPhone (\d+)/) : null
+  const product = store.productMap.get(store.selectedDevice)
+  const matched = product ? product.Name.match(/^iPhone (\d+)/) : null
   return deviceMockup[getDeviceType(matched)]
 })
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ConfirmOptions } from '@3un/shared/confirm'
-import { registerConfirm } from '@3un/shared/confirm'
+import type { ConfirmOptions } from '@3un/utils'
+import { registerConfirm } from '@3un/utils'
 import { isString } from '@3un/ui'
 
 const defaultOptions = {

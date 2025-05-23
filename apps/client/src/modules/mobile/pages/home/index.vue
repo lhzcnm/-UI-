@@ -4,7 +4,7 @@ import PickService from './components/PickService.vue'
 
 import { twJoin } from 'tailwind-merge'
 import { useStorage } from '@vueuse/core'
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 
 import { usePage } from './utils/usePage'
 import { getCommonList } from '@/utils'

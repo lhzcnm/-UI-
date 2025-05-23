@@ -107,22 +107,16 @@ function fillSelectedState(state = false) {
     <div class="mt-3 pr-1 space-y-3 overflow-y-auto max-h-[500px]">
       <div
         v-for="(item, index) in convertCodes" :key="index"
-        class="flex items-center space-x-3"
+        class="flex items-start space-x-3"
       >
-        <div>
-          <input 
-            type="checkbox" 
-            class="size-4" 
-            v-model="selectedItems[index]"
-          />
-        </div>
+        <input v-model="selectedItems[index]" type="checkbox" class="size-4 mt-0.5 bg-card" />
         <div class="flex-1">
           <label class="block text-sm mb-1">原始码</label>
-          <XTextarea v-model="item.key" rows="3" placeholder="原始码" />
+          <XInput v-model="item.key" placeholder="原始码" />
         </div>
         <div class="flex-1">
           <label class="block text-sm mb-1">转换码</label>
-          <XTextarea v-model="item.value" rows="3" placeholder="转换码" />
+          <XInput v-model="item.value" placeholder="转换码" />
         </div>
       </div>
     </div>

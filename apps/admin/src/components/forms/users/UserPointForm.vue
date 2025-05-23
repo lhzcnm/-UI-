@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { UserPointForm } from '@/inters/users'
-import { PAYMENT_METHOD } from '@3un/shared/enums'
+import { PAYMENT_METHOD } from '@3un/utils'
 import { XRadio } from '@3un/ui'
 
 const form = defineModel<UserPointForm>({ required: true })

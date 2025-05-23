@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TicketItem } from '@/api/tickets'
 
-import { TICKET_STATUS_MAP, TICKET_TYPE_MAP, TICKET_TYPE } from '@3un/shared/enums'
+import { TICKET_STATUS_MAP, TICKET_TYPE_MAP, TICKET_TYPE } from '@3un/utils'
 import { twJoin } from 'tailwind-merge'
 
 interface TicketItemProps {

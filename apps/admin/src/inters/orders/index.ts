@@ -1,45 +1,71 @@
-import { ORDER_STATUS, ORDER_VERTIFY, SUBMIT_METHOD } from '@3un/shared/enums'
+import type { IList, IPage } from '@3un/shared'
+import { ORDER_STATUS, ORDER_VERTIFY, SUBMIT_METHOD } from '@3un/utils'
 import * as z from 'zod'
 
-export const zOrder = z.object({
+export const zOrder = z.interface({
   codeId: z.number().default(0),
   userId: z.number().default(0),
-  packageId: z.number().default(0),
-  codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
-  originalStatus: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
+  // phoneLockedOn: z.string().default(''),
+  // modelNo: z.string().default(''),
   imeiNo: z.string().default(''),
-  credits: z.number().default(0),
-  code: z.string().default(''),
+  packageId: z.number().default(0),
+  // personalRecord: z.string().default(''),
+  // countryId: z.string().default(''),
+  codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
   requestedAt: z.string().default(''),
-  updateTime: z.string().default(''),
-  submitMethod: z.enum(SUBMIT_METHOD).default(SUBMIT_METHOD.WEB),
-  isBluk: z.boolean().default(false),
-  downloaded: z.boolean().default(false),
-  verify: z.enum(ORDER_VERTIFY).default(ORDER_VERTIFY.NORMAL),
-  orderIdFromServer: z.string().default(''),
+  credits: z.number().default(0),
+  comments: z.string().default(''),
   codeSentToOtherServer: z.number().default(0),
   messageFromServer: z.string().default(''),
+  code: z.string().default(''),
+  orderIdFromServer: z.string().default(''),
+  // checkDuplication: z.boolean().default(false),
+  // mep: z.string().default(''),
+  // model: z.string().default(''),
+  // serialNo: z.string().default(''),
+  // serviceId: z.string().default(''),
+  // modelId: z.string().default(''),
+  // providerId: z.string().default(''),
+  // operatorId: z.string().default(''),
+  // mobileId: z.string().default(''),
+  // prd: z.string().default(''),
+  // pin: z.string().default(''),
+  // kbh: z.string().default(''),
+  // otherId: z.string().default(''),
+  // otherValue: z.string().default(''),
+  // zte: z.string().default(''),
+  // network: z.string().default(''),
+  // locks: z.string().default(''),
+  downloaded: z.boolean().default(false),
+  // archived: z.boolean().default(false),
+  // adminArchived: z.boolean().default(false),
+  // alternateEmail: z.string().default(''),
+  verify: z.enum(ORDER_VERTIFY).default(ORDER_VERTIFY.NORMAL),
+  ip: z.string().default('unknown'),
+  verifyIp: z.string().default(''),
+  showToSupplier: z.boolean().default(false),
+  // payout: z.number().default(0),
+  supplierId: z.string().default(''),
+  updateTime: z.string().default(''),
+  isBulk: z.boolean().default(false),
+  submitMethod: z.enum(SUBMIT_METHOD).default(SUBMIT_METHOD.WECHAT),
+  // mtype: z.string().default(''),
 })
 
+export type Order = z.infer<typeof zOrder>
 
-// export interface OrderView {
-//   codeId: number
-//   userId: number
-//   packageId: number
-//   codeStatusId: ORDER_STATUS
-//   originalStatus: ORDER_STATUS
+// List
+export const zOrderSearchForm = z.interface({
+  userId: z.number().optional(),
+  username: z.string().optional(),
+  imeiList: z.string().optional(),
+  serviceId: z.number().optional(),
+  serverOrderIdEmpty: z.boolean().optional(),
+  statusId: z.enum(ORDER_STATUS).optional(),
+  startTime: z.string().optional(),
+  endTime: z.string().optional(),
+})
 
-//   imeiNo: string
-//   credits: number
-//   code: string
-//   requestedAt: string
-//   updateTime: string
-//   submitMethod: SUBMIT_METHOD
-//   isBluk: boolean
-
-//   downloaded: boolean
-//   verify: ORDER_VERTIFY
-//   orderIdFromServer: string
-//   codeSentToOtherServer: number
-//   messageFromServer: string
-// }
+export type OrderList = IList<Order>
+export type OrderSearchForm = z.infer<typeof zOrderSearchForm>
+export interface OrderListParams extends IPage, OrderSearchForm {}

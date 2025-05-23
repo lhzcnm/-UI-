@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import UserFormBase from '@forms/users/UserFormBase.vue'
+import { createUser, updateUser } from '@/api/users'
+import { USER_STORE } from '../utils'
 
 import type { FormMode } from '@3un/shared'
 
-import { USER_STORE } from '../utils'
-import { createUser, updateUser } from '@/api/users'
-
-const store = inject(USER_STORE)!
 const options = {
   create: {
     title: '新增',
@@ -17,6 +15,8 @@ const options = {
     submitText: '保存',
   },
 }
+
+const store = inject(USER_STORE)!
 
 const isCreate = computed(() => store.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
@@ -31,8 +31,6 @@ function handleSubmit() {
 }
 
 function handleCreate() {
-  loading.value = true
-
   const response = createUser(store.formBase)
   response.then(() => {
     store.refresh = !store.refresh
@@ -45,8 +43,6 @@ function handleCreate() {
 }
 
 function handleUpdate() {
-  loading.value = true
-
   const user = store.users.list[store.index!]
   const body = { ...store.formBase, userId: user.userId }
   const response = updateUser(body)

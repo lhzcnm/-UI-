@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IMEI_TYPE } from '@3un/shared/enums'
+import { IMEI_TYPE } from '@3un/utils'
 import { getSubmitImei } from '@/utils'
 import { toast } from 'vue-sonner'
 import * as XLSX from 'xlsx'

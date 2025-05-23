@@ -2,7 +2,7 @@
 import type { ServiceDetail } from '@/api/services'
 import PickService from './components/PickService.vue'
 
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 import { useStorage } from '@vueuse/core'
 import { getCommonList } from '@/utils'
 

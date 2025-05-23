@@ -12,7 +12,7 @@ import type { Order, OrderSubmitResult } from '@/api/orders'
 
 import { ua, IMEIValidator } from '@3un/utils'
 import { getSubmitImei, base64ToFile } from '@/utils'
-import { IMEI_TYPE, ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { IMEI_TYPE, ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
 
 import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'

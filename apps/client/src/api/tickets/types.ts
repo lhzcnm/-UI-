@@ -1,4 +1,4 @@
-import type { TICKET_STATUS, TICKET_PRIORITY, TICKET_TYPE } from '@3un/shared/enums'
+import type { TICKET_STATUS, TICKET_PRIORITY, TICKET_TYPE } from '@3un/utils'
 import type { R } from '@3un/shared'
 
 export interface TicketApi {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TicketCreateForm } from '@/api/tickets'
-import { TICKET_TYPE_LIST, TICKET_PRIORITY_LIST } from '@3un/shared/enums'
+import { TICKET_TYPE_LIST, TICKET_PRIORITY_LIST } from '@3un/utils'
 
 const form = defineModel<TicketCreateForm>({ required: true })
 </script>

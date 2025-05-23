@@ -10,8 +10,8 @@ export const columns: XTableColumn[] = [
     width: 220,
     render: (_, row: CreditLogItem) => {
       if (!row.packageId) return '积分充值'
-      const service = store.services.get(row.packageId)!
-      return `${service.id} - ${service.title}`
+      const service = store.services.get(row.packageId)
+      return service ? `${service.id} - ${service.title}` : '服务不存在'
     }
   },
   {

@@ -3,7 +3,7 @@ import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 
 import type { XTableColumn } from '@3un/ui'
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
 import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
@@ -13,7 +13,7 @@ import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
 import { getDefaultColumns, mergeColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 
 const props = defineProps<{ id: string }>()
 

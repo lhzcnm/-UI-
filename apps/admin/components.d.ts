@@ -8,12 +8,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AdminFormBase: typeof import('./src/components/forms/users/AdminFormBase.vue')['default']
     Badge: typeof import('./src/components/Badge.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     DesktopHeader: typeof import('./src/modules/desktop/components/DesktopHeader.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
+    FormDialog: typeof import('./src/components/FormDialog.vue')['default']
     FormField: typeof import('./src/modules/desktop/components/FormField.vue')['default']
-    LevelFormBase: typeof import('./src/components/forms/level/LevelFormBase.vue')['default']
+    InterceptForm: typeof import('./src/components/forms/InterceptFormBase.vue')['default']
+    InterceptFormBase: typeof import('./src/components/forms/InterceptFormBase.vue')['default']
+    LevelFormBase: typeof import('./src/components/forms/users/LevelFormBase.vue')['default']
     MobileHeader: typeof import('./src/modules/mobile/components/MobileHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -25,7 +29,6 @@ declare module 'vue' {
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SidebarItem: typeof import('./src/components/SidebarItem.vue')['default']
     TheConfirm: typeof import('./src/components/TheConfirm.vue')['default']
-    TheDialog: typeof import('./src/components/TheDialog.vue')['default']
     TheEditor: typeof import('./src/components/TheEditor.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']

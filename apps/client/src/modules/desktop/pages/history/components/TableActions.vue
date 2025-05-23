@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { XButton } from '@3un/ui'
 
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/shared/enums'
+import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
 import { stripHtml } from '@3un/utils'
 import { ref } from 'vue'
 import { useClipboard, useThrottleFn } from '@vueuse/core'

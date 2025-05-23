@@ -1,4 +1,4 @@
-import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/shared/enums'
+import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/utils'
 import type { OrderTableView } from '@/api/orders'
 import type { XTableColumn } from '@3un/ui'
 import { XTag } from '@3un/ui'

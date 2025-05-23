@@ -10,23 +10,20 @@ import PluginDownload from './components/PluginDownload.vue'
 import { useWebSocket } from '@vueuse/core'
 
 import type { DeviceStore } from './utils'
-import type { BatteryInfo, DeviceInfo } from './types'
-import { DEVICE_STORE, ConnStatus, deviceConfig } from './utils'
-import devicesIos from '@/assets/devices-ios.json'
+import type { BatteryInfo, DeviceInfo, Product, ProductData } from './types'
+import { DEVICE_STORE, ConnStatus, DEVICE_CONFIG } from './utils'
+import DEVICE_DATA from '@/assets/devices-ios.json'
 import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
   battery: {} as BatteryInfo,
-  deviceChipMap: new Map(),
   deviceMap: new Map(),
+  productMap: new Map(),
   infoMap: new Map(),
-  
+
   screenshot: '',
   selectedDevice: '',
   status: ConnStatus.IDLE,
-
-  printPreview: '',
-  printPreviewVisible: false,
 })
 
 provide(DEVICE_STORE, store)
@@ -34,13 +31,14 @@ provide(DEVICE_STORE, store)
 await checkPlugin()
 
 const visible = computed(() => ({
-  waiting: store.status === ConnStatus.IDLE || store.status === ConnStatus.DISCONNECTED,
+  waiting: store.status === ConnStatus.IDLE
+    || store.status === ConnStatus.DISCONNECTED,
   plugin: store.status === ConnStatus.PLUGIN_NOT_INSTALLED,
   connected: store.status === ConnStatus.CONNECTED,
 }))
 
 const { data } = useWebSocket(
-  deviceConfig.ws,
+  DEVICE_CONFIG.ws,
   {
     heartbeat: {
       interval: 30000,
@@ -59,30 +57,27 @@ watch(data, (value) => {
   const data = JSON.parse(value) as DeviceInfo
   const key = `${data.DeviceID}:${data.UniqueDeviceID}`
 
-  type DeviceType = keyof typeof devicesIos
-  const chip = devicesIos[data.ProductType as DeviceType]
-  if (Array.isArray(chip)) store.deviceChipMap.set(key, chip[0])
-  else store.deviceChipMap.set(key, chip)
-
+  const product = getProduct(data)
+  store.productMap.set(key, product)
   store.deviceMap.set(key, data)
   store.infoMap.set(key, {
-    SerialNumber: data.SerialNumber,
-    CPU: store.deviceChipMap.get(key)?.Chip || '--',
-    InternationalMobileEquipmentIdentity: data.InternationalMobileEquipmentIdentity,
-    MLBSerialNumber: data.MLBSerialNumber,
     ModelNumber: data.ModelNumber,
-    RegionInfo: data.RegionInfo,
+    SerialNumber: data.SerialNumber,
+    MLBSerialNumber: data.MLBSerialNumber,
+    Imei: data.InternationalMobileEquipmentIdentity,
     ProductVersion: data.ProductVersion,
     BuildVersion: data.BuildVersion,
+    RegionInfo: data.RegionInfo,
     UniqueChipID: data.UniqueChipID.toString(),
     UniqueDeviceID: data.UniqueDeviceID,
     ActivationState: data.ActivationState ? '已激活' : '未激活',
     iCloud: data.CloudBackupEnabled ? '已开启' : '未开启',
+    CPU: product.Chip || '--',
     Warranty: '--',
     NetworkLock: '--',
     ActivationLock: '--',
   })
-  
+
   http.post('/device/save', data)
   if (store.deviceMap.size === 1) {
     store.status = ConnStatus.CONNECTED
@@ -103,8 +98,8 @@ watch(
 async function checkPlugin() {
   try {
     const controller = new AbortController()
-    setTimeout(() => controller.abort(), 3000)
-    await fetch(deviceConfig.api, {
+    setTimeout(() => controller.abort(), 2000)
+    await fetch(DEVICE_CONFIG.api, {
       signal: controller.signal,
     })
   }
@@ -115,15 +110,46 @@ async function checkPlugin() {
 }
 
 async function getScreenshot(id: string) {
-  const response = await fetch(`${deviceConfig.api}/screenshot/${id}`)
+  const response = await fetch(`${DEVICE_CONFIG.api}/screenshot/${id}`)
   const blob = await response.blob()
   store.screenshot = URL.createObjectURL(blob)
 }
 
 async function getBatteryInfo(id: string) {
-  const response = await fetch(`${deviceConfig.api}/battery/${id}`)
+  const product = store.productMap.get(store.selectedDevice)!
+  const response = await fetch(
+    `${DEVICE_CONFIG.api}/battery`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        ProductName: product.Name,
+        UniqueId: id,
+      }),
+    },
+  )
+
   const { data } = await response.json()
   store.battery = data
+}
+
+function getProduct(data: DeviceInfo) {
+  let datasets = DEVICE_DATA as ProductData
+
+  type ProductKey = keyof typeof datasets
+  let product = datasets[data.ProductType as ProductKey] as Product
+  if (Array.isArray(product)) product = product[0]
+
+  let color = product[data.DeviceColor]
+  if (data.ModelNumber.length === 12) {
+    const suffix = data.ModelNumber.slice(-4)
+    color = datasets[suffix as ProductKey] as string
+  }
+
+  return {
+    Name: product.Name,
+    Chip: product.Chip,
+    Color: color || data.DeviceColor,
+  }
 }
 
 function handleDisconnect(value: string) {
@@ -133,7 +159,7 @@ function handleDisconnect(value: string) {
     const keyPrefix = key.split(':')[0]
     if (keyPrefix === deviceId) {
       store.deviceMap.delete(key)
-      store.deviceChipMap.delete(key)
+      store.productMap.delete(key)
       store.infoMap.delete(key)
     }
   }

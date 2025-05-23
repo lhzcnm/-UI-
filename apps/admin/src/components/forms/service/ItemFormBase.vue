@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ServiceCreateParams } from '@/inters/services'
-import { IMEI_TYPE } from '@3un/shared/enums'
+import { IMEI_TYPE } from '@3un/utils'
 import { XRadio, XSwitch } from '@3un/ui'
 
 const form = defineModel<ServiceCreateParams>({ required: true })

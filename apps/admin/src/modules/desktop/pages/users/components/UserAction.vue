@@ -3,7 +3,7 @@ import type { User } from '@/inters/users'
 import { zUserForm } from '@/inters/users'
 
 import type { XBtnSplitOptions } from '@3un/ui'
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 import { USER_STORE } from '../utils'
 import { deleteUser } from '@/api/users'
 

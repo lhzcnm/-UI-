@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OrderSearchForm } from '@/api/orders'
-import { ORDER_STATUS } from '@3un/shared/enums'
+import { ORDER_STATUS } from '@3un/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 const serviceStore = useServiceStore()

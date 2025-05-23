@@ -9,10 +9,10 @@ const diskInfo = computed(() => {
     totalSystemCapacity: formatFileSize(info.TotalSystemCapacity),
     totalDataCapacity: formatFileSize(info.TotalDataCapacity),
     amountDataAvailable: formatFileSize(info.AmountDataAvailable),
-    totalDiskCapacityPercentage: getPercentage(info.TotalDiskCapacity, info.TotalDiskCapacity),
-    totalSystemCapacityPercentage: getPercentage(info.TotalSystemCapacity, info.TotalDiskCapacity),
-    totalDataCapacityPercentage: getPercentage(info.TotalDataCapacity, info.TotalDiskCapacity),
-    amountDataAvailablePercentage: getPercentage(info.AmountDataAvailable, info.TotalDiskCapacity),
+    // totalDiskCapacityPercentage: getPercentage(info.TotalDiskCapacity),
+    totalSystemCapacityPercentage: getPercentage(info.TotalSystemCapacity),
+    totalDataCapacityPercentage: getPercentage(info.TotalDataCapacity),
+    amountDataAvailablePercentage: getPercentage(info.AmountDataAvailable),
   }
 })
 
@@ -25,7 +25,9 @@ function formatFileSize(bytes: number) {
   return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + units[i]
 }
 
-function getPercentage(part: number, total: number) {
+function getPercentage(part: number) {
+  const info = store.deviceMap.get(store.selectedDevice)!
+  const total = info.TotalDiskCapacity
   return Math.round((part / total) * 100)
 }
 </script>

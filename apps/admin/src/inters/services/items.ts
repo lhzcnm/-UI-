@@ -1,4 +1,4 @@
-import { IMEI_TYPE } from '@3un/shared/enums'
+import { IMEI_TYPE } from '@3un/utils'
 import type { WithId } from '@3un/shared'
 import * as z from 'zod'
 

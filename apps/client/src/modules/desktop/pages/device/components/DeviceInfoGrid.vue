@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { DEVICE_STORE, deviceConfig } from '../utils'
+import { DEVICE_STORE, DEVICE_CONFIG } from '../utils'
 import http from '@/utils/http'
 
 import { tv } from 'tailwind-variants'
 import { useClipboard } from '@vueuse/core'
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { Icon } from '@iconify/vue'
 
@@ -34,7 +34,7 @@ async function handleActivation() {
   const suffix = isActivated.value ? 'deactivate' : 'activation'
   const [_, uniqueId] = store.selectedDevice.split(':')
   
-  await fetch(`${deviceConfig.api}/${suffix}/${uniqueId}`)
+  await fetch(`${DEVICE_CONFIG.api}/${suffix}/${uniqueId}`)
   isActivated.value = !isActivated.value
   
   const info = store.infoMap.get(store.selectedDevice)!
@@ -156,7 +156,7 @@ const b = style()
       <div>
         <span :class="b.label()">串号</span>
         <span :class="b.value()" @click="cp">
-          {{ info.InternationalMobileEquipmentIdentity }}
+          {{ info.Imei }}
         </span>
       </div>
       <div>

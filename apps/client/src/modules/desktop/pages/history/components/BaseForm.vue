@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SelectService from '@desktop/components/SelectService.vue'
 import type { OrderSearchForm } from '@/api/orders'
-import { ORDER_STATUS_LIST } from '@3un/shared/enums'
+import { ORDER_STATUS_LIST } from '@3un/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 </script>

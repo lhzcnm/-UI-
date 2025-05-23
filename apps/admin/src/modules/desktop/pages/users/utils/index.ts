@@ -1,5 +1,5 @@
 import type { LevelCreateParams } from '@/inters/level'
-import type { User, UserCreateParams, UserExtraInfo, UserPointForm, UserSearchForm } from '@/inters/users'
+import type { AdminCreateParams, User, UserCreateParams, UserExtraInfo, UserPointForm, UserSearchForm } from '@/inters/users'
 import type { IK, IList } from '@3un/shared'
 
 // User
@@ -25,6 +25,15 @@ export interface LevelStore {
   index: number | undefined
 }
 
+// Admin
+export interface AdminStore {
+  admins: User[]
+  formBase: AdminCreateParams
+  visibleBase: boolean
+  index: number | undefined
+}
+
 // Store
 export const USER_STORE: IK<UsersStore> = Symbol('users')
 export const LEVEL_STORE: IK<LevelStore> = Symbol('levels')
+export const ADMIN_STORE: IK<AdminStore> = Symbol('admins')

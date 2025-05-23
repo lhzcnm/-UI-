@@ -1,4 +1,4 @@
-import type { IMEI_TYPE } from '@3un/shared/enums'
+import type { IMEI_TYPE } from '@3un/utils'
 import type { R } from '@3un/shared'
 
 export interface ServiceApi {

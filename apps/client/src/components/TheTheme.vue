@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { THEME } from '@3un/shared/theme'
 import { twMerge } from 'tailwind-merge'
+import { THEME } from '@3un/utils'
 
 interface ThemeProps {
   ghost?: boolean

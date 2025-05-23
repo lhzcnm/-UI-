@@ -1,4 +1,4 @@
-import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/shared/enums'
+import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/utils'
 import TableActions from '../components/TableActions.vue'
 import { XTag } from '@3un/ui'
 
@@ -15,9 +15,7 @@ export const columns: XTableColumn[] = [
     width: 220,
     render: (_: any, row: Order) => {
       const service = serviceStore.services.get(row.serviceId)
-
-      if (!service) return '服务不存在'
-      return `${service.id} - ${service.title}`
+      return service ? `${service.id} - ${service.title}` : '服务不存在'
     },
   },
   { key: 'imei', title: 'IMEI/SN', width: 158 },

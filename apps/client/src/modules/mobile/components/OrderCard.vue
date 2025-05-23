@@ -12,7 +12,7 @@ import {
   ORDER_VERTIFY_MAP,
   ORDER_STATUS,
   ORDER_VERTIFY,
-} from '@3un/shared/enums'
+} from '@3un/utils'
 import { stripHtml } from '@3un/utils'
 
 interface OrderCardProps {

@@ -1,35 +1,33 @@
 import type { DeviceInfo, BatteryInfo, DeviceForm } from "../types"
-import type { InjectionKey } from "vue"
+import type { IK } from "@3un/shared"
 
-export const DEVICE_STORE: InjectionKey<DeviceStore> = Symbol('deviceStore')
+export const DEVICE_STORE: IK<DeviceStore> = Symbol('deviceStore')
 
 export enum ConnStatus {
-  IDLE = 'idle',
-  CONNECTED = 'connected',
-  DISCONNECTED = 'disconnected',
+  IDLE                 = 'idle',
+  CONNECTED            = 'connected',
+  DISCONNECTED         = 'disconnected',
   PLUGIN_NOT_INSTALLED = 'plugin_not_installed',
 }
 
 export interface DeviceStore {
   battery: BatteryInfo
-  deviceChipMap: Map<string, DeviceChip>
   deviceMap: Map<string, DeviceInfo>
+  productMap: Map<string, ProductInfo>
   infoMap: Map<string, DeviceForm>
 
   screenshot: string
   status: ConnStatus
   selectedDevice: string
-  
-  printPreview: string
-  printPreviewVisible: boolean
 }
 
-interface DeviceChip {
+interface ProductInfo {
   Name: string
   Chip: string
+  Color: string
 }
 
-export const deviceConfig = {
-  api: 'http://192.168.10.3:9999',
-  ws: 'ws://192.168.10.3:10000/ws',
+export const DEVICE_CONFIG = {
+  api: 'http://localhost:9999',
+  ws: 'ws://localhost:10000/ws',
 }

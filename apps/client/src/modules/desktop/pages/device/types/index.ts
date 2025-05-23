@@ -46,15 +46,25 @@ export interface DeviceInfo {
   Contacts: ICloudData
   Notes: ICloudData
 }
-
 interface ICloudData {
   AccountNames: string[]
   Sources: string[]
 }
 
+// GET /battery
+export interface BatteryInfo {
+  BatterySerialNumber: string
+  DesignCapacity: number
+  MaxCapacity: number
+  CycleCount: number
+  NominalChargeCapacity: number
+  FullAvailableCapacity: number
+  AbsoluteCapacity: number
+}
+
 export interface DeviceForm {
+  Imei: string
   SerialNumber: string
-  InternationalMobileEquipmentIdentity: string
   ModelNumber: string
   RegionInfo: string
   MLBSerialNumber: string
@@ -71,13 +81,12 @@ export interface DeviceForm {
   CPU: string
 }
 
-// GET /battery
-export interface BatteryInfo {
-  BatterySerialNumber: string
-  DesignCapacity: number
-  MaxCapacity: number
-  CycleCount: number
-  NominalChargeCapacity: number
-  FullAvailableCapacity: number
-  AbsoluteCapacity: number
+export interface ProductData {
+  [key: string]: string | Product | Product[]
+}
+
+export interface Product {
+  Name: string
+  Chip: string
+  [key: string]: string
 }

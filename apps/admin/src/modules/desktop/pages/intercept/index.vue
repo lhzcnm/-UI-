@@ -1,5 +1,52 @@
+<script setup lang="ts">
+import InterceptForm from './components/InterceptForm.vue'
+import { zInterceptForm } from '@/inters/intercept'
+import { getIntercepts } from '@/api/intercept'
+
+import type { InterceptStore } from './utils'
+import { columns } from './utils/column'
+import { INTERCEPT_STORE } from './utils'
+
+const store: InterceptStore = reactive({
+  formBase: zInterceptForm.parse({}),
+  visibleBase: false,
+  index: undefined,
+  intercepts: [],
+})
+
+provide(INTERCEPT_STORE, store)
+
+await getList()
+async function getList() {
+  const data = await getIntercepts()
+  store.intercepts = data
+}
+
+function openCreate() {
+  store.formBase = zInterceptForm.parse({})
+  store.index = undefined
+  store.visibleBase = true
+}
+</script>
+
 <template>
   <div>
-    <h1>拦截管理</h1>
+    <section class="p-3 border-b">
+      <XButton
+        color="success" icon="lucide:plus"
+        label="新增拦截" @click="openCreate"
+      />
+    </section>
+
+    <div class="p-3">
+      <XTable
+        :columns="columns"
+        :data="store.intercepts"
+        row-key="id"
+        class="border h-[calc(100vh-8.75rem)]"
+      />
+    </div>
+
+    <InterceptForm />
   </div>
 </template>

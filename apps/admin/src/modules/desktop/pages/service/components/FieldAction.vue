@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 
 import type { ServiceField } from '@/inters/services'
 import { zServiceFieldForm } from '@/inters/services'

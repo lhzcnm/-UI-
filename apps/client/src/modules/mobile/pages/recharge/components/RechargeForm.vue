@@ -32,7 +32,7 @@ const amountList = [
   { label: '1000 元', info: '免手续费', value: 1000 },
 ]
 
-function handleCustomAmount(value: string | number | undefined) {
+function handleCustomAmount(value: any) {
   if (!value) return
 
   const numStr = value.toString().replace(/[^\d]/g, '')

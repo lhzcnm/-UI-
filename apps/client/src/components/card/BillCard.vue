@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import type { InvoiceItem } from '@/api/user'
-import { PAYMENT_STATUS_MAP } from '@3un/shared/enums'
+import { PAYMENT_STATUS_MAP } from '@3un/utils'
 import { twMerge } from 'tailwind-merge'
 
 defineProps<{ item: InvoiceItem }>()

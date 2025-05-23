@@ -1,6 +1,4 @@
-import type { XTagColor } from '@3un/ui'
-
-type StatusMap = Record<number, { color: XTagColor, label: string }>
+import type { StatusMap } from '@3un/shared'
 
 // Imei Type
 export enum IMEI_TYPE {

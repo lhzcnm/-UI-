@@ -3,7 +3,7 @@ import { twJoin } from 'tailwind-merge'
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 
-import { DEVICE_STORE, deviceConfig } from '../utils'
+import { DEVICE_STORE, DEVICE_CONFIG } from '../utils'
 
 const store = inject(DEVICE_STORE)!
 const isRecoveryMode = ref(false)
@@ -18,13 +18,13 @@ function handleRecoveryMode() {
 
 async function handleEnterRecoveryMode() {
   const [_, uniqueId] = store.selectedDevice.split(':')
-  await fetch(`${deviceConfig.api}/enterRecoveryMode/${uniqueId}`)
+  await fetch(`${DEVICE_CONFIG.api}/enterRecoveryMode/${uniqueId}`)
   isRecoveryMode.value = true
 }
 
 async function handleExitRecoveryMode() {
   const device = store.deviceMap.get(store.selectedDevice)!
-  await fetch(`${deviceConfig.api}/irecovery/${device.UniqueChipID}`)
+  await fetch(`${DEVICE_CONFIG.api}/irecovery/${device.UniqueChipID}`)
   isRecoveryMode.value = false
 }
 
@@ -32,7 +32,7 @@ function handleCopy() {
   const info = store.infoMap.get(store.selectedDevice)!
   const meta = [
     ['序列号', info.SerialNumber],
-    ['串号', info.InternationalMobileEquipmentIdentity],
+    ['串号', info.Imei],
     ['型号号码', `${info.ModelNumber} ${info.RegionInfo}`],
     ['主板序号', info.MLBSerialNumber],
     ['系统版本', `${info.ProductVersion} (${info.BuildVersion})`],
@@ -55,17 +55,17 @@ async function handlePrint() {
 
   const device = store.deviceMap.get(store.selectedDevice)!
   const info = store.infoMap.get(store.selectedDevice)!
-  const chip = store.deviceChipMap.get(store.selectedDevice)!
+  const product = store.productMap.get(store.selectedDevice)!
 
   const response = await fetch(
-    `${deviceConfig.api}/print`,
+    `${DEVICE_CONFIG.api}/print`,
     {
       method: 'POST',
       body: JSON.stringify({
-        DeviceName: chip.Name,
-        Color: device.DeviceColor,
+        DeviceName: product.Name,
+        Color: product.Color,
+        Imei: info.Imei,
         MLBSerialNumber: info.MLBSerialNumber,
-        Imei: info.InternationalMobileEquipmentIdentity,
         ProductVersion: info.ProductVersion,
         RegionInfo: info.RegionInfo,
         ModelNumber: info.ModelNumber,
@@ -99,7 +99,7 @@ async function handlePrint() {
         <XSelectItem
           v-for="{ DeviceID, UniqueDeviceID } in store.deviceMap.values()"
           :key="UniqueDeviceID" :value="`${DeviceID}:${UniqueDeviceID}`"
-          :label="store.deviceChipMap.get(`${DeviceID}:${UniqueDeviceID}`)?.Name"
+          :label="store.productMap.get(`${DeviceID}:${UniqueDeviceID}`)?.Name"
         />
       </XSelect>
 

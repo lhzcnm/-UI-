@@ -1,7 +1,7 @@
 import type { TicketCreateForm, TicketItem, TicketReplyItem } from '@/api/tickets'
 import type { InjectionKey } from 'vue'
 
-import { TICKET_PRIORITY, TICKET_TYPE } from '@3un/shared/enums'
+import { TICKET_PRIORITY, TICKET_TYPE } from '@3un/utils'
 
 export interface TicketStore {
   tickets: TicketItem[]

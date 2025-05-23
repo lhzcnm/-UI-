@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { xconfirm } from '@3un/shared/confirm'
+import { xconfirm } from '@3un/utils'
 
 import type { ServiceGroup } from '@/inters/services'
 import { deleteServiceGroup } from '@/api/services'
