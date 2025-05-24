@@ -1,5 +1,11 @@
 import type { StatusMap } from '@3un/shared'
 
+// User Role
+export enum USER_ROLE {
+  USER = 0,
+  ADMIN = 1,
+}
+
 // Imei Type
 export enum IMEI_TYPE {
   NONE = 5,

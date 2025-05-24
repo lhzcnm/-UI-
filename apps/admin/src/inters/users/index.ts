@@ -1,5 +1,5 @@
 import type { IList, WithId, IPage } from '@3un/shared'
-import { PAYMENT_METHOD } from '@3un/utils'
+import { PAYMENT_METHOD, USER_ROLE } from '@3un/utils'
 import * as z from 'zod'
 
 export * from './extra'
@@ -53,7 +53,7 @@ export const zUser = z.interface({
   bulkCheckApi: z.string().nullable().default(null),
   headImgUrl: z.string().nullable().default(null),
   nickName: z.string().nullable().default(null),
-  role: z.number().default(0),
+  role: z.enum(USER_ROLE).default(USER_ROLE.USER),
   ips: z.string().nullable().default(null),
   // opanStartDt: z.string().nullable().default(null),
   // opanEndDt: z.string().nullable().default(null),

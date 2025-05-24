@@ -22,7 +22,7 @@ const menus = [
     label: '我的设备',
     path: '/device',
     icon: 'iconoir:laptop-charging',
-    // hide: uStore.info.pricePlanId < 3,
+    hide: uStore.info.pricePlanId < 3,
   },
   { label: '我的订单', path: '/history', icon: 'iconoir:page-flip' },
   { label: '积分充值', path: '/recharge', icon: 'iconoir:credit-card' },

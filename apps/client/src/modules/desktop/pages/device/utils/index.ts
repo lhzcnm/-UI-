@@ -9,9 +9,13 @@ export interface DeviceStore {
 }
 
 export const DEVICE_STORE: IK<DeviceStore> = Symbol('device')
+// export const DEVICE_CONFIG = {
+//   api: 'http://192.168.10.3:9999',
+//   ws: 'ws://192.168.10.3:10000/ws',
+// }
 export const DEVICE_CONFIG = {
-  api: 'http://192.168.10.3:9999',
-  ws: 'ws://192.168.10.3:10000/ws',
+  api: 'http://localhost:9999',
+  ws: 'ws://localhost:10000/ws',
 }
 
 export function formatSize(bytes: number) {
