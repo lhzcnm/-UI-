@@ -1,14 +1,14 @@
-import type { IK } from "@3un/shared"
 import type { DeviceInfo, DeviceForm, ProductItem, Device } from "../types"
+import type { IK } from "@3un/shared"
 
 export interface DeviceStore {
+  updateSelected: (info: DeviceInfo) => void
   deviceMap: Map<string, Device>
-  status: 'list' | 'detail' | 'wait' | 'plugin'
   screenshot: string
   selected: string
 }
 
-export const DEVICE_STORE: IK<DeviceStore> = Symbol('device')
+export const DEVICE_STORE: IK<DeviceStore> = Symbol('deviceStore')
 export const DEVICE_CONFIG = {
   api: 'http://192.168.10.3:9999',
   ws: 'ws://192.168.10.3:10000/ws',

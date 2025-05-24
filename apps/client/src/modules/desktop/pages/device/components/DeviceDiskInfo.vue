@@ -1,33 +1,25 @@
 <script setup lang="ts">
-import { DEVICE_STORE } from '../utils'
+import { DEVICE_STORE, formatSize } from '../utils'
 
 const store = inject(DEVICE_STORE)!
+
 const diskInfo = computed(() => {
-  const info = store.deviceMap.get(store.selectedDevice)!
+  const { info } = store.deviceMap.get(store.selected)!
+  const total = info.TotalDiskCapacity
+
   return {
-    totalDiskCapacity: formatFileSize(info.TotalDiskCapacity),
-    totalSystemCapacity: formatFileSize(info.TotalSystemCapacity),
-    totalDataCapacity: formatFileSize(info.TotalDataCapacity),
-    amountDataAvailable: formatFileSize(info.AmountDataAvailable),
-    // totalDiskCapacityPercentage: getPercentage(info.TotalDiskCapacity),
-    totalSystemCapacityPercentage: getPercentage(info.TotalSystemCapacity),
-    totalDataCapacityPercentage: getPercentage(info.TotalDataCapacity),
-    amountDataAvailablePercentage: getPercentage(info.AmountDataAvailable),
+    totalDiskCapacity: formatSize(total),
+    totalSystemCapacity: formatSize(info.TotalSystemCapacity),
+    totalDataCapacity: formatSize(info.TotalDataCapacity),
+    amountDataAvailable: formatSize(info.AmountDataAvailable),
+    totalDiskCapacityPer: getPercentage(info.TotalDiskCapacity, total),
+    totalSystemCapacityPer: getPercentage(info.TotalSystemCapacity, total),
+    totalDataCapacityPer: getPercentage(info.TotalDataCapacity, total),
+    amountDataAvailablePer: getPercentage(info.AmountDataAvailable, total),
   }
 })
 
-function formatFileSize(bytes: number) {
-  if (bytes === 0) return '0 B'
-  
-  const units = ['B', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(bytes) / Math.log(1024))
-
-  return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + units[i]
-}
-
-function getPercentage(part: number) {
-  const info = store.deviceMap.get(store.selectedDevice)!
-  const total = info.TotalDiskCapacity
+function getPercentage(part: number, total: number) {
   return Math.round((part / total) * 100)
 }
 </script>
@@ -50,13 +42,13 @@ function getPercentage(part: number) {
         <span class="text-sm">系统占用</span>
         <span class="text-sm">
           {{ diskInfo.totalSystemCapacity }}
-          ({{ diskInfo.totalSystemCapacityPercentage }}%)
+          ({{ diskInfo.totalSystemCapacityPer }}%)
         </span>
       </div>
       <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
         <div
           class="bg-orange-500 h-full rounded-full"
-          :style="{ width: `${diskInfo.totalSystemCapacityPercentage}%` }"
+          :style="{ width: `${diskInfo.totalSystemCapacityPer}%` }"
         />
       </div>
     </div>
@@ -66,13 +58,13 @@ function getPercentage(part: number) {
         <span class="text-sm">用户数据</span>
         <span class="text-sm">
           {{ diskInfo.totalDataCapacity }}
-          ({{ diskInfo.totalDataCapacityPercentage }}%)
+          ({{ diskInfo.totalDataCapacityPer }}%)
         </span>
       </div>
       <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
         <div
           class="bg-primary h-full rounded-full"
-          :style="{ width: `${diskInfo.totalDataCapacityPercentage}%` }"
+          :style="{ width: `${diskInfo.totalDataCapacityPer}%` }"
         />
       </div>
     </div>
@@ -82,13 +74,13 @@ function getPercentage(part: number) {
         <span class="text-sm">可用空间</span>
         <span class="text-sm">
           {{ diskInfo.amountDataAvailable }}
-          ({{ diskInfo.amountDataAvailablePercentage }}%)
+          ({{ diskInfo.amountDataAvailablePer }}%)
         </span>
       </div>
       <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
         <div
           class="bg-success h-full rounded-full"
-          :style="{ width: `${diskInfo.amountDataAvailablePercentage}%` }"
+          :style="{ width: `${diskInfo.amountDataAvailablePer}%` }"
         />
       </div>
     </div>

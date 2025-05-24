@@ -8,10 +8,6 @@ import { xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { Icon } from '@iconify/vue'
 
-const store = inject(DEVICE_STORE)!
-const uStore = useUserStore()
-
-const { copy } = useClipboard({ legacy: true })
 const style = tv({
   slots: {
     label: 'inline-block w-20 text-muted-foreground',
@@ -19,10 +15,20 @@ const style = tv({
   },
 })
 
-const device = computed(() => store.deviceMap.get(store.selectedDevice)!)
-const info = computed(() => store.infoMap.get(store.selectedDevice)!)
+const store = inject(DEVICE_STORE)!
+const uStore = useUserStore()
 
-const isActivated = ref(device.value.ActivationState === 'Activated')
+const { copy } = useClipboard({ legacy: true })
+
+const form = computed({
+  get: () => store.deviceMap.get(store.selected)!.form,
+  set: (value) => {
+    store.deviceMap.get(store.selected)!.form = value
+  },
+})
+
+const defaultState = form.value.ActivationState
+const isActivated = ref(defaultState === 'Activated')
 
 const loadings = reactive({
   networkLock: false,
@@ -32,23 +38,23 @@ const loadings = reactive({
 
 async function handleActivation() {
   const suffix = isActivated.value ? 'deactivate' : 'activation'
-  const [_, uniqueId] = store.selectedDevice.split(':')
+  const [_, uniqueId] = store.selected.split(':')
   
   await fetch(`${DEVICE_CONFIG.api}/${suffix}/${uniqueId}`)
-  isActivated.value = !isActivated.value
   
-  const info = store.infoMap.get(store.selectedDevice)!
-  info.ActivationState = isActivated.value ? '已激活' : '未激活'
+  isActivated.value = !isActivated.value
+  form.value.ActivationState = isActivated.value ? '已激活' : '未激活'
 }
 
 async function handleNetworkLock() {
   if (!await checkFreecount(1160)) return
 
   loadings.networkLock = true
+  const { info } = store.deviceMap.get(store.selected)!
   const response = http.post('/device/query', {
-    imei: device.value.InternationalMobileEquipmentIdentity,
-    imei2: device.value.InternationalMobileEquipmentIdentity2,
-    sn: device.value.SerialNumber,
+    imei: info.InternationalMobileEquipmentIdentity,
+    imei2: info.InternationalMobileEquipmentIdentity2,
+    sn: info.SerialNumber,
     serviceId: 1160,
     type: 'NetworkLock',
   })
@@ -63,9 +69,7 @@ async function handleNetworkLock() {
     }
 
     const status = options[data as keyof typeof options]
-    const info = store.infoMap.get(store.selectedDevice)!
-    info.NetworkLock = `${data}(${status})`
-
+    form.value.NetworkLock = `${data}(${status})`
     uStore.updateCredit()
   })
 
@@ -78,10 +82,11 @@ async function handleActivationLock() {
   if (! await checkFreecount(1161)) return
 
   loadings.activationLock = true
+  const { info } = store.deviceMap.get(store.selected)!
   const response = http.post('/device/query', {
-    imei: device.value.InternationalMobileEquipmentIdentity,
-    imei2: device.value.InternationalMobileEquipmentIdentity2,
-    sn: device.value.SerialNumber,
+    imei: info.InternationalMobileEquipmentIdentity,
+    imei2: info.InternationalMobileEquipmentIdentity2,
+    sn: info.SerialNumber,
     serviceId: 1161,
     type: 'ActivationLock',
   })
@@ -91,8 +96,7 @@ async function handleActivationLock() {
     if (data === '开启') status = 'ON'
     else if (data === '关闭') status = 'OFF'
 
-    const info = store.infoMap.get(store.selectedDevice)!
-    info.ActivationLock = `${status}(${data})`
+    form.value.ActivationLock = `${status}(${data})`
     uStore.updateCredit()
   })
 
@@ -105,15 +109,15 @@ async function handleWarranty() {
   if (!await checkFreecount(1162)) return
 
   loadings.warranty = true
+  const { info } = store.deviceMap.get(store.selected)!
   const response = http.post('/device/query', {
-    sn: device.value.SerialNumber,
+    sn: info.SerialNumber,
     serviceId: 1162,
     type: 'Warranty',
   })
 
   response.then(({ data }) => {
-    const info = store.infoMap.get(store.selectedDevice)!
-    info.Warranty = data
+    form.value.Warranty = data
     uStore.updateCredit()
   })
 
@@ -150,43 +154,43 @@ const b = style()
       <div>
         <span :class="b.label()">序列号</span>
         <span :class="b.value()" @click="cp">
-          {{ info.SerialNumber }}
+          {{ form.SerialNumber }}
         </span>
       </div>
       <div>
         <span :class="b.label()">串号</span>
         <span :class="b.value()" @click="cp">
-          {{ info.Imei }}
+          {{ form.Imei }}
         </span>
       </div>
       <div>
         <span :class="b.label()">型号号码</span>
         <span :class="b.value()" @click="cp">
-          {{ info.ModelNumber }} {{ info.RegionInfo }}
+          {{ form.ModelNumber }} {{ form.RegionInfo }}
         </span>
       </div>
       <div>
         <span :class="b.label()">主板序号</span>
         <span :class="b.value()" @click="cp">
-          {{ info.MLBSerialNumber }}
+          {{ form.MLBSerialNumber }}
         </span>
       </div>
       <div>
         <span :class="b.label()">系统版本</span>
         <span :class="b.value()" @click="cp">
-          {{ info.ProductVersion }} ({{ info.BuildVersion }})
+          {{ form.ProductVersion }} ({{ form.BuildVersion }})
         </span>
       </div>
       <div>
         <span :class="b.label()">ECID</span>
         <span :class="b.value()" @click="cp">
-          {{ info.UniqueChipID }}
+          {{ form.UniqueChipID }}
         </span>
       </div>
       <div>
         <span :class="b.label()">UDID</span>
         <span :class="b.value()" @click="cp">
-          {{ info.UniqueDeviceID }}
+          {{ form.UniqueDeviceID }}
         </span>
       </div>
     </div>
@@ -196,7 +200,7 @@ const b = style()
         <span :class="b.label()">激活状态</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ info.ActivationState }}
+            {{ form.ActivationState }}
           </span>
           <button class="ml-2 text-primary" @click="handleActivation">
             {{ isActivated ? '反激活' : '激活' }}
@@ -206,7 +210,7 @@ const b = style()
       <div class="flex items-center">
         <span :class="b.label()">网络锁</span>
         <div class="flex-1 flex items-center justify-between">
-          <span :class="b.value()" @click="cp">{{ info.NetworkLock }}</span>
+          <span :class="b.value()" @click="cp">{{ form.NetworkLock }}</span>
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary"
             :disabled="loadings.networkLock"
@@ -220,7 +224,7 @@ const b = style()
       <div class="flex items-center">
         <span :class="b.label()">激活锁</span>
         <div class="flex-1 flex items-center justify-between">
-          <span :class="b.value()" @click="cp">{{ info.ActivationLock }}</span>
+          <span :class="b.value()" @click="cp">{{ form.ActivationLock }}</span>
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary"
             :disabled="loadings.activationLock"
@@ -234,7 +238,7 @@ const b = style()
       <div class="flex items-center">
         <span :class="b.label()">保修期限</span>
         <div class="flex-1 flex items-center justify-between">
-          <span :class="b.value()" @click="cp">{{ info.Warranty }}</span>
+          <span :class="b.value()" @click="cp">{{ form.Warranty }}</span>
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary"
             :disabled="loadings.warranty"
@@ -249,14 +253,14 @@ const b = style()
         <span :class="b.label()">iCloud</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ info.iCloud }}
+            {{ form.iCloud }}
           </span>
         </div>
       </div>
       <div class="flex items-center">
         <span :class="b.label()">CPU</span>
         <span :class="b.value()" @click="cp">
-          {{ info.CPU }}
+          {{ form.CPU }}
         </span>
       </div>
     </div>

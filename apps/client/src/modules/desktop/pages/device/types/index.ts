@@ -82,11 +82,24 @@ export interface DeviceForm {
 }
 
 export interface ProductData {
-  [key: string]: string | Product | Product[]
+  [key: string]: string | ProductInfo | ProductInfo[]
 }
 
-export interface Product {
+export interface ProductInfo {
+  [key: string]: string
   Name: string
   Chip: string
-  [key: string]: string
+}
+
+export interface ProductItem {
+  Name: string
+  Chip: string
+  Color: string
+}
+
+export interface Device {
+  info: DeviceInfo
+  battery: BatteryInfo
+  product: ProductItem
+  form: DeviceForm
 }

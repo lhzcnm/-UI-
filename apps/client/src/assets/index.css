@@ -216,3 +216,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: translateX(400%);
   }
 }
+
+/* 垂直滑动 */
+.slide-vertical-enter-active,
+.slide-vertical-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-vertical-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.slide-vertical-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.slide-vertical-move {
+  transition: transform 0.3s ease;
+}

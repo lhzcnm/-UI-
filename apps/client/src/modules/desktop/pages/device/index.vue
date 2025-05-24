@@ -1,41 +1,50 @@
 <script setup lang="ts">
-import DevicePhoneDisplay from './components/DevicePhoneDisplay.vue'
-import DeviceInfoHeader from './components/DeviceInfoHeader.vue'
-import DeviceInfoGrid from './components/DeviceInfoGrid.vue'
-import DeviceBatteryInfo from './components/DeviceBatteryInfo.vue'
-import DeviceDiskInfo from './components/DeviceDiskInfo.vue'
-import WaitConnect from './components/WaitConnect.vue'
-import PluginDownload from './components/PluginDownload.vue'
+import DeviceList from './views/DeviceList.vue'
+import DeviceDetail from './views/DeviceDetail.vue'
+import WaitConnect from './views/WaitConnect.vue'
+import PluginDownload from './views/PluginDownload.vue'
 
 import { useWebSocket } from '@vueuse/core'
 
 import type { DeviceStore } from './utils'
-import type { BatteryInfo, DeviceInfo, Product, ProductData } from './types'
-import { DEVICE_STORE, ConnStatus, DEVICE_CONFIG } from './utils'
-import DEVICE_DATA from '@/assets/devices-ios.json'
+import type { BatteryInfo, DeviceInfo, ProductData, ProductInfo, ProductItem } from './types'
+import { DEVICE_STORE, DEVICE_CONFIG, getDeviceForm } from './utils'
 import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
-  battery: {} as BatteryInfo,
   deviceMap: new Map(),
-  productMap: new Map(),
-  infoMap: new Map(),
-
+  status: 'wait',
   screenshot: '',
-  selectedDevice: '',
-  status: ConnStatus.IDLE,
+  selected: '',
 })
 
 provide(DEVICE_STORE, store)
 
-await checkPlugin()
+let datasets: ProductData
 
-const visible = computed(() => ({
-  waiting: store.status === ConnStatus.IDLE
-    || store.status === ConnStatus.DISCONNECTED,
-  plugin: store.status === ConnStatus.PLUGIN_NOT_INSTALLED,
-  connected: store.status === ConnStatus.CONNECTED,
-}))
+await checkPlugin()
+async function checkPlugin() {
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), 5000)
+
+  try {
+    const response = await fetch(
+      `${DEVICE_CONFIG.api}/info`,
+      { signal: controller.signal },
+    )
+
+    const { data } = await response.json()
+    const r = await fetch('/devices-ios.json')
+    datasets = await r.json() as ProductData
+
+    if (data.length === 0) return
+    await Promise.all(data.map(handleDevice))
+    store.status = 'list'
+  }
+  catch (error) {
+    store.status = 'plugin'
+  }
+}
 
 const { data } = useWebSocket(
   DEVICE_CONFIG.ws,
@@ -48,95 +57,45 @@ const { data } = useWebSocket(
   },
 )
 
-watch(data, (value) => {
+watch(data, async (value) => {
   if (value.startsWith('disconnected:')) {
-    handleDisconnect(value)
-    return
+    return handleDisconnect(value)
   }
 
   const data = JSON.parse(value) as DeviceInfo
-  const key = `${data.DeviceID}:${data.UniqueDeviceID}`
-
-  const product = getProduct(data)
-  store.productMap.set(key, product)
-  store.deviceMap.set(key, data)
-  store.infoMap.set(key, {
-    ModelNumber: data.ModelNumber,
-    SerialNumber: data.SerialNumber,
-    MLBSerialNumber: data.MLBSerialNumber,
-    Imei: data.InternationalMobileEquipmentIdentity,
-    ProductVersion: data.ProductVersion,
-    BuildVersion: data.BuildVersion,
-    RegionInfo: data.RegionInfo,
-    UniqueChipID: data.UniqueChipID.toString(),
-    UniqueDeviceID: data.UniqueDeviceID,
-    ActivationState: data.ActivationState ? '已激活' : '未激活',
-    iCloud: data.CloudBackupEnabled ? '已开启' : '未开启',
-    CPU: product.Chip || '--',
-    Warranty: '--',
-    NetworkLock: '--',
-    ActivationLock: '--',
-  })
+  await handleDevice(data)
 
   http.post('/device/save', data)
   if (store.deviceMap.size === 1) {
-    store.status = ConnStatus.CONNECTED
-    store.selectedDevice = key
+    store.status = 'list'
   }
 })
 
 watch(
-  () => store.selectedDevice,
+  () => store.selected,
   (value) => {
     if (!value) return
     const [, uniqueId] = value.split(':')
     getScreenshot(uniqueId)
-    getBatteryInfo(uniqueId)
   },
 )
 
-async function checkPlugin() {
-  try {
-    const controller = new AbortController()
-    setTimeout(() => controller.abort(), 2000)
-    await fetch(DEVICE_CONFIG.api, {
-      signal: controller.signal,
-    })
-  }
-  catch (error) {
-    store.status = ConnStatus.PLUGIN_NOT_INSTALLED
-    console.error('Plugin not installed')
-  }
-}
+async function handleDevice(data: DeviceInfo) {
+  const product = getProduct(data)
+  const battery = await getBatteryInfo(data, product)
+  const key = `${data.DeviceID}:${data.UniqueDeviceID}`
 
-async function getScreenshot(id: string) {
-  const response = await fetch(`${DEVICE_CONFIG.api}/screenshot/${id}`)
-  const blob = await response.blob()
-  store.screenshot = URL.createObjectURL(blob)
-}
-
-async function getBatteryInfo(id: string) {
-  const product = store.productMap.get(store.selectedDevice)!
-  const response = await fetch(
-    `${DEVICE_CONFIG.api}/battery`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        ProductName: product.Name,
-        UniqueId: id,
-      }),
-    },
-  )
-
-  const { data } = await response.json()
-  store.battery = data
+  store.deviceMap.set(key, {
+    form: getDeviceForm(data, product),
+    battery: battery as BatteryInfo,
+    product: product,
+    info: data,
+  })
 }
 
 function getProduct(data: DeviceInfo) {
-  let datasets = DEVICE_DATA as ProductData
-
   type ProductKey = keyof typeof datasets
-  let product = datasets[data.ProductType as ProductKey] as Product
+  let product = datasets[data.ProductType as ProductKey] as ProductInfo
   if (Array.isArray(product)) product = product[0]
 
   let color = product[data.DeviceColor]
@@ -159,43 +118,50 @@ function handleDisconnect(value: string) {
     const keyPrefix = key.split(':')[0]
     if (keyPrefix === deviceId) {
       store.deviceMap.delete(key)
-      store.productMap.delete(key)
-      store.infoMap.delete(key)
     }
   }
 
   if (store.deviceMap.size === 0) {
-    store.status = ConnStatus.DISCONNECTED
+    store.status = 'wait'
   }
+}
 
-  if (store.deviceMap.size > 0) {
-    const key = store.deviceMap.keys().next().value!
-    store.selectedDevice = key
-  }
+async function getBatteryInfo(
+  device: DeviceInfo, 
+  product: ProductItem
+) {
+  const response = await fetch(
+    `${DEVICE_CONFIG.api}/battery`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        ProductName: product.Name,
+        UniqueId: device.UniqueDeviceID,
+      }),
+    },
+  )
+
+  return (await response.json()).data
+}
+
+async function getScreenshot(id: string) {
+  const response = await fetch(`${DEVICE_CONFIG.api}/screenshot/${id}`)
+  const blob = await response.blob()
+  store.screenshot = URL.createObjectURL(blob)
+}
+
+const components = {
+  list: DeviceList,
+  detail: DeviceDetail,
+  wait: WaitConnect,
+  plugin: PluginDownload,
 }
 </script>
 
 <template>
   <div class="relative p-4 h-full">
-    <TransitionGroup name="fade-in">
-      <WaitConnect v-if="visible.waiting" key="waiting" />
-      <PluginDownload v-if="visible.plugin" key="plugin" />
-
-      <div v-if="visible.connected" key="connected" class="flex">
-        <DevicePhoneDisplay />
-
-        <div class="flex-1 min-w-[800px] max-w-screen-lg py-4">
-          <div class="overflow-hidden border rounded-lg mb-4">
-            <DeviceInfoHeader />
-            <DeviceInfoGrid />
-          </div>
-
-          <div class="flex space-x-4">
-            <DeviceBatteryInfo class="flex-1" />
-            <DeviceDiskInfo class="flex-1" />
-          </div>
-        </div>
-      </div>
-    </TransitionGroup>
+    <Transition name="fade-in" mode="out-in">
+      <component :is="components[store.status]" />
+    </Transition>
   </div>
 </template>

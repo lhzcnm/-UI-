@@ -52,7 +52,7 @@ const handleRestart = useThrottleFn(onRestart, 1000)
 const handleShutdown = useThrottleFn(onShutdown, 1000)
 
 const deviceImage = computed(() => {
-  const product = store.productMap.get(store.selectedDevice)
+  const { product } = store.deviceMap.get(store.selected)!
   const matched = product ? product.Name.match(/^iPhone (\d+)/) : null
   return deviceMockup[getDeviceType(matched)]
 })
@@ -81,17 +81,17 @@ function getCurrentDate() {
 }
 
 async function onRestart() {
-  const [_, uniqueId] = store.selectedDevice.split(':')
+  const [_, uniqueId] = store.selected.split(':')
   await fetch(`${apiUrl}/reboot/${uniqueId}`)
 }
 
 async function onShutdown() {
-  const [_, uniqueId] = store.selectedDevice.split(':')
+  const [_, uniqueId] = store.selected.split(':')
   await fetch(`${apiUrl}/shutdown/${uniqueId}`)
 }
 
 async function onRefresh() {
-  const [_, uniqueId] = store.selectedDevice.split(':')
+  const [_, uniqueId] = store.selected.split(':')
   const response = await fetch(`${apiUrl}/screenshot/${uniqueId}`)
   const blob = await response.blob()
 
