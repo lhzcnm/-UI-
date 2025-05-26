@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AdminForm from './components/AdminForm.vue'
+import AdminDialog from './components/AdminDialog.vue'
 import { zAdminForm } from '@/inters/users'
 import { getAdmins } from '@/api/admin'
 
@@ -47,6 +47,6 @@ function openCreate() {
       />
     </div>
 
-    <AdminForm />
+    <AdminDialog />
   </div>
 </template>

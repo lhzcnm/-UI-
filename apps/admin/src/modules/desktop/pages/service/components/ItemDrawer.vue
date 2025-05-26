@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ItemFormBase from '@forms/service/ItemFormBase.vue'
+import ItemForm from '@/components/forms/service/ItemForm.vue'
 import { createService, deleteService, updateService } from '@/api/services'
 
 import type { FormMode } from '@3un/shared'
@@ -78,7 +78,7 @@ async function handleDelete() {
     v-model="store.visibleBase"
     width="500px" :title="options[mode].title"
   >
-    <ItemFormBase v-model="store.formBase" />
+    <ItemForm v-model="store.formBase" />
     <template #footer>
       <div class="flex justify-between p-4 border-t">
         <XButton

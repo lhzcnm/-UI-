@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ItemForm from './components/ItemForm.vue'
+import ItemDrawer from './components/ItemDrawer.vue'
 
 import { zServiceForm } from '@/inters/services'
 import { SERVICE_STORE, type ServiceStore } from './utils'
@@ -93,6 +93,6 @@ function openCreate() {
       />
     </div>
 
-    <ItemForm />
+    <ItemDrawer />
   </div>
 </template>

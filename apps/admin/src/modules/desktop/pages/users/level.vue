@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LevelForm from './components/LevelForm.vue'
+import LevelDialog from './components/LevelDialog.vue'
 import { zLevelForm } from '@/inters/level'
 
 import type { LevelStore } from './utils'
@@ -43,6 +43,6 @@ function openCreate() {
       />
     </div>
 
-    <LevelForm />
+    <LevelDialog />
   </div>
 </template>

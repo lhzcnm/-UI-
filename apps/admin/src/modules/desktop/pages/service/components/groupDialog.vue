@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupFormBase from '@forms/service/groupFormBase.vue'
+import GroupForm from '@/components/forms/service/groupForm.vue'
 import { createServiceGroup, updateServiceGroup } from '@/api/services'
 import { GROUP_STORE } from '../utils'
 
@@ -29,6 +29,6 @@ async function handleUpdate() {
     :update="handleUpdate"
     :create="handleCreate"
   >
-    <GroupFormBase v-model="store.formBase" />
+    <GroupForm v-model="store.formBase" />
   </FormDialog>
 </template>

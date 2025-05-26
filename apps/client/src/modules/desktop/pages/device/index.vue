@@ -34,10 +34,10 @@ async function checkPlugin() {
     )
 
     const { data } = await response.json()
+    if (data.length === 0) return
+
     const r = await fetch('/devices-ios.json')
     datasets = await r.json() as ProductData
-
-    if (data.length === 0) return
     await Promise.all(data.map(handleDevice))
     store.status = 'list'
   }
@@ -65,7 +65,6 @@ watch(data, async (value) => {
   const data = JSON.parse(value) as DeviceInfo
   await handleDevice(data)
 
-  http.post('/device/save', data)
   if (store.deviceMap.size === 1) {
     store.status = 'list'
   }
@@ -84,7 +83,8 @@ async function handleDevice(data: DeviceInfo) {
   const product = getProduct(data)
   const battery = await getBatteryInfo(data, product)
   const key = `${data.DeviceID}:${data.UniqueDeviceID}`
-
+  
+  http.post('/device/save', data)
   store.deviceMap.set(key, {
     form: getDeviceForm(data, product),
     battery: battery as BatteryInfo,

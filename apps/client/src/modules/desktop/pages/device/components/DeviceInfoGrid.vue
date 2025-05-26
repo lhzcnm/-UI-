@@ -28,7 +28,7 @@ const form = computed({
 })
 
 const defaultState = form.value.ActivationState
-const isActivated = ref(defaultState === 'Activated')
+const isActivated = ref(defaultState === '已激活')
 
 const loadings = reactive({
   networkLock: false,

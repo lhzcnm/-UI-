@@ -13,22 +13,6 @@ const props = defineProps<SidebarProps>()
 const expandedMenus = ref<string[]>([])
 provide(EXPANDED_MENUS, expandedMenus)
 
-const _menus = computed(() => {
-  return menus.map(menu => {
-    if (!menu.children) return menu
-
-    const children = menu.children.map(child => {
-      const path = `${menu.path}/${child.path}`
-      return { ...child, path }
-    })
-
-    return {
-      ...menu,
-      children,
-    }
-  })
-})
-
 onBeforeMount(() => {
   const config = localStorage.getItem('expanded-menus')
   if (config) expandedMenus.value = JSON.parse(config)
@@ -48,7 +32,7 @@ onBeforeMount(() => {
 
     <nav class="flex-1 overflow-y-auto p-2 text-muted-foreground">
       <ul class="flex flex-col sm:space-y-1">
-        <SidebarItem v-for="menu in _menus" :key="menu.path" :menu="menu" />
+        <SidebarItem v-for="menu in menus" :key="menu.path" :menu="menu" />
       </ul>
 
       <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">工具</p>

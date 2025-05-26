@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UnlockForm from './components/UnlockForm.vue'
+import UnlockDialog from './components/UnlockDialog.vue'
 import UnlockConvert from './components/UnlockConvert.vue'
 
 import { zUnlockForm } from '@/inters/services'
@@ -48,7 +48,7 @@ function openCreate() {
       />
     </div>
 
-    <UnlockForm />
+    <UnlockDialog />
     <UnlockConvert />
   </div>
 </template>

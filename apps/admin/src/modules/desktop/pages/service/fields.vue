@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FieldForm from './components/FieldForm.vue'
+import FieldDialog from './components/FieldDialog.vue'
 
 import { toast } from 'vue-sonner'
 
@@ -102,6 +102,6 @@ function handleDelete() {
       />
     </div>
 
-    <FieldForm />
+    <FieldDialog />
   </div>
 </template>

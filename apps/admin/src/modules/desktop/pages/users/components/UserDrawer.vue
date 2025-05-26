@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UserFormBase from '@forms/users/UserFormBase.vue'
+import UserFormBase from '@/components/forms/users/UserForm.vue'
 import { createUser, updateUser } from '@/api/users'
 import { USER_STORE } from '../utils'
 

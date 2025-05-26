@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UserForm from './components/UserForm.vue'
+import UserDrawer from './components/UserDrawer.vue'
 import UserSearch from './components/UserSearch.vue'
 
 import type { UserListParams } from '@/inters/users'
@@ -100,7 +100,7 @@ function resetSearch() {
       />
     </div>
 
-    <UserForm />
+    <UserDrawer />
     <UserSearch />
   </div>
 </template>

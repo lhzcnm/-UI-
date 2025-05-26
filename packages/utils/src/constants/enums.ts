@@ -29,6 +29,10 @@ export const PAYMENT_STATUS_MAP: StatusMap = {
   [PAYMENT_STATUS.UNPAID] : { color: 'info', label: '未支付' },
   [PAYMENT_STATUS.PAID]   : { color: 'success', label: '已支付' },
 }
+export const PAYMENT_STATUS_LIST = [
+  { value: PAYMENT_STATUS.UNPAID, label: '未支付' },
+  { value: PAYMENT_STATUS.PAID, label: '已支付' },
+]
 
 // Payment Method
 export enum PAYMENT_METHOD {
@@ -37,8 +41,8 @@ export enum PAYMENT_METHOD {
   WECHAT = 9,
 }
 export const PAYMENT_METHOD_MAP: StatusMap = {
-  [PAYMENT_METHOD.ADMIN] : { color: 'info', label: '管理员充值' },
-  [PAYMENT_METHOD.ALIPAY] : { color: 'success', label: '支付宝' },
+  [PAYMENT_METHOD.ADMIN] : { color: 'warning', label: '管理员充值' },
+  [PAYMENT_METHOD.ALIPAY] : { color: 'primary', label: '支付宝' },
   [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
 }
 export const PAYMENT_METHOD_LIST = [
@@ -61,7 +65,20 @@ export enum API_TYPE {
   REALTIME = 0,
   DHRU     = 2,
   CUSTOM   = 3,
+  DATABASE = 5,
 }
+export const API_TYPE_MAP: StatusMap = {
+  [API_TYPE.REALTIME] : { color: 'success', label: '实时查询' },
+  [API_TYPE.DHRU]     : { color: 'primary', label: 'DHRU' },
+  [API_TYPE.CUSTOM]   : { color: 'info', label: '自定义' },
+  [API_TYPE.DATABASE] : { color: 'danger', label: '数据库' },
+}
+export const API_TYPE_LIST = [
+  { value: API_TYPE.REALTIME, label: '实时查询' },
+  { value: API_TYPE.DHRU, label: 'DHRU' },
+  { value: API_TYPE.CUSTOM, label: '自定义' },
+  { value: API_TYPE.DATABASE, label: '数据库' },
+]
 
 // Shop
 export enum SHOP_NAME {
@@ -69,6 +86,12 @@ export enum SHOP_NAME {
   MONTHLY1 = 2,
   MONTHLY2 = 3,
   MONTHLY3 = 4,
+}
+export const SHOP_NAME_MAP: StatusMap = {
+  [SHOP_NAME.CREDIT] : { color: 'success', label: '积分充值' },
+  [SHOP_NAME.MONTHLY1] : { color: 'primary', label: '包月会员一个月' },
+  [SHOP_NAME.MONTHLY2] : { color: 'warning', label: '包月会员两个月' },
+  [SHOP_NAME.MONTHLY3] : { color: 'danger', label: '包月会员三个月' },
 }
 
 // Order

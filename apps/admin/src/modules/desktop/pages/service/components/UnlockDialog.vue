@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UnlockFormBase from '@forms/service/UnlockFormBase.vue'
+import UnlockForm from '@/components/forms/service/UnlockForm.vue'
 import { createUnlock, updateUnlock } from '@/api/services'
 import { UNLOCK_STORE } from '../utils'
 
@@ -30,6 +30,6 @@ async function handleUpdate() {
     :update="handleUpdate"
     :create="handleCreate"
   >
-    <UnlockFormBase v-model="store.formBase" />
+    <UnlockForm v-model="store.formBase" />
   </FormDialog>
 </template>

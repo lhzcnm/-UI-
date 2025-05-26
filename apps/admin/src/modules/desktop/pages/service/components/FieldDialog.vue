@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FieldFormBase from '@forms/service/FieldFormBase.vue'
+import FieldForm from '@/components/forms/service/FieldForm.vue'
 import { createServiceField, updateServiceField } from '@/api/services'
 import { FIELD_STORE } from '../utils'
 
@@ -30,6 +30,6 @@ async function handleUpdate() {
     :update="handleUpdate"
     :create="handleCreate"
   >
-    <FieldFormBase v-model="store.formBase" />
+    <FieldForm v-model="store.formBase" />
   </FormDialog>
 </template>

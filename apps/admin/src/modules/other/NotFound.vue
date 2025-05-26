@@ -11,7 +11,7 @@ import { twJoin } from 'tailwind-merge'
   >
     <XEmpty
       src="/images/not_found.png"
-      :ui="{ image: 'bg-card border rounded-lg' }"
+      ui-image="bg-card border rounded-lg"
     >
       <RouterLink to="/" class="block mt-2 text-center">
         返回首页

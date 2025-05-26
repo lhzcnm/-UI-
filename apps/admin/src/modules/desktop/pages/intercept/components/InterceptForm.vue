@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InterceptFormBase from '@forms/InterceptFormBase.vue'
+import InterceptForm from '@/components/forms/InterceptForm.vue'
 import { createIntercept, updateIntercept } from '@/api/intercept'
 import { INTERCEPT_STORE } from '../utils'
 
@@ -28,6 +28,6 @@ async function handleUpdate() {
     :update="handleUpdate"
     :create="handleCreate"
   >
-    <InterceptFormBase v-model="store.formBase" />
+    <InterceptForm v-model="store.formBase" />
   </FormDialog>
 </template>

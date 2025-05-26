@@ -83,7 +83,7 @@ const isActive = computed(() => {
             :class="twMerge(
               'flex items-center px-3 h-9 sm:h-7 space-x-1',
               'rounded hover:bg-accent/15 hover:text-foreground transition-colors',
-              route.path === child.path && 'bg-accent/15 text-foreground',
+              route.fullPath === child.path && 'bg-accent/15 text-foreground',
             )"
             @click="handleChildClick(child, menu.label)"
           >

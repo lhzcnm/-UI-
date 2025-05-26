@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupForm from './components/groupForm.vue'
+import GroupDialog from './components/groupDialog.vue'
 
 import { zServiceGroupForm } from '@/inters/services'
 import { GROUP_STORE, type ServiceGroupStore } from './utils'
@@ -36,6 +36,6 @@ function openCreate() {
       />
     </div>
 
-    <GroupForm />
+    <GroupDialog />
   </div>
 </template>

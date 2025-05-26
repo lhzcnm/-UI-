@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LevelFormBase from '@forms/users/LevelFormBase.vue'
+import LevelFormBase from '@/components/forms/users/LevelForm.vue'
 import { createLevel, updateLevel } from '@/api/level'
 import { LEVEL_STORE } from '../utils'
 

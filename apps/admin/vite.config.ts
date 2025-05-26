@@ -21,6 +21,7 @@ export default defineConfig({
     }),
     Components({
       resolvers: [UIResolver()],
+      deep: false,
       globs: [
         'src/components/**/*.vue',
         '!src/components/logos/*.vue',

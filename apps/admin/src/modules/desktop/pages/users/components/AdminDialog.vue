@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AdminFormBase from '@forms/users/AdminFormBase.vue'
+import AdminForm from '@/components/forms/users/AdminForm.vue'
 import { createAdmin, updateAdmin } from '@/api/admin'
 import { ADMIN_STORE } from '../utils'
 
@@ -28,6 +28,6 @@ async function handleUpdate() {
     :update="handleUpdate"
     :create="handleCreate"
   >
-    <AdminFormBase v-model="store.formBase" />
+    <AdminForm v-model="store.formBase" />
   </FormDialog>
 </template>

@@ -18,9 +18,10 @@ import { Icon } from '@iconify/vue'
         如果插件未运行，请先启动插件，再刷新页面。<br>
         如果插件未安装，请点击下方按钮下载安装插件。
       </p>
-      <XButton icon="lucide:arrow-down-to-line">
-        下载插件
-      </XButton>
+      <div class="space-x-4 text-center">
+        <XButton icon="lucide:arrow-down-to-line">下载插件</XButton>
+        <XButton variant="soft" icon="lucide:refresh-cw" @click="$router.go(0)">刷新页面</XButton>
+      </div>
     </div>
   </div>
 </template>
