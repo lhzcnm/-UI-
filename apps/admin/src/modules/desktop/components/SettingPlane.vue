@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import type { Configs } from '@/inters/settings'
 import SettingAdvanced from './settings/SettingAdvanced.vue'
 import SettingAnno from './settings/SettingAnno.vue'
 import SettingRoutine from './settings/SettingRoutine.vue'
 import SettingTheme from './settings/SettingTheme.vue'
 
+import { getConfigs, getSettings } from '@/api/settings'
+
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
 const visible = defineModel<boolean>({ required: true })
-const tab = ref('routine')
 
 const options = [
   { label: '常规', value: 'routine', icon: 'lucide:settings' },
@@ -23,16 +25,48 @@ const components = {
   announcement: SettingAnno,
   advanced: SettingAdvanced,
 }
+
+const tab = ref('routine')
+const settings = ref()
+const configs = ref()
+
+await Promise.all([
+  getSetting(),
+  getConfig(),
+])
+
+async function getSetting() {
+  const data = await getSettings()
+  settings.value = {}
+
+  for (const item of data) {
+    if (item.content) {
+      settings.value[item.name] = item.content
+      continue
+    }
+    if (item.status) {
+      settings.value[item.name] = item.status
+    }
+  }
+}
+
+async function getConfig() {
+  const data = await getConfigs()
+  configs.value = data.reduce((acc, cur) => {
+    acc[cur.key as keyof Configs] = cur.value
+    return acc
+  }, {} as Configs)
+}
 </script>
 
 <template>
   <XDialog
     v-model="visible" title="设置"
-    uiRoot="sm:max-w-2xl sm:p-0"
+    uiRoot="sm:max-w-2xl sm:p-0 h-[600px]"
     uiHeader="p-3 pb-0"
   >
-    <div class="flex px-2">
-      <div class="w-40 h-96 space-y-1 text-sm pr-1 border-r border-dashed">
+    <div class="flex h-[calc(100%-3.5rem)]">
+      <div class="w-40 space-y-1 text-sm px-3 border-r">
         <button
           v-for="item in options" :key="item.value"
           :class="twJoin(
@@ -46,9 +80,11 @@ const components = {
           <span>{{ item.label }}</span>
         </button>
       </div>
-      <div class="flex-1 px-3">
-        <component :is="components[tab as keyof typeof components]" />
-      </div>
+      <component
+        :is="components[tab as keyof typeof components]"
+        :settings="settings"
+        :configs="configs"
+      />
     </div>
   </XDialog>
 </template>

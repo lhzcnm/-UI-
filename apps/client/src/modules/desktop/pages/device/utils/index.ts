@@ -1,5 +1,5 @@
+import type { DeviceForm, ProductItem, Device, DeviceResponse } from "../types"
 import type { IK } from "@3un/shared"
-import type { DeviceInfo, DeviceForm, ProductItem, Device } from "../types"
 
 export interface DeviceStore {
   deviceMap: Map<string, Device>
@@ -9,14 +9,14 @@ export interface DeviceStore {
 }
 
 export const DEVICE_STORE: IK<DeviceStore> = Symbol('device')
-export const DEVICE_CONFIG = {
-  api: 'http://192.168.10.3:9999',
-  ws: 'ws://192.168.10.3:10000/ws',
-}
 // export const DEVICE_CONFIG = {
-//   api: 'http://localhost:9999',
-//   ws: 'ws://localhost:10000/ws',
+//   api: 'http://192.168.10.3:9999',
+//   ws: 'ws://192.168.10.3:10000/ws',
 // }
+export const DEVICE_CONFIG = {
+  api: 'http://localhost:9999',
+  ws: 'ws://localhost:10000/ws',
+}
 
 export function formatSize(bytes: number) {
   if (bytes === 0) return '0 B'
@@ -42,26 +42,32 @@ export const getCopyToken = (info: DeviceForm) => ([
   ['CPU', info.CPU],
 ])
 
-export const getDeviceForm = (info: DeviceInfo, product: ProductItem) => ({
-  ModelNumber: info.ModelNumber,
-  SerialNumber: info.SerialNumber,
-  MLBSerialNumber: info.MLBSerialNumber,
-  Imei: info.InternationalMobileEquipmentIdentity,
-  ProductVersion: info.ProductVersion,
-  BuildVersion: info.BuildVersion,
-  RegionInfo: info.RegionInfo,
-  UniqueChipID: info.UniqueChipID.toString(),
-  UniqueDeviceID: info.UniqueDeviceID,
-  ActivationState: info.ActivationState ? '已激活' : '未激活',
-  iCloud: info.CloudBackupEnabled ? '已开启' : '未开启',
-  CPU: product.Chip || '--',
-  Warranty: '--',
-  NetworkLock: '--',
-  ActivationLock: '--',
-})
+export function getDeviceForm(
+  device: DeviceResponse,
+  product: ProductItem,
+) {
+  const { DeviceInfo, ICloud } = device
+  return {
+    ModelNumber: DeviceInfo.ModelNumber,
+    SerialNumber: DeviceInfo.SerialNumber,
+    MLBSerialNumber: DeviceInfo.MLBSerialNumber,
+    Imei: DeviceInfo.InternationalMobileEquipmentIdentity,
+    ProductVersion: DeviceInfo.ProductVersion,
+    BuildVersion: DeviceInfo.BuildVersion,
+    RegionInfo: DeviceInfo.RegionInfo,
+    UniqueChipID: DeviceInfo.UniqueChipID.toString(),
+    UniqueDeviceID: DeviceInfo.UniqueDeviceID,
+    ActivationState: DeviceInfo.ActivationState ? '已激活' : '未激活',
+    iCloud: ICloud.CloudBackupEnabled ? '已开启' : '未开启',
+    CPU: product.Chip || '--',
+    Warranty: '--',
+    NetworkLock: '--',
+    ActivationLock: '--',
+  }
+}
 
 export function getPrintPayload(device: Device) {
-  const { info, product, battery, form } = device
+  const { info, memory, product, battery, form } = device
   return JSON.stringify({
     DeviceName: product.Name,
     Color: product.Color,
@@ -70,7 +76,7 @@ export function getPrintPayload(device: Device) {
     ProductVersion: info.ProductVersion,
     RegionInfo: info.RegionInfo,
     ModelNumber: info.ModelNumber,
-    TotalDiskCapacity: info.TotalDiskCapacity,
+    TotalDiskCapacity: memory.TotalDiskCapacity,
     NominalChargeCapacity: battery.NominalChargeCapacity,
     DesignCapacity: battery.DesignCapacity,
     CycleCount: battery.CycleCount,

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import SearchDialog from './components/SearchDialog.vue'
 
-import { zLogSearch } from '@/inters/logs'
-import { deleteLogs } from '@/api/logs'
+import type { LogListParams } from '@/inters/logs'
+import { zLogSearchForm } from '@/inters/logs'
+import { deleteLogs, getLogs } from '@/api/logs'
 
 import { toast } from 'vue-sonner'
-import { xconfirm } from '@3un/utils'
+import { USER_ROLE, xconfirm } from '@3un/utils'
 
 import type { LogStore } from './utils'
 import { LOG_STORE } from './utils'
@@ -13,7 +14,7 @@ import { columns } from './utils/column'
 
 const store: LogStore = reactive({
   logs: { list: [], total: 0, page: 1, pageSize: 20 },
-  formSearch: zLogSearch.parse({}),
+  formSearch: zLogSearchForm.parse({}),
   visibleSearch: false,
   refresh: false,
   page: 1,
@@ -22,19 +23,61 @@ const store: LogStore = reactive({
 
 provide(LOG_STORE, store)
 
+const route = useRoute()
+const loading = ref(false)
 const ids = ref<number[]>([])
 
+watch(
+  [
+    () => store.page,
+    () => store.limit,
+    () => store.refresh,
+  ],
+  ([pageValue, limitValue]) => {
+    getList({
+      page: pageValue,
+      pageSize: limitValue,
+      ...store.formSearch,
+    })
+  },
+)
+
+watch(
+  () => route.query.q,
+  (value) => {
+    store.formSearch = zLogSearchForm.parse({})
+    store.refresh = !store.refresh
+    store.page = 1
+
+    if (value === 'user') {
+      store.formSearch.role = USER_ROLE.USER
+    }
+    if (value === 'admin') {
+      store.formSearch.role = USER_ROLE.ADMIN
+    }
+  },
+  { immediate: true },
+)
+
+function getList(params: LogListParams) {
+  loading.value = true
+
+  const response = getLogs(params)
+  response.then(data => store.logs = data)
+  response.finally(() => loading.value = false)
+}
+
 function resetSearch() {
-  store.formSearch = zLogSearch.parse({})
+  store.formSearch = zLogSearchForm.parse({})
   store.refresh = !store.refresh
 }
 
 async function handleDelete() {
-  if (ids.value.length === 0) 
+  if (ids.value.length === 0) {
     return toast.warning('请选择要删除的记录')
+  }
 
   if (!await xconfirm('确定删除这些记录吗？')) return
-
   deleteLogs(ids.value).then(() => {
     store.refresh = !store.refresh
   })
@@ -78,6 +121,7 @@ async function handleDelete() {
       <XTable
         :columns="columns"
         :data="store.logs.list"
+        :loading="loading"
         row-key="id" selected-key="id"
         @selection-change="ids = $event"
         class="border h-[calc(100vh-8.75rem)]"

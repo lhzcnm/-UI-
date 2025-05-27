@@ -10,7 +10,7 @@ interface DeviceCardProps {
 }
 
 const props = defineProps<DeviceCardProps>()
-const { info, product, form } = props.device
+const { info, memory, product, form, DeviceID } = props.device
 
 const { copy } = useClipboard({ legacy: true })
 
@@ -18,12 +18,12 @@ const store = inject(DEVICE_STORE)!
 const isPrinting = ref(false)
 
 const diskCapacity = computed(() => {
-  const total = info.TotalDiskCapacity
+  const total = memory.TotalDiskCapacity
   return `${total / 1000 / 1000 / 1000}GB`
 })
 
 function toDevice() {
-  store.selected = `${info.DeviceID}:${info.UniqueDeviceID}`
+  store.selected = `${DeviceID}:${info.UniqueDeviceID}`
   store.status = 'detail'
 }
 

@@ -15,7 +15,7 @@ const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
 </script>
 
 <template>
-  <form class="space-y-3" @submit.prevent>
+  <form class="space-y-4" @submit.prevent>
     <div class="flex space-x-3">
       <div class="w-1/2">
         <label class="block text-sm mb-1">API名称</label>

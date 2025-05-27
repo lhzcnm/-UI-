@@ -8,23 +8,22 @@ export const zLog = z.interface({
   loginTime: z.string().default(''),
   logoutTime: z.string().nullable(),
   ip: z.string().default(''),
-  region: z.string().default(''),
+  region: z.string().nullable(),
 })
 
 export type Log = z.infer<typeof zLog>
 
 // Search
-export const zLogSearch = z.interface({
+export const zLogSearchForm = z.interface({
   ip: z.string().optional(),
   userId: z.number().optional(),
-  // username: z.string().default(''),
   role: z.enum(USER_ROLE).optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
 })
 
-export type LogSearch = z.infer<typeof zLogSearch>
+export type LogSearchForm = z.infer<typeof zLogSearchForm>
 
 // List
 export type LogList = IList<Log>
-export interface LogListParams extends IPage, LogSearch {}
+export interface LogListParams extends IPage, LogSearchForm {}

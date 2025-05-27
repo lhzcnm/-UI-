@@ -24,19 +24,20 @@ export const columns: XColDef<Recharge> = [
     width: 108,
   },
   {
+    key: 'paymentMethod',
+    title: '支付方式',
+    width: 108,
+    render: (value) => {
+      const item = PAYMENT_METHOD_MAP[value]
+      return item.label
+    },
+  },
+  {
     key: 'paymentStatus',
     title: '支付状态',
     width: 108,
     render: (value) => {
       return h(XTag, PAYMENT_STATUS_MAP[value])
-    },
-  },
-  {
-    key: 'paymentMethod',
-    title: '支付方式',
-    width: 108,
-    render: (value) => {
-      return h(XTag, PAYMENT_METHOD_MAP[value])
     },
   },
   {

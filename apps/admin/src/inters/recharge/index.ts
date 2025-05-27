@@ -11,7 +11,7 @@ export const zRecharge = z.interface({
   paymentDtTm: z.string().default(''),
   transactionId: z.string().nullable().default(null),
   creditsTransferred: z.boolean().default(false),
-  comments: z.string().default(''),
+  comments: z.string().nullable(),
   updatedAt: z.string().default(''),
   amount: z.string().default(''),
   // payable: z.boolean().default(false),

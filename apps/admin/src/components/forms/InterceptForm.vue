@@ -5,7 +5,7 @@ const form = defineModel<InterceptForm>({ required: true })
 </script>
 
 <template>
-  <form class="space-y-3" @submit.prevent>
+  <form class="space-y-4" @submit.prevent>
     <div>
       <label class="block text-sm mb-1">拦截IP</label>
       <XInput v-model="form.ip" placeholder="拦截IP" />

@@ -1,5 +1,5 @@
 import type { User } from '@/inters/users'
-import { XSwitch, XTag, type XColDef } from '@3un/ui'
+import { XSwitch, type XColDef } from '@3un/ui'
 
 import UserAction from '../components/UserAction.vue'
 import { updateUser } from '@/api/users'
@@ -31,25 +31,23 @@ export const columns: XColDef<User> = [
     width: 128,
   },
   {
+    key: 'nickName',
+    title: '昵称',
+    width: 154,
+  },
+  {
     key: 'pricePlanId',
     title: '会员等级',
     width: 108,
     render(value) {
       const level = levelStore.levelMap.get(value)
-      const label = level ? level.pricePlan : '未知'
-      return h(XTag, { color: 'success', label })
+      return level ? level.pricePlan : '未知'
     },
   },
   {
     key: 'credits',
     title: '积分',
     width: 88,
-  },
-  {
-    key: 'nickName',
-    title: '昵称',
-    width: 154,
-    cellEmpty: '-'
   },
   {
     key: 'weiXinOpenid',

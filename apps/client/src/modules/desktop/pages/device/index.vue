@@ -7,7 +7,7 @@ import PluginDownload from './views/PluginDownload.vue'
 import { useWebSocket } from '@vueuse/core'
 
 import type { DeviceStore } from './utils'
-import type { BatteryInfo, DeviceInfo, ProductData, ProductInfo, ProductItem } from './types'
+import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, ProductItem, DeviceResponse } from './types'
 import { DEVICE_STORE, DEVICE_CONFIG, getDeviceForm } from './utils'
 import http from '@/utils/http'
 
@@ -42,6 +42,7 @@ async function checkPlugin() {
     store.status = 'list'
   }
   catch (error) {
+    console.warn(error)
     store.status = 'plugin'
   }
 }
@@ -62,7 +63,7 @@ watch(data, async (value) => {
     return handleDisconnect(value)
   }
 
-  const data = JSON.parse(value) as DeviceInfo
+  const data = JSON.parse(value)
   await handleDevice(data)
 
   if (store.deviceMap.size === 1) {
@@ -79,17 +80,21 @@ watch(
   },
 )
 
-async function handleDevice(data: DeviceInfo) {
-  const product = getProduct(data)
-  const battery = await getBatteryInfo(data, product)
-  const key = `${data.DeviceID}:${data.UniqueDeviceID}`
-  
+async function handleDevice(data: DeviceResponse) {
+  const { DeviceInfo, Memory, ICloud, DeviceID } = data
+  const product = getProduct(DeviceInfo)
+  const battery = await getBatteryInfo(DeviceInfo, product)
+  const key = `${DeviceID}:${DeviceInfo.UniqueDeviceID}`
+
   http.post('/device/save', data)
   store.deviceMap.set(key, {
+    DeviceID: DeviceID,
     form: getDeviceForm(data, product),
     battery: battery as BatteryInfo,
+    memory: Memory as MemoryInfo,
+    icloud: ICloud,
     product: product,
-    info: data,
+    info: DeviceInfo,
   })
 }
 

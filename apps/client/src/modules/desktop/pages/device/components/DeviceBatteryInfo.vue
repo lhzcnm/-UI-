@@ -1,44 +1,42 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import type { DeviceInfo } from '../types'
+import type { BatteryInfo } from '../types'
 import { DEVICE_STORE } from '../utils'
 
 const store = inject(DEVICE_STORE)!
 
 const batteryInfo = computed(() => {
-  const { info, battery } = store.deviceMap.get(store.selected)!
-  const capacity = info.BatteryCurrentCapacity
+  const { battery } = store.deviceMap.get(store.selected)!
   const current = battery.NominalChargeCapacity
   const design = battery.DesignCapacity
 
   return {
-    color: getColor(info, capacity),
-    icon: getIcon(info, capacity),
-    healthPercentage: ((current / design) * 100).toFixed(2),
-    isCharging: info.BatteryIsCharging,
-    currentCapacity: capacity,
+    color: getColor(battery),
+    icon: getIcon(battery),
     designCapacity: design,
-    absoluteCapacity: battery.AbsoluteCapacity,
+    isCharging: battery.IsCharging,
+    currentCapacity: battery.CurrentCapacity,
+    healthPercentage: ((current / design) * 100).toFixed(2),
     nominalChargeCapacity: battery.NominalChargeCapacity,
-    batterySerialNumber: battery.BatterySerialNumber,
+    temperature: battery.Temperature / 100,
     cycleCount: battery.CycleCount,
   }
 })
 
-function getColor(info: DeviceInfo, capacity: number) {
-  if (info.BatteryIsCharging) return 'text-green-500'
-  if (capacity >= 80) return 'text-green-500'
-  if (capacity >= 20) return 'text-yellow-500'
+function getColor(battery: BatteryInfo) {
+  if (battery.IsCharging) return 'text-green-500'
+  if (battery.CurrentCapacity >= 80) return 'text-green-500'
+  if (battery.CurrentCapacity >= 20) return 'text-yellow-500'
   return 'text-red-500'
 }
 
-function getIcon(info: DeviceInfo, capacity: number) {
-  if (info.BatteryIsCharging) return 'lucide:battery-charging'
-  if (capacity >= 80) return 'lucide:battery-full'
-  if (capacity >= 60) return 'lucide:battery-high'
-  if (capacity >= 40) return 'lucide:battery-medium'
-  if (capacity >= 20) return 'lucide:battery-low'
+function getIcon(battery: BatteryInfo) {
+  if (battery.IsCharging) return 'lucide:battery-charging'
+  if (battery.CurrentCapacity >= 80) return 'lucide:battery-full'
+  if (battery.CurrentCapacity >= 60) return 'lucide:battery-high'
+  if (battery.CurrentCapacity >= 40) return 'lucide:battery-medium'
+  if (battery.CurrentCapacity >= 20) return 'lucide:battery-low'
   return 'lucide:battery-empty'
 }
 </script>
@@ -53,7 +51,7 @@ function getIcon(info: DeviceInfo, capacity: number) {
       </div>
     </div>
 
-    <div class="space-y-1">
+    <div class="space-y-2">
       <div class="flex items-center justify-between text-sm">
         <span class="text-muted-foreground">充电状态</span>
         <span class="font-medium">
@@ -67,28 +65,23 @@ function getIcon(info: DeviceInfo, capacity: number) {
       </div>
 
       <div class="flex items-center justify-between text-sm">
-        <span class="text-muted-foreground">循环次数</span>
-        <span class="font-medium">{{ batteryInfo.cycleCount }} 次</span>
-      </div>
-
-      <div class="flex items-center justify-between text-sm">
         <span class="text-muted-foreground">设计容量</span>
         <span class="font-medium">{{ batteryInfo.designCapacity }} mAh</span>
       </div>
 
       <div class="flex items-center justify-between text-sm">
-        <span class="text-muted-foreground">绝对容量</span>
-        <span class="font-medium">{{ batteryInfo.absoluteCapacity }} mAh</span>
-      </div>
-
-      <div class="flex items-center justify-between text-sm">
-        <span class="text-muted-foreground">满电容量</span>
+        <span class="text-muted-foreground">最大可用容量</span>
         <span class="font-medium">{{ batteryInfo.nominalChargeCapacity }} mAh</span>
       </div>
 
       <div class="flex items-center justify-between text-sm">
-        <span class="text-muted-foreground">电池序列号</span>
-        <span class="font-medium">{{ batteryInfo.batterySerialNumber }}</span>
+        <span class="text-muted-foreground">循环次数</span>
+        <span class="font-medium">{{ batteryInfo.cycleCount }} 次</span>
+      </div>
+
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-muted-foreground">电池温度</span>
+        <span class="font-medium">{{ batteryInfo.temperature }} ℃</span>
       </div>
     </div>
   </div>

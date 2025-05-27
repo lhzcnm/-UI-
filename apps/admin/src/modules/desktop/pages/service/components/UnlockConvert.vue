@@ -71,7 +71,7 @@ function handleDelete() {
 
   convertCodes.value = filtered
   if (filtered.length === 0) {
-    convertCodes.value.unshift({ key: '', value: '' })
+    convertCodes.value.push({ key: '', value: '' })
   }
   
   fillSelectedState(false)
@@ -109,7 +109,10 @@ function fillSelectedState(state = false) {
         v-for="(item, index) in convertCodes" :key="index"
         class="flex items-start space-x-3"
       >
-        <input v-model="selectedItems[index]" type="checkbox" class="size-4 mt-0.5 bg-card" />
+        <input
+          v-model="selectedItems[index]"
+          type="checkbox" class="size-4 mt-1"
+        />
         <div class="flex-1">
           <label class="block text-sm mb-1">原始码</label>
           <XInput v-model="item.key" placeholder="原始码" />

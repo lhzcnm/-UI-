@@ -69,7 +69,7 @@ export const menus: SidebarMenu[] = [
     path: '/logs',
     icon: 'lucide:hard-drive',
     children: [
-      { label: '用户登录日志', match: 'yonghudengluri', path: '/logs?q=users' },
+      { label: '用户登录日志', match: 'yonghudengluri', path: '/logs?q=user' },
       { label: '管理员登录日志', match: 'guanliyuandengluri', icon: 'lucide:paw-print', path: '/logs?q=admin' },
     ],
   },

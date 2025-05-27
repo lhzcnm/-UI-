@@ -1,9 +1,9 @@
-import type { LogList, LogSearch } from '@/inters/logs'
+import type { LogList, LogSearchForm } from '@/inters/logs'
 import type { IK } from '@3un/shared'
 
 export interface LogStore {
   logs: LogList
-  formSearch: LogSearch
+  formSearch: LogSearchForm
   visibleSearch: boolean
   refresh: boolean
   page: number

@@ -98,11 +98,11 @@ async function onRefresh() {
   store.screenshot = URL.createObjectURL(blob)
 }
 
-function handleImageLoad() {
-  if (store.screenshot) {
-    URL.revokeObjectURL(store.screenshot)
-  }
-}
+// function handleImageLoad() {
+//   if (store.screenshot) {
+//     URL.revokeObjectURL(store.screenshot)
+//   }
+// }
 </script>
 
 <template>
@@ -133,7 +133,6 @@ function handleImageLoad() {
           alt="Device Screenshot"
           class="size-full"
           draggable="false"
-          @load="handleImageLoad"
           @error="store.screenshot = ''"
         >
         <template v-else>

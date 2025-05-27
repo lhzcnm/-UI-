@@ -13,8 +13,6 @@ import { columns } from './utils/column'
 
 import dayjs from 'dayjs'
 
-const route = useRoute()
-
 const store: RechargeStore = reactive({
   recharges: { list: [], total: 0, page: 1, pageSize: 20 },
   formSearch: zRechargeSearchForm.parse({}),
@@ -26,6 +24,8 @@ const store: RechargeStore = reactive({
 })
 
 provide(RECHARGE_STORE, store)
+
+const route = useRoute()
 
 const ids = ref<number[]>([])
 const loading = ref(false)
@@ -43,22 +43,23 @@ watch(
       ...store.formSearch,
     })
   },
-  { immediate: true },
 )
 
 watch(
   () => route.query,
   (value) => {
     store.formSearch = zRechargeSearchForm.parse({})
+    store.refresh = !store.refresh
+    store.page = 1
 
     if (value.q === 'today') {
-      store.formSearch.startTime = dayjs().startOf('day').format('YYYY-MM-DD HH:mm:ss')
-      store.formSearch.endTime = dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss')
+      const format = 'YYYY-MM-DD HH:mm:ss'
+      store.formSearch.startTime = dayjs().startOf('day').format(format)
+      store.formSearch.endTime = dayjs().endOf('day').format(format)
     }
     if (value.q === 'admin') {
       store.formSearch.byAdmin = true
     }
-    store.refresh = !store.refresh
   },
   { immediate: true },
 )

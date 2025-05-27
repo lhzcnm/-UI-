@@ -11,17 +11,17 @@ function handleSelected(value: number) {
 </script>
 
 <template>
-  <form class="space-y-3" @submit.prevent>
+  <form class="space-y-4" @submit.prevent>
     <div>
-      <label class="block text-sm mb-1">服务ID</label>
+      <label class="block text-muted-foreground text-sm mb-1">服务ID</label>
       <SelectService v-model="form.packageId" @selected="handleSelected" />
     </div>
     <div>
-      <label class="block text-sm mb-1">服务名称</label>
+      <label class="block text-muted-foreground text-sm mb-1">服务名称</label>
       <XInput v-model="form.name" placeholder="服务名称" />
     </div>
     <div>
-      <label class="block text-sm mb-1">触发关键字</label>
+      <label class="block text-muted-foreground text-sm mb-1">触发关键字</label>
       <XInput v-model="form.operator" placeholder="触发关键字" />
     </div>
   </form>

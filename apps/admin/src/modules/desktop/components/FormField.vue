@@ -52,7 +52,7 @@ const b = style()
       <p :class="b.title({ required })">{{ label }}</p>
       <span v-if="variant === 'horizontal'" :class="b.desc()">{{ desc }}</span>
     </div>
-    <div :class="twJoin(contentFlex && 'flex-1')">
+    <div class="flex items-center space-x-2" :class="twJoin(contentFlex && 'flex-1')">
       <slot />
     </div>
   </div>

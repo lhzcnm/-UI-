@@ -2,21 +2,22 @@ import type { StatusMap } from '@3un/shared'
 
 // User Role
 export enum USER_ROLE {
-  USER = 0,
-  ADMIN = 1,
+  USER        = 0,
+  ADMIN       = 1,
+  SUPER_ADMIN = 2,
 }
 
 // Imei Type
 export enum IMEI_TYPE {
-  NONE = 5,
-  IMEI = 2,
-  SN   = 4,
+  NONE       = 5,
+  IMEI       = 2,
+  SN         = 4,
   IMEI_OR_SN = 6,
 }
 
 // Recharge Type
 export enum RECHARGE_TYPE {
-  BALANCE = 1,
+  BALANCE    = 1,
   MEMBERSHIP = 2,
 }
 
@@ -36,12 +37,12 @@ export const PAYMENT_STATUS_LIST = [
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  ADMIN = 5,
+  ADMIN  = 5,
   ALIPAY = 8,
   WECHAT = 9,
 }
 export const PAYMENT_METHOD_MAP: StatusMap = {
-  [PAYMENT_METHOD.ADMIN] : { color: 'warning', label: '管理员充值' },
+  [PAYMENT_METHOD.ADMIN]  : { color: 'warning', label: '管理员充值' },
   [PAYMENT_METHOD.ALIPAY] : { color: 'primary', label: '支付宝' },
   [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
 }
@@ -82,13 +83,13 @@ export const API_TYPE_LIST = [
 
 // Shop
 export enum SHOP_NAME {
-  CREDIT = 1,
+  CREDIT   = 1,
   MONTHLY1 = 2,
   MONTHLY2 = 3,
   MONTHLY3 = 4,
 }
 export const SHOP_NAME_MAP: StatusMap = {
-  [SHOP_NAME.CREDIT] : { color: 'success', label: '积分充值' },
+  [SHOP_NAME.CREDIT]   : { color: 'success', label: '积分充值' },
   [SHOP_NAME.MONTHLY1] : { color: 'primary', label: '包月会员一个月' },
   [SHOP_NAME.MONTHLY2] : { color: 'warning', label: '包月会员两个月' },
   [SHOP_NAME.MONTHLY3] : { color: 'danger', label: '包月会员三个月' },
@@ -148,14 +149,14 @@ export const TICKET_STATUS_MAP: StatusMap = {
 
 // Ticket Priority
 export enum TICKET_PRIORITY {
-  HIGH = 0,
+  HIGH   = 0,
   MEDIUM = 1,
-  LOW = 2,
+  LOW    = 2,
 }
 export const TICKET_PRIORITY_MAP: StatusMap = {
-  [TICKET_PRIORITY.HIGH] : { color: 'danger', label: '紧急' },
+  [TICKET_PRIORITY.HIGH]   : { color: 'danger', label: '紧急' },
   [TICKET_PRIORITY.MEDIUM] : { color: 'primary', label: '普通' },
-  [TICKET_PRIORITY.LOW] : { color: 'info', label: '可以等待' },
+  [TICKET_PRIORITY.LOW]    : { color: 'info', label: '可以等待' },
 }
 export const TICKET_PRIORITY_LIST = [
   { value: TICKET_PRIORITY.HIGH, label: '紧急' },
@@ -166,11 +167,11 @@ export const TICKET_PRIORITY_LIST = [
 // Ticket Type
 export enum TICKET_TYPE {
   RECHARGE = 0,
-  ORDER = 1,
+  ORDER    = 1,
 }
 export const TICKET_TYPE_MAP: StatusMap = {
   [TICKET_TYPE.RECHARGE] : { color: 'success', label: '充值退款问题' },
-  [TICKET_TYPE.ORDER] : { color: 'success', label: '订单问题' },
+  [TICKET_TYPE.ORDER]    : { color: 'success', label: '订单问题' },
 }
 export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.RECHARGE, label: '充值退款问题' },

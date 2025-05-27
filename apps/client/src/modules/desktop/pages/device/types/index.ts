@@ -1,32 +1,98 @@
 // GET /info
-export interface DeviceInfo {
+export interface DeviceResponse {
   DeviceID: number
-  DeviceName: string
-  DeviceColor: string
-  DeviceClass: string
-  ProductVersion: string
-  ProductType: string
-  ProductName: string
-  ModelNumber: string
-  SerialNumber: string
-  SIMStatus: string
-  CPUArchitecture: string
-  ProtocolVersion: string
-  RegionInfo: string
-  TelephonyCapability: boolean
-  TimeZone: string
-  UniqueDeviceID: string
-  WiFiAddress: string
-  WirelessBoardSerialNumber: string
-  MLBSerialNumber: string
-  BluetoothAddress: string
-  BuildVersion: string
+  DeviceInfo: DeviceInfo
+  ICloud: ICloudInfo
+  Memory: MemoryInfo
+}
+
+export interface DeviceInfo {
   ActivationState: string
+  ActivationStateAcknowledged: boolean
+  BasebandActivationTicketVersion: string
+  BasebandCertID: number
+  BasebandChipID: number
+  BasebandKeyHashInformation: {
+    AKeyStatus: number
+    SKeyHash: string
+    SKeyStatus: number
+  }
+  BasebandMasterKeyHash: string
+  BasebandRegionSKU: string
+  BasebandSerialNumber: string
+  BasebandStatus: string
+  BasebandVersion: string
+  BluetoothAddress: string
+  BoardID: number
+  BrickState: boolean
+  BuildVersion: string
+  CPUArchitecture: string
+  CarrierBundleInfoArray: []
+  CertID: number
+  ChipID: number
+  ChipSerialNo: string
+  DeviceClass: string
+  DeviceColor: string
+  DeviceName: string
+  DieID: number
+  EthernetAddress: string
+  FirmwareVersion: string
+  FusingStatus: number
   HardwareModel: string
+  HardwarePlatform: string
+  HasSiDP: boolean
+  HostAttached: boolean
   InternationalMobileEquipmentIdentity: string
   InternationalMobileEquipmentIdentity2: string
-  BatteryCurrentCapacity: number
-  BatteryIsCharging: boolean
+  MLBSerialNumber: string
+  MobileEquipmentIdentifier: string
+  MobileSubscriberCountryCode: string
+  MobileSubscriberNetworkCode: string
+  ModelNumber: string
+  NonVolatileRAM: {
+    AutoBoot: string
+    BacklightLevel: string
+    BootArgs: string
+    Bootdelay: null
+    ComAppleSystemTz0Size: string
+    OblitBegins: string
+    Obliteration: string
+  },
+  PartitionType: string
+  PasswordProtected: boolean
+  PkHash: string
+  ProductName: string
+  ProductType: string
+  ProductVersion: string
+  ProductionSOC: boolean
+  ProtocolVersion: string
+  ProximitySensorCalibration: string
+  RegionInfo: string
+  SBLockdownEverRegisteredKey: boolean
+  SIMStatus: string
+  SIMTrayStatus: string
+  SerialNumber: string
+  SoftwareBehavior: string
+  SoftwareBundleVersion: string
+  SupportedDeviceFamilies: number[]
+  TelephonyCapability: boolean
+  TimeIntervalSince1970: number
+  TimeZone: string
+  TimeZoneOffsetFromUTC: number
+  TrustedHostAttached: boolean
+  UniqueChipID: number
+  UniqueDeviceID: string
+  UseRaptorCerts: boolean
+  Uses24HourClock: boolean
+  WiFiAddress: string
+  WirelessBoardSerialNumber: string
+  KCTPostponementInfoPRIVersion: string
+  KCTPostponementInfoPRLName: number
+  KCTPostponementInfoServiceProvisioningState: boolean
+  KCTPostponementStatus: string
+}
+
+export interface MemoryInfo {
   AmountDataAvailable: number
   AmountDataReserved: number
   AmountRestoreAvailable: number
@@ -34,34 +100,39 @@ export interface DeviceInfo {
   TotalDataCapacity: number
   TotalDiskCapacity: number
   TotalSystemCapacity: number
-  UniqueChipID: number
+}
+
+export interface ICloudInfo {
   CloudBackupEnabled: boolean
   LastCloudBackupTZ: string
   LastiTunesBackupDate: number
   LastiTunesBackupTZ: string
-  Version: string
-  WillEncrypt: boolean
-  Bookmarks: ICloudData
-  Calendars: ICloudData
-  Contacts: ICloudData
-  Notes: ICloudData
-}
-interface ICloudData {
-  AccountNames: string[]
-  Sources: string[]
 }
 
 // GET /battery
 export interface BatteryInfo {
-  BatterySerialNumber: string
+  InstantAmperage: number
+  Temperature: number
+  Voltage: number
+  IsCharging: boolean
+  CurrentCapacity: number
   DesignCapacity: number
-  MaxCapacity: number
-  CycleCount: number
   NominalChargeCapacity: number
-  FullAvailableCapacity: number
-  AbsoluteCapacity: number
+  CycleCount: number
+  AtCriticalLevel: boolean
+  AtWarnLevel: boolean
 }
 
+// store
+export interface Device {
+  DeviceID: number
+  icloud: ICloudInfo
+  info: DeviceInfo
+  memory: MemoryInfo
+  battery: BatteryInfo
+  product: ProductItem
+  form: DeviceForm
+}
 export interface DeviceForm {
   Imei: string
   SerialNumber: string
@@ -80,26 +151,18 @@ export interface DeviceForm {
   iCloud: string
   CPU: string
 }
-
-export interface ProductData {
-  [key: string]: string | ProductInfo | ProductInfo[]
-}
-
-export interface ProductInfo {
-  [key: string]: string
-  Name: string
-  Chip: string
-}
-
 export interface ProductItem {
   Name: string
   Chip: string
   Color: string
 }
 
-export interface Device {
-  info: DeviceInfo
-  battery: BatteryInfo
-  product: ProductItem
-  form: DeviceForm
+// ios datasets
+export interface ProductData {
+  [key: string]: string | ProductInfo | ProductInfo[]
+}
+export interface ProductInfo {
+  [key: string]: string
+  Name: string
+  Chip: string
 }
