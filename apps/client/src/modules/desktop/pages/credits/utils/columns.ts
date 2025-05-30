@@ -1,16 +1,17 @@
-import type { XTableColumn } from '@3un/ui'
 import type { CreditLogItem } from '@/api/user'
+import type { XColDef } from '@3un/ui'
+import { h } from 'vue'
 
 const store = useServiceStore()
 
-export const columns: XTableColumn[] = [
+export const columns: XColDef<CreditLogItem> = [
   {
-    key: 'service',
+    key: 'packageId',
     title: '项目',
     width: 220,
-    render: (_, row: CreditLogItem) => {
-      if (!row.packageId) return '积分充值'
-      const service = store.services.get(row.packageId)
+    render: (value) => {
+      if (!value) return '积分充值'
+      const service = store.services.get(value)
       return service ? `${service.id} - ${service.title}` : '服务不存在'
     }
   },
@@ -23,7 +24,7 @@ export const columns: XTableColumn[] = [
     key: 'credits',
     title: '变动金额',
     width: 88,
-    render: (value: number, row: CreditLogItem) => {
+    render: (value: number, row) => {
       const isSubmit = /订单提交|查询订单|Code Request/.test(row.description)
       const isReduce = isSubmit || row.description === '管理员扣除积分'
       let label = Math.abs(value).toString()

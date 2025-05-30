@@ -16,6 +16,7 @@ export default defineConfig({
   plugins: [
     vue(),
     Imports({
+      ignore: ['h'],
       imports: ['vue', 'vue-router'],
       dirs: ['src/stores', 'src/composables'],
     }),

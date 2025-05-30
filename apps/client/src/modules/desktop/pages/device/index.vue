@@ -20,7 +20,8 @@ const store: DeviceStore = reactive({
 
 provide(DEVICE_STORE, store)
 
-let datasets: ProductData
+const r = await fetch('/devices-ios.json')
+const datasets = await r.json() as ProductData
 
 await checkPlugin()
 async function checkPlugin() {
@@ -34,10 +35,7 @@ async function checkPlugin() {
     )
 
     const { data } = await response.json()
-    if (data.length === 0) return
-
-    const r = await fetch('/devices-ios.json')
-    datasets = await r.json() as ProductData
+    if (!data || data.length === 0) return
     await Promise.all(data.map(handleDevice))
     store.status = 'list'
   }
@@ -100,19 +98,26 @@ async function handleDevice(data: DeviceResponse) {
 
 function getProduct(data: DeviceInfo) {
   type ProductKey = keyof typeof datasets
-  let product = datasets[data.ProductType as ProductKey] as ProductInfo
-  if (Array.isArray(product)) product = product[0]
 
-  let color = product[data.DeviceColor]
-  if (data.ModelNumber.length === 12) {
+  let product = null
+  if (data.ProductType in datasets) {
+    product = datasets[data.ProductType as ProductKey] as ProductInfo
+    if (Array.isArray(product)) product = product[0]  
+  }
+
+  let color = data.DeviceColor
+  if (data.DeviceColor in product) {
+    color = product[data.DeviceColor]
+  }
+  else if (data.ModelNumber.length === 12) {
     const suffix = data.ModelNumber.slice(-4)
     color = datasets[suffix as ProductKey] as string
   }
 
   return {
-    Name: product.Name,
-    Chip: product.Chip,
-    Color: color || data.DeviceColor,
+    Name: product ? product.Name : data.ProductType,
+    Chip: product ? product.Chip : data.CPUArchitecture,
+    Color: color,
   }
 }
 

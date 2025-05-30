@@ -1,7 +1,8 @@
-import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/utils'
 import type { OrderTableView } from '@/api/orders'
-import type { XTableColumn } from '@3un/ui'
-import { XTag } from '@3un/ui'
+
+import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/utils'
+import { XTag, type XTableColumn } from '@3un/ui'
+import { h } from 'vue'
 
 export const getDefaultColumns = (): XTableColumn[] => ([
   {

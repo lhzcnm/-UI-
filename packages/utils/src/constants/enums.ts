@@ -60,6 +60,20 @@ export enum SUBMIT_METHOD {
   WECHAT  = 3,
   WEB     = 4,
 }
+export const SUBMIT_METHOD_MAP: StatusMap = {
+  [SUBMIT_METHOD.NONE]    : { color: 'info', label: '未知' },
+  [SUBMIT_METHOD.API]     : { color: 'danger', label: 'API Endpoint' },
+  [SUBMIT_METHOD.DESKTOP] : { color: 'primary', label: '桌面端' },
+  [SUBMIT_METHOD.WECHAT]  : { color: 'success', label: '公众号' },
+  [SUBMIT_METHOD.WEB]     : { color: 'warning', label: '网页端' },
+}
+export const SUBMIT_METHOD_LIST = [
+  { value: SUBMIT_METHOD.NONE, label: '未知' },
+  { value: SUBMIT_METHOD.API, label: 'API Endpoint' },
+  { value: SUBMIT_METHOD.DESKTOP, label: '桌面端' },
+  { value: SUBMIT_METHOD.WECHAT, label: '公众号' },
+  { value: SUBMIT_METHOD.WEB, label: '网页端' },
+]
 
 // API Type
 export enum API_TYPE {
@@ -142,10 +156,15 @@ export enum TICKET_STATUS {
   SOLVED  = 2,
 }
 export const TICKET_STATUS_MAP: StatusMap = {
-  [TICKET_STATUS.WAIT]    : { color: 'info', label: '未处理' },
-  [TICKET_STATUS.PROCESS] : { color: 'primary', label: '处理中' },
+  [TICKET_STATUS.WAIT]    : { color: 'primary', label: '未处理' },
+  [TICKET_STATUS.PROCESS] : { color: 'warning', label: '处理中' },
   [TICKET_STATUS.SOLVED]  : { color: 'success', label: '已解决' },
 }
+export const TICKET_STATUS_LIST = [
+  { value: TICKET_STATUS.WAIT, label: '未处理' },
+  { value: TICKET_STATUS.PROCESS, label: '处理中' },
+  { value: TICKET_STATUS.SOLVED, label: '已解决' },
+]
 
 // Ticket Priority
 export enum TICKET_PRIORITY {
@@ -166,12 +185,12 @@ export const TICKET_PRIORITY_LIST = [
 
 // Ticket Type
 export enum TICKET_TYPE {
-  RECHARGE = 0,
-  ORDER    = 1,
+  RECHARGE = 16,
+  ORDER    = 17,
 }
 export const TICKET_TYPE_MAP: StatusMap = {
   [TICKET_TYPE.RECHARGE] : { color: 'success', label: '充值退款问题' },
-  [TICKET_TYPE.ORDER]    : { color: 'success', label: '订单问题' },
+  [TICKET_TYPE.ORDER]    : { color: 'warning', label: '订单问题' },
 }
 export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.RECHARGE, label: '充值退款问题' },

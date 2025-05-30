@@ -8,11 +8,7 @@ import { getCommonList } from '@/utils'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
-
-await Promise.all([
-  store.getServices(),
-  iStore.getSettings(),
-])
+await store.getServices()
 
 const router = useRouter()
 

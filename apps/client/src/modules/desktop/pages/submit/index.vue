@@ -7,6 +7,7 @@ import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
 import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
+import { h } from 'vue'
 
 import type { Service } from '@/api/services'
 import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'

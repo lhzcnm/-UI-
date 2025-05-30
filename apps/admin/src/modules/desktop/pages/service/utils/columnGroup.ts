@@ -1,7 +1,7 @@
 import GroupAction from '../components/groupAction.vue'
 
-import type { XColDef } from '@3un/ui'
-import {  XInputNumber, XSwitch } from "@3un/ui"
+import { type XColDef, XInputNumber, XSwitch } from "@3un/ui"
+import { h } from 'vue'
 
 import type { ServiceGroup } from '@/inters/services'
 import { updateServiceGroup } from '@/api/services'

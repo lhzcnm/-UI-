@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { TicketItem } from '@/api/tickets'
+import type { TicketItem, TicketType } from '@/api/tickets'
 
-import { TICKET_STATUS_MAP, TICKET_TYPE_MAP, TICKET_TYPE } from '@3un/utils'
+import { TICKET_STATUS_MAP } from '@3un/utils'
 import { twJoin } from 'tailwind-merge'
 
 interface TicketItemProps {
+  type: TicketType | undefined
   ticket: TicketItem
   active: boolean
 }
@@ -27,15 +28,9 @@ defineProps<TicketItemProps>()
     </div>
     <div class="flex items-center justify-between text-xs">
       <div class="flex items-center space-x-2">
-        <span
-          class="size-1.5 rounded-full"
-          :class="{
-            'bg-success': ticket.type === TICKET_TYPE.RECHARGE,
-            'bg-primary': ticket.type === TICKET_TYPE.ORDER
-          }"
-        />
+        <span class="size-1.5 bg-primary rounded-full" />
         <span class="text-muted-foreground">
-          {{ TICKET_TYPE_MAP[ticket.type].label }}
+          {{ type ? type.departmentName : '未知' }}
         </span>
       </div>
       <span class="text-muted-foreground">

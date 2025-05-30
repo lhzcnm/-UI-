@@ -1,5 +1,20 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
+import { ua } from '@3un/utils'
+
+// /api/oss/download/43  window
+// /api/oss/download/44  Mac(arm64)
+
+function download() {
+  const options = {
+    Windows: '/oss/download/43',
+    MacOS: '/oss/download/44',
+  }
+
+  const baseUrl = import.meta.env.VITE_API_URL
+  const path = options[ua.os as keyof typeof options]
+  location.href = `${baseUrl}${path}`
+}
 </script>
 
 <template>
@@ -19,7 +34,7 @@ import { Icon } from '@iconify/vue'
         如果插件未安装，请点击下方按钮下载安装插件。
       </p>
       <div class="space-x-4 text-center">
-        <XButton icon="lucide:arrow-down-to-line">下载插件</XButton>
+        <XButton icon="lucide:arrow-down-to-line" @click="download">下载插件</XButton>
         <XButton variant="soft" icon="lucide:refresh-cw" @click="$router.go(0)">刷新页面</XButton>
       </div>
     </div>

@@ -1,22 +1,22 @@
 import type { WithId } from '@3un/shared'
 import * as z from 'zod'
 
-export const zTicketIssue = z.interface({
+export const zTicketType = z.interface({
   departmentId: z.number().default(0),
   departmentName: z.string().default(''),
   departmentDes: z.string().default(''),
   // addedOn: z.string().default(''),
-  // status: z.number().default(0),
-  enable: z.number().default(1),
+  status: z.number().default(0),
+  // enable: z.number().default(1),
   deptOrder: z.number().default(1),
   // deptEmail: z.string().default(''),
 })
 
-export type TicketIssue = z.infer<typeof zTicketIssue>
+export type TicketType = z.infer<typeof zTicketType>
 
 // Form
-export const zTicketIssueForm = zTicketIssue.omit({ departmentId: true })
+export const zTicketTypeForm = zTicketType.omit({ departmentId: true })
 
 // Create & Update
-export type TicketIssueCreateParams = z.infer<typeof zTicketIssueForm>
-export type TicketIssueUpdateParams = WithId<TicketIssueCreateParams, 'departmentId'>
+export type TicketTypeCreateParams = z.infer<typeof zTicketTypeForm>
+export type TicketTypeUpdateParams = WithId<TicketTypeCreateParams, 'departmentId'>

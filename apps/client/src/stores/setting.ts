@@ -3,10 +3,11 @@ import type { Setting } from '@/api/settings'
 import { defineStore } from 'pinia'
 import { settingApi } from '@/api/settings'
 import { useFetchWithCache } from '@3un/utils'
+import { useStorage } from '@vueuse/core'
 
 export const useSettingStore = defineStore('settingStore', () => {
   const key = import.meta.env.VITE_SETTINGS
-  const settings = ref() as Ref<Setting>
+  const settings = useStorage<Setting>(key, {} as Setting, sessionStorage)
   const originUrl = ref('')
 
   async function getSettings() {

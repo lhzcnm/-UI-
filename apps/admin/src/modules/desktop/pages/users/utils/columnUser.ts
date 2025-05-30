@@ -1,7 +1,9 @@
-import type { User } from '@/inters/users'
-import { XSwitch, type XColDef } from '@3un/ui'
-
 import UserAction from '../components/UserAction.vue'
+
+import { XSwitch, type XColDef } from '@3un/ui'
+import { h } from 'vue'
+
+import type { User } from '@/inters/users'
 import { updateUser } from '@/api/users'
 
 const levelStore = useLevelStore()

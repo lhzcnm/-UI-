@@ -1,9 +1,11 @@
 import UpstreamAction from '../components/UpstreamAction.vue'
+
 import { XSwitch, type XColDef, XTag } from '@3un/ui'
+import { API_TYPE_MAP } from '@3un/utils'
+import { h } from 'vue'
 
 import type { Upstream } from '@/inters/upstream'
 import { updateUpstream } from '@/api/upstream'
-import { API_TYPE_MAP } from '@3un/utils'
 
 export const columns: XColDef<Upstream> = [
   {

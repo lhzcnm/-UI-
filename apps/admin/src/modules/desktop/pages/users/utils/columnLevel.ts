@@ -2,9 +2,10 @@ import LevelAction from '../components/LevelAction.vue'
 
 import type { XColDef } from '@3un/ui'
 import { XSwitch } from '@3un/ui'
+import { h } from 'vue'
 
-import { updateLevel } from '@/api/level'
 import type { Level } from '@/inters/level'
+import { updateLevel } from '@/api/level'
 
 export const columns: XColDef<Level> = [
   {

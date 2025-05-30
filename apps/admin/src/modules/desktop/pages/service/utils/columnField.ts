@@ -1,7 +1,7 @@
 import FieldAction from '../components/FieldAction.vue'
 
-import type { XColDef } from "@3un/ui"
-import { XSwitch, XInputNumber } from '@3un/ui'
+import { type XColDef, XInputNumber, XSwitch } from '@3un/ui'
+import { h } from 'vue'
 
 import type { ServiceField } from '@/inters/services'
 import { updateServiceField } from "@/api/services"
@@ -20,7 +20,6 @@ export const columns: XColDef<ServiceField> = [
     render(_, row) {
       const service = serviceStore.itemMap.get(row.serviceId)!
       if (!service) return '服务不存在'
-
       return `${service.packageId} - ${service.packageTitle}`
     },
   },

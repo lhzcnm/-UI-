@@ -69,3 +69,26 @@ export const zOrderSearchForm = z.interface({
 export type OrderList = IList<Order>
 export type OrderSearchForm = z.infer<typeof zOrderSearchForm>
 export interface OrderListParams extends IPage, OrderSearchForm {}
+
+// Update
+export const zOrderUpdateForm = z.interface({
+  codeId: z.number().default(0),
+  imeiNo: z.string().default(''),
+  codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
+  originalStatus: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
+  code: z.string().default(''),
+  messageFromServer: z.string().default(''),
+  orderIdFromServer: z.string().default(''),
+})
+
+export type OrderUpdateForm = z.infer<typeof zOrderUpdateForm>
+
+export type OrderUpdateParams = {
+  codeId: number
+  imeiNo?: string
+  codeStatusId?: ORDER_STATUS
+  originalStatus?: ORDER_STATUS
+  code?: string
+  messageFromServer?: string
+  orderIdFromServer?: string
+}

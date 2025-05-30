@@ -3,12 +3,13 @@ import type { ServiceDetail, Service } from '@/api/services'
 import { defineStore } from 'pinia'
 import { serviceApi } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
+import { useStorage } from '@vueuse/core'
 
 export const useServiceStore = defineStore('serviceStore', () => {
   const sKey = import.meta.env.VITE_SERVICES
   const rKey = import.meta.env.VITE_RECENT_SERVICES
 
-  const details = shallowRef<ServiceDetail[]>([])
+  const details = useStorage<ServiceDetail[]>(sKey, [], sessionStorage)
   const services = shallowRef<Map<number, Service>>(new Map())
 
   async function getServices() {

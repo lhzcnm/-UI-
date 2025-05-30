@@ -8,4 +8,5 @@ export const ticketApi: TicketApi = {
   replys: (id) => http.get(`ticket/message/${id}`),
   create: (params) => http.post('ticket/create', params),
   reply: (params) => http.post('ticket/reply', params),
+  issueList: () => http.get('ticket/department'),
 }

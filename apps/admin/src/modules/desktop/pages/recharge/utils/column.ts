@@ -1,6 +1,8 @@
 import type { Recharge } from '@/inters/recharge'
+
 import { PAYMENT_METHOD_MAP, PAYMENT_STATUS_MAP, SHOP_NAME_MAP } from '@3un/utils'
 import { XTag, type XColDef } from '@3un/ui'
+import { h } from 'vue'
 
 export const columns: XColDef<Recharge> = [
   {

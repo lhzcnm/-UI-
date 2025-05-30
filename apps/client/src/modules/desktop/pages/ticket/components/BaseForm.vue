@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import type { TicketCreateForm } from '@/api/tickets'
-import { TICKET_TYPE_LIST, TICKET_PRIORITY_LIST } from '@3un/utils'
+import type { TicketCreateForm, TicketType } from '@/api/tickets'
+import { TICKET_PRIORITY_LIST } from '@3un/utils'
 
+interface BaseFormProps {
+  typeList: TicketType[]
+}
+
+const props = defineProps<BaseFormProps>()
 const form = defineModel<TicketCreateForm>({ required: true })
 </script>
 
@@ -11,8 +16,8 @@ const form = defineModel<TicketCreateForm>({ required: true })
       <label class="text-muted-foreground text-sm">工单类型</label>
       <XSelect v-model="form.type">
         <XSelectItem
-          v-for="item in TICKET_TYPE_LIST" :key="item.value"
-          :value="item.value" :label="item.label"
+          v-for="item in props.typeList" :key="item.departmentId"
+          :value="item.departmentId" :label="item.departmentName"
         />
       </XSelect>
     </div>

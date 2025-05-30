@@ -1,5 +1,7 @@
 import AdminAction from '../components/AdminAction.vue'
+
 import { XSwitch, type XColDef } from '@3un/ui'
+import { h } from 'vue'
 
 import type { User } from '@/inters/users'
 import { updateUser } from '@/api/users'

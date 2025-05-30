@@ -1,0 +1,51 @@
+<script setup lang="ts">
+import type { TicketSearch, TicketType } from '@/inters/ticket'
+import { TICKET_STATUS_LIST, TICKET_PRIORITY_LIST } from '@3un/utils'
+
+interface TicketSearchProps {
+  typeList: TicketType[]
+}
+
+const props = defineProps<TicketSearchProps>()
+const form = defineModel<TicketSearch>({ required: true })
+
+const ticketStatusList = [
+  { value: -1, label: '全部' },
+  ...TICKET_STATUS_LIST,
+]
+
+const ticketPriorityList = [
+  { value: -1, label: '全部' },
+  ...TICKET_PRIORITY_LIST,
+]
+</script>
+
+<template>
+  <form class="space-y-4" @submit.prevent>
+    <div>
+      <label class="text-sm text-muted-foreground mb-1">工单类型</label>
+      <XSelect v-model="form.type" placeholder="选择工单类型" clearable>
+        <XSelectItem
+          v-for="item in props.typeList"
+          :key="item.departmentId"
+          :value="item.departmentId"
+          :label="item.departmentName"
+        />
+      </XSelect>
+    </div>
+    <div>
+      <label class="text-sm text-muted-foreground mb-1">工单状态</label>
+      <XSegmented
+        v-model="form.status!"
+        :options="ticketStatusList"
+      />
+    </div>
+    <div>
+      <label class="text-sm text-muted-foreground mb-1">工单优先级</label>
+      <XSegmented
+        v-model="form.priority!"
+        :options="ticketPriorityList"
+      />
+    </div>
+  </form>
+</template>

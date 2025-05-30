@@ -1,7 +1,9 @@
-import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
-import { zService, type Service } from '@/inters/services'
-import { updateService } from '@/api/services'
 import { SERVICE_STORE } from '.'
+
+import { updateService } from '@/api/services'
+import { zService, type Service } from '@/inters/services'
+import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
+import { h } from 'vue'
 
 const serviceStore =  useServiceStore()
 export const columns: XColDef<Service> = [

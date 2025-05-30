@@ -28,7 +28,7 @@ function handleSubmit() {
     :mask-closable="false"
     title="创建工单"
   >
-    <BaseForm v-model="store.createForm" />
+    <BaseForm v-model="store.createForm" :type-list="store.types" />
 
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

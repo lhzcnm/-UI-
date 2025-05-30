@@ -6,6 +6,7 @@ export interface TicketApi {
   replys: (ticketId: number) => R<TicketReplyItem[]>
   create: (params: TicketCreateParams) => R<TicketItem>
   reply: (params: TicketReplyParams) => R<TicketReplyItem>
+  issueList: () => R<TicketType[]>
 }
 
 export interface TicketItem {
@@ -47,4 +48,15 @@ export interface TicketReplyItem {
   replyId: number | null
   msg: string
   time: string
+}
+
+// ----------
+// Ticket Type
+// ----------
+export interface TicketType {
+  departmentId: number
+  departmentName: string
+  departmentDes: string
+  status: number
+  deptOrder: number
 }

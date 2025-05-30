@@ -9,6 +9,8 @@ import { ticketApi } from '@/api/tickets'
 const store: TicketStore = reactive({
   tickets: [],
   replies: [],
+  types: [],
+
   createForm: form.create,
   visibleCreate: false,
   index: undefined,
@@ -18,10 +20,17 @@ provide(TICKET_STORE, store)
 
 const visibleReply = ref(false)
 
-await getList()
+await Promise.all([
+  getList(),
+  getTypes(),
+])
+
 async function getList() {
-  const { data } = await ticketApi.list()
-  store.tickets = data
+  store.tickets = (await ticketApi.list()).data
+}
+
+async function getTypes() {
+  store.types = (await ticketApi.issueList()).data
 }
 
 function checkoutTicket(index: number) {
@@ -30,6 +39,10 @@ function checkoutTicket(index: number) {
 
   const response = ticketApi.replys(store.tickets[index].id)
   response.then(({ data }) => store.replies = data)
+}
+
+function getTicketType(type: number) {
+  return store.types.find(t => t.departmentId === type)
 }
 </script>
 
@@ -47,7 +60,9 @@ function checkoutTicket(index: number) {
       <template v-else>
         <TicketCard
           v-for="(ticket, index) in store.tickets" :key="ticket.id"
-          :ticket="ticket" :active="store.index === index"
+          :ticket="ticket"
+          :active="store.index === index"
+          :type="getTicketType(ticket.type)"
           @click="checkoutTicket(index)"
         />
       </template>

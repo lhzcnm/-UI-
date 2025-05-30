@@ -10,6 +10,7 @@ import { ticketApi } from '@/api/tickets'
 const store: TicketStore = reactive({
   tickets: [],
   replies: [],
+  types: [],
   createForm: form.create,
   visibleCreate: false,
   index: undefined,
@@ -17,10 +18,17 @@ const store: TicketStore = reactive({
 
 provide(TICKET_STORE, store)
 
-await getList()
+await Promise.all([
+  getList(),
+  getTypes(),
+])
+
 async function getList() {
-  const { data } = await ticketApi.list()
-  store.tickets = data
+  store.tickets = (await ticketApi.list()).data
+}
+
+async function getTypes() {
+  store.types = (await ticketApi.issueList()).data
 }
 </script>
 

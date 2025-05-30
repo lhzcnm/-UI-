@@ -15,6 +15,10 @@ function checkoutTicket(index: number) {
   const response = ticketApi.replys(store.tickets[index].id)
   response.then(({ data }) => store.replies = data)
 }
+
+function getTicketType(type: number) {
+  return store.types.find(t => t.departmentId === type)
+}
 </script>
 
 <template>
@@ -30,7 +34,9 @@ function checkoutTicket(index: number) {
 
       <TicketCard
         v-for="(ticket, index) in store.tickets" :key="ticket.id"
-        :ticket="ticket" :active="store.index === index"
+        :ticket="ticket"
+        :active="store.index === index"
+        :type="getTicketType(ticket.type)"
         @click="checkoutTicket(index)"
       />
     </section>

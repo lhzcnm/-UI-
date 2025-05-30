@@ -11,18 +11,23 @@ export const zTicket = z.interface({
   type: z.number().default(0),
   time: z.string().default(''),
   userName: z.string().default(''),
-  headImgUrl: z.string().default(''),
+  headImgUrl: z.string().nullable(),
   priority: z.enum(TICKET_PRIORITY).default(TICKET_PRIORITY.LOW),
   statusId: z.enum(TICKET_STATUS).default(TICKET_STATUS.WAIT),
 })
 
 export type Ticket = z.infer<typeof zTicket>
 
+// Search
+export type TicketSearch = {
+  status: number | undefined
+  priority: number | undefined
+  type: number | undefined
+}
+
 // List
 export type TicketList = IList<Ticket>
-export interface TicketListParams extends IPage {
-  statusId?: TICKET_STATUS
-}
+export interface TicketListParams extends IPage, TicketSearch {}
 
 // Update
 export type TicketUpdateParams = {
@@ -37,7 +42,7 @@ export type TicketUpdateParams = {
 export const zTicketReply = z.interface({
   id: z.number().default(0),
   ticketId: z.number().default(0),
-  replyId: z.number().default(0),
+  replyId: z.number().nullable(),
   msg: z.string().default(''),
   time: z.string().default(''),
 })

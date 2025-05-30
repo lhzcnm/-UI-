@@ -8,7 +8,7 @@ const levelStore = useLevelStore()
 <template>
   <form class="divide-y" @submit.prevent>
     <FormField label="会员等级" desc="会员等级">
-      <XSelect v-model="form.pricePlanId" placeholder="会员等级">
+      <XSelect v-model="form.pricePlanId" placeholder="选择会员等级">
         <XSelectItem
           v-for="level in levelStore.levels" :key="level.pricePlanId"
           :value="level.pricePlanId" :label="level.pricePlan"

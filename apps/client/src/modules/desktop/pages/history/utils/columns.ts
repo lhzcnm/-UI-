@@ -1,20 +1,21 @@
-import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/utils'
 import TableActions from '../components/TableActions.vue'
-import { XTag } from '@3un/ui'
 
-import type { XTableColumn } from '@3un/ui'
+import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/utils'
+import { XTag, type XColDef } from '@3un/ui'
+import { h } from 'vue'
+
 import type { Order } from '@/api/orders'
 
 const serviceStore = useServiceStore()
 
-export const columns: XTableColumn[] = [
+export const columns: XColDef<Order> = [
   { key: 'id', title: '订单号', width: 98 },
   {
-    key: 'service',
+    key: 'serviceId',
     title: '服务',
     width: 220,
-    render: (_: any, row: Order) => {
-      const service = serviceStore.services.get(row.serviceId)
+    render: (value) => {
+      const service = serviceStore.services.get(value)
       return service ? `${service.id} - ${service.title}` : '服务不存在'
     },
   },
@@ -25,8 +26,7 @@ export const columns: XTableColumn[] = [
     title: '订单状态',
     width: 88,
     render: (value: ORDER_STATUS) => {
-      const tag = ORDER_STATUS_MAP[value]
-      return h(XTag, tag)
+      return h(XTag, ORDER_STATUS_MAP[value])
     }
   },
   {
@@ -34,8 +34,7 @@ export const columns: XTableColumn[] = [
     title: '验证状态',
     width: 88,
     render(value: ORDER_VERTIFY) {
-      const tag = ORDER_VERTIFY_MAP[value]
-      return h(XTag, tag)
+      return h(XTag, ORDER_VERTIFY_MAP[value])
     }
   },
   {
@@ -53,7 +52,7 @@ export const columns: XTableColumn[] = [
     title: '操作',
     fixed: 'right',
     width: 200,
-    render(_, row: Order, index) {
+    render(_, row, index) {
       return h(TableActions, { row, index })
     }
   }

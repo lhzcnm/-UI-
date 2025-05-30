@@ -50,7 +50,7 @@ export const menus: SidebarMenu[] = [
     children: [
       { label: '全部订单', match: 'quandingdan', path: '/orders' },
       { label: '订单验证', match: 'dingdanyanzheng', path: '/orders?q=verify', icon: 'lucide:check-circle', badge: 9 },
-      { label: '等待处理', match: 'dengdaichuli', path: '/orders?q=pending', icon: 'lucide:clock', badge: 4 },
+      { label: '等待处理', match: 'dengdaichuli', path: '/orders?q=wait', icon: 'lucide:clock', badge: 4 },
       { label: '正在处理', match: 'zhengzaichuli', path: '/orders?q=processing', icon: 'lucide:square-activity', badge: 203 },
     ],
   },
