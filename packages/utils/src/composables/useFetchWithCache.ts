@@ -4,13 +4,13 @@ export enum StorageType {
 }
 
 export interface FetchWithCacheOptions<T> {
-  key           : string
-  force        ?: boolean
-  waitTime     ?: number
-  cacheDuration?: number
-  storageType  ?: StorageType
-  fetchData     : () => Promise<T>
-  onUpdate     ?: (data: T) => void
+  key            : string
+  force         ?: boolean
+  waitTime      ?: number
+  cacheDuration ?: number
+  storageType   ?: StorageType
+  fetchFn        : () => Promise<T>
+  onUpdate      ?: (data: T) => void
 }
 
 const cacheManager = {
@@ -38,7 +38,7 @@ export async function useFetchWithCache<T>(
   options: FetchWithCacheOptions<T>
 ): Promise<T> {
   const {
-    fetchData,
+    fetchFn,
     onUpdate,
     key,
     force         = false,
@@ -58,7 +58,6 @@ export async function useFetchWithCache<T>(
 
     if (now - time < duration) {
       const data = JSON.parse(cachedRawData)
-      console.log('cached', data)
       return new Promise((resolve) => {
         setTimeout(() => resolve(data), waitTime)
       })
@@ -66,19 +65,19 @@ export async function useFetchWithCache<T>(
   }
 
   const fetchStart = Date.now()
-  const data = await fetchData()
+  const data = await fetchFn()
   const fetchTime = Date.now() - fetchStart
   const _waitTime = fetchTime < waitTime ? waitTime - fetchTime : 0
 
   storage.setItem(
     `cache-${key}`,
     JSON.stringify({
-      key: key,
       time: fetchStart,
       duration: cacheDuration,
     })
   )
 
+  storage.setItem(key, JSON.stringify(data))
   onUpdate?.(data)
 
   return new Promise((resolve) => {

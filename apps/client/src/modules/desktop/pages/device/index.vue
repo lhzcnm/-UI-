@@ -45,7 +45,7 @@ async function checkPlugin() {
   }
 }
 
-const { data } = useWebSocket(
+const { data, status } = useWebSocket(
   DEVICE_CONFIG.ws,
   {
     heartbeat: {
@@ -55,6 +55,10 @@ const { data } = useWebSocket(
     },
   },
 )
+
+watch(status, (value) => {
+  console.log(value)
+})
 
 watch(data, async (value) => {
   if (value.startsWith('disconnected:')) {

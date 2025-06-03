@@ -2,9 +2,6 @@
 import { Icon } from '@iconify/vue'
 import { ua } from '@3un/utils'
 
-// /api/oss/download/43  window
-// /api/oss/download/44  Mac(arm64)
-
 function download() {
   const options = {
     Windows: '/oss/download/43',

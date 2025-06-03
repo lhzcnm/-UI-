@@ -3,19 +3,15 @@ import type { ServiceDetail, Service } from '@/api/services'
 import { defineStore } from 'pinia'
 import { serviceApi } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
-import { useStorage } from '@vueuse/core'
 
 export const useServiceStore = defineStore('serviceStore', () => {
-  const sKey = import.meta.env.VITE_SERVICES
-  const rKey = import.meta.env.VITE_RECENT_SERVICES
-
-  const details = useStorage<ServiceDetail[]>(sKey, [], sessionStorage)
+  const details = shallowRef<ServiceDetail[]>([])
   const services = shallowRef<Map<number, Service>>(new Map())
 
   async function getServices() {
     const data = await useFetchWithCache({
-      fetchData: async () => (await serviceApi.list()).data,
-      key: sKey,
+      fetchFn: async () => (await serviceApi.list()).data,
+      key: import.meta.env.VITE_SERVICES,
     })
 
     services.value.clear()
@@ -29,7 +25,8 @@ export const useServiceStore = defineStore('serviceStore', () => {
   }
 
   function addRecentService(id: number) {
-    const rawList = localStorage.getItem(rKey)
+    const key = import.meta.env.VITE_RECENT_SERVICES
+    const rawList = localStorage.getItem(key)
     const list = rawList ? JSON.parse(rawList) as number[] : []
 
     if (!list.includes(id)) {
@@ -43,7 +40,7 @@ export const useServiceStore = defineStore('serviceStore', () => {
       validList.pop()
     }
 
-    localStorage.setItem(rKey, JSON.stringify(validList))
+    localStorage.setItem(key, JSON.stringify(validList))
   }
 
   return {

@@ -3,17 +3,15 @@ import type { UserInfo } from '@/api/user'
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import { useFetchWithCache } from '@3un/utils'
-import { useStorage } from '@vueuse/core'
 
 export const useUserStore = defineStore('userStore', () => {
   const uKey = import.meta.env.VITE_USER_INFO
-  const info = useStorage<UserInfo>(uKey, {} as UserInfo, sessionStorage)
+  const info = shallowRef<UserInfo>({} as UserInfo)
 
   async function getInfo(force = false) {
     const data = await useFetchWithCache({
-      fetchData: async () => (await userApi.info()).data,
-      key: uKey,
-      force,
+      fetchFn: async () => (await userApi.info()).data,
+      key: uKey, force,
     })
 
     info.value = data
