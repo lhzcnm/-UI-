@@ -1,26 +1,20 @@
 import type { DeviceForm, ProductItem, Device, DeviceResponse } from "../types"
 import type { IK } from "@3un/shared"
 
+type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin'
+
 export interface DeviceStore {
   deviceMap: Map<string, Device>
-  status: 'list' | 'detail' | 'wait' | 'plugin'
+  status: DeviceStatus
   screenshot: string
   selected: string
 }
 
-export const DEVICE_STORE: IK<DeviceStore> = Symbol('device')
-// export const DEVICE_CONFIG = {
-//   api: 'http://192.168.10.3:9999',
-//   ws: 'ws://192.168.10.3:10000/ws',
-// }
-export const DEVICE_CONFIG = {
-  api: 'http://localhost:9999',
-  ws: 'ws://localhost:10000/ws',
-}
+export const STORE: IK<DeviceStore> = Symbol('device')
 
 export function formatSize(bytes: number) {
   if (bytes === 0) return '0 B'
-  
+
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
   return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + units[i]
@@ -30,8 +24,8 @@ export const getCopyToken = (info: DeviceForm) => ([
   ['序列号', info.SerialNumber],
   ['串号', info.Imei],
   ['型号号码', `${info.ModelNumber} ${info.RegionInfo}`],
-  ['主板序号', info.MLBSerialNumber],
   ['系统版本', `${info.ProductVersion} (${info.BuildVersion})`],
+  ['主板序号', info.MLBSerialNumber],
   ['ECID', info.UniqueChipID],
   ['UDID', info.UniqueDeviceID],
   ['激活状态', info.ActivationState],
@@ -41,6 +35,23 @@ export const getCopyToken = (info: DeviceForm) => ([
   ['iCloud', info.iCloud],
   ['CPU', info.CPU],
 ])
+
+export function getPrintPayload(device: Device) {
+  const { info, memory, product, battery, form } = device
+  return {
+    DeviceName: product.Name,
+    Color: product.Color,
+    Imei: form.Imei,
+    MLBSerialNumber: info.MLBSerialNumber,
+    ProductVersion: info.ProductVersion,
+    RegionInfo: info.RegionInfo,
+    ModelNumber: info.ModelNumber,
+    TotalDiskCapacity: memory.TotalDiskCapacity,
+    NominalChargeCapacity: battery.NominalChargeCapacity,
+    DesignCapacity: battery.DesignCapacity,
+    CycleCount: battery.CycleCount,
+  }
+}
 
 export function getDeviceForm(
   device: DeviceResponse,
@@ -64,21 +75,4 @@ export function getDeviceForm(
     NetworkLock: '--',
     ActivationLock: '--',
   }
-}
-
-export function getPrintPayload(device: Device) {
-  const { info, memory, product, battery, form } = device
-  return JSON.stringify({
-    DeviceName: product.Name,
-    Color: product.Color,
-    Imei: form.Imei,
-    MLBSerialNumber: info.MLBSerialNumber,
-    ProductVersion: info.ProductVersion,
-    RegionInfo: info.RegionInfo,
-    ModelNumber: info.ModelNumber,
-    TotalDiskCapacity: memory.TotalDiskCapacity,
-    NominalChargeCapacity: battery.NominalChargeCapacity,
-    DesignCapacity: battery.DesignCapacity,
-    CycleCount: battery.CycleCount,
-  })
 }

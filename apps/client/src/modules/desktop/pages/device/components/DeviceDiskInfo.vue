@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { DEVICE_STORE, formatSize } from '../utils'
+import { STORE, formatSize } from '../utils'
 
-const store = inject(DEVICE_STORE)!
+const store = inject(STORE)!
 
 const diskInfo = computed(() => {
   const { memory } = store.deviceMap.get(store.selected)!

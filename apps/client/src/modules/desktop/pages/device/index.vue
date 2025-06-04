@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import DeviceList from './views/DeviceList.vue'
-import DeviceDetail from './views/DeviceDetail.vue'
-import WaitConnect from './views/WaitConnect.vue'
-import PluginDownload from './views/PluginDownload.vue'
-
-import { useWebSocket } from '@vueuse/core'
+import DeviceList       from './views/DeviceList.vue'
+import DeviceDetail     from './views/DeviceDetail.vue'
+import WaitConnect      from './views/WaitConnect.vue'
+import PluginDownload   from './views/PluginDownload.vue'
 
 import type { DeviceStore } from './utils'
-import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, ProductItem, DeviceResponse } from './types'
-import { DEVICE_STORE, DEVICE_CONFIG, getDeviceForm } from './utils'
+import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, DeviceResponse } from './types'
+import { STORE, getDeviceForm } from './utils'
+import { ws, wsFetch } from './utils/websocket'
 import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
@@ -18,74 +17,76 @@ const store: DeviceStore = reactive({
   selected: '',
 })
 
-provide(DEVICE_STORE, store)
+provide(STORE, store)
 
 const r = await fetch('/devices-ios.json')
 const datasets = await r.json() as ProductData
 
+watch(
+  ws.data,
+  async (value: string) => {
+    if (value.startsWith('disconnected')) {
+      return handleDisconnect(value)
+    }
+
+    if (value.startsWith('{"id"')) return
+    if (value.includes('DeviceID')) {
+      const data = JSON.parse(value)
+      await handleDevice(data)
+
+      if (store.deviceMap.size === 1) {
+        store.status = 'list'
+      }
+    }
+  },
+)
+
 await checkPlugin()
 async function checkPlugin() {
   const controller = new AbortController()
-  setTimeout(() => controller.abort(), 5000)
+  setTimeout(() => controller.abort(), 3000)
 
   try {
     const response = await fetch(
-      `${DEVICE_CONFIG.api}/info`,
+      'http://localhost:9999/info',
       { signal: controller.signal },
     )
 
     const { data } = await response.json()
-    if (!data || data.length === 0) return
-    await Promise.all(data.map(handleDevice))
-    store.status = 'list'
+    await handleInfo(data)
   }
   catch (error) {
-    console.warn(error)
-    store.status = 'plugin'
+    try {
+      const data = await wsFetch({ type: 'info' })
+      await handleInfo(data as DeviceResponse[])
+    }
+    catch (error) {
+      console.warn(error)
+      store.status = 'plugin'
+    }
   }
 }
-
-const { data, status } = useWebSocket(
-  DEVICE_CONFIG.ws,
-  {
-    heartbeat: {
-      interval: 30000,
-      pongTimeout: 3000,
-      responseMessage: 'pong',
-    },
-  },
-)
-
-watch(status, (value) => {
-  console.log(value)
-})
-
-watch(data, async (value) => {
-  if (value.startsWith('disconnected:')) {
-    return handleDisconnect(value)
-  }
-
-  const data = JSON.parse(value)
-  await handleDevice(data)
-
-  if (store.deviceMap.size === 1) {
-    store.status = 'list'
-  }
-})
 
 watch(
   () => store.selected,
   (value) => {
     if (!value) return
     const [, uniqueId] = value.split(':')
+    store.screenshot = ''
     getScreenshot(uniqueId)
   },
 )
 
+async function handleInfo(data: DeviceResponse[]) {
+  if (!data || data.length === 0) return
+  await Promise.all(data.map(handleDevice))
+  store.status = 'list'
+}
+
 async function handleDevice(data: DeviceResponse) {
   const { DeviceInfo, Memory, ICloud, DeviceID } = data
   const product = getProduct(DeviceInfo)
-  const battery = await getBatteryInfo(DeviceInfo, product)
+  const battery = await getBatteryInfo(DeviceInfo)
   const key = `${DeviceID}:${DeviceInfo.UniqueDeviceID}`
 
   http.post('/device/save', data)
@@ -140,34 +141,26 @@ function handleDisconnect(value: string) {
   }
 }
 
-async function getBatteryInfo(
-  device: DeviceInfo, 
-  product: ProductItem
-) {
-  const response = await fetch(
-    `${DEVICE_CONFIG.api}/battery`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        ProductName: product.Name,
-        UniqueId: device.UniqueDeviceID,
-      }),
-    },
-  )
-
-  return (await response.json()).data
+async function getBatteryInfo(device: DeviceInfo) {
+  return await wsFetch<BatteryInfo>({
+    Uid: device.UniqueDeviceID,
+    type: 'battery',
+  })
 }
 
 async function getScreenshot(id: string) {
-  const response = await fetch(`${DEVICE_CONFIG.api}/screenshot/${id}`)
-  const blob = await response.blob()
-  store.screenshot = URL.createObjectURL(blob)
+  const response = await wsFetch<string>({
+    type: 'screenshot',
+    Uid: id,
+  })
+
+  store.screenshot = `data:image/png;base64,${response}`
 }
 
 const components = {
   list: DeviceList,
-  detail: DeviceDetail,
   wait: WaitConnect,
+  detail: DeviceDetail,
   plugin: PluginDownload,
 }
 </script>

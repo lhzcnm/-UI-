@@ -2,9 +2,9 @@
 import { Icon } from '@iconify/vue'
 
 import type { BatteryInfo } from '../types'
-import { DEVICE_STORE } from '../utils'
+import { STORE } from '../utils'
 
-const store = inject(DEVICE_STORE)!
+const store = inject(STORE)!
 
 const batteryInfo = computed(() => {
   const { battery } = store.deviceMap.get(store.selected)!

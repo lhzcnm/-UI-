@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { DEVICE_STORE, DEVICE_CONFIG } from '../utils'
-import http from '@/utils/http'
-
 import { tv } from 'tailwind-variants'
 import { useClipboard } from '@vueuse/core'
-import { xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { Icon } from '@iconify/vue'
+import { xconfirm } from '@3un/utils'
+
+import http from '@/utils/http'
+
+import { STORE } from '../utils'
+import { wsFetch } from '../utils/websocket'
 
 const style = tv({
   slots: {
@@ -15,7 +17,7 @@ const style = tv({
   },
 })
 
-const store = inject(DEVICE_STORE)!
+const store = inject(STORE)!
 const uStore = useUserStore()
 
 const { copy } = useClipboard({ legacy: true })
@@ -40,8 +42,7 @@ async function handleActivation() {
   const suffix = isActivated.value ? 'deactivate' : 'activation'
   const [_, uniqueId] = store.selected.split(':')
   
-  await fetch(`${DEVICE_CONFIG.api}/${suffix}/${uniqueId}`)
-  
+  await wsFetch({ type: suffix, Uid: uniqueId })
   isActivated.value = !isActivated.value
   form.value.ActivationState = isActivated.value ? '已激活' : '未激活'
 }

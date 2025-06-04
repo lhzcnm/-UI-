@@ -6,7 +6,7 @@ import { useFetchWithCache } from '@3un/utils'
 
 export const useUserStore = defineStore('userStore', () => {
   const uKey = import.meta.env.VITE_USER_INFO
-  const info = shallowRef<UserInfo>({} as UserInfo)
+  const info = ref<UserInfo>({} as UserInfo)
 
   async function getInfo(force = false) {
     const data = await useFetchWithCache({

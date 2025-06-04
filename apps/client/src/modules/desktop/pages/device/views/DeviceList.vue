@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import DeviceCard from '../components/DeviceCard.vue'
-import { DEVICE_STORE } from '../utils'
+import { STORE } from '../utils'
 
-const store = inject(DEVICE_STORE)!
+const store = inject(STORE)!
 </script>
 
 <template>

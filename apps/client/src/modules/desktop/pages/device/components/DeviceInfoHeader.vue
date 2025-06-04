@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { twJoin } from 'tailwind-merge'
-
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import { DEVICE_STORE, DEVICE_CONFIG, getCopyToken, getPrintPayload } from '../utils'
+import { STORE, getCopyToken, getPrintPayload } from '../utils'
+import { wsFetch } from '../utils/websocket'
 
 const { copy } = useClipboard({ legacy: true })
-const store = inject(DEVICE_STORE)!
+const store = inject(STORE)!
 
 const isRecoveryMode = ref(false)
 const isPrinting = ref(false)
@@ -19,12 +19,12 @@ function handleRecoveryMode() {
 }
 
 async function handleEnterRecoveryMode(uniqueId: string) {
-  await fetch(`${DEVICE_CONFIG.api}/enterRecoveryMode/${uniqueId}`)
+  await wsFetch({ type: 'enterRecoveryMode', Uid: uniqueId })
   isRecoveryMode.value = true
 }
 
 async function handleExitRecoveryMode(uniqueId: string) {
-  await fetch(`${DEVICE_CONFIG.api}/irecovery/${uniqueId}`)
+  await wsFetch({ type: 'exitRecoveryMode', Uid: uniqueId })
   isRecoveryMode.value = false
 }
 
@@ -34,12 +34,15 @@ async function handlePrint() {
   const device = store.deviceMap.get(store.selected)!
   const payload = getPrintPayload(device)
 
-  const response = await fetch(
-    `${DEVICE_CONFIG.api}/print`,
-    { method: 'POST', body: payload },
-  )
+  const response = await wsFetch<string>({ type: 'print', ...payload })
+  const binaryString = atob(response)
+  const bytes = new Uint8Array(binaryString.length)
 
-  const blob = await response.blob()
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i)
+  }
+  
+  const blob = new Blob([bytes], { type: 'application/pdf' })
   window.open(URL.createObjectURL(blob), '_blank')
   isPrinting.value = false
 }

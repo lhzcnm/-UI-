@@ -5,7 +5,7 @@ import { settingApi } from '@/api/settings'
 import { useFetchWithCache } from '@3un/utils'
 
 export const useSettingStore = defineStore('settingStore', () => {
-  const settings = shallowRef<Setting>({} as Setting)
+  const settings = ref<Setting>({} as Setting)
   const originUrl = ref('')
 
   async function getSettings() {

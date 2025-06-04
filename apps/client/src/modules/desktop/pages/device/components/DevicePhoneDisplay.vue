@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
-import { DEVICE_STORE, DEVICE_CONFIG } from '../utils'
 import { useThrottleFn } from '@vueuse/core'
+
+import { STORE } from '../utils'
+import { wsFetch } from '../utils/websocket'
 
 const b = tv({
   base: [
@@ -14,8 +16,7 @@ const b = tv({
 const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
-const store = inject(DEVICE_STORE)!
-const apiUrl = DEVICE_CONFIG.api
+const store = inject(STORE)!
 
 const deviceMockup = {
   iPhone8: {
@@ -82,27 +83,23 @@ function getCurrentDate() {
 
 async function onRestart() {
   const [_, uniqueId] = store.selected.split(':')
-  await fetch(`${apiUrl}/reboot/${uniqueId}`)
+  await wsFetch({ type: 'reboot', Uid: uniqueId })
 }
 
 async function onShutdown() {
   const [_, uniqueId] = store.selected.split(':')
-  await fetch(`${apiUrl}/shutdown/${uniqueId}`)
+  await wsFetch({ type: 'shutdown', Uid: uniqueId })
 }
 
 async function onRefresh() {
   const [_, uniqueId] = store.selected.split(':')
-  const response = await fetch(`${apiUrl}/screenshot/${uniqueId}`)
-  const blob = await response.blob()
+  const response = await wsFetch<string>({
+    type: 'screenshot',
+    Uid: uniqueId,
+  })
 
-  store.screenshot = URL.createObjectURL(blob)
+  store.screenshot = `data:image/png;base64,${response}`
 }
-
-// function handleImageLoad() {
-//   if (store.screenshot) {
-//     URL.revokeObjectURL(store.screenshot)
-//   }
-// }
 </script>
 
 <template>
