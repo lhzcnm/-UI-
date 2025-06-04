@@ -52,12 +52,5 @@ async function createType() {
       :columns="column"
       :loading="loading"
     />
-
-    <template #footer>
-      <div class="flex justify-end space-x-2 mt-4">
-        <XButton variant="soft" @click="store.visibleType = false">取消</XButton>
-        <XButton>保存</XButton>
-      </div>
-    </template>
   </XDialog>
 </template>

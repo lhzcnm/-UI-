@@ -32,7 +32,7 @@ export const useServiceStore = defineStore('service', () => {
 
   async function getItems(force = false) {
     const data = await useFetchWithCache({
-      fetchData: getServices,
+      fetchFn: getServices,
       key: 'services',
       force: force,
     })
@@ -46,7 +46,7 @@ export const useServiceStore = defineStore('service', () => {
 
   async function getGroups(force = false) {
     const data = await useFetchWithCache({
-      fetchData: getServiceGroups,
+      fetchFn: getServiceGroups,
       key: 'groups',
       force: force,
     })

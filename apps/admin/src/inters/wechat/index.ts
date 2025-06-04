@@ -14,6 +14,9 @@ export const zWechatMenu = z.interface({
 })
 
 export type WechatMenu = z.infer<typeof zWechatMenu>
+export interface WechatTreeMenus extends WechatMenu {
+  children: WechatMenu[]
+}
 
 // Form
 export const zWechatMenuForm = zWechatMenu.omit({ id: true })

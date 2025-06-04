@@ -1,4 +1,4 @@
-import { zCustomMessage, type BuiltInMessage, type BuiltInMsgUpdateParams, type CustomMessage, type CustomMessageCreateParams, type CustomMessageUpdateParams, type WechatMenu, type WechatMenuCreateParams, type WechatMenuUpdateParams } from "@/inters/wechat"
+import { zBuiltInMsg, zCustomMsg, type BuiltInMessage, type BuiltInMsgUpdateParams, type CustomMsg, type CustomMsgCreateParams, type CustomMsgUpdateParams, type WechatMenu, type WechatMenuCreateParams, type WechatMenuUpdateParams } from "@/inters/wechat"
 import http from "@/utils/http"
 
 // Menu
@@ -30,33 +30,34 @@ export const pushWechatMenu: MenuPushFn = async () => {
 // Built-in Message
 type BuiltInMsgListFn = () => Promise<BuiltInMessage[]>
 export const getBuiltInMsgList: BuiltInMsgListFn = async () => {
-  return (await http.get('/wx/message')).data
+  const { data } = await http.get<BuiltInMessage[]>('/wx/message')
+  return data.map(item => zBuiltInMsg.parse(item))
 }
 
 type BuiltInMsgUpdateFn = (params: BuiltInMsgUpdateParams) => Promise<void>
 export const updateBuiltInMsg: BuiltInMsgUpdateFn = async (params) => {
-  return (await http.put(`/wx/message/${params.id}`, params)).data
+  return (await http.put(`/wx/message`, params)).data
 }
 
 // Custom Message
-type CustomMessageListFn = () => Promise<CustomMessage[]>
-export const getCustomMessageList: CustomMessageListFn = async () => {
-  const { data } = await http.get<CustomMessage[]>('/wx/message/custom')
-  return data.map(item => zCustomMessage.parse(item))
+type CustomMsgListFn = () => Promise<CustomMsg[]>
+export const getCustomMsgList: CustomMsgListFn = async () => {
+  const { data } = await http.get<CustomMsg[]>('/wx/message/custom')
+  return data.map(item => zCustomMsg.parse(item))
 }
 
-type CustomMessageCreateFn = (params: CustomMessageCreateParams) => Promise<CustomMessage>
-export const createCustomMessage: CustomMessageCreateFn = async (params) => {
+type CustomMsgCreateFn = (params: CustomMsgCreateParams) => Promise<CustomMsg>
+export const createCustomMsg: CustomMsgCreateFn = async (params) => {
   const { data } = await http.post('/wx/message/custom', params)
-  return zCustomMessage.parse(data)
+  return zCustomMsg.parse(data)
 }
 
-type CustomMessageUpdateFn = (params: CustomMessageUpdateParams) => Promise<number>
-export const updateCustomMessage: CustomMessageUpdateFn = async (params) => {
+type CustomMsgUpdateFn = (params: CustomMsgUpdateParams) => Promise<number>
+export const updateCustomMsg: CustomMsgUpdateFn = async (params) => {
   return (await http.put(`/wx/message/custom`, params)).data
 }
 
-type CustomMessageDeleteFn = (id: number) => Promise<void>
-export const deleteCustomMessage: CustomMessageDeleteFn = async (id) => {
+type CustomMsgDeleteFn = (id: number) => Promise<void>
+export const deleteCustomMsg: CustomMsgDeleteFn = async (id) => {
   await http.delete(`/wx/message/custom/${id}`)
 }

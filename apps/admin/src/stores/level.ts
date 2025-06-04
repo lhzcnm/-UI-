@@ -11,7 +11,7 @@ export const useLevelStore = defineStore('level', () => {
 
   async function getList(force = false) {
     const data = await useFetchWithCache({
-      fetchData: getLevels,
+      fetchFn: getLevels,
       key: 'levels',
       force,
     })

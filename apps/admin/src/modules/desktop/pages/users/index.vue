@@ -72,7 +72,7 @@ function resetSearch() {
       <div class="flex space-x-2">
         <XButton color="success" icon="lucide:plus" label="新增用户" @click="openCreate" />
         <XButton icon="lucide:filter" label="筛选" @click="store.visibleSearch = true" />
-        <XButton icon="lucide:trash-2" label="清空筛选" color="danger" @click="resetSearch" />
+        <XButton icon="lucide:trash-2" label="清空筛选" color="warning" @click="resetSearch" />
       </div>
 
       <XPagination
