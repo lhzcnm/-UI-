@@ -3,7 +3,7 @@ import type { Configs } from '@/inters/settings'
 import SettingAdvanced from './settings/SettingAdvanced.vue'
 import SettingAnno from './settings/SettingAnno.vue'
 import SettingRoutine from './settings/SettingRoutine.vue'
-import SettingTheme from './settings/SettingTheme.vue'
+// import SettingTheme from './settings/SettingTheme.vue'
 
 import { getConfigs, getSettings } from '@/api/settings'
 
@@ -14,14 +14,14 @@ const visible = defineModel<boolean>({ required: true })
 
 const options = [
   { label: '常规', value: 'routine', icon: 'lucide:settings' },
-  { label: '主题', value: 'theme', icon: 'lucide:palette' },
+  // { label: '主题', value: 'theme', icon: 'lucide:palette' },
   { label: '公告', value: 'announcement', icon: 'lucide:microwave' },
   { label: '高级', value: 'advanced', icon: 'lucide:shapes' },
 ]
 
 const components = {
   routine: SettingRoutine,
-  theme: SettingTheme,
+  // theme: SettingTheme,
   announcement: SettingAnno,
   advanced: SettingAdvanced,
 }

@@ -61,8 +61,8 @@ function openCreate() {
 
 function resetSearch() {
   store.formSearch = zUserSearchForm.parse({})
-  store.page = 1
   store.refresh = !store.refresh
+  store.page = 1
 }
 </script>
 
@@ -72,7 +72,7 @@ function resetSearch() {
       <div class="flex space-x-2">
         <XButton color="success" icon="lucide:plus" label="新增用户" @click="openCreate" />
         <XButton icon="lucide:filter" label="筛选" @click="store.visibleSearch = true" />
-        <XButton icon="lucide:trash-2" label="清空筛选" color="warning" @click="resetSearch" />
+        <XButton icon="lucide:brush-cleaning" label="清空筛选" color="warning" @click="resetSearch" />
       </div>
 
       <XPagination

@@ -23,7 +23,7 @@ const ticketPriorityList = [
 <template>
   <form class="space-y-4" @submit.prevent>
     <div>
-      <label class="text-sm text-muted-foreground mb-1">工单类型</label>
+      <label class="block text-sm text-label mb-1">工单类型</label>
       <XSelect v-model="form.type" placeholder="选择工单类型" clearable>
         <XSelectItem
           v-for="item in props.typeList"
@@ -34,14 +34,14 @@ const ticketPriorityList = [
       </XSelect>
     </div>
     <div>
-      <label class="text-sm text-muted-foreground mb-1">工单状态</label>
+      <label class="block text-sm text-label mb-1">工单状态</label>
       <XSegmented
         v-model="form.status!"
         :options="ticketStatusList"
       />
     </div>
     <div>
-      <label class="text-sm text-muted-foreground mb-1">工单优先级</label>
+      <label class="block text-sm text-label mb-1">工单优先级</label>
       <XSegmented
         v-model="form.priority!"
         :options="ticketPriorityList"

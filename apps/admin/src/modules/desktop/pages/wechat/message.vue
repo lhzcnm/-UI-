@@ -53,11 +53,11 @@ function openBuiltIn() {
       />
     </section>
 
-    <div class="p-3">
+    <div>
       <XTable
         :columns="columns"
         :data="store.msgList"
-        class="border h-[calc(100vh-8.75rem)]"
+        class="h-[calc(100vh-8.75rem)]"
         row-key="id"
       />
     </div>

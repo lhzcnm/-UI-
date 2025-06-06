@@ -26,7 +26,7 @@ const statusOptions = [
 <template>
   <div class="space-y-3">
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-muted-foreground">服务选择：</label>
+      <label class="inline-block mb-1 text-sm text-label">服务选择：</label>
       <div class="flex items-center space-x-2">
         <NativeSelect
           v-model="groupId"
@@ -48,7 +48,7 @@ const statusOptions = [
     </div>
 
     <div class="space-y-1">
-      <label class="text-sm text-muted-foreground">订单状态：</label>
+      <label class="text-sm text-label">订单状态：</label>
       <XSegmented
         v-model="form.status"
         :options="statusOptions"
@@ -57,7 +57,7 @@ const statusOptions = [
     </div>
 
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-muted-foreground">提交时间：</label>
+      <label class="inline-block mb-1 text-sm text-label">提交时间：</label>
       <div class="flex items-center space-x-2">
         <NativeDate v-model="form.startTime" placeholder="开始时间" />
         <NativeDate v-model="form.endTime" placeholder="结束时间" />
@@ -65,7 +65,7 @@ const statusOptions = [
     </div>
 
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-muted-foreground">IMEI/SN:</label>
+      <label class="inline-block mb-1 text-sm text-label">IMEI/SN:</label>
       <XTextarea
         v-model="form.imei" rows="4"
         placeholder="IMEI/SN"

@@ -18,11 +18,11 @@ const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
   <form class="space-y-4" @submit.prevent>
     <div class="flex space-x-3">
       <div class="w-1/2">
-        <label class="block text-sm mb-1">API名称</label>
+        <label class="block text-label text-sm mb-1">API名称</label>
         <XInput v-model="form.apiTitle" placeholder="API标题" />
       </div>
       <div class="w-1/2">
-        <label class="block text-sm mb-1">API类型</label>
+        <label class="block text-label text-sm mb-1">API类型</label>
         <XSelect v-model="form.apiType" placeholder="选择API类型">
           <XSelectItem
             v-for="item in API_TYPE_LIST" :key="item.value"
@@ -32,7 +32,7 @@ const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
       </div>
     </div>
     <div>
-      <label class="block text-sm mb-1">用户名/账号ID</label>
+      <label class="block text-label text-sm mb-1">用户名/账号ID</label>
       <XInput
         v-model="form.accountId"
         :disabled="isRealtime"
@@ -40,7 +40,7 @@ const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
       />
     </div>
     <div>
-      <label class="block text-sm mb-1">API密钥</label>
+      <label class="block text-label text-sm mb-1">API密钥</label>
       <XInput
         v-model="form.apiKey"
         :disabled="isRealtime"
@@ -48,7 +48,7 @@ const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
       />
     </div>
     <div>
-      <label class="block text-sm mb-1">API地址</label>
+      <label class="block text-label text-sm mb-1">API地址</label>
       <XTextarea
         v-model="form.serverUrl"
         placeholder="API地址"
@@ -56,7 +56,7 @@ const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
       />
     </div>
     <div>
-      <label class="block text-sm mb-1">禁用</label>
+      <label class="block text-label text-sm mb-1">禁用</label>
       <XSwitch v-model="form.disableApi" placeholder="禁用" />
     </div>
   </form>

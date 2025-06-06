@@ -1,7 +1,8 @@
-import type { Order } from '@/inters/orders'
+import { zOrderUpdateForm, type Order } from '@/inters/orders'
+import { ORDER_STORE } from '../utils'
 
 import { ORDER_STATUS_MAP, SUBMIT_METHOD_MAP } from '@3un/utils'
-import { XTag, type XColDef } from "@3un/ui"
+import { XButton, XTag, type XColDef } from "@3un/ui"
 import { h } from 'vue'
 
 const serviceStore = useServiceStore()
@@ -56,6 +57,11 @@ export const columns: XColDef<Order> = [
     width: 78,
   },
   {
+    key: 'imeiNo',
+    title: 'IMEI/SN',
+    width: 154,
+  },
+  {
     key: 'code',
     title: '订单结果',
     minWidth: 280,
@@ -74,13 +80,33 @@ export const columns: XColDef<Order> = [
   {
     key: 'requestedAt',
     title: '耗时',
-    width: 100,
+    width: 180,
     render(value, row) {
       const updateTimeDate = new Date(row.updateTime).getTime()
       const requestedAtDate = new Date(value).getTime()
       const diffTime = updateTimeDate - requestedAtDate
       const diff = Math.round(diffTime / 1000)
       return diff < 1 ? '<1s' : `${diff}s`
+    }
+  },
+  {
+    key: 'action',
+    title: '操作',
+    width: 88,
+    fixed: 'right',
+    render(_, row, index) {
+      const store = inject(ORDER_STORE)!
+      function handleUpdate() {
+        store.formUpdate = zOrderUpdateForm.parse(row)
+        store.index = index
+        store.visibleUpdate = true
+      }
+
+      return h(XButton, {
+        icon: 'lucide:edit',
+        size: 'sm', label: '编辑',
+        onClick: handleUpdate,
+      })
     }
   },
 ]

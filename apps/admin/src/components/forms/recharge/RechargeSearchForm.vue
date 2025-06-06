@@ -10,7 +10,7 @@ const route = useRoute()
   <form class="space-y-4" @submit.prevent>
     <div class="flex space-x-3">
       <div class="w-1/2">
-        <label class="block text-sm text-muted-foreground mb-1">支付方式</label>
+        <label class="block text-sm text-label mb-1">支付方式</label>
         <XSelect v-model="form.paymentMethod" placeholder="选择支付方式" clearable>
           <XSelectItem
             v-for="item in PAYMENT_METHOD_LIST" :key="item.value"
@@ -19,7 +19,7 @@ const route = useRoute()
         </XSelect>
       </div>
       <div class="w-1/2">
-        <label class="block text-sm text-muted-foreground mb-1">支付状态</label>
+        <label class="block text-sm text-label mb-1">支付状态</label>
         <XSelect v-model="form.paymentStatus" placeholder="选择支付状态" clearable>
           <XSelectItem
             v-for="item in PAYMENT_STATUS_LIST" :key="item.value"
@@ -29,7 +29,7 @@ const route = useRoute()
       </div>
     </div>
     <div v-if="route.query.q !== 'today'">
-      <label class="block text-sm text-muted-foreground mb-1">支付时间</label>
+      <label class="block text-sm text-label mb-1">支付时间</label>
       <XDatePicker
         v-model:start="form.startTime"
         v-model:end="form.endTime"
@@ -37,15 +37,15 @@ const route = useRoute()
       />
     </div>
     <div>
-      <label class="block text-sm text-muted-foreground mb-1">用户ID</label>
+      <label class="block text-sm text-label mb-1">用户ID</label>
       <XInput v-model="form.userId" placeholder="用户ID" />
     </div>
     <div>
-      <label class="block text-sm text-muted-foreground mb-1">交易ID</label>
+      <label class="block text-sm text-label mb-1">交易ID</label>
       <XInput v-model="form.transactionId" placeholder="交易ID" />
     </div>
     <div v-if="route.query.q !== 'admin'">
-      <label class="block text-sm text-muted-foreground mb-1">管理添加</label>
+      <label class="block text-sm text-label mb-1">管理添加</label>
       <XSwitch v-model="form.byAdmin" />
     </div>
   </form>

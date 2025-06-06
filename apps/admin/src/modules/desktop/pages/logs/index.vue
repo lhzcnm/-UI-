@@ -93,7 +93,7 @@ async function handleDelete() {
           label="筛选" @click="store.visibleSearch = true"
         />
         <XButton
-          color="warning" icon="lucide:trash"
+          color="warning" icon="lucide:brush-cleaning"
           label="清空筛选" @click="resetSearch"
         />
         <XButton

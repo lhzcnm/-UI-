@@ -36,6 +36,8 @@
 
     --accent: 240 4% 46%; /* zinc 500 */
     --accent-foreground: 240 5% 96%; /* zinc 100 */
+
+    --label-text: 240 5% 26%; /* zinc 700 */
   }
 
   .dark {
@@ -58,6 +60,8 @@
 
     --accent: 240 5% 84%; /* zinc 300 */
     --accent-foreground: 240 6% 10%; /* zinc 900 */
+
+    --label-text: 240 5% 84%; /* zinc 300 */
   }
 }
 

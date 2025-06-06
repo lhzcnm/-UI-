@@ -93,15 +93,13 @@ function resetSearch() {
       </div>
 
       <XButton
-        icon="lucide:list"
+        icon="lucide:list" label="常见问题"
         @click="store.visibleType = true"
-      >
-        常见问题
-      </XButton>
+      />
     </section>
 
     <div class="flex space-x-3 p-3 h-[calc(100vh-7.125rem)]">
-      <ListPlane class="w-[350px]" />
+      <ListPlane class="w-[350px] flex-shrink-0" />
       <ReplyPlane class="min-w-[36rem]" />
     </div>
 

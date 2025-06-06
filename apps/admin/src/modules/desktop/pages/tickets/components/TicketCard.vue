@@ -13,9 +13,7 @@ interface TicketItemProps {
 const props = defineProps<TicketItemProps>()
 const store = inject(TICKET_STORE)!
 
-const ticketType = computed(() => {
-  return store.types.find(t => t.departmentId === props.ticket.type)
-})
+const ticketType = computed(() => store.types.find(t => t.departmentId === props.ticket.type))
 
 function getAvatar(headImgUrl: string | null) {
   if (headImgUrl) return headImgUrl

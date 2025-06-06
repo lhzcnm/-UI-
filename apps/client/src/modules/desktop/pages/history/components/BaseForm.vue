@@ -9,12 +9,12 @@ const form = defineModel<OrderSearchForm>({ required: true })
 <template>
   <form class="space-y-4" @submit.prevent>
     <div class="space-y-1">
-      <label class="text-muted-foreground text-sm">服务</label>
+      <label class="text-label text-sm">服务</label>
       <SelectService v-model="form.serviceId" />
     </div>
 
     <div class="space-y-1">
-      <label class="text-muted-foreground text-sm">订单状态</label>
+      <label class="text-label text-sm">订单状态</label>
       <XSelect
         v-model="form.status"
         :teleport="false"
@@ -29,7 +29,7 @@ const form = defineModel<OrderSearchForm>({ required: true })
     </div>
 
     <div class="space-y-1">
-      <label class="text-muted-foreground text-sm">日期</label>
+      <label class="text-label text-sm">日期</label>
       <XDatePicker
         v-model:start="form.startTime"
         v-model:end="form.endTime"
@@ -38,7 +38,7 @@ const form = defineModel<OrderSearchForm>({ required: true })
     </div>
 
     <div class="space-y-1">
-      <label class="text-muted-foreground text-sm">IMEI/SN</label>
+      <label class="text-label text-sm">IMEI/SN</label>
       <XTextarea
         v-model="form.imei"
         placeholder="请输入IMEI/SN"

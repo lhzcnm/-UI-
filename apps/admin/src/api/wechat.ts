@@ -7,14 +7,14 @@ export const getWechatMenu: MenuListFn = async () => {
   return (await http.get('/wx/menu')).data
 }
 
-type MenuCreateFn = (params: WechatMenuCreateParams) => Promise<void>
+type MenuCreateFn = (params: WechatMenuCreateParams) => Promise<WechatMenu>
 export const createWechatMenu: MenuCreateFn = async (params) => {
   return (await http.post('/wx/menu', params)).data
 }
 
 type MenuUpdateFn = (params: WechatMenuUpdateParams) => Promise<void>
 export const updateWechatMenu: MenuUpdateFn = async (params) => {
-  return (await http.put(`/wx/menu/${params.id}`, params)).data
+  return (await http.put('/wx/menu', params)).data
 }
 
 type MenuDeleteFn = (id: number) => Promise<void>
@@ -36,7 +36,7 @@ export const getBuiltInMsgList: BuiltInMsgListFn = async () => {
 
 type BuiltInMsgUpdateFn = (params: BuiltInMsgUpdateParams) => Promise<void>
 export const updateBuiltInMsg: BuiltInMsgUpdateFn = async (params) => {
-  return (await http.put(`/wx/message`, params)).data
+  return (await http.put('/wx/message', params)).data
 }
 
 // Custom Message
@@ -54,7 +54,7 @@ export const createCustomMsg: CustomMsgCreateFn = async (params) => {
 
 type CustomMsgUpdateFn = (params: CustomMsgUpdateParams) => Promise<number>
 export const updateCustomMsg: CustomMsgUpdateFn = async (params) => {
-  return (await http.put(`/wx/message/custom`, params)).data
+  return (await http.put('/wx/message/custom', params)).data
 }
 
 type CustomMsgDeleteFn = (id: number) => Promise<void>

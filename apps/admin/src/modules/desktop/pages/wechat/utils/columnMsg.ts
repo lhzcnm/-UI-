@@ -5,7 +5,7 @@ import type { XColDef } from '@3un/ui'
 import { h } from 'vue'
 
 export const columns: XColDef<CustomMsg> = [
-  { key: 'id', title: '消息ID', width: 72 },
+  { key: 'id', title: '消息ID', align: 'center', width: 72 },
   { key: 'keywords', title: '关键词', width: 300 },
   {
     key: 'content',
