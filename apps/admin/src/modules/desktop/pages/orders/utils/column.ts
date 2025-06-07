@@ -97,7 +97,16 @@ export const columns: XColDef<Order> = [
     render(_, row, index) {
       const store = inject(ORDER_STORE)!
       function handleUpdate() {
-        store.formUpdate = zOrderUpdateForm.parse(row)
+        store.formUpdate = zOrderUpdateForm.parse({
+          codeId: row.codeId,
+          imeiNo: row.imeiNo,
+          code: row.code.split('<br>').join('\n'),
+          codeStatusId: row.codeStatusId,
+          originalStatus: row.codeStatusId,
+          messageFromServer: row.messageFromServer,
+          orderIdFromServer: row.orderIdFromServer,
+        })
+
         store.index = index
         store.visibleUpdate = true
       }

@@ -5,7 +5,7 @@ import auth     from './routes/auth'
 import desktop  from './routes/desktop'
 import mobile   from './routes/mobile'
 import { ua } from '@3un/utils'
-import { menus } from '@/utils'
+import { menus, tools } from '@/utils'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -63,22 +63,40 @@ router.afterEach((to) => {
   let breadcrumbItems: string[] = []
 
   // find main menu by path
-  const mainMenu = menus
+  const mainMenu = menus.concat(tools)
     .find(menu => menu.path === `/${firstLevel}`)
 
   if (mainMenu) {
-    if (!mainMenu.children || pathParts.length === 1) {
+    if (!mainMenu.children) {
       // no child menu or only one level path
       breadcrumbItems = [mainMenu.label]
     }
     else if (pathParts.length > 1) {
       // has child menu and has second level path
       const secondLevel = pathParts[1]
-      const childMenu = mainMenu.children
-        .find(child => child.path === secondLevel)
-      
+      const childMenu = mainMenu.children.find(child =>
+        child.path === `/${firstLevel}/${secondLevel}`
+      )
+
       breadcrumbItems = [mainMenu.label]
       if (childMenu) breadcrumbItems.push(childMenu.label)
+    }
+    else {
+      // has child menu but second level path is query string
+      breadcrumbItems = [mainMenu.label]
+      const query = to.fullPath.split('?')[1]
+      const params = new URLSearchParams(query)
+      const match = params.get('q')
+
+      if (match) {
+        const childMenu = mainMenu.children.find(child => {
+          return child.path === `/${firstLevel}?q=${match}`
+        })
+
+        if (childMenu) {
+          breadcrumbItems.push(childMenu.label)
+        }
+      }
     }
   } else {
     // no matching menu item, use path name as breadcrumb

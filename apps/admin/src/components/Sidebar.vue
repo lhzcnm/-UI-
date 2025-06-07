@@ -42,6 +42,7 @@ onBeforeMount(() => {
             :class="twJoin(
               'flex items-center justify-between w-full px-3 h-10 sm:h-8',
               'rounded-md hover:bg-accent/15 hover:text-foreground transition-colors',
+              $route.path === tool.path && 'bg-accent/15 text-foreground',
             )"
             @click="$router.push(tool.path)"
           >

@@ -1,4 +1,6 @@
-import type { OrderList, OrderListParams } from '@/inters/orders'
+import type { OrderList, OrderListParams, OrderUpdateParams, OrderUpdateStatusParam } from '@/inters/orders'
+import type { AxiosResponse } from 'axios'
+
 import { zOrder } from '@/inters/orders'
 import http from '@/utils/http'
 
@@ -7,4 +9,34 @@ type OrderListFn = (params: OrderListParams) => Promise<OrderList>
 export const getOrders: OrderListFn = async (params) => {
   const { data } = await http.post<OrderList>('/order/search', params)
   return { ...data, list: data.list.map((item) => zOrder.parse(item)) }
+}
+
+// Update
+type OrderUpdateFn = (params: OrderUpdateParams) => Promise<number>
+export const updateOrder: OrderUpdateFn = async (params) => {
+  return (await http.put('/order', params)).data
+}
+
+// Export
+type OrderExportFn = (codeIds: number[]) => Promise<AxiosResponse>
+export const exportOrder: OrderExportFn = (codeIds) => {
+  return http.post('/order/export', codeIds, { responseType: 'blob' })
+}
+
+// Push
+type OrderPushFn = (codeIds: number[]) => Promise<AxiosResponse>
+export const pushOrder: OrderPushFn = (codeIds) => {
+  return http.post('/order/push', codeIds)
+}
+
+// Update Code Status
+type OrderUpdateCodeStatusFn = (params: OrderUpdateStatusParam[]) => Promise<AxiosResponse>
+export const updateCodeStatus: OrderUpdateCodeStatusFn = (params) => {
+  return http.put('/order/status', params)
+}
+
+// Re Submit
+type OrderReSubmitFn = (codeIds: number[]) => Promise<AxiosResponse>
+export const reSubmitOrder: OrderReSubmitFn = (codeIds) => {
+  return http.post('/order/batch/resubmit', codeIds)
 }

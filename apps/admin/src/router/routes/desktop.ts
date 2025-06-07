@@ -3,6 +3,8 @@ import type { RouteRecordRaw } from 'vue-router'
 import users    from './desktop/users'
 import service  from './desktop/service'
 import wechat   from './desktop/wechat'
+import orders   from './desktop/orders'
+import tools    from './desktop/tools'
 
 const desktop: RouteRecordRaw = {
   path: '/',
@@ -13,15 +15,12 @@ const desktop: RouteRecordRaw = {
     ...users,
     ...service,
     ...wechat,
+    ...orders,
+    ...tools,
     {
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@desktop/pages/dashboard/index.vue'),
-    },
-    {
-      path: '/orders',
-      name: 'Orders',
-      component: () => import('@desktop/pages/orders/index.vue'),
     },
     {
       path: 'tickets',
@@ -47,11 +46,6 @@ const desktop: RouteRecordRaw = {
       path: 'logs',
       name: 'Logs',
       component: () => import('@desktop/pages/logs/index.vue'),
-    },
-    {
-      path: 'editor',
-      name: 'Editor',
-      component: () => import('@desktop/pages/editor/index.vue'),
     },
   ],
 }

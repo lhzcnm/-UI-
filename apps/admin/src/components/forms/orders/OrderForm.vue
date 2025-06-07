@@ -23,7 +23,7 @@ const form = defineModel<OrderUpdateForm>({ required: true })
     </div>
     <div>
       <label class="block text-sm text-label mb-1">订单结果</label>
-      <XTextarea v-model="form.code" placeholder="订单结果" rows="8" />
+      <XTextarea v-model="form.code" class=" whitespace-nowrap" placeholder="订单结果" rows="8" />
     </div>
     <div>
       <label class="block text-sm text-label mb-1">上游订单信息</label>

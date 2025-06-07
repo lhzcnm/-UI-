@@ -48,6 +48,17 @@ const isActive = computed(() => {
   if (!menu.children) return route.path === menu.path
   return !isExpanded.value && route.path.startsWith(menu.path)
 })
+
+function isActiveChild(child: SidebarMenuChild) {
+  const [path, query] = route.fullPath.split('?')
+  const search = new URLSearchParams(query)
+  if (search.size === 0) {
+    return path === child.path
+  }
+
+  const match = search.get('q')
+  return child.path === `${path}?q=${match}`
+}
 </script>
 
 <template>
@@ -83,7 +94,7 @@ const isActive = computed(() => {
             :class="twMerge(
               'flex items-center px-3 h-9 sm:h-7 space-x-1',
               'rounded hover:bg-accent/15 hover:text-foreground transition-colors',
-              route.fullPath === child.path && 'bg-accent/15 text-foreground',
+              isActiveChild(child) && 'bg-accent/15 text-foreground',
             )"
             @click="handleChildClick(child, menu.label)"
           >

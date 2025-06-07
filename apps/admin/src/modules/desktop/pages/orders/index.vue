@@ -2,15 +2,16 @@
 import OrderSearch from './components/OrderSearch.vue'
 import OrderDialog from './components/OrderDialog.vue'
 
+import { downloadFile, ORDER_STATUS } from '@3un/utils'
+import { useClipboard } from '@vueuse/core'
+import { toast } from 'vue-sonner'
+
 import type { Order, OrderListParams } from '@/inters/orders'
 import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
-import { getOrders } from '@/api/orders'
-
-import { ORDER_STATUS } from '@3un/utils'
+import { exportOrder, getOrders, pushOrder, reSubmitOrder, updateCodeStatus } from '@/api/orders'
 
 import type { OrderStore } from './utils'
-import { ORDER_STORE } from './utils'
-import { columns } from './utils/column'
+import { ORDER_STORE, columns } from './utils'
 
 const store: OrderStore = reactive({
   orders: { list: [], total: 0, page: 1, pageSize: 20 },
@@ -26,10 +27,11 @@ const store: OrderStore = reactive({
 
 provide(ORDER_STORE, store)
 
+const route = useRoute()
+const { copy } = useClipboard()
+
 const loading = ref(false)
 const selected = shallowRef<Order[]>([])
-
-const route = useRoute()
 
 watch(
   [
@@ -50,18 +52,15 @@ watch(
   () => route.query.q,
   (value) => {
     store.formSearch = zOrderSearchForm.parse({})
-    store.refresh = !store.refresh
-    store.page = 1
-
-    if (value === 'verify') {
-      // store.formSearch.verify = ORDER_VERTIFY.NORMAL
-    }
     if (value === 'wait') {
       store.formSearch.statusId = ORDER_STATUS.WAIT
     }
     if (value === 'processing') {
       store.formSearch.statusId = ORDER_STATUS.PROCESSING
     }
+
+    store.refresh = !store.refresh
+    store.page = 1
   },
   { immediate: true }
 )
@@ -79,6 +78,76 @@ function resetSearch() {
   store.refresh = !store.refresh
   store.page = 1
 }
+
+function selectWrapper(fn: () => void) {
+  return () => {
+    if (selected.value.length === 0) {
+      toast.warning('请先选择要复制的行')
+      return
+    }
+
+    fn()
+  }
+}
+
+const handleCopyImei = selectWrapper(() => {
+  copy(
+    selected.value
+      .map(item => item.imeiNo)
+      .filter(Boolean)
+      .join('\n')
+  )
+  toast.success('复制成功')
+})
+
+const handleExport = selectWrapper(() => {
+  const codeIds = selected.value.map(item => item.codeId)
+  exportOrder(codeIds).then(data => downloadFile(data))
+})
+
+const handlePushOrder = selectWrapper(() => {
+  const codeIds = selected.value.map(item => item.codeId)
+  pushOrder(codeIds).then(() => {
+    store.refresh = !store.refresh
+    toast.success('推送成功')
+  })
+})
+
+const handleAcceptOrder = selectWrapper(() => {
+  const params = selected.value.map(item => ({
+    userId: item.userId,
+    codeId: item.codeId,
+    codeStatusId: ORDER_STATUS.PROCESSING,
+    originalStatus: item.codeStatusId,
+  }))
+
+  updateCodeStatus(params).then(() => {
+    store.refresh = !store.refresh
+    toast.success('接受成功')
+  })
+})
+
+const handleReSubmitOrder = selectWrapper(() => {
+  const codeIds = selected.value.map(item => item.codeId)
+  reSubmitOrder(codeIds).then(() => {
+    store.refresh = !store.refresh
+    toast.success('重新提交成功')
+  })
+})
+
+const handleRejectOrder = selectWrapper(() => {
+  const params = selected.value.map(item => ({
+    userId: item.userId,
+    codeId: item.codeId,
+    codeStatusId: ORDER_STATUS.FAILED,
+    originalStatus: item.codeStatusId,
+  }))
+
+  updateCodeStatus(params).then(() => {
+    store.refresh = !store.refresh
+    toast.success('拒绝成功')
+  })
+})
 </script>
 
 <template>
@@ -113,39 +182,40 @@ function resetSearch() {
 
     <section class="flex items-center p-3 pb-0">
       <XButton
-        icon="lucide:file-input"
-        size="sm" label="导出订单"
         class="mr-2"
-        @click="store.visibleUpdate = true"
+        size="sm"
+        label="导出订单"
+        icon="lucide:file-input"
+        @click="handleExport"
       />
       <XButton
+        size="sm"
+        label="复制IMEI"
         icon="lucide:copy"
-        size="sm" label="复制IMEI"
-        @click="store.visibleUpdate = true"
+        @click="handleCopyImei"
       />
 
       <hr class="h-5 w-px mx-4 bg-border" />
-
       <div class="space-x-2">
         <XButton
           icon="lucide:bell" size="sm"
           color="warning" label="推送通知"
-          @click="store.visibleUpdate = true"
+          @click="handlePushOrder"
         />
         <XButton
           icon="lucide:check" size="sm"
           color="success" label="接受订单"
-          @click="store.visibleUpdate = true"
+          @click="handleAcceptOrder"
         />
         <XButton
           icon="lucide:refresh-cw" size="sm"
           color="primary" label="重新提交"
-          @click="store.visibleUpdate = true"
+          @click="handleReSubmitOrder"
         />
         <XButton
           icon="lucide:x" size="sm"
           color="danger" label="拒绝订单"
-          @click="store.visibleUpdate = true"
+          @click="handleRejectOrder"
         />
       </div>
     </section>

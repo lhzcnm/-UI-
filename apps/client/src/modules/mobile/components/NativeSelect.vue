@@ -44,7 +44,7 @@ function handleChange() {
       v-model="selected"
       :class="twMerge(
         'w-full h-10 px-2 bg-card rounded appearance-none overflow-hidden',
-        'border-r-8 border-r-transparent ring-1 ring-input',
+        'border-r-8 border-r-transparent ring-1 ring-input shadow-sm',
         'outline-none focus:ring-primary disabled:opacity-50',
         props.class
       )"

@@ -82,13 +82,33 @@ export const zOrderUpdateForm = z.interface({
 })
 
 export type OrderUpdateForm = z.infer<typeof zOrderUpdateForm>
-
 export type OrderUpdateParams = {
   codeId: number
   imeiNo?: string
+  code?: string
   codeStatusId?: ORDER_STATUS
   originalStatus?: ORDER_STATUS
-  code?: string
   messageFromServer?: string
   orderIdFromServer?: string
+}
+
+// Update Code Status
+export interface OrderUpdateStatusParam {
+  userId: number
+  codeId: number
+  codeStatusId: ORDER_STATUS
+  originalStatus: ORDER_STATUS
+}
+
+// Batch Edit Orders
+export interface OrderBatchEditItem {
+  imei: string
+  code: string | null
+  serverOrderId: string | null
+
+  status: ORDER_STATUS
+  originalStatus: ORDER_STATUS
+  serviceId: number
+
+  codeId?: number
 }

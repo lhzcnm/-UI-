@@ -44,7 +44,7 @@ function handleClick() {
 
     <div
       :class="twMerge(
-        'flex items-center justify-between w-full h-10 px-3 ',
+        'flex items-center justify-between w-full h-10 px-3 shadow-sm',
         'bg-transparent rounded ring-1 ring-input hover:ring-hover',
         'focus-within:ring-2 focus-within:ring-primary',
         disabled && 'opacity-50 cursor-not-allowed',
