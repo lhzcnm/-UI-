@@ -130,23 +130,23 @@ export const ORDER_STATUS_LIST = [
 ]
 
 // Order Verify
-export enum ORDER_VERTIFY {
+export enum ORDER_VERIFY {
   NORMAL    = 0,
   REPLIED   = 1,
   SOLVED    = 2,
   REFUNDED  = 3,
 }
-export const ORDER_VERTIFY_MAP: StatusMap = {
-  [ORDER_VERTIFY.NORMAL]    : { color: 'info', label: '正常' },
-  [ORDER_VERTIFY.REPLIED]   : { color: 'primary', label: '已反馈' },
-  [ORDER_VERTIFY.SOLVED]    : { color: 'success', label: '已解决' },
-  [ORDER_VERTIFY.REFUNDED]  : { color: 'danger', label: '已退款' },
+export const ORDER_VERIFY_MAP: StatusMap = {
+  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常' },
+  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈' },
+  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决' },
+  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款' },
 }
 export const ORDER_VERIFY_LIST = [
-  { value: ORDER_VERTIFY.NORMAL, label: '正常' },
-  { value: ORDER_VERTIFY.REPLIED, label: '已反馈' },
-  { value: ORDER_VERTIFY.SOLVED, label: '已解决' },
-  { value: ORDER_VERTIFY.REFUNDED, label: '已退款' },
+  { value: ORDER_VERIFY.NORMAL, label: '正常' },
+  { value: ORDER_VERIFY.REPLIED, label: '已反馈' },
+  { value: ORDER_VERIFY.SOLVED, label: '已解决' },
+  { value: ORDER_VERIFY.REFUNDED, label: '已退款' },
 ]
 
 // Ticket

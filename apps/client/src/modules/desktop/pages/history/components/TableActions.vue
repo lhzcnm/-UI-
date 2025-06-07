@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { XButton } from '@3un/ui'
 
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
+import { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import { stripHtml } from '@3un/utils'
 import { ref } from 'vue'
 import { useClipboard, useThrottleFn } from '@vueuse/core'
@@ -26,10 +26,10 @@ const status = {
 }
 
 const verify = {
-  isNormal: row.verify === ORDER_VERTIFY.NORMAL,
-  isReplied: row.verify === ORDER_VERTIFY.REPLIED,
-  isSolved: row.verify === ORDER_VERTIFY.SOLVED,
-  isRefunded: row.verify === ORDER_VERTIFY.REFUNDED
+  isNormal: row.verify === ORDER_VERIFY.NORMAL,
+  isReplied: row.verify === ORDER_VERIFY.REPLIED,
+  isSolved: row.verify === ORDER_VERIFY.SOLVED,
+  isRefunded: row.verify === ORDER_VERIFY.REFUNDED
 }
 
 const store = inject(HISTORY_STORE)!
@@ -70,7 +70,7 @@ function handleVerify() {
     focreHide.value = true
     store.orders.list[index] = {
       ...store.orders.list[index],
-      verify: ORDER_VERTIFY.REPLIED
+      verify: ORDER_VERIFY.REPLIED
     }
   })
 }

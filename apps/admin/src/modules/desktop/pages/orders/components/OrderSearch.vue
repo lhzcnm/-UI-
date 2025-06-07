@@ -2,7 +2,8 @@
 import OrderSearchForm from '@forms/orders/OrderSearchForm.vue'
 import { ORDER_STORE } from '../utils'
 
-const store = inject(ORDER_STORE)!
+let store = inject(ORDER_STORE)!
+
 function handleSubmit() {
   store.visibleSearch = false
   store.refresh = !store.refresh

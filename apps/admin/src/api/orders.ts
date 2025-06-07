@@ -1,4 +1,4 @@
-import type { OrderList, OrderListParams, OrderUpdateParams, OrderUpdateStatusParam } from '@/inters/orders'
+import type { OrderBatchEditItem, OrderList, OrderListParams, OrderUpdateParams, OrderUpdateStatusParam, OrderVerifyParam } from '@/inters/orders'
 import type { AxiosResponse } from 'axios'
 
 import { zOrder } from '@/inters/orders'
@@ -39,4 +39,16 @@ export const updateCodeStatus: OrderUpdateCodeStatusFn = (params) => {
 type OrderReSubmitFn = (codeIds: number[]) => Promise<AxiosResponse>
 export const reSubmitOrder: OrderReSubmitFn = (codeIds) => {
   return http.post('/order/batch/resubmit', codeIds)
+}
+
+// Batch Update Order
+type OrderBatchUpdateFn = (params: OrderBatchEditItem[]) => Promise<AxiosResponse>
+export const batchUpdateOrder: OrderBatchUpdateFn = (params) => {
+  return http.put('/order/batch', params)
+}
+
+// Order Verify
+type OrderVerifyFn = (params: OrderVerifyParam[]) => Promise<AxiosResponse>
+export const updateOrderVerify: OrderVerifyFn = (params) => {
+  return http.put('/order/verify', params)
 }

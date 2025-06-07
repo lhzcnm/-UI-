@@ -1,6 +1,6 @@
 import TableActions from '../components/TableActions.vue'
 
-import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERTIFY, ORDER_VERTIFY_MAP } from '@3un/utils'
+import { ORDER_STATUS, ORDER_STATUS_MAP, ORDER_VERIFY, ORDER_VERIFY_MAP } from '@3un/utils'
 import { XTag, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 
@@ -33,8 +33,8 @@ export const columns: XColDef<Order> = [
     key: 'verify',
     title: '验证状态',
     width: 88,
-    render(value: ORDER_VERTIFY) {
-      return h(XTag, ORDER_VERTIFY_MAP[value])
+    render(value: ORDER_VERIFY) {
+      return h(XTag, ORDER_VERIFY_MAP[value])
     }
   },
   {

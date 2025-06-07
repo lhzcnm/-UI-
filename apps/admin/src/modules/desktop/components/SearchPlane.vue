@@ -27,10 +27,10 @@ const search = ref('')
 
 const _menus = menus.map(menu => {
   if (!menu.children) return menu
-  return menu.children.map(child => {
-    const path = `${menu.path}/${child.path}`
-    return { ...child, path, icon: child.icon || menu.icon }
-  })
+  return menu.children.map(child => ({
+    ...child,
+    icon: child.icon || menu.icon,
+  }))
 })
 
 const rawOptions: Options<SidebarMenuChild>[] = [

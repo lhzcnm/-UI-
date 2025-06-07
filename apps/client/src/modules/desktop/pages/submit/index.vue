@@ -3,7 +3,7 @@ import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 
 import type { XTableColumn } from '@3un/ui'
-import { ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
+import { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { hash } from 'ohash'
@@ -111,7 +111,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       serviceName: service ? service.title : null,
       credits: service ? service.price : 0,
       status: ORDER_STATUS.WAIT,
-      verify: ORDER_VERTIFY.NORMAL,
+      verify: ORDER_VERIFY.NORMAL,
       imei: imeiList[i],
       remark: remark,
       result: '',

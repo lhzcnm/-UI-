@@ -11,7 +11,8 @@ import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
 import { exportOrder, getOrders, pushOrder, reSubmitOrder, updateCodeStatus } from '@/api/orders'
 
 import type { OrderStore } from './utils'
-import { ORDER_STORE, columns } from './utils'
+import { ORDER_STORE } from './utils'
+import { columns } from './utils/column'
 
 const store: OrderStore = reactive({
   orders: { list: [], total: 0, page: 1, pageSize: 20 },
@@ -79,7 +80,7 @@ function resetSearch() {
   store.page = 1
 }
 
-function selectWrapper(fn: () => void) {
+function selectDecorator(fn: () => void) {
   return () => {
     if (selected.value.length === 0) {
       toast.warning('请先选择要复制的行')
@@ -90,7 +91,7 @@ function selectWrapper(fn: () => void) {
   }
 }
 
-const handleCopyImei = selectWrapper(() => {
+const handleCopyImei = selectDecorator(() => {
   copy(
     selected.value
       .map(item => item.imeiNo)
@@ -100,12 +101,12 @@ const handleCopyImei = selectWrapper(() => {
   toast.success('复制成功')
 })
 
-const handleExport = selectWrapper(() => {
+const handleExport = selectDecorator(() => {
   const codeIds = selected.value.map(item => item.codeId)
   exportOrder(codeIds).then(data => downloadFile(data))
 })
 
-const handlePushOrder = selectWrapper(() => {
+const handlePushOrder = selectDecorator(() => {
   const codeIds = selected.value.map(item => item.codeId)
   pushOrder(codeIds).then(() => {
     store.refresh = !store.refresh
@@ -113,7 +114,7 @@ const handlePushOrder = selectWrapper(() => {
   })
 })
 
-const handleAcceptOrder = selectWrapper(() => {
+const handleAcceptOrder = selectDecorator(() => {
   const params = selected.value.map(item => ({
     userId: item.userId,
     codeId: item.codeId,
@@ -127,7 +128,7 @@ const handleAcceptOrder = selectWrapper(() => {
   })
 })
 
-const handleReSubmitOrder = selectWrapper(() => {
+const handleReSubmitOrder = selectDecorator(() => {
   const codeIds = selected.value.map(item => item.codeId)
   reSubmitOrder(codeIds).then(() => {
     store.refresh = !store.refresh
@@ -135,7 +136,7 @@ const handleReSubmitOrder = selectWrapper(() => {
   })
 })
 
-const handleRejectOrder = selectWrapper(() => {
+const handleRejectOrder = selectDecorator(() => {
   const params = selected.value.map(item => ({
     userId: item.userId,
     codeId: item.codeId,
@@ -147,6 +148,22 @@ const handleRejectOrder = selectWrapper(() => {
     store.refresh = !store.refresh
     toast.success('拒绝成功')
   })
+})
+
+const iStore = useSystemStore()
+const router = useRouter()
+
+const handleBatchEdit = selectDecorator(() => {
+  iStore.selectedOrders = selected.value.map(item => ({
+    imei: item.imeiNo,
+    serviceId: item.packageId,
+    status: item.codeStatusId,
+    originalStatus: item.codeStatusId,
+    serverOrderId: item.orderIdFromServer,
+    code: item.code.trim().split('<br>').join('\n'),
+  }))
+
+  router.push('/batch-edit-orders')
 })
 </script>
 
@@ -194,8 +211,17 @@ const handleRejectOrder = selectWrapper(() => {
         icon="lucide:copy"
         @click="handleCopyImei"
       />
+      
+      <hr class="h-5 w-px mx-4 bg-border" />
+
+      <XButton
+        icon="lucide:wand-sparkles"
+        size="sm" label="批量编辑"
+        @click="handleBatchEdit"
+      />
 
       <hr class="h-5 w-px mx-4 bg-border" />
+
       <div class="space-x-2">
         <XButton
           icon="lucide:bell" size="sm"
@@ -223,8 +249,8 @@ const handleRejectOrder = selectWrapper(() => {
     <div class="p-3">
       <XTable
         :columns="columns"
-        :data="store.orders.list"
         :loading="loading"
+        :data="store.orders.list"
 
         selection row-key="codeId"
         class="border h-[calc(100vh-11.125rem)]"

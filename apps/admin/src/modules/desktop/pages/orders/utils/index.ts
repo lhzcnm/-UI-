@@ -1,9 +1,8 @@
 import type { OrderList, OrderSearchForm, OrderUpdateForm } from "@/inters/orders"
 import type { IK } from "@3un/shared"
 
-export * from './column'
-
 export const ORDER_STORE: IK<OrderStore> = Symbol('orders')
+export const VERIFY_STORE: IK<VerifyStore> = Symbol('verify')
 
 export interface OrderStore {
   orders: OrderList
@@ -12,6 +11,13 @@ export interface OrderStore {
   visibleSearch: boolean
   visibleUpdate: boolean
   index: number | undefined
+  refresh: boolean
+  page: number
+  limit: number
+}
+
+export interface VerifyStore {
+  orders: OrderList
   refresh: boolean
   page: number
   limit: number

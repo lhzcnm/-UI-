@@ -12,7 +12,7 @@ import type { Order, OrderSubmitResult } from '@/api/orders'
 
 import { ua, IMEIValidator } from '@3un/utils'
 import { getSubmitImei, base64ToFile } from '@/utils'
-import { IMEI_TYPE, ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
+import { IMEI_TYPE, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 
 import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
@@ -318,7 +318,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
       serviceId: form.serviceId,
       credits: store.service?.price || 0,
       result: isFailed ? item.message : '订单处理中',
-      verify: ORDER_VERTIFY.NORMAL,
+      verify: ORDER_VERIFY.NORMAL,
       status: item.status,
       imei: item.imei,
       remark: form.remark,

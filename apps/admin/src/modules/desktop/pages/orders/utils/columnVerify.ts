@@ -1,21 +1,15 @@
-import { zOrderUpdateForm, type Order } from '@/inters/orders'
-import { ORDER_STORE } from '../utils'
+import OrderVerifyAction from '../components/OrderVerifyAction.vue'
+import type { Order } from '@/inters/orders'
 
-import { ORDER_STATUS, ORDER_STATUS_MAP, SUBMIT_METHOD_MAP } from '@3un/utils'
-import { XButton, XTag, type XColDef } from "@3un/ui"
+import { type XColDef, XTextarea } from '@3un/ui'
+import { ORDER_STATUS, SUBMIT_METHOD_MAP } from '@3un/utils'
 import { h } from 'vue'
 
 const serviceStore = useServiceStore()
-
 export const columns: XColDef<Order> = [
   {
     key: 'codeId',
     title: '订单号',
-    width: 100,
-  },
-  {
-    key: 'orderIdFromServer',
-    title: '上游订单号',
     width: 100,
   },
   {
@@ -33,25 +27,6 @@ export const columns: XColDef<Order> = [
     width: 88,
   },
   {
-    key: 'codeStatusId',
-    title: '订单状态',
-    width: 108,
-    render(value) {
-      return h(XTag, {
-        ...ORDER_STATUS_MAP[value],
-        solid: true,
-      })
-    }
-  },
-  {
-    key: 'downloaded',
-    title: '已经推送',
-    width: 100,
-    render(value) {
-      return value ? 'YES' : 'NO'
-    }
-  },
-  {
     key: 'credits',
     title: '积分',
     width: 78,
@@ -66,7 +41,12 @@ export const columns: XColDef<Order> = [
     title: '订单结果',
     minWidth: 280,
     render(value) {
-      return h('span', { innerHTML: value })
+      return h(
+        XTextarea, {
+          'modelValue': value.split('<br>').join('\n'),
+          rows: 6,
+        },
+      )
     }
   },
   {
@@ -113,30 +93,10 @@ export const columns: XColDef<Order> = [
   {
     key: 'action',
     title: '操作',
-    width: 88,
+    width: 164,
     fixed: 'right',
     render(_, row, index) {
-      const store = inject(ORDER_STORE)!
-      function handleUpdate() {
-        store.formUpdate = zOrderUpdateForm.parse({
-          codeId: row.codeId,
-          imeiNo: row.imeiNo,
-          code: row.code.split('<br>').join('\n'),
-          codeStatusId: row.codeStatusId,
-          originalStatus: row.codeStatusId,
-          messageFromServer: row.messageFromServer,
-          orderIdFromServer: row.orderIdFromServer,
-        })
-
-        store.index = index
-        store.visibleUpdate = true
-      }
-
-      return h(XButton, {
-        icon: 'lucide:edit',
-        size: 'sm', label: '编辑',
-        onClick: handleUpdate,
-      })
+      return h(OrderVerifyAction, { row, index })
     }
-  },
+  }
 ]

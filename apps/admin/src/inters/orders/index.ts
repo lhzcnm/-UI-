@@ -1,5 +1,5 @@
 import type { IList, IPage } from '@3un/shared'
-import { ORDER_STATUS, ORDER_VERTIFY, SUBMIT_METHOD } from '@3un/utils'
+import { ORDER_STATUS, ORDER_VERIFY, SUBMIT_METHOD } from '@3un/utils'
 import * as z from 'zod'
 
 export const zOrder = z.interface({
@@ -40,7 +40,7 @@ export const zOrder = z.interface({
   // archived: z.boolean().default(false),
   // adminArchived: z.boolean().default(false),
   // alternateEmail: z.string().default(''),
-  verify: z.enum(ORDER_VERTIFY).default(ORDER_VERTIFY.NORMAL),
+  verify: z.enum(ORDER_VERIFY).default(ORDER_VERIFY.NORMAL),
   ip: z.string().default('unknown'),
   verifyIp: z.string().default(''),
   showToSupplier: z.boolean().default(false),
@@ -60,8 +60,9 @@ export const zOrderSearchForm = z.interface({
   username: z.string().optional(),
   imeiList: z.string().optional(),
   serviceId: z.number().optional(),
-  serverOrderIdEmpty: z.boolean().optional(),
+  serverOrderIdEmpty: z.boolean().default(false),
   statusId: z.enum(ORDER_STATUS).optional(),
+  verify: z.enum(ORDER_VERIFY).optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
 })
@@ -111,4 +112,14 @@ export interface OrderBatchEditItem {
   serviceId: number
 
   codeId?: number
+}
+
+// Order Verify
+export interface OrderVerifyParam {
+  codeId: number
+  userId: number
+  verify: ORDER_VERIFY
+  codeStatusId: ORDER_STATUS
+  originalStatus: ORDER_STATUS
+  code: string
 }

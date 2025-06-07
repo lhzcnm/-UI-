@@ -1,4 +1,4 @@
-import type { ORDER_STATUS, ORDER_VERTIFY } from '@3un/utils'
+import type { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import type { IList, IPage, R } from '@3un/shared'
 
 export interface OrderApi {
@@ -16,7 +16,7 @@ export interface Order {
   id: number
   serviceId: number
   status: ORDER_STATUS
-  verify: ORDER_VERTIFY
+  verify: ORDER_VERIFY
   imei: string
   credits: number
   remark: string
@@ -31,7 +31,7 @@ export interface OrderTableView {
   serviceId: number | null
   serviceName: string | null
   status: ORDER_STATUS
-  verify: ORDER_VERTIFY
+  verify: ORDER_VERIFY
   imei: string
   credits: number
   remark: string

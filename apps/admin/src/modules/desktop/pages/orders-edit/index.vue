@@ -1,21 +1,49 @@
 <script setup lang="ts">
 import ImportArea from './components/ImportArea.vue'
+import ContentArea from './components/ContentArea.vue'
+
+import { toast } from 'vue-sonner'
+
 import { STORE, type OrderEditStore } from './utils'
+import { batchUpdateOrder } from '@/api/orders'
+
+const iStore = useSystemStore()
 
 const store: OrderEditStore = reactive({
-  isCode: false,
+  items: iStore.selectedOrders,
+  isCode: true,
   serviceId: undefined,
   status: undefined,
-  items: [],
 })
 
 provide(STORE, store)
 
 const comp = computed(() => {
   const hasContent = store.items.length > 0
-  if (hasContent) return ImportArea
+  if (hasContent) return ContentArea
   return ImportArea
 })
+
+const loading = ref(false)
+function handleSave() {
+  loading.value = true
+
+  store.items.forEach(item => {
+    if (!item.code) return
+    item.code = item.code
+      .trim()
+      .split('\n')
+      .join('<br>')
+  })
+
+  batchUpdateOrder(store.items)
+    .then(() => {
+      iStore.selectedOrders = []
+      store.items = []
+      toast.success('保存成功')
+    })
+    .finally(() => loading.value = false)
+}
 </script>
 
 <template>
@@ -27,6 +55,14 @@ const comp = computed(() => {
           人工服务，批量编辑订单信息
         </p>
       </div>
+
+      <XButton
+        v-show="store.items.length > 0"
+        label="保存修改"
+        icon="lucide:save"
+        :loading="loading"
+        @click="handleSave"
+      />
     </section>
 
     <Transition name="fade" mode="out-in">

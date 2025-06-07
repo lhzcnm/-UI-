@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OrderSearchForm } from '@/inters/orders'
-import { ORDER_STATUS_LIST } from '@3un/utils'
+import { ORDER_STATUS_LIST, ORDER_VERIFY_LIST } from '@3un/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 </script>
@@ -29,6 +29,16 @@ const form = defineModel<OrderSearchForm>({ required: true })
         <XSelectItem
           v-for="status in ORDER_STATUS_LIST" :key="status.value"
           :value="status.value" :label="status.label"
+        />
+      </XSelect>
+    </div>
+
+    <div>
+      <label class="block text-sm text-label mb-1">验证状态</label>
+      <XSelect v-model="form.verify" placeholder="选择验证状态" clearable>
+        <XSelectItem
+          v-for="verify in ORDER_VERIFY_LIST" :key="verify.value"
+          :value="verify.value" :label="verify.label"
         />
       </XSelect>
     </div>

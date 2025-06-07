@@ -9,9 +9,9 @@ import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
 import {
   ORDER_STATUS_MAP,
-  ORDER_VERTIFY_MAP,
+  ORDER_VERIFY_MAP,
   ORDER_STATUS,
-  ORDER_VERTIFY,
+  ORDER_VERIFY,
 } from '@3un/utils'
 import { stripHtml } from '@3un/utils'
 
@@ -41,10 +41,10 @@ const status = computed(() => ({
 }))
 
 const verify = computed(() => ({
-  isNormal: order.value.verify === ORDER_VERTIFY.NORMAL,
-  isReplied: order.value.verify === ORDER_VERTIFY.REPLIED,
-  isSolved: order.value.verify === ORDER_VERTIFY.SOLVED,
-  isRefunded: order.value.verify === ORDER_VERTIFY.REFUNDED,
+  isNormal: order.value.verify === ORDER_VERIFY.NORMAL,
+  isReplied: order.value.verify === ORDER_VERIFY.REPLIED,
+  isSolved: order.value.verify === ORDER_VERIFY.SOLVED,
+  isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
 }))
 
 const { copy, copied } = useClipboard({ legacy: true })
@@ -70,7 +70,7 @@ function handleVerify() {
 
   window.confirm('确定开启验证吗？') && (() => {
     orderApi.verify(id).then(() => {
-      order.value.verify = ORDER_VERTIFY.REPLIED
+      order.value.verify = ORDER_VERIFY.REPLIED
       toast.success('已提交验证')
     })
   })()
@@ -109,7 +109,7 @@ function handleCopy() {
       <span v-else class="text-base font-medium">{{ order.id }}</span>
       <div class="flex space-x-2">
         <XTag v-bind="ORDER_STATUS_MAP[order.status]" />
-        <XTag v-if="!isSubmit" v-bind="ORDER_VERTIFY_MAP[order.verify]" />
+        <XTag v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
       </div>
     </div>
 
