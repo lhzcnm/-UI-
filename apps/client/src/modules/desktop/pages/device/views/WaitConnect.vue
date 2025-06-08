@@ -3,7 +3,7 @@ import { Icon } from '@iconify/vue'
 </script>
 
 <template>
-  <div class="absolute inset-0 z-30 flex items-center justify-center flex-col h-full bg-background">
+  <div class="flex items-center justify-center flex-col h-full bg-background">
     <div class="relative -mt-36">
       <div class="absolute inset-0 animate-pulse bg-primary/10 rounded-full blur-xl"></div>
       <div class="relative border-2 border-dashed border-primary/30 rounded-full p-6 bg-background/50 backdrop-blur-sm">

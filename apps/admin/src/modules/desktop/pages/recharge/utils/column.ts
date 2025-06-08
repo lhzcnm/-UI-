@@ -1,8 +1,9 @@
-import type { Recharge } from '@/inters/recharge'
-
 import { PAYMENT_METHOD_MAP, PAYMENT_STATUS_MAP, SHOP_NAME_MAP } from '@3un/utils'
 import { XTag, type XColDef } from '@3un/ui'
 import { h } from 'vue'
+
+import RechargeAction from '../components/RechargeAction.vue'
+import type { Recharge } from '@/inters/recharge'
 
 export const columns: XColDef<Recharge> = [
   {
@@ -24,6 +25,14 @@ export const columns: XColDef<Recharge> = [
     key: 'credits',
     title: '到账金额',
     width: 108,
+  },
+  {
+    key: 'byAdmin',
+    title: '管理员添加',
+    width: 98,
+    render: (value) => {
+      return value ? 'YES' : 'NO'
+    },
   },
   {
     key: 'paymentMethod',
@@ -64,5 +73,13 @@ export const columns: XColDef<Recharge> = [
     key: 'comments',
     title: '备注',
     minWidth: 180,
+  },
+  {
+    key: 'action',
+    title: '操作',
+    width: 154,
+    render: (_, row, index) => {
+      return h(RechargeAction, { row, index })
+    },
   },
 ]

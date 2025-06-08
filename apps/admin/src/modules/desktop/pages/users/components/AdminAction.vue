@@ -28,6 +28,6 @@ async function handleDelete() {
 </script>
 
 <template>
-  <XButton label="编辑" size="sm" @click="openUpdate" />
-  <XButton label="删除" size="sm" color="danger" @click="handleDelete" />
+  <XButton label="编辑" size="sm" icon="lucide:edit" @click="openUpdate" />
+  <XButton label="删除" size="sm" color="danger" icon="lucide:trash-2" @click="handleDelete" />
 </template>

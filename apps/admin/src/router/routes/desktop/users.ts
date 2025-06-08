@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const users: RouteRecordRaw[] = [
   {
-    path: 'users/all',
+    path: 'users',
     name: 'AllUser',
     component: () => import('@desktop/pages/users/index.vue'),
   },

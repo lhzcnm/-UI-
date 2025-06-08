@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Level } from '@/inters/level'
-import { zLevelForm } from '@/inters/level'
+import { zLevelForm, zLevelServiceForm } from '@/inters/level'
 
 import type { XBtnSplitOptions } from '@3un/ui'
 import { xconfirm } from '@3un/utils'
 import { LEVEL_STORE } from '../utils'
-import { deleteLevel } from '@/api/level'
+import { deleteLevel, getLevelServices } from '@/api/level'
 
 interface LevelActionProps {
   index: number
@@ -18,7 +18,7 @@ const store = inject(LEVEL_STORE)!
 const levelStore = useLevelStore()
 
 const options: XBtnSplitOptions = [
-  { label: '服务价格', icon: 'lucide:coins' },,
+  { label: '服务价格', icon: 'lucide:coins', command: openService },,
   { label: '永久删除', icon: 'lucide:trash-2', command: handleDelete },
 ]
 
@@ -26,6 +26,23 @@ function openUpdate() {
   store.formBase = zLevelForm.parse(props.row)
   store.index = props.index
   store.visibleBase = true
+}
+
+async function openService() {
+  await getServices()
+
+  store.formService = zLevelServiceForm.parse({
+    planId: props.row.pricePlanId,
+  })
+
+  store.index = props.index
+  store.visibleService = true
+}
+
+async function getServices() {
+  const levelId = props.row.pricePlanId
+  const response = await getLevelServices(levelId)
+  store.services = response
 }
 
 async function handleDelete() {

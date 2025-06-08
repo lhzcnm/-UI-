@@ -1,4 +1,4 @@
-import type { IList, WithId } from '@3un/shared'
+import type { IList, IPage, WithId } from '@3un/shared'
 import * as z from 'zod'
 
 export const zUserPaid = z.interface({
@@ -14,15 +14,18 @@ export const zUserPaid = z.interface({
 
 export type UserPaid = z.infer<typeof zUserPaid>
 
-// Search & List
+// Search
 export const zUserPaidSearchForm = z.interface({
-  userId: z.number().nullable().default(null),
-  weixinOpenId: z.string().default(''),
-  userName: z.string().default(''),
-  nickName: z.string().default(''),
+  userId: z.number().optional(),
+  openId: z.string().optional(),
+  username: z.string().optional(),
+  nickname: z.string().optional(),
 })
 
 export type UserPaidSearchForm = z.infer<typeof zUserPaidSearchForm>
+
+// List
+export interface UserPaidListParams extends IPage, UserPaidSearchForm {}
 export type UserPaidList = IList<UserPaid>
 
 // Form

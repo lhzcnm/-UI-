@@ -39,6 +39,7 @@ declare module 'vue' {
     WechatForm: typeof import('./src/components/form/WechatForm.vue')['default']
     XBulletinBoard: typeof import('@3un/ui')['XBulletinBoard']
     XButton: typeof import('@3un/ui')['XButton']
+    XButtonSplit: typeof import('@3un/ui')['XButtonSplit']
     XCaptchaSlider: typeof import('@3un/ui')['XCaptchaSlider']
     XDatePicker: typeof import('@3un/ui')['XDatePicker']
     XDialog: typeof import('@3un/ui')['XDialog']

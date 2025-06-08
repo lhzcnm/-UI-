@@ -1,5 +1,7 @@
-import type { User, UserCreateParams, UserExtraInfo, UserList, UserListParams, UserPaidList, UserPaidSearchForm, UserService, UserServiceCreateParams, UserServiceUpdateParams, UserUpdateParams } from '@/inters/users'
+import type { User, UserCreateParams, UserExtraInfo, UserList, UserListParams, UserPaidList, UserPaidListParams, UserPointForm, UserService, UserServiceCreateParams, UserServiceUpdateParams, UserUpdateParams } from '@/inters/users'
 import { zUser, zUserPaid, zUserService } from '@/inters/users'
+
+import type { AxiosResponse } from 'axios'
 import http from '@/utils/http'
 
 // User
@@ -32,7 +34,7 @@ export const deleteUser: UserDeleteFn = async (id) => {
 }
 
 // Paid user
-type UserPaidListFn = (body: UserPaidSearchForm) => Promise<UserPaidList>
+type UserPaidListFn = (body: UserPaidListParams) => Promise<UserPaidList>
 export const getUserPaidList: UserPaidListFn = async (body) => {
   const { data } = await http.post<UserPaidList>('/user/member/package', body)
   return { ...data, list: data.list.map(item => zUserPaid.parse(item)) }
@@ -76,4 +78,22 @@ export const updateUserService: ServiceUpdateFn = async (body) => {
 type ServiceDeleteFn = (ids: number[]) => Promise<void>
 export const deleteUserService: ServiceDeleteFn = async (data) => {
   await http.delete(`/user/price`, { data })
+}
+
+// Point
+type PointUpdateFn = (body: UserPointForm) => Promise<AxiosResponse>
+export const updateUserPoint: PointUpdateFn = (body) => {
+  return http.put('/user/point', body)
+}
+
+// Api key
+type ApiKeyUpdateFn = (userId: number) => Promise<string>
+export const updateUserApiKey: ApiKeyUpdateFn = async (userId) => {
+  return (await http.post(`/user/key/${userId}`)).data
+}
+
+// Bulk api key
+type BulkApiKeyUpdateFn = (userId: number) => Promise<string>
+export const updateUserBulkApiKey: BulkApiKeyUpdateFn = async (userId) => {
+  return (await http.get(`/user/bulkKey/${userId}`)).data
 }

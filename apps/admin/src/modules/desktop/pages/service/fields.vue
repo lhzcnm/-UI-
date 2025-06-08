@@ -76,10 +76,29 @@ function handleDelete() {
 <template>
   <div>
     <section class="flex justify-between p-3 border-b">
-      <div class="flex space-x-2">
-        <SelectService v-model="serviceId" clearable ui-trigger="w-56" />
-        <XButton icon="lucide:circle-plus" label="新增" @click="openCreate" />
-        <XButton color="danger" icon="lucide:trash" label="批量删除" @click="handleDelete" />
+      <div class="flex items-center">
+        <SelectService
+          v-model="serviceId"
+          ui-trigger="w-56"
+          clearable
+        />
+
+        <hr class="h-6 w-px mx-4 bg-border" />
+
+        <XButton
+          label="新增"
+          class="mr-2"
+          color="success"
+          icon="lucide:circle-plus"
+          @click="openCreate"
+        />
+
+        <XButton
+          label="批量删除"
+          color="danger"
+          icon="lucide:trash"
+          @click="handleDelete"
+        />
       </div>
 
       <XPagination

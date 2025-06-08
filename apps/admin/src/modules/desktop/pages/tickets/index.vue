@@ -79,17 +79,16 @@ function resetSearch() {
     <section class="flex justify-between p-3 border-b">
       <div class="space-x-2">
         <XButton
-          icon="lucide:search" color="success"
+          label="搜索"
+          icon="lucide:search"
           @click="store.visibleSearch = true"
-        >
-          搜索
-        </XButton>
+        />
         <XButton
-          icon="lucide:trash" color="warning"
+          label="清空筛选"
+          variant="outline"
+          icon="lucide:brush-cleaning"
           @click="resetSearch"
-        >
-          清空筛选
-        </XButton>
+        />
       </div>
 
       <XButton

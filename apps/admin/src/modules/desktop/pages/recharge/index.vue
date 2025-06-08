@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import RechargeSearch from './components/RechargeSearch.vue'
+import RechargeDialog from './components/RechargeDialog.vue'
 
 import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
+import dayjs from 'dayjs'
 
-import { zRechargeSearchForm, type RechargeListParams } from '@/inters/recharge'
+import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
 import { deleteRecharges, getRecharges } from '@/api/recharge'
+import { zRechargeSearchForm } from '@/inters/recharge'
 
 import type { RechargeStore } from './utils'
-import { RECHARGE_STORE } from './utils'
-import { columns } from './utils/column'
-
-import dayjs from 'dayjs'
+import { RECHARGE_STORE, columns } from './utils'
 
 const store: RechargeStore = reactive({
   recharges: { list: [], total: 0, page: 1, pageSize: 20 },
   formSearch: zRechargeSearchForm.parse({}),
+  formUpdate: {} as RechargeUpdateParams,
   visibleSearch: false,
+  visibleUpdate: false,
   index: undefined,
   refresh: false,
   page: 1,
@@ -49,9 +51,10 @@ watch(
   () => route.query,
   (value) => {
     store.formSearch = zRechargeSearchForm.parse({})
-    store.refresh = !store.refresh
-    store.page = 1
 
+    if (value.userId) {
+      store.formSearch.userId = Number(value.userId)
+    }
     if (value.q === 'today') {
       const format = 'YYYY-MM-DD HH:mm:ss'
       store.formSearch.startTime = dayjs().startOf('day').format(format)
@@ -60,6 +63,9 @@ watch(
     if (value.q === 'admin') {
       store.formSearch.byAdmin = true
     }
+
+    store.refresh = !store.refresh
+    store.page = 1
   },
   { immediate: true },
 )
@@ -72,27 +78,46 @@ function getList(params: RechargeListParams) {
   response.finally(() => loading.value = false)
 }
 
-async function handleDelete() {
-  if (ids.value.length === 0) {
-    return toast.warning('请选择要删除的充值记录')
-  }
+function resetSearch() {
+  store.formSearch = zRechargeSearchForm.parse({})
+  store.refresh = !store.refresh
+  store.page = 1
+}
 
+async function handleDelete() {
+  if (ids.value.length === 0) return toast.warning('请选择要删除的充值记录')
   if (!await xconfirm('确定要删除这些充值记录吗？')) return
-  await deleteRecharges(ids.value)
+
+  deleteRecharges(ids.value).then(() => {
+    store.refresh = !store.refresh
+  })
 }
 </script>
 
 <template>
   <div>
     <section class="flex justify-between p-3 border-b">
-      <div class="space-x-2">
+      <div class="flex items-center">
         <XButton
-          icon="lucide:filter" label="筛选"
+          label="筛选"
+          class="mr-2"
+          icon="lucide:filter"
           @click="store.visibleSearch = true"
         />
         <XButton
-          color="danger" icon="lucide:trash"
-          label="删除" @click="handleDelete"
+          label="清空筛选"
+          variant="outline"
+          icon="lucide:x"
+          @click="resetSearch"
+        />
+
+        <hr class="h-6 w-px mx-4 bg-border" />
+
+        <XButton
+          color="danger"
+          label="批量删除"
+          icon="lucide:trash-2"
+          @click="handleDelete"
         />
       </div>
 
@@ -125,5 +150,6 @@ async function handleDelete() {
     </div>
 
     <RechargeSearch />
+    <RechargeDialog />
   </div>
 </template>

@@ -52,11 +52,9 @@ const isActive = computed(() => {
 function isActiveChild(child: SidebarMenuChild) {
   const [path, query] = route.fullPath.split('?')
   const search = new URLSearchParams(query)
-  if (search.size === 0) {
-    return path === child.path
-  }
-
   const match = search.get('q')
+
+  if (!match) return path === child.path
   return child.path === `${path}?q=${match}`
 }
 </script>

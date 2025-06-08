@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import UserFormBase from '@/components/forms/users/UserForm.vue'
-import { createUser, updateUser } from '@/api/users'
+import { createUser, updateUser, updateUserApiKey, updateUserBulkApiKey } from '@/api/users'
 import { USER_STORE } from '../utils'
 
 import type { FormMode } from '@3un/shared'
@@ -56,6 +56,26 @@ function handleUpdate() {
     loading.value = false
   })
 }
+
+function handleApiKey() {
+  const user = store.users.list[store.index!]
+  const response = updateUserApiKey(user.userId)
+
+  response.then((data) => {
+    store.formBase.apiKey = data
+    user.apiKey = data
+  })
+}
+
+function handleBulkApiKey() {
+  const user = store.users.list[store.index!]
+  const response = updateUserBulkApiKey(user.userId)
+
+  response.then((data) => {
+    store.formBase.bulkCheckApi = data
+    user.bulkCheckApi = data
+  })
+}
 </script>
 
 <template>
@@ -63,7 +83,11 @@ function handleUpdate() {
     v-model="store.visibleBase"
     width="500px" :title="options[mode].title"
   >
-    <UserFormBase v-model="store.formBase" />
+    <UserFormBase
+      v-model="store.formBase"
+      @update:api-key="handleApiKey"
+      @update:bulk-api-key="handleBulkApiKey"
+    />
     <template #footer>
       <div class="flex justify-end space-x-2 p-4 border-t">
         <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>

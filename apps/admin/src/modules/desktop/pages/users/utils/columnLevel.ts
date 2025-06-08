@@ -11,6 +11,7 @@ export const columns: XColDef<Level> = [
   {
     key: 'pricePlanId',
     title: '等级ID',
+    align: 'center',
     width: 64,
   },
   {

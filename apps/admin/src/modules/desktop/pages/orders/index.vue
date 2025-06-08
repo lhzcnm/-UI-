@@ -170,14 +170,16 @@ const handleBatchEdit = selectDecorator(() => {
 <template>
   <div>
     <section class="flex justify-between p-3 border-b">
-      <div class="flex space-x-2">
+      <div class="space-x-2">
         <XButton
-          icon="lucide:filter" label="筛选"
+          label="筛选"
+          icon="lucide:filter"
           @click="store.visibleSearch = true"
         />
         <XButton
-          icon="lucide:brush-cleaning" label="清空筛选"
-          color="warning" variant="outline"
+          label="清空筛选"
+          variant="outline"
+          icon="lucide:brush-cleaning"
           @click="resetSearch"
         />
       </div>

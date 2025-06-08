@@ -43,18 +43,22 @@ watch(
 )
 
 watch(
-  () => route.query.q,
+  () => route.query,
   (value) => {
     store.formSearch = zLogSearchForm.parse({})
-    store.refresh = !store.refresh
-    store.page = 1
 
-    if (value === 'user') {
+    if (value.userId) {
+      store.formSearch.userId = Number(value.userId)
+    }
+    if (value.q === 'user') {
       store.formSearch.role = USER_ROLE.USER
     }
-    if (value === 'admin') {
+    if (value.q === 'admin') {
       store.formSearch.role = USER_ROLE.ADMIN
     }
+
+    store.refresh = !store.refresh
+    store.page = 1
   },
   { immediate: true },
 )
@@ -87,18 +91,27 @@ async function handleDelete() {
 <template>
   <div>
     <section class="flex justify-between p-3 border-b">
-      <div class="flex space-x-2">
+      <div class="flex items-center">
         <XButton
-          color="success" icon="lucide:filter"
-          label="筛选" @click="store.visibleSearch = true"
+          label="筛选"
+          class="mr-2"
+          icon="lucide:filter"
+          @click="store.visibleSearch = true"
         />
         <XButton
-          color="warning" icon="lucide:brush-cleaning"
-          label="清空筛选" @click="resetSearch"
+          label="清空筛选"
+          variant="outline"
+          icon="lucide:brush-cleaning"
+          @click="resetSearch"
         />
+
+        <hr class="h-6 w-px mx-4 bg-border" />
+
         <XButton
-          color="danger" icon="lucide:trash-2"
-          label="删除记录" @click="handleDelete"
+          label="批量删除"
+          color="danger"
+          icon="lucide:trash-2"
+          @click="handleDelete"
         />
       </div>
 

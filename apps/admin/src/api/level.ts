@@ -25,9 +25,9 @@ export const deleteLevel: LevelDeleteFn = async (id) => {
 }
 
 // Service
-type LevelServiceListFn = () => Promise<LevelService[]>
-export const getLevelServices: LevelServiceListFn = async () => {
-  const { data } = await http.get<LevelService[]>('/plans/service')
+type LevelServiceListFn = (id: number) => Promise<LevelService[]>
+export const getLevelServices: LevelServiceListFn = async (id) => {
+  const { data } = await http.get<LevelService[]>(`/plans/service/${id}`)
   return data.map(item => zLevelService.parse(item))
 }
 

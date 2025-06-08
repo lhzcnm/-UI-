@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type { UserCreateParams } from '@/inters/users'
 
+interface UserFormEmits {
+  (e: 'update:api-key'): void
+  (e: 'update:bulk-api-key'): void
+}
+
+const emit = defineEmits<UserFormEmits>()
 const form = defineModel<UserCreateParams>({ required: true })
 const levelStore = useLevelStore()
 </script>
@@ -38,6 +44,16 @@ const levelStore = useLevelStore()
 
     <FormField label="手机号" desc="11位手机号">
       <XInput v-model="form.phone" placeholder="手机号" />
+    </FormField>
+
+    <FormField label="API 密钥" desc="用于 API 提交订单">
+      <XInput v-model="form.apiKey" placeholder="API 密钥" disabled />
+      <XButton @click="emit('update:api-key')">刷新</XButton>
+    </FormField>
+
+    <FormField label="批量查询密钥" desc="用于批量查询订单">
+      <XInput v-model="form.bulkCheckApi" placeholder="批量查询密钥" disabled />
+      <XButton @click="emit('update:bulk-api-key')">刷新</XButton>
     </FormField>
 
     <FormField label="API白名单" desc="仅允许这些IP使用API">

@@ -36,7 +36,7 @@ export const columns: XColDef<User> = [
   {
     key: 'action',
     title: '操作',
-    width: 128,
+    width: 164,
     fixed: 'right',
     render(_, row, index) {
       return h(AdminAction, { index, row })

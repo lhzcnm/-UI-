@@ -13,7 +13,11 @@ export const zUserService = z.interface({
 export type UserService = z.infer<typeof zUserService>
 
 // Form
-export const zUserServiceForm = zUserService.omit({ id: true })
+export const zUserServiceForm = z.interface({
+  userId: z.number().default(0),
+  packageId: z.number().optional(),
+  price: z.number().optional(),
+})
 
 // Create & Update
 export type UserServiceCreateParams = z.infer<typeof zUserServiceForm>

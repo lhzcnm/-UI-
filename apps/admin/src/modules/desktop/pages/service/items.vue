@@ -60,11 +60,11 @@ function openCreate() {
 
 <template>
   <div>
-    <section class="flex space-x-2 p-3 border-b">
+    <section class="flex items-center p-3 border-b">
       <XSelect
         v-model="store.formSearch.categoryId"
         placeholder="请选择服务组"
-        ui-trigger="w-64"
+        ui-trigger="w-56 mr-2"
         clearable
       >
         <XSelectItem
@@ -74,14 +74,20 @@ function openCreate() {
           :label="item.category"
         />
       </XSelect>
+
       <XInput
         v-model="store.formSearch.keyword"
         placeholder="请输入关键词" clearable
         ui-root="w-64"
       />
+
+      <hr class="h-6 w-px mx-4 bg-border" />
+
       <XButton
+        label="新增"
+        color="success"
         icon="lucide:circle-plus"
-        label="新增服务" @click="openCreate"
+        @click="openCreate"
       />
     </section>
 

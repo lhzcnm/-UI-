@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import LevelDialog from './components/LevelDialog.vue'
-import { zLevelForm } from '@/inters/level'
+import LevelService from './components/LevelService.vue'
+
+import { zLevelForm, zLevelServiceForm } from '@/inters/level'
 
 import type { LevelStore } from './utils'
-import { LEVEL_STORE } from './utils'
-
 import { columns } from './utils/columnLevel'
+import { LEVEL_STORE } from './utils'
 
 const levelStore = useLevelStore()
 await levelStore.getList(true)
 
 const store: LevelStore = reactive({
+  services: [],
+
   formBase: zLevelForm.parse({}),
+  formService: zLevelServiceForm.parse({}),
+
   visibleBase: false,
+  visibleService: false,
+
   index: undefined,
 })
 
@@ -44,5 +51,6 @@ function openCreate() {
     </div>
 
     <LevelDialog />
+    <LevelService />
   </div>
 </template>

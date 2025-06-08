@@ -166,7 +166,7 @@ const components = {
 </script>
 
 <template>
-  <div class="relative p-4 h-full">
+  <div class="p-4 h-full">
     <Transition name="fade-in" mode="out-in">
       <component :is="components[store.status]" />
     </Transition>

@@ -26,7 +26,7 @@ export const menus: SidebarMenu[] = [
     path: '/users',
     icon: 'lucide:users',
     children: [
-      { label: '会员', match: 'huiyuan', path: '/users/all' },
+      { label: '会员', match: 'huiyuan', path: '/users' },
       { label: '管理员', match: 'guanliyuan', icon: 'lucide:smile', path: '/users/admin' },
       { label: '会员等级', match: 'huiyuandengji', icon: 'lucide:gem', path: '/users/level' },
       { label: '包月会员', match: 'baoyuehuiyuan', icon: 'lucide:crown', path: '/users/paid' },
