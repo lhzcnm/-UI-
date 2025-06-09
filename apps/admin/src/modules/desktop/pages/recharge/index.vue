@@ -28,6 +28,7 @@ const store: RechargeStore = reactive({
 provide(RECHARGE_STORE, store)
 
 const route = useRoute()
+const router = useRouter()
 
 const ids = ref<number[]>([])
 const loading = ref(false)
@@ -49,19 +50,17 @@ watch(
 
 watch(
   () => route.query,
-  (value) => {
-    store.formSearch = zRechargeSearchForm.parse({})
-
-    if (value.userId) {
-      store.formSearch.userId = Number(value.userId)
-    }
-    if (value.q === 'today') {
+  ({ uid, q }) => {
+    if (q === 'today') {
       const format = 'YYYY-MM-DD HH:mm:ss'
       store.formSearch.startTime = dayjs().startOf('day').format(format)
       store.formSearch.endTime = dayjs().endOf('day').format(format)
     }
-    if (value.q === 'admin') {
-      store.formSearch.byAdmin = true
+
+    store.formSearch = {
+      ...store.formSearch,
+      userId: uid ? Number(uid) : undefined,
+      byAdmin: q === 'admin',
     }
 
     store.refresh = !store.refresh
@@ -80,8 +79,10 @@ function getList(params: RechargeListParams) {
 
 function resetSearch() {
   store.formSearch = zRechargeSearchForm.parse({})
-  store.refresh = !store.refresh
-  store.page = 1
+  router.replace({
+    path: route.path,
+    query: { q: route.query.q },
+  })
 }
 
 async function handleDelete() {

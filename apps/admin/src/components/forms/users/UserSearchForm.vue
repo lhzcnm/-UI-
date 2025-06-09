@@ -42,5 +42,10 @@ const levelStore = useLevelStore()
       <label class="block text-label text-sm mb-1">微信ID</label>
       <XInput v-model="form.openId" placeholder="微信ID" />
     </div>
+
+    <div>
+      <label class="block text-label text-sm mb-1">仅看管理员</label>
+      <XSwitch v-model="form.isAdmin" />
+    </div>
   </form>
 </template>

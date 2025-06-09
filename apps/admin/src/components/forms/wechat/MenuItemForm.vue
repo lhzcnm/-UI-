@@ -29,7 +29,7 @@ const form = defineModel<WechatMenuCreateParams>({ required: true })
     </div>
     <div>
       <label class="block text-sm text-label mb-1">KEY/URL</label>
-      <XInput v-model="form.key" placeholder="请输入KEY/URL" />
+      <XTextarea v-model="form.key" placeholder="请输入KEY/URL" rows="6" />
     </div>
     <div>
       <label class="block text-sm text-label mb-1">排序</label>

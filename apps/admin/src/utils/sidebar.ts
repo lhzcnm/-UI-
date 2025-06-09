@@ -1,17 +1,17 @@
 export interface SidebarMenu {
-  label: string
-  icon: string
-  path: string
-  badge?: number
-  match?: string[] | string
-  children?: SidebarMenuChild[]
+  label      : string
+  icon       : string
+  path       : string
+  badge     ?: number
+  match     ?: string[] | string
+  children  ?: SidebarMenuChild[]
 }
 export interface SidebarMenuChild {
-  match?: string[] | string
-  label: string
-  path: string
-  icon?: string
-  badge?: number
+  match   ?: string[] | string
+  label    : string
+  path     : string
+  icon    ?: string
+  badge   ?: number
 }
 
 export const menus: SidebarMenu[] = [
@@ -27,7 +27,7 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:users',
     children: [
       { label: '会员', match: 'huiyuan', path: '/users' },
-      { label: '管理员', match: 'guanliyuan', icon: 'lucide:smile', path: '/users/admin' },
+      { label: '管理员', match: 'guanliyuan', icon: 'lucide:smile', path: '/users?q=admin' },
       { label: '会员等级', match: 'huiyuandengji', icon: 'lucide:gem', path: '/users/level' },
       { label: '包月会员', match: 'baoyuehuiyuan', icon: 'lucide:crown', path: '/users/paid' },
     ],
@@ -69,7 +69,7 @@ export const menus: SidebarMenu[] = [
     path: '/logs',
     icon: 'lucide:hard-drive',
     children: [
-      { label: '用户登录日志', match: 'yonghudengluri', path: '/logs?q=user' },
+      { label: '用户登录日志', match: 'yonghudengluri', path: '/logs' },
       { label: '管理员登录日志', match: 'guanliyuandengluri', icon: 'lucide:paw-print', path: '/logs?q=admin' },
     ],
   },
@@ -81,6 +81,12 @@ export const menus: SidebarMenu[] = [
       { label: '菜单栏', match: 'caidanlan', path: '/wechat/menu' },
       { label: '客服消息', match: 'kefuxiaoxi', icon: 'lucide:message-circle-more', path: '/wechat/message' },
     ],
+  },
+  {
+    label: '积分记录',
+    path: '/credits',
+    icon: 'lucide:coins',
+    match: 'jifenjilu',
   },
   {
     label: '工单管理',

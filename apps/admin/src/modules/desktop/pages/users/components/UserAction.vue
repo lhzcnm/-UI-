@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { User } from '@/inters/users'
 import { zUserForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
+import { deleteUser, getUserServices } from '@/api/users'
 
 import type { XBtnSplitOptions } from '@3un/ui'
-import { PAYMENT_METHOD, xconfirm } from '@3un/utils'
+import { PAYMENT_METHOD, USER_ROLE, xconfirm } from '@3un/utils'
+
 import { USER_STORE } from '../utils'
-import { deleteUser, getUserServices } from '@/api/users'
 
 interface UserActionProps {
   index: number
@@ -18,7 +19,7 @@ const options: XBtnSplitOptions = [
   { label: '查看详情', icon: 'lucide:eye' },
   { label: '积分设置', icon: 'lucide:dollar-sign', command: openPoint },
   { label: '服务设置', icon: 'lucide:server', command: openService },,
-  { label: '积分记录', icon: 'lucide:coins' },
+  { label: '积分记录', icon: 'lucide:coins', command: toCredits },
   { label: '支付记录', icon: 'lucide:credit-card', command: toRecharge },
   { label: '登录日志', icon: 'lucide:location-edit', command: toLoginLogs },,
   { label: '永久删除', icon: 'lucide:trash-2', command: handleDelete },
@@ -66,21 +67,29 @@ async function getServices() {
 }
 
 function toRecharge() {
+  const uid = props.row.userId
   router.push({
     name: 'Recharge',
-    query: {
-      userId: props.row.userId,
-    },
+    query: { uid },
+  })
+}
+
+function toCredits() {
+  const uid = props.row.userId
+  router.push({
+    name: 'Credits',
+    query: { uid },
   })
 }
 
 function toLoginLogs() {
+  const { userId, role } = props.row
+  const isUser = role === USER_ROLE.USER
+  const q = isUser ? undefined : 'admin'
+
   router.push({
     name: 'Logs',
-    query: {
-      userId: props.row.userId,
-      q: 'user',
-    },
+    query: { uid: userId, q },
   })
 }
 

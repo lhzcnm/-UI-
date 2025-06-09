@@ -41,23 +41,37 @@ watch(
     () => store.refresh,
   ],
   ([pageValue, limitValue]) => {
+    const imeiList = store.formSearch.imeiList
+
     getList({
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
+      imeiList: imeiList
+        ? imeiList
+            .trim()
+            .split(/[\s,]+/)
+            .filter(Boolean)
+        : undefined,
     })
   }
 )
 
 watch(
-  () => route.query.q,
-  (value) => {
-    store.formSearch = zOrderSearchForm.parse({})
-    if (value === 'wait') {
-      store.formSearch.statusId = ORDER_STATUS.WAIT
+  () => route.query,
+  ({ imei, uid, q }) => {
+    const statusMap = {
+      wait: ORDER_STATUS.WAIT,
+      processing: ORDER_STATUS.PROCESSING
     }
-    if (value === 'processing') {
-      store.formSearch.statusId = ORDER_STATUS.PROCESSING
+
+    type StatusKey = keyof typeof statusMap
+
+    store.formSearch = {
+      ...store.formSearch,
+      userId: uid ? Number(uid) : undefined,
+      imeiList: imei ? imei.toString() : undefined,
+      statusId: q ? statusMap[q as StatusKey] : undefined,
     }
 
     store.refresh = !store.refresh
@@ -76,8 +90,10 @@ function getList(params: OrderListParams) {
 
 function resetSearch() {
   store.formSearch = zOrderSearchForm.parse({})
-  store.refresh = !store.refresh
-  store.page = 1
+  router.replace({
+    path: route.path,
+    query: { q: route.query.q },
+  })
 }
 
 function selectDecorator(fn: () => void) {

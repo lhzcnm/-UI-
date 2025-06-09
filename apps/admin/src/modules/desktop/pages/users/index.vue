@@ -35,6 +35,9 @@ const store: UsersStore = reactive({
 
 provide(USER_STORE, store)
 
+const route = useRoute()
+const router = useRouter()
+
 const loading = ref(false)
 
 watch(
@@ -49,6 +52,20 @@ watch(
       pageSize: limitValue,
       ...store.formSearch,
     })
+  },
+)
+
+watch(
+  () => route.query,
+  ({ q, uid }) => {
+    store.formSearch = {
+      ...store.formSearch,
+      userId: uid ? Number(uid) : undefined,
+      isAdmin: q === 'admin',
+    }
+
+    store.refresh = !store.refresh
+    store.page = 1
   },
   { immediate: true },
 )
@@ -69,8 +86,10 @@ function openCreate() {
 
 function resetSearch() {
   store.formSearch = zUserSearchForm.parse({})
-  store.refresh = !store.refresh
-  store.page = 1
+  router.replace({
+    path: route.path,
+    query: { q: route.query.q },
+  })
 }
 </script>
 
@@ -94,7 +113,7 @@ function resetSearch() {
         <hr class="h-6 w-px mx-4 bg-border" />
 
         <XButton
-          label="新增用户"
+          label="新增"
           color="success"
           icon="lucide:plus"
           @click="openCreate"

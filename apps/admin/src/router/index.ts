@@ -5,7 +5,7 @@ import auth     from './routes/auth'
 import desktop  from './routes/desktop'
 import mobile   from './routes/mobile'
 import { ua } from '@3un/utils'
-import { menus, tools } from '@/utils'
+import { menus, tools, type SidebarMenuChild } from '@/utils'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -49,6 +49,11 @@ router.afterEach((to) => {
 
   const store = useSystemStore()
 
+  if (
+    store.breadcrumbItems.length > 0 &&
+    !store.isGlobalSearch
+  ) return
+
   // extract breadcrumb info from route path
   let pathParts = to.path.split('/').filter(Boolean)
   if (ua.isMobile) pathParts = pathParts.slice(1)
@@ -88,14 +93,20 @@ router.afterEach((to) => {
       const params = new URLSearchParams(query)
       const match = params.get('q')
 
+      let childMenu: SidebarMenuChild | undefined
       if (match) {
-        const childMenu = mainMenu.children.find(child => {
+        childMenu = mainMenu.children.find(child => {
           return child.path === `/${firstLevel}?q=${match}`
         })
+      }
+      else {
+        childMenu = mainMenu.children.find(child => {
+          return child.path === `/${firstLevel}`
+        })
+      }
 
-        if (childMenu) {
-          breadcrumbItems.push(childMenu.label)
-        }
+      if (childMenu) {
+        breadcrumbItems.push(childMenu.label)
       }
     }
   } else {

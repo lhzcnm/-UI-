@@ -6,6 +6,11 @@ export enum USER_ROLE {
   ADMIN       = 1,
   SUPER_ADMIN = 2,
 }
+export const USER_ROLE_MAP: StatusMap = {
+  [USER_ROLE.USER]        : { color: 'info', label: '普通用户' },
+  [USER_ROLE.ADMIN]       : { color: 'warning', label: '管理员' },
+  [USER_ROLE.SUPER_ADMIN] : { color: 'danger', label: '超级管理员' },
+}
 
 // Imei Type
 export enum IMEI_TYPE {

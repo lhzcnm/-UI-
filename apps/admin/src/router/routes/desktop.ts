@@ -47,6 +47,11 @@ const desktop: RouteRecordRaw = {
       name: 'Logs',
       component: () => import('@desktop/pages/logs/index.vue'),
     },
+    {
+      path: 'credits',
+      name: 'Credits',
+      component: () => import('@desktop/pages/credits/index.vue'),
+    },
   ],
 }
 

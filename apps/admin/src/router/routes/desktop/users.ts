@@ -7,11 +7,6 @@ const users: RouteRecordRaw[] = [
     component: () => import('@desktop/pages/users/index.vue'),
   },
   {
-    path: 'users/admin',
-    name: 'AllAdmin',
-    component: () => import('@desktop/pages/users/admin.vue'),
-  },
-  {
     path: 'users/level',
     name: 'AllLevel',
     component: () => import('@desktop/pages/users/level.vue'),

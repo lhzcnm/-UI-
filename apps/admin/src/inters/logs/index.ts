@@ -1,5 +1,4 @@
 import type { IList, IPage } from '@3un/shared'
-import { USER_ROLE } from '@3un/utils'
 import * as z from 'zod'
 
 export const zLog = z.interface({
@@ -17,7 +16,8 @@ export type Log = z.infer<typeof zLog>
 export const zLogSearchForm = z.interface({
   ip: z.string().optional(),
   userId: z.number().optional(),
-  role: z.enum(USER_ROLE).optional(),
+  // role: z.enum(USER_ROLE).optional(),
+  isAdmin: z.boolean().default(false),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
 })

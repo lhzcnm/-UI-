@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import SearchRouteItem from './SearchRouteItem.vue'
-import SearchServiceItem from './SearchServiceItem.vue'
 
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 import { isNumeric } from '@3un/ui'
 
-import type { Service } from '@/inters/services'
 import type { SidebarMenuChild } from '@/utils/sidebar'
 import { menus, tools } from '@/utils/sidebar'
 
@@ -16,55 +14,91 @@ interface Options<T = any> {
   children: T[]
 }
 
-type SearchOptions = Options<SidebarMenuChild | Service>
+type SearchOptions = Options<SidebarMenuChild>
 
 const visible = defineModel<boolean>({ required: true })
 
 const route = useRoute()
 const router = useRouter()
-const store = useServiceStore()
+const iStore = useSystemStore()
+
 const search = ref('')
 
 const _menus = menus.map(menu => {
   if (!menu.children) return menu
   return menu.children.map(child => ({
-    ...child,
-    icon: child.icon || menu.icon,
+    ...child, icon: child.icon || menu.icon,
   }))
 })
 
-const rawOptions: Options<SidebarMenuChild>[] = [
+const routeOptions: Options<SidebarMenuChild>[] = [
   { label: '工具', value: 'tool', children: tools },
   { label: '路由', value: 'route', children: _menus.flat() },
 ]
 
-const options = computed<SearchOptions[]>(() => {
-  const searchTerm = search.value.toLowerCase().trim()
-  if (!searchTerm) return rawOptions
+const searchOptions: Options<SidebarMenuChild>[] = [
+  {
+    label: '搜索服务',
+    value: 'recommend',
+    children: [
+      { label: '服务ID', path: '/service/items?id', icon: 'lucide:package-search' },
+    ]
+  },
+  {
+    label: '搜索订单',
+    value: 'recommend',
+    children: [
+      { label: 'IMEI/SN', path: '/orders?imei', icon: 'lucide:shopping-bag' },
+      { label: '用户ID', path: '/orders?uid', icon: 'lucide:shopping-bag' },
+    ]
+  },
+  {
+    label: '搜索用户',
+    value: 'recommend',
+    children: [
+      { label: '用户ID', path: '/users?uid', icon: 'lucide:user-round-search' },
+    ]
+  },
+  {
+    label: '搜索充值记录',
+    value: 'recommend',
+    children: [
+      { label: '用户ID', path: '/recharge?uid', icon: 'lucide:user-round-search' },
+    ]
+  },
+  {
+    label: '搜索登录日志',
+    value: 'recommend',
+    children: [
+      { label: '用户ID', path: '/logs?uid', icon: 'lucide:user-round-search' },
+      { label: 'IP地址', path: '/logs?ip', icon: 'lucide:user-round-search' },
+    ]
+  },
+  {
+    label: '搜索积分记录',
+    value: 'recommend',
+    children: [
+      { label: '用户ID', path: '/credits?uid', icon: 'lucide:credit-card' },
+      { label: '服务ID', path: '/credits?sid', icon: 'lucide:credit-card' },
+    ]
+  },
+]
 
-  // service
-  if (isNumeric(searchTerm) && searchTerm.length <= 4) {
-    return getSearchOptions(searchTerm)
+const options = computed<SearchOptions[]>(() => {
+  const searchTerm = search.value.trim().toLowerCase()
+  if (!searchTerm) return routeOptions
+
+  let result: SearchOptions[] = []
+  if (!isNumeric(searchTerm)) {
+    result = getRouteOptions(searchTerm)
   }
 
-  // route & tool
-  return getRouteOptions(searchTerm)
+  if (result.length > 0) return result
+  return searchOptions
 })
 
-function getSearchOptions(searchTerm: string) {
-  const service = store.items.filter(item =>
-    item.packageId.toString().includes(searchTerm)
-  )
-
-  return [{
-    label: '服务',
-    value: 'service',
-    children: service,
-  }]
-}
-
 function getRouteOptions(searchTerm: string) {
-  const _options = rawOptions.map(option => {
+  const _options = routeOptions.map(option => {
     const filteredChildren = option.children.filter(child => {
       const label = child.label.toLowerCase()
       if (label.includes(searchTerm)) return true
@@ -91,30 +125,32 @@ function getRouteOptions(searchTerm: string) {
   return _options.filter(option => option.children.length > 0)
 }
 
-function handleCommand(command: string, event: MouseEvent) {
+async function handleCommand(command: string, event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const element = target.closest('[data-path]')!
+  const path = element.getAttribute('data-path')!
+
+  iStore.isGlobalSearch = true
+
+  // tool & route
   if (command === 'tool' || command === 'route') {
-    const target = event.target as HTMLElement
-    const element = target.closest('[data-path]')
-    if (!element) return
-
-    const path = element.getAttribute('data-path')
-    if (!path) return
-
-    router.push(path)
+    await router.push(path)
   }
 
-  if (command === 'service') {
-    const target = event.target as HTMLElement
-    const element = target.closest('[data-id]')
-    const id = element!.getAttribute('data-id')
-    
-    router.push({
-      path: '/service/items',
-      query: { ...route.query, id },
-    })
+  if (command === 'recommend') {
+    const [base, flag] = path.split('?')
+
+    let extra = route.query
+    if (base === '/service/items') {
+      extra = { cid: route.query.cid }
+    }
+
+    const query = { ...extra, [flag]: search.value.trim() }
+    await router.push({ path: base, query })
   }
 
   visible.value = false
+  iStore.isGlobalSearch = false
 }
 </script>
 
@@ -122,6 +158,7 @@ function handleCommand(command: string, event: MouseEvent) {
   <XDialog
     v-model="visible"
     uiRoot="sm:max-w-md p-0 sm:p-0 border"
+    @close="search = ''"
   >
     <div class="relative border-b p-1">
       <Icon
@@ -132,44 +169,26 @@ function handleCommand(command: string, event: MouseEvent) {
         v-model="search" placeholder="请输入..."
         :class="twJoin(
           'w-full h-10 sm:h-9 rounded-md pl-9 pr-2',
-          'text-sm bg-transparent focus:outline-none'
+          'text-base bg-transparent focus:outline-none'
         )"
         autofocus
       >
     </div>
-    <div class="h-80 overflow-y-auto">
+    <div class="h-96 overflow-y-auto">
       <div
         v-for="option in options" :key="option.label"
-        class="flex flex-col space-y-2 p-1.5 mt-2" 
+        class="flex flex-col p-1.5 mt-2" 
       >
-        <div class="pl-1.5 text-xs text-muted-foreground">{{ option.label }}</div>
+        <div class="pl-1.5 text-sm text-muted-foreground mb-1">{{ option.label }}</div>
         <ul
           class="flex flex-col space-y-1 text-sm"
           @click.stop="handleCommand(option.value, $event)"
         >
-          <template v-if="['route', 'tool'].includes(option.value)">
-            <SearchRouteItem
-              v-for="child in (option as Options<SidebarMenuChild>).children"
-              :key="child.path"
-              :data-path="child.path"
-              :child="child"
-            />
-          </template>
-          <template v-else>
-            <SearchServiceItem
-              v-for="child in (option as Options<Service>).children"
-              :key="child.packageId"
-              :data-id="child.packageId"
-              :child="child"
-            />
-          </template>
+          <SearchRouteItem
+            v-for="child in option.children" :key="child.path"
+            :data-path="child.path" :child="child"
+          />
         </ul>
-      </div>
-      <div
-        v-if="search && !options.length"
-        class="p-4 text-sm text-center text-muted-foreground"
-      >
-        未找到匹配结果
       </div>
     </div>
   </XDialog>

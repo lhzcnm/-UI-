@@ -68,6 +68,7 @@ export const zUserSearchForm = z.interface({
   username: z.string().optional(),
   nickname: z.string().optional(),
   openId: z.string().optional(),
+  isAdmin: z.boolean().default(false),
 })
 
 export type UserSearchForm = z.infer<typeof zUserSearchForm>

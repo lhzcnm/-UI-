@@ -15,13 +15,13 @@ defineProps<RouteSearchItemProps>()
   <li>
     <button
       :class="twJoin(
-        'flex justify-between w-full rounded-md p-1.5 group',
+        'flex items-center justify-between w-full rounded-md p-1.5 group',
         'hover:bg-muted/90 focus:bg-muted focus:outline-none',
       )"
     >
       <div class="flex items-center space-x-2">
         <Icon :icon="child.icon!" class="size-4" />
-        <span>{{ child.label }}</span>
+        <span class="text-base">{{ child.label }}</span>
       </div>
       <span
         :class="twJoin(

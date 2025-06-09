@@ -1,6 +1,7 @@
 import UserAction from '../components/UserAction.vue'
 
 import { XSwitch, type XColDef } from '@3un/ui'
+import { USER_ROLE_MAP } from '@3un/utils'
 import { h } from 'vue'
 
 import type { User } from '@/inters/users'
@@ -44,6 +45,14 @@ export const columns: XColDef<User> = [
     render(value) {
       const level = levelStore.levelMap.get(value)
       return level ? level.pricePlan : '未知'
+    },
+  },
+  {
+    key: 'role',
+    title: '角色',
+    width: 108,
+    render(value) {
+      return USER_ROLE_MAP[value].label
     },
   },
   {

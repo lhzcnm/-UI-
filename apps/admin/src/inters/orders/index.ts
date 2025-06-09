@@ -54,7 +54,7 @@ export const zOrder = z.interface({
 
 export type Order = z.infer<typeof zOrder>
 
-// List
+// Search
 export const zOrderSearchForm = z.interface({
   userId: z.number().optional(),
   username: z.string().optional(),
@@ -67,9 +67,14 @@ export const zOrderSearchForm = z.interface({
   endTime: z.string().optional(),
 })
 
-export type OrderList = IList<Order>
 export type OrderSearchForm = z.infer<typeof zOrderSearchForm>
-export interface OrderListParams extends IPage, OrderSearchForm {}
+type OmitImeiList = Omit<OrderSearchForm, 'imeiList'>
+
+// List
+export type OrderList = IList<Order>
+export interface OrderListParams extends IPage, OmitImeiList {
+  imeiList: string[] | undefined
+}
 
 // Update
 export const zOrderUpdateForm = z.interface({

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import SearchDialog from './components/SearchDialog.vue'
+import LogSearch from './components/LogSearch.vue'
 
 import type { LogListParams } from '@/inters/logs'
 import { zLogSearchForm } from '@/inters/logs'
 import { deleteLogs, getLogs } from '@/api/logs'
 
 import { toast } from 'vue-sonner'
-import { USER_ROLE, xconfirm } from '@3un/utils'
+import { xconfirm } from '@3un/utils'
 
 import type { LogStore } from './utils'
 import { LOG_STORE } from './utils'
@@ -24,6 +24,8 @@ const store: LogStore = reactive({
 provide(LOG_STORE, store)
 
 const route = useRoute()
+const router = useRouter()
+
 const loading = ref(false)
 const ids = ref<number[]>([])
 
@@ -44,17 +46,12 @@ watch(
 
 watch(
   () => route.query,
-  (value) => {
-    store.formSearch = zLogSearchForm.parse({})
-
-    if (value.userId) {
-      store.formSearch.userId = Number(value.userId)
-    }
-    if (value.q === 'user') {
-      store.formSearch.role = USER_ROLE.USER
-    }
-    if (value.q === 'admin') {
-      store.formSearch.role = USER_ROLE.ADMIN
+  ({ q, uid, ip }) => {
+    store.formSearch = {
+      ...store.formSearch,
+      isAdmin: q === 'admin',
+      userId: uid ? Number(uid) : undefined,
+      ip: ip ? ip.toString() : undefined,
     }
 
     store.refresh = !store.refresh
@@ -73,7 +70,10 @@ function getList(params: LogListParams) {
 
 function resetSearch() {
   store.formSearch = zLogSearchForm.parse({})
-  store.refresh = !store.refresh
+  router.replace({
+    path: route.path,
+    query: { q: route.query.q },
+  })
 }
 
 async function handleDelete() {
@@ -141,6 +141,6 @@ async function handleDelete() {
       />
     </div>
 
-    <SearchDialog />
+    <LogSearch />
   </div>
 </template>

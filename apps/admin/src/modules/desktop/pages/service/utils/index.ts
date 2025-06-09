@@ -10,7 +10,7 @@ export interface ServiceStore {
 }
 
 interface ServiceSearch {
-  categoryId: number | undefined
+  categoryId: number | null
   keyword: string
 }
 

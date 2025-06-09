@@ -4,14 +4,13 @@ import ItemDrawer from './components/ItemDrawer.vue'
 import { zServiceForm } from '@/inters/services'
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { columns } from './utils/columnItem'
-
-const route = useRoute()
+import { isNullish } from '@3un/ui'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
   formBase: zServiceForm.parse({}),
   formSearch: {
-    categoryId: undefined,
+    categoryId: null,
     keyword: '',
   },
   visibleBase: false,
@@ -20,14 +19,18 @@ const store: ServiceStore = reactive({
 
 provide(SERVICE_STORE, store)
 
+const route = useRoute()
+const router = useRouter()
+
 watch(
   () => route.query,
-  () => {
-    const { cid, id } = route.query
-    store.formSearch.categoryId = cid ? +cid : undefined
-    store.formSearch.keyword = (id as string) || ''
+  ({ cid, id }) => {
+    store.formSearch = {
+      categoryId: cid ? +cid : null,
+      keyword: (id as string) || '',
+    }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const displayItems = computed(() => {
@@ -35,7 +38,7 @@ const displayItems = computed(() => {
   let { categoryId, keyword } = store.formSearch
   keyword = keyword.trim().toLowerCase()
 
-  if (categoryId !== undefined) {
+  if (!isNullish(categoryId)) {
     items = items.filter(item => item.categoryId === categoryId)
   }
 
@@ -56,6 +59,14 @@ function openCreate() {
   store.index = undefined
   store.visibleBase = true
 }
+
+type ClearType = 'category' | 'keyword'
+function handleClear(type: ClearType) {
+  router.replace({
+    path: route.path,
+    query: { [type]: undefined },
+  })
+}
 </script>
 
 <template>
@@ -63,9 +74,9 @@ function openCreate() {
     <section class="flex items-center p-3 border-b">
       <XSelect
         v-model="store.formSearch.categoryId"
+        clearable ui-trigger="w-56 mr-2"
         placeholder="请选择服务组"
-        ui-trigger="w-56 mr-2"
-        clearable
+        @clear="handleClear('category')"
       >
         <XSelectItem
           v-for="item in serviceStore.groups"
@@ -77,8 +88,9 @@ function openCreate() {
 
       <XInput
         v-model="store.formSearch.keyword"
-        placeholder="请输入关键词" clearable
-        ui-root="w-64"
+        clearable ui-root="w-64"
+        placeholder="请输入关键词"
+        @clear="handleClear('keyword')"
       />
 
       <hr class="h-6 w-px mx-4 bg-border" />
