@@ -20,6 +20,12 @@ const home: RouteRecordRaw = {
       path: 'device',
       name: 'Device',
       component: () => import('@desktop/pages/device/index.vue'),
+      beforeEnter: () => {
+        const uStore = useUserStore()
+        if (!uStore.info.enableDevice) {
+          return '/'
+        }
+      },
     },
     {
       path: 'history',
@@ -36,6 +42,12 @@ const home: RouteRecordRaw = {
       path: 'ticket',
       name: 'Ticket',
       component: () => import('@desktop/pages/ticket/index.vue'),
+      beforeEnter: () => {
+        const iStore = useSettingStore()
+        if (!iStore.settings.enableTricket) {
+          return '/'
+        }
+      },
     },
     {
       path: 'credits',

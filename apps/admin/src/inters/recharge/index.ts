@@ -1,8 +1,8 @@
 import type { IList, IPage } from '@3un/shared'
 import { PAYMENT_METHOD, PAYMENT_STATUS, SHOP_NAME } from '@3un/utils'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zRecharge = z.interface({
+export const zRecharge = z.object({
   paymentId: z.number().default(0),
   userId: z.number().default(0),
   credits: z.string().default(''),
@@ -27,7 +27,7 @@ export const zRecharge = z.interface({
 export type Recharge = z.infer<typeof zRecharge>
 
 // Search
-export const zRechargeSearchForm = z.interface({
+export const zRechargeSearchForm = z.object({
   userId: z.number().optional(),
   transactionId: z.string().optional(),
   paymentMethod: z.enum(PAYMENT_METHOD).optional(),

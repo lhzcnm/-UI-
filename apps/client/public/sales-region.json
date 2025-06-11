@@ -1,0 +1,206 @@
+{
+  "LL\\/A|AM\\/A|LL\\/B": [
+    "美国",
+    "United States"
+  ],
+  "CH\\/A|CH661|CH\\/B": [
+    "中国",
+    "China"
+  ],
+  "B\\/A|B661": [
+    "英国",
+    "United Kingdom"
+  ],
+  "AB\\/A|AE\\/A|AE661": [
+    "沙特阿拉伯",
+    "Saudi Arabia"
+  ],
+  "BR\\/A|BZ\\/A|BZ661": [
+    "巴西",
+    "Brazil"
+  ],
+  "C\\/A|CL\\/A|VC\\/A|VC661": [
+    "加拿大",
+    "Canada"
+  ],
+  "CZ\\/A": [
+    "捷克共和国",
+    "Czech Republic"
+  ],
+  "D\\/A|DN661": [
+    "德国",
+    "Germany"
+  ],
+  "DN\\/A": [
+    "荷兰",
+    "Netherlands"
+  ],
+  "EE\\/A": [
+    "爱沙尼亚共和国",
+    "Estonia"
+  ],
+  "E\\/A": [
+    "墨西哥",
+    "Mexico"
+  ],
+  "FB\\/A|F\\/A": [
+    "法国",
+    "France"
+  ],
+  "FD\\/A|QN\\/A": [
+    "瑞士",
+    "Sweden"
+  ],
+  "GR\\/A": [
+    "希腊",
+    "Greece"
+  ],
+  "HN\\/A|HN661": [
+    "印度",
+    "India"
+  ],
+  "HB\\/A": [
+    "以色列",
+    "Israel"
+  ],
+  "J\\/A|J661": [
+    "日本",
+    "Japan"
+  ],
+  "KH\\/A|KH661": [
+    "韩国",
+    "Korea"
+  ],
+  "KN\\/A": [
+    "挪威",
+    "Norway"
+  ],
+  "KS\\/A": [
+    "芬兰",
+    "Finland"
+  ],
+  "LA\\/A": [
+    "拉丁美洲",
+    "Latin America"
+  ],
+  "LZ\\/A|LZ661": [
+    "智利/芬兰",
+    "Chile"
+  ],
+  "MG\\/A": [
+    "匈牙利",
+    "Hungary"
+  ],
+  "MO\\/A": [
+    "澳门",
+    "Macau China"
+  ],
+  "MY\\/A|MY661": [
+    "马来西亚",
+    "Malaysia"
+  ],
+  "NF\\/A": [
+    "比利时",
+    "Belgium"
+  ],
+  "PL\\/A|PO\\/A": [
+    "波兰",
+    "Poland"
+  ],
+  "QL\\/A": [
+    "葡萄牙",
+    "Portugal"
+  ],
+  "PP\\/A": [
+    "菲律宾",
+    "Philippines"
+  ],
+  "RO\\/A": [
+    "罗马尼亚",
+    "Romania"
+  ],
+  "SL\\/A": [
+    "斯洛伐克",
+    "Slovakia"
+  ],
+  "SO\\/A": [
+    "南非",
+    "South Africa"
+  ],
+  "TU\\/A|TU661": [
+    "土耳其",
+    "Turkey"
+  ],
+  "TY\\/A|T\\/A|IP\\/A": [
+    "意大利",
+    "Italy"
+  ],
+  "Y\\/A": [
+    "西班牙",
+    "Spain"
+  ],
+  "ZA\\/A|ZA661": [
+    "香港/新加坡",
+    "HongKong/Singapore"
+  ],
+  "ZP\\/A|ZP661|ZP\\/B": [
+    "香港/澳门",
+    "HongKong/Singapore"
+  ],
+  "ZD661|ZD\\/A": [
+    "欧洲",
+    "Europe"
+  ],
+  "VN661|VN\\/A": [
+    "越南",
+    "Vietnam"
+  ],
+  "TH661|TH\\/A": [
+    "泰国",
+    "Thailand"
+  ],
+  "LE661|LE\\/A": [
+    "阿根廷共和国",
+    "Argentina"
+  ],
+  "RU661|RU\\/A|RS\\/A": [
+    "俄罗斯",
+    "Russia"
+  ],
+  "TA661|TA\\/A": [
+    "台湾",
+    "Taiwan"
+  ],
+  "X661|X\\/A": [
+    "澳大利亚",
+    "Australia"
+  ],
+  "AA\\/A|AA661": [
+    "阿联酋",
+    "United Arab Emirates"
+  ],
+  "CE661": [
+    "中国|港澳地区",
+    "China/HongKong,Macau"
+  ],
+  "661-": [
+    "全球国际",
+    "Global"
+  ],
+  "FRD": [
+    "荷兰",
+    "Netherlands"
+  ],
+  "Z\\/A": [
+    "捷克共和国",
+    "Czech Republic"
+  ],
+  "JA\\/A": [
+    "日本",
+    "Japan"
+  ],
+  "GP\\/A": [
+    "瑞士",
+    "Switzerland"
+  ]
+}

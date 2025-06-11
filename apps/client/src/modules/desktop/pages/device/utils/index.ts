@@ -26,14 +26,15 @@ export const getCopyToken = (info: DeviceForm) => ([
   ['型号号码', `${info.ModelNumber} ${info.RegionInfo}`],
   ['系统版本', `${info.ProductVersion} (${info.BuildVersion})`],
   ['主板序号', info.MLBSerialNumber],
-  ['ECID', info.UniqueChipID],
+  ['ECID', info.Ecid],
   ['UDID', info.UniqueDeviceID],
   ['激活状态', info.ActivationState],
   ['网络锁', info.NetworkLock],
   ['激活锁', info.ActivationLock],
   ['保修期限', info.Warranty],
-  ['iCloud', info.iCloud],
-  ['CPU', info.CPU],
+  ['销售地区', info.SalesRegion.chinese],
+  ['iCloud备份', info.iCloud],
+  ['CPU类型', info.CPU],
 ])
 
 export function getPrintPayload(device: Device) {
@@ -53,10 +54,7 @@ export function getPrintPayload(device: Device) {
   }
 }
 
-export function getDeviceForm(
-  device: DeviceResponse,
-  product: ProductItem,
-) {
+export function getDeviceForm(device: DeviceResponse, product: ProductItem) {
   const { DeviceInfo, ICloud } = device
   return {
     ModelNumber: DeviceInfo.ModelNumber,
@@ -66,10 +64,10 @@ export function getDeviceForm(
     ProductVersion: DeviceInfo.ProductVersion,
     BuildVersion: DeviceInfo.BuildVersion,
     RegionInfo: DeviceInfo.RegionInfo,
-    UniqueChipID: DeviceInfo.UniqueChipID.toString(),
+    Ecid: DeviceInfo.Ecid,
     UniqueDeviceID: DeviceInfo.UniqueDeviceID,
-    ActivationState: DeviceInfo.ActivationState ? '已激活' : '未激活',
     iCloud: ICloud.CloudBackupEnabled ? '已开启' : '未开启',
+    ActivationState: DeviceInfo.ActivationState ? '已激活' : '未激活',
     CPU: product.Chip || '--',
     Warranty: '--',
     NetworkLock: '--',

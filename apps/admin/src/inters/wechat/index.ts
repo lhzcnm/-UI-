@@ -1,9 +1,9 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
 export * from './message'
 
-export const zWechatMenu = z.interface({
+export const zWechatMenu = z.object({
   id: z.number().default(0),
   parentId: z.number().default(0),
   type: z.string().default(''),

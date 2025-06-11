@@ -1,13 +1,14 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
 export * from './service'
 
-export const zLevel = z.interface({
+export const zLevel = z.object({
   pricePlanId: z.number().default(0),
-  pricePlan: z.string().default(''),
-  pricePlanLocal: z.string().default(''),
+  pricePlan: z.string().min(1, '等级名称不能为空').default(''),
+  pricePlanLocal: z.string().min(1, '等级名称EN不能为空').default(''),
   disablePricePlan: z.boolean().default(false),
+  enableDevice: z.boolean().default(false),
   // isDel: z.boolean().default(false),
   // updateTime: z.string().default(''),
   // createTime: z.string().default(''),

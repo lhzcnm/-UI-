@@ -1,6 +1,6 @@
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zLevelService = z.interface({
+export const zLevelService = z.object({
   id: z.number().default(0),
   planId: z.number().default(0),
   packageId: z.number().default(0),
@@ -11,7 +11,7 @@ export const zLevelService = z.interface({
 export type LevelService = z.infer<typeof zLevelService>
 
 // Form
-export const zLevelServiceForm = z.interface({
+export const zLevelServiceForm = z.object({
   planId: z.number().default(0),
   packageId: z.number().optional(),
   price: z.number().optional(),

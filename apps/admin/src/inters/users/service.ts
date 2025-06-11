@@ -1,7 +1,7 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zUserService = z.interface({
+export const zUserService = z.object({
   id: z.number().default(0),
   packageId: z.number().default(0),
   userId: z.number().default(0),
@@ -13,7 +13,7 @@ export const zUserService = z.interface({
 export type UserService = z.infer<typeof zUserService>
 
 // Form
-export const zUserServiceForm = z.interface({
+export const zUserServiceForm = z.object({
   userId: z.number().default(0),
   packageId: z.number().optional(),
   price: z.number().optional(),

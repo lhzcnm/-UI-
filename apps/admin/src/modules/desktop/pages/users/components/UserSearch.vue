@@ -3,6 +3,7 @@ import UserSearchForm from '@forms/users/UserSearchForm.vue'
 import { USER_STORE } from '../utils'
 
 const store = inject(USER_STORE)!
+
 function handleSubmit() {
   store.visibleSearch = false
   store.refresh = !store.refresh

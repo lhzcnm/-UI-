@@ -1,7 +1,7 @@
 import type { IList, IPage, WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zUserPaid = z.interface({
+export const zUserPaid = z.object({
   userId: z.number().default(0),
   weixinOpenId: z.string().default(''),
   userName: z.string().default(''),
@@ -15,7 +15,7 @@ export const zUserPaid = z.interface({
 export type UserPaid = z.infer<typeof zUserPaid>
 
 // Search
-export const zUserPaidSearchForm = z.interface({
+export const zUserPaidSearchForm = z.object({
   userId: z.number().optional(),
   openId: z.string().optional(),
   username: z.string().optional(),

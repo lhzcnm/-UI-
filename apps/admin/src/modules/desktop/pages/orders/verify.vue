@@ -34,6 +34,7 @@ watch(
       pageSize: limitValue,
       ...zOrderSearchForm.parse({}),
       verify: ORDER_VERIFY.REPLIED,
+      imeiList: undefined,
     })
   },
   { immediate: true }

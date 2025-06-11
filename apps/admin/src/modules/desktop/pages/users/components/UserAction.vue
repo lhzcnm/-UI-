@@ -16,7 +16,7 @@ interface UserActionProps {
 const props = defineProps<UserActionProps>()
 
 const options: XBtnSplitOptions = [
-  { label: '查看详情', icon: 'lucide:eye' },
+  { label: '查看详情', icon: 'lucide:eye', },
   { label: '积分设置', icon: 'lucide:dollar-sign', command: openPoint },
   { label: '服务设置', icon: 'lucide:server', command: openService },,
   { label: '积分记录', icon: 'lucide:coins', command: toCredits },

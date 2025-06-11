@@ -2,6 +2,7 @@
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
 import { useThrottleFn } from '@vueuse/core'
+import { toast } from 'vue-sonner'
 
 import { STORE } from '../utils'
 import { wsFetch } from '../utils/websocket'
@@ -84,11 +85,13 @@ function getCurrentDate() {
 async function onRestart() {
   const [_, uniqueId] = store.selected.split(':')
   await wsFetch({ type: 'reboot', Uid: uniqueId })
+  toast.success('指令已发送')
 }
 
 async function onShutdown() {
   const [_, uniqueId] = store.selected.split(':')
   await wsFetch({ type: 'shutdown', Uid: uniqueId })
+  toast.success('指令已发送')
 }
 
 async function onRefresh() {
@@ -103,7 +106,7 @@ async function onRefresh() {
 </script>
 
 <template>
-  <div class="w-96">
+  <div>
     <div
       class="relative w-64 mx-auto"
       :style="{ height: deviceImage.imageHeight }"

@@ -1,8 +1,7 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export type ServiceGroup = z.infer<typeof zServiceGroup>
-export const zServiceGroup = z.interface({
+export const zServiceGroup = z.object({
   categoryId: z.number().default(0),
   category: z.string().default(''),
   categoryLocal: z.string().default(''),
@@ -15,6 +14,8 @@ export const zServiceGroup = z.interface({
   // metaTags: z.string().default(''),
   // seoUrlName: z.string().default(''),
 })
+
+export type ServiceGroup = z.infer<typeof zServiceGroup>
 
 // Form
 export const zServiceGroupForm = zServiceGroup.omit({ categoryId: true })

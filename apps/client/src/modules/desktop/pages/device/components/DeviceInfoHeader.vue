@@ -20,11 +20,13 @@ function handleRecoveryMode() {
 
 async function handleEnterRecoveryMode(uniqueId: string) {
   await wsFetch({ type: 'enterRecoveryMode', Uid: uniqueId })
+  toast.success('指令已发送')
   isRecoveryMode.value = true
 }
 
 async function handleExitRecoveryMode(uniqueId: string) {
   await wsFetch({ type: 'exitRecoveryMode', Uid: uniqueId })
+  toast.success('指令已发送')
   isRecoveryMode.value = false
 }
 
@@ -41,7 +43,7 @@ async function handlePrint() {
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i)
   }
-  
+
   const blob = new Blob([bytes], { type: 'application/pdf' })
   window.open(URL.createObjectURL(blob), '_blank')
   isPrinting.value = false
@@ -54,6 +56,17 @@ function handleCopy() {
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
   toast.success('复制成功')
 }
+
+const diskCapacity = computed(() => {
+  const device = store.deviceMap.get(store.selected)!
+  const total = device.memory.TotalDiskCapacity
+  return `${total / 1000 / 1000 / 1000}GB`
+})
+
+const colorLabel = computed(() => {
+  const device = store.deviceMap.get(store.selected)!
+  return device.product.Color
+})
 </script>
 
 <template>
@@ -76,7 +89,12 @@ function handleCopy() {
       </XSelect>
 
       <XTag
-        color="primary" label="16GB"
+        color="primary" :label="diskCapacity"
+        class="rounded-full ring-1 ring-primary"
+      />
+
+      <XTag
+        color="primary" :label="colorLabel"
         class="rounded-full ring-1 ring-primary"
       />
     </div>

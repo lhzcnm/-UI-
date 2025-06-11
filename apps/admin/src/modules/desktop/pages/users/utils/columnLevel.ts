@@ -25,6 +25,28 @@ export const columns: XColDef<Level> = [
     minWidth: 128,
   },
   {
+    key: 'enableDevice',
+    title: '允许访问设备页面',
+    width: 128,
+    render(value, row) {
+      return h(XSwitch, {
+        modelValue: value,
+        'onUpdate:modelValue': async (val) => {
+          const oldVal = row.enableDevice
+          const response = updateLevel({
+            pricePlanId: row.pricePlanId,
+            enableDevice: val,
+          })
+
+          row.enableDevice = val
+          response.catch(() => {
+            setTimeout(() => row.enableDevice = oldVal, 1000)
+          })
+        },
+      })
+    },
+  },
+  {
     key: 'disablePricePlan',
     title: '是否禁用',
     width: 128,

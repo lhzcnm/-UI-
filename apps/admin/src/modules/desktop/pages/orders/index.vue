@@ -99,7 +99,7 @@ function resetSearch() {
 function selectDecorator(fn: () => void) {
   return () => {
     if (selected.value.length === 0) {
-      toast.warning('请先选择要复制的行')
+      toast.warning('请先选择要操作的行')
       return
     }
 

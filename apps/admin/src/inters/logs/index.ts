@@ -1,7 +1,7 @@
 import type { IList, IPage } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zLog = z.interface({
+export const zLog = z.object({
   id: z.number().default(0),
   userId: z.number().default(0),
   loginTime: z.string().default(''),
@@ -13,7 +13,7 @@ export const zLog = z.interface({
 export type Log = z.infer<typeof zLog>
 
 // Search
-export const zLogSearchForm = z.interface({
+export const zLogSearchForm = z.object({
   ip: z.string().optional(),
   userId: z.number().optional(),
   // role: z.enum(USER_ROLE).optional(),

@@ -18,29 +18,31 @@ const form = defineModel<OrderSearchForm>({ required: true })
       </div>
     </div>
 
+    <div class="flex space-x-2">
+      <div class="w-1/2">
+        <label class="block text-sm text-label mb-1">订单状态</label>
+        <XSelect v-model="form.statusId" placeholder="选择订单状态" clearable>
+          <XSelectItem
+            v-for="status in ORDER_STATUS_LIST" :key="status.value"
+            :value="status.value" :label="status.label"
+          />
+        </XSelect>
+      </div>
+
+      <div class="w-1/2">
+        <label class="block text-sm text-label mb-1">验证状态</label>
+        <XSelect v-model="form.verify" placeholder="选择验证状态" clearable>
+          <XSelectItem
+            v-for="verify in ORDER_VERIFY_LIST" :key="verify.value"
+            :value="verify.value" :label="verify.label"
+          />
+        </XSelect>
+      </div>
+    </div>
+
     <div>
       <label class="block text-sm text-label mb-1">服务</label>
-      <SelectService v-model="form.serviceId" />
-    </div>
-
-    <div>
-      <label class="block text-sm text-label mb-1">订单状态</label>
-      <XSelect v-model="form.statusId" placeholder="选择订单状态" clearable>
-        <XSelectItem
-          v-for="status in ORDER_STATUS_LIST" :key="status.value"
-          :value="status.value" :label="status.label"
-        />
-      </XSelect>
-    </div>
-
-    <div>
-      <label class="block text-sm text-label mb-1">验证状态</label>
-      <XSelect v-model="form.verify" placeholder="选择验证状态" clearable>
-        <XSelectItem
-          v-for="verify in ORDER_VERIFY_LIST" :key="verify.value"
-          :value="verify.value" :label="verify.label"
-        />
-      </XSelect>
+      <SelectService v-model="form.serviceId" clearable />
     </div>
 
     <div>
@@ -54,7 +56,7 @@ const form = defineModel<OrderSearchForm>({ required: true })
 
     <div>
       <label class="block text-sm text-label mb-1">IMEI/SN</label>
-      <XTextarea v-model="form.imeiList" placeholder="IMEI/SN，一行一个" />
+      <XTextarea v-model="form.imeiList" placeholder="IMEI/SN，一行一个" rows="5" />
     </div>
   </form>
 </template>

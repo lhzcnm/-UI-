@@ -1,8 +1,8 @@
 import type { WithId } from '@3un/shared'
 import { API_TYPE } from '@3un/utils'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zUpstream = z.interface({
+export const zUpstream = z.object({
   apiId: z.number().default(0),
   apiTitle: z.string().default(''),
   disableApi: z.boolean().default(false),

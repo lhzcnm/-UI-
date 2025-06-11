@@ -12,7 +12,7 @@ import { wsFetch } from '../utils/websocket'
 
 const style = tv({
   slots: {
-    label: 'inline-block w-20 text-muted-foreground',
+    label: 'inline-block w-[88px] text-muted-foreground',
     value: 'cursor-pointer hover:text-primary active:text-primary/80',
   },
 })
@@ -24,9 +24,12 @@ const { copy } = useClipboard({ legacy: true })
 
 const form = computed({
   get: () => store.deviceMap.get(store.selected)!.form,
-  set: (value) => {
-    store.deviceMap.get(store.selected)!.form = value
-  },
+  set: (value) => store.deviceMap.get(store.selected)!.form = value,
+})
+
+const cache = computed({
+  get: () => store.deviceMap.get(store.selected)!.cache,
+  set: (value) => store.deviceMap.get(store.selected)!.cache = value,
 })
 
 const defaultState = form.value.ActivationState
@@ -71,6 +74,7 @@ async function handleNetworkLock() {
 
     const status = options[data as keyof typeof options]
     form.value.NetworkLock = `${data}(${status})`
+    cache.value.hasNetworkLock = true
     uStore.updateCredit()
   })
 
@@ -97,6 +101,7 @@ async function handleActivationLock() {
     if (data === '开启') status = 'ON'
     else if (data === '关闭') status = 'OFF'
 
+    cache.value.hasActivationLock = true
     form.value.ActivationLock = `${status}(${data})`
     uStore.updateCredit()
   })
@@ -112,12 +117,14 @@ async function handleWarranty() {
   loadings.warranty = true
   const { info } = store.deviceMap.get(store.selected)!
   const response = http.post('/device/query', {
+    imei: info.InternationalMobileEquipmentIdentity,
     sn: info.SerialNumber,
     serviceId: 1162,
     type: 'Warranty',
   })
 
   response.then(({ data }) => {
+    cache.value.hasWarranty = true
     form.value.Warranty = data
     uStore.updateCredit()
   })
@@ -150,7 +157,7 @@ const b = style()
 </script>
 
 <template>
-  <div class="flex gap-12 p-4 bg-card whitespace-nowrap">
+  <div class="flex gap-4 p-4 bg-card">
     <div class="flex-1 space-y-1">
       <div>
         <span :class="b.label()">序列号</span>
@@ -185,12 +192,12 @@ const b = style()
       <div>
         <span :class="b.label()">ECID</span>
         <span :class="b.value()" @click="cp">
-          {{ form.UniqueChipID }}
+          {{ form.Ecid }}
         </span>
       </div>
       <div>
         <span :class="b.label()">UDID</span>
-        <span :class="b.value()" @click="cp">
+        <span :class="b.value()" class=" break-all" @click="cp">
           {{ form.UniqueDeviceID }}
         </span>
       </div>
@@ -218,7 +225,7 @@ const b = style()
             @click="handleNetworkLock"
           >
             <Icon v-if="loadings.networkLock" icon="lucide:loader-2" class="animate-spin" />
-            <span>{{ loadings.networkLock ? '查询中...' : '立即查询' }}</span>
+            <span>{{ loadings.networkLock ? '查询中...' : (cache.hasNetworkLock ? '重新查询' : '立即查询') }}</span>
           </button>
         </div>
       </div>
@@ -232,7 +239,7 @@ const b = style()
             @click="handleActivationLock"
           >
             <Icon v-if="loadings.activationLock" icon="lucide:loader-2" class="animate-spin" />
-            <span>{{ loadings.activationLock ? '查询中...' : '立即查询' }}</span>
+            <span>{{ loadings.activationLock ? '查询中...' : (cache.hasActivationLock ? '重新查询' : '立即查询') }}</span>
           </button>
         </div>
       </div>
@@ -246,12 +253,20 @@ const b = style()
             @click="handleWarranty"
           >
             <Icon v-if="loadings.warranty" icon="lucide:loader-2" class="animate-spin" />
-            <span>{{ loadings.warranty ? '查询中...' : '立即查询' }}</span>
+            <span>{{ loadings.warranty ? '查询中...' : (cache.hasWarranty ? '重新查询' : '立即查询') }}</span>
           </button>
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">iCloud</span>
+        <span :class="b.label()">销售地区</span>
+        <div class="flex-1 flex items-center justify-between">
+          <span :class="b.value()" @click="cp">
+            {{ form.SalesRegion.chinese }}
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <span :class="b.label()">iCloud备份</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ form.iCloud }}
@@ -259,7 +274,7 @@ const b = style()
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">CPU</span>
+        <span :class="b.label()">CPU类型</span>
         <span :class="b.value()" @click="cp">
           {{ form.CPU }}
         </span>

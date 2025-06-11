@@ -1,7 +1,7 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zAdminForm = z.interface({
+export const zAdminForm = z.object({
   userName: z.string().default(''),
   nickName: z.string().nullable().default(null),
   userPassword: z.string().default(''),

@@ -36,6 +36,7 @@ export interface UserInfo {
   pricePlanId: number
   memberExp: string
   usageDays: number
+  enableDevice: boolean
   bulkCheckApi: string
   rechargeCount: string
   totalReceipts: string

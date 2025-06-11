@@ -4,6 +4,8 @@ import UserSearch from './components/UserSearch.vue'
 import UserPoint from './components/UserPoint.vue'
 import UserService from './components/UserService.vue'
 
+import { USER_ROLE } from '@3un/utils'
+
 import type { UserListParams } from '@/inters/users'
 import { zUserExtraInfo, zUserForm, zUserPointForm, zUserSearchForm, zUserServiceForm } from '@/inters/users'
 import { getUsers } from '@/api/users'
@@ -79,7 +81,11 @@ function getList(params: UserListParams) {
 }
 
 function openCreate() {
-  store.formBase = zUserForm.parse({})
+  const isAdmin = route.query.q === 'admin'
+  store.formBase = zUserForm.parse({
+    role: isAdmin ? USER_ROLE.ADMIN : USER_ROLE.USER,
+  })
+
   store.index = undefined
   store.visibleBase = true
 }

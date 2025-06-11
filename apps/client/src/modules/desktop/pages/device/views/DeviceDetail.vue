@@ -8,7 +8,7 @@ import DeviceDiskInfo from '../components/DeviceDiskInfo.vue'
 
 <template>
   <div class="flex">
-    <DevicePhoneDisplay />
+    <DevicePhoneDisplay class="w-80 flex-shrink-0" />
 
     <div class="flex-1 min-w-[800px] max-w-screen-lg py-4">
       <div class="overflow-hidden border rounded-lg mb-4">

@@ -5,7 +5,7 @@ import WaitConnect      from './views/WaitConnect.vue'
 import PluginDownload   from './views/PluginDownload.vue'
 
 import type { DeviceStore } from './utils'
-import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, DeviceResponse } from './types'
+import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, DeviceResponse, SalesRegion } from './types'
 import { STORE, getDeviceForm } from './utils'
 import { ws, wsFetch } from './utils/websocket'
 import http from '@/utils/http'
@@ -19,8 +19,10 @@ const store: DeviceStore = reactive({
 
 provide(STORE, store)
 
-const r = await fetch('/devices-ios.json')
-const datasets = await r.json() as ProductData
+const [datasets, countriesMap] = await Promise.all([
+  fetch('/devices-ios.json').then(res => res.json()),
+  fetch('/sales-region.json').then(res => res.json()),
+]) as [ProductData, Record<string, string[]>]
 
 watch(
   ws.data,
@@ -86,18 +88,26 @@ async function handleInfo(data: DeviceResponse[]) {
 async function handleDevice(data: DeviceResponse) {
   const { DeviceInfo, Memory, ICloud, DeviceID } = data
   const product = getProduct(DeviceInfo)
+  const form = getDeviceForm(data, product)
   const battery = await getBatteryInfo(DeviceInfo)
+  const cache = await getPrevCache(form.Imei)
+  const SalesRegion = getSalesRegion(form.ModelNumber)
   const key = `${DeviceID}:${DeviceInfo.UniqueDeviceID}`
 
   http.post('/device/save', data)
   store.deviceMap.set(key, {
-    DeviceID: DeviceID,
-    form: getDeviceForm(data, product),
-    battery: battery as BatteryInfo,
-    memory: Memory as MemoryInfo,
-    icloud: ICloud,
-    product: product,
-    info: DeviceInfo,
+    DeviceID : DeviceID,
+    icloud   : ICloud,
+    product  : product,
+    info     : DeviceInfo,
+    battery  : battery as BatteryInfo,
+    memory   : Memory as MemoryInfo,
+    form     : { ...form, ...cache, SalesRegion },
+    cache    : {
+      hasNetworkLock: cache.NetworkLock !== '--',
+      hasActivationLock: cache.ActivationLock !== '--',
+      hasWarranty: cache.Warranty !== '--',
+    },
   })
 }
 
@@ -110,12 +120,12 @@ function getProduct(data: DeviceInfo) {
     if (Array.isArray(product)) product = product[0]  
   }
 
-  let color = data.DeviceColor
+  let color = '未知颜色'
   if (data.DeviceColor in product) {
     color = product[data.DeviceColor]
   }
-  else if (data.ModelNumber.length === 12) {
-    const suffix = data.ModelNumber.slice(-4)
+  else if (data.SerialNumber.length === 12) {
+    const suffix = data.SerialNumber.slice(-4)
     color = datasets[suffix as ProductKey] as string
   }
 
@@ -123,6 +133,30 @@ function getProduct(data: DeviceInfo) {
     Name: product ? product.Name : data.ProductType,
     Chip: product ? product.Chip : data.CPUArchitecture,
     Color: color,
+  }
+}
+
+/**
+ * 根据型号代码获取销售地区信息
+ * @param modelCode 型号代码，如 "LL/A"
+ * @returns 销售地区信息，包含中文和英文描述
+ */
+ function getSalesRegion(modelCode: string): SalesRegion {
+  for (const pattern in countriesMap) {
+    const regex = new RegExp(pattern)
+    
+    if (regex.test(modelCode)) {
+      const regions = countriesMap[pattern]
+      return {
+        chinese: regions[0],
+        english: regions[1]
+      }
+    }
+  }
+
+  return {
+    chinese: '未知',
+    english: 'Unknown'
   }
 }
 
@@ -138,6 +172,24 @@ function handleDisconnect(value: string) {
 
   if (store.deviceMap.size === 0) {
     store.status = 'wait'
+  }
+}
+
+async function getPrevCache(imei: string) {
+  const { data } = await http.post(
+    '/device/prev-query',
+    {
+      networkLockId: 1160,
+      activationLockId: 1161,
+      warrantyId: 1162,
+      imei: imei,
+    },
+  )
+
+  return {
+    NetworkLock: data.networkLockCode || '--',
+    ActivationLock: data.activationLockCode || '--',
+    Warranty: data.warrantyCode || '--',
   }
 }
 

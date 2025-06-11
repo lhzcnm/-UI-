@@ -16,6 +16,11 @@ export const columns: XColDef<Credit> = [
     }
   },
   {
+    key: 'userId',
+    title: '用户',
+    width: 88,
+  },
+  {
     key: 'imeiNo',
     title: 'IMEI',
     width: 180,

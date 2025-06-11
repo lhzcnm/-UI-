@@ -1,8 +1,8 @@
 import type { IPage, IList, WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
 export type ServiceField = z.infer<typeof zServiceField>
-export const zServiceField = z.interface({
+export const zServiceField = z.object({
   id: z.number().default(0),
   serviceId: z.number().default(0),
   name: z.string().default(''),

@@ -1,7 +1,7 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zTicketType = z.interface({
+export const zTicketType = z.object({
   departmentId: z.number().default(0),
   departmentName: z.string().default(''),
   departmentDes: z.string().default(''),

@@ -1,20 +1,22 @@
 import type { IList, WithId, IPage } from '@3un/shared'
 import { PAYMENT_METHOD, USER_ROLE } from '@3un/utils'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
 export * from './extra'
 export * from './paid'
 export * from './service'
 export * from './admin'
 
-export const zUser = z.interface({
+export const zUser = z.object({
   userId: z.number().default(0),
   userName: z.string().default(''),
+
   // firstName: z.string().nullable().default(null),
   // lastName: z.string().nullable().default(null),
   userPassword: z.string().default(''),
   // countryId: z.number().default(0),
   phone: z.string().nullable().default(null),
+
   addedAt: z.string().default(''),
   // updatedAt: z.string().default(''),
   // addedBy: z.number().nullable().default(null),
@@ -32,7 +34,7 @@ export const zUser = z.interface({
   // currencyId: z.number().default(0),
   pricePlanId: z.number().default(0),
   // listId: z.number().default(0),
-  apiKey: z.string().default(''),
+  apiKey: z.string().nullable().default(null),
   // prPlanOfferId: z.number().nullable().default(null),
   allowNegativeCredits: z.boolean().default(false),
   // currencyConversion: z.boolean().default(false),
@@ -40,11 +42,12 @@ export const zUser = z.interface({
   ip: z.string().nullable().default(null),
   allowApi: z.boolean().default(false),
   loginAttempts: z.boolean().default(false),
-  userEmail: z.string().nullable().default(null),
+  userEmail: z.email().nullable().default(null),
   loginAllowedFromOtherCountry: z.boolean().default(true),
   // userLang: z.string().default(''),
   passwordUpdatedAt: z.string().nullable().default(null),
   weiXinOpenid: z.string().nullable().default(null),
+
   inviteCode: z.string().nullable().default(null),
   inviteByUserid: z.number().nullable().default(null),
   pushMsg: z.boolean().default(true),
@@ -62,7 +65,7 @@ export const zUser = z.interface({
 export type User = z.infer<typeof zUser>
 
 // Search
-export const zUserSearchForm = z.interface({
+export const zUserSearchForm = z.object({
   userId: z.number().optional(),
   planId: z.number().optional(),
   username: z.string().optional(),
@@ -89,7 +92,7 @@ export type UserCreateParams = z.infer<typeof zUserForm>
 export type UserUpdateParams = WithId<UserCreateParams, 'userId'>
 
 // Point
-export const zUserPointForm = z.interface({
+export const zUserPointForm = z.object({
   userId: z.number().default(0),
   isAdd: z.boolean().default(true),
   isPay: z.boolean().default(false),

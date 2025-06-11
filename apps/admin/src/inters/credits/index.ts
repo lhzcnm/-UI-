@@ -1,19 +1,8 @@
 import type { IList, IPage } from "@3un/shared"
-import * as z from "zod"
+import { VERIFY_MSG } from '@/utils/message'
+import { z } from 'zod/v4'
 
-// {
-//   "userId": 29590,
-//   "imeiNo": "FCCR130UGRWQ",
-//   "packageId": 1037,
-//   "historyDtTm": "2023-07-29 00:00:12",
-//   "description": "Wexin Code Request",
-//   "credits": 0.15,
-//   "creditsLeft": "lMaJaw==",
-//   "comments": null,
-//   "ip": "81.69.101.237"
-// }
-
-export const zCredit = z.interface({
+export const zCredit = z.object({
   userId: z.number().default(0),
   imeiNo: z.string().default(''),
   packageId: z.number().default(0),
@@ -28,9 +17,9 @@ export const zCredit = z.interface({
 export type Credit = z.infer<typeof zCredit>
 
 // Search
-export const zCreditSearchForm = z.interface({
+export const zCreditSearchForm = z.object({
   imeiNo: z.string().optional(),
-  userId: z.number().optional(),
+  userId: z.number(VERIFY_MSG.USER_ID).optional(),
   serviceId: z.number().optional(),
 })
 

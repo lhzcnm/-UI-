@@ -1,7 +1,7 @@
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zIntercept = z.interface({
+export const zIntercept = z.object({
   id: z.number().default(0),
   ip: z.ipv4().default('unknown'),
   comments: z.string().default(''),

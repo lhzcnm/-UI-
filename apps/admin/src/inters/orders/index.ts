@@ -1,8 +1,8 @@
 import type { IList, IPage } from '@3un/shared'
 import { ORDER_STATUS, ORDER_VERIFY, SUBMIT_METHOD } from '@3un/utils'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zOrder = z.interface({
+export const zOrder = z.object({
   codeId: z.number().default(0),
   userId: z.number().default(0),
   // phoneLockedOn: z.string().default(''),
@@ -55,7 +55,7 @@ export const zOrder = z.interface({
 export type Order = z.infer<typeof zOrder>
 
 // Search
-export const zOrderSearchForm = z.interface({
+export const zOrderSearchForm = z.object({
   userId: z.number().optional(),
   username: z.string().optional(),
   imeiList: z.string().optional(),
@@ -77,7 +77,7 @@ export interface OrderListParams extends IPage, OmitImeiList {
 }
 
 // Update
-export const zOrderUpdateForm = z.interface({
+export const zOrderUpdateForm = z.object({
   codeId: z.number().default(0),
   imeiNo: z.string().default(''),
   codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),

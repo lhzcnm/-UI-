@@ -1,6 +1,6 @@
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export const zUserExtraInfo = z.interface({
+export const zUserExtraInfo = z.object({
   imageUrl: z.string().nullable().default(null),
   // 总的充值金额
   totalCredit: z.string().default(''),

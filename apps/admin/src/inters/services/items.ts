@@ -1,9 +1,8 @@
 import { IMEI_TYPE } from '@3un/utils'
 import type { WithId } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
-export type Service = z.infer<typeof zService>
-export const zService = z.interface({
+export const zService = z.object({
   packageId: z.number().default(0),
   categoryId: z.number().default(0),
   apiId: z.number().default(-1),
@@ -50,6 +49,8 @@ export const zService = z.interface({
   // sl3lbf: z.boolean(),
   // toolForUnlockBase: z.string(),
 })
+
+export type Service = z.infer<typeof zService>
 
 // Form
 export const zServiceForm = zService.omit({ packageId: true })

@@ -38,7 +38,7 @@ const options = [
         如果插件未安装，请点击下方按钮下载安装插件。
       </p>
       <div class="space-x-4 text-center">
-        <XButtonSplit label="下载插件" :options="options" @change="handleDownload()" />
+        <XButtonSplit label="下载插件" :options="options" @click="handleDownload()" />
         <XButton variant="soft" icon="lucide:refresh-cw" @click="$router.go(0)">刷新页面</XButton>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import { TICKET_PRIORITY, TICKET_STATUS } from '@3un/utils'
 import type { IList, IPage } from '@3un/shared'
-import * as z from 'zod'
+import { z } from 'zod/v4'
 
 export * from './issue'
 
-export const zTicket = z.interface({
+export const zTicket = z.object({
   id: z.number().default(0),
   userId: z.number().default(0),
   subject: z.string().default(''),
@@ -39,7 +39,7 @@ export type TicketUpdateParams = {
 }
 
 // Reply
-export const zTicketReply = z.interface({
+export const zTicketReply = z.object({
   id: z.number().default(0),
   ticketId: z.number().default(0),
   replyId: z.number().nullable(),

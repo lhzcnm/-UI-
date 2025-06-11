@@ -90,6 +90,7 @@ export interface DeviceInfo {
   KCTPostponementInfoPRLName: number
   KCTPostponementInfoServiceProvisioningState: boolean
   KCTPostponementStatus: string
+  Ecid: string
 }
 
 export interface MemoryInfo {
@@ -132,6 +133,11 @@ export interface Device {
   battery: BatteryInfo
   product: ProductItem
   form: DeviceForm
+  cache: {
+    hasNetworkLock: boolean
+    hasActivationLock: boolean
+    hasWarranty: boolean
+  }
 }
 export interface DeviceForm {
   Imei: string
@@ -141,13 +147,14 @@ export interface DeviceForm {
   MLBSerialNumber: string
   ProductVersion: string
   BuildVersion: string
-  UniqueChipID: string
+  Ecid: string
   UniqueDeviceID: string
   
   ActivationState: string
   NetworkLock: string
   ActivationLock: string
   Warranty: string
+  SalesRegion: SalesRegion
   iCloud: string
   CPU: string
 }
@@ -165,4 +172,10 @@ export interface ProductInfo {
   [key: string]: string
   Name: string
   Chip: string
+}
+
+// sales region
+export interface SalesRegion {
+  chinese: string
+  english: string
 }
