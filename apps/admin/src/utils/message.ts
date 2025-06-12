@@ -43,4 +43,6 @@ export enum VERIFY_MSG {
 
   REQ_MSG_KEYWORDS = '关键字不能为空',
   REQ_MSG_CONTENT = '消息内容不能为空',
+
+  REQ_SHOP_NAME = '商品名称不能为空',
 }

@@ -19,6 +19,7 @@ declare module 'vue' {
     FormField: typeof import('./src/modules/desktop/components/FormField.vue')['default']
     MobileHeader: typeof import('./src/modules/mobile/components/MobileHeader.vue')['default']
     NoMessage: typeof import('./src/components/NoMessage.vue')['default']
+    PackageForm: typeof import('./src/components/forms/recharge/PackageForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchPlane: typeof import('./src/modules/desktop/components/SearchPlane.vue')['default']

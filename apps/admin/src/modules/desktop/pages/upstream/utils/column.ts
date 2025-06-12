@@ -10,14 +10,6 @@ import { updateUpstream } from '@/api/upstream'
 export const columns: XColDef<Upstream> = [
   { key: 'apiTitle', title: 'API名称', width: 225 },
   {
-    key: 'apiType',
-    title: 'API类型',
-    width: 88,
-    render(value) {
-      return h(XTag, API_TYPE_MAP[value])
-    },
-  },
-  {
     key: 'accountId',
     title: '用户名',
     width: 108,
@@ -28,6 +20,14 @@ export const columns: XColDef<Upstream> = [
     title: 'API密钥',
     width: 300,
     cellEmpty: '--'
+  },
+  {
+    key: 'apiType',
+    title: 'API类型',
+    width: 88,
+    render(value) {
+      return h(XTag, API_TYPE_MAP[value])
+    },
   },
   {
     key: 'serverUrl',

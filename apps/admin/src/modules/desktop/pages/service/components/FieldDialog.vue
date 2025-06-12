@@ -7,16 +7,12 @@ const store = inject(FIELD_STORE)!
 const formRef = useTemplateRef('formRef')
 
 async function handleCreate() {
-  if (!formRef.value!.validateForm()) return
-
   await createServiceField(store.formBase)
   store.refresh = !store.refresh
   store.visibleBase = false
 }
 
 async function handleUpdate() {
-  if (!formRef.value!.validateForm()) return
-
   const body = {
     ...store.formBase,
     id: store.fields.list[store.index!].id,
@@ -34,6 +30,7 @@ async function handleUpdate() {
     :index="store.index"
     :update="handleUpdate"
     :create="handleCreate"
+    :validate="formRef?.validateForm"
     @close="formRef?.clearErrors"
   >
     <FieldForm ref="formRef" v-model="store.formBase" />

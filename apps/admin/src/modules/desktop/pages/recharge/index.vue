@@ -11,7 +11,8 @@ import { deleteRecharges, getRecharges } from '@/api/recharge'
 import { zRechargeSearchForm } from '@/inters/recharge'
 
 import type { RechargeStore } from './utils'
-import { RECHARGE_STORE, columns } from './utils'
+import { columns } from './utils/column'
+import { RECHARGE_STORE } from './utils'
 
 const store: RechargeStore = reactive({
   recharges: { list: [], total: 0, page: 1, pageSize: 20 },

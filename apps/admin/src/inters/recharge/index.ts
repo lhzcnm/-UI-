@@ -2,6 +2,8 @@ import type { IList, IPage } from '@3un/shared'
 import { PAYMENT_METHOD, PAYMENT_STATUS, SHOP_NAME } from '@3un/utils'
 import { z } from 'zod/v4'
 
+export * from './package'
+
 export const zRecharge = z.object({
   paymentId: z.number().default(0),
   userId: z.number().default(0),

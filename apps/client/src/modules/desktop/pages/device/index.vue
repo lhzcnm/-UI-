@@ -91,7 +91,7 @@ async function handleDevice(data: DeviceResponse) {
   const form = getDeviceForm(data, product)
   const battery = await getBatteryInfo(DeviceInfo)
   const cache = await getPrevCache(form.Imei)
-  const SalesRegion = getSalesRegion(form.ModelNumber)
+  const SalesRegion = getSalesRegion(form.RegionInfo)
   const key = `${DeviceID}:${DeviceInfo.UniqueDeviceID}`
 
   http.post('/device/save', data)
@@ -149,7 +149,7 @@ function getProduct(data: DeviceInfo) {
       const regions = countriesMap[pattern]
       return {
         chinese: regions[0],
-        english: regions[1]
+        english: regions[1],
       }
     }
   }

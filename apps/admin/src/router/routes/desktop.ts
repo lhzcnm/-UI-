@@ -5,6 +5,7 @@ import service  from './desktop/service'
 import wechat   from './desktop/wechat'
 import orders   from './desktop/orders'
 import tools    from './desktop/tools'
+import recharge from './desktop/recharge'
 
 const desktop: RouteRecordRaw = {
   path: '/',
@@ -17,6 +18,7 @@ const desktop: RouteRecordRaw = {
     ...wechat,
     ...orders,
     ...tools,
+    ...recharge,
     {
       path: 'dashboard',
       name: 'Dashboard',
@@ -27,11 +29,7 @@ const desktop: RouteRecordRaw = {
       name: 'Tickets',
       component: () => import('@desktop/pages/tickets/index.vue'),
     },
-    {
-      path: 'recharge',
-      name: 'Recharge',
-      component: () => import('@desktop/pages/recharge/index.vue'),
-    },
+
     {
       path: 'upstream',
       name: 'Upstream',

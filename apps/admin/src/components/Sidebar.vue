@@ -3,6 +3,7 @@ import type { ClassNameValue } from 'tailwind-merge'
 import { twJoin, twMerge } from 'tailwind-merge'
 import { Icon } from '@iconify/vue'
 
+import type { SidebarMenuChild } from '@/utils'
 import { menus, tools, EXPANDED_MENUS } from '@/utils'
 
 interface SidebarProps {
@@ -17,6 +18,14 @@ onBeforeMount(() => {
   const config = localStorage.getItem('expanded-menus')
   if (config) expandedMenus.value = JSON.parse(config)
 })
+
+const router = useRouter()
+const iStore = useSystemStore()
+
+function handleChildClick(child: SidebarMenuChild) {
+  iStore.breadcrumbItems = [child.label]
+  router.push(child.path)
+}
 </script>
 
 <template>
@@ -44,7 +53,7 @@ onBeforeMount(() => {
               'rounded-md hover:bg-accent/15 hover:text-foreground transition-colors',
               $route.path === tool.path && 'bg-accent/15 text-foreground',
             )"
-            @click="$router.push(tool.path)"
+            @click="handleChildClick(tool)"
           >
             <div class="flex items-center space-x-2">
               <Icon v-if="tool.icon" :icon="tool.icon" class="size-4" />

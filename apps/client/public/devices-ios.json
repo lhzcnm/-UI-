@@ -397,7 +397,8 @@
 	},
 	"iPhone17,1": {
 		"Name": "iPhone 16 Pro",
-		"Chip": "A18 PRO"
+		"Chip": "A18 PRO",
+		"1": "沙漠色钛金属"
 	},
 	"iPhone17,2": {
 		"Name": "iPhone 16 Pro Max",

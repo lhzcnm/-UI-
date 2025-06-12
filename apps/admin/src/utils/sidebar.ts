@@ -28,8 +28,8 @@ export const menus: SidebarMenu[] = [
     children: [
       { label: '会员', match: 'huiyuan', path: '/users' },
       { label: '管理员', match: 'guanliyuan', icon: 'lucide:smile', path: '/users?q=admin' },
-      { label: '会员等级', match: 'huiyuandengji', icon: 'lucide:gem', path: '/users/level' },
       { label: '包月会员', match: 'baoyuehuiyuan', icon: 'lucide:crown', path: '/users/paid' },
+      { label: '会员等级', match: 'huiyuandengji', icon: 'lucide:gem', path: '/users/level' },
     ],
   },
   {
@@ -62,6 +62,7 @@ export const menus: SidebarMenu[] = [
       { label: '会员充值', match: 'huiyuanchongzhi', path: '/recharge' },
       { label: '今日充值', match: 'jinritianchongzhi', icon: 'lucide:calendar-days', path: '/recharge?q=today' },
       { label: '管理员充值', match: 'guanliyuanchongzhi', icon: 'lucide:coins', path: '/recharge?q=admin' },
+      { label: '包月套餐', match: 'baoyuetaocan', icon: 'lucide:pizza', path: '/recharge/packages' },
     ],
   },
   {

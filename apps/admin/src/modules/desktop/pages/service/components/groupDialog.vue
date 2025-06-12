@@ -8,16 +8,12 @@ const formRef = useTemplateRef('formRef')
 const serviceStore = useServiceStore()
 
 async function handleCreate() {
-  if (!formRef.value!.validateForm()) return
-
   const data = await createServiceGroup(store.formBase)
   serviceStore.groups.push(data)
   store.visibleBase = false
 }
 
 async function handleUpdate() {
-  if (!formRef.value!.validateForm()) return
-
   const group = serviceStore.groups[store.index!]
   const body = { ...store.formBase, categoryId: group.categoryId }
 
@@ -33,6 +29,7 @@ async function handleUpdate() {
     :index="store.index"
     :update="handleUpdate"
     :create="handleCreate"
+    :validate="formRef?.validateForm"
     @close="formRef?.clearErrors"
   >
     <GroupForm ref="formRef" v-model="store.formBase" />

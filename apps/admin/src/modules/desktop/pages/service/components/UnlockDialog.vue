@@ -7,16 +7,12 @@ const store = inject(UNLOCK_STORE)!
 const formRef = useTemplateRef('formRef')
 
 async function handleCreate() {
-  if (!formRef.value!.validateForm()) return
-
   const data = await createUnlock(store.formBase)
   store.unlocks.push(data)
   store.visibleBase = false
 }
 
 async function handleUpdate() {
-  if (!formRef.value!.validateForm()) return
-
   const body = {
     ...store.formBase,
     id: store.unlocks[store.index!].id,
@@ -34,6 +30,7 @@ async function handleUpdate() {
     :index="store.index"
     :update="handleUpdate"
     :create="handleCreate"
+    :validate="formRef?.validateForm"
     @close="formRef?.clearErrors"
   >
     <UnlockForm ref="formRef" v-model="store.formBase" />
