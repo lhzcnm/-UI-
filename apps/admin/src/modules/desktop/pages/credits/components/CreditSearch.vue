@@ -3,11 +3,8 @@ import CreditSearchForm from '@forms/CreditSearchForm.vue'
 import { CREDIT_STORE } from '../utils'
 
 const store = inject(CREDIT_STORE)!
-const formRef = useTemplateRef('formRef')
 
 function handleSubmit() {
-  if (!formRef.value!.validateForm()) return
-
   store.visibleSearch = false
   store.refresh = !store.refresh
   store.page = 1
@@ -15,12 +12,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <XDialog
-    v-model="store.visibleSearch"
-    title="搜索积分记录"
-
-    @close="formRef?.clearErrors"
-  >
+  <XDialog v-model="store.visibleSearch" title="搜索积分记录">
     <CreditSearchForm ref="formRef" v-model="store.formSearch" />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

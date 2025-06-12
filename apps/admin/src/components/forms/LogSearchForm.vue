@@ -7,10 +7,11 @@ const form = defineModel<LogSearchForm>({ required: true })
   <form class="space-y-4" @submit.prevent>
     <div>
       <label class="block text-label text-sm mb-1">登录时间</label>
-      <XDatePicker
+      <XDateRangePicker
         v-model:start="form.startTime"
         v-model:end="form.endTime"
-        placeholder="选择时间"
+        label-format="YYYY-MM-DD"
+        placeholder="选择登录时间范围"
       />
     </div>
     <div>

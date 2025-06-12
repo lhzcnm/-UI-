@@ -1,7 +1,8 @@
-import { deleteLevelService } from '@/api/level'
-import type { LevelService } from '@/inters/level'
 import { XButton, type XColDef, XInputNumber } from '@3un/ui'
 import { h } from 'vue'
+
+import type { LevelService } from '@/inters/level'
+import { deleteLevelService } from '@/api/level'
 import { LEVEL_STORE } from '.'
 
 const serviceStore = useServiceStore()

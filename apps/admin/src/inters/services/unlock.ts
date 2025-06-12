@@ -1,4 +1,5 @@
 import type { WithId } from '@3un/shared'
+import { VERIFY_MSG } from '@/utils/message'
 import { z } from 'zod/v4'
 
 const zUnlockConvertCode = z.object({
@@ -8,9 +9,18 @@ const zUnlockConvertCode = z.object({
 
 export const zUnlock = z.object({
   id: z.number().default(0),
-  packageId: z.number().default(0),
-  operator: z.string().default(''),
-  name: z.string().default(''),
+  packageId: z.number()
+    .refine((val) => val > 0, VERIFY_MSG.REQ_SERVICE_ID)
+    .default(0),
+
+  name: z.string()
+    .min(1, VERIFY_MSG.REQ_SERVICE_NAME)
+    .default(''),
+
+  operator: z.string()
+    .min(1, VERIFY_MSG.REQ_OPERATOR)
+    .default(''),
+
   convertCode: z.array(zUnlockConvertCode).default([]),
 })
 

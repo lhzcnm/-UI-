@@ -1,9 +1,38 @@
 <script setup lang="ts">
 import UpstreamForm from '@/components/forms/UpstreamForm.vue'
+
+import { API_TYPE } from '@3un/utils'
+
 import { createUpstream, updateUpstream } from '@/api/upstream'
+import { VERIFY_MSG, validate, type ValidRule } from '@/utils'
 import { UPSTREAM_STORE } from '../utils'
 
 const store = inject(UPSTREAM_STORE)!
+
+function validForm() {
+  const { apiType, apiTitle, serverUrl, accountId, apiKey } = store.formBase
+  if (apiType === API_TYPE.CUSTOM) return true
+
+  let rules: ValidRule[] = [
+    { rule: !!apiTitle.trim(), message: VERIFY_MSG.REQ_API_TITLE },
+  ]
+
+  const isDhru = apiType === API_TYPE.DHRU
+  const isRealtime = apiType === API_TYPE.REALTIME
+
+  if (isDhru) {
+    rules.push(
+      { rule: !!accountId, message: VERIFY_MSG.REQ_ACCOUNT_ID },
+      { rule: !!apiKey, message: VERIFY_MSG.REQ_API_KEY },
+    )
+  }
+
+  if (isRealtime || isDhru) {
+    rules.push({ rule: !!serverUrl.trim(), message: VERIFY_MSG.REQ_SERVER_URL })
+  }
+
+  return validate(rules)
+}
 
 async function handleCreate() {
   const data = await createUpstream(store.formBase)
@@ -25,6 +54,7 @@ async function handleUpdate() {
   <FormDialog
     v-model="store.visibleBase"
     :index="store.index"
+    :validate="validForm"
     :update="handleUpdate"
     :create="handleCreate"
   >

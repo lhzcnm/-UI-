@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 import { createUserService } from '@/api/users'
+import { VERIFY_MSG } from '@/utils'
+
 import { columns } from '../utils/columnUserService'
 import { USER_STORE } from '../utils'
 
@@ -7,7 +11,19 @@ const serviceStore = useServiceStore()
 const store = inject(USER_STORE)!
 
 const loading = ref(false)
+
 function handleSubmit() {
+  const { packageId, price } = store.formService
+
+  if (!packageId) {
+    toast.warning(VERIFY_MSG.REQ_SERVICE_ID)
+    return
+  }
+  if (price && !/^\d+(\.\d{1,2})?$/.test(price.toString())) {
+    toast.warning(VERIFY_MSG.FMT_PRICE)
+    return
+  }
+
   loading.value = true
 
   const response = createUserService({

@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import MenuForm from '@/components/forms/wechat/MenuForm.vue'
+
+import { toast } from 'vue-sonner'
+
 import { updateWechatMenu } from '@/api/wechat'
 import { MENU_STORE } from '../utils'
 
 const store = inject(MENU_STORE)!
 
 async function handleUpdate() {
+  if (!store.formMenu.name) {
+    toast.error('菜单名称不能为空')
+    return
+  }
+
   const parent = store.menus[store.parentIdx!]
   const body = { ...store.formMenu, id: parent.id }
 
@@ -20,10 +28,7 @@ async function handleUpdate() {
 </script>
 
 <template>
-  <XDialog
-    v-model="store.visibleMenu"
-    title="菜单管理"
-  >
+  <XDialog v-model="store.visibleMenu" title="菜单管理">
     <MenuForm v-model="store.formMenu" />
     <template #footer>
       <div class="flex justify-end mt-4 space-x-2">

@@ -47,9 +47,10 @@ const form = defineModel<OrderSearchForm>({ required: true })
 
     <div>
       <label class="block text-sm text-label mb-1">提交时间</label>
-      <XDatePicker
+      <XDateRangePicker
         v-model:start="form.startTime"
         v-model:end="form.endTime"
+        label-format="YYYY-MM-DD"
         placeholder="选择提交时间"
       />
     </div>

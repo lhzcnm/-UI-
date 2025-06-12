@@ -4,6 +4,7 @@ import { createCustomMsg, updateCustomMsg } from '@/api/wechat'
 import { MSG_STORE } from '../utils'
 
 const store = inject(MSG_STORE)!
+const formRef = useTemplateRef('formRef')
 
 async function handleCreate() {
   const msg = await createCustomMsg(store.formBase)
@@ -27,7 +28,9 @@ async function handleUpdate() {
     :index="store.index"
     :update="handleUpdate"
     :create="handleCreate"
+    :validate="formRef?.validateForm"
+    @close="formRef?.clearErrors"
   >
-    <MsgForm v-model="store.formBase" />
+    <MsgForm ref="formRef" v-model="store.formBase" />
   </FormDialog>
 </template>

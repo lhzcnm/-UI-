@@ -35,9 +35,9 @@ const displayUpstreams = computed(() => {
   if (searchValue) {
     list = list.filter(item =>
       item.apiTitle.toLowerCase().includes(searchValue) ||
-      item.accountId.toLowerCase().includes(searchValue) ||
+      item.accountId?.toLowerCase().includes(searchValue) ||
       item.serverUrl.toLowerCase().includes(searchValue) ||
-      item.apiKey.toLowerCase().includes(searchValue)
+      item.apiKey?.toLowerCase().includes(searchValue)
     )
   }
 
@@ -71,38 +71,41 @@ async function handleDelete() {
 
 <template>
   <div>
-    <section class="flex justify-between p-3 border-b">
-      <div class="flex space-x-2">
-        <XSelect
-          v-model="apiType"
-          placeholder="选择API类型"
-          ui-trigger="w-48"
-          clearable
-        >
-          <XSelectItem 
-            v-for="item in API_TYPE_LIST" :key="item.value"
-            :value="item.value" :label="item.label"
-          />
-        </XSelect>
-        <XInput
-          v-model="search"
-          icon="lucide:search"
-          placeholder="搜索"
-          ui-root="w-64 flex-shrink-0"
-          clearable
+    <section class="flex items-center p-3 border-b">
+      <XSelect
+        v-model="apiType"
+        placeholder="选择API类型"
+        ui-trigger="w-48 mr-2"
+        clearable
+      >
+        <XSelectItem 
+          v-for="item in API_TYPE_LIST" :key="item.value"
+          :value="item.value" :label="item.label"
         />
-      </div>
+      </XSelect>
+      <XInput
+        v-model="search"
+        ui-root="w-64 flex-shrink-0"
+        icon="lucide:search"
+        placeholder="搜索"
+        clearable
+      />
 
-      <div class="flex space-x-2">
-        <XButton
-          color="success" icon="lucide:plus"
-          label="新增API" @click="openCreate"
-        />
-        <XButton
-          color="danger" icon="lucide:trash"
-          label="永久删除" @click="handleDelete"
-        />
-      </div>
+      <hr class="h-6 w-px mx-4 bg-border" />
+
+      <XButton
+        label="新增API"
+        class="mr-2"
+        color="success"
+        icon="lucide:plus"
+        @click="openCreate"
+      />
+      <XButton
+        label="永久删除"
+        color="danger"
+        icon="lucide:trash"
+        @click="handleDelete"
+      />
     </section>
 
     <div class="p-3">

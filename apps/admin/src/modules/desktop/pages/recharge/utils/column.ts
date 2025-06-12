@@ -78,6 +78,7 @@ export const columns: XColDef<Recharge> = [
     key: 'action',
     title: '操作',
     width: 154,
+    fixed: 'right',
     render: (_, row, index) => {
       return h(RechargeAction, { row, index })
     },

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import UserPointForm from '@forms/users/UserPointForm.vue'
+
+import { toast } from 'vue-sonner'
+
 import { updateUserPoint } from '@/api/users'
 import { USER_STORE } from '../utils'
 
@@ -7,6 +10,11 @@ const store = inject(USER_STORE)!
 const loading = ref(false)
 
 function handleSubmit() {
+  if (store.formPoint.credits === 0) {
+    toast.warning('请先输入点数')
+    return
+  }
+
   loading.value = true
 
   const response = updateUserPoint(store.formPoint)

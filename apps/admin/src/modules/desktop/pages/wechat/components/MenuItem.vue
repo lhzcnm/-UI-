@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { xconfirm } from '@3un/utils'
+
 import type { WechatMenu } from '@/inters/wechat'
-import { zWechatMenuForm } from '@/inters/wechat'
+import { zWechatMenuItemForm } from '@/inters/wechat'
 import { deleteWechatMenu } from '@/api/wechat'
 import { MENU_TYPE_MAP, MENU_STORE } from '../utils'
-import { xconfirm } from '@3un/utils'
 
 interface MenuItemProps {
   menu: WechatMenu
@@ -17,7 +18,7 @@ function openUpdate(menu: WechatMenu) {
   const index = store.menus
     .findIndex(item => item.id === menu.parentId)
 
-  store.formBase = zWechatMenuForm.parse(menu)
+  store.formBase = zWechatMenuItemForm.parse(menu)
   store.visibleBase = true
   store.parentIdx = index
   store.currentId = props.index

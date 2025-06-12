@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import ItemForm from '@/components/forms/service/ItemForm.vue'
-import { createService, deleteService, updateService } from '@/api/services'
 
 import type { FormMode } from '@3un/shared'
-import { xconfirm } from '@3un/utils'
+import { xconfirm, } from '@3un/utils'
 
+import type { ServiceCreateParams } from '@/inters/services'
+import { createService, deleteService, updateService } from '@/api/services'
+
+import { validate, type ValidRule } from '@/utils'
 import { SERVICE_STORE } from '../utils'
 
 const options = {
@@ -26,9 +29,27 @@ const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
 const loading = ref(false)
 
-function handleSubmit() {
-  loading.value = true
+function getRules(form: ServiceCreateParams) {
+  const {
+    tmpTitle, packageTitle, packageTitleLocal,
+    packagePrice, timeTaken, timeTakenLocal
+  } = form
 
+  return [
+    { rule: !!tmpTitle, message: '服务简写不能为空' },
+    { rule: !!packageTitle, message: '服务名称不能为空' },
+    { rule: !!packageTitleLocal, message: '服务名称(EN)不能为空' },
+    { rule: !!packagePrice, message: '服务价格不能为0' },
+    { rule: !!timeTaken, message: '处理时间不能为空' },
+    { rule: !!timeTakenLocal, message: '处理时间(EN)不能为空' },
+  ] as ValidRule[]
+}
+
+function handleSubmit() {
+  const rules = getRules(store.formBase)
+  if (!validate(rules)) return
+
+  loading.value = true
   if (isCreate.value) handleCreate()
   else handleUpdate()
 }

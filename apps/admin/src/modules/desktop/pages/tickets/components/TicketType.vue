@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { createTicketType, getTicketTypes } from '@/api/ticket'
 
+import { toast } from 'vue-sonner'
+
 import { TICKET_STORE } from '../utils'
 import { column } from '../utils/typeColumn'
 
@@ -22,6 +24,10 @@ watch(
 )
 
 async function createType() {
+  if (!type.value) {
+    return toast.warning('常见问题不能为空')
+  }
+
   const response = createTicketType({
     departmentName: type.value,
     departmentDes: type.value,

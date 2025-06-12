@@ -5,7 +5,7 @@ import MenuItem from './components/MenuItem.vue'
 
 import type { WechatMenu, WechatTreeMenus } from '@/inters/wechat'
 import { getWechatMenu, pushWechatMenu } from '@/api/wechat'
-import { zWechatMenuForm } from '@/inters/wechat'
+import { zWechatMenuForm, zWechatMenuItemForm } from '@/inters/wechat'
 
 import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
@@ -14,7 +14,7 @@ import type { MenuStore } from './utils'
 import { MENU_STORE } from './utils'
 
 const store: MenuStore = reactive({
-  formBase: zWechatMenuForm.parse({}),
+  formBase: zWechatMenuItemForm.parse({}),
   formMenu: zWechatMenuForm.parse({}),
   visibleBase: false,
   visibleMenu: false,

@@ -4,8 +4,9 @@ import type { FormMode } from '@3un/shared'
 interface TheDialogProps {
   flag?: string
   index: number | undefined
-  update: () => Promise<any>
-  create: () => Promise<any>
+  validate?: () => boolean
+  update   : () => Promise<any>
+  create   : () => Promise<any>
 }
 
 const props = defineProps<TheDialogProps>()
@@ -28,6 +29,8 @@ const isCreate = computed(() => props.index === undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
 function handleSubmit() {
+  if (props.validate && !props.validate()) return
+
   loading.value = true
   let response: Promise<any>
 

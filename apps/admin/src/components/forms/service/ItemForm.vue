@@ -9,7 +9,7 @@ const store = useServiceStore()
 
 <template>
   <form class="divide-y" @submit.prevent>
-    <FormField label="所在服务组" desc="选择要添加到的服务组" required>
+    <FormField label="所在服务组" desc="选择要添加到的服务组">
       <XSelect v-model="form.categoryId" placeholder="请选择服务组">
         <XSelectItem
           v-for="item in store.groups" :key="item.categoryId"
@@ -26,7 +26,7 @@ const store = useServiceStore()
       <XInput v-model="form.packageTitle" placeholder="服务中文名称" />
     </FormField>
 
-    <FormField label="服务名称(英文)" desc="服务英文名称" required>
+    <FormField label="服务名称(EN)" desc="服务英文名称" required>
       <XInput v-model="form.packageTitleLocal" placeholder="服务英文名称" />
     </FormField>
 
@@ -41,7 +41,7 @@ const store = useServiceStore()
       <XInput v-model="form.timeTaken" placeholder="处理时间" />
     </FormField>
 
-    <FormField label="处理时间(英文)" desc="服务预计处理时间" required>
+    <FormField label="处理时间(EN)" desc="服务预计处理时间" required>
       <XInput v-model="form.timeTakenLocal" placeholder="处理时间EN" />
     </FormField>
 

@@ -5,13 +5,13 @@ import { API_TYPE, API_TYPE_LIST } from '@3un/utils'
 const form = defineModel<UpstreamCreateParams>({ required: true })
 const isRealtime = computed(() => form.value.apiType === API_TYPE.REALTIME)
 
-// watchEffect(() => {
-//   const apiType = form.value.apiType
-//   if (apiType === API_TYPE.REALTIME) {
-//     form.value.accountId = ''
-//     form.value.apiKey = ''
-//   }
-// })
+watchEffect(() => {
+  const apiType = form.value.apiType
+  if (apiType === API_TYPE.REALTIME) {
+    form.value.accountId = null
+    form.value.apiKey = null
+  }
+})
 </script>
 
 <template>

@@ -3,10 +3,12 @@ import { z } from 'zod/v4'
 
 export const zIntercept = z.object({
   id: z.number().default(0),
-  ip: z.ipv4().default('unknown'),
+  ip: z.ipv4().default(''),
   comments: z.string().default(''),
   createTime: z.string().default(''),
-  expireTime: z.string().nullable().default(null),
+  expireTime: z.string()
+    
+    .nullable().default(null),
 })
 
 export type Intercept = z.infer<typeof zIntercept>

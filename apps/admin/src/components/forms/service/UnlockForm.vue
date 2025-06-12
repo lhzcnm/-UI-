@@ -1,28 +1,34 @@
 <script setup lang="ts">
 import type { UnlockCreateParams } from '@/inters/services'
+import { zUnlockForm } from '@/inters/services'
 
 const form = defineModel<UnlockCreateParams>({ required: true })
+const formRef = useTemplateRef('formRef')
 const serviceStore = useServiceStore()
 
 function handleSelected(value: number) {
   const service = serviceStore.itemMap.get(value)
   if (service) form.value.name = service.packageTitle
 }
+
+defineExpose({
+  validateForm: () => formRef.value!.validateForm(),
+  clearErrors: () => formRef.value!.clearErrors(),
+})
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent>
-    <div>
-      <label class="block text-label text-sm mb-1">服务ID</label>
+  <XForm ref="formRef" :model="form" :schema="zUnlockForm">
+    <XFormItem label="服务ID" field="packageId">
       <SelectService v-model="form.packageId" @selected="handleSelected" />
-    </div>
-    <div>
-      <label class="block text-label text-sm mb-1">服务名称</label>
+    </XFormItem>
+
+    <XFormItem label="服务名称" field="name">
       <XInput v-model="form.name" placeholder="服务名称" />
-    </div>
-    <div>
-      <label class="block text-label text-sm mb-1">触发关键字</label>
+    </XFormItem>
+
+    <XFormItem label="触发关键字" field="operator">
       <XInput v-model="form.operator" placeholder="触发关键字" />
-    </div>
-  </form>
+    </XFormItem>
+  </XForm>
 </template>

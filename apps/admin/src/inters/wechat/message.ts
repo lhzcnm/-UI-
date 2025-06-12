@@ -1,4 +1,5 @@
 import type { WithId } from '@3un/shared'
+import { VERIFY_MSG } from '@/utils'
 import { z } from 'zod/v4'
 
 export const zBuiltInMsg = z.object({
@@ -24,8 +25,8 @@ export type CustomMsg = z.infer<typeof zCustomMsg>
 
 // Form
 export const zCustomMsgForm = z.object({
-  keywords: z.string().default(''),
-  content: z.string().default(''),
+  keywords: z.string().min(1, VERIFY_MSG.REQ_MSG_KEYWORDS).default(''),
+  content: z.string().min(1, VERIFY_MSG.REQ_MSG_CONTENT).default(''),
 })
 
 // Create & Update

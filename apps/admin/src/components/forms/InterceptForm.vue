@@ -11,8 +11,8 @@ const form = defineModel<InterceptForm>({ required: true })
       <XInput v-model="form.ip" placeholder="拦截IP" />
     </div>
     <div>
-      <label class="block text-sm text-label mb-1">过期时间</label>
-      <XInput v-model="form.expireTime" placeholder="过期时间" />
+      <label class="block text-sm text-label mb-1">过期时间(不选，默认永久)</label>
+      <XDatePicker v-model="form.expireTime" placeholder="过期时间" />
     </div>
     <div>
       <label class="block text-sm text-label mb-1">备注</label>

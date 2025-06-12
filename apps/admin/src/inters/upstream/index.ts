@@ -6,9 +6,9 @@ export const zUpstream = z.object({
   apiId: z.number().default(0),
   apiTitle: z.string().default(''),
   disableApi: z.boolean().default(false),
-  apiKey: z.string().default(''),
+  apiKey: z.string().nullable().default(null),
   serverUrl: z.string().default(''),
-  accountId: z.string().default(''),
+  accountId: z.string().nullable().default(null),
   // apiAction: z.string().default(''),
   // responseUrl: z.string().default(''),
   // serviceId: z.string().default(''),
@@ -26,3 +26,12 @@ export const zUpstreamForm = zUpstream.omit({ apiId: true })
 // Create & Update
 export type UpstreamCreateParams = z.infer<typeof zUpstreamForm>
 export type UpstreamUpdateParams = WithId<UpstreamCreateParams, 'apiId'>
+
+// Sync
+export interface UpstreamSyncParams {
+  id: number
+  accountId: string
+  apiKey: string
+  serverUrl: string
+  apiType: API_TYPE
+}

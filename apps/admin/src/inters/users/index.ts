@@ -39,7 +39,12 @@ export const zUser = z.object({
   allowNegativeCredits: z.boolean().default(false),
   // currencyConversion: z.boolean().default(false),
   userType: z.boolean().default(false),
-  ip: z.string().nullable().default(null),
+  
+  // 登录白名单
+  ip: z.string()
+    .transform((val) => val.replace(',', '\n'))
+    .nullable().default(null),
+
   allowApi: z.boolean().default(false),
   loginAttempts: z.boolean().default(false),
   userEmail: z.email().nullable().default(null),
@@ -57,7 +62,12 @@ export const zUser = z.object({
   headImgUrl: z.string().nullable().default(null),
   nickName: z.string().nullable().default(null),
   role: z.enum(USER_ROLE).default(USER_ROLE.USER),
-  ips: z.string().nullable().default(null),
+
+  // API 白名单
+  ips: z.string()
+    .transform((val) => val.replace(',', '\n'))
+    .nullable().default(null),
+
   // opanStartDt: z.string().nullable().default(null),
   // opanEndDt: z.string().nullable().default(null),
 })

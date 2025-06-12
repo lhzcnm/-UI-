@@ -19,7 +19,7 @@ function handleSelect(id: number) {
   <form class="space-y-4" @submit.prevent>
     <div>
       <label for="type" class="block mb-1 text-sm text-label">消息类型</label>
-      <XSelect v-model="form.id" @selected="handleSelect">
+      <XSelect v-model="form.id" placeholder="请选择消息类型" @selected="handleSelect">
         <XSelectItem
           v-for="item in builtInList" :key="item.id"
           :value="item.id" :label="item.label"

@@ -8,33 +8,45 @@ import type { Upstream } from '@/inters/upstream'
 import { updateUpstream } from '@/api/upstream'
 
 export const columns: XColDef<Upstream> = [
+  { key: 'apiTitle', title: 'API名称', width: 225 },
   {
-    key: 'apiTitle',
-    title: 'API名称',
-    width: 225,
-  },  
+    key: 'apiType',
+    title: 'API类型',
+    width: 88,
+    render(value) {
+      return h(XTag, API_TYPE_MAP[value])
+    },
+  },
   {
     key: 'accountId',
     title: '用户名',
-    minWidth: 108,
+    width: 108,
+    cellEmpty: '--'
   },
   {
     key: 'apiKey',
     title: 'API密钥',
-    minWidth: 225,
+    width: 300,
+    cellEmpty: '--'
   },
   {
     key: 'serverUrl',
     title: 'API地址',
-    minWidth: 225,
-    tdClassName: 'truncate',
-  },
-  {
-    key: 'apiType',
-    title: 'API类型',
-    width: 108,
+    minWidth: 350,
     render(value) {
-      return h(XTag, API_TYPE_MAP[value])
+      const [url, query] = value.split('?')
+      if (query) {
+        const list = query.split('&')
+        return h('div', [
+          h('div', { class: 'underline' }, url),
+          ...list.map((item: string) => {
+            const [key, value] = item.split('=')
+            return h('div', `${key}：${value || '--'}`)
+          }),
+        ])
+      }
+
+      return h('div', url)
     },
   },
   {
@@ -62,7 +74,8 @@ export const columns: XColDef<Upstream> = [
   {
     key: 'action',
     title: '操作',
-    width: 88,
+    width: 154,
+    fixed: 'right',
     render(_, row, index) {
       return h(UpstreamAction, { row, index })
     },

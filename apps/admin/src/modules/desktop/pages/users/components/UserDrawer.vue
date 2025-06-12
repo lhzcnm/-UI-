@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import UserFormBase from '@/components/forms/users/UserForm.vue'
-import { createUser, updateUser, updateUserApiKey, updateUserBulkApiKey } from '@/api/users'
-import { USER_STORE } from '../utils'
 
 import type { FormMode } from '@3un/shared'
+import { EMAIL_REG, IP_REG, PASSWORD_REG, PHONE_REG, USERNAME_REG } from '@3un/utils'
+
+import { createUser, updateUser, updateUserApiKey, updateUserBulkApiKey } from '@/api/users'
+import { validate, VERIFY_MSG, type ValidRule } from '@/utils'
+import { USER_STORE } from '../utils'
 
 const options = {
   create: {
@@ -23,8 +26,84 @@ const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
 const loading = ref(false)
 
+function getRules() {
+  const {
+    userName, userPassword, nickName,
+    phone, userEmail, weiXinOpenid,
+    ip, ips
+  } = store.formBase
+
+  const rules: ValidRule[] = [
+    { rule: !!userName, message: VERIFY_MSG.REQ_USER_NAME },
+    { rule: USERNAME_REG.test(userName), message: VERIFY_MSG.FMT_USERNAME },
+
+    { rule: !!nickName, message: VERIFY_MSG.REQ_NICKNAME },
+
+    { rule: !!userPassword, message: VERIFY_MSG.REQ_PASSWORD },
+    { rule: PASSWORD_REG.test(userPassword), message: VERIFY_MSG.FMT_PASSWORD },
+  ]
+
+  if (weiXinOpenid) {
+    rules.push({
+      rule: weiXinOpenid.length === 28,
+      message: VERIFY_MSG.WEIXIN_OPENID,
+    })
+  }
+
+  if (phone) {
+    rules.push({
+      rule: PHONE_REG.test(phone),
+      message: VERIFY_MSG.FMT_PHONE,
+    })
+  }
+
+  if (userEmail) {
+    rules.push({
+      rule: EMAIL_REG.test(userEmail),
+      message: VERIFY_MSG.FMT_EMAIL,
+    })
+  }
+
+  if (ip) {
+    rules.push({
+      rule: validIp(ip),
+      message: VERIFY_MSG.FMT_LOGIN_IP,
+    })
+  }
+
+  if (ips) {
+    rules.push({
+      rule: validIp(ips),
+      message: VERIFY_MSG.FMT_API_IP,
+    })
+  }
+
+  return rules
+}
+
+function validIp(ip: string) {
+  const ipList = ip.trim()
+    .split('\n')
+    .filter(Boolean)
+
+  return ipList.every((ip) => IP_REG.test(ip))
+}
+
+function formatIp(ip: string | null) {
+  if (!ip) return null
+  return ip.trim()
+    .split('\n')
+    .filter(Boolean)
+    .join(',')
+}
+
 function handleSubmit() {
+  const rules = getRules()
+  if (!validate(rules)) return
+
   loading.value = true
+  store.formBase.ip = formatIp(store.formBase.ip)
+  store.formBase.ips = formatIp(store.formBase.ips)
 
   if (isCreate.value) handleCreate()
   else handleUpdate()

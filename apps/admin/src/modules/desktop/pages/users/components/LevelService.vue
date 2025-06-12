@@ -1,19 +1,39 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 import { createLevelService } from '@/api/level'
+
 import { columns } from '../utils/columnLevelService'
 import { LEVEL_STORE } from '../utils'
+import { VERIFY_MSG } from '@/utils'
 
 const serviceStore = useServiceStore()
 const store = inject(LEVEL_STORE)!
 
 const loading = ref(false)
+
 function handleSubmit() {
+  const { packageId, price, freeCount } = store.formService
+
+  if (!packageId) {
+    toast.warning(VERIFY_MSG.REQ_SERVICE_ID)
+    return
+  }
+  if (price && !/^\d+(\.\d{1,2})?$/.test(price.toString())) {
+    toast.warning(VERIFY_MSG.FMT_PRICE)
+    return
+  }
+  if (freeCount && !/^\d+$/.test(freeCount.toString())) {
+    toast.warning(VERIFY_MSG.FMT_FREE_COUNT)
+    return
+  }
+
   loading.value = true
 
   const response = createLevelService({
     packageId: store.formService.packageId,
     planId: store.formService.planId,
-    price: store.formService.price || 0,
+    price: store.formService.price!,
     freeCount: store.formService.freeCount || 0,
   })
 

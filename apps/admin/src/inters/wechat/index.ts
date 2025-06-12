@@ -1,4 +1,5 @@
 import type { WithId } from '@3un/shared'
+import { VERIFY_MSG } from '@/utils'
 import { z } from 'zod/v4'
 
 export * from './message'
@@ -21,6 +22,15 @@ export interface WechatTreeMenus extends WechatMenu {
 // Form
 export const zWechatMenuForm = zWechatMenu.omit({ id: true })
 
+export const zWechatMenuItemForm = z.object({
+  parentId: z.number().default(0),
+  name: z.string().min(1, VERIFY_MSG.REQ_MENU_NAME).default(''),
+  type: z.string().min(1, VERIFY_MSG.REQ_MENU_TYPE).default(''),
+  key: z.string().min(1, VERIFY_MSG.REQ_MENU_KEY).default(''),
+  orderBy: z.number().default(0),
+  menuDisable: z.boolean().default(false),
+})
+
 // Create & Update
-export type WechatMenuCreateParams = z.infer<typeof zWechatMenuForm>
+export type WechatMenuCreateParams = z.infer<typeof zWechatMenuItemForm>
 export type WechatMenuUpdateParams = WithId<WechatMenuCreateParams, 'id'>

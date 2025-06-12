@@ -30,9 +30,10 @@ const route = useRoute()
     </div>
     <div v-if="route.query.q !== 'today'">
       <label class="block text-sm text-label mb-1">支付时间</label>
-      <XDatePicker
+      <XDateRangePicker
         v-model:start="form.startTime"
         v-model:end="form.endTime"
+        label-format="YYYY-MM-DD"
         placeholder="支付时间"
       />
     </div>
