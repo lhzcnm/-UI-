@@ -26,7 +26,10 @@ export const columns: XColDef<Upstream> = [
     title: 'API类型',
     width: 88,
     render(value) {
-      return h(XTag, API_TYPE_MAP[value])
+      return h(XTag, {
+        ...API_TYPE_MAP[value],
+        solid: true,
+      })
     },
   },
   {

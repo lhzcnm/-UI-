@@ -22,30 +22,30 @@ const store = inject(STORE)!
 const deviceMockup = {
   iPhone8: {
     image: '/images/device_8p.png',
-    imageHeight: '512px',
+    imageHeight: '448px',
     imageRadius: 0,
-    left: '17px',
-    top: '59px',
-    width: '222px',
-    height: '393px',
+    left: '14px',
+    top: '52px',
+    width: '195px',
+    height: '343px',
   },
   iPhonex: {
     image: '/images/device_13pm.png',
-    imageHeight: '516px',
+    imageHeight: '452px',
     imageRadius: 0,
-    left: '14px',
-    top: '13px',
-    width: '227px',
-    height: '490px',
+    left: '12px',
+    top: '11px',
+    width: '199px',
+    height: '430px',
   },
   iPhone11: {
     image: '/images/device_14pm.png',
-    imageHeight: '524px',
+    imageHeight: '460px',
     imageRadius: '10px',
-    left: '11px',
-    top: '10px',
-    width: '234px',
-    height: '504px',
+    left: '10px',
+    top: '8px',
+    width: '204px',
+    height: '442px',
   },
 }
 
@@ -57,6 +57,11 @@ const deviceImage = computed(() => {
   const { product } = store.deviceMap.get(store.selected)!
   const matched = product ? product.Name.match(/^iPhone (\d+)/) : null
   return deviceMockup[getDeviceType(matched)]
+})
+
+const deviceName = computed(() => {
+  const selected = store.deviceMap.get(store.selected)!
+  return selected.info.DeviceName
 })
 
 function getDeviceType(matched: RegExpMatchArray | null) {
@@ -107,8 +112,12 @@ async function onRefresh() {
 
 <template>
   <div>
+    <div class="h-10 flex items-start justify-center">
+      <span class="bg-card border px-2 py-1 rounded">{{ deviceName }}</span>
+    </div>
+
     <div
-      class="relative w-64 mx-auto"
+      class="relative w-56 mx-auto"
       :style="{ height: deviceImage.imageHeight }"
     >
       <img

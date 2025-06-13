@@ -90,14 +90,14 @@ export enum API_TYPE {
 export const API_TYPE_MAP: StatusMap = {
   [API_TYPE.REALTIME] : { color: 'success', label: '实时查询' },
   [API_TYPE.DHRU]     : { color: 'primary', label: 'DHRU' },
-  [API_TYPE.DATABASE] : { color: 'danger', label: '数据库' },
+  [API_TYPE.DATABASE] : { color: 'warning', label: '数据库' },
   [API_TYPE.CUSTOM]   : { color: 'info', label: '自定义' },
 }
 export const API_TYPE_LIST = [
   { value: API_TYPE.REALTIME, label: '实时查询' },
   { value: API_TYPE.DHRU, label: 'DHRU' },
-  { value: API_TYPE.CUSTOM, label: '自定义' },
   { value: API_TYPE.DATABASE, label: '数据库' },
+  { value: API_TYPE.CUSTOM, label: '自定义' },
 ]
 
 // Shop

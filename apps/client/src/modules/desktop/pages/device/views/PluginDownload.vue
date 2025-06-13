@@ -15,7 +15,7 @@ function handleDownload(id?: number) {
 }
 
 const options = [
-  { label: 'Windows', command: () => handleDownload(43) },
+  { label: 'Windows', command: () => handleDownload(43) },,
   { label: 'MacOS M系列', command: () => handleDownload(44) },
   { label: 'MacOS Intel系列', command: () => handleDownload(45) },
 ]

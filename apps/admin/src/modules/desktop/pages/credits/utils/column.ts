@@ -5,6 +5,7 @@ import { h } from "vue"
 const store = useServiceStore()
 
 export const columns: XColDef<Credit> = [
+  { key: 'historyId', title: 'ID', width: 98 },
   {
     key: 'packageId',
     title: '项目',
@@ -46,6 +47,11 @@ export const columns: XColDef<Credit> = [
 
       return h('span', { class: color }, label)
     }
+  },
+  {
+    key: 'creditsLeft',
+    title: '剩余积分',
+    width: 88,
   },
   {
     key: 'description',

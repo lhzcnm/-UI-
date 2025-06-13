@@ -3,6 +3,7 @@ import { VERIFY_MSG } from '@/utils/message'
 import { z } from 'zod/v4'
 
 export const zCredit = z.object({
+  historyId: z.number().default(0),
   userId: z.number().default(0),
   imeiNo: z.string().default(''),
   packageId: z.number().default(0),
