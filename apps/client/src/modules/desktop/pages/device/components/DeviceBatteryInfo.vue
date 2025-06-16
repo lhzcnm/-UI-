@@ -9,6 +9,7 @@ const store = inject(STORE)!
 const batteryInfo = computed(() => {
   const { battery } = store.deviceMap.get(store.selected)!
   const current = battery.NominalChargeCapacity
+  const isFull = battery.CurrentCapacity === 100
   const design = battery.DesignCapacity
 
   return {
@@ -17,6 +18,7 @@ const batteryInfo = computed(() => {
     designCapacity: design,
     isCharging: battery.IsCharging,
     currentCapacity: battery.CurrentCapacity,
+    label: battery.IsCharging ? '正在充电' : (isFull ? '电池满电' : '正在充电'),
     healthPercentage: ((current / design) * 100).toFixed(2),
     nominalChargeCapacity: battery.NominalChargeCapacity,
     temperature: battery.Temperature / 100,
@@ -54,9 +56,7 @@ function getIcon(battery: BatteryInfo) {
     <div class="space-y-2">
       <div class="flex items-center justify-between text-sm">
         <span class="text-muted-foreground">充电状态</span>
-        <span class="font-medium">
-          {{ batteryInfo.isCharging ? '正在充电' : '电池满电' }}
-        </span>
+        <span class="font-medium">{{ batteryInfo.label }}</span>
       </div>
 
       <div class="flex items-center justify-between text-sm">

@@ -3,8 +3,7 @@ import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
 import type { Device } from '../types'
-import { STORE, getCopyToken, getPrintPayload } from '../utils'
-import { wsFetch } from '../utils/websocket'
+import { STORE, getCopyToken } from '../utils'
 
 interface DeviceCardProps {
   device: Device
@@ -29,23 +28,8 @@ function toDevice() {
 }
 
 async function handlePrint() {
-  isPrinting.value = true
-
-  const response = await wsFetch<string>({
-    ...getPrintPayload(props.device),
-    type: 'print',
-  })
-
-  const binaryString = atob(response)
-  const bytes = new Uint8Array(binaryString.length)
-
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i)
-  }
-  
-  const blob = new Blob([bytes], { type: 'application/pdf' })
-  window.open(URL.createObjectURL(blob), '_blank')
-  isPrinting.value = false
+  store.printIndex = String(props.device.DeviceID)
+  store.visiblePrint = true
 }
 
 function handleCopy() {

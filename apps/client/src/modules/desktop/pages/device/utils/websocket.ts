@@ -27,6 +27,7 @@ interface WebSocketParams {
   TotalDiskCapacity     ?: number
   NominalChargeCapacity ?: number
   DesignCapacity        ?: number
+  TemplateId            ?: number
 }
 
 interface WebSocketHandler {

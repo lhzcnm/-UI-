@@ -1,13 +1,18 @@
+import { maskText } from "@/utils"
 import type { DeviceForm, ProductItem, Device, DeviceResponse } from "../types"
 import type { IK } from "@3un/shared"
+
+import { stripHtml } from '@3un/utils'
 
 type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin'
 
 export interface DeviceStore {
-  deviceMap: Map<string, Device>
-  status: DeviceStatus
-  screenshot: string
-  selected: string
+  deviceMap   : Map<string, Device>
+  status      : DeviceStatus
+  visiblePrint: boolean
+  printIndex  : string
+  screenshot  : string
+  selected    : string
 }
 
 export const STORE: IK<DeviceStore> = Symbol('device')
@@ -25,12 +30,13 @@ export const getCopyToken = (info: DeviceForm) => ([
   ['串号', info.Imei],
   ['型号号码', `${info.ModelNumber} ${info.RegionInfo}`],
   ['系统版本', `${info.ProductVersion} (${info.BuildVersion})`],
+  ['产品类型', `${info.ProductType}`],
   ['主板序号', info.MLBSerialNumber],
   ['ECID', info.Ecid],
   ['UDID', info.UniqueDeviceID],
   ['激活状态', info.ActivationState],
-  ['网络锁', info.NetworkLock],
-  ['激活锁', info.ActivationLock],
+  ['网络锁', stripHtml(info.NetworkLock)],
+  ['激活锁', stripHtml(info.ActivationLock)],
   ['保修期限', info.Warranty],
   ['销售地区', info.SalesRegion.chinese],
   ['iCloud备份', info.iCloud],
@@ -51,6 +57,9 @@ export function getPrintPayload(device: Device) {
     NominalChargeCapacity: battery.NominalChargeCapacity,
     DesignCapacity: battery.DesignCapacity,
     CycleCount: battery.CycleCount,
+    NetworkLock: form.NetworkLock,
+    ActivationLock: form.ActivationLock,
+    Warranty: form.Warranty,
   }
 }
 
@@ -61,10 +70,12 @@ export function getDeviceForm(device: DeviceResponse, product: ProductItem) {
     SerialNumber: DeviceInfo.SerialNumber,
     MLBSerialNumber: DeviceInfo.MLBSerialNumber,
     Imei: DeviceInfo.InternationalMobileEquipmentIdentity,
+    ProductType: `${DeviceInfo.ProductType} (${product.ModelNumber})`,
     ProductVersion: DeviceInfo.ProductVersion,
     BuildVersion: DeviceInfo.BuildVersion,
     RegionInfo: DeviceInfo.RegionInfo,
-    Ecid: DeviceInfo.Ecid,
+    Ecid: DeviceInfo.Ecid.toUpperCase(),
+    WiFiAddress: maskText(DeviceInfo.WiFiAddress, 9, 11),
     UniqueDeviceID: DeviceInfo.UniqueDeviceID,
     iCloud: ICloud.CloudBackupEnabled ? '已开启' : '未开启',
     ActivationState: DeviceInfo.ActivationState ? '已激活' : '未激活',

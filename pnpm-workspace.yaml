@@ -2,7 +2,9 @@ packages:
   - apps/*
   - packages/*
   - script
+
 onlyBuiltDependencies:
+  - es5-ext
   - esbuild
   - javascript-obfuscator
   - vue-demi

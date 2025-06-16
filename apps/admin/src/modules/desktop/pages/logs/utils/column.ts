@@ -10,26 +10,26 @@ export const columns: XColDef<Log> = [
   {
     key: 'userId',
     title: '用户ID',
-    width: 72,
+    minWidth: 72,
   },
   {
     key: 'ip',
     title: 'IP地址',
-    width: 160,
+    minWidth: 160,
   },
   {
     key: 'region',
     title: '地区',
-    width: 200,
+    minWidth: 200,
   },
   {
     key: 'loginTime',
     title: '登录时间',
-    width: 160,
+    minWidth: 160,
   },
   {
     key: 'logoutTime',
     title: '登出时间',
-    width: 160,
+    minWidth: 160,
   },
 ]

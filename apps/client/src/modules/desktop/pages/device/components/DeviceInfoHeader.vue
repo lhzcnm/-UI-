@@ -3,7 +3,7 @@ import { twJoin } from 'tailwind-merge'
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import { STORE, getCopyToken, getPrintPayload } from '../utils'
+import { STORE, getCopyToken } from '../utils'
 import { wsFetch } from '../utils/websocket'
 
 const { copy } = useClipboard({ legacy: true })
@@ -31,22 +31,9 @@ async function handleExitRecoveryMode(uniqueId: string) {
 }
 
 async function handlePrint() {
-  isPrinting.value = true
-
-  const device = store.deviceMap.get(store.selected)!
-  const payload = getPrintPayload(device)
-
-  const response = await wsFetch<string>({ type: 'print', ...payload })
-  const binaryString = atob(response)
-  const bytes = new Uint8Array(binaryString.length)
-
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i)
-  }
-
-  const blob = new Blob([bytes], { type: 'application/pdf' })
-  window.open(URL.createObjectURL(blob), '_blank')
-  isPrinting.value = false
+  const [DeviceID, _] = store.selected.split(':')
+  store.visiblePrint = true
+  store.printIndex = DeviceID
 }
 
 function handleCopy() {

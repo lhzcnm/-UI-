@@ -11,8 +11,8 @@ import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
 import { exportOrder, getOrders, pushOrder, reSubmitOrder, updateCodeStatus } from '@/api/orders'
 
 import type { OrderStore } from './utils'
-import { ORDER_STORE } from './utils'
 import { columns } from './utils/column'
+import { ORDER_STORE } from './utils'
 
 const store: OrderStore = reactive({
   orders: { list: [], total: 0, page: 1, pageSize: 20 },

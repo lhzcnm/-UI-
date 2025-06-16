@@ -27,7 +27,7 @@ const deviceMockup = {
     left: '14px',
     top: '52px',
     width: '195px',
-    height: '343px',
+    height: '344px',
   },
   iPhonex: {
     image: '/images/device_13pm.png',
@@ -45,7 +45,7 @@ const deviceMockup = {
     left: '10px',
     top: '8px',
     width: '204px',
-    height: '442px',
+    height: '443px',
   },
 }
 
@@ -113,16 +113,18 @@ async function onRefresh() {
 <template>
   <div>
     <div class="h-10 flex items-start justify-center">
-      <span class="bg-card border px-2 py-1 rounded">{{ deviceName }}</span>
+      <span class="bg-card border-t border-b px-3 py-0.5 rounded">
+        {{ deviceName }}
+      </span>
     </div>
 
     <div
-      class="relative w-56 mx-auto"
+      class="relative w-[224px] mx-auto"
       :style="{ height: deviceImage.imageHeight }"
     >
       <img
         :src="deviceImage.image" alt="Device Mockup"
-        class="absolute z-10 drop-shadow-2xl"
+        class="absolute z-10 size-full drop-shadow-2xl"
         draggable="false"
       >
 
@@ -147,7 +149,7 @@ async function onRefresh() {
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>
           <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-3xl font-bold">{{ currentTime }}</div>
-          <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm mt-2">{{ currentDate }}</div>
+          <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm mt-2 whitespace-nowrap">{{ currentDate }}</div>
         </template>
       </div>
     </div>

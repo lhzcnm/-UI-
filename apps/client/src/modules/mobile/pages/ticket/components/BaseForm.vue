@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import type { TicketCreateForm } from '@/api/tickets'
-import { TICKET_PRIORITY, TICKET_TYPE, TICKET_TYPE_LIST, TICKET_PRIORITY_LIST } from '@3un/utils'
+import type { TicketCreateForm, TicketType } from '@/api/tickets'
+import { TICKET_PRIORITY, TICKET_TYPE, TICKET_PRIORITY_LIST } from '@3un/utils'
 
+interface BaseFormProps {
+  typeList: TicketType[]
+}
+
+defineProps<BaseFormProps>()
 const form = defineModel<TicketCreateForm>({ required: true })
 </script>
 
@@ -11,10 +16,10 @@ const form = defineModel<TicketCreateForm>({ required: true })
       <label class="text-label text-sm">工单类型</label>
       <NativeSelect
         v-model="form.type"
-        :options="TICKET_TYPE_LIST"
+        :options="typeList"
         :default="TICKET_TYPE.ORDER"
-        value-key="value"
-        label-key="label"
+        value-key="departmentId"
+        label-key="departmentName"
       />
     </div>
 

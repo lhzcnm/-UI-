@@ -3,18 +3,22 @@ import DeviceList       from './views/DeviceList.vue'
 import DeviceDetail     from './views/DeviceDetail.vue'
 import WaitConnect      from './views/WaitConnect.vue'
 import PluginDownload   from './views/PluginDownload.vue'
+import PrintDialog      from './components/PrintDialog.vue'
 
 import type { DeviceStore } from './utils'
 import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, DeviceResponse, SalesRegion } from './types'
+
 import { STORE, getDeviceForm } from './utils'
 import { ws, wsFetch } from './utils/websocket'
 import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
-  deviceMap: new Map(),
-  status: 'wait',
-  screenshot: '',
-  selected: '',
+  deviceMap   : new Map(),
+  visiblePrint: false,
+  status      : 'wait',
+  printIndex  : '',
+  screenshot  : '',
+  selected    : '',
 })
 
 provide(STORE, store)
@@ -107,6 +111,10 @@ async function handleDevice(data: DeviceResponse) {
       hasNetworkLock: cache.NetworkLock !== '--',
       hasActivationLock: cache.ActivationLock !== '--',
       hasWarranty: cache.Warranty !== '--',
+      
+      showNetworkLock: cache.NetworkLock === '--',
+      showActivationLock: cache.ActivationLock === '--',
+      showWarranty: cache.Warranty === '--'
     },
   })
 }
@@ -129,9 +137,17 @@ function getProduct(data: DeviceInfo) {
     color = datasets[suffix as ProductKey] as string
   }
 
+  let modelNumber = ''
+  let imeiPrefix = data.InternationalMobileEquipmentIdentity.slice(0, 8)
+
+  if (imeiPrefix in product) {
+    modelNumber = product[imeiPrefix as ProductKey] as string
+  }
+
   return {
     Name: product ? product.Name : data.ProductType,
     Chip: product ? product.Chip : data.CPUArchitecture,
+    ModelNumber: modelNumber || '未知',
     Color: color,
   }
 }
@@ -222,5 +238,7 @@ const components = {
     <Transition name="fade-in" mode="out-in">
       <component :is="components[store.status]" />
     </Transition>
+
+    <PrintDialog />
   </div>
 </template>

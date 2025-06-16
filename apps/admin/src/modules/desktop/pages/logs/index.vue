@@ -135,9 +135,11 @@ async function handleDelete() {
         :columns="columns"
         :data="store.logs.list"
         :loading="loading"
-        row-key="id" selected-key="id"
-        @selection-change="ids = $event"
+
+        row-key="id"
+        selection selected-key="id"
         class="border h-[calc(100vh-8.75rem)]"
+        @selection-change="ids = $event"
       />
     </div>
 

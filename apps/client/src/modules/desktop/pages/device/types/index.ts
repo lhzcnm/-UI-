@@ -137,6 +137,10 @@ export interface Device {
     hasNetworkLock: boolean
     hasActivationLock: boolean
     hasWarranty: boolean
+
+    showNetworkLock: boolean
+    showActivationLock: boolean
+    showWarranty: boolean
   }
 }
 export interface DeviceForm {
@@ -145,11 +149,12 @@ export interface DeviceForm {
   ModelNumber: string
   RegionInfo: string
   MLBSerialNumber: string
+  ProductType: string
   ProductVersion: string
   BuildVersion: string
   Ecid: string
   UniqueDeviceID: string
-  
+  WiFiAddress: string
   ActivationState: string
   NetworkLock: string
   ActivationLock: string
@@ -162,6 +167,7 @@ export interface ProductItem {
   Name: string
   Chip: string
   Color: string
+  ModelNumber: string
 }
 
 // ios datasets

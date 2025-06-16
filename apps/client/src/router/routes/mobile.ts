@@ -44,12 +44,6 @@ const mobile: RouteRecordRaw = {
       path: 'ticket',
       name: 'Ticket',
       component: () => import('@mobile/pages/ticket/index.vue'),
-      beforeEnter: () => {
-        const iStore = useSettingStore()
-        if (!iStore.settings.enableTricket) {
-          return '/m'
-        }
-      },
     },
     {
       path: 'profile',

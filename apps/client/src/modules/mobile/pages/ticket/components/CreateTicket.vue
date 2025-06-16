@@ -32,7 +32,7 @@ function handleClose() {
     title="创建工单" class="h-[78%]"
     @close="handleClose"
   >
-    <BaseForm v-model="store.createForm" class="px-4" />
+    <BaseForm v-model="store.createForm" :type-list="store.types" class="px-4" />
     <div class="flex justify-end p-4">
       <XButton
         :loading="submitLoading" label="创建工单"
