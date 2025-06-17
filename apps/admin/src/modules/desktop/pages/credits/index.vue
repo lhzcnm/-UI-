@@ -7,14 +7,17 @@ import { getCreditList } from '@/api/credits'
 
 import type { CreditStore } from './utils'
 import { CREDIT_STORE, columns } from './utils'
+import { createList } from '@/utils'
 
 const store: CreditStore = reactive({
-  credits: { list: [], total: 0, page: 1, pageSize: 20 },
+  credits: createList(),
+
   formSearch: zCreditSearchForm.parse({}),
   visibleSearch: false,
+
   refresh: false,
-  page: 1,
-  limit: 20,
+  page   : 1,
+  limit  : 20,
 })
 
 provide(CREDIT_STORE, store)

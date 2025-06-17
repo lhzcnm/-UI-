@@ -26,7 +26,7 @@ const toggleTheme = () => {
   <button
     accesskey="t"
     :class="twMerge(
-      'p-2 rounded-full text-muted-foreground hover:text-foreground transition-colors duration-300',
+      'x-tooltip p-2 rounded-full text-muted-foreground hover:text-foreground transition-colors duration-300',
       props.ghost ? 'bg-transparent hover:bg-muted' : 'bg-muted hover:bg-accent/20',
     )"
     aria-label="Toggle theme"
@@ -34,5 +34,9 @@ const toggleTheme = () => {
   >
     <Icon icon="lucide:moon" v-if="theme.isDark" class="size-5" />
     <Icon icon="lucide:sun" v-else class="size-5" />
+
+    <div class="x-tooltip-text top120">
+      {{ theme.isDark ? '深色模式' : '明亮模式' }}
+    </div>
   </button>
 </template>

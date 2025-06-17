@@ -24,7 +24,7 @@ onMounted(async () => {
   const result = await xconfirm({
     title: '公告',
     text: popupAnnc,
-    confirmText: '朕知道了',
+    confirmText: '确定',
     cancelText: undefined,
   })
 

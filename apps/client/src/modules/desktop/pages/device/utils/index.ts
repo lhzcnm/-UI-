@@ -49,6 +49,7 @@ export function getPrintPayload(device: Device) {
     DeviceName: product.Name,
     Color: product.Color,
     Imei: form.Imei,
+    SerialNumber: form.SerialNumber,
     MLBSerialNumber: info.MLBSerialNumber,
     ProductVersion: info.ProductVersion,
     RegionInfo: info.RegionInfo,
@@ -57,8 +58,8 @@ export function getPrintPayload(device: Device) {
     NominalChargeCapacity: battery.NominalChargeCapacity,
     DesignCapacity: battery.DesignCapacity,
     CycleCount: battery.CycleCount,
-    NetworkLock: form.NetworkLock,
-    ActivationLock: form.ActivationLock,
+    NetworkLock: stripHtml(form.NetworkLock),
+    ActivationLock: stripHtml(form.ActivationLock),
     Warranty: form.Warranty,
   }
 }

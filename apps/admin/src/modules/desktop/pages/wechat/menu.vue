@@ -14,19 +14,21 @@ import type { MenuStore } from './utils'
 import { MENU_STORE } from './utils'
 
 const store: MenuStore = reactive({
+  menus: [] as WechatTreeMenus[],
+
   formBase: zWechatMenuItemForm.parse({}),
   formMenu: zWechatMenuForm.parse({}),
+
   visibleBase: false,
   visibleMenu: false,
+
   currentId: undefined,
   parentIdx: undefined,
-  menus: [] as WechatTreeMenus[],
 })
 
 provide(MENU_STORE, store)
 
 await getList()
-
 async function getList() {
   const response = await getWechatMenu()
   store.menus = getTreeMenus(response)

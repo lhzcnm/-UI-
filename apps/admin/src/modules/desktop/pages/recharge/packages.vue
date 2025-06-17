@@ -8,11 +8,13 @@ import { PACKAGE_STORE } from './utils'
 import { getRechargePackages } from '@/api/recharge'
 
 const store: PackageStore = reactive({
-  formBase: zRechargePackageForm.parse({}),
   packages: [],
+  
+  formBase: zRechargePackageForm.parse({}),
   visibleBase: false,
-  index: undefined,
+
   refresh: false,
+  index  : undefined,
 })
 
 provide(PACKAGE_STORE, store)

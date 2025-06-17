@@ -4,25 +4,29 @@ import ReplyPlane from './components/ReplyPlane.vue'
 import TicketSearch from './components/TicketSearch.vue'
 import TicketType from './components/TicketType.vue'
 
-import { zTicketType, type TicketListParams } from '@/inters/ticket'
+import type { TicketListParams } from '@/inters/ticket'
 import { getTickets, getTicketTypes } from '@/api/ticket'
+import { zTicketType } from '@/inters/ticket'
+import { createList } from '@/utils'
 
 import type { TicketStore } from './utils'
 import { TICKET_STORE } from './utils'
 
 const store: TicketStore = reactive({
-  tickets: { list: [], total: 0, page: 1, pageSize: 20 },
+  tickets: createList(),
+  replies: [],
+  types  : [],
+
   formSearch: { status: -1, priority: -1, type: undefined },
   formType: zTicketType.parse({}),
+
   visibleSearch: false,
   visibleType: false,
-  replies: [],
-  types: [],
 
-  index: undefined,
   refresh: false,
-  limit: 20,
-  page: 1,
+  index  : undefined,
+  limit  : 20,
+  page   : 1,
 })
 
 provide(TICKET_STORE, store)
@@ -46,7 +50,7 @@ watch(
   { immediate: true },
 )
 
-getTypes()
+await getTypes()
 
 function getList(params: TicketListParams) {
   let { status, priority } = store.formSearch
@@ -57,9 +61,9 @@ function getList(params: TicketListParams) {
   response.then((data) => store.tickets = data)
 }
 
-function getTypes() {
-  const response = getTicketTypes()
-  response.then((data) => store.types = data)
+async function getTypes() {
+  const data = await getTicketTypes()
+  store.types = data
 }
 
 function resetSearch() {

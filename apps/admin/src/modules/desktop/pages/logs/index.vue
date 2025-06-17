@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import LogSearch from './components/LogSearch.vue'
 
-import type { LogListParams } from '@/inters/logs'
-import { zLogSearchForm } from '@/inters/logs'
-import { deleteLogs, getLogs } from '@/api/logs'
-
 import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
 
+import type { LogListParams } from '@/inters/logs'
+import { zLogSearchForm } from '@/inters/logs'
+import { deleteLogs, getLogs } from '@/api/logs'
+import { createList } from '@/utils'
+
 import type { LogStore } from './utils'
-import { LOG_STORE } from './utils'
 import { columns } from './utils/column'
+import { LOG_STORE } from './utils'
 
 const store: LogStore = reactive({
-  logs: { list: [], total: 0, page: 1, pageSize: 20 },
+  logs: createList(),
+
   formSearch: zLogSearchForm.parse({}),
   visibleSearch: false,
+
   refresh: false,
-  page: 1,
-  limit: 20,
+  page   : 1,
+  limit  : 20,
 })
 
 provide(LOG_STORE, store)
@@ -70,10 +73,7 @@ function getList(params: LogListParams) {
 
 function resetSearch() {
   store.formSearch = zLogSearchForm.parse({})
-  router.replace({
-    path: route.path,
-    query: { q: route.query.q },
-  })
+  router.replace({ path: route.path, query: {q: route.query.q}})
 }
 
 async function handleDelete() {

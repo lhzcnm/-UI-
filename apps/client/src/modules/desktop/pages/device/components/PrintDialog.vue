@@ -12,31 +12,29 @@ interface Template {
   tags: string[]
 }
 
+const baseTag = ['设备名称', '颜色', 'IMEI', '主板序号', '版本', '型号', '容量', '电池循环次数']
 const templates: Template[] = [
   {
     id: 1,
-    tags: ['设备名称', '颜色', 'IMEI', '主板序号', '版本', '型号', '容量', '电池循环次数'],
+    tags: baseTag,
     preview: '/images/tmp-1.png'
   },
   {
     id: 2,
-    tags: ['设备名称', '颜色', 'IMEI', '主板序号', '版本', '型号', '容量', '电池循环次数', '网络锁', '激活锁', '保修期限'],
+    tags: [...baseTag, '网络锁', '激活锁', '保修期限'],
     preview: '/images/tmp-2.png'
+  },
+  {
+    id: 3,
+    tags: [...baseTag, '序列号',  '网络锁', '激活锁', '保修期限'],
+    preview: '/images/tmp-3.png'
   },
 ]
 
 async function handleSubmit() {
   loading.value = true
 
-  let device = null
-  for (const [key, value] of store.deviceMap) {
-    const [DeviceID, _] = key.split(':')
-    if (DeviceID === store.printIndex) {
-      device = value
-      break
-    }
-  }
-
+  const device = store.deviceMap.get(store.printIndex)
   const response = await wsFetch<string>({
     ...getPrintPayload(device!),
     TemplateId: selected.value,
@@ -54,10 +52,6 @@ async function handleSubmit() {
   window.open(URL.createObjectURL(blob), '_blank')
   loading.value = false
 }
-
-function handleSelectTemplate(index: number) {
-  selected.value = index
-}
 </script>
 
 <template>
@@ -68,32 +62,23 @@ function handleSelectTemplate(index: number) {
   >
     <div class="h-[450px] overflow-y-auto">
       <div class="grid grid-cols-2 gap-3">
-        <div 
+        <label 
           v-for="template in templates" :key="template.id" 
-          class="space-y-2 p-3 border rounded cursor-pointer"
-          @click="handleSelectTemplate(template.id)"
+          class="bg-card border rounded cursor-pointer"
         >
-          <div class="flex items-center space-x-2">
-            <div 
-              class="size-4 rounded-full border-2 flex items-center justify-center"
-              :class="{ 'border-primary': selected === template.id }"
-            >
-              <div 
-                v-if="selected === template.id"
-                class="size-2 rounded-full bg-primary"
-              />
-            </div>
-            <div class="text-base font-bold">模板 {{ template.id }}</div>
+          <div class="flex items-center px-3 h-10 space-x-2">
+            <input v-model="selected" type="radio" :value="template.id" name="template" class="size-4" />
+            <div class="font-semibold">模板 {{ template.id }}</div>
           </div>
 
-          <div class="overflow-hidden rounded h-40">
-            <img :src="template.preview" alt="Preview" class="size-full">
+          <div class="p-3 pt-0 h-64">
+            <img :src="template.preview" alt="Preview" draggable="false" class="size-full border rounded">
           </div>
 
-          <div class="flex items-center flex-wrap gap-1">
+          <div class="flex items-center flex-wrap gap-1 p-3 border-t border-dashed">
             <XTag v-for="tag in template.tags" :key="tag" size="sm" :label="tag" />
           </div>
-        </div>
+        </label>
       </div>
     </div>
 

@@ -7,23 +7,29 @@ export const MSG_STORE: IK<MsgStore> = Symbol('msg')
 export const MENU_STORE: IK<MenuStore> = Symbol('menu')
 
 export interface MsgStore {
-  msgList: CustomMsg[]
   builtInList: BuiltInMessage[]
+  msgList: CustomMsg[]
+
   formBase: CustomMsgCreateParams
   formBuiltIn: BuiltInMessage
+
   visibleBase: boolean
   visibleBuiltIn: boolean
+
   index: number | undefined
 }
 
 export interface MenuStore {
   menus: WechatTreeMenus[]
-  currentId: number | undefined
-  parentIdx: number | undefined
+  
   formMenu: WechatMenuCreateParams
   formBase: WechatMenuCreateParams
+  
   visibleBase: boolean
   visibleMenu: boolean
+
+  currentId: number | undefined
+  parentIdx: number | undefined
 }
 
 export const MENU_TYPES = [

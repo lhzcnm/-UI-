@@ -9,21 +9,25 @@ import { toast } from 'vue-sonner'
 import type { Order, OrderListParams } from '@/inters/orders'
 import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
 import { exportOrder, getOrders, pushOrder, reSubmitOrder, updateCodeStatus } from '@/api/orders'
+import { createList } from '@/utils'
 
 import type { OrderStore } from './utils'
 import { columns } from './utils/column'
 import { ORDER_STORE } from './utils'
 
 const store: OrderStore = reactive({
-  orders: { list: [], total: 0, page: 1, pageSize: 20 },
+  orders: createList(),
+
   formSearch: zOrderSearchForm.parse({}),
   formUpdate: zOrderUpdateForm.parse({}),
+
   visibleSearch: false,
   visibleUpdate: false,
-  index: undefined,
+
   refresh: false,
-  page: 1,
-  limit: 20,
+  index  : undefined,
+  page   : 1,
+  limit  : 20,
 })
 
 provide(ORDER_STORE, store)

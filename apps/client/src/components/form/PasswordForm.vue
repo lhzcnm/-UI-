@@ -9,16 +9,15 @@ import { userApi } from '@/api/user'
 
 const props = defineProps<{ onClose: () => void }>()
 
-const store = useUserStore()
 const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'password_countdown'
 })
 
 const form = reactive({
-  target: store.info.phone || store.info.email || '',
-  code: '',
-  password: '',
-  confirmPassword: ''
+  target         : '',
+  code           : '',
+  password       : '',
+  confirmPassword: '',
 })
 
 async function sendCaptcha() {

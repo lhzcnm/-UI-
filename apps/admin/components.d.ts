@@ -30,6 +30,7 @@ declare module 'vue' {
     XButton: typeof import('@3un/ui')['XButton']
     XButtonSplit: typeof import('@3un/ui')['XButtonSplit']
     XColorPicker: typeof import('@3un/ui')['XColorPicker']
+    XDatePicker: typeof import('@3un/ui')['XDatePicker']
     XDateRangePicker: typeof import('@3un/ui')['XDateRangePicker']
     XDialog: typeof import('@3un/ui')['XDialog']
     XDrawer: typeof import('@3un/ui')['XDrawer']

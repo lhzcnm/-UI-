@@ -23,6 +23,7 @@ const deviceMockup = {
   iPhone8: {
     image: '/images/device_8p.png',
     imageHeight: '448px',
+    imageWidth: '224px',
     imageRadius: 0,
     left: '14px',
     top: '52px',
@@ -32,6 +33,7 @@ const deviceMockup = {
   iPhonex: {
     image: '/images/device_13pm.png',
     imageHeight: '452px',
+    imageWidth: '224px',
     imageRadius: 0,
     left: '12px',
     top: '11px',
@@ -41,11 +43,33 @@ const deviceMockup = {
   iPhone11: {
     image: '/images/device_14pm.png',
     imageHeight: '460px',
+    imageWidth: '224px',
     imageRadius: '10px',
     left: '10px',
     top: '8px',
     width: '204px',
     height: '443px',
+  },
+
+  iWatch: {
+    image: '/images/iWatch.svg',
+    imageHeight: '246px',
+    imageWidth: '224px',
+    imageRadius: '10px',
+    left: '56px',
+    top: '58px',
+    width: '106px',
+    height: '129px',
+  },
+  iPad: {
+    image: '/images/iPad.svg',
+    imageHeight: '268px',
+    imageWidth: '224px',
+    imageRadius: '0',
+    left: '17px',
+    top: '9px',
+    width: '190px',
+    height: '250px',
   },
 }
 
@@ -55,8 +79,17 @@ const handleShutdown = useThrottleFn(onShutdown, 1000)
 
 const deviceImage = computed(() => {
   const { product } = store.deviceMap.get(store.selected)!
-  const matched = product ? product.Name.match(/^iPhone (\d+)/) : null
-  return deviceMockup[getDeviceType(matched)]
+
+  let matched1 = product.Name.match(/^iPhone (\d+)/)
+  if (matched1) return deviceMockup[getIphoneDeviceType(matched1)]
+
+  let matched2 = product.Name.includes('iWatch')
+  if (matched2) return deviceMockup['iWatch']
+
+  let matched3 = product.Name.includes('iPad')
+  if (matched3) return deviceMockup['iPad']
+
+  return deviceMockup['iPhonex']
 })
 
 const deviceName = computed(() => {
@@ -64,7 +97,7 @@ const deviceName = computed(() => {
   return selected.info.DeviceName
 })
 
-function getDeviceType(matched: RegExpMatchArray | null) {
+function getIphoneDeviceType(matched: RegExpMatchArray | null) {
   if (matched && Number(matched[1]) <= 8) return 'iPhone8'
   if (matched && Number(matched[1]) >= 11) return 'iPhone11'
 
@@ -108,6 +141,10 @@ async function onRefresh() {
 
   store.screenshot = `data:image/png;base64,${response}`
 }
+
+function screenshotOnError() {
+  store.screenshot = ''
+}
 </script>
 
 <template>
@@ -119,8 +156,11 @@ async function onRefresh() {
     </div>
 
     <div
-      class="relative w-[224px] mx-auto"
-      :style="{ height: deviceImage.imageHeight }"
+      class="relative mx-auto"
+      :style="{ 
+        width: deviceImage.imageWidth,
+        height: deviceImage.imageHeight
+      }"
     >
       <img
         :src="deviceImage.image" alt="Device Mockup"
@@ -144,7 +184,7 @@ async function onRefresh() {
           alt="Device Screenshot"
           class="size-full"
           draggable="false"
-          @error="store.screenshot = ''"
+          @error="screenshotOnError"
         >
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>

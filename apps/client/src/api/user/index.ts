@@ -12,7 +12,7 @@ export const userApi: UserApi = {
   bindWechat: () => http.get('wx/bind/qrcode'),
 
   updateInfo: (params) => http.put('user/info', params),
-  updatePassword: (params) => http.put('auth/forgot-psw', params),
+  updatePassword: (params) => http.put('user/forgot-psw', params),
   updatePhone: (params) => http.put('user/phone', params),
   updateEmail: (params) => http.put('user/email', params),
 

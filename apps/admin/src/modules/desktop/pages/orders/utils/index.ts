@@ -6,19 +6,23 @@ export const VERIFY_STORE: IK<VerifyStore> = Symbol('verify')
 
 export interface OrderStore {
   orders: OrderList
+
   formSearch: OrderSearchForm
   formUpdate: OrderUpdateForm
+
   visibleSearch: boolean
   visibleUpdate: boolean
-  index: number | undefined
+
   refresh: boolean
-  page: number
-  limit: number
+  index  : number | undefined
+  page   : number
+  limit  : number
 }
 
 export interface VerifyStore {
   orders: OrderList
+
   refresh: boolean
-  page: number
-  limit: number
+  page   : number
+  limit  : number
 }

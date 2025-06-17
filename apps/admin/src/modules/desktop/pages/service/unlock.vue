@@ -9,11 +9,14 @@ import { UNLOCK_STORE, type UnlockStore } from './utils'
 import { columns } from './utils/columnUnlock'
 
 const store: UnlockStore = reactive({
+  unlocks: [],
+
   formBase: zUnlockForm.parse({}),
+
   visibleBase: false,
   visibleConvert: false,
+
   index: undefined,
-  unlocks: [],
 })
 
 provide(UNLOCK_STORE, store)

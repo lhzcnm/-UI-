@@ -41,8 +41,8 @@ async function handleDelete(menu: WechatMenu) {
     <div class="flex justify-between items-center mb-1">
       <div class="text-sm font-bold">{{ menu.name }}</div>
       <div class="space-x-2">
-        <XButton size="sm" label="编辑" @click="openUpdate(menu)" />
         <XButton size="sm" label="删除" color="danger" variant="outline" @click="handleDelete(menu)" />
+        <XButton size="sm" label="编辑" @click="openUpdate(menu)" />
       </div>
     </div>
     <div class="flex items-center text-sm text-muted-foreground">

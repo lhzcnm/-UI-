@@ -7,20 +7,25 @@ export const PACKAGE_STORE: IK<PackageStore> = Symbol('package')
 
 export interface RechargeStore {
   recharges: RechargeList
+
   formSearch: RechargeSearchForm
   formUpdate: RechargeUpdateParams
+
   visibleSearch: boolean
   visibleUpdate: boolean
-  index: number | undefined
+
   refresh: boolean
-  page: number
-  limit: number
+  index  : number | undefined
+  page   : number
+  limit  : number
 }
 
 export interface PackageStore {
   packages: RechargePackage[]
+
   formBase: RechargePackageForm
   visibleBase: boolean
-  index: number | undefined
+
   refresh: boolean
+  index  : number | undefined
 }

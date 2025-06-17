@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { xconfirm } from '@3un/utils'
-import { toast } from 'vue-sonner'
 
 import type { Recharge } from '@/inters/recharge'
 import { deleteRecharges } from '@/api/recharge'
@@ -34,7 +33,6 @@ async function handleDelete() {
   deleteRecharges([props.row.paymentId]).then(() => {
     store.recharges.list.splice(props.index, 1)
     store.recharges.total--
-    toast.success('删除成功')
   })
 }
 </script>

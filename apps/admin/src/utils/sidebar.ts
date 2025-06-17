@@ -7,11 +7,11 @@ export interface SidebarMenu {
   children  ?: SidebarMenuChild[]
 }
 export interface SidebarMenuChild {
-  match   ?: string[] | string
-  label    : string
-  path     : string
-  icon    ?: string
-  badge   ?: number
+  match     ?: string[] | string
+  label      : string
+  path       : string
+  icon      ?: string
+  badge     ?: number
 }
 
 export const menus: SidebarMenu[] = [

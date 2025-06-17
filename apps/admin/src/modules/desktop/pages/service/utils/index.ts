@@ -24,21 +24,26 @@ export interface ServiceGroupStore {
 // ServiceField
 export interface ServiceFieldStore {
   fields: IList<ServiceField>
+
   formBase: ServiceFieldCreateParams
   visibleBase: boolean
-  index: number | undefined
-  loading: boolean
+
   refresh: boolean
-  page: number
-  limit: number
+  loading: boolean
+  index  : number | undefined
+  page   : number
+  limit  : number
 }
 
 // Unlock
 export interface UnlockStore {
   unlocks: Unlock[]
+
   formBase: UnlockCreateParams
+
   visibleBase: boolean
   visibleConvert: boolean
+
   index: number | undefined
 }
 

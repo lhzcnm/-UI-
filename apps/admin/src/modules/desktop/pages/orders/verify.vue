@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import type { Order, OrderListParams } from '@/inters/orders'
-import { zOrderSearchForm } from '@/inters/orders'
-import { getOrders, updateOrderVerify } from '@/api/orders'
-
 import { ORDER_VERIFY } from '@3un/utils'
+import { toast } from 'vue-sonner'
+
+import type { Order, OrderListParams } from '@/inters/orders'
+import { getOrders, updateOrderVerify } from '@/api/orders'
+import { zOrderSearchForm } from '@/inters/orders'
+import { createList } from '@/utils'
 
 import type { VerifyStore } from './utils'
 import { columns } from './utils/columnVerify'
 import { VERIFY_STORE } from './utils'
-import { toast } from 'vue-sonner'
 
 const store: VerifyStore = reactive({
-  orders: { list: [], page: 1, total: 0, pageSize: 20 },
+  orders: createList(),
+
   refresh: false,
-  page: 1,
-  limit: 20,
+  page   : 1,
+  limit  : 20,
 })
 
 provide(VERIFY_STORE, store)

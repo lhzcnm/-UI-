@@ -18,8 +18,8 @@ export interface UsersStore {
   visiblePoint: boolean
   visibleService: boolean
 
-  index: number | undefined
   refresh: boolean
+  index: number | undefined
   page: number
   limit: number
 }

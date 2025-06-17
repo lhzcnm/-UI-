@@ -62,10 +62,7 @@ function openCreate() {
 
 type ClearType = 'category' | 'keyword'
 function handleClear(type: ClearType) {
-  router.replace({
-    path: route.path,
-    query: { [type]: undefined },
-  })
+  router.replace({ path: route.path, query: {[type]: undefined}})
 }
 </script>
 

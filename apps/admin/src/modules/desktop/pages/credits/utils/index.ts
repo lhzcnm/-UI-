@@ -7,9 +7,11 @@ export const CREDIT_STORE: IK<CreditStore> = Symbol('CreditStore')
 
 export interface CreditStore {
   credits: CreditList
+
   formSearch: CreditSearchForm
   visibleSearch: boolean
+
   refresh: boolean
-  page: number
-  limit: number
+  page   : number
+  limit  : number
 }

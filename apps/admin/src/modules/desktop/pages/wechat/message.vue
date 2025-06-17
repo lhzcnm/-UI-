@@ -9,13 +9,16 @@ import type { MsgStore } from './utils'
 import { MSG_STORE, columns } from './utils'
 
 const store: MsgStore = reactive({
+  builtInList: [],
+  msgList: [],
+
   formBase: zCustomMsgForm.parse({}),
   formBuiltIn: zBuiltInMsg.parse({}),
+
   visibleBuiltIn: false,
   visibleBase: false,
+
   index: undefined,
-  msgList: [],
-  builtInList: [],
 })
 
 provide(MSG_STORE, store)

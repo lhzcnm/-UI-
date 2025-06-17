@@ -11,8 +11,8 @@ export function registerConfirm(fn: typeof confirmFn) {
   confirmFn = fn
 }
 
-export function xconfirm(strings: TemplateStringsArray, ...values: any[]): Promise<boolean>
 export function xconfirm(options: string | ConfirmOptions): Promise<boolean>
+export function xconfirm(strings: TemplateStringsArray, ...values: any[]): Promise<boolean>
 export function xconfirm(first: string | ConfirmOptions | TemplateStringsArray, ...values: any[]): Promise<boolean> {
   if (!confirmFn) throw new Error('confirmFn is not registered')
 

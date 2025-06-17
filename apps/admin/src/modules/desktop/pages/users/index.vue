@@ -9,14 +9,15 @@ import { USER_ROLE } from '@3un/utils'
 import type { UserListParams } from '@/inters/users'
 import { zUserExtraInfo, zUserForm, zUserPointForm, zUserSearchForm, zUserServiceForm } from '@/inters/users'
 import { getUsers } from '@/api/users'
+import { createList } from '@/utils'
 
 import type { UsersStore } from './utils'
 import { columns } from './utils/columnUser'
 import { USER_STORE } from './utils'
 
 const store: UsersStore = reactive({
-  users: { list: [], page: 1, total: 0, pageSize: 20 },
   extraInfo: zUserExtraInfo.parse({}),
+  users: createList(),
   services: [],
 
   formBase: zUserForm.parse({}),
@@ -29,8 +30,8 @@ const store: UsersStore = reactive({
   visiblePoint: false,
   visibleService: false,
 
-  index: undefined,
   refresh: false,
+  index: undefined,
   page: 1,
   limit: 20,
 })
@@ -92,10 +93,7 @@ function openCreate() {
 
 function resetSearch() {
   store.formSearch = zUserSearchForm.parse({})
-  router.replace({
-    path: route.path,
-    query: { q: route.query.q },
-  })
+  router.replace({ path: route.path, query: {q: route.query.q} })
 }
 </script>
 

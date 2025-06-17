@@ -2,7 +2,7 @@
 import SearchPlane from './SearchPlane.vue'
 
 import { Icon } from '@iconify/vue'
-import { twJoin } from 'tailwind-merge'
+import { tv } from 'tailwind-variants'
 
 interface HeaderProps {
   isFullscreen: boolean
@@ -14,22 +14,37 @@ defineProps<HeaderProps>()
 const iStore = useSystemStore()
 const visibleSearch = ref(false)
 const visibleSetting = ref(false)
+
+const foldIcon = computed(() => {
+  if (iStore.showSidebar) return 'lucide:panel-left-close'
+  else return 'lucide:panel-left-open'
+})
+
+const style = tv({
+  slots: {
+    root: [
+      'flex justify-between items-center',
+      'w-full px-1 h-header border-b',
+    ],
+    iconBtn: [
+      'x-tooltip p-2 rounded-full hover:bg-muted',
+      'text-muted-foreground transition-transform'
+    ]
+  },
+})
+
+const b = style()
 </script>
 
 <template>
-  <div
-    :class="twJoin(
-      'flex justify-between items-center',
-      'w-full px-1 h-header border-b',
-    )"
-  >
+  <div :class="b.root()">
     <div class="flex items-center space-x-1">
       <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground transition-transform"
+        :class="b.iconBtn()" accesskey="b"
         @click="iStore.toggleSidebar"
-        accesskey="b"
       >
-        <Icon :icon="iStore.showSidebar ? 'lucide:panel-left-close' : 'lucide:panel-left-open'" class="size-5" />
+        <Icon :icon="foldIcon" class="size-5" />
+        <div class="x-tooltip-text top120">折叠</div>
       </button>
 
       <Breadcrumb :items="iStore.breadcrumbItems" />
@@ -37,40 +52,39 @@ const visibleSetting = ref(false)
 
     <div class="flex items-center space-x-1">
       <button
-        accesskey="k"
-        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
+        :class="b.iconBtn()" accesskey="k"
         @click="visibleSearch = true"
       >
         <Icon icon="lucide:search" class="size-5" />
+        <div class="x-tooltip-text top120">搜索</div>
       </button>
 
-      <button
-        accesskey="m"
-        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
-      >
+      <button :class="b.iconBtn()" accesskey="m">
         <Icon icon="lucide:bell" class="size-5" />
+        <div class="x-tooltip-text top120">消息</div>
       </button>
 
       <hr class="h-6 w-px bg-border" />
       <TheTheme ghost />
 
-      <button
-        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
-        @click="toggleFullscreen"
-      >
+      <button :class="b.iconBtn()" @click="toggleFullscreen">
         <Icon
           :icon="isFullscreen ? 'lucide:minimize' : 'lucide:maximize'"
           class="size-5"
         />
+        <div class="x-tooltip-text top120">
+          {{ isFullscreen ? '退出全屏' : '全屏' }}
+        </div>
       </button>
 
       <hr class="h-6 w-px bg-border" />
+
       <button
-        accesskey="s"
-        class="p-2 rounded-full hover:bg-muted hover:text-foreground text-muted-foreground"
+        :class="b.iconBtn()" accesskey="s"
         @click="visibleSetting = true"
       >
         <Icon icon="lucide:settings" class="size-5" />
+        <div class="x-tooltip-text top120">设置</div>
       </button>
     </div>
 

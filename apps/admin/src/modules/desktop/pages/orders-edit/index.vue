@@ -11,9 +11,10 @@ const iStore = useSystemStore()
 
 const store: OrderEditStore = reactive({
   items: iStore.selectedOrders,
-  isCode: true,
+
   serviceId: undefined,
   status: undefined,
+  isCode: true,
 })
 
 provide(STORE, store)

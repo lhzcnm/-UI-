@@ -57,6 +57,7 @@ async function createType() {
       :data="store.types"
       :columns="column"
       :loading="loading"
+      class="border h-[400px]"
     />
   </XDialog>
 </template>

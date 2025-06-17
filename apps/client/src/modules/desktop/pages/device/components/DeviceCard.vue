@@ -28,7 +28,7 @@ function toDevice() {
 }
 
 async function handlePrint() {
-  store.printIndex = String(props.device.DeviceID)
+  store.printIndex = `${DeviceID}:${info.UniqueDeviceID}`
   store.visiblePrint = true
 }
 

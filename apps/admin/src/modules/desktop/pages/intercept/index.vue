@@ -8,10 +8,12 @@ import { columns } from './utils/column'
 import { INTERCEPT_STORE } from './utils'
 
 const store: InterceptStore = reactive({
+  intercepts: [],
+
   formBase: zInterceptForm.parse({}),
   visibleBase: false,
+
   index: undefined,
-  intercepts: [],
 })
 
 provide(INTERCEPT_STORE, store)

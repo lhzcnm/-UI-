@@ -4,8 +4,9 @@ import FieldDialog from './components/FieldDialog.vue'
 import { toast } from 'vue-sonner'
 
 import type { ServiceFieldListParams } from '@/inters/services'
-import { zServiceFieldForm, zServiceField } from '@/inters/services'
+import { zServiceFieldForm } from '@/inters/services'
 import { deleteServiceField, getServiceFields } from '@/api/services'
+import { createList } from '@/utils'
 
 import { FIELD_STORE, type ServiceFieldStore } from './utils'
 import { columns } from './utils/columnField'
@@ -14,14 +15,16 @@ const serviceStore = useServiceStore()
 await serviceStore.getItems()
 
 const store: ServiceFieldStore = reactive({
-  fields: { list: [], page: 1, total: 0, pageSize: 20 },
+  fields: createList(),
+
   formBase: zServiceFieldForm.parse({}),
   visibleBase: false,
-  index: undefined,
-  loading: false,
+
   refresh: false,
-  page: 1,
-  limit: 20,
+  loading: false,
+  index  : undefined,
+  page   : 1,
+  limit  : 20,
 })
 
 provide(FIELD_STORE, store)
@@ -47,11 +50,8 @@ function getList(params: ServiceFieldListParams) {
   loading.value = true
 
   const response = getServiceFields(params)
+  response.then((data) => store.fields = data)
   response.finally(() => loading.value = false)
-  response.then((data) => {
-    const list = data.list.map((item) => zServiceField.parse(item))
-    store.fields = { ...data, list }
-  })
 }
 
 function openCreate() {
@@ -67,8 +67,7 @@ function handleDelete() {
   }
 
   deleteServiceField(ids.value).then(() => {
-    getList({ page: store.page, pageSize: store.limit })
-    toast.success('删除成功')
+    store.refresh = !store.refresh
   })
 }
 </script>

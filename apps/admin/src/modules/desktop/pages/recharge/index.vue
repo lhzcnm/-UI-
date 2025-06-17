@@ -9,21 +9,25 @@ import dayjs from 'dayjs'
 import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
 import { deleteRecharges, getRecharges } from '@/api/recharge'
 import { zRechargeSearchForm } from '@/inters/recharge'
+import { createList } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { columns } from './utils/column'
 import { RECHARGE_STORE } from './utils'
 
 const store: RechargeStore = reactive({
-  recharges: { list: [], total: 0, page: 1, pageSize: 20 },
+  recharges: createList(),
+
   formSearch: zRechargeSearchForm.parse({}),
   formUpdate: {} as RechargeUpdateParams,
+
   visibleSearch: false,
   visibleUpdate: false,
-  index: undefined,
+
   refresh: false,
-  page: 1,
-  limit: 20,
+  index  : undefined,
+  page   : 1,
+  limit  : 20,
 })
 
 provide(RECHARGE_STORE, store)
