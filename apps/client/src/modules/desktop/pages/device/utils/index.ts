@@ -4,15 +4,16 @@ import type { IK } from "@3un/shared"
 
 import { stripHtml } from '@3un/utils'
 
-type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin'
+type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version'
 
 export interface DeviceStore {
-  deviceMap   : Map<string, Device>
-  status      : DeviceStatus
-  visiblePrint: boolean
-  printIndex  : string
-  screenshot  : string
-  selected    : string
+  deviceMap    : Map<string, Device>
+  status       : DeviceStatus
+  visiblePrint : boolean
+  printIndex   : string
+  screenshot   : string
+  selected     : string
+  hasNewVersion: boolean
 }
 
 export const STORE: IK<DeviceStore> = Symbol('device')

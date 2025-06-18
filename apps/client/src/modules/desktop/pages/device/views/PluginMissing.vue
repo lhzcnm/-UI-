@@ -1,24 +1,6 @@
 <script setup lang="ts">
+import PluginDownload from '../components/PluginDowload.vue'
 import { Icon } from '@iconify/vue'
-import { ua } from '@3un/utils'
-
-function handleDownload(id?: number) {
-  const baseUrl = import.meta.env.VITE_API_URL
-  let platform = id
-
-  if (!id) {
-    const options = { Windows: 43, MacOS: 44 }
-    platform = options[ua.os as keyof typeof options]
-  }
-
-  location.href = `${baseUrl}/oss/download/${platform}`
-}
-
-const options = [
-  { label: 'Windows', command: () => handleDownload(43) },,
-  { label: 'MacOS M系列', command: () => handleDownload(44) },
-  { label: 'MacOS Intel系列', command: () => handleDownload(45) },
-]
 </script>
 
 <template>
@@ -38,8 +20,13 @@ const options = [
         如果插件未安装，请点击下方按钮下载安装插件。
       </p>
       <div class="space-x-4 text-center">
-        <XButtonSplit label="下载插件" :options="options" @click="handleDownload()" />
-        <XButton variant="soft" icon="lucide:refresh-cw" @click="$router.go(0)">刷新页面</XButton>
+        <PluginDownload />
+        <XButton
+          variant="soft" icon="lucide:refresh-cw"
+          @click="$router.go(0)"
+        >
+          刷新页面
+        </XButton>
       </div>
     </div>
   </div>

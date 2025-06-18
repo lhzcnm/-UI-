@@ -2,10 +2,13 @@ import { SERVICE_STORE } from '.'
 
 import { updateService } from '@/api/services'
 import { zService, type Service } from '@/inters/services'
+import router from '@/router'
 import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 
 const serviceStore =  useServiceStore()
+const iStore = useSystemStore()
+
 export const columns: XColDef<Service> = [
   {
     key: 'packageId',
@@ -62,6 +65,48 @@ export const columns: XColDef<Service> = [
     cellEmpty: '-',
   },
   {
+    key: 'mustRead',
+    title: '中文服务说明',
+    width: 108,
+    render(value, row) {
+      return h(XButton, {
+        size: 'sm',
+        label: '编辑',
+        onClick() {
+          iStore.richText = value
+          router.push({
+            path: '/editor',
+            query: {
+              type: 'service',
+              id: row.packageId,
+            },
+          })
+        }
+      })
+    },
+  },
+  {
+    key: 'mustReadLocal',
+    title: '英文服务说明',
+    width: 108,
+    render(value, row) {
+      return h(XButton, {
+        size: 'sm',
+        label: '编辑',
+        onClick() {
+          iStore.richText = value
+          router.push({
+            path: '/editor',
+            query: {
+              type: 'service-en',
+              id: row.packageId,
+            },
+          })
+        }
+      })
+    },
+  },
+  {
     key: 'packageOrderBy',
     title: '排序',
     width: 128,
@@ -87,7 +132,7 @@ export const columns: XColDef<Service> = [
   {
     key: 'disablePackage',
     title: '禁用',
-    width: 128,
+    width: 108,
     render(value, row) {
       return h(XSwitch, {
         modelValue: value,

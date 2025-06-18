@@ -134,16 +134,13 @@ async function onShutdown() {
 
 async function onRefresh() {
   const [_, uniqueId] = store.selected.split(':')
-  const response = await wsFetch<string>({
+  const data = await wsFetch<string>({
     type: 'screenshot',
     Uid: uniqueId,
   })
 
-  store.screenshot = `data:image/png;base64,${response}`
-}
-
-function screenshotOnError() {
-  store.screenshot = ''
+  if (data === 'failed') store.screenshot = ''
+  else store.screenshot = `data:image/png;base64,${data}`
 }
 </script>
 
@@ -184,7 +181,7 @@ function screenshotOnError() {
           alt="Device Screenshot"
           class="size-full"
           draggable="false"
-          @error="screenshotOnError"
+          @error="store.screenshot = ''"
         >
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>

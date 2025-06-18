@@ -8,9 +8,9 @@ export const useSystemStore = defineStore('system', () => {
   const showSidebar = useStorage<boolean>('show-sidebar', ua.isDesktop)
   const breadcrumbItems = ref<string[]>([])
   const isGlobalSearch = ref<boolean>(false)
-
   const selectedOrders = ref<OrderBatchEditItem[]>([])
-  const richText = ref<string>('')
+  const showSetting = ref(false)
+  const richText = ref('')
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
@@ -18,6 +18,7 @@ export const useSystemStore = defineStore('system', () => {
 
   return {
     showSidebar,
+    showSetting,
     breadcrumbItems,
     isGlobalSearch,
     selectedOrders,

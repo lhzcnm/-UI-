@@ -13,7 +13,6 @@ defineProps<HeaderProps>()
 
 const iStore = useSystemStore()
 const visibleSearch = ref(false)
-const visibleSetting = ref(false)
 
 const foldIcon = computed(() => {
   if (iStore.showSidebar) return 'lucide:panel-left-close'
@@ -81,7 +80,7 @@ const b = style()
 
       <button
         :class="b.iconBtn()" accesskey="s"
-        @click="visibleSetting = true"
+        @click="iStore.showSetting = true"
       >
         <Icon icon="lucide:settings" class="size-5" />
         <div class="x-tooltip-text top120">设置</div>
@@ -89,6 +88,6 @@ const b = style()
     </div>
 
     <SearchPlane v-model="visibleSearch" />
-    <SettingPlane v-model="visibleSetting" />
+    <SettingPlane />
   </div>
 </template>

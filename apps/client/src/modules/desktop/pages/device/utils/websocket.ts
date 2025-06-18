@@ -56,12 +56,15 @@ export const ws = useWebSocket(
       const handler = messageHandlers.get(response.id)
       if (!handler) return
 
-      const isSuccess = response.code === 200
-      if (isSuccess) handler.resolve(response.data)
+      if (response.code === 200) {
+        handler.resolve(response.data)
+      }
       else {
         toast.warning(response.message)
         handler.reject(new Error(response.message))
       }
+
+      messageHandlers.delete(response.id)
     }
   }
 )

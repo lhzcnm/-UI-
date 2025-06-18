@@ -1,253 +1,206 @@
 <script setup lang="ts">
-import { EditorContent } from '@tiptap/vue-3'
+import HeadingPicker from './HeadingPicker.vue'
+import FontSizePicker from './FontSizePicker.vue'
+import TextColorPicker from './TextColorPicker.vue'
 
-
+import { EditorContent, Editor } from '@tiptap/vue-3'
 import { Icon } from '@iconify/vue'
-import { XPopover } from '@3un/ui'
 
-interface TheEditorProps {
-  editor: any
-}
+import StarterKit  from '@tiptap/starter-kit'
+import Underline   from '@tiptap/extension-underline'
+import TextStyle   from '@tiptap/extension-text-style'
+import Placeholder from '@tiptap/extension-placeholder'
+import TextAlign   from '@tiptap/extension-text-align'
 
-const props = defineProps<TheEditorProps>()
+import { EDITOR_STORE } from '../utils'
 
-const openHeading = ref(false)
-const openFontSize = ref(false)
-const openColor = ref(false)
+const FontSizeTextStyle = TextStyle.extend({
+  addAttributes() {
+    return {
+      fontSize: {
+        default: null,
+        parseHTML: element => element.style.fontSize,
+        renderHTML: attributes => {
+          if (!attributes.fontSize) return {}
+          return { style: `font-size: ${attributes.fontSize}` }
+        },
+      },
+    }
+  },
+})
 
-const headingList = [
-  // { label: '一级标题', value: 1 },
-  { label: '二级标题', value: 2 },
-  { label: '三级标题', value: 3 },
-  { label: '四级标题', value: 4 },
-]
-const fontSizeList = [
-  { label: '12px', value: '12px' },
-  { label: '14px', value: '14px' },
-  { label: '16px(默认)', value: '16px' },
-  { label: '18px', value: '18px' },
-  { label: '20px', value: '20px' },
-  { label: '22px', value: '22px' },
-  { label: '24px', value: '24px' },
-  { label: '28px', value: '28px' },
-]
+const editor = new Editor({
+  content: '',
+  extensions: [
+    StarterKit.configure({
+      orderedList: {
+        HTMLAttributes: {
+          class: 'list-decimal pl-5',
+        },
+      },
+      bulletList: {
+        HTMLAttributes: {
+          class: 'list-disc pl-5',
+        },
+      },
+    }),
+    Underline,
+    FontSizeTextStyle,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
+    }),
+    Placeholder.configure({
+      placeholder: 'Write something …',
+    }),
+  ],
+  editorProps: {
+    attributes: {
+      class: 'h-[calc(100vh-7.75rem)] outline-none'
+    }
+  }
+})
 
-function handleFontSize(event: Event) {
-  const target = event.target as HTMLButtonElement
-  const element = target.closest('[data-value]')!
-  const fontSize = element.getAttribute('data-value')!
+const route = useRoute()
+const iStore = useSystemStore()
 
-  props.editor!.chain().focus()
-    .setMark('textStyle', {fontSize}).run()
-}
+const store = inject(EDITOR_STORE)!
 
-function handleHeading(event: Event) {
-  const target = event.target as HTMLButtonElement
-  const element = target.closest('[data-value]')!
-  const heading = element.getAttribute('data-value')!
+watch(
+  () => route.query,
+  ({ type }) => {
+    if (type) store.selected = type as string
+    if (type && type.toString().startsWith('service')) {
+      console.log(editor)
+      editor.commands.setContent(iStore.richText)
+    }
+  },
+  { immediate: true },
+)
 
-  props.editor!.chain().focus()
-    .toggleHeading({level: Number(heading) as any}).run()
-}
+onBeforeUnmount(() => {
+  editor.destroy()
+})
 </script>
 
 <template>
-  <div class="border rounded">
-    <div class="flex items-center flex-wrap p-2 border-b">
-      <div class="space-x-1">
+  <div>
+    <div class="flex items-center flex-wrap p-3 py-2 border-b">
+      <div class="space-x-0.5">
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          @click="editor?.chain().focus().undo().run()"
+          @click="editor.chain().focus().undo().run()"
         >
           <Icon icon="lucide:undo" class="size-5" />
-          <div class="x-tooltip-text bottom120">撤销</div>
+          <div class="x-tooltip-text top120">撤销</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          @click="editor?.chain().focus().redo().run()"
+          @click="editor.chain().focus().redo().run()"
         >
           <Icon icon="lucide:redo" class="size-5" />
-          <div class="x-tooltip-text bottom120">重做</div>
+          <div class="x-tooltip-text top120">重做</div>
         </button>
       </div>
 
-      <hr class="h-5 w-px mx-3 bg-border" />
+      <hr class="h-5 w-px mx-2 bg-border" />
 
-      <XPopover
-        v-model="openHeading"
-        closeOnClickOutside
-        trigger="click"
-      >
-        <template #trigger>
-          <button class="x-tooltip hover:bg-muted rounded px-1.5 py-1">
-            <Icon icon="lucide:heading" class="size-5" />
-            <div class="x-tooltip-text bottom120">标题</div>
-          </button>
-        </template>
+      <HeadingPicker :editor="editor" />
 
-        <div class="w-28 p-1" @click="handleHeading">
-          <button
-            v-for="item in headingList" :key="item.value"
-            :data-value="item.value"
-            :class="[
-              'flex items-center w-full text-sm',
-              'rounded px-2 py-1 hover:bg-muted transition-colors',
-              editor?.isActive('heading', {level: item.value})
-            ]"
-          >
-            <span>{{ item.label }}</span>
-            <Icon 
-              icon="lucide:check" class="inline-block size-4 ml-auto opacity-0 transition-opacity"
-              :class="{'opacity-100': editor?.isActive('heading', {level: item.value})}"
-            />
-          </button>
-        </div>
-      </XPopover>
+      <hr class="h-5 w-px mx-2 bg-border" />
 
-      <hr class="h-5 w-px mx-3 bg-border" />
-
-      <div class="space-x-1">
+      <div class="space-x-0.5">
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive('bold')}"
-          @click="editor?.chain().focus().toggleBold().run()"
+          :class="{'bg-muted': editor.isActive('bold')}"
+          @click="editor.chain().focus().toggleBold().run()"
         >
           <Icon icon="lucide:bold" class="size-5" />
-          <div class="x-tooltip-text bottom120">加粗</div>
+          <div class="x-tooltip-text top120">加粗</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive('italic')}"
-          @click="editor?.chain().focus().toggleItalic().run()"
+          :class="{'bg-muted': editor.isActive('italic')}"
+          @click="editor.chain().focus().toggleItalic().run()"
         >
           <Icon icon="lucide:italic" class="size-5" />
-          <div class="x-tooltip-text bottom120">斜体</div>
+          <div class="x-tooltip-text top120">斜体</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive('underline')}"
-          @click="editor?.chain().focus().toggleUnderline().run()"
+          :class="{'bg-muted': editor.isActive('underline')}"
+          @click="editor.chain().focus().toggleUnderline().run()"
         >
           <Icon icon="lucide:underline" class="size-5" />
-          <div class="x-tooltip-text bottom120">下划线</div>
+          <div class="x-tooltip-text top120">下划线</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive('strike')}"
-          @click="editor?.chain().focus().toggleStrike().run()"
+          :class="{'bg-muted': editor.isActive('strike')}"
+          @click="editor.chain().focus().toggleStrike().run()"
         >
           <Icon icon="lucide:strikethrough" class="size-5" />
-          <div class="x-tooltip-text bottom120">删除线</div>
+          <div class="x-tooltip-text top120">删除线</div>
         </button>
       </div>
 
-      <hr class="h-5 w-px mx-3 bg-border" />
+      <hr class="h-5 w-px mx-2 bg-border" />
 
-      <div class="space-x-1">
+      <div class="space-x-0.5">
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive('bulletList')}"
-          @click="editor?.chain().focus().toggleBulletList().run()"
+          :class="{'bg-muted': editor.isActive('bulletList')}"
+          @click="editor.chain().focus().toggleBulletList().run()"
         >
           <Icon icon="lucide:list" class="size-5" />
-          <div class="x-tooltip-text bottom120">无序列表</div>
+          <div class="x-tooltip-text top120">无序列表</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive('orderedList')}"
-          @click="editor?.chain().focus().toggleOrderedList().run()"
+          :class="{'bg-muted': editor.isActive('orderedList')}"
+          @click="editor.chain().focus().toggleOrderedList().run()"
         >
           <Icon icon="lucide:list-ordered" class="size-5" />
-          <div class="x-tooltip-text bottom120">有序列表</div>
+          <div class="x-tooltip-text top120">有序列表</div>
         </button>
       </div>
 
-      <hr class="h-5 w-px mx-3 bg-border" />
+      <hr class="h-5 w-px mx-2 bg-border" />
 
-      <div class="space-x-1">
+      <div class="space-x-0.5">
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive({ textAlign: 'left' })}"
-          @click="editor?.chain().focus().setTextAlign('left').run()"
+          :class="{'bg-muted': editor.isActive({ textAlign: 'left' })}"
+          @click="editor.chain().focus().setTextAlign('left').run()"
         >
           <Icon icon="lucide:align-left" class="size-5" />
-          <div class="x-tooltip-text bottom120">左对齐</div>
+          <div class="x-tooltip-text top120">左对齐</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive({ textAlign: 'center' })}"
-          @click="editor?.chain().focus().setTextAlign('center').run()"
+          :class="{'bg-muted': editor.isActive({ textAlign: 'center' })}"
+          @click="editor.chain().focus().setTextAlign('center').run()"
         >
           <Icon icon="lucide:align-center" class="size-5" />
-          <div class="x-tooltip-text bottom120">居中对齐</div>
+          <div class="x-tooltip-text top120">居中对齐</div>
         </button>
         <button
           class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
-          :class="{'bg-muted': editor?.isActive({ textAlign: 'right' })}"
-          @click="editor?.chain().focus().setTextAlign('right').run()"
+          :class="{'bg-muted': editor.isActive({ textAlign: 'right' })}"
+          @click="editor.chain().focus().setTextAlign('right').run()"
         >
           <Icon icon="lucide:align-right" class="size-5" />
-          <div class="x-tooltip-text bottom120">右对齐</div>
+          <div class="x-tooltip-text top120">右对齐</div>
         </button>
       </div>
 
       <hr class="h-5 w-px mx-3 bg-border" />
 
-      <div class="space-x-1">
-        <XPopover
-          v-model="openFontSize"
-          closeOnClickOutside
-          trigger="click"
-        >
-          <template #trigger>
-            <button class="x-tooltip hover:bg-muted rounded px-1.5 py-1">
-              <Icon icon="iconoir:text-size" class="size-5" />
-              <div class="x-tooltip-text bottom120">字号</div>
-            </button>
-          </template>
-  
-          <div class="w-32 p-1" @click="handleFontSize">
-            <button
-              v-for="item in fontSizeList" :key="item.value"
-              :data-value="item.value"
-              :class="[
-                'flex items-center w-full text-sm',
-                'rounded px-2 py-1 hover:bg-muted transition-colors',
-              ]"
-            >
-              {{ item.label }}
-            </button>
-          </div>
-        </XPopover>
-  
-        <XPopover
-          v-model="openColor"
-          closeOnClickOutside
-          trigger="click"
-        >
-          <template #trigger>
-            <button class="x-tooltip hover:bg-muted rounded px-1.5 py-1">
-              <Icon icon="iconoir:color-picker" class="size-5" />
-              <div class="x-tooltip-text bottom120">字体颜色</div>
-            </button>
-          </template>
-  
-          <div class="w-32 p-1" @click="handleFontSize">
-            <button
-              v-for="item in headingList" :key="item.value"
-              :data-value="item.value"
-              :class="[
-                'flex items-center w-full text-sm',
-                'rounded px-2 py-1 hover:bg-muted transition-colors',
-              ]"
-            >
-              {{ item.label }}
-            </button>
-          </div>
-        </XPopover>
+      <div class="space-x-0.5">
+        <FontSizePicker :editor="editor" />
+        <TextColorPicker :editor="editor" />
       </div>
     </div>
 
-    <EditorContent :editor="editor" class="p-2" />  
+    <EditorContent :editor="editor" class="p-3" />  
   </div>
 </template>

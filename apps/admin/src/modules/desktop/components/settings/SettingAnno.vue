@@ -1,26 +1,31 @@
 <script setup lang="ts">
 import type { Configs, Settings } from '@/inters/settings'
-import { updateSetting, updateConfig } from '@/api/settings'
+import { updateSetting } from '@/api/settings'
 
 interface SettingPlaneProps {
   settings: Settings
   configs: Configs
 }
 
-const { settings, configs } =
-  defineProps<SettingPlaneProps>()
+const { settings } = defineProps<SettingPlaneProps>()
 
-const form = computed(() => ({
-  popupAnnc: settings.popupAnnc,
-  paymentInfo: settings.paymentInfo,
-  scrollingAnnc: settings.scrollingAnnc,
-}))
+const iStore = useSystemStore()
+const router = useRouter()
 
-const form2 = ref({
+const form = ref({
   enablePopupAnnc: settings.enablePopupAnnc,
   enablePaymentInfo: settings.enablePaymentInfo,
   enableScrollingAnnc: settings.enableScrollingAnnc,
 })
+
+function handleUpdate(val: boolean, name: string) {
+  updateSetting([{ name, status: val }])
+}
+
+function handleEdit(type: string) {
+  router.push({ path: '/editor', query: {type} })
+  iStore.showSetting = false
+}
 </script>
 
 <template>
@@ -30,24 +35,47 @@ const form2 = ref({
       desc="每次进入网站首页弹出的公告"
       :content-flex="false"
     >
-      <XSwitch v-model="form2.enablePopupAnnc" />
-      <XButton icon="lucide:edit" label="编辑" size="sm" />
+      <XSwitch
+        v-model="form.enablePopupAnnc"
+        @change="handleUpdate($event, 'enablePopupAnnc')"
+      />
+      <XButton
+        label="编辑" size="sm"
+        icon="lucide:edit"
+        @click="handleEdit('popup')"
+      />
     </FormField>
+
     <FormField
       label="滚动公告"
       desc="滑动公告，用于显示服务价格调整信息"
       :content-flex="false"
     >
-      <XSwitch v-model="form2.enableScrollingAnnc" />
-      <XButton icon="lucide:edit" label="编辑" size="sm" />
+      <XSwitch
+        v-model="form.enableScrollingAnnc"
+        @change="handleUpdate($event, 'enableScrollingAnnc')"
+      />
+      <XButton
+        label="编辑" size="sm"
+        icon="lucide:edit"
+        @click="handleEdit('scrolling')"
+      />
     </FormField>
+
     <FormField
       label="充值说明"
       desc="在支付页面显示的注意事项"
       :content-flex="false"
     >
-      <XSwitch v-model="form2.enablePaymentInfo" />
-      <XButton icon="lucide:edit" label="编辑" size="sm" />
+      <XSwitch
+        v-model="form.enablePaymentInfo"
+        @change="handleUpdate($event, 'enablePaymentInfo')"
+      />
+      <XButton
+        label="编辑" size="sm"
+        icon="lucide:edit"
+        @click="handleEdit('recharge')"
+      />
     </FormField>
   </div>
 </template>

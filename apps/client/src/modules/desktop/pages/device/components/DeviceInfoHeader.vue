@@ -31,9 +31,8 @@ async function handleExitRecoveryMode(uniqueId: string) {
 }
 
 async function handlePrint() {
-  const [DeviceID, _] = store.selected.split(':')
   store.visiblePrint = true
-  store.printIndex = DeviceID
+  store.printIndex = store.selected
 }
 
 function handleCopy() {

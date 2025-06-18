@@ -4,6 +4,7 @@ export interface DeviceResponse {
   DeviceInfo: DeviceInfo
   ICloud: ICloudInfo
   Memory: MemoryInfo
+  Version: string
 }
 
 export interface DeviceInfo {

@@ -2,7 +2,8 @@
 import DeviceList       from './views/DeviceList.vue'
 import DeviceDetail     from './views/DeviceDetail.vue'
 import WaitConnect      from './views/WaitConnect.vue'
-import PluginDownload   from './views/PluginDownload.vue'
+import PluginMissing    from './views/PluginMissing.vue'
+import PluginVersion    from './views/PluginVersion.vue'
 import PrintDialog      from './components/PrintDialog.vue'
 
 import type { DeviceStore } from './utils'
@@ -13,19 +14,20 @@ import { ws, wsFetch } from './utils/websocket'
 import http from '@/utils/http'
 
 const store: DeviceStore = reactive({
-  deviceMap   : new Map(),
-  visiblePrint: false,
-  status      : 'wait',
-  printIndex  : '',
-  screenshot  : '',
-  selected    : '',
+  deviceMap    : new Map(),
+  visiblePrint : false,
+  hasNewVersion: false,
+  status       : 'wait',
+  printIndex   : '',
+  screenshot   : '',
+  selected     : '',
 })
 
 provide(STORE, store)
 
 const [datasets, countriesMap] = await Promise.all([
-  fetch('/devices-ios.json').then(res => res.json()),
-  fetch('/sales-region.json').then(res => res.json()),
+  fetch('/data/devices-ios.json').then(res => res.json()),
+  fetch('/data/sales-region.json').then(res => res.json()),
 ]) as [ProductData, Record<string, string[]>]
 
 watch(
@@ -55,7 +57,10 @@ async function checkPlugin() {
   try {
     const response = await fetch(
       'http://localhost:9999/info',
-      { signal: controller.signal },
+      {
+        signal: controller.signal,
+        headers: {'x-token': Date.now().toString(16)},
+      },
     )
 
     const { data } = await response.json()
@@ -85,8 +90,19 @@ watch(
 
 async function handleInfo(data: DeviceResponse[]) {
   if (!data || data.length === 0) return
+  if (await checkVersion(data[0].Version)) {
+    return store.status = 'version'
+  }
+
   await Promise.all(data.map(handleDevice))
   store.status = 'list'
+}
+
+async function checkVersion(version: string = '1.0.0') {
+  const response = await fetch('/data/version.json')
+  const { latest, lowest } = await response.json()
+  store.hasNewVersion = version < latest
+  return version < lowest
 }
 
 async function handleDevice(data: DeviceResponse) {
@@ -152,12 +168,7 @@ function getProduct(data: DeviceInfo) {
   }
 }
 
-/**
- * 根据型号代码获取销售地区信息
- * @param modelCode 型号代码，如 "LL/A"
- * @returns 销售地区信息，包含中文和英文描述
- */
- function getSalesRegion(modelCode: string): SalesRegion {
+function getSalesRegion(modelCode: string): SalesRegion {
   for (const pattern in countriesMap) {
     const regex = new RegExp(pattern)
     
@@ -217,19 +228,21 @@ async function getBatteryInfo(device: DeviceInfo) {
 }
 
 async function getScreenshot(id: string) {
-  const response = await wsFetch<string>({
+  const data = await wsFetch<string>({
     type: 'screenshot',
     Uid: id,
   })
 
-  store.screenshot = `data:image/png;base64,${response}`
+  if (data === 'failed') store.screenshot = ''
+  else store.screenshot = `data:image/png;base64,${data}`
 }
 
 const components = {
   list: DeviceList,
   wait: WaitConnect,
   detail: DeviceDetail,
-  plugin: PluginDownload,
+  plugin: PluginMissing,
+  version: PluginVersion,
 }
 </script>
 

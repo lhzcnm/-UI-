@@ -76,22 +76,6 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
-      label="服务说明"
-      desc="中文服务说明"
-      :content-flex="false"
-    >
-      <XButton icon="lucide:edit">编辑</XButton>
-    </FormField>
-
-    <FormField
-      label="服务说明EN"
-      desc="英文服务说明"
-      :content-flex="false"
-    >
-      <XButton icon="lucide:edit">编辑</XButton>
-    </FormField>
-
-    <FormField
       label="重置价格"
       desc="所有用户恢复原价"
       :content-flex="false"

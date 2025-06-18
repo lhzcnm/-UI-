@@ -29,6 +29,11 @@ const templates: Template[] = [
     tags: [...baseTag, '序列号',  '网络锁', '激活锁', '保修期限'],
     preview: '/images/tmp-3.png'
   },
+  {
+    id: 4,
+    tags: ['设备名称', '颜色', 'IMEI', '版本', '容量', '销售地区', '序列号', '网络锁', '激活锁'],
+    preview: '/images/tmp-4.png'
+  },
 ]
 
 async function handleSubmit() {
@@ -62,7 +67,7 @@ async function handleSubmit() {
   >
     <div class="h-[450px] overflow-y-auto">
       <div class="grid grid-cols-2 gap-3">
-        <label 
+        <label
           v-for="template in templates" :key="template.id" 
           class="bg-card border rounded cursor-pointer"
         >

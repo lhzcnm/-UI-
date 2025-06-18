@@ -1,74 +1,56 @@
 <script setup lang="ts">
 import TheEditor from './components/TheEditor.vue'
-import { useEditor } from '@tiptap/vue-3'
 
-import StarterKit  from '@tiptap/starter-kit'
-import Underline   from '@tiptap/extension-underline'
-import TextStyle   from '@tiptap/extension-text-style'
-import Placeholder from '@tiptap/extension-placeholder'
-import TextAlign   from '@tiptap/extension-text-align'
+import type { EditorStore } from './utils'
+import { EDITOR_STORE } from './utils'
 
-const FontSizeTextStyle = TextStyle.extend({
-  addAttributes() {
-    return {
-      fontSize: {
-        default: null,
-        parseHTML: element => element.style.fontSize,
-        renderHTML: attributes => {
-          if (!attributes.fontSize) return {}
-          return { style: `font-size: ${attributes.fontSize}` }
-        },
-      },
-    }
-  },
+const store: EditorStore = reactive({
+  selected: '',
+  result: '',
 })
 
-const editor = useEditor({
-  content: '',
-  extensions: [
-    StarterKit.configure({
-      orderedList: {
-        HTMLAttributes: {
-          class: 'list-decimal pl-5',
-        },
-      },
-      bulletList: {
-        HTMLAttributes: {
-          class: 'list-disc pl-5',
-        },
-      },
-      paragraph: {
-        HTMLAttributes: {
-          class: 'text-base',
-        },
-      },
-    }),
-    Underline,
-    FontSizeTextStyle,
-    TextAlign.configure({
-      types: ['heading', 'paragraph'],
-    }),
-    Placeholder.configure({
-      placeholder: 'Write something …',
-    }),
-  ],
-  editorProps: {
-    attributes: {
-      class: 'outline-none'
-    }
-  }
-})
+provide(EDITOR_STORE, store)
 
+const options = [
+  { label: '中文服务说明', value: 'service' },
+  { label: '英文服务说明', value: 'service-en' },
+  { label: '滑动公告', value: 'scrolling' },
+  { label: '弹窗公告', value: 'popup' },
+  { label: '充值说明', value: 'recharge' },
+]
+
+function handleSave() {
+  console.log(store.selected)
+}
 </script>
 
 <template>
-  <div class="flex space-x-6 p-6">
-    <div class="flex-1">
-      <TheEditor :editor="editor" />
-    </div>
-    <div class="flex-1">
-      <h2 class="text-xl font-bold mb-3">预览</h2>
-      <div class="border rounded p-4" v-html="editor?.getHTML()" />
-    </div>
-  </div>
+  <SplitPlane>
+    <template #left>
+      <TheEditor />
+    </template>
+    <template #right>
+      <div class="p-3">
+        <div class="flex items-center justify-between">
+          <XSelect
+            v-model="store.selected"
+            ui-trigger="w-48"
+            placeholder="选择编辑类型"
+          >
+            <XSelectItem
+              v-for="item in options" :key="item.value"
+              :value="item.value" :label="item.label"
+            />
+          </XSelect>
+
+          <XButton label="保存" @click="handleSave" />
+        </div>
+
+        <div class="mt-6">
+          <h2 class="text-xl font-bold mb-3">预览</h2>
+          <div class="h-[calc(100vh-11rem)] p-4 overflow-y-auto border rounded" />
+        </div>
+      </div>
+    </template>
+  </SplitPlane>
 </template>
