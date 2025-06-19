@@ -42,7 +42,7 @@ function handleEdit(type: string) {
       <XButton
         label="编辑" size="sm"
         icon="lucide:edit"
-        @click="handleEdit('popup')"
+        @click="handleEdit('popupAnnc')"
       />
     </FormField>
 
@@ -58,7 +58,7 @@ function handleEdit(type: string) {
       <XButton
         label="编辑" size="sm"
         icon="lucide:edit"
-        @click="handleEdit('scrolling')"
+        @click="handleEdit('scrollingAnnc')"
       />
     </FormField>
 
@@ -74,7 +74,7 @@ function handleEdit(type: string) {
       <XButton
         label="编辑" size="sm"
         icon="lucide:edit"
-        @click="handleEdit('recharge')"
+        @click="handleEdit('paymentInfo')"
       />
     </FormField>
   </div>

@@ -10,7 +10,6 @@ export const useSystemStore = defineStore('system', () => {
   const isGlobalSearch = ref<boolean>(false)
   const selectedOrders = ref<OrderBatchEditItem[]>([])
   const showSetting = ref(false)
-  const richText = ref('')
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
@@ -22,7 +21,6 @@ export const useSystemStore = defineStore('system', () => {
     breadcrumbItems,
     isGlobalSearch,
     selectedOrders,
-    richText,
     toggleSidebar,
   }
 })

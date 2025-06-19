@@ -43,7 +43,9 @@ const b = style()
         @click="iStore.toggleSidebar"
       >
         <Icon :icon="foldIcon" class="size-5" />
-        <div class="x-tooltip-text top120">折叠</div>
+        <div class="x-tooltip-text top120">
+          {{ iStore.showSidebar ? '折叠' : '展开' }}
+        </div>
       </button>
 
       <Breadcrumb :items="iStore.breadcrumbItems" />

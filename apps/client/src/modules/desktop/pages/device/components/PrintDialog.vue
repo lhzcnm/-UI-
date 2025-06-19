@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import { getPrintPayload, STORE } from '../utils'
-import { wsFetch } from '../utils/websocket'
-
-const store = inject(STORE)!
-const loading = ref(false)
-const selected = ref(1)
+import { getPrintPayload, STORE, wsFetch } from '../utils'
 
 interface Template {
-  id: number
+  id     : number
+  tags   : string[]
   preview: string
-  tags: string[]
 }
 
 const baseTag = ['设备名称', '颜色', 'IMEI', '主板序号', '版本', '型号', '容量', '电池循环次数']
@@ -35,6 +30,10 @@ const templates: Template[] = [
     preview: '/images/tmp-4.png'
   },
 ]
+
+const store = inject(STORE)!
+const loading = ref(false)
+const selected = ref(1)
 
 async function handleSubmit() {
   loading.value = true

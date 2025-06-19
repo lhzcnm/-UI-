@@ -12,18 +12,20 @@ type WebSocketType =
   | 'exitRecoveryMode'
   | 'reboot'
   | 'shutdown'
+  | 'mountImage'
 
 interface WebSocketParams {
   type                   : WebSocketType
+
   Uid                   ?: string
-  CycleCount            ?: number
+  DeviceName            ?: string
+  ModelNumber           ?: string
+  MLBSerialNumber       ?: string
   Imei                  ?: string
   Color                 ?: string
-  DeviceName            ?: string
-  MLBSerialNumber       ?: string
-  ProductVersion        ?: string
+  CycleCount            ?: number
   RegionInfo            ?: string
-  ModelNumber           ?: string
+  ProductVersion        ?: string
   TotalDiskCapacity     ?: number
   NominalChargeCapacity ?: number
   DesignCapacity        ?: number

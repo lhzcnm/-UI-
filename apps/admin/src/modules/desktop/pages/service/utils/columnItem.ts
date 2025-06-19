@@ -7,7 +7,6 @@ import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 
 const serviceStore =  useServiceStore()
-const iStore = useSystemStore()
 
 export const columns: XColDef<Service> = [
   {
@@ -68,12 +67,11 @@ export const columns: XColDef<Service> = [
     key: 'mustRead',
     title: '中文服务说明',
     width: 108,
-    render(value, row) {
+    render(_, row) {
       return h(XButton, {
         size: 'sm',
         label: '编辑',
         onClick() {
-          iStore.richText = value
           router.push({
             path: '/editor',
             query: {
@@ -89,12 +87,11 @@ export const columns: XColDef<Service> = [
     key: 'mustReadLocal',
     title: '英文服务说明',
     width: 108,
-    render(value, row) {
+    render(_, row) {
       return h(XButton, {
         size: 'sm',
         label: '编辑',
         onClick() {
-          iStore.richText = value
           router.push({
             path: '/editor',
             query: {

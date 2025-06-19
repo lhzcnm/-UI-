@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { Editor } from '@tiptap/vue-3'
 import { Icon } from '@iconify/vue'
 
 interface FontSizePickerProps {
-  editor: any
+  editor: Editor
 }
 
 const props = defineProps<FontSizePickerProps>()
@@ -36,7 +37,10 @@ function handleFontSize(event: Event) {
     trigger="click"
   >
     <template #trigger>
-      <button class="hover:bg-muted rounded px-1.5 py-1">
+      <button
+        class="hover:bg-muted rounded px-1.5 py-1"
+        :class="editor.isActive('textStyle') && 'bg-muted'"
+      >
         <Icon icon="iconoir:text-size" class="size-5" />
       </button>
     </template>
@@ -48,13 +52,13 @@ function handleFontSize(event: Event) {
         :class="[
           'flex items-center w-full text-sm',
           'rounded px-2 py-1 hover:bg-muted transition-colors',
-          editor?.isActive('textStyle', {fontSize: item.value})
+          editor.isActive('textStyle', {fontSize: item.value})
         ]"
       >
         <span>{{ item.label }}</span>
         <Icon 
           icon="lucide:check" class="inline-block size-4 ml-auto opacity-0 transition-opacity"
-          :class="{'opacity-100': editor?.isActive('textStyle', {fontSize: item.value})}"
+          :class="{'opacity-100': editor.isActive('textStyle', {fontSize: item.value})}"
         />
       </button>
     </div>

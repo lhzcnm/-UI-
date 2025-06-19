@@ -4,8 +4,7 @@ import { tv } from 'tailwind-variants'
 import { useThrottleFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 
-import { STORE } from '../utils'
-import { wsFetch } from '../utils/websocket'
+import { wsFetch, STORE } from '../utils'
 
 const b = tv({
   base: [
@@ -97,6 +96,11 @@ const deviceName = computed(() => {
   return selected.info.DeviceName
 })
 
+const isSuccess = computed(() =>
+  store.screenshot &&
+  store.screenshotStatus === 'success'
+)
+
 function getIphoneDeviceType(matched: RegExpMatchArray | null) {
   if (matched && Number(matched[1]) <= 8) return 'iPhone8'
   if (matched && Number(matched[1]) >= 11) return 'iPhone11'
@@ -175,14 +179,23 @@ async function onRefresh() {
           borderRadius: deviceImage.imageRadius,
         }"
       >
-        <img
-          v-if="store.screenshot"
-          :src="store.screenshot"
-          alt="Device Screenshot"
-          class="size-full"
-          draggable="false"
-          @error="store.screenshot = ''"
-        >
+        <template v-if="store.screenshotStatus === 'wait'">
+          <div class="absolute size-full flex items-center justify-center">
+            <div class="flex flex-col justify-center items-center p-6 border rounded bg-muted">
+              <Icon icon="lucide:loader" class="size-6 animate-spin" />
+              <span class="inline-block text-sm mt-3">截图加载中...</span>
+            </div>
+          </div>
+        </template>
+        <template v-else-if="isSuccess">
+          <img
+            :src="store.screenshot"
+            alt="Device Screenshot"
+            class="size-full"
+            draggable="false"
+            @error="store.screenshot = ''"
+          >
+        </template>
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>
           <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-3xl font-bold">{{ currentTime }}</div>

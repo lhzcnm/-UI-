@@ -1,20 +1,9 @@
-import { maskText } from "@/utils"
-import type { DeviceForm, ProductItem, Device, DeviceResponse } from "../types"
+import type { DeviceStore, DeviceMapItem, DeviceSummary } from "../types"
 import type { IK } from "@3un/shared"
 
 import { stripHtml } from '@3un/utils'
 
-type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version'
-
-export interface DeviceStore {
-  deviceMap    : Map<string, Device>
-  status       : DeviceStatus
-  visiblePrint : boolean
-  printIndex   : string
-  screenshot   : string
-  selected     : string
-  hasNewVersion: boolean
-}
+export * from './websocket'
 
 export const STORE: IK<DeviceStore> = Symbol('device')
 
@@ -26,7 +15,7 @@ export function formatSize(bytes: number) {
   return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + units[i]
 }
 
-export const getCopyToken = (info: DeviceForm) => ([
+export const getCopyToken = (info: DeviceSummary) => ([
   ['序列号', info.SerialNumber],
   ['串号', info.Imei],
   ['型号号码', `${info.ModelNumber} ${info.RegionInfo}`],
@@ -44,46 +33,23 @@ export const getCopyToken = (info: DeviceForm) => ([
   ['CPU类型', info.CPU],
 ])
 
-export function getPrintPayload(device: Device) {
-  const { info, memory, product, battery, form } = device
+export function getPrintPayload(device: DeviceMapItem) {
+  const { info, memory, product, battery, summary } = device
   return {
-    DeviceName: product.Name,
-    Color: product.Color,
-    Imei: form.Imei,
-    SerialNumber: form.SerialNumber,
-    MLBSerialNumber: info.MLBSerialNumber,
-    ProductVersion: info.ProductVersion,
-    RegionInfo: info.RegionInfo,
-    ModelNumber: info.ModelNumber,
-    TotalDiskCapacity: memory.TotalDiskCapacity,
+    DeviceName           : product.Name,
+    Imei                 : summary.Imei,
+    SerialNumber         : summary.SerialNumber,
+    MLBSerialNumber      : info.MLBSerialNumber,
+    ProductVersion       : info.ProductVersion,
+    ModelNumber          : info.ModelNumber,
+    RegionInfo           : info.RegionInfo,
+    Color                : product.Color,
+    CycleCount           : battery.CycleCount,
+    DesignCapacity       : battery.DesignCapacity,
+    TotalDiskCapacity    : memory.TotalDiskCapacity,
     NominalChargeCapacity: battery.NominalChargeCapacity,
-    DesignCapacity: battery.DesignCapacity,
-    CycleCount: battery.CycleCount,
-    NetworkLock: stripHtml(form.NetworkLock),
-    ActivationLock: stripHtml(form.ActivationLock),
-    Warranty: form.Warranty,
-  }
-}
-
-export function getDeviceForm(device: DeviceResponse, product: ProductItem) {
-  const { DeviceInfo, ICloud } = device
-  return {
-    ModelNumber: DeviceInfo.ModelNumber,
-    SerialNumber: DeviceInfo.SerialNumber,
-    MLBSerialNumber: DeviceInfo.MLBSerialNumber,
-    Imei: DeviceInfo.InternationalMobileEquipmentIdentity,
-    ProductType: `${DeviceInfo.ProductType} (${product.ModelNumber})`,
-    ProductVersion: DeviceInfo.ProductVersion,
-    BuildVersion: DeviceInfo.BuildVersion,
-    RegionInfo: DeviceInfo.RegionInfo,
-    Ecid: DeviceInfo.Ecid.toUpperCase(),
-    WiFiAddress: maskText(DeviceInfo.WiFiAddress, 9, 11),
-    UniqueDeviceID: DeviceInfo.UniqueDeviceID,
-    iCloud: ICloud.CloudBackupEnabled ? '已开启' : '未开启',
-    ActivationState: DeviceInfo.ActivationState ? '已激活' : '未激活',
-    CPU: product.Chip || '--',
-    Warranty: '--',
-    NetworkLock: '--',
-    ActivationLock: '--',
+    NetworkLock          : stripHtml(summary.NetworkLock),
+    ActivationLock       : stripHtml(summary.ActivationLock),
+    Warranty             : summary.Warranty,
   }
 }

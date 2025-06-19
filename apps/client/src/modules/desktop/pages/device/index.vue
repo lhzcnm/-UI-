@@ -1,26 +1,34 @@
 <script setup lang="ts">
-import DeviceList       from './views/DeviceList.vue'
-import DeviceDetail     from './views/DeviceDetail.vue'
-import WaitConnect      from './views/WaitConnect.vue'
-import PluginMissing    from './views/PluginMissing.vue'
-import PluginVersion    from './views/PluginVersion.vue'
-import PrintDialog      from './components/PrintDialog.vue'
+import DeviceList     from './views/DeviceList.vue'
+import DeviceDetail   from './views/DeviceDetail.vue'
+import WaitConnect    from './views/WaitConnect.vue'
+import PluginMissing  from './views/PluginMissing.vue'
+import PluginVersion  from './views/PluginVersion.vue'
+import PrintDialog    from './components/PrintDialog.vue'
 
-import type { DeviceStore } from './utils'
-import type { BatteryInfo, DeviceInfo, MemoryInfo, ProductData, ProductInfo, DeviceResponse, SalesRegion } from './types'
-
-import { STORE, getDeviceForm } from './utils'
-import { ws, wsFetch } from './utils/websocket'
 import http from '@/utils/http'
+import { maskText } from '@/utils'
+
+import type {
+  DeviceStore,
+  DeviceBaseInfo,
+  DeviceResponse, BatteryResponse,
+  ProductDataset, SaleRegionDataset,
+  SaleRegion, ProductItem,
+  DeviceCache, DeviceProduct,
+} from './types'
+
+import { ws, wsFetch, STORE } from './utils'
 
 const store: DeviceStore = reactive({
-  deviceMap    : new Map(),
-  visiblePrint : false,
-  hasNewVersion: false,
-  status       : 'wait',
-  printIndex   : '',
-  screenshot   : '',
-  selected     : '',
+  deviceMap        : new Map(),
+  visiblePrint     : false,
+  hasNewVersion    : false,
+  deviceStatus     : 'wait',
+  screenshotStatus : 'wait',
+  printIndex       : '',
+  screenshot       : '',
+  selected         : '',
 })
 
 provide(STORE, store)
@@ -28,7 +36,7 @@ provide(STORE, store)
 const [datasets, countriesMap] = await Promise.all([
   fetch('/data/devices-ios.json').then(res => res.json()),
   fetch('/data/sales-region.json').then(res => res.json()),
-]) as [ProductData, Record<string, string[]>]
+]) as [ProductDataset, SaleRegionDataset]
 
 watch(
   ws.data,
@@ -43,11 +51,37 @@ watch(
       await handleDevice(data)
 
       if (store.deviceMap.size === 1) {
-        store.status = 'list'
+        store.deviceStatus = 'list'
       }
     }
   },
 )
+
+watch(
+  () => store.selected,
+  (value) => {
+    if (!value) return
+    store.screenshot = ''
+
+    const [, uniqueId] = value.split(':')
+    checkScreenshot(uniqueId)
+  },
+)
+
+function handleDisconnect(value: string) {
+  const deviceId = value.split(':')[1]
+
+  for (const key of store.deviceMap.keys()) {
+    const keyPrefix = key.split(':')[0]
+    if (keyPrefix === deviceId) {
+      store.deviceMap.delete(key)
+    }
+  }
+
+  if (store.deviceMap.size === 0) {
+    store.deviceStatus = 'wait'
+  }
+}
 
 await checkPlugin()
 async function checkPlugin() {
@@ -73,29 +107,19 @@ async function checkPlugin() {
     }
     catch (error) {
       console.warn(error)
-      store.status = 'plugin'
+      store.deviceStatus = 'plugin'
     }
   }
 }
 
-watch(
-  () => store.selected,
-  (value) => {
-    if (!value) return
-    const [, uniqueId] = value.split(':')
-    store.screenshot = ''
-    getScreenshot(uniqueId)
-  },
-)
-
 async function handleInfo(data: DeviceResponse[]) {
   if (!data || data.length === 0) return
   if (await checkVersion(data[0].Version)) {
-    return store.status = 'version'
+    return store.deviceStatus = 'version'
   }
 
   await Promise.all(data.map(handleDevice))
-  store.status = 'list'
+  store.deviceStatus = 'list'
 }
 
 async function checkVersion(version: string = '1.0.0') {
@@ -107,40 +131,36 @@ async function checkVersion(version: string = '1.0.0') {
 
 async function handleDevice(data: DeviceResponse) {
   const { DeviceInfo, Memory, ICloud, DeviceID } = data
-  const product = getProduct(DeviceInfo)
-  const form = getDeviceForm(data, product)
-  const battery = await getBatteryInfo(DeviceInfo)
-  const cache = await getPrevCache(form.Imei)
-  const SalesRegion = getSalesRegion(form.RegionInfo)
   const key = `${DeviceID}:${DeviceInfo.UniqueDeviceID}`
+  const imei = DeviceInfo.InternationalMobileEquipmentIdentity
+
+  const product = getProduct(DeviceInfo)
+  const battery = await getBatteryInfo(DeviceInfo)
+  const cache   = await getPrevCache(imei)
+
+  const summary = handleSummary(data, product, cache)
+  const cacheStatus = getDeviceCacheStatus(cache)
 
   http.post('/device/save', data)
+
   store.deviceMap.set(key, {
-    DeviceID : DeviceID,
-    icloud   : ICloud,
+    deviceId : DeviceID,
     product  : product,
+    battery  : battery,
+    memory   : Memory,
+    icloud   : ICloud,
     info     : DeviceInfo,
-    battery  : battery as BatteryInfo,
-    memory   : Memory as MemoryInfo,
-    form     : { ...form, ...cache, SalesRegion },
-    cache    : {
-      hasNetworkLock: cache.NetworkLock !== '--',
-      hasActivationLock: cache.ActivationLock !== '--',
-      hasWarranty: cache.Warranty !== '--',
-      
-      showNetworkLock: cache.NetworkLock === '--',
-      showActivationLock: cache.ActivationLock === '--',
-      showWarranty: cache.Warranty === '--'
-    },
+    cache    : cacheStatus,
+    summary  : summary,
   })
 }
 
-function getProduct(data: DeviceInfo) {
+function getProduct(data: DeviceBaseInfo) {
   type ProductKey = keyof typeof datasets
 
   let product = null
   if (data.ProductType in datasets) {
-    product = datasets[data.ProductType as ProductKey] as ProductInfo
+    product = datasets[data.ProductType as ProductKey] as ProductItem
     if (Array.isArray(product)) product = product[0]  
   }
 
@@ -168,11 +188,11 @@ function getProduct(data: DeviceInfo) {
   }
 }
 
-function getSalesRegion(modelCode: string): SalesRegion {
+function getSalesRegion(regionInfo: string): SaleRegion {
   for (const pattern in countriesMap) {
     const regex = new RegExp(pattern)
     
-    if (regex.test(modelCode)) {
+    if (regex.test(regionInfo)) {
       const regions = countriesMap[pattern]
       return {
         chinese: regions[0],
@@ -187,23 +207,39 @@ function getSalesRegion(modelCode: string): SalesRegion {
   }
 }
 
-function handleDisconnect(value: string) {
-  const deviceId = value.split(':')[1]
+function handleSummary(
+  device: DeviceResponse,
+  product: DeviceProduct,
+  cache: DeviceCache,
+) {
+  const { DeviceInfo: info, ICloud } = device
+  const salesRegion = getSalesRegion(info.RegionInfo)
 
-  for (const key of store.deviceMap.keys()) {
-    const keyPrefix = key.split(':')[0]
-    if (keyPrefix === deviceId) {
-      store.deviceMap.delete(key)
-    }
-  }
+  return {
+    ModelNumber     : info.ModelNumber,
+    SerialNumber    : info.SerialNumber,
+    MLBSerialNumber : info.MLBSerialNumber,
+    Imei            : info.InternationalMobileEquipmentIdentity,
+    ProductType     : `${info.ProductType} (${product.ModelNumber})`,
+    ProductVersion  : info.ProductVersion,
+    BuildVersion    : info.BuildVersion,
+    RegionInfo      : info.RegionInfo,
+    UniqueDeviceID  : info.UniqueDeviceID,
+    Ecid            : info.Ecid.toUpperCase(),
+    WiFiAddress     : maskText(info.WiFiAddress, 9, 11),
+    ActivationState : info.ActivationState ? '已激活' : '未激活',
+    iCloud          : ICloud.CloudBackupEnabled ? '已开启' : '未开启',
+    CPU             : product.Chip || '--',
+    SalesRegion     : salesRegion,
 
-  if (store.deviceMap.size === 0) {
-    store.status = 'wait'
+    Warranty        : cache.warrantyCode || '--',
+    NetworkLock     : cache.networkLockCode || '--',
+    ActivationLock  : cache.activationLockCode || '--',
   }
 }
 
 async function getPrevCache(imei: string) {
-  const { data } = await http.post(
+  const { data } = await http.post<DeviceCache>(
     '/device/prev-query',
     {
       networkLockId: 1160,
@@ -213,15 +249,27 @@ async function getPrevCache(imei: string) {
     },
   )
 
+  return data
+}
+
+function getDeviceCacheStatus(cache: DeviceCache) {
+  const hasNetworkLock = cache.networkLockCode !== '--'
+  const hasActivationLock = cache.activationLockCode !== '--'
+  const hasWarranty = cache.warrantyCode !== '--'
+
   return {
-    NetworkLock: data.networkLockCode || '--',
-    ActivationLock: data.activationLockCode || '--',
-    Warranty: data.warrantyCode || '--',
+    hasNetworkLock: hasNetworkLock,
+    hasActivationLock: hasActivationLock,
+    hasWarranty: hasWarranty,
+
+    showNetworkLock: !hasNetworkLock,
+    showActivationLock: !hasActivationLock,
+    showWarranty: !hasWarranty,
   }
 }
 
-async function getBatteryInfo(device: DeviceInfo) {
-  return await wsFetch<BatteryInfo>({
+async function getBatteryInfo(device: DeviceBaseInfo) {
+  return await wsFetch<BatteryResponse>({
     Uid: device.UniqueDeviceID,
     type: 'battery',
   })
@@ -237,6 +285,19 @@ async function getScreenshot(id: string) {
   else store.screenshot = `data:image/png;base64,${data}`
 }
 
+async function checkScreenshot(id: string) {
+  const data = await wsFetch<string>({
+    type: 'mountImage',
+    Uid: id,
+  })
+
+  const isSuccess = data.endsWith('success')
+  const status = isSuccess ? 'success' : 'fail'
+
+  if (isSuccess) await getScreenshot(id)
+  store.screenshotStatus = status
+}
+
 const components = {
   list: DeviceList,
   wait: WaitConnect,
@@ -249,7 +310,7 @@ const components = {
 <template>
   <div class="p-4 h-full">
     <Transition name="fade-in" mode="out-in">
-      <component :is="components[store.status]" />
+      <component :is="components[store.deviceStatus]" />
     </Transition>
 
     <PrintDialog />

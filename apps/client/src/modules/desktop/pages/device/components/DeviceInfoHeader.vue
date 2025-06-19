@@ -3,8 +3,7 @@ import { twJoin } from 'tailwind-merge'
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import { STORE, getCopyToken } from '../utils'
-import { wsFetch } from '../utils/websocket'
+import { wsFetch, STORE, getCopyToken } from '../utils'
 
 const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
@@ -37,7 +36,7 @@ async function handlePrint() {
 
 function handleCopy() {
   const device = store.deviceMap.get(store.selected)!
-  const tokens = getCopyToken(device.form)
+  const tokens = getCopyToken(device.summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
   toast.success('复制成功')
@@ -90,7 +89,7 @@ const colorLabel = computed(() => {
         v-if="store.deviceMap.size"
         icon="lucide:list"
         label="设备列表" size="sm"
-        @click="store.status = 'list'"
+        @click="store.deviceStatus = 'list'"
       />
 
       <XButton size="sm" color="success" @click="handleRecoveryMode">

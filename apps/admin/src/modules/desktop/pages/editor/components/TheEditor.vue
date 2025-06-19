@@ -12,7 +12,27 @@ import TextStyle   from '@tiptap/extension-text-style'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign   from '@tiptap/extension-text-align'
 
+import { getSettings } from '@/api/settings'
 import { EDITOR_STORE } from '../utils'
+
+const store = inject(EDITOR_STORE)!
+const settings = ref()
+
+await getSetting()
+async function getSetting() {
+  const data = await getSettings()
+  settings.value = {}
+
+  for (const item of data) {
+    if (item.content) {
+      settings.value[item.name] = item.content
+      continue
+    }
+    if (item.status) {
+      settings.value[item.name] = item.status
+    }
+  }
+}
 
 const FontSizeTextStyle = TextStyle.extend({
   addAttributes() {
@@ -25,25 +45,22 @@ const FontSizeTextStyle = TextStyle.extend({
           return { style: `font-size: ${attributes.fontSize}` }
         },
       },
+      color: {
+        default: null,
+        parseHTML: element => element.style.color,
+        renderHTML: attributes => {
+          if (!attributes.color) return {}
+          return { style: `color: ${attributes.color}` }
+        },
+      },
     }
   },
 })
 
 const editor = new Editor({
-  content: '',
+  content: 'hello world',
   extensions: [
-    StarterKit.configure({
-      orderedList: {
-        HTMLAttributes: {
-          class: 'list-decimal pl-5',
-        },
-      },
-      bulletList: {
-        HTMLAttributes: {
-          class: 'list-disc pl-5',
-        },
-      },
-    }),
+    StarterKit,
     Underline,
     FontSizeTextStyle,
     TextAlign.configure({
@@ -55,31 +72,40 @@ const editor = new Editor({
   ],
   editorProps: {
     attributes: {
-      class: 'h-[calc(100vh-7.75rem)] outline-none'
+      class: 'h-[calc(100vh-8rem)] outline-none'
     }
   }
 })
 
 const route = useRoute()
-const iStore = useSystemStore()
-
-const store = inject(EDITOR_STORE)!
+const serviceStore = useServiceStore()
 
 watch(
   () => route.query,
-  ({ type }) => {
-    if (type) store.selected = type as string
-    if (type && type.toString().startsWith('service')) {
-      console.log(editor)
-      editor.commands.setContent(iStore.richText)
+  (value) => {
+    if (!value.type) return
+
+    const type = value.type as string
+    const id = value.id as string
+
+    store.selected = type
+
+    if (type.startsWith('service') && id) {
+      const isEn = type.endsWith('en')
+      const service = serviceStore.itemMap.get(Number(id))!
+      const content = isEn ? service.mustReadLocal : service.mustRead
+      editor.commands.setContent(content)
+      return
     }
+
+    const content = settings.value[type]
+    editor.commands.setContent(content)
   },
   { immediate: true },
 )
 
-onBeforeUnmount(() => {
-  editor.destroy()
-})
+onBeforeUnmount(() => editor.destroy())
+defineExpose({getHtml: () => editor.getHTML()})
 </script>
 
 <template>
@@ -87,14 +113,14 @@ onBeforeUnmount(() => {
     <div class="flex items-center flex-wrap p-3 py-2 border-b">
       <div class="space-x-0.5">
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           @click="editor.chain().focus().undo().run()"
         >
           <Icon icon="lucide:undo" class="size-5" />
           <div class="x-tooltip-text top120">撤销</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           @click="editor.chain().focus().redo().run()"
         >
           <Icon icon="lucide:redo" class="size-5" />
@@ -104,13 +130,22 @@ onBeforeUnmount(() => {
 
       <hr class="h-5 w-px mx-2 bg-border" />
 
-      <HeadingPicker :editor="editor" />
+      <div class="space-x-0.5">
+        <HeadingPicker :editor="editor" />
+        <button
+          class="x-tooltip hover:bg-muted rounded p-1.5"
+          @click="editor.chain().focus().unsetAllMarks().run()"
+        >
+          <Icon icon="lucide:eraser" class="size-5" />
+          <div class="x-tooltip-text top120">清除格式</div>
+        </button>
+      </div>
 
       <hr class="h-5 w-px mx-2 bg-border" />
 
       <div class="space-x-0.5">
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive('bold')}"
           @click="editor.chain().focus().toggleBold().run()"
         >
@@ -118,7 +153,7 @@ onBeforeUnmount(() => {
           <div class="x-tooltip-text top120">加粗</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive('italic')}"
           @click="editor.chain().focus().toggleItalic().run()"
         >
@@ -126,7 +161,7 @@ onBeforeUnmount(() => {
           <div class="x-tooltip-text top120">斜体</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive('underline')}"
           @click="editor.chain().focus().toggleUnderline().run()"
         >
@@ -134,7 +169,7 @@ onBeforeUnmount(() => {
           <div class="x-tooltip-text top120">下划线</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive('strike')}"
           @click="editor.chain().focus().toggleStrike().run()"
         >
@@ -147,7 +182,7 @@ onBeforeUnmount(() => {
 
       <div class="space-x-0.5">
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive('bulletList')}"
           @click="editor.chain().focus().toggleBulletList().run()"
         >
@@ -155,7 +190,7 @@ onBeforeUnmount(() => {
           <div class="x-tooltip-text top120">无序列表</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive('orderedList')}"
           @click="editor.chain().focus().toggleOrderedList().run()"
         >
@@ -168,7 +203,7 @@ onBeforeUnmount(() => {
 
       <div class="space-x-0.5">
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive({ textAlign: 'left' })}"
           @click="editor.chain().focus().setTextAlign('left').run()"
         >
@@ -176,7 +211,7 @@ onBeforeUnmount(() => {
           <div class="x-tooltip-text top120">左对齐</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive({ textAlign: 'center' })}"
           @click="editor.chain().focus().setTextAlign('center').run()"
         >
@@ -184,7 +219,7 @@ onBeforeUnmount(() => {
           <div class="x-tooltip-text top120">居中对齐</div>
         </button>
         <button
-          class="x-tooltip hover:bg-muted rounded px-1.5 py-1"
+          class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive({ textAlign: 'right' })}"
           @click="editor.chain().focus().setTextAlign('right').run()"
         >

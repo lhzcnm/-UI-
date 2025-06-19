@@ -12,6 +12,7 @@ const diskInfo = computed(() => {
     totalSystemCapacity: formatSize(memory.TotalSystemCapacity),
     totalDataCapacity: formatSize(memory.TotalDataCapacity),
     amountDataAvailable: formatSize(memory.AmountDataAvailable),
+    
     totalDiskCapacityPer: getPercentage(memory.TotalDiskCapacity, total),
     totalSystemCapacityPer: getPercentage(memory.TotalSystemCapacity, total),
     totalDataCapacityPer: getPercentage(memory.TotalDataCapacity, total),

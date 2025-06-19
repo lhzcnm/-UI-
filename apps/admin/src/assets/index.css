@@ -3,6 +3,9 @@
 @import 'tailwindcss/utilities';
 
 @import '@3un/ui/index.css';
+@import './tiptap.css';
+@import './utility.css';
+@import './animation.css';
 
 @layer base {
   :root {
@@ -73,125 +76,8 @@ body {
   @apply bg-background text-foreground;
 }
 
-.x-highlight {
-  color: theme('colors.orange.600');
-  background: transparent;
-  font-weight: bold;
-}
-
-/* Tiptap */
-.tiptap p.is-editor-empty:first-child::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-}
-
-/* tiptap */
-.tiptap:first-child {
-  margin-top: 0;
-}
-.tiptap h1,
-.tiptap h2,
-.tiptap h3,
-.tiptap h4 {
-  line-height: 1.5;
-  font-weight: 600;
-  text-wrap: pretty;
-}
-
-.tiptap h1 {
-  margin: 1rem 0 1rem;
-  font-size: 1.6rem;
-}
-.tiptap h2 {
-  margin: 1rem 0 0.75rem;
-  font-size: 1.4rem;
-}
-.tiptap h3 {
-  margin: 1rem 0 0.5rem;
-  font-size: 1.2rem;
-}
-.tiptap h4 {
-  margin: 1rem 0 0.25rem;
-  font-size: 1rem;
-}
-
-/* tooltip */
-.x-tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-.x-tooltip:hover .x-tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-.x-tooltip-text {
-  position: absolute;
-  left: 50%;
-  z-index: 100;
-
-  padding: 4px 8px;
-
-  opacity: 0;
-  visibility: hidden;
-  white-space: nowrap;
-  background-color: hsl(var(--foreground));
-  color: hsl(var(--background));
-  border-radius: 4px;
-  font-size: 12px;
-
-  transition: opacity 0.2s;
-  transition-delay: 0.3s;
-  transform: translateX(-50%);
-}
-.x-tooltip-text.bottom120 {
-  bottom: 120%;
-}
-.x-tooltip-text.top120 {
-  top: 120%;
-}
-
 /* Scrollbar */
 * {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--border)) transparent
-}
-
-/* 淡入淡出 */
-.fade-in-enter-active,
-.fade-in-leave-active {
-  transition: opacity 0.2s ease;
-}
-.fade-in-enter-from,
-.fade-in-leave-to {
-  opacity: 0;
-}
-
-/* 淡入淡出 - 缩放 */
-.fade-in-scale-enter-active {
-  @apply transition duration-300 ease-out;
-}
-.fade-in-scale-leave-active {
-  @apply transition duration-200 ease-in;
-}
-.fade-in-scale-enter-from,
-.fade-in-scale-leave-to {
-  @apply opacity-0 scale-95;
-}
-.fade-in-scale-enter-to,
-.fade-in-scale-leave-from {
-  @apply opacity-100 scale-100;
-}
-
-/* 左滑动 */
-.slide-left-enter-active,
-.slide-left-leave-active {
-  transition: transform 0.3s ease;
-}
-.slide-left-enter-from,
-.slide-left-leave-to {
-  transform: translateX(-100%);
 }

@@ -8,7 +8,7 @@ import { Icon } from '@iconify/vue'
     <div class="relative -mt-36">
       <div class="absolute inset-0 animate-pulse bg-primary/10 rounded-full blur-xl"></div>
       <div class="relative border-2 border-dashed border-primary/30 rounded-full p-6 bg-background/50 backdrop-blur-sm">
-        <Icon icon="lucide:circle-arrow-up" class="text-7xl text-primary x-animate-bounce" />
+        <Icon icon="lucide:circle-arrow-down" class="text-7xl text-primary x-animate-bounce" />
       </div>
     </div>
     <div class="mt-12 text-center space-y-4">

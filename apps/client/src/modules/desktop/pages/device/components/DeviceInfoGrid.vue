@@ -6,9 +6,7 @@ import { Icon } from '@iconify/vue'
 import { xconfirm } from '@3un/utils'
 
 import http from '@/utils/http'
-
-import { STORE } from '../utils'
-import { wsFetch } from '../utils/websocket'
+import { wsFetch, STORE } from '../utils'
 
 const style = tv({
   slots: {
@@ -23,8 +21,8 @@ const uStore = useUserStore()
 const { copy } = useClipboard({ legacy: true })
 
 const form = computed({
-  get: () => store.deviceMap.get(store.selected)!.form,
-  set: (value) => store.deviceMap.get(store.selected)!.form = value,
+  get: () => store.deviceMap.get(store.selected)!.summary,
+  set: (value) => store.deviceMap.get(store.selected)!.summary = value,
 })
 
 const cache = computed({

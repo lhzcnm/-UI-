@@ -1,13 +1,110 @@
-// GET /info
-export interface DeviceResponse {
-  DeviceID: number
-  DeviceInfo: DeviceInfo
-  ICloud: ICloudInfo
-  Memory: MemoryInfo
-  Version: string
+// Store
+export type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version'
+export type ScreenshotStatus = 'wait' | 'success' | 'fail'
+
+export interface DeviceStore {
+  deviceMap        : Map<string, DeviceMapItem>
+  deviceStatus     : DeviceStatus
+  screenshotStatus : ScreenshotStatus
+  visiblePrint     : boolean
+  printIndex       : string
+  screenshot       : string
+  selected         : string
+  hasNewVersion    : boolean
 }
 
-export interface DeviceInfo {
+// Datasets
+export interface ProductDataset {
+  [key: string]: string | ProductItem | ProductItem[]
+}
+export interface SaleRegionDataset {
+  [key: string]: string[]
+}
+
+export interface ProductItem {
+  [key: string]: string
+  Name: string
+  Chip: string
+}
+export interface SaleRegion {
+  chinese: string
+  english: string
+}
+
+// GET info
+export interface DeviceResponse {
+  DeviceID   : number
+  Version    : string
+  Memory     : DeviceMemory
+  ICloud     : DeviceICloud
+  DeviceInfo : DeviceBaseInfo
+}
+
+// GET battery
+export interface BatteryResponse {
+  InstantAmperage       : number
+  Temperature           : number
+  Voltage               : number
+  IsCharging            : boolean
+  CurrentCapacity       : number
+  DesignCapacity        : number
+  NominalChargeCapacity : number
+  CycleCount            : number
+  AtCriticalLevel       : boolean
+  AtWarnLevel           : boolean
+}
+
+// Device Map Item
+export interface DeviceMapItem {
+  deviceId: number
+  info    : DeviceBaseInfo
+  icloud  : DeviceICloud
+  memory  : DeviceMemory
+  battery : BatteryResponse
+  product : DeviceProduct
+  summary : DeviceSummary
+  cache   : DeviceCacheStatus
+}
+
+export interface DeviceSummary {
+  UniqueDeviceID  : string
+  Ecid            : string
+  Imei            : string
+  SerialNumber    : string
+  ModelNumber     : string
+  RegionInfo      : string
+  MLBSerialNumber : string
+  ProductType     : string
+  ProductVersion  : string
+  BuildVersion    : string
+  WiFiAddress     : string
+  CPU             : string
+  iCloud          : string
+  SalesRegion     : SaleRegion
+  ActivationState : string
+  ActivationLock  : string
+  NetworkLock     : string
+  Warranty        : string
+}
+
+export interface DeviceCacheStatus {
+  hasNetworkLock: boolean
+  hasActivationLock: boolean
+  hasWarranty: boolean
+
+  showNetworkLock: boolean
+  showActivationLock: boolean
+  showWarranty: boolean
+}
+
+export interface DeviceProduct {
+  Name        : string
+  Chip        : string
+  Color       : string
+  ModelNumber : string
+}
+
+export interface DeviceBaseInfo {
   ActivationState: string
   ActivationStateAcknowledged: boolean
   BasebandActivationTicketVersion: string
@@ -94,7 +191,7 @@ export interface DeviceInfo {
   Ecid: string
 }
 
-export interface MemoryInfo {
+export interface DeviceMemory {
   AmountDataAvailable: number
   AmountDataReserved: number
   AmountRestoreAvailable: number
@@ -104,85 +201,15 @@ export interface MemoryInfo {
   TotalSystemCapacity: number
 }
 
-export interface ICloudInfo {
+export interface DeviceICloud {
   CloudBackupEnabled: boolean
   LastCloudBackupTZ: string
   LastiTunesBackupDate: number
   LastiTunesBackupTZ: string
 }
 
-// GET /battery
-export interface BatteryInfo {
-  InstantAmperage: number
-  Temperature: number
-  Voltage: number
-  IsCharging: boolean
-  CurrentCapacity: number
-  DesignCapacity: number
-  NominalChargeCapacity: number
-  CycleCount: number
-  AtCriticalLevel: boolean
-  AtWarnLevel: boolean
-}
-
-// store
-export interface Device {
-  DeviceID: number
-  icloud: ICloudInfo
-  info: DeviceInfo
-  memory: MemoryInfo
-  battery: BatteryInfo
-  product: ProductItem
-  form: DeviceForm
-  cache: {
-    hasNetworkLock: boolean
-    hasActivationLock: boolean
-    hasWarranty: boolean
-
-    showNetworkLock: boolean
-    showActivationLock: boolean
-    showWarranty: boolean
-  }
-}
-export interface DeviceForm {
-  Imei: string
-  SerialNumber: string
-  ModelNumber: string
-  RegionInfo: string
-  MLBSerialNumber: string
-  ProductType: string
-  ProductVersion: string
-  BuildVersion: string
-  Ecid: string
-  UniqueDeviceID: string
-  WiFiAddress: string
-  ActivationState: string
-  NetworkLock: string
-  ActivationLock: string
-  Warranty: string
-  SalesRegion: SalesRegion
-  iCloud: string
-  CPU: string
-}
-export interface ProductItem {
-  Name: string
-  Chip: string
-  Color: string
-  ModelNumber: string
-}
-
-// ios datasets
-export interface ProductData {
-  [key: string]: string | ProductInfo | ProductInfo[]
-}
-export interface ProductInfo {
-  [key: string]: string
-  Name: string
-  Chip: string
-}
-
-// sales region
-export interface SalesRegion {
-  chinese: string
-  english: string
+export interface DeviceCache {
+  networkLockCode: string
+  activationLockCode: string
+  warrantyCode: string
 }

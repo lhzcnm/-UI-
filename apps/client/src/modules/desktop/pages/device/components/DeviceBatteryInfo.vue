@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import type { BatteryInfo } from '../types'
+import type { BatteryResponse } from '../types'
 import { STORE } from '../utils'
 
 const store = inject(STORE)!
@@ -26,14 +26,14 @@ const batteryInfo = computed(() => {
   }
 })
 
-function getColor(battery: BatteryInfo) {
+function getColor(battery: BatteryResponse) {
   if (battery.IsCharging) return 'text-green-500'
   if (battery.CurrentCapacity >= 80) return 'text-green-500'
   if (battery.CurrentCapacity >= 20) return 'text-yellow-500'
   return 'text-red-500'
 }
 
-function getIcon(battery: BatteryInfo) {
+function getIcon(battery: BatteryResponse) {
   if (battery.IsCharging) return 'lucide:battery-charging'
   if (battery.CurrentCapacity >= 80) return 'lucide:battery-full'
   if (battery.CurrentCapacity >= 60) return 'lucide:battery-high'

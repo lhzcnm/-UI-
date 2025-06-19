@@ -2,15 +2,17 @@
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import type { Device } from '../types'
+import type { DeviceMapItem } from '../types'
 import { STORE, getCopyToken } from '../utils'
 
 interface DeviceCardProps {
-  device: Device
+  device: DeviceMapItem
 }
 
 const props = defineProps<DeviceCardProps>()
-const { info, memory, product, form, DeviceID } = props.device
+
+const { info, memory, product, summary, deviceId } = props.device
+const currentKey = `${deviceId}:${info.UniqueDeviceID}`
 
 const { copy } = useClipboard({ legacy: true })
 
@@ -23,17 +25,17 @@ const diskCapacity = computed(() => {
 })
 
 function toDevice() {
-  store.selected = `${DeviceID}:${info.UniqueDeviceID}`
-  store.status = 'detail'
+  store.selected = currentKey
+  store.deviceStatus = 'detail'
 }
 
 async function handlePrint() {
-  store.printIndex = `${DeviceID}:${info.UniqueDeviceID}`
+  store.printIndex = currentKey
   store.visiblePrint = true
 }
 
 function handleCopy() {
-  const tokens = getCopyToken(form)
+  const tokens = getCopyToken(summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
   toast.success('复制成功')
