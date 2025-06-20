@@ -3,6 +3,12 @@ import type { ServiceCreateParams } from '@/inters/services'
 import { IMEI_TYPE } from '@3un/utils'
 import { XRadio, XSwitch } from '@3un/ui'
 
+interface ItemFormProps {
+  isCreate: boolean
+  resetPrice: () => void
+}
+
+const props = defineProps<ItemFormProps>()
 const form = defineModel<ServiceCreateParams>({ required: true })
 const store = useServiceStore()
 </script>
@@ -76,11 +82,17 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
+      v-if="!props.isCreate"
       label="重置价格"
       desc="所有用户恢复原价"
       :content-flex="false"
     >
-      <XButton icon="lucide:database-backup" color="danger">重置</XButton>
+      <XButton
+        label="重置"
+        color="danger"
+        icon="lucide:database-backup"
+        @click="props.resetPrice"
+      />
     </FormField>
 
     <FormField

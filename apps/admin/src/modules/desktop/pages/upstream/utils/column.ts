@@ -8,30 +8,8 @@ import type { Upstream } from '@/inters/upstream'
 import { updateUpstream } from '@/api/upstream'
 
 export const columns: XColDef<Upstream> = [
+  { key: 'apiId', title: 'APIID', width: 68 },
   { key: 'apiTitle', title: 'API名称', width: 225 },
-  {
-    key: 'accountId',
-    title: '用户名',
-    width: 108,
-    cellEmpty: '--'
-  },
-  {
-    key: 'apiKey',
-    title: 'API密钥',
-    width: 300,
-    cellEmpty: '--'
-  },
-  {
-    key: 'apiType',
-    title: 'API类型',
-    width: 88,
-    render(value) {
-      return h(XTag, {
-        ...API_TYPE_MAP[value],
-        solid: true,
-      })
-    },
-  },
   {
     key: 'serverUrl',
     title: 'API地址',
@@ -50,6 +28,26 @@ export const columns: XColDef<Upstream> = [
       }
 
       return h('div', url)
+    },
+  },
+  {
+    key: 'accountId',
+    title: '用户名',
+    width: 108,
+    cellEmpty: '--'
+  },
+  {
+    key: 'apiKey',
+    title: 'API密钥',
+    width: 300,
+    cellEmpty: '--'
+  },
+  {
+    key: 'apiType',
+    title: 'API类型',
+    width: 88,
+    render(value) {
+      return h(XTag, API_TYPE_MAP[value])
     },
   },
   {

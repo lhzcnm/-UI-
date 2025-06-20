@@ -2,7 +2,7 @@ import { SERVICE_STORE } from '.'
 
 import { updateService } from '@/api/services'
 import { zService, type Service } from '@/inters/services'
-import router from '@/router'
+
 import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 
@@ -32,15 +32,26 @@ export const columns: XColDef<Service> = [
     key: 'apiId',
     title: '服务 API',
     width: 200,
-    render(value) {
+    render(value, row) {
+      const store = inject(SERVICE_STORE)!
       const api = serviceStore.items
         .find(item => item.apiId === value)
 
+      function openUpstream() {
+        store.visibleUpstream = true
+        store.formUpstream = {
+          serviceId: row.packageId,
+          apiId: value === -1 ? undefined : value,
+          externalNetworkId: row.externalNetworkId,
+        }
+      }
+      
       return h(
         'a',
         {
           href: 'javascript:void(0)',
           class: 'hover:text-success underline',
+          onClick: openUpstream,
         },
         api?.apiName || '编辑'
       )
@@ -62,46 +73,6 @@ export const columns: XColDef<Service> = [
     minWidth: 220,
     tdClassName: 'break-words',
     cellEmpty: '-',
-  },
-  {
-    key: 'mustRead',
-    title: '中文服务说明',
-    width: 108,
-    render(_, row) {
-      return h(XButton, {
-        size: 'sm',
-        label: '编辑',
-        onClick() {
-          router.push({
-            path: '/editor',
-            query: {
-              type: 'service',
-              id: row.packageId,
-            },
-          })
-        }
-      })
-    },
-  },
-  {
-    key: 'mustReadLocal',
-    title: '英文服务说明',
-    width: 108,
-    render(_, row) {
-      return h(XButton, {
-        size: 'sm',
-        label: '编辑',
-        onClick() {
-          router.push({
-            path: '/editor',
-            query: {
-              type: 'service-en',
-              id: row.packageId,
-            },
-          })
-        }
-      })
-    },
   },
   {
     key: 'packageOrderBy',

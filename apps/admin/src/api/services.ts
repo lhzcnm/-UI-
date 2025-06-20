@@ -1,4 +1,5 @@
-import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams } from '@/inters/services'
+import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams, UpstreamServiceSyncParams } from '@/inters/services'
+import type { AxiosResponse } from 'axios'
 
 import { zService, zServiceField, zServiceGroup, zUnlock } from '@/inters/services'
 import http from '@/utils/http'
@@ -24,6 +25,18 @@ export const updateService: ServiceUpdateFn = async (body) => {
 type ServiceDeleteFn = (id: number) => Promise<void>
 export const deleteService: ServiceDeleteFn = async (id) => {
   await http.delete(`/service/${id}`)
+}
+
+// reset service price
+type ResetServicePriceFn = (id: number) => Promise<AxiosResponse>
+export const resetServicePrice: ResetServicePriceFn = (id) => {
+  return http.delete(`/service/clean/${id}`)
+}
+
+// upstream service
+type UpstreamServiceUpdateFn = (body: UpstreamServiceSyncParams) => Promise<void>
+export const updateUpstreamService: UpstreamServiceUpdateFn = async (body) => {
+  await http.put('/api/service/edit', body)
 }
 
 // service group

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import ItemForm from '@/components/forms/service/ItemForm.vue'
+import ItemForm from '@forms/service/ItemForm.vue'
 
 import type { FormMode } from '@3un/shared'
-import { xconfirm, } from '@3un/utils'
+import { xconfirm } from '@3un/utils'
+import { toast } from 'vue-sonner'
 
 import type { ServiceCreateParams } from '@/inters/services'
-import { createService, deleteService, updateService } from '@/api/services'
+import { createService, deleteService, resetServicePrice, updateService } from '@/api/services'
 
 import { validate, type ValidRule } from '@/utils'
 import { SERVICE_STORE } from '../utils'
@@ -92,6 +93,12 @@ async function handleDelete() {
     store.visibleBase = false
   })
 }
+
+async function handleResetPrice() {
+  const item = serviceStore.items[store.index!]
+  await resetServicePrice(item.packageId)
+  toast.success('重置服务价格成功')
+}
 </script>
 
 <template>
@@ -99,7 +106,11 @@ async function handleDelete() {
     v-model="store.visibleBase"
     width="500px" :title="options[mode].title"
   >
-    <ItemForm v-model="store.formBase" />
+    <ItemForm
+      v-model="store.formBase"
+      :is-create="isCreate"
+      :reset-price="handleResetPrice"
+    />
     <template #footer>
       <div class="flex justify-between p-4 border-t">
         <XButton

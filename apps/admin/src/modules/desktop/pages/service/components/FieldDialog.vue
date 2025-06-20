@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FieldForm from '@/components/forms/service/FieldForm.vue'
+import FieldForm from '@forms/service/FieldForm.vue'
 import { createServiceField, updateServiceField } from '@/api/services'
 import { FIELD_STORE } from '../utils'
 

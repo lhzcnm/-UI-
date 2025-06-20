@@ -1,19 +1,28 @@
 <script setup lang="ts">
 import ItemDrawer from './components/ItemDrawer.vue'
+import ItemUpstream from './components/ItemUpstream.vue'
 
 import { zServiceForm } from '@/inters/services'
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { columns } from './utils/columnItem'
 import { isNullish } from '@3un/ui'
+import { getUpstreams } from '@/api/upstream'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
+  upstreams: [],
+
   formBase: zServiceForm.parse({}),
-  formSearch: {
-    categoryId: null,
-    keyword: '',
+  formSearch: { categoryId: null, keyword: '' },
+  formUpstream: {
+    apiId: undefined,
+    serviceId: undefined,
+    externalNetworkId: undefined,
   },
+
   visibleBase: false,
+  visibleUpstream: false,
+
   index: undefined,
 })
 
@@ -53,6 +62,12 @@ const displayItems = computed(() => {
 
   return items
 })
+
+initUpstreams()
+async function initUpstreams() {
+  const data = await getUpstreams()
+  store.upstreams = data
+}
 
 function openCreate() {
   store.formBase = zServiceForm.parse({})
@@ -109,5 +124,6 @@ function handleClear(type: ClearType) {
     </div>
 
     <ItemDrawer />
+    <ItemUpstream />
   </div>
 </template>

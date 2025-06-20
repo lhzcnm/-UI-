@@ -12,27 +12,9 @@ import TextStyle   from '@tiptap/extension-text-style'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign   from '@tiptap/extension-text-align'
 
-import { getSettings } from '@/api/settings'
 import { EDITOR_STORE } from '../utils'
 
 const store = inject(EDITOR_STORE)!
-const settings = ref()
-
-await getSetting()
-async function getSetting() {
-  const data = await getSettings()
-  settings.value = {}
-
-  for (const item of data) {
-    if (item.content) {
-      settings.value[item.name] = item.content
-      continue
-    }
-    if (item.status) {
-      settings.value[item.name] = item.status
-    }
-  }
-}
 
 const FontSizeTextStyle = TextStyle.extend({
   addAttributes() {
@@ -58,7 +40,7 @@ const FontSizeTextStyle = TextStyle.extend({
 })
 
 const editor = new Editor({
-  content: 'hello world',
+  content: '',
   extensions: [
     StarterKit,
     Underline,
@@ -78,7 +60,7 @@ const editor = new Editor({
 })
 
 const route = useRoute()
-const serviceStore = useServiceStore()
+// const serviceStore = useServiceStore()
 
 watch(
   () => route.query,
@@ -86,26 +68,29 @@ watch(
     if (!value.type) return
 
     const type = value.type as string
-    const id = value.id as string
+    // const id = value.id as string
 
-    store.selected = type
+    store.selectedType = type
 
-    if (type.startsWith('service') && id) {
-      const isEn = type.endsWith('en')
-      const service = serviceStore.itemMap.get(Number(id))!
-      const content = isEn ? service.mustReadLocal : service.mustRead
-      editor.commands.setContent(content)
-      return
-    }
+    // if (type.startsWith('service') && id) {
+    //   const isEn = type.endsWith('en')
+    //   const service = serviceStore.itemMap.get(Number(id))!
+    //   const content = isEn ? service.mustReadLocal : service.mustRead
+    //   editor.commands.setContent(content)
+    //   return
+    // }
 
-    const content = settings.value[type]
+    const content = store.settings[type] as string
     editor.commands.setContent(content)
   },
   { immediate: true },
 )
 
 onBeforeUnmount(() => editor.destroy())
-defineExpose({getHtml: () => editor.getHTML()})
+defineExpose({
+  getHtml: () => editor.getHTML(),
+  setHtml: (html: string) => editor.commands.setContent(html),
+})
 </script>
 
 <template>

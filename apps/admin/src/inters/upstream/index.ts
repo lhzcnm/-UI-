@@ -2,6 +2,8 @@ import type { WithId } from '@3un/shared'
 import { API_TYPE } from '@3un/utils'
 import { z } from 'zod/v4'
 
+export * from './service'
+
 export const zUpstream = z.object({
   apiId: z.number().default(0),
   apiTitle: z.string().default(''),

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { API_TYPE } from '@3un/utils'
+import { toast } from 'vue-sonner'
 
 import type { UpstreamCreateParams, Upstream } from '@/inters/upstream'
 import { zUpstreamForm } from '@/inters/upstream'
+import { syncUpstream } from '@/api/upstream'
 
 import { validate, VERIFY_MSG, type ValidRule } from '@/utils'
 import { UPSTREAM_STORE } from '../utils'
-import { syncUpstream } from '@/api/upstream'
-import { toast } from 'vue-sonner'
 
 interface UpstreamActionProps {
   row: Upstream
@@ -35,15 +35,16 @@ function getRules(form: UpstreamCreateParams) {
 }
 
 function handleSync() {
-  const rules = getRules(store.formBase)
+  const form = zUpstreamForm.parse(props.row)
+  const rules = getRules(form)
   if (!validate(rules)) return
 
   const response = syncUpstream({
     id: props.row.apiId,
-    accountId: store.formBase.accountId!,
-    apiKey: store.formBase.apiKey!,
-    serverUrl: store.formBase.serverUrl,
-    apiType: store.formBase.apiType,
+    accountId: form.accountId!,
+    apiKey: form.apiKey!,
+    serverUrl: form.serverUrl,
+    apiType: form.apiType,
   })
 
   response.then(() => {

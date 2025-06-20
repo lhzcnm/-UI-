@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupDialog from './components/groupDialog.vue'
+import GroupDialog from './components/GroupDialog.vue'
 
 import { zServiceGroupForm } from '@/inters/services'
 import { GROUP_STORE, type ServiceGroupStore } from './utils'

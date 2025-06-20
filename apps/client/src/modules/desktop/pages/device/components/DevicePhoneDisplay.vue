@@ -143,8 +143,14 @@ async function onRefresh() {
     Uid: uniqueId,
   })
 
-  if (data === 'failed') store.screenshot = ''
-  else store.screenshot = `data:image/png;base64,${data}`
+  if (data === 'failed') {
+    store.screenshot = ''
+    store.screenshotStatus = 'fail'
+    return
+  }
+
+  store.screenshotStatus = 'success'
+  store.screenshot = `data:image/png;base64,${data}`
 }
 </script>
 
@@ -181,7 +187,7 @@ async function onRefresh() {
       >
         <template v-if="store.screenshotStatus === 'wait'">
           <div class="absolute size-full flex items-center justify-center">
-            <div class="flex flex-col justify-center items-center p-6 border rounded bg-muted">
+            <div class="flex flex-col justify-center items-center px-1 py-2 border rounded bg-muted/50">
               <Icon icon="lucide:loader" class="size-6 animate-spin" />
               <span class="inline-block text-sm mt-3">截图加载中...</span>
             </div>

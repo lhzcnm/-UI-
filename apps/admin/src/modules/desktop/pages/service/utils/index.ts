@@ -1,11 +1,16 @@
 import type { ServiceField, ServiceFieldCreateParams, ServiceGroupCreateParams, ServiceCreateParams, UnlockCreateParams, Unlock } from '@/inters/services'
+import type { UpstreamServiceForm } from '@/inters/services/upstream'
+import type { Upstream } from '@/inters/upstream'
 import type { IList, IK } from '@3un/shared'
 
 // Service
 export interface ServiceStore {
+  upstreams: Upstream[]
   formBase: ServiceCreateParams
   formSearch: ServiceSearch
+  formUpstream: UpstreamServiceForm
   visibleBase: boolean
+  visibleUpstream: boolean
   index: number | undefined
 }
 

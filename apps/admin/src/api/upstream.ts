@@ -1,4 +1,4 @@
-import type { Upstream, UpstreamCreateParams, UpstreamSyncParams, UpstreamUpdateParams } from "@/inters/upstream"
+import type { Upstream, UpstreamCreateParams, UpstreamService, UpstreamSyncParams, UpstreamUpdateParams } from "@/inters/upstream"
 import type { AxiosResponse } from "axios"
 
 import { zUpstream } from "@/inters/upstream"
@@ -30,4 +30,9 @@ export const deleteUpstreams: UpstreamDeleteFn = async (data) => {
 type UpstreamSyncFn = (params: UpstreamSyncParams) => Promise<AxiosResponse>
 export const syncUpstream: UpstreamSyncFn = (params) => {
   return http.post('/api/sync', params)
+}
+
+type UpstreamServiceListFn = (apiId: number) => Promise<UpstreamService[]>
+export const getUpstreamServices: UpstreamServiceListFn = async (apiId) => {
+  return (await http.get(`/api/list/${apiId}`)).data
 }

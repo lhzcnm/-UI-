@@ -34,8 +34,8 @@ const form = defineModel<UserPointForm>({ required: true })
       <div class="w-1/2">
         <label class="block text-label text-sm mb-1">付款状态</label>
         <XSelect v-model="form.isPay">
-          <XSelectItem :value="true" label="已付款" />
           <XSelectItem :value="false" label="未付款" />
+          <XSelectItem :value="true" label="已付款" />
         </XSelect>
       </div>
       <div class="w-1/2">

@@ -1,4 +1,4 @@
-import GroupAction from '../components/groupAction.vue'
+import GroupAction from '../components/GroupAction.vue'
 
 import { type XColDef, XInputNumber, XSwitch } from "@3un/ui"
 import { h } from 'vue'
