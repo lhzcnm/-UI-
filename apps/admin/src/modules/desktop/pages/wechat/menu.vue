@@ -49,7 +49,7 @@ function getTreeMenus(menus: WechatMenu[]) {
 }
 
 function openCreate(index: number) {
-  store.formBase = zWechatMenuForm.parse({})
+  store.formBase = zWechatMenuItemForm.parse({})
   store.visibleBase = true
   store.parentIdx = index
   store.currentId = undefined

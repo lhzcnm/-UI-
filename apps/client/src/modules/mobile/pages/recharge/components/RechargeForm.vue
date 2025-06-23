@@ -161,7 +161,7 @@ function onBridgeReady(config: WXInvokeConfig) {
     >
       <p class="mb-2 font-medium">充值说明：</p>
       <div
-        class="text-sm text-muted-foreground"
+        class="tiptap text-sm text-muted-foreground"
         v-html="iStore.settings.paymentInfo"
       />
     </div>

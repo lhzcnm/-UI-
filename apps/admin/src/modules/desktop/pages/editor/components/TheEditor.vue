@@ -54,13 +54,12 @@ const editor = new Editor({
   ],
   editorProps: {
     attributes: {
-      class: 'h-[calc(100vh-8rem)] outline-none'
+      class: 'h-[calc(100vh-10rem)] outline-none'
     }
   }
 })
 
 const route = useRoute()
-// const serviceStore = useServiceStore()
 
 watch(
   () => route.query,
@@ -68,17 +67,7 @@ watch(
     if (!value.type) return
 
     const type = value.type as string
-    // const id = value.id as string
-
     store.selectedType = type
-
-    // if (type.startsWith('service') && id) {
-    //   const isEn = type.endsWith('en')
-    //   const service = serviceStore.itemMap.get(Number(id))!
-    //   const content = isEn ? service.mustReadLocal : service.mustRead
-    //   editor.commands.setContent(content)
-    //   return
-    // }
 
     const content = store.settings[type] as string
     editor.commands.setContent(content)
@@ -87,6 +76,7 @@ watch(
 )
 
 onBeforeUnmount(() => editor.destroy())
+
 defineExpose({
   getHtml: () => editor.getHTML(),
   setHtml: (html: string) => editor.commands.setContent(html),

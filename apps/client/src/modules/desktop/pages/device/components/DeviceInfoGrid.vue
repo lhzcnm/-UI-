@@ -188,13 +188,13 @@ const b = style()
       <div>
         <span :class="b.label()">ECID</span>
         <span :class="b.value()" @click="cp">
-          {{ form.Ecid }}
+          {{ form.Ecid.toUpperCase() }}
         </span>
       </div>
       <div>
         <span :class="b.label()">UDID</span>
         <span :class="b.value()" class=" break-all" @click="cp">
-          {{ form.UniqueDeviceID }}
+          {{ form.UniqueDeviceID.toUpperCase() }}
         </span>
       </div>
     </div>
@@ -284,7 +284,7 @@ const b = style()
         <span :class="b.label()">WiFi地址</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ form.WiFiAddress }}
+            {{ form.WiFiAddress.toUpperCase() }}
           </span>
         </div>
       </div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Service, ServiceDetail } from '@/inters/services'
-import type { XSelectEmits } from '@3un/ui'
+import type { XSelectEmits, XSelectProps } from '@3un/ui'
+
+const props = defineProps<XSelectProps>()
 
 const store = useServiceStore()
 
@@ -53,10 +55,11 @@ function highlightText(text: string, keyword: string) {
   <XSelect
     v-model.number="modal"
     v-model:input="input"
-    v-bind="$attrs"
-    filterable 
-    placeholder="请选择服务"
+    v-bind="{...props, ...$attrs}"
+
+    filterable
     placement="bottom-start"
+    placeholder="请选择服务"
     @selected="emits('selected', $event)"
   >
     <XSelectGroup

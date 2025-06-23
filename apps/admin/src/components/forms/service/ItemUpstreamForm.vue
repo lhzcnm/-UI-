@@ -21,6 +21,7 @@ const searchServiceName = ref<string>('')
 const _upstreams = computed(() => {
   const search = searchApiId.value.trim().toLowerCase()
   return props.upstreams.filter(item =>
+    item.apiId.toString().includes(search) ||
     item.apiTitle.toLowerCase().includes(search)
   )
 })
@@ -67,7 +68,7 @@ function toggleSelectedService(e: MouseEvent) {
       >
         <XSelectItem
           v-for="item in _upstreams" :key="item.apiId"
-          :value="item.apiId" :label="item.apiTitle"
+          :value="item.apiId" :label="`${item.apiId} - ${item.apiTitle}`"
         />
       </XSelect>
     </div>
@@ -105,7 +106,9 @@ function toggleSelectedService(e: MouseEvent) {
               class="inline-block size-4 mr-2 p-0.5 bg-primary text-white rounded-full"
               icon="lucide:check"
             />
-            <div class="flex-1 truncate">{{ item.serviceId }} - {{ item.serviceName }}</div>
+            <div class="flex-1 truncate">
+              {{ item.serviceId }} - {{ item.serviceName.replace(/^#[0-9]+-/, '') }}
+            </div>
             <span class="text-primary">￥{{ item.servicePrice }}</span>
           </button>
         </div>

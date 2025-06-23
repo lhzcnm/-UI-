@@ -6,5 +6,4 @@ export interface EditorStore {
   settings: Record<string, string | boolean>
   selectedService: number
   selectedType: string
-  result: string
 }

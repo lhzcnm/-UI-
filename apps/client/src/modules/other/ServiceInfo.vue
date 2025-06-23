@@ -36,7 +36,7 @@ onMounted(async () => {
       <div class="space-y-3 bg-card rounded-lg p-4 border">
         <div class="border-b border-dashed pb-1">
           <h1 class="text-lg"><span class="text-primary">#{{ service.id }}</span> {{ service.title }}</h1>
-  
+
           <div class="my-2">
             <div class="flex items-center space-x-2">
               <span class="text-muted-foreground">服务价格:</span>
@@ -48,15 +48,15 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-  
+
         <div v-if="service.mustRead">
           <h2 class="text-lg font-semibold mb-2">服务说明</h2>
           <div
-            class="bg-muted rounded-lg p-3"
+            class="tiptap bg-muted rounded-lg p-3"
             v-html="service.mustRead || '暂无服务说明'"
           />
         </div>
-  
+
         <div class="flex justify-end">
           <XButton
             class="flex-row-reverse"

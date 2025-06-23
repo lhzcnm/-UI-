@@ -1,7 +1,8 @@
 {
   "tailwindCSS.experimental.classRegex": [
     ["tv\\(([^)]*)\\)", "['\"`]([^'\"`]*)['\"`]"],
-    ["class:\\s*['\"`]([^'\"`]*)['\"`]"]
+    ["class:\\s*['\"`]([^'\"`]*)['\"`]"],
+    ["ui-\\w+=\"(.+?)\""]
   ],
 
   "iconify.annotations": false,
