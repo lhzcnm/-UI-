@@ -52,3 +52,9 @@ type OrderVerifyFn = (params: OrderVerifyParam[]) => Promise<AxiosResponse>
 export const updateOrderVerify: OrderVerifyFn = (params) => {
   return http.put('/order/verify', params)
 }
+
+// Order Clean
+type OrderCleanFn = (time: string) => Promise<AxiosResponse>
+export const cleanOrder: OrderCleanFn = (time) => {
+  return http.get(`/order/clean?time=${time}`)
+}

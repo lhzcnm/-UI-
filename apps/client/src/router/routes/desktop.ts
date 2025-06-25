@@ -17,11 +17,6 @@ const home: RouteRecordRaw = {
       props: true,
     },
     {
-      path: 'device',
-      name: 'Device',
-      component: () => import('@desktop/pages/device/index.vue'),
-    },
-    {
       path: 'history',
       name: 'History',
       component: () => import('@desktop/pages/history/index.vue'),
@@ -47,7 +42,14 @@ const home: RouteRecordRaw = {
       name: 'Profile',
       component: () => import('@desktop/pages/profile/index.vue'),
     },
-  ],
+  ]
+}
+
+if (import.meta.env.VITE_APP_DEVICE === 'true') {
+  home.children && home.children.push({
+    path: 'device', name: 'Device',
+    component: () => import('@desktop/pages/device/index.vue'),
+  })
 }
 
 export default home

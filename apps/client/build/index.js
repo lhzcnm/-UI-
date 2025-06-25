@@ -10,6 +10,7 @@ const list = [
   { mode: 'AiSuCha', obfuscator: false },
   { mode: 'LuShen', obfuscator: false },
   { mode: 'IFunlock', obfuscator: true },
+  { mode: 'JiuXing', obfuscator: true },
   { mode: 'U4GSM', obfuscator: true },
 ]
 
@@ -29,18 +30,21 @@ async function run(item) {
   if (item.obfuscator) {
     plugins.push(
       obfuscator({
-        threadPool: {
-          enable: true,
-          size: 4,
-        },
+        log: false,
+        threadPool: true,
         excludes: [
           'vendor',
           'vendor-utils',
           'qrcode',
-          'ag-grid',
           'jsencrypt',
           'xlsx',
         ],
+        options: {
+          controlFlowFlattening: false,
+          transformObjectKeys: false,
+          deadCodeInjection: false,
+          stringArray: false,
+        }
       })
     )
   }

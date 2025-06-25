@@ -128,3 +128,9 @@ export interface OrderVerifyParam {
   originalStatus: ORDER_STATUS
   code: string
 }
+
+// Order Clean
+export interface OrderCleanForm {
+  checked: string
+  time: string
+}

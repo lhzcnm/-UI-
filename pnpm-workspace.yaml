@@ -1,7 +1,6 @@
 packages:
   - apps/*
   - packages/*
-  - script
 
 onlyBuiltDependencies:
   - es5-ext

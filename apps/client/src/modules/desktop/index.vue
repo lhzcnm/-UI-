@@ -15,6 +15,11 @@ await Promise.all([
   uStore.getInfo(),
 ])
 
+const hideDevice =
+  import.meta.env.VITE_APP_DEVICE === 'false' ||
+  // 用户未开启设备
+  !uStore.info.enableDevice
+
 const menus = [
   { label: '首页',    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
   { label: '订单查询', path: '/submit', icon: 'iconoir:atom' },
@@ -22,7 +27,7 @@ const menus = [
     label: '我的设备',
     path: '/device',
     icon: 'iconoir:laptop-charging',
-    hide: !uStore.info.enableDevice,
+    hide: hideDevice,
   },
   { label: '我的订单', path: '/history', icon: 'iconoir:page-flip' },
   { label: '积分充值', path: '/recharge', icon: 'iconoir:credit-card' },

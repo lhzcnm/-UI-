@@ -1,4 +1,4 @@
-import type { OrderList, OrderSearchForm, OrderUpdateForm } from "@/inters/orders"
+import type { OrderList, OrderSearchForm, OrderUpdateForm, OrderCleanForm } from "@/inters/orders"
 import type { IK } from "@3un/shared"
 
 export const ORDER_STORE: IK<OrderStore> = Symbol('orders')
@@ -9,9 +9,11 @@ export interface OrderStore {
 
   formSearch: OrderSearchForm
   formUpdate: OrderUpdateForm
+  formClean: OrderCleanForm
 
   visibleSearch: boolean
   visibleUpdate: boolean
+  visibleClear: boolean
 
   refresh: boolean
   index  : number | undefined

@@ -53,6 +53,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      echarts:
+        specifier: ^5.6.0
+        version: 5.6.0
       jsencrypt:
         specifier: ^3.3.2
         version: 3.3.2
@@ -74,6 +77,9 @@ importers:
       vue:
         specifier: ^3
         version: 3.5.14(typescript@5.7.3)
+      vue-echarts:
+        specifier: ^7.0.3
+        version: 7.0.3(@vue/runtime-core@3.5.14)(echarts@5.6.0)(vue@3.5.14(typescript@5.7.3))
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.14(typescript@5.7.3))
@@ -133,11 +139,11 @@ importers:
         specifier: ^28.5.0
         version: 28.5.0(@babel/parser@7.27.2)(vue@3.5.14(typescript@5.7.3))
       vite:
-        specifier: ^6.2.7
+        specifier: ^6.3.5
         version: 6.3.5(@types/node@22.15.21)(jiti@1.21.7)(yaml@2.8.0)
       vite-plugin-bundle-obfuscator:
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.6.0
+        version: 1.6.0
       vite-plugin-dts:
         specifier: ^4.5.3
         version: 4.5.4(@types/node@22.15.21)(rollup@4.41.0)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.21)(jiti@1.21.7)(yaml@2.8.0))
@@ -1390,6 +1396,9 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
+  echarts@5.6.0:
+    resolution: {integrity: sha512-oTbVTsXfKuEhxftHqL5xprgLoc0k7uScAwtryCgWF6hPYFLRwOUHiFmHGCBKP5NPFNkDVopOieyUqYGH8Fa3kA==}
+
   electron-to-chromium@1.5.157:
     resolution: {integrity: sha512-/0ybgsQd1muo8QlnuTpKwtl0oX5YMlUGbm8xyqgDU00motRkKFFbUJySAQBWcY79rVqNLWIWa87BGVGClwAB2w==}
 
@@ -2588,6 +2597,9 @@ packages:
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
+  tslib@2.3.0:
+    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
+
   tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
@@ -2720,8 +2732,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite-plugin-bundle-obfuscator@1.5.0:
-    resolution: {integrity: sha512-Go/BsWrN86vizKbcDCz3KExVN/2zpsLJuW1kO8hEamueXtWlhJuDbjq2a/EFXXQ93qq+JL+OE0hUkXlUOVLvyw==}
+  vite-plugin-bundle-obfuscator@1.6.0:
+    resolution: {integrity: sha512-jeeWtbP8ChhknTzZx6EdCEuKqnasgE+k0SUE7ez4DQ0kZjjI/IT87Jk8wYNix4e7F/CX3uz9+TsZAwyRROJwgw==}
     engines: {node: '>=14.0.0'}
 
   vite-plugin-dts@4.5.4:
@@ -2776,6 +2788,17 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
+  vue-demi@0.13.11:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
@@ -2785,6 +2808,16 @@ packages:
       vue: ^3.0.0-0 || ^2.6.0
     peerDependenciesMeta:
       '@vue/composition-api':
+        optional: true
+
+  vue-echarts@7.0.3:
+    resolution: {integrity: sha512-/jSxNwOsw5+dYAUcwSfkLwKPuzTQ0Cepz1LxCOpj2QcHrrmUa/Ql0eQqMmc1rTPQVrh2JQ29n2dhq75ZcHvRDw==}
+    peerDependencies:
+      '@vue/runtime-core': ^3.0.0
+      echarts: ^5.5.1
+      vue: ^2.7.0 || ^3.1.1
+    peerDependenciesMeta:
+      '@vue/runtime-core':
         optional: true
 
   vue-router@4.5.1:
@@ -2895,6 +2928,9 @@ packages:
 
   zod@3.25.57:
     resolution: {integrity: sha512-6tgzLuwVST5oLUxXTmBqoinKMd3JeesgbgseXeFasKKj8Q1FCZrHnbqJOyiEvr4cVAlbug+CgIsmJ8cl/pU5FA==}
+
+  zrender@5.6.1:
+    resolution: {integrity: sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -3982,6 +4018,11 @@ snapshots:
       gopd: 1.2.0
 
   eastasianwidth@0.2.0: {}
+
+  echarts@5.6.0:
+    dependencies:
+      tslib: 2.3.0
+      zrender: 5.6.1
 
   electron-to-chromium@1.5.157: {}
 
@@ -5511,6 +5552,8 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
+  tslib@2.3.0: {}
+
   tslib@2.5.0: {}
 
   tsup@8.5.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.21))(jiti@1.21.7)(postcss@8.5.3)(typescript@5.7.3)(yaml@2.8.0):
@@ -5682,7 +5725,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-plugin-bundle-obfuscator@1.5.0:
+  vite-plugin-bundle-obfuscator@1.6.0:
     dependencies:
       javascript-obfuscator: 4.1.1
 
@@ -5721,9 +5764,23 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
+  vue-demi@0.13.11(vue@3.5.14(typescript@5.7.3)):
+    dependencies:
+      vue: 3.5.14(typescript@5.7.3)
+
   vue-demi@0.14.10(vue@3.5.14(typescript@5.7.3)):
     dependencies:
       vue: 3.5.14(typescript@5.7.3)
+
+  vue-echarts@7.0.3(@vue/runtime-core@3.5.14)(echarts@5.6.0)(vue@3.5.14(typescript@5.7.3)):
+    dependencies:
+      echarts: 5.6.0
+      vue: 3.5.14(typescript@5.7.3)
+      vue-demi: 0.13.11(vue@3.5.14(typescript@5.7.3))
+    optionalDependencies:
+      '@vue/runtime-core': 3.5.14
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   vue-router@4.5.1(vue@3.5.14(typescript@5.7.3)):
     dependencies:
@@ -5860,5 +5917,9 @@ snapshots:
       yargs-parser: 21.1.1
 
   zod@3.25.57: {}
+
+  zrender@5.6.1:
+    dependencies:
+      tslib: 2.3.0
 
   zwitch@2.0.4: {}

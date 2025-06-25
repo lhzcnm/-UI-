@@ -44,9 +44,10 @@ import { hash } from 'ohash'
 
 import type { Service } from '@/api/services'
 import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
-import { getDefaultColumns, mergeColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
+
+import { getDefaultColumns, mergeColumns } from './utils/columns'
 ```
 
 注意: css 文件导入总是在最前面

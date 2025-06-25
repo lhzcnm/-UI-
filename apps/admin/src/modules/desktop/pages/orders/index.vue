@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import OrderSearch from './components/OrderSearch.vue'
 import OrderDialog from './components/OrderDialog.vue'
+import OrderClean from './components/OrderClean.vue'
 
 import { downloadFile, ORDER_STATUS } from '@3un/utils'
 import { useClipboard } from '@vueuse/core'
@@ -20,9 +21,11 @@ const store: OrderStore = reactive({
 
   formSearch: zOrderSearchForm.parse({}),
   formUpdate: zOrderUpdateForm.parse({}),
+  formClean: { checked: '7', time: '' },
 
   visibleSearch: false,
   visibleUpdate: false,
+  visibleClear: false,
 
   refresh: false,
   index  : undefined,
@@ -98,6 +101,11 @@ function resetSearch() {
     path: route.path,
     query: { q: route.query.q },
   })
+}
+
+function handleCleanOrder() {
+  store.formClean = { checked: '7', time: '' }
+  store.visibleClear = true
 }
 
 function selectDecorator(fn: () => void) {
@@ -190,9 +198,10 @@ const handleBatchEdit = selectDecorator(() => {
 <template>
   <div>
     <section class="flex justify-between p-3 border-b">
-      <div class="space-x-2">
+      <div class="flex items-center">
         <XButton
           label="筛选"
+          class="mr-2"
           icon="lucide:filter"
           @click="store.visibleSearch = true"
         />
@@ -201,6 +210,16 @@ const handleBatchEdit = selectDecorator(() => {
           variant="outline"
           icon="lucide:brush-cleaning"
           @click="resetSearch"
+        />
+
+        <hr class="h-6 w-px mx-4 bg-border" />
+
+        <XButton
+          label="清理订单"
+          color="danger"
+          variant="outline"
+          icon="lucide:trash-2"
+          @click="handleCleanOrder"
         />
       </div>
 
@@ -282,5 +301,6 @@ const handleBatchEdit = selectDecorator(() => {
 
     <OrderSearch />
     <OrderDialog />
+    <OrderClean />
   </div>
 </template>
