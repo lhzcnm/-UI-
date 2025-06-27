@@ -4,9 +4,11 @@ import type { EChartsOption } from 'echarts'
 import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
-import { STORE } from '../utils'
+interface IncomeStackLineProps {
+  data: Record<string, string>
+}
 
-const store = inject(STORE)!
+const props = defineProps<IncomeStackLineProps>()
 const theme = inject(THEME)!
 
 const option = computed<EChartsOption>(() => ({
@@ -58,7 +60,7 @@ const option = computed<EChartsOption>(() => ({
           ]
         }
       },
-      data: Object.entries(store.income)
+      data: Object.entries(props.data)
         .map(([key, value]) => [key, Number(value)]),
     },
   ]

@@ -3,10 +3,14 @@ import type { EChartsOption } from 'echarts'
 import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
-import { STORE } from '../utils'
+import type { StatOrder } from '@/inters/dashboard'
 
+interface OrderStackLineProps {
+  data: StatOrder[]
+}
+
+const props = defineProps<OrderStackLineProps>()
 const theme = inject(THEME)!
-const store = inject(STORE)!
 
 const option = computed<EChartsOption>(() => ({
   grid: {
@@ -57,7 +61,7 @@ const option = computed<EChartsOption>(() => ({
           ]
         }
       },
-      data: store.orders.map((item) => [item.orderTime, item.success]),
+      data: props.data.map((item) => [item.orderTime, item.success]),
     },
     {
       type: 'line',
@@ -88,7 +92,7 @@ const option = computed<EChartsOption>(() => ({
           ]
         }
       },
-      data: store.orders.map((item) => [item.orderTime, item.failure]),
+      data: props.data.map((item) => [item.orderTime, item.failure]),
     },
   ]
 }))

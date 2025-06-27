@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import type { EChartsOption } from 'echarts'
+import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
-import { STORE } from '../utils'
+import type { StatService } from '@/inters/dashboard'
 
+interface ServiceStackLineProps {
+  data: StatService[]
+}
+
+const props = defineProps<ServiceStackLineProps>()
 const theme = inject(THEME)!
-const store = inject(STORE)!
 
 const option = computed<EChartsOption>(() => ({
   grid: {
@@ -56,7 +61,7 @@ const option = computed<EChartsOption>(() => ({
           ]
         }
       },
-      data: store.orders.map((item) => [item.orderTime, item.success]),
+      data: props.data.map((item) => [item.orderTime, item.successOrder]),
     },
     {
       type: 'line',
@@ -87,7 +92,7 @@ const option = computed<EChartsOption>(() => ({
           ]
         }
       },
-      data: store.orders.map((item) => [item.orderTime, item.failure]),
+      data: props.data.map((item) => [item.orderTime, item.failOrder]),
     },
   ]
 }))

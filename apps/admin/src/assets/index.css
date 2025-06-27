@@ -11,9 +11,6 @@
   :root {
     --header-height: 3.25rem;
     --sidebar-width: 16rem;
-
-    --temp-1: rgb(220, 38, 38, 0.5);
-    --temp-2: rgb(220, 38, 38, 0.1);
   }
 }
 

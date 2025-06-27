@@ -42,7 +42,7 @@ function estimateGrowth(
 </script>
 
 <template>
-  <div class="border rounded hover:shadow overflow-hidden">
+  <div class="border rounded overflow-hidden">
     <div class="flex items-center justify-between border-b border-dashed p-3">
       <div class="flex items-center space-x-2">
         <Icon :icon="icon" class="size-5" />
