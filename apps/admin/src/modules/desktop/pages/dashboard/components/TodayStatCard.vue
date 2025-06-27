@@ -1,17 +1,20 @@
 <script setup lang="ts">
+import TrendChart from './TrendChart.vue'
+
 import { Icon, type IconifyIcon } from '@iconify/vue'
+import { twMerge } from 'tailwind-merge'
 
 import { formatNumberToThousands } from '@/utils/common'
-import { twMerge } from 'tailwind-merge'
 
 interface StatCardProps {
   title: string
   today: string | number
   yesterday: string | number
   icon: string | IconifyIcon
+  data: [string, number][]
 }
 
-const { title, today, yesterday, icon } = defineProps<StatCardProps>()
+const { title, today, yesterday, icon, data } = defineProps<StatCardProps>()
 const growth = computed(() => estimateGrowth(today, yesterday))
 
 function estimateGrowth(
@@ -28,18 +31,18 @@ function estimateGrowth(
     return { rate: '0.00', increase: false }
   }
 
-  const it = +todaySoFar - estimatedYesterdayToNow
-  const growth = (it / estimatedYesterdayToNow) * 100
+  const diff = +todaySoFar - estimatedYesterdayToNow
+  const growth = (diff / estimatedYesterdayToNow) * 100
 
   return {
     rate: growth.toFixed(1),
-    increase: it > 0,
+    increase: diff > 0,
   }
 }
 </script>
 
 <template>
-  <div class="border rounded hover:shadow">
+  <div class="border rounded hover:shadow overflow-hidden">
     <div class="flex items-center justify-between border-b border-dashed p-3">
       <div class="flex items-center space-x-2">
         <Icon :icon="icon" class="size-5" />
@@ -47,7 +50,7 @@ function estimateGrowth(
       </div>
     </div>
 
-    <div class="flex items-center justify-between p-3">
+    <div class="flex items-center justify-between p-3 pb-0">
       <div class="text-2xl font-bold">
         {{ formatNumberToThousands(Number(today)) }}
       </div>
@@ -60,6 +63,6 @@ function estimateGrowth(
       </div>
     </div>
 
-    <slot></slot>
+    <TrendChart :data="data" class="h-16" />
   </div>
 </template>

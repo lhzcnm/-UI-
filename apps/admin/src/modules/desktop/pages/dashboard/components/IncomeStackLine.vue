@@ -1,47 +1,40 @@
 <script setup lang="ts">
 import type { EChartsOption } from 'echarts'
+
 import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
 import { STORE } from '../utils'
 
-const theme = inject(THEME)!
 const store = inject(STORE)!
+const theme = inject(THEME)!
 
-const option = ref<EChartsOption>({
+const option = computed<EChartsOption>(() => ({
   grid: {
     left: 0,
-    top: 0,
+    top: 12,
     right: 0,
     bottom: 0,
     containLabel: false
   },
   tooltip: {
     trigger: 'axis',
-    show: false
   },
   xAxis: {
     type: 'time',
     show: false,
-    axisLine: {
-      lineStyle: {
-        color: 'rgba(5, 150, 105, .3)'
-      }
-    },
-    axisTick: {
-      show: false
-    }
   },
   yAxis: {
     type: 'value',
-    show: false
+    show: false,
   },
   series: [
     {
       type: 'line',
       smooth: true,
       showSymbol: false,
-      data: Object.entries(store.income).map(([key, value]) => [key, Number(value)]),
+      name: '充值金额',
+      color: 'rgba(5, 150, 105, 1)',
       lineStyle: {
         width: 2,
         color: 'rgba(5, 150, 105, 1)'
@@ -65,14 +58,17 @@ const option = ref<EChartsOption>({
           ]
         }
       },
-    }
+      data: Object.entries(store.income)
+        .map(([key, value]) => [key, Number(value)]),
+    },
   ]
-})
+}))
 </script>
 
 <template>
   <VChart
     :option="option"
     :theme="theme.name"
+    :autoresize="{throttle: 200}"
   />
 </template>

@@ -15,7 +15,6 @@ declare module 'vue' {
     DesktopHeader: typeof import('./src/modules/desktop/components/DesktopHeader.vue')['default']
     EmailForm: typeof import('./src/components/form/EmailForm.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
-    JiuXing: typeof import('./src/components/logo/JiuXing.vue')['default']
     MobileFooter: typeof import('./src/modules/mobile/components/MobileFooter.vue')['default']
     MobileHeader: typeof import('./src/modules/mobile/components/MobileHeader.vue')['default']
     NativeDate: typeof import('./src/modules/mobile/components/NativeDate.vue')['default']

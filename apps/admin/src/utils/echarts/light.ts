@@ -21,6 +21,7 @@ const theme = {
   textStyle: {
     // from: var(--foreground)
     color: 'hsl(240 6% 10%)',
+    fontFamily: '"Noto Sans SC", sans-serif',
   },
   title: {
     textStyle: {
@@ -45,9 +46,11 @@ const theme = {
     },
     axisPointer: {
       lineStyle: {
+        // from: var(--border)
         color: 'hsl(240 6% 90%)',
       },
       crossStyle: {
+        // from: var(--border)
         color: 'hsl(240 6% 90%)',
       },
     },

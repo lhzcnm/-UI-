@@ -3,21 +3,21 @@ import type { EChartsOption } from 'echarts'
 import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
-interface TrendLineProps {
-  data: Array<[string, number]>
+interface TrendChartProps {
+  data: [string, number][]
 }
 
-const props = defineProps<TrendLineProps>()
+const props = defineProps<TrendChartProps>()
 
 const theme = inject(THEME)!
 
-const option = ref<EChartsOption>({
+const option: EChartsOption = {
   grid: {
-    left: 0,
-    top: 0,
-    right: 0,
+    top: 2,
     bottom: 0,
-    containLabel: false
+    left: 0,
+    right: 0,
+    containLabel: false,
   },
   tooltip: {
     trigger: 'axis',
@@ -26,14 +26,6 @@ const option = ref<EChartsOption>({
   xAxis: {
     type: 'time',
     show: false,
-    axisLine: {
-      lineStyle: {
-        color: 'rgba(5, 150, 105, .3)'
-      }
-    },
-    axisTick: {
-      show: false
-    }
   },
   yAxis: {
     type: 'value',
@@ -44,7 +36,6 @@ const option = ref<EChartsOption>({
       type: 'line',
       smooth: true,
       showSymbol: false,
-      data: props.data,
       lineStyle: {
         width: 2,
         color: 'rgba(5, 150, 105, 1)'
@@ -66,16 +57,18 @@ const option = ref<EChartsOption>({
               color: 'rgba(5, 150, 105, .1)'
             }
           ]
-        }
+        },
       },
-    }
+      data: props.data,
+    },
   ]
-})
+}
 </script>
 
 <template>
   <VChart
     :option="option"
     :theme="theme.name"
+    :autoresize="{throttle: 200}"
   />
 </template>

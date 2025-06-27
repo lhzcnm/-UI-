@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
 import { getPrintPayload, STORE, wsFetch } from '../utils'
 
 interface Template {
@@ -36,9 +37,27 @@ const loading = ref(false)
 const selected = ref(1)
 
 async function handleSubmit() {
-  loading.value = true
-
   const device = store.deviceMap.get(store.printIndex)
+  const options = {
+    activationLock: [2, 3, 4].includes(selected.value),
+    networkLock: [2, 3, 4].includes(selected.value),
+    warranty: [2, 3].includes(selected.value),
+  }
+
+  if (device && selected.value > 1) {
+    const { ActivationLock, NetworkLock, Warranty } = device.summary
+
+    if (options.activationLock && !ActivationLock)
+      return toast.warning('请先查询激活锁')
+
+    if (options.networkLock && !NetworkLock)
+      return toast.warning('请先查询网络锁')
+
+    if (options.warranty && !Warranty)
+      return toast.warning('请先查询保修期限')
+  }
+
+  loading.value = true
   const response = await wsFetch<string>({
     ...getPrintPayload(device!),
     TemplateId: selected.value,

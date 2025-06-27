@@ -24,11 +24,12 @@ const toggleTheme = () => {
 
 <template>
   <button
-    accesskey="t"
     :class="twMerge(
       'x-tooltip p-2 rounded-full text-muted-foreground hover:text-foreground transition-colors duration-300',
       props.ghost ? 'bg-transparent hover:bg-muted' : 'bg-muted hover:bg-accent/20',
     )"
+
+    accesskey="t"
     aria-label="Toggle theme"
     @click="toggleTheme"
   >

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { EChartsOption } from 'echarts'
-import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
 import { STORE } from '../utils'

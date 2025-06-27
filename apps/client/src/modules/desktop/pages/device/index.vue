@@ -38,16 +38,27 @@ const [datasets, countriesMap] = await Promise.all([
   fetch('/data/sales-region.json').then(res => res.json()),
 ]) as [ProductDataset, SaleRegionDataset]
 
+const version = ref('')
+
 watch(
   ws.data,
   async (value: string) => {
     if (value.startsWith('disconnected')) {
+      if (await checkVersion(version.value)) {
+        return store.deviceStatus = 'version'
+      }
+
       return handleDisconnect(value)
     }
 
     if (value.startsWith('{"id"')) return
     if (value.includes('DeviceID')) {
-      const data = JSON.parse(value)
+      const data = JSON.parse(value) as DeviceResponse
+      if (await checkVersion(data.Version)) {
+        version.value = data.Version
+        return store.deviceStatus = 'version'
+      }
+
       await handleDevice(data)
 
       if (store.deviceMap.size === 1) {
@@ -115,6 +126,7 @@ async function checkPlugin() {
 async function handleInfo(data: DeviceResponse[]) {
   if (!data || data.length === 0) return
   if (await checkVersion(data[0].Version)) {
+    version.value = data[0].Version
     return store.deviceStatus = 'version'
   }
 

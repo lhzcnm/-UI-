@@ -21,6 +21,7 @@ const theme = {
   textStyle: {
     // from: var(--foreground)
     color: 'hsl(240 6% 90%)',
+    fontFamily: '"Noto Sans SC", sans-serif',
   },
   title: {
     textStyle: {

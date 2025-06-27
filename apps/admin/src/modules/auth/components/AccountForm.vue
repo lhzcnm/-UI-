@@ -47,8 +47,11 @@ async function handleLogin() {
       data,
     )
 
-    isLoading.value = false
     await router.push('/')
+  })
+
+  response.finally(() => {
+    isLoading.value = false
   })
 }
 
