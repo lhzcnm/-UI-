@@ -16,8 +16,10 @@ export function randomNumber(min: number, max: number) {
  * @returns 
  */
 export function formatNumberToThousands(value: number) {
-  if (value === null || value === undefined) return '0';
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (value === null || value === undefined) return '0'
+  if (value < 1000) return value.toString()
+
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 export const createList = useCopyFn(

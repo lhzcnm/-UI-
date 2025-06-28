@@ -2,18 +2,14 @@
 import CardSection from './components/CardSection.vue'
 import IncomeSection from './components/IncomeSection.vue'
 import OrderSection from './components/OrderSection.vue'
+import RealtimeOrderSection from './components/RealtimeOrderSection.vue'
 import ServiceSection from './components/ServiceSection.vue'
 
 import * as echarts from 'echarts/core'
-import { LineChart } from 'echarts/charts'
+import { LineChart, BarChart } from 'echarts/charts'
 import { CanvasRenderer } from 'echarts/renderers'
 import { UniversalTransition } from 'echarts/features'
-
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent
-} from 'echarts/components'
+import { TooltipComponent, GridComponent } from 'echarts/components'
 
 import dayjs from 'dayjs'
 
@@ -27,7 +23,7 @@ echarts.registerTheme('dark', darkTheme)
 
 echarts.use([
   LineChart,
-  TitleComponent,
+  BarChart,
   TooltipComponent,
   GridComponent,
   CanvasRenderer,
@@ -39,19 +35,24 @@ const tomorrow = today.add(1, 'day')
 const yesterday = today.subtract(1, 'day')
 
 const store: StatStore = reactive({
-  today,
-  tomorrow,
-  yesterday,
+  today, tomorrow, yesterday
 })
 
 provide(STORE, store)
 </script>
 
 <template>
-  <div class="p-6 space-y-6">
+  <div class="p-3 space-y-6">
     <CardSection />
-    <IncomeSection />
-    <OrderSection />
-    <ServiceSection />
+
+    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+      <RealtimeOrderSection />
+      <OrderSection />
+    </div>
+    
+    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+      <IncomeSection />
+      <ServiceSection />
+    </div>
   </div>
 </template>

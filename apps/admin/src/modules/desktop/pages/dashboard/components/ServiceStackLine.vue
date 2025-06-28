@@ -1,15 +1,15 @@
 <script setup lang="ts">
+import type { OrderStatItem } from '@/inters/dashboard'
 import type { EChartsOption } from 'echarts'
+
 import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
-import type { StatService } from '@/inters/dashboard'
-
-interface ServiceStackLineProps {
-  data: StatService[]
+interface TheProps {
+  data: OrderStatItem[]
 }
 
-const props = defineProps<ServiceStackLineProps>()
+const props = defineProps<TheProps>()
 const theme = inject(THEME)!
 
 const option = computed<EChartsOption>(() => ({
@@ -35,7 +35,9 @@ const option = computed<EChartsOption>(() => ({
     {
       type: 'line',
       smooth: true,
-      showSymbol: false,
+      showSymbol: true,
+      symbol: 'circle',
+      symbolSize: 4,
       name: '成功订单',
       color: 'rgba(5, 150, 105, 1)',
       lineStyle: {
@@ -45,28 +47,21 @@ const option = computed<EChartsOption>(() => ({
       areaStyle: {
         color: {
           type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1, // vertical
+          x: 0, y: 0, x2: 0, y2: 1,
           colorStops: [
-            {
-              offset: 0,
-              color: 'rgba(5, 150, 105, .5)'
-            },
-            {
-              offset: 1,
-              color: 'rgba(5, 150, 105, .1)'
-            }
+            { offset: 0, color: 'rgba(5, 150, 105, .5)'},
+            { offset: 1, color: 'rgba(5, 150, 105, .1)'},
           ]
         }
       },
-      data: props.data.map((item) => [item.orderTime, item.successOrder]),
+      data: props.data.map((item) => [item.dataTime, item.success]),
     },
     {
       type: 'line',
       smooth: true,
-      showSymbol: false,
+      showSymbol: true,
+      symbol: 'circle',
+      symbolSize: 4,
       name: '失败订单',
       color: 'rgb(220, 38, 38, 1)',
       lineStyle: {
@@ -76,23 +71,14 @@ const option = computed<EChartsOption>(() => ({
       areaStyle: {
         color: {
           type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1, // vertical
+          x: 0, y: 0, x2: 0, y2: 1,
           colorStops: [
-            {
-              offset: 0,
-              color: 'rgb(220, 38, 38, 0.5)'
-            },
-            {
-              offset: 1,
-              color: 'rgb(220, 38, 38, 0.1)'
-            }
+            { offset: 0, color: 'rgb(220, 38, 38, 0.5)'},
+            { offset: 1, color: 'rgb(220, 38, 38, 0.1)'},
           ]
         }
       },
-      data: props.data.map((item) => [item.orderTime, item.failOrder]),
+      data: props.data.map((item) => [item.dataTime, item.failure]),
     },
   ]
 }))

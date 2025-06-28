@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TodayStatCard from './TodayStatCard.vue'
 
-import { getIncome, getOrder, getIncomeTrend, getOrderTrend } from '@/api/dashboard'
+import { getIncomeRange, getOrderRange, getIncomeTrend, getOrderTrend } from '@/api/dashboard'
 import { STORE } from '../utils'
 
 const store = inject(STORE)!
@@ -24,7 +24,7 @@ await Promise.all([
 ])
 
 async function getIncomeStat() {
-  const data = await getIncome({
+  const data = await getIncomeRange({
     startTime: store.yesterday.format('YYYY-MM-DD'),
     endTime: store.tomorrow.format('YYYY-MM-DD'),
   })
@@ -39,7 +39,7 @@ async function getIncomeStat() {
 }
 
 async function getOrderStat() {
-  const data = await getOrder({
+  const data = await getOrderRange({
     startTime: store.yesterday.format('YYYY-MM-DD'),
     endTime: store.tomorrow.format('YYYY-MM-DD'),
   })

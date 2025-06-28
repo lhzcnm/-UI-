@@ -1,24 +1,12 @@
-export interface StatParams {
+export interface RangeStatParams {
   serviceId?: number
   startTime?: string
   endTime?: string
 }
 
-export interface StatOrder {
-  awaiting: number
-  failure: number
-  processing: number
-  success: number
-  orderTime: string
+export interface OrderStatItem {
   total: number
-}
-
-export interface StatService {
-  awaitOrder: number
-  failOrder: number
-  orderCount: number
-  orderTime: string
-  packageId: string | null
-  processingOrder: number
-  successOrder: number
+  failure: number
+  success: number
+  dataTime: string
 }

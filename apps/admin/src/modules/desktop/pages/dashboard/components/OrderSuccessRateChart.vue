@@ -1,0 +1,105 @@
+<script setup lang="ts">
+import type { OrderStatItem } from '@/inters/dashboard'
+import type { EChartsOption } from 'echarts'
+
+import VChart from 'vue-echarts'
+import { THEME } from '@3un/utils'
+
+interface TheProps {
+  data: OrderStatItem[]
+}
+
+const props = defineProps<TheProps>()
+const theme = inject(THEME)!
+
+const option = computed<EChartsOption>(() => {
+  const successRates = props.data.map(item => 
+    item.total > 0 ? ((item.success / item.total) * 100) : 0
+  )
+
+  // 计算合适的Y轴范围
+  const minRate = Math.min(...successRates)
+  const maxRate = Math.max(...successRates)
+  const range = maxRate - minRate
+
+  // 如果变化范围很小，放大显示
+  const yAxisMin = range < 5 ? Math.max(minRate - 2, 0) : Math.max(minRate - range * 0.1, 0)
+  const yAxisMax = range < 5 ? Math.min(maxRate + 2, 100) : Math.min(maxRate + range * 0.1, 100)
+
+  return {
+    grid: {
+      left: 50,
+      top: 12,
+      right: 24,
+      bottom: 30,
+      containLabel: false
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    xAxis: {
+      type: 'time',
+      axisLabel: {
+        fontSize: 11,
+        formatter: (value: number) => {
+          const date = new Date(value)
+          return `${date.getMonth() + 1}/${date.getDate()}`
+        }
+      },
+      axisLine: {
+        lineStyle: { color: '#e5e7eb' }
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: '成功率(%)',
+      min: yAxisMin,
+      max: yAxisMax,
+      axisLabel: {
+        fontSize: 11,
+        formatter: '{value}%'
+      },
+      axisLine: {
+        lineStyle: { color: '#e5e7eb' }
+      },
+      splitLine: {
+        lineStyle: { color: '#f3f4f6', type: 'dashed' }
+      }
+    },
+    series: [
+      {
+        type: 'line',
+        smooth: true,
+        showSymbol: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        name: '成功率',
+        color: '#059669',
+        lineStyle: {
+          width: 3,
+          color: '#059669'
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: 'rgba(5, 150, 105, 0.3)' },
+              { offset: 1, color: 'rgba(5, 150, 105, 0.05)' }
+            ]
+          }
+        },
+        data: props.data.map((item, idx) => [item.dataTime, successRates[idx]]),
+      }
+    ]
+  }
+})
+</script>
+
+<template>
+  <VChart
+    :option="option"
+    :theme="theme.name"
+    :autoresize="{throttle: 200}"
+  />
+</template>

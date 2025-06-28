@@ -4,11 +4,11 @@ import type { EChartsOption } from 'echarts'
 import VChart from 'vue-echarts'
 import { THEME } from '@3un/utils'
 
-interface IncomeStackLineProps {
+interface TheProps {
   data: Record<string, string>
 }
 
-const props = defineProps<IncomeStackLineProps>()
+const props = defineProps<TheProps>()
 const theme = inject(THEME)!
 
 const option = computed<EChartsOption>(() => ({
@@ -34,7 +34,9 @@ const option = computed<EChartsOption>(() => ({
     {
       type: 'line',
       smooth: true,
-      showSymbol: false,
+      showSymbol: true,
+      symbol: 'circle',
+      symbolSize: 4,
       name: '充值金额',
       color: 'rgba(5, 150, 105, 1)',
       lineStyle: {
@@ -44,19 +46,10 @@ const option = computed<EChartsOption>(() => ({
       areaStyle: {
         color: {
           type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1, // vertical
+          x: 0, y: 0, x2: 0, y2: 1,
           colorStops: [
-            {
-              offset: 0,
-              color: 'rgba(5, 150, 105, .5)'
-            },
-            {
-              offset: 1,
-              color: 'rgba(5, 150, 105, .1)'
-            }
+            { offset: 0, color: 'rgba(5, 150, 105, .5)' },
+            { offset: 1, color: 'rgba(5, 150, 105, .1)' }
           ]
         }
       },

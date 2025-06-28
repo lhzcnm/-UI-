@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import IncomeStackLine from './IncomeStackLine.vue'
-import { getIncome } from '@/api/dashboard'
-import { STORE } from '../utils'
+
 import { formatNumberToThousands } from '@/utils/common'
+import { getIncomeRange } from '@/api/dashboard'
+import { STORE } from '../utils'
 
 import { Dayjs } from 'dayjs'
 
 const store = inject(STORE)!
 
-const income = ref<Record<string, string>>({})
+const income   = ref<Record<string, string>>({})
 const selected = ref('7')
 
 const stats = computed(() => {
@@ -18,36 +19,30 @@ const stats = computed(() => {
     .filter(v => !isNaN(v) && v > 0)
   
   if (values.length === 0) {
-    return {
-      max: 0,
-      min: 0,
-      avg: 0,
-      total: 0,
-      count: 0
-    }
+    return { max: 0, min: 0, avg: 0, total: 0 }
   }
-  
+
   const max = Math.max(...values)
   const min = Math.min(...values)
+
   const total = values.reduce((sum, val) => sum + val, 0)
   const avg = total / values.length
-  
+
   return {
     max: Number(max.toFixed(2)),
     min: Number(min.toFixed(2)),
     avg: Number(avg.toFixed(2)),
     total: Number(total.toFixed(2)),
-    count: values.length
   }
 })
 
-await getIncomeStat(selected.value)
+await getStatData(selected.value)
 
-async function getIncomeStat(value: string) {
+async function getStatData(value: string) {
   const startDay = store.tomorrow.subtract(Number(value), 'day')
   const endDay = store.tomorrow
 
-  const data = await getIncome({
+  const data = await getIncomeRange({
     startTime: startDay.format('YYYY-MM-DD'),
     endTime: endDay.format('YYYY-MM-DD'),
   })
@@ -78,7 +73,7 @@ function patchData(
 </script>
 
 <template>
-  <section class="border p-4 rounded">
+  <section class="p-4 border rounded">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-xl font-bold">充值统计</h3>
 
@@ -86,7 +81,7 @@ function patchData(
         <XSelect
           v-model="selected"
           ui-trigger="w-48"
-          @selected="getIncomeStat"
+          @selected="getStatData"
         >
           <XSelectItem value="7">最近7天</XSelectItem>
           <XSelectItem value="30">最近一个月</XSelectItem>
@@ -97,37 +92,37 @@ function patchData(
       </div>
     </div>
 
-    <div class="flex space-x-4 mb-4">
-      <div class="w-48 p-3 rounded border">
-        <div class="text-sm mb-1">总充值金额</div>
-        <div class="text-lg font-bold text-primary">
-          ¥ {{ formatNumberToThousands(stats.total) }}
-        </div>
-      </div>
-
-      <div class="w-48 p-3 rounded border">
-        <div class="text-sm mb-1">最大充值金额</div>
-        <div class="text-lg font-bold text-success">
-          ¥ {{ formatNumberToThousands(stats.max) }}
-        </div>
-      </div>
-
-      <div class="w-48 p-3 rounded border">
-        <div class="text-sm mb-1">最小充值金额</div>
-        <div class="text-lg font-bold text-warning">
-          ¥ {{ formatNumberToThousands(stats.min) }}
-        </div>
-      </div>
-
-      <div class="w-48 p-3 rounded border">
-        <div class="text-sm mb-1">平均充值金额</div>
-        <div class="text-lg font-bold text-danger">
-          ¥ {{ formatNumberToThousands(stats.avg) }}
-        </div>
-      </div>
-    </div>
-
     <div class="border rounded overflow-hidden">
+      <div class="flex divide-x border-b border-dashed">
+        <div class="px-4 py-2">
+          <div class="text-sm mb-1">总充值金额</div>
+          <div class="text-lg font-bold text-primary">
+            ¥ {{ formatNumberToThousands(stats.total) }}
+          </div>
+        </div>
+  
+        <div class="px-4 py-2">
+          <div class="text-sm mb-1">最大充值金额</div>
+          <div class="text-lg font-bold text-success">
+            ¥ {{ formatNumberToThousands(stats.max) }}
+          </div>
+        </div>
+  
+        <div class="px-4 py-2">
+          <div class="text-sm mb-1">最小充值金额</div>
+          <div class="text-lg font-bold text-warning">
+            ¥ {{ formatNumberToThousands(stats.min) }}
+          </div>
+        </div>
+  
+        <div class="px-4 py-2">
+          <div class="text-sm mb-1">平均充值金额</div>
+          <div class="text-lg font-bold text-danger">
+            ¥ {{ formatNumberToThousands(stats.avg) }}
+          </div>
+        </div>
+      </div>
+  
       <IncomeStackLine :data="income" class="h-36" />
     </div>
   </section>

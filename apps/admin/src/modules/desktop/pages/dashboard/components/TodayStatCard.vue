@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import TrendChart from './TrendChart.vue'
 
-import { Icon, type IconifyIcon } from '@iconify/vue'
 import { twMerge } from 'tailwind-merge'
+import { Icon, type IconifyIcon } from '@iconify/vue'
 
 import { formatNumberToThousands } from '@/utils/common'
 

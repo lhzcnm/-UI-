@@ -46,6 +46,7 @@ declare module 'vue' {
     XPopover: typeof import('@3un/ui')['XPopover']
     XRadio: typeof import('@3un/ui')['XRadio']
     XSegmented: typeof import('@3un/ui')['XSegmented']
+    XSegmentedItem: typeof import('@3un/ui')['XSegmentedItem']
     XSelect: typeof import('@3un/ui')['XSelect']
     XSelectGroup: typeof import('@3un/ui')['XSelectGroup']
     XSelectItem: typeof import('@3un/ui')['XSelectItem']
