@@ -2,8 +2,6 @@ import type { Credit } from "@/inters/credits"
 import { type XColDef } from "@3un/ui"
 import { h } from "vue"
 
-const store = useServiceStore()
-
 export const columns: XColDef<Credit> = [
   { key: 'historyId', title: 'ID', width: 98 },
   {
@@ -12,6 +10,7 @@ export const columns: XColDef<Credit> = [
     width: 300,
     render: (value) => {
       if (!value) return '积分充值'
+      const store = useServiceStore()
       const service = store.itemMap.get(value)
       return service ? `${service.packageId} - ${service.packageTitle}` : '服务不存在'
     }

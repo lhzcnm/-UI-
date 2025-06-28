@@ -6,7 +6,6 @@ import { h } from 'vue'
 import type { ServiceField } from '@/inters/services'
 import { updateServiceField } from "@/api/services"
 
-const serviceStore = useServiceStore()
 export const columns: XColDef<ServiceField> = [
   {
     key: 'id',
@@ -18,6 +17,7 @@ export const columns: XColDef<ServiceField> = [
     title: '服务',
     minWidth: 280,
     render(_, row) {
+      const serviceStore = useServiceStore()
       const service = serviceStore.itemMap.get(row.serviceId)!
       if (!service) return '服务不存在'
       return `${service.packageId} - ${service.packageTitle}`

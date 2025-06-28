@@ -6,8 +6,6 @@ import { zService, type Service } from '@/inters/services'
 import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 
-const serviceStore =  useServiceStore()
-
 export const columns: XColDef<Service> = [
   {
     key: 'packageId',
@@ -19,6 +17,7 @@ export const columns: XColDef<Service> = [
     title: '所在服务组',
     width: 180,
     render: (value) => {
+      const serviceStore = useServiceStore()
       const group = serviceStore.groupMap.get(value)
       return group ? group.category : '默认服务组'
     }
@@ -33,6 +32,7 @@ export const columns: XColDef<Service> = [
     title: '服务 API',
     width: 200,
     render(value, row) {
+      const serviceStore = useServiceStore()
       const store = inject(SERVICE_STORE)!
       const api = serviceStore.items
         .find(item => item.apiId === value)
@@ -125,6 +125,7 @@ export const columns: XColDef<Service> = [
     width: 64,
     fixed: 'right',
     render: (_, row) => {
+      const serviceStore = useServiceStore()
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
         store.formBase = zService.parse(row)

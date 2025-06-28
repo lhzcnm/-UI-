@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { ua } from '@3un/utils'
+
+import type { SidebarMenuChild } from '@/utils'
+import { menus, tools } from '@/utils'
 
 import notFound from './routes/404'
 import auth     from './routes/auth'
 import desktop  from './routes/desktop'
 import mobile   from './routes/mobile'
-import { ua } from '@3un/utils'
-import { menus, tools, type SidebarMenuChild } from '@/utils'
 
 const router = createRouter({
   history: createWebHistory(),

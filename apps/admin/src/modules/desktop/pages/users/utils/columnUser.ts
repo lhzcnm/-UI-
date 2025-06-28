@@ -7,7 +7,6 @@ import { h } from 'vue'
 import type { User } from '@/inters/users'
 import { updateUser } from '@/api/users'
 
-const levelStore = useLevelStore()
 export const columns: XColDef<User> = [
   {
     key: 'userId',
@@ -43,6 +42,7 @@ export const columns: XColDef<User> = [
     title: '会员等级',
     width: 108,
     render(value) {
+      const levelStore = useLevelStore()
       const level = levelStore.levelMap.get(value)
       return level ? level.pricePlan : '未知'
     },

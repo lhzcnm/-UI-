@@ -5,8 +5,6 @@ import { ORDER_STATUS, ORDER_STATUS_MAP, SUBMIT_METHOD_MAP } from '@3un/utils'
 import { XButton, XTag, type XColDef } from "@3un/ui"
 import { h } from 'vue'
 
-const serviceStore = useServiceStore()
-
 export const columns: XColDef<Order> = [
   {
     key: 'codeId',
@@ -23,6 +21,7 @@ export const columns: XColDef<Order> = [
     title: '服务',
     width: 225,
     render(value) {
+      const serviceStore = useServiceStore()
       const service = serviceStore.itemMap.get(value)
       return service ? `${service.packageId} - ${service.packageTitle}` : '--'
     }

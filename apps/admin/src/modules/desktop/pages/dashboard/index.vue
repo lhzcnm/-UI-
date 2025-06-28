@@ -30,7 +30,7 @@ echarts.use([
   UniversalTransition,
 ])
 
-const today = dayjs('2025-04-14')
+const today = dayjs()
 const tomorrow = today.add(1, 'day')
 const yesterday = today.subtract(1, 'day')
 

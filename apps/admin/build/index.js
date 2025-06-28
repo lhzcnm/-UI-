@@ -85,8 +85,19 @@ async function clean(mode) {
 
 function manualChunks(id) {
   if (id.includes('jsencrypt')) return 'jsencrypt'
-  if (id.includes('echarts') || id.includes('zrender')) return 'echarts'
-  if (id.includes('tiptap') || id.includes('prosemirror')) return 'tiptap'
+  if (
+    id.includes('tiptap') ||
+    id.includes('prosemirror') ||
+    id.includes('w3c-keyname') || 
+    id.includes('orderedmap') || 
+    id.includes('rope-sequence')
+  ) return 'tiptap'
+
+  if (
+    id.includes('echarts') ||
+    id.includes('zrender') ||
+    id.includes('tslib')
+  ) return 'echarts'
 
   if (
     id.includes('@vueuse') ||
