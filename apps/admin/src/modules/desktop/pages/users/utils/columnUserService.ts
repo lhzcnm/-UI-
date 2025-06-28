@@ -5,14 +5,13 @@ import type { LevelService } from '@/inters/level'
 import { deleteLevelService } from '@/api/level'
 import { USER_STORE } from '.'
 
-const serviceStore = useServiceStore()
-
 export const columns: XColDef<LevelService> = [
   {
     key: 'packageId',
     title: '服务',
     minWidth: 210,
     render: (value) => {
+      const serviceStore = useServiceStore()
       const service = serviceStore.itemMap.get(value)
       return service ? `${service.packageId} - ${service.packageTitle}` : '--'
     },
@@ -22,6 +21,7 @@ export const columns: XColDef<LevelService> = [
     title: '原始点数',
     width: 72,
     render: (_, row) => {
+      const serviceStore = useServiceStore()
       const service = serviceStore.itemMap.get(row.packageId)
       return service ? service.packagePrice : '--'
     }

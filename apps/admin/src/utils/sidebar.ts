@@ -112,12 +112,6 @@ export const menus: SidebarMenu[] = [
 
 export const tools: SidebarMenu[] = [
   {
-    label: 'Redis 管理',
-    path: '/redis',
-    icon: 'lucide:database-zap',
-    match: 'redisguanli',
-  },
-  {
     label: '批量编辑订单',
     path: '/batch-edit-orders',
     icon: 'lucide:square-bottom-dashed-scissors',

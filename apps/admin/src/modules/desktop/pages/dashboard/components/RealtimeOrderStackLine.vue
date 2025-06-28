@@ -24,6 +24,25 @@ const option = computed<EChartsOption>(() => {
     },
     tooltip: {
       trigger: 'axis',
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return ''
+        
+        const time = dayjs(params[0].axisValue).format('MM-DD HH:mm')
+        let tooltip = `<div style="font-weight: bold; margin-bottom: 4px;">${time}</div>`
+        
+        params.forEach((param: any) => {
+          const color = param.color
+          const name = param.seriesName
+          const value = param.value[1]
+          tooltip += `<div style="display: flex; align-items: center; margin: 2px 0;">
+            <span style="display: inline-block; width: 10px; height: 10px; background-color: ${color}; margin-right: 8px; border-radius: 50%;"></span>
+            <span style="margin-right: 8px;">${name}:</span>
+            <span style="font-weight: bold;">${value}</span>
+          </div>`
+        })
+        
+        return tooltip
+      }
     },
     xAxis: {
       type: 'time',
@@ -34,6 +53,7 @@ const option = computed<EChartsOption>(() => {
           return dayjs(value).format('HH:mm')
         },
       },
+      animationDuration: 300,
     },
     yAxis: {
       type: 'value',
@@ -43,12 +63,15 @@ const option = computed<EChartsOption>(() => {
           if (value >= 1000) {
             return (value / 1000).toFixed(1) + 'k'
           }
-
           return value.toString()
         }
       },
-      splitLine: { show: false }
+      splitLine: { show: false },
+      scale: true
     },
+    animation: true,
+    animationDuration: 300,
+    animationEasing: 'cubicOut',
     series: [
       {
         type: 'line',
@@ -71,6 +94,8 @@ const option = computed<EChartsOption>(() => {
           }
         },
         data: props.data.map(item => [new Date(item.dataTime).getTime(), item.success]),
+        animationDuration: 300,
+        animationEasing: 'cubicOut'
       },
       {
         type: 'line',
@@ -80,7 +105,7 @@ const option = computed<EChartsOption>(() => {
         color: 'rgb(220, 38, 38, 1)',
         lineStyle: {
           width: 2,
-          color: 'rgb(220, 38, 38, 0.5)'
+          color: 'rgb(220, 38, 38, 0.8)'
         },
         areaStyle: {
           color: {
@@ -93,6 +118,8 @@ const option = computed<EChartsOption>(() => {
           }
         },
         data: props.data.map(item => [new Date(item.dataTime).getTime(), item.failure]),
+        animationDuration: 300,
+        animationEasing: 'cubicOut'
       },
     ]
   }

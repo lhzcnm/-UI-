@@ -85,7 +85,7 @@ const theme = {
     splitLine: {
       lineStyle: {
         // from: var(--muted)
-        color: 'hsl(240 4% 16%)',
+        color: '#27272a',
       },
     },
   },

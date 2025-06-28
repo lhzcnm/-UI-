@@ -12,90 +12,90 @@ interface TheProps {
 const props = defineProps<TheProps>()
 const theme = inject(THEME)!
 
-const option = computed<EChartsOption>(() => ({
-  grid: {
-    left: 12,
-    top: 50,
-    right: 12,
-    bottom: 12,
-    containLabel: true
-  },
-  tooltip: {
-    trigger: 'axis',
-  },
-  xAxis: {
-    type: 'time',
-    axisLabel: {
-      fontSize: 10,
-      formatter: (value: number) => {
-        const date = new Date(value)
-        return `${date.getMonth() + 1}/${date.getDate()}`
-      }
-    }
-  },
-  yAxis: [
-    {
-      type: 'value',
-      name: '订单成功率(%)',
-      position: 'left',
-      min: 90,
-      max: 100,
+const option = computed<EChartsOption>(() => {
+  const successRates = props.data.map(item => 
+    item.total > 0 ? ((item.success / item.total) * 100) : 0
+  )
+
+  const minRate = Math.min(...successRates)
+  const maxRate = Math.max(...successRates)
+  const range = maxRate - minRate
+
+  const yAxisMin = range < 5 ? Math.max(minRate - 2, 0) : Math.max(minRate - range * 0.1, 0)
+  const yAxisMax = range < 5 ? Math.min(maxRate + 2, 100) : Math.min(maxRate + range * 0.1, 100)
+
+  return {
+    grid: {
+      left: 50,
+      top: 12,
+      right: 24,
+      bottom: 30,
+      containLabel: false
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    xAxis: {
+      type: 'time',
       axisLabel: {
-        fontSize: 10,
+        fontSize: 11,
+        formatter: (value: number) => {
+          const date = new Date(value)
+          return `${date.getMonth() + 1}/${date.getDate()}`
+        }
+      },
+      axisLine: {
+        lineStyle: { color: '#e5e7eb' }
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: '成功率(%)',
+      min: yAxisMin,
+      max: yAxisMax,
+      axisLabel: {
+        fontSize: 11,
         formatter: '{value}%'
       },
-      splitLine: { show: false }
-    },
-    {
-      type: 'value',
-      name: '失败订单数',
-      position: 'right',
-      axisLabel: {
-        fontSize: 10
+      axisLine: {
+        lineStyle: { color: '#e5e7eb' }
       },
-      splitLine: { show: false }
-    }
-  ],
-  series: [
-    {
-      type: 'line',
-      yAxisIndex: 0,
-      smooth: true,
-      showSymbol: true,
-      symbol: 'circle',
-      symbolSize: 6,
-      name: '订单成功率',
-      color: '#059669',
-      lineStyle: {
-        width: 3,
-        color: '#059669'
-      },
-      data: props.data.map((item) => [
-        item.dataTime, 
-        ((item.success / item.total) * 100).toFixed(2)
-      ]),
+      splitLine: {
+        lineStyle: {
+          type: 'dashed',
+
+          opacity: 0.5,
+        }
+      }
     },
-    {
-      type: 'bar',
-      yAxisIndex: 1,
-      name: '失败订单',
-      color: '#e11d48',
-      barWidth: '60%',
-      itemStyle: {
-        color: {
-          type: 'linear',
-          x: 0, y: 0, x2: 0, y2: 1,
-          colorStops: [
-            { offset: 0, color: '#e11d48' },
-            { offset: 1, color: '#fda4af' }
-          ]
+    series: [
+      {
+        type: 'line',
+        smooth: true,
+        showSymbol: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        name: '成功率',
+        color: '#059669',
+        lineStyle: {
+          width: 2,
+          color: '#059669'
         },
-        borderRadius: [2, 2, 0, 0]
-      },
-      data: props.data.map((item) => [item.dataTime, item.failure]),
-    }
-  ]
-}))
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: 'rgba(5, 150, 105, 0.3)' },
+              { offset: 1, color: 'rgba(5, 150, 105, 0.05)' }
+            ]
+          }
+        },
+        data: props.data.map((item, idx) => [item.dataTime, successRates[idx]]),
+      }
+    ]
+  }
+})
 </script>
 
 <template>

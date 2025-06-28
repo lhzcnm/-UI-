@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import OrderStackLine from './OrderStackLine.vue'
-import OrderSuccessRateChart from './OrderSuccessRateChart.vue'
 
 import type { OrderStatItem } from '@/inters/dashboard'
 import { formatNumberToThousands } from '@/utils/common'
@@ -12,12 +11,6 @@ const store = inject(STORE)!
 
 const orders = ref<OrderStatItem[]>([])
 const selected = ref('30')
-
-const chartType = ref<'combined' | 'success-rate'>('combined')
-const segmentOptions = [
-  { label: '组合图表', value: 'combined' },
-  { label: '成功率趋势', value: 'success-rate' },
-]
 
 const orderStats = computed(() => {
   if (orders.value.length === 0) {
@@ -54,11 +47,6 @@ async function getStatData(value: string) {
       <h3 class="text-xl font-bold">订单统计</h3>
 
       <div class="flex items-center space-x-2">
-        <XSegmented 
-          v-model="chartType" 
-          :options="segmentOptions"
-        />
-
         <XSelect
           v-model="selected"
           ui-trigger="w-48"
@@ -104,8 +92,7 @@ async function getStatData(value: string) {
         </div>
       </div>
   
-      <OrderStackLine v-if="chartType === 'combined'" :data="orders" class="h-44" />
-      <OrderSuccessRateChart v-else :data="orders" class="h-44" />
+      <OrderStackLine :data="orders" class="h-44" />
     </div>
   </section>
 </template>
