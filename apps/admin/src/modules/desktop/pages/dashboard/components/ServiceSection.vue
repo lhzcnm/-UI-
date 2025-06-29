@@ -44,13 +44,14 @@ async function getStatData(value: string, serviceId: number) {
 </script>
 
 <template>
-  <section class="p-4 border rounded">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-xl font-bold whitespace-nowrap">服务统计</h3>
+  <section class="border rounded">
+    <div class="flex items-center justify-between p-3 border-b">
+      <h3 class="text-lg font-bold whitespace-nowrap">服务统计</h3>
 
       <div class="flex items-center space-x-2">
         <SelectService
-          v-model="serviceId" ui-trigger="w-48" placement="top"
+          v-model="serviceId"
+          ui-trigger="w-48" placement="top"
           @selected="getStatData(selected, $event)"
         />
 
@@ -67,7 +68,7 @@ async function getStatData(value: string, serviceId: number) {
       </div>
     </div>
 
-    <div class="border rounded overflow-hidden">
+    <div class="flex flex-col h-64 overflow-hidden">
       <div class="flex divide-x border-b border-dashed">
         <div class="px-4 py-2">
           <div class="text-sm mb-1">总订单数量</div>
@@ -98,7 +99,7 @@ async function getStatData(value: string, serviceId: number) {
         </div>
       </div>
   
-      <ServiceStackLine :data="services" class="h-36" />
+      <ServiceStackLine :data="services" class="flex-1" />
     </div>
   </section>
 </template>

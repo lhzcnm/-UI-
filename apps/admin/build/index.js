@@ -61,7 +61,7 @@ async function run(item) {
           drop_debugger: true,
         },
       },
-      sourcemap: true,
+      sourcemap: false,
       rollupOptions: {
         output: {
           dir: `./dist/${item.mode}`,

@@ -30,8 +30,8 @@ echarts.use([
   UniversalTransition,
 ])
 
-const today = dayjs()
-const tomorrow = today.add(1, 'day')
+const today     = dayjs()
+const tomorrow  = today.add(1, 'day')
 const yesterday = today.subtract(1, 'day')
 
 const store: StatStore = reactive({
@@ -42,17 +42,12 @@ provide(STORE, store)
 </script>
 
 <template>
-  <div class="p-3 space-y-6">
+  <div class="p-6 space-y-6">
     <CardSection />
 
-    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-6">
-      <RealtimeOrderSection />
-      <OrderSection />
-    </div>
-    
-    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-6">
-      <IncomeSection />
-      <ServiceSection />
-    </div>
+    <RealtimeOrderSection />
+    <OrderSection />
+    <IncomeSection />
+    <ServiceSection />
   </div>
 </template>

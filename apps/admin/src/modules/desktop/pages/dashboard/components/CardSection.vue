@@ -34,8 +34,8 @@ async function getIncomeStat() {
   const todayDate = store.today.format('YYYY-MM-DD')
   const yesterdayDate = store.yesterday.format('YYYY-MM-DD')
 
-  incomeToday.value = data[todayDate]
-  incomeYesterday.value = data[yesterdayDate]
+  incomeToday.value = data[todayDate] || '0'
+  incomeYesterday.value = data[yesterdayDate] || '0'
 }
 
 async function getOrderStat() {

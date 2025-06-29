@@ -27,13 +27,14 @@ const option = computed<EChartsOption>(() => {
   return {
     grid: {
       left: 50,
-      top: 12,
+      top: 16,
       right: 24,
       bottom: 30,
       containLabel: false
     },
     tooltip: {
       trigger: 'axis',
+      valueFormatter: (value) => `${Number(value).toFixed(2)}%`
     },
     xAxis: {
       type: 'time',
@@ -50,20 +51,18 @@ const option = computed<EChartsOption>(() => {
     },
     yAxis: {
       type: 'value',
-      name: '成功率(%)',
+      name: '成功率',
+      nameGap: 8,
+      nameLocation: 'start',
       min: yAxisMin,
       max: yAxisMax,
       axisLabel: {
         fontSize: 11,
-        formatter: '{value}%'
-      },
-      axisLine: {
-        lineStyle: { color: '#e5e7eb' }
+        formatter: (value: number) => `${value.toFixed(0)}%`
       },
       splitLine: {
         lineStyle: {
           type: 'dashed',
-
           opacity: 0.5,
         }
       }
