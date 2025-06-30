@@ -7,7 +7,7 @@ import { getRealtimeOrder } from '@/api/dashboard'
 
 import dayjs from 'dayjs'
 
-const rawData = ref<OrderStatItem[]>([])
+const rawData = shallowRef<Map<string, OrderStatItem>>(new Map())
 const displayData = ref<OrderStatItem[]>([])
 const lastUpdateTime = ref('')
 
@@ -16,11 +16,11 @@ let displayTimer: number | null = null
 
 const stats = computed(() => {
   const carry = { total: 0, success: 0, failure: 0 }
-  if (rawData.value.length === 0) {
+  if (rawData.value.size === 0) {
     return { ...carry, successRate: 0 }
   }
 
-  for (const item of rawData.value) {
+  for (const item of rawData.value.values()) {
     carry.total += item.total
     carry.success += item.success
     carry.failure += item.failure
@@ -38,45 +38,68 @@ async function getStatData() {
   stopTimers()
 
   const data = await getRealtimeOrder()
-  const isEmpty = rawData.value.length === 0
-  const slicedData = data.slice(isEmpty ? -2 : -1)
-  rawData.value = rawData.value.concat(slicedData).slice(-10)
-
-  console.log('raw Data', rawData.value)
+  rawData.value = new Map(data.map(item => [item.dataTime, item]))
   lastUpdateTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  console.log('mock data', data)
 
   startTimers()
 }
 
 function startTimers() {
-  fetchTimer = setTimeout(getStatData, 60 * 1000)
-  let data: OrderStatItem[] = []
+  const values = Array.from(rawData.value.values())
+  let processData: OrderStatItem[]
 
   if (displayData.value.length > 0) {
-    const prevLastItem = displayData.value[displayData.value.length - 1]
-    const lastTime = prevLastItem.dataTime
-  
-    data = rawData.value.filter(item => item.dataTime > lastTime)
+    const lastItem = displayData.value[displayData.value.length - 1]
+    const filtered = values.filter(item => item.dataTime > lastItem.dataTime)
+    processData = handleDisplayData(filtered)
   }
   else {
-    data = rawData.value
+    processData = handleDisplayData(values)
   }
 
-  const processedData = handleDisplayData(data)
+  console.log('process data', processData)
 
-  console.log('data', processedData)
-  updateDisplayData(processedData)
+  if (processData.length === 0) {
+    return fetchTimer = setTimeout(getStatData, 60000)
+  }
+
+  const interval = Math.floor(60000 / processData.length)
+
+  updateDisplayData(processData)
+  displayTimer = setInterval(
+    () => updateDisplayData(processData),
+    interval,
+  )
+
+  fetchTimer = setTimeout(getStatData, 60000)
+}
+
+function updateDisplayData(data: OrderStatItem[]) {
+  const nextItem = data.pop()
+  if (!nextItem) return
+
+  console.log('nextItem', nextItem)
+  displayData.value.push(nextItem)
 }
 
 function stopTimers() {
-  if (fetchTimer) {
-    clearInterval(fetchTimer)
-    fetchTimer = null
-  }
-  if (displayTimer) {
-    clearInterval(displayTimer)
-    displayTimer = null
-  }
+  stopFetchTimer()
+  stopDisplayTimer()
+}
+
+function stopFetchTimer() {
+  if (!fetchTimer) return
+  
+  clearInterval(fetchTimer)
+  fetchTimer = null
+}
+
+function stopDisplayTimer() {
+  if (!displayTimer) return
+
+  clearInterval(displayTimer)
+  displayTimer = null
 }
 
 function handleDisplayData(data: OrderStatItem[]) {
@@ -84,7 +107,7 @@ function handleDisplayData(data: OrderStatItem[]) {
   const format = 'YYYY-MM-DD HH:mm:ss'
   const result: OrderStatItem[] = []
 
-  for (let i = 0; i < data.length - 1; i++) {
+  for (let i = data.length - 2; i >= 0; i--) {
     const nextItem = data[i + 1] || lastItem
     const item = data[i]
 
@@ -93,9 +116,7 @@ function handleDisplayData(data: OrderStatItem[]) {
     const successRate = (nextItem.success - item.success) / 60
     const failureRate = (nextItem.failure - item.failure) / 60
 
-    result.push(item)
-
-    for (let j = 5; j < 60; j += 5) {
+    for (let j = 55; j >= 5; j -= 5) {
       const currentTime = itemTime.add(j, 'second')
 
       result.push({
@@ -105,27 +126,11 @@ function handleDisplayData(data: OrderStatItem[]) {
         failure: Math.round(item.failure + failureRate * j),
       })
     }
+
+    result.push(item)
   }
 
   return result
-}
-
-function updateDisplayData(data: OrderStatItem[]) {
-  const item = data.shift()
-
-  if (item) {
-    console.log('item0', item)
-    displayData.value.push(item)
-  }
-
-  displayTimer = setInterval(() => {
-    const item = data.shift()
-
-    if (item) {
-      console.log('item', item)
-      displayData.value.push(item)
-    }
-  }, 5 * 1000)
 }
 </script>
 
@@ -137,7 +142,6 @@ function updateDisplayData(data: OrderStatItem[]) {
       <div class="flex items-center space-x-2 text-sm text-muted-foreground ml-auto">
         <span v-if="lastUpdateTime" class="text-xs">最后更新: {{ lastUpdateTime }}</span>
         <span class="text-xs">数据点: {{ displayData.length }}</span>
-        <span class="text-xs text-orange-500">延时1分钟</span>
       </div>
     </div>
 

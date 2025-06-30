@@ -14,9 +14,9 @@ export const updateTicket: TicketUpdateFn = async (params) => {
   return (await http.put('/ticket', params)).data
 }
 
-type TicketDeleteFn = (id: number) => Promise<void>
-export const deleteTicket: TicketDeleteFn = async (id) => {
-  await http.delete(`/ticket/${id}`)
+type TicketDeleteFn = (data: number[]) => Promise<void>
+export const deleteTicket: TicketDeleteFn = async (data) => {
+  await http.delete('/ticket', { data })
 }
 
 // Ticket Reply

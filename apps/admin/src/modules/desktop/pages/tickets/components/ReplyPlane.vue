@@ -74,7 +74,7 @@ async function handleToggle() {
 async function handleDelete() {
   if (!await xconfirm('确定删除该工单吗？')) return
   if (currentTicket.value) {
-    await deleteTicket(currentTicket.value.id)
+    await deleteTicket([currentTicket.value.id])
 
     store.tickets.list.splice(store.index!, 1)
     store.tickets.total--

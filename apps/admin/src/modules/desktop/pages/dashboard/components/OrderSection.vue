@@ -36,7 +36,6 @@ async function getStatData(value: string) {
     endTime: endDay.format('YYYY-MM-DD'),
   })
 
-  console.log('order', data)
   orders.value = data
 }
 </script>

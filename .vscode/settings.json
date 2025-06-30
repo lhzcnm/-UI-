@@ -8,7 +8,7 @@
   "iconify.annotations": false,
 
   "files.exclude": {
-    "**/node_modules": false,
+    "**/node_modules": true,
     "packages/**/dist": true,
   },
   "files.associations": {

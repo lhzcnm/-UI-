@@ -48,8 +48,6 @@ async function getStatData(value: string) {
   })
 
   const patchedData = patchData(startDay, endDay, data)
-  console.log('income', patchedData)
-
   income.value = patchedData
 }
 

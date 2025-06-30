@@ -38,7 +38,6 @@ async function getStatData(value: string, serviceId: number) {
     serviceId,
   })
 
-  console.log('service', data)
   services.value = data
 }
 </script>

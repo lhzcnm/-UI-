@@ -29,8 +29,6 @@ async function getIncomeStat() {
     endTime: store.tomorrow.format('YYYY-MM-DD'),
   })
 
-  console.log('income', data)
-
   const todayDate = store.today.format('YYYY-MM-DD')
   const yesterdayDate = store.yesterday.format('YYYY-MM-DD')
 
@@ -43,8 +41,6 @@ async function getOrderStat() {
     startTime: store.yesterday.format('YYYY-MM-DD'),
     endTime: store.tomorrow.format('YYYY-MM-DD'),
   })
-
-  console.log('order', data)
 
   orderToday.value = data[1].total
   orderYesterday.value = data[0].total
@@ -60,7 +56,6 @@ async function getIncomeTrendStat() {
 
 async function getOrderTrendStat() {
   const data = await getOrderTrend()
-  console.log('orderTrend', data)
 
   orderTrend.value = Object.entries(data)
     .map(([key, value]) => [key, Number(value)])
