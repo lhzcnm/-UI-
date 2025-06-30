@@ -4,7 +4,8 @@ import { twJoin, twMerge } from 'tailwind-merge'
 import { Icon } from '@iconify/vue'
 
 import type { SidebarMenuChild } from '@/utils'
-import { menus, tools, EXPANDED_MENUS } from '@/utils'
+import { menus, tools, others, EXPANDED_MENUS } from '@/utils'
+import http from '@/utils/http'
 
 interface SidebarProps {
   class: ClassNameValue
@@ -25,6 +26,20 @@ const iStore = useSystemStore()
 function handleChildClick(child: SidebarMenuChild) {
   iStore.breadcrumbItems = [child.label]
   router.push(child.path)
+}
+
+function handleOtherClick(item: SidebarMenuChild) {
+  if (item.path === 'logout') {
+    http.get('/auth/logout').then(() => {
+      localStorage.clear()
+      sessionStorage.clear()
+      router.push('/auth')
+    })
+  }
+
+  if (item.path === 'settings') {
+    iStore.showSetting = true
+  }
 }
 </script>
 
@@ -58,6 +73,24 @@ function handleChildClick(child: SidebarMenuChild) {
             <div class="flex items-center space-x-2">
               <Icon v-if="tool.icon" :icon="tool.icon" class="size-4" />
               <span>{{ tool.label }}</span>
+            </div>
+          </button>
+        </li>
+      </ul>
+
+      <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">其他</p>
+      <ul class="flex flex-col sm:space-y-1">
+        <li v-for="item in others" :key="item.path">
+          <button
+            :class="twJoin(
+              'flex items-center justify-between w-full px-3 h-10 sm:h-8',
+              'rounded-md hover:bg-accent/15 hover:text-foreground transition-colors',
+            )"
+            @click="handleOtherClick(item)"
+          >
+            <div class="flex items-center space-x-2">
+              <Icon v-if="item.icon" :icon="item.icon" class="size-4" />
+              <span>{{ item.label }}</span>
             </div>
           </button>
         </li>

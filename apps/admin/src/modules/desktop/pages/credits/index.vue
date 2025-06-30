@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CreditSearch from './components/CreditSearch.vue'
+import CreditClean from './components/CreditClean.vue'
 
 import type { CreditListParams } from '@/inters/credits'
 import { zCreditSearchForm } from '@/inters/credits'
@@ -13,7 +14,10 @@ const store: CreditStore = reactive({
   credits: createList(),
 
   formSearch: zCreditSearchForm.parse({}),
+  formClean: { checked: '90', time: '' },
+
   visibleSearch: false,
+  visibleClean: false,
 
   refresh: false,
   page   : 1,
@@ -73,6 +77,11 @@ function getList(params: CreditListParams) {
   response.finally(() => loading.value = false)
 }
 
+function handleCleanOrder() {
+  store.formClean = { checked: '90', time: '' }
+  store.visibleClean = true
+}
+
 function resetSearch() {
   store.formSearch = zCreditSearchForm.parse({})
   router.replace({ path: route.path })
@@ -94,6 +103,16 @@ function resetSearch() {
           variant="outline"
           icon="lucide:brush-cleaning"
           @click="resetSearch"
+        />
+
+        <hr class="h-6 w-px mx-4 bg-border" />
+
+        <XButton
+          label="清理记录"
+          color="danger"
+          variant="outline"
+          icon="lucide:trash-2"
+          @click="handleCleanOrder"
         />
       </div>
 
@@ -123,5 +142,6 @@ function resetSearch() {
     </div>
 
     <CreditSearch />
+    <CreditClean />
   </div>
 </template>

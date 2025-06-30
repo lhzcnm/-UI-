@@ -55,7 +55,11 @@ const store = useServiceStore()
       <XInputNumber v-model.number="form.packageOrderBy" :step="1" />
     </FormField>
 
-    <FormField label="提交类型" desc="提交类型" variant="vertical">
+    <FormField
+      label="提交类型"
+      desc="用户提交订单时，限制提交的数据类型"
+      variant="vertical"
+    >
       <div class="flex space-x-6">
         <XRadio
           v-model="form.imeiFieldType"

@@ -1,4 +1,4 @@
-import type { CreditList, CreditSearchForm } from "@/inters/credits";
+import type { CreditCleanForm, CreditList, CreditSearchForm } from "@/inters/credits"
 import type { IK } from "@3un/shared";
 
 export * from './column'
@@ -9,7 +9,10 @@ export interface CreditStore {
   credits: CreditList
 
   formSearch: CreditSearchForm
+  formClean: CreditCleanForm
+
   visibleSearch: boolean
+  visibleClean: boolean
 
   refresh: boolean
   page   : number

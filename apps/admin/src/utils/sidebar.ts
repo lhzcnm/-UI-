@@ -2,7 +2,7 @@ export interface SidebarMenu {
   label      : string
   icon       : string
   path       : string
-  badge     ?: number
+  badge     ?: (() => number)
   match     ?: string[] | string
   children  ?: SidebarMenuChild[]
 }
@@ -11,7 +11,7 @@ export interface SidebarMenuChild {
   label      : string
   path       : string
   icon      ?: string
-  badge     ?: number
+  badge     ?: (() => number)
 }
 
 export const menus: SidebarMenu[] = [
@@ -49,9 +49,36 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:shopping-bag',
     children: [
       { label: '全部订单', match: 'quandingdan', path: '/orders' },
-      { label: '订单验证', match: 'dingdanyanzheng', path: '/orders/verify', icon: 'lucide:check-circle', badge: 9 },
-      { label: '等待处理', match: 'dengdaichuli', path: '/orders?q=wait', icon: 'lucide:clock', badge: 4 },
-      { label: '正在处理', match: 'zhengzaichuli', path: '/orders?q=processing', icon: 'lucide:square-activity', badge: 203 },
+      {
+        label: '订单验证',
+        match: 'dingdanyanzheng',
+        path: '/orders/verify',
+        icon: 'lucide:check-circle',
+        badge: () => {
+          const iStore = useSystemStore()
+          return iStore.todoCount.verifying
+        }
+      },
+      {
+        label: '等待处理',
+        match: 'dengdaichuli',
+        path: '/orders?q=wait',
+        icon: 'lucide:clock',
+        badge: () => {
+          const iStore = useSystemStore()
+          return iStore.todoCount.awaiting
+        }
+      },
+      {
+        label: '正在处理',
+        match: 'zhengzaichuli',
+        path: '/orders?q=processing',
+        icon: 'lucide:square-activity',
+        badge: () => {
+          const iStore = useSystemStore()
+          return iStore.todoCount.processing
+        },
+      },
     ],
   },
   {
@@ -94,7 +121,10 @@ export const menus: SidebarMenu[] = [
     path: '/tickets',
     icon: 'lucide:messages-square',
     match: 'gongdanguanli',
-    badge: 10,
+    badge: () => {
+      const iStore = useSystemStore()
+      return iStore.todoCount.ticket
+    },
   },
   {
     label: 'API 管理',
@@ -123,4 +153,9 @@ export const tools: SidebarMenu[] = [
     icon: 'lucide:remove-formatting',
     match: 'fuwenbenbianji',
   },
+]
+
+export const others: SidebarMenu[] = [
+  { label: '设置', icon: 'lucide:settings', path: 'settings' },
+  { label: '退出登录', icon: 'lucide:log-out', path: 'logout' },
 ]

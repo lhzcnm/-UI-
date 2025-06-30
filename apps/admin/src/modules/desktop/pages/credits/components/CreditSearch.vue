@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CreditSearchForm from '@forms/CreditSearchForm.vue'
+import CreditSearchForm from '@/components/forms/credit/CreditSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { CREDIT_STORE } from '../utils'
 

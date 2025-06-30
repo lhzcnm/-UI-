@@ -80,7 +80,7 @@ function handleReply(verify: number) {
         <XButton
           label="批量回复"
           icon="lucide:message-circle-reply"
-          @click="handleReply(ORDER_VERIFY.REPLIED)"
+          @click="handleReply(ORDER_VERIFY.SOLVED)"
         />
         <XButton
           label="批量退积分"
@@ -111,6 +111,7 @@ function handleReply(verify: number) {
         :data="store.orders.list"
         selection row-key="codeId"
         class="border h-[calc(100vh-8.75rem)]"
+        @select-change="selected = $event"
       />
     </div>
   </div>

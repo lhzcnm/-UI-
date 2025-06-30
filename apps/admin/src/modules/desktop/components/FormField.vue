@@ -50,7 +50,7 @@ const b = style()
   <div :class="b.base({ variant })">
     <div class="flex-1">
       <p :class="b.title({ required })">{{ label }}</p>
-      <span v-if="variant === 'horizontal'" :class="b.desc()">{{ desc }}</span>
+      <span :class="b.desc()">{{ desc }}</span>
     </div>
     <div class="flex items-center space-x-2" :class="twJoin(contentFlex && 'flex-1')">
       <slot />

@@ -23,6 +23,23 @@ export const columns: XColDef<Service> = [
     }
   },
   {
+    key: 'tmpTitle',
+    title: '服务简称',
+    minWidth: 220,
+  },
+  {
+    key: 'packageTitle',
+    title: '服务名称',
+    minWidth: 220,
+  },
+  {
+    key: 'packageTitleLocal',
+    title: '服务名称EN',
+    minWidth: 220,
+    tdClassName: 'break-words',
+    cellEmpty: '-',
+  },
+  {
     key: 'packagePrice',
     title: '服务价格',
     width: 88,
@@ -56,23 +73,6 @@ export const columns: XColDef<Service> = [
         api?.apiName || '编辑'
       )
     }
-  },
-  {
-    key: 'tmpTitle',
-    title: '服务简称',
-    minWidth: 220,
-  },
-  {
-    key: 'packageTitle',
-    title: '服务名称',
-    minWidth: 220,
-  },
-  {
-    key: 'packageTitleLocal',
-    title: '服务名称EN',
-    minWidth: 220,
-    tdClassName: 'break-words',
-    cellEmpty: '-',
   },
   {
     key: 'packageOrderBy',

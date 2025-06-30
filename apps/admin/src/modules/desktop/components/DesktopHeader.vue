@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SearchPlane from './SearchPlane.vue'
+import TodoMsg from './TodoMsg.vue'
 
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
@@ -37,7 +38,7 @@ const b = style()
 
 <template>
   <div :class="b.root()">
-    <div class="flex items-center space-x-1">
+    <div class="flex items-center space-x-2">
       <button
         :class="b.iconBtn()" accesskey="b"
         @click="iStore.toggleSidebar"
@@ -51,7 +52,7 @@ const b = style()
       <Breadcrumb :items="iStore.breadcrumbItems" />
     </div>
 
-    <div class="flex items-center space-x-1">
+    <div class="flex items-center space-x-2">
       <button
         :class="b.iconBtn()" accesskey="k"
         @click="visibleSearch = true"
@@ -60,10 +61,7 @@ const b = style()
         <div class="x-tooltip-text top120">搜索</div>
       </button>
 
-      <button :class="b.iconBtn()" accesskey="m">
-        <Icon icon="lucide:bell" class="size-5" />
-        <div class="x-tooltip-text top120">消息</div>
-      </button>
+      <TodoMsg :ui-btn="b.iconBtn()" />
 
       <hr class="h-6 w-px bg-border" />
       <TheTheme ghost />

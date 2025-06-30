@@ -24,8 +24,8 @@ provide(THEME, theme)
   </RouterView>
   <TheConfirm />
   <Toaster
-      richColors
-      position="top-center"
-      :theme="theme.name"
+    richColors
+    position="top-center"
+    :theme="theme.name"
   />
 </template>

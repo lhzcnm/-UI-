@@ -51,11 +51,6 @@ router.afterEach((to) => {
 
   const store = useSystemStore()
 
-  if (
-    store.breadcrumbItems.length > 0 &&
-    !store.isGlobalSearch
-  ) return
-
   // extract breadcrumb info from route path
   let pathParts = to.path.split('/').filter(Boolean)
   if (ua.isMobile) pathParts = pathParts.slice(1)

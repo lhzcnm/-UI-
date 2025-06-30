@@ -20,7 +20,6 @@ const visible = defineModel<boolean>({ required: true })
 
 const route = useRoute()
 const router = useRouter()
-const iStore = useSystemStore()
 
 const search = ref('')
 
@@ -130,8 +129,6 @@ async function handleCommand(command: string, event: MouseEvent) {
   const element = target.closest('[data-path]')!
   const path = element.getAttribute('data-path')!
 
-  iStore.isGlobalSearch = true
-
   // tool & route
   if (command === 'tool' || command === 'route') {
     await router.push(path)
@@ -150,7 +147,6 @@ async function handleCommand(command: string, event: MouseEvent) {
   }
 
   visible.value = false
-  iStore.isGlobalSearch = false
 }
 </script>
 

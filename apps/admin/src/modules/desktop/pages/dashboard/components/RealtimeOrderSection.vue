@@ -59,12 +59,12 @@ function startTimers() {
   }
 
   console.log('process data', processData)
-
+  const fetchInterval = 60000
   if (processData.length === 0) {
-    return fetchTimer = setTimeout(getStatData, 60000)
+    return fetchTimer = setTimeout(getStatData, fetchInterval)
   }
 
-  const interval = Math.floor(60000 / processData.length)
+  const interval = Math.floor(fetchInterval / processData.length)
 
   updateDisplayData(processData)
   displayTimer = setInterval(
@@ -72,7 +72,7 @@ function startTimers() {
     interval,
   )
 
-  fetchTimer = setTimeout(getStatData, 60000)
+  fetchTimer = setTimeout(getStatData, fetchInterval)
 }
 
 function updateDisplayData(data: OrderStatItem[]) {
@@ -81,6 +81,10 @@ function updateDisplayData(data: OrderStatItem[]) {
 
   console.log('nextItem', nextItem)
   displayData.value.push(nextItem)
+
+  if (displayData.value.length > 60) {
+    displayData.value.shift()
+  }
 }
 
 function stopTimers() {

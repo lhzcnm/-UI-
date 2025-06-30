@@ -32,3 +32,9 @@ export type CreditList = IList<Credit>
 export interface CreditListParams extends IPage, OmitImeiNo {
   imeiNo: string[] | undefined
 }
+
+// Order Clean
+export interface CreditCleanForm {
+  checked: string
+  time: string
+}

@@ -90,12 +90,13 @@ function handleSubmit() {
   
       <FormField
         label="过滤词"
+        variant="vertical"
         desc="排除图像识别经常出现的错误IMEI/SN"
       >
         <XTextarea
           v-model="form.excludedWords"
           placeholder="过滤词"
-          rows="5"
+          rows="8"
         />
       </FormField>
   

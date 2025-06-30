@@ -51,9 +51,6 @@ const option = computed<EChartsOption>(() => {
     },
     yAxis: {
       type: 'value',
-      name: '成功率',
-      nameGap: 8,
-      nameLocation: 'start',
       min: yAxisMin,
       max: yAxisMax,
       axisLabel: {

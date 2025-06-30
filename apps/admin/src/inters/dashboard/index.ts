@@ -10,3 +10,10 @@ export interface OrderStatItem {
   success: number
   dataTime: string
 }
+
+export interface TodoCountItem {
+  ticket    : number
+  awaiting  : number
+  verifying : number
+  processing: number
+}

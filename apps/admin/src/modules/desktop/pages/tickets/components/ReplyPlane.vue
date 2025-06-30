@@ -96,8 +96,8 @@ async function handleDelete() {
         <h2 class="text-lg font-bold">{{ currentTicket.subject }}</h2>
         <div class="flex items-center space-x-2">
           <XButton
-            color="danger" size="sm"
-            variant="soft"
+            size="sm"
+            variant="outline"
             @click="handleToggle"
           >
             {{ isSolved ? '重新打开' : '关闭工单' }}

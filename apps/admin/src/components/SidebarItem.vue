@@ -72,7 +72,12 @@ function isActiveChild(child: SidebarMenuChild) {
       <div class="flex items-center space-x-2">
         <Icon v-if="menu.icon" :icon="menu.icon" class="size-4" />
         <span>{{ menu.label }}</span>
-        <Badge v-if="menu.badge" :value="menu.badge" />
+        <XBadge
+          v-if="menu.badge && menu.badge()"
+          :value="menu.badge()"
+          color="success"
+          size="sm"
+        />
       </div>
       <Icon
         v-if="menu.children"
@@ -97,7 +102,12 @@ function isActiveChild(child: SidebarMenuChild) {
             @click="handleChildClick(child, menu.label)"
           >
             <span>{{ child.label }}</span>
-            <Badge v-if="child.badge" :value="child.badge" />
+            <XBadge
+              v-if="child.badge && child.badge()"
+              :value="child.badge()"
+              color="success"
+              size="sm"
+            />
           </RouterLink>
         </li>
       </ul>

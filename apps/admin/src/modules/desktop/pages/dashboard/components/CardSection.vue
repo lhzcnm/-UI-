@@ -42,13 +42,18 @@ async function getOrderStat() {
     endTime: store.tomorrow.format('YYYY-MM-DD'),
   })
 
-  orderToday.value = data[1].total
-  orderYesterday.value = data[0].total
+  if (data.length === 2) {
+    orderToday.value = data[1].total
+    orderYesterday.value = data[0].total
+  }
+  else {
+    orderToday.value = 0
+    orderYesterday.value = 0
+  }
 }
 
 async function getIncomeTrendStat() {
   const data = await getIncomeTrend()
-  console.log('incomeTrend', data)
 
   incomeTrend.value = Object.entries(data)
     .map(([key, value]) => [key, Number(value)])

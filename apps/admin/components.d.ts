@@ -8,7 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Badge: typeof import('./src/components/Badge.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     DesktopHeader: typeof import('./src/modules/desktop/components/DesktopHeader.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
@@ -28,6 +27,8 @@ declare module 'vue' {
     TheConfirm: typeof import('./src/components/TheConfirm.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
+    TodoMsg: typeof import('./src/modules/desktop/components/TodoMsg.vue')['default']
+    XBadge: typeof import('@3un/ui')['XBadge']
     XButton: typeof import('@3un/ui')['XButton']
     XButtonSplit: typeof import('@3un/ui')['XButtonSplit']
     XDatePicker: typeof import('@3un/ui')['XDatePicker']

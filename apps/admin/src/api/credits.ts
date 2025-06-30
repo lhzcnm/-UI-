@@ -7,3 +7,8 @@ export const getCreditList: CreditListFn = async (params) => {
   const { data } = await http.post('/credits/list', params)
   return data
 }
+
+type CreditCleanFn = (date: string) => Promise<void>
+export const cleanCredit: CreditCleanFn = async (date) => {
+  await http.get(`/credits/clean?time=${date}`)
+}
