@@ -102,14 +102,18 @@ async function handleResetPrice() {
 </script>
 
 <template>
-  <XDrawer
+  <XDialog
     v-model="store.visibleBase"
-    width="500px" :title="options[mode].title"
+    :title="options[mode].title"
+    :mask-closable="false"
+    ui-root="sm:max-w-lg sm:p-0"
+    ui-header="p-4 mb-0 border-b"
   >
     <ItemForm
       v-model="store.formBase"
       :is-create="isCreate"
       :reset-price="handleResetPrice"
+      class="max-h-[75vh] p-4 overflow-y-auto"
     />
     <template #footer>
       <div class="flex justify-between p-4 border-t">
@@ -121,11 +125,12 @@ async function handleResetPrice() {
         >
           删除服务
         </XButton>
+
         <div class="ml-auto space-x-2">
           <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
           <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
         </div>
       </div>
     </template>
-  </XDrawer>
+  </XDialog>
 </template>

@@ -44,7 +44,11 @@ function handleSubmit() {
 </script>
 
 <template>
-  <XDialog v-model="visible" :title="options[mode].title">
+  <XDialog
+    v-model="visible"
+    :title="options[mode].title"
+    v-bind="$attrs"
+  >
     <slot></slot>
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

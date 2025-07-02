@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import ItemDrawer from './components/ItemDrawer.vue'
+import ItemDialog from './components/ItemDialog.vue'
 import ItemUpstream from './components/ItemUpstream.vue'
 
+import { isNullish } from '@3un/ui'
+
 import { zServiceForm } from '@/inters/services'
+import { getUpstreams } from '@/api/upstream'
+
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { columns } from './utils/columnItem'
-import { isNullish } from '@3un/ui'
-import { getUpstreams } from '@/api/upstream'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
@@ -123,7 +125,7 @@ function handleClear(type: ClearType) {
       />
     </div>
 
-    <ItemDrawer />
+    <ItemDialog />
     <ItemUpstream />
   </div>
 </template>

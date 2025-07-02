@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UserDrawer from './components/UserDrawer.vue'
+import UserDialog from './components/UserDialog.vue'
 import UserSearch from './components/UserSearch.vue'
 import UserPoint from './components/UserPoint.vue'
 import UserService from './components/UserService.vue'
@@ -154,7 +154,7 @@ function resetSearch() {
     </div>
 
     <UserSearch :key="queryHash" />
-    <UserDrawer />
+    <UserDialog />
     <UserPoint />
     <UserDetail />
     <UserService />
