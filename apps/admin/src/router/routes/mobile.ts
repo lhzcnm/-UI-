@@ -12,9 +12,9 @@ const mobile: RouteRecordRaw = {
       component: () => import('@mobile/pages/dashboard/index.vue'),
     },
     {
-      path: 'order',
-      name: 'Order',
-      component: () => import('@mobile/pages/order/index.vue'),
+      path: 'orders',
+      name: 'Orders',
+      component: () => import('@mobile/pages/orders/index.vue'),
     },
   ],
 }

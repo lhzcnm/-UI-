@@ -2,7 +2,6 @@
 import ItemUpstreamForm from '@forms/service/ItemUpstreamForm.vue'
 
 import { toast } from 'vue-sonner'
-import { isNullish } from '@3un/ui'
 
 import type { UpstreamService } from '@/inters/upstream'
 import { getUpstreamServices } from '@/api/upstream'
@@ -31,13 +30,13 @@ watch(
 
 function handleSubmit() {
   const { serviceId, externalNetworkId, apiId } = store.formUpstream
-  if (isNullish(apiId)) return toast.error('请选择上游接口')
+  // if (isNullish(apiId)) return toast.error('请选择上游接口')
 
   const service = serviceList.value
     .find(item => item.serviceId === externalNetworkId)
 
   const response = updateUpstreamService({
-    apiId, // 上游接口
+    apiId: apiId || -1, // 上游接口
     serviceId, // 上游服务ID
     externalNetworkId, // 外部网络ID
     serviceName: service?.serviceName, // 上游服务名称

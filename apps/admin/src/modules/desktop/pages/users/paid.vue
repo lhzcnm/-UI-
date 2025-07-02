@@ -87,7 +87,7 @@ function resetSearch() {
       />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :data="store.users.list"

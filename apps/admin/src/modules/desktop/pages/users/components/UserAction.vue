@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { User } from '@/inters/users'
 import { zUserForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
-import { deleteUser, getUserServices } from '@/api/users'
+import { deleteUser, getUserServices, getExtraInfo } from '@/api/users'
 
 import type { XBtnSplitOptions } from '@3un/ui'
 import { PAYMENT_METHOD, USER_ROLE, xconfirm } from '@3un/utils'
@@ -16,7 +16,7 @@ interface UserActionProps {
 const props = defineProps<UserActionProps>()
 
 const options: XBtnSplitOptions = [
-  { label: '查看详情', icon: 'lucide:eye', },
+  { label: '查看详情', icon: 'lucide:eye', command: openDetail },
   { label: '积分设置', icon: 'lucide:dollar-sign', command: openPoint },
   { label: '服务设置', icon: 'lucide:server', command: openService },,
   { label: '积分记录', icon: 'lucide:coins', command: toCredits },
@@ -32,6 +32,15 @@ function openUpdate() {
   store.formBase = zUserForm.parse(props.row)
   store.index = props.index
   store.visibleBase = true
+}
+
+async function openDetail() {
+  const userId = props.row.userId
+  const extraInfo = await getExtraInfo(userId)
+  store.extraInfo = extraInfo
+
+  store.index = props.index
+  store.visibleDetail = true
 }
 
 function openPoint() {

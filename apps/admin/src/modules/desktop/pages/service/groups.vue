@@ -27,7 +27,7 @@ function openCreate() {
       <XButton icon="lucide:circle-plus" label="新增服务组" @click="openCreate" />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :data="serviceStore.groups"
         :columns="columns"

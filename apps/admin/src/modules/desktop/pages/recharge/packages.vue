@@ -37,7 +37,7 @@ function openCreate() {
       <XButton icon="lucide:plus" label="添加套餐" @click="openCreate" />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :data="store.packages" row-key="id"

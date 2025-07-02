@@ -26,7 +26,7 @@ export const columns: XColDef<Level> = [
   },
   {
     key: 'enableDevice',
-    title: '允许访问设备页面',
+    title: '启用设备页面',
     width: 128,
     render(value, row) {
       return h(XSwitch, {

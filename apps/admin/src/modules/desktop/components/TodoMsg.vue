@@ -23,14 +23,14 @@ const todoItems = computed(() => [
     key: 'ticket',
     label: '待处理工单',
     count: iStore.todoCount.ticket,
-    icon: 'lucide:ticket',
+    icon: 'lucide:messages-square',
     route: '/tickets'
   },
   {
     key: 'verifying',
     label: '待验证订单',
     count: iStore.todoCount.verifying,
-    icon: 'lucide:clock',
+    icon: 'lucide:triangle-alert',
     route: '/orders/verify'
   },
   {
@@ -44,7 +44,7 @@ const todoItems = computed(() => [
     key: 'processing',
     label: '正在处理订单',
     count: iStore.todoCount.processing,
-    icon: 'lucide:loader',
+    icon: 'lucide:square-activity',
     route: '/orders?q=processing'
   }
 ].filter(item => item.count > 0))

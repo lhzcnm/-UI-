@@ -39,7 +39,7 @@ export const columns: XColDef<UserPaid> = [
     width: 88,
   },
   {
-    key: 'weiXinOpenid',
+    key: 'weixinOpenId',
     title: '微信ID',
     minWidth: 320,
   },
@@ -49,8 +49,8 @@ export const columns: XColDef<UserPaid> = [
     width: 180,
   },
   {
-    key: 'addedAt',
-    title: '注册时间',
+    key: 'remark',
+    title: '备注',
     width: 180,
   },
 ]

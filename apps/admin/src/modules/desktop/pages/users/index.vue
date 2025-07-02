@@ -3,8 +3,10 @@ import UserDrawer from './components/UserDrawer.vue'
 import UserSearch from './components/UserSearch.vue'
 import UserPoint from './components/UserPoint.vue'
 import UserService from './components/UserService.vue'
+import UserDetail from './components/UserDetail.vue'
 
 import { USER_ROLE } from '@3un/utils'
+import { hash } from 'ohash'
 
 import type { UserListParams } from '@/inters/users'
 import { zUserExtraInfo, zUserForm, zUserPointForm, zUserSearchForm, zUserServiceForm } from '@/inters/users'
@@ -29,6 +31,7 @@ const store: UsersStore = reactive({
   visibleSearch: false,
   visiblePoint: false,
   visibleService: false,
+  visibleDetail: false,
 
   refresh: false,
   index: undefined,
@@ -42,6 +45,7 @@ const route = useRoute()
 const router = useRouter()
 
 const loading = ref(false)
+const queryHash = computed(() => hash(route.query))
 
 watch(
   [
@@ -62,7 +66,7 @@ watch(
   () => route.query,
   ({ q, uid }) => {
     store.formSearch = {
-      ...store.formSearch,
+      ...zUserSearchForm.parse({}),
       userId: uid ? Number(uid) : undefined,
       isAdmin: q === 'admin',
     }
@@ -139,7 +143,7 @@ function resetSearch() {
       />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :data="store.users.list"
@@ -149,9 +153,10 @@ function resetSearch() {
       />
     </div>
 
+    <UserSearch :key="queryHash" />
     <UserDrawer />
-    <UserSearch />
     <UserPoint />
+    <UserDetail />
     <UserService />
   </div>
 </template>

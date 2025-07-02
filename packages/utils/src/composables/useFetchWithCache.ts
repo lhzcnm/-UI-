@@ -20,11 +20,15 @@ const cacheManager = {
   clearExpired(storage = sessionStorage) {
     for (let i = 0; i < storage.length; i++) {
       const key = storage.key(i)
-      if (!key) continue
+
+      if (!key || !key.startsWith('cache-')) continue
 
       try {
         const cached = JSON.parse(storage.getItem(key) || '')
+        const dataKey = key.replace('cache-', '')
+
         if (Date.now() - cached.time > cached.duration) {
+          storage.removeItem(dataKey)
           storage.removeItem(key)
         }
       } catch (e) {

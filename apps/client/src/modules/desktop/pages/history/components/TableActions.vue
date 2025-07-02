@@ -38,6 +38,15 @@ const focreHide = ref(false)
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success('复制成功'))
 
+const iStore = useSettingStore()
+
+const isShowVerify = computed(() => {
+  return iStore.settings.enableOrderVerify &&
+    verify.isNormal &&
+    status.isSuccess &&
+    !focreHide.value
+})
+
 const handleRefresh = useThrottleFn(() => {
   orderApi.item(row.id).then(({ data }) => {
     toast.success('刷新成功')
@@ -87,9 +96,9 @@ function handleCopy() {
       color="success" label="复制结果"
       size="sm" @click="handleCopy"
     />
- 
+
     <XButton
-      v-if="verify.isNormal && status.isSuccess && !focreHide"
+      v-if="isShowVerify"
       variant="outline" color="warning"
       label="开启验证" size="sm"
       @click="handleVerify"

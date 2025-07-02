@@ -5,6 +5,7 @@ import RechargeDialog from './components/RechargeDialog.vue'
 import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
 import dayjs from 'dayjs'
+import { hash } from 'ohash'
 
 import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
 import { deleteRecharges, getRecharges } from '@/api/recharge'
@@ -38,6 +39,8 @@ const router = useRouter()
 const ids = ref<number[]>([])
 const loading = ref(false)
 
+const queryHash = computed(() => hash(route.query))
+
 watch(
   [
     () => store.page,
@@ -56,16 +59,16 @@ watch(
 watch(
   () => route.query,
   ({ uid, q }) => {
+    store.formSearch = {
+      ...zRechargeSearchForm.parse({}),
+      userId: uid ? Number(uid) : undefined,
+      byAdmin: q === 'admin',
+    }
+
     if (q === 'today') {
       const format = 'YYYY-MM-DD HH:mm:ss'
       store.formSearch.startTime = dayjs().startOf('day').format(format)
       store.formSearch.endTime = dayjs().endOf('day').format(format)
-    }
-
-    store.formSearch = {
-      ...store.formSearch,
-      userId: uid ? Number(uid) : undefined,
-      byAdmin: q === 'admin',
     }
 
     store.refresh = !store.refresh
@@ -91,7 +94,10 @@ function resetSearch() {
 }
 
 async function handleDelete() {
-  if (ids.value.length === 0) return toast.warning('请选择要删除的充值记录')
+  if (ids.value.length === 0) {
+    return toast.warning('请选择要删除的充值记录')
+  }
+
   if (!await xconfirm('确定要删除这些充值记录吗？')) return
 
   deleteRecharges(ids.value).then(() => {
@@ -142,7 +148,7 @@ async function handleDelete() {
       />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :data="store.recharges.list"
@@ -155,7 +161,7 @@ async function handleDelete() {
       />
     </div>
 
-    <RechargeSearch />
+    <RechargeSearch :key="queryHash" />
     <RechargeDialog />
   </div>
 </template>

@@ -115,7 +115,7 @@ function handleClear(type: ClearType) {
       />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :data="displayItems"
         :columns="columns"

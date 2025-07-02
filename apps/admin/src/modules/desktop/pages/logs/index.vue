@@ -3,6 +3,7 @@ import LogSearch from './components/LogSearch.vue'
 
 import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
+import { hash } from 'ohash'
 
 import type { LogListParams } from '@/inters/logs'
 import { zLogSearchForm } from '@/inters/logs'
@@ -32,6 +33,8 @@ const router = useRouter()
 const loading = ref(false)
 const ids = ref<number[]>([])
 
+const queryHash = computed(() => hash(route.query))
+
 watch(
   [
     () => store.page,
@@ -51,7 +54,7 @@ watch(
   () => route.query,
   ({ q, uid, ip }) => {
     store.formSearch = {
-      ...store.formSearch,
+      ...zLogSearchForm.parse({}),
       isAdmin: q === 'admin',
       userId: uid ? Number(uid) : undefined,
       ip: ip ? ip.toString() : undefined,
@@ -130,7 +133,7 @@ async function handleDelete() {
       />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :data="store.logs.list"
@@ -143,6 +146,6 @@ async function handleDelete() {
       />
     </div>
 
-    <LogSearch />
+    <LogSearch :key="queryHash" />
   </div>
 </template>

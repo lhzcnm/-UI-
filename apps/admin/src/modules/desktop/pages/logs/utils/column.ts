@@ -1,5 +1,6 @@
 import type { XColDef } from '@3un/ui'
 import type { Log } from '@/inters/logs'
+import { h } from 'vue'
 
 export const columns: XColDef<Log> = [
   {
@@ -11,6 +12,14 @@ export const columns: XColDef<Log> = [
     key: 'userId',
     title: '用户ID',
     minWidth: 72,
+    render(value) {
+      return h('a', {
+        href: `/users?uid=${value}`,
+        class: 'underline hover:text-success',
+        target: '_blank',
+        rel: 'opener',
+      }, value)
+    },
   },
   {
     key: 'ip',

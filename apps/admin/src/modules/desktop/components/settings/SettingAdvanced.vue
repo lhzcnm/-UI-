@@ -12,9 +12,9 @@ const { settings, configs } =
 
 const loading = ref(false)
 const form = reactive({
-  register: settings.enableRegister,
-  orderFeedback: settings.enableOrderVerify,
-  ticket: settings.enableTricket,
+  enableRegister: settings.enableRegister,
+  enableOrderVerify: settings.enableOrderVerify,
+  enableTricket: settings.enableTricket,
   minRechargeAmount: settings.minRechargeAmount,
   maxRechargeAmount: settings.maxRechargeAmount,
   invitePonit: configs['invite:point'],
@@ -24,14 +24,16 @@ const form = reactive({
     : '',
 })
 
+const iStore = useSystemStore()
+
 function handleSubmit() {
   loading.value = true
 
   const response = Promise.all([
     updateSetting([
-      { name: 'register', status: form.register },
-      { name: 'orderFeedback', status: form.orderFeedback },
-      { name: 'ticket', status: form.ticket },
+      { name: 'enableRegister', status: form.enableRegister },
+      { name: 'enableOrderVerify', status: form.enableOrderVerify },
+      { name: 'enableTricket', status: form.enableTricket },
       { name: 'minRechargeAmount', content: form.minRechargeAmount.toString() },
       { name: 'maxRechargeAmount', content: form.maxRechargeAmount.toString() },
     ]),
@@ -50,6 +52,10 @@ function handleSubmit() {
   ])
 
   response.then(() => {
+    iStore.showSetting = false
+  })
+
+  response.finally(() => {
     loading.value = false
   })
 }
@@ -57,7 +63,7 @@ function handleSubmit() {
 
 <template>
   <div class="flex-1 flex flex-col">
-    <div class="flex-1 divide-y px-3 overflow-y-auto">
+    <div class="flex-1 divide-y px-6 pb-4 overflow-y-auto">
       <FormField label="受邀请积分" desc="用户填写邀请码后获得的积分">
         <XInput v-model="form.inviteForPonit" />
       </FormField>
@@ -105,7 +111,7 @@ function handleSubmit() {
         desc="关闭后，将不允许用户通过网页注册"
         :content-flex="false"
       >
-        <XSwitch v-model="form.register" />
+        <XSwitch v-model="form.enableRegister" />
       </FormField>
   
       <FormField
@@ -113,7 +119,7 @@ function handleSubmit() {
         desc="关闭后，将不允许用户提交订单验证"
         :content-flex="false"
       >
-        <XSwitch v-model="form.orderFeedback" />
+        <XSwitch v-model="form.enableOrderVerify" />
       </FormField>
   
       <FormField
@@ -121,10 +127,11 @@ function handleSubmit() {
         desc="关闭后，将不允许用户提交工单"
         :content-flex="false"
       >
-        <XSwitch v-model="form.ticket" />
+        <XSwitch v-model="form.enableTricket" />
       </FormField>
     </div>
-    <div class="p-3 flex justify-end">
+
+    <div class="px-4 py-3 flex justify-end border-t">
       <XButton label="应用修改" :loading="loading" @click="handleSubmit" />
     </div>
   </div>

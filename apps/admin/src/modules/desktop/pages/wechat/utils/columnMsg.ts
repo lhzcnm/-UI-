@@ -19,7 +19,7 @@ export const columns: XColDef<CustomMsg> = [
   {
     key: 'action',
     title: '操作',
-    width: 148,
+    width: 154,
     render: (_, row, index) => {
       return h(MsgAction, { row, index })
     }

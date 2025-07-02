@@ -10,19 +10,15 @@ const { isFullscreen, toggle } = useFullscreen(rootRef)
 const serviceStore = useServiceStore()
 const levelStore = useLevelStore()
 
-await Promise.all([
+Promise.all([
   serviceStore.getItems(),
   serviceStore.getGroups(),
   levelStore.getList(),
 ])
 
-// 启动待办消息定时器
 iStore.startTodoTimer()
 
-// 组件卸载时清理定时器
-onUnmounted(() => {
-  iStore.stopTodoTimer()
-})
+onUnmounted(() => iStore.stopTodoTimer())
 </script>
 
 <template>

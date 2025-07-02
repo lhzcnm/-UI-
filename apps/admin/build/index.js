@@ -7,11 +7,11 @@ import fs from 'node:fs/promises'
 const list = [
   { mode: 'SanHe', obfuscator: false },
   { mode: 'HaoXuan', obfuscator: false },
-  // { mode: 'AiSuCha', obfuscator: false },
-  // { mode: 'LuShen', obfuscator: false },
-  // { mode: 'IFunlock', obfuscator: true },
-  // { mode: 'JiuXing', obfuscator: true },
-  // { mode: 'U4GSM', obfuscator: true },
+  { mode: 'AiSuCha', obfuscator: false },
+  { mode: 'LuShen', obfuscator: false },
+  { mode: 'IFunlock', obfuscator: true },
+  { mode: 'JiuXing', obfuscator: true },
+  { mode: 'U4GSM', obfuscator: true },
 ]
 
 await Promise.all(list.map(run))

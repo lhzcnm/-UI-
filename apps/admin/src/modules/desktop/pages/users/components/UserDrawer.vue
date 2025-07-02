@@ -160,7 +160,9 @@ function handleBulkApiKey() {
 <template>
   <XDrawer
     v-model="store.visibleBase"
-    width="500px" :title="options[mode].title"
+    placement="right"
+    width="500px"
+    :title="options[mode].title"
   >
     <UserFormBase
       v-model="store.formBase"

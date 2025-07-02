@@ -15,6 +15,14 @@ export const columns: XColDef<Recharge> = [
     key: 'userId',
     title: '用户ID',
     width: 88,
+    render(value) {
+      return h('a', {
+        href: `/users?uid=${value}`,
+        class: 'underline hover:text-success',
+        target: '_blank',
+        rel: 'opener',
+      }, value)
+    },
   },
   {
     key: 'amount',

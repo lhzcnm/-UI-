@@ -36,7 +36,7 @@ export const useSystemStore = defineStore('system', () => {
   function startTodoTimer() {
     if (todoTimer) return
 
-    todoTimer = setInterval(() => getTodoMsg(), 30000)
+    todoTimer = setInterval(getTodoMsg, 30000)
     getTodoMsg()
   }
 

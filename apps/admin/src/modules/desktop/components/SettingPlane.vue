@@ -27,10 +27,19 @@ const tab = ref('routine')
 const settings = ref()
 const configs = ref()
 
-await Promise.all([
-  getSetting(),
-  getConfig(),
-])
+watch(
+  () => iStore.showSetting,
+  (value) => value && init()
+)
+
+await init()
+
+async function init() {
+  await Promise.all([
+    getSetting(),
+    getConfig(),
+  ])
+}
 
 async function getSetting() {
   const data = await getSettings()

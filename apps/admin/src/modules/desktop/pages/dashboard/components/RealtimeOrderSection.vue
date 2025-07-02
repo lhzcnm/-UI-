@@ -40,7 +40,6 @@ async function getStatData() {
   const data = await getRealtimeOrder()
   rawData.value = new Map(data.map(item => [item.dataTime, item]))
   lastUpdateTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
-  console.log('mock data', data)
 
   startTimers()
 }
@@ -58,7 +57,6 @@ function startTimers() {
     processData = handleDisplayData(values)
   }
 
-  console.log('process data', processData)
   const fetchInterval = 60000
   if (processData.length === 0) {
     return fetchTimer = setTimeout(getStatData, fetchInterval)
@@ -79,7 +77,6 @@ function updateDisplayData(data: OrderStatItem[]) {
   const nextItem = data.pop()
   if (!nextItem) return
 
-  console.log('nextItem', nextItem)
   displayData.value.push(nextItem)
 
   if (displayData.value.length > 60) {

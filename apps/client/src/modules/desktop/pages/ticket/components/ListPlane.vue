@@ -3,6 +3,19 @@ import { TICKET_STORE, form } from '../utils'
 import { ticketApi } from '@/api/tickets'
 
 const store = inject(TICKET_STORE)!
+const route = useRoute()
+
+watch(
+  () => route.query,
+  (query) => {
+    if (!query.ticketId) return
+    const index = store.tickets
+      .findIndex(t => t.id === Number(query.ticketId))
+
+    if (index !== -1) checkoutTicket(index)
+  },
+  { immediate: true },
+)
 
 function handleCreate() {
   store.createForm = { ...form.create }

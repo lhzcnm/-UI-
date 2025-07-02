@@ -16,9 +16,11 @@ const form = reactive({
   title: settings.title,
   phone: settings.phone,
   email: settings.email,
-  copyright: settings.beian,
+  beian: settings.beian,
   company: settings.company,
 })
+
+const iStore = useSystemStore()
 
 function handleSubmit() {
   loading.value = true
@@ -28,7 +30,7 @@ function handleSubmit() {
       { name: 'title', content: form.title },
       { name: 'phone', content: form.phone },
       { name: 'email', content: form.email },
-      { name: 'copyright', content: form.copyright },
+      { name: 'beian', content: form.beian },
       { name: 'company', content: form.company },
     ]),
     updateConfig([
@@ -38,6 +40,10 @@ function handleSubmit() {
   ])
 
   response.then(() => {
+    iStore.showSetting = false
+  })
+
+  response.finally(() => {
     loading.value = false
   })
 }
@@ -45,7 +51,7 @@ function handleSubmit() {
 
 <template>
   <div class="flex-1 flex flex-col">
-    <div class="flex-1 divide-y px-3 overflow-y-auto">
+    <div class="flex-1 divide-y px-4 overflow-y-auto">
       <FormField label="网站地址" desc="网站地址">
         <XInput v-model="form.url" placeholder="https://www.example.com" />
       </FormField>
@@ -59,7 +65,7 @@ function handleSubmit() {
         <XInput v-model="form.email" placeholder="邮箱" />
       </FormField>
       <FormField label="备案号" desc="备案号">
-        <XInput v-model="form.copyright" placeholder="备案号" />
+        <XInput v-model="form.beian" placeholder="备案号" />
       </FormField>
       <FormField label="公司名称" desc="公司名称">
         <XInput v-model="form.company" placeholder="公司名称" />

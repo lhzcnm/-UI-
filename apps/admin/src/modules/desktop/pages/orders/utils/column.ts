@@ -30,6 +30,14 @@ export const columns: XColDef<Order> = [
     key: 'userId',
     title: '用户',
     width: 88,
+    render(value) {
+      return h('a', {
+        href: `/users?uid=${value}`,
+        class: 'underline hover:text-success',
+        target: '_blank',
+        rel: 'opener',
+      }, value)
+    },
   },
   {
     key: 'codeStatusId',

@@ -6,6 +6,7 @@ import OrderClean from './components/OrderClean.vue'
 import { downloadFile, ORDER_STATUS } from '@3un/utils'
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
+import { hash } from 'ohash'
 
 import type { Order, OrderListParams } from '@/inters/orders'
 import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
@@ -41,6 +42,8 @@ const { copy } = useClipboard()
 const loading = ref(false)
 const selected = shallowRef<Order[]>([])
 
+const queryHash = computed(() => hash(route.query)) 
+
 watch(
   [
     () => store.page,
@@ -69,15 +72,15 @@ watch(
   ({ imei, uid, q }) => {
     const statusMap = {
       wait: ORDER_STATUS.WAIT,
-      processing: ORDER_STATUS.PROCESSING
+      processing: ORDER_STATUS.PROCESSING,
     }
 
     type StatusKey = keyof typeof statusMap
 
     store.formSearch = {
-      ...store.formSearch,
+      ...zOrderSearchForm.parse({}),
       userId: uid ? Number(uid) : undefined,
-      imeiList: imei ? imei.toString() : undefined,
+      imeiList: imei ? imei as string: undefined,
       statusId: q ? statusMap[q as StatusKey] : undefined,
     }
 
@@ -287,7 +290,7 @@ const handleBatchEdit = selectDecorator(() => {
       </div>
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :loading="loading"
@@ -299,7 +302,7 @@ const handleBatchEdit = selectDecorator(() => {
       />
     </div>
 
-    <OrderSearch />
+    <OrderSearch :key="queryHash" />
     <OrderDialog />
     <OrderClean />
   </div>

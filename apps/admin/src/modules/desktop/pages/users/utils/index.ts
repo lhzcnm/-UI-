@@ -17,6 +17,7 @@ export interface UsersStore {
   visibleSearch: boolean
   visiblePoint: boolean
   visibleService: boolean
+  visibleDetail: boolean
 
   refresh: boolean
   index: number | undefined

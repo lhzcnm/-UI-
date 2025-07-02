@@ -3,12 +3,14 @@ import { z } from 'zod/v4'
 
 export const zUserPaid = z.object({
   userId: z.number().default(0),
-  weixinOpenId: z.string().default(''),
+  headImgUrl: z.string().default(''),
   userName: z.string().default(''),
   nickName: z.string().default(''),
+  credits: z.string().default(''),
+  weixinOpenId: z.string().default(''),
   memberExp: z.string().default(''),
-  payTime: z.string().default(''),
   remark: z.string().nullable().default(null),
+  // payTime: z.string().default(''),
   // addedAt: z.string().default(''),
 })
 

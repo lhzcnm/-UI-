@@ -9,6 +9,7 @@ import { getCreditList } from '@/api/credits'
 import type { CreditStore } from './utils'
 import { CREDIT_STORE, columns } from './utils'
 import { createList } from '@/utils'
+import { hash } from 'ohash'
 
 const store: CreditStore = reactive({
   credits: createList(),
@@ -30,6 +31,7 @@ const route = useRoute()
 const router = useRouter()
 
 const loading = ref(false)
+const queryHash = computed(() => hash(route.query))
 
 watch(
   [
@@ -58,7 +60,7 @@ watch(
   () => route.query,
   ({ uid, sid }) => {
     store.formSearch = {
-      ...store.formSearch,
+      ...zCreditSearchForm.parse({}),
       userId: uid ? Number(uid) : undefined,
       serviceId: sid ? Number(sid) : undefined,
     }
@@ -131,7 +133,7 @@ function resetSearch() {
       />
     </section>
 
-    <div class="p-3">
+    <div class="p-3 pb-0">
       <XTable
         :columns="columns"
         :loading="loading"
@@ -141,7 +143,7 @@ function resetSearch() {
       />
     </div>
 
-    <CreditSearch />
+    <CreditSearch :key="queryHash" />
     <CreditClean />
   </div>
 </template>

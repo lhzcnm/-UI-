@@ -29,7 +29,7 @@ function handleEdit(type: string) {
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col px-3 divide-y">
+  <div class="flex-1 flex flex-col px-4 divide-y">
     <FormField
       label="弹窗公告"
       desc="每次进入网站首页弹出的公告"

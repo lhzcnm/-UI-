@@ -3,7 +3,6 @@ import type { RechargeSearchForm } from '@/inters/recharge'
 import { PAYMENT_METHOD_LIST, PAYMENT_STATUS_LIST } from '@3un/utils'
 
 const form = defineModel<RechargeSearchForm>({ required: true })
-const route = useRoute()
 </script>
 
 <template>
@@ -28,7 +27,7 @@ const route = useRoute()
         </XSelect>
       </div>
     </div>
-    <div v-if="route.query.q !== 'today'">
+    <div>
       <label class="block text-sm text-label mb-1">支付时间</label>
       <XDateRangePicker
         v-model:start="form.startTime"
@@ -45,7 +44,7 @@ const route = useRoute()
       <label class="block text-sm text-label mb-1">交易ID</label>
       <XInput v-model="form.transactionId" placeholder="交易ID" />
     </div>
-    <div v-if="route.query.q !== 'admin'">
+    <div>
       <label class="block text-sm text-label mb-1">管理添加</label>
       <XSwitch v-model="form.byAdmin" />
     </div>

@@ -50,6 +50,14 @@ const verify = computed(() => ({
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success('复制成功'))
 
+const iStore = useSettingStore()
+
+const isShowVerify = computed(() => {
+  return iStore.settings.enableOrderVerify &&
+    verify.value.isNormal &&
+    status.value.isSuccess
+})
+
 const handleRefresh = useThrottleFn(() => {
   orderApi.item(order.value.id).then((response) => {
     order.value = response.data
@@ -168,7 +176,7 @@ function handleCopy() {
           </button>
 
           <button
-            v-if="verify.isNormal && status.isSuccess"
+            v-if="isShowVerify"
             class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="handleVerify"
           >
