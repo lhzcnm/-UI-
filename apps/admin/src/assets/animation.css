@@ -24,7 +24,7 @@
   @apply opacity-100 scale-100;
 }
 
-/* 左滑动 */
+/* 左侧滑动 */
 .slide-left-enter-active,
 .slide-left-leave-active {
   transition: transform 0.3s ease;
@@ -32,4 +32,24 @@
 .slide-left-enter-from,
 .slide-left-leave-to {
   transform: translateX(-100%);
+}
+
+/* 右侧滑入 */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-right-enter-from,
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
+
+/* 底部滑入 */
+.slide-bottom-enter-active,
+.slide-bottom-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-bottom-enter-from,
+.slide-bottom-leave-to {
+  transform: translateY(100%);
 }

@@ -23,11 +23,10 @@ const route = useRoute()
       </main>
     </RouterView>
 
-    <!-- siderbar -->
     <Transition name="fade-in">
       <div
         v-if="iStore.showSidebar"
-        class="absolute top-0 left-0 size-full bg-black/80"
+        class="fixed top-0 left-0 size-full bg-black/80"
         @click="iStore.showSidebar = false"
       />
     </Transition>

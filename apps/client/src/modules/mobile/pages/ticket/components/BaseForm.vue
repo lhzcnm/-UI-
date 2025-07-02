@@ -14,7 +14,7 @@ const form = defineModel<TicketCreateForm>({ required: true })
   <form class="space-y-3" @submit.prevent>
     <div class="space-y-1">
       <label class="text-label text-sm">工单类型</label>
-      <NativeSelect
+      <XNativeSelect
         v-model="form.type"
         :options="typeList"
         :default="TICKET_TYPE.ORDER"
@@ -25,7 +25,7 @@ const form = defineModel<TicketCreateForm>({ required: true })
 
     <div class="space-y-1">
       <label class="text-label text-sm">工单紧急程度</label>
-      <NativeSelect
+      <XNativeSelect
         v-model="form.priority"
         :options="TICKET_PRIORITY_LIST"
         :default="TICKET_PRIORITY.MEDIUM"

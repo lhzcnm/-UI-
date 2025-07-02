@@ -28,7 +28,7 @@ const statusOptions = [
     <div class="space-y-1">
       <label class="inline-block mb-1 text-sm text-label">服务选择：</label>
       <div class="flex items-center space-x-2">
-        <NativeSelect
+        <XNativeSelect
           v-model="groupId"
           :options="[...serviceStore.details]"
           @change="form.serviceId = 0"
@@ -36,7 +36,7 @@ const statusOptions = [
           label-key="title"
           value-key="id"
         />
-        <NativeSelect
+        <XNativeSelect
           v-model="form.serviceId"
           :options="options"
           :disabled="!groupId"
@@ -59,8 +59,8 @@ const statusOptions = [
     <div class="space-y-1">
       <label class="inline-block mb-1 text-sm text-label">提交时间：</label>
       <div class="flex items-center space-x-2">
-        <NativeDate v-model="form.startTime" placeholder="开始时间" />
-        <NativeDate v-model="form.endTime" placeholder="结束时间" />
+        <XNativeDate v-model="form.startTime" placeholder="开始时间" />
+        <XNativeDate v-model="form.endTime" placeholder="结束时间" />
       </div>
     </div>
 

@@ -23,8 +23,7 @@ const store = inject(STORE)!
     </div>
 
     <TransitionGroup
-      tag="div"
-      name="slide-vertical"
+      tag="div" name="slide-vertical"
       class="grid grid-cols-[repeat(auto-fill,minmax(280px,_1fr))] gap-4"
     >
       <DeviceCard

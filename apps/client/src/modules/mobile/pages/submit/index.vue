@@ -372,7 +372,7 @@ function handlePushMsgChange(value: boolean) {
         </RouterLink>
       </div>
       <div class="space-y-2">
-        <NativeSelect
+        <XNativeSelect
           v-model="form.groupId"
           :options="[...serviceStore.details]"
           @change="form.serviceId = 0"
@@ -381,7 +381,7 @@ function handlePushMsgChange(value: boolean) {
           value-key="id"
           class="w-full"
         />
-        <NativeSelect
+        <XNativeSelect
           v-model="form.serviceId"
           :options="options"
           :disabled="!form.groupId"
