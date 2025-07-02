@@ -4,6 +4,15 @@ import { twJoin } from 'tailwind-merge'
 
 const iStore = useSystemStore()
 const route = useRoute()
+
+const serviceStore = useServiceStore()
+const levelStore = useLevelStore()
+
+Promise.all([
+  serviceStore.getItems(),
+  serviceStore.getGroups(),
+  levelStore.getList(),
+])
 </script>
 
 <template>

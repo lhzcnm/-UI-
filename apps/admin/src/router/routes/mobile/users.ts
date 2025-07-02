@@ -4,17 +4,17 @@ const users: RouteRecordRaw[] = [
   {
     path: 'users',
     name: 'AllUser',
-    component: () => import('@desktop/pages/users/index.vue'),
+    component: () => import('@mobile/pages/users/index.vue'),
   },
   {
     path: 'users/level',
     name: 'AllLevel',
-    component: () => import('@desktop/pages/users/level.vue'),
+    component: () => import('@mobile/pages/users/level.vue'),
   },
   {
     path: 'users/paid',
     name: 'AllPaid',
-    component: () => import('@desktop/pages/users/paid.vue'),
+    component: () => import('@mobile/pages/users/paid.vue'),
   },
 ]
 

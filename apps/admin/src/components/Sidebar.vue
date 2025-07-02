@@ -2,6 +2,7 @@
 import type { ClassNameValue } from 'tailwind-merge'
 import { twJoin, twMerge } from 'tailwind-merge'
 import { Icon } from '@iconify/vue'
+import { ua } from '@3un/utils'
 
 import type { SidebarMenuChild } from '@/utils'
 import { menus, tools, others, EXPANDED_MENUS } from '@/utils'
@@ -24,6 +25,8 @@ const router = useRouter()
 const iStore = useSystemStore()
 
 function handleChildClick(child: SidebarMenuChild) {
+  if (ua.isMobile) iStore.showSidebar = false
+
   iStore.breadcrumbItems = [child.label]
   router.push(child.path)
 }

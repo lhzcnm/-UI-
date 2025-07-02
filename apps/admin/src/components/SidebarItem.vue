@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { twMerge } from 'tailwind-merge'
+import { ua } from '@3un/utils'
 
 import type { SidebarMenu, SidebarMenuChild } from '@/utils'
 import { EXPANDED_MENUS } from '@/utils'
@@ -31,12 +32,15 @@ function handleClick(menu: SidebarMenu) {
     return
   }
 
+  if (ua.isMobile) iStore.showSidebar = false
+
   // no children, update breadcrumb
   iStore.breadcrumbItems = [menu.label]
   router.push(menu.path)
 }
 
 function handleChildClick(child: SidebarMenuChild, parentLabel: string) {
+  if (ua.isMobile) iStore.showSidebar = false
   iStore.breadcrumbItems = [parentLabel, child.label]
 }
 
