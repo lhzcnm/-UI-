@@ -13,8 +13,8 @@ interface SidebarItemProps {
 const { menu } = defineProps<SidebarItemProps>()
 const expandedMenus = inject<Ref<string[]>>(EXPANDED_MENUS)!
 
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
 const iStore = useSystemStore()
 
 function toggleExpand(path: string) {
@@ -49,12 +49,14 @@ const isExpanded = computed(() =>
 )
 
 const isActive = computed(() => {
-  if (!menu.children) return route.path === menu.path
-  return !isExpanded.value && route.path.startsWith(menu.path)
+  const curPath = route.path.replace(/^\/m/, '')
+  if (!menu.children) return curPath === menu.path
+  return !isExpanded.value && curPath.startsWith(menu.path)
 })
 
 function isActiveChild(child: SidebarMenuChild) {
-  const [path, query] = route.fullPath.split('?')
+  const curPath = route.fullPath.replace(/^\/m/, '')
+  const [path, query] = curPath.split('?')
   const search = new URLSearchParams(query)
   const match = search.get('q')
 
