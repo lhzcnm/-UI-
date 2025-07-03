@@ -19,7 +19,7 @@ Promise.all([
   <div class="flex flex-col h-screen">
     <MobileHeader />
     <RouterView v-slot="{ Component }" :key="route.path">
-      <main v-if="Component" class="flex-1 overflow-y-auto">
+      <main v-if="Component" class="flex-1 overflow-y-auto bg-zinc-100 dark:bg-black">
         <Transition name="fade-in" mode="out-in">
           <Suspense>
             <component :is="Component" />
@@ -35,7 +35,7 @@ Promise.all([
     <Transition name="fade-in">
       <div
         v-if="iStore.showSidebar"
-        class="fixed top-0 left-0 size-full bg-black/80"
+        class="fixed top-0 left-0 z-10 size-full bg-black/80"
         @click="iStore.showSidebar = false"
       />
     </Transition>

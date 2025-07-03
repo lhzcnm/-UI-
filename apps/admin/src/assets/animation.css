@@ -24,7 +24,7 @@
   @apply opacity-100 scale-100;
 }
 
-/* 左侧滑动 */
+/* 左侧滑入 */
 .slide-left-enter-active,
 .slide-left-leave-active {
   transition: transform 0.3s ease;
@@ -52,4 +52,15 @@
 .slide-bottom-enter-from,
 .slide-bottom-leave-to {
   transform: translateY(100%);
+}
+
+/* toolbar spread */
+.toolbar-spread-enter-active,
+.toolbar-spread-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.toolbar-spread-enter-from,
+.toolbar-spread-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
 }
