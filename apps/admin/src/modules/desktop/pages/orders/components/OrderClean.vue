@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import OrderCleanForm from '@forms/orders/OrderCleanForm.vue'
+import OrderCleanForm from './OrderCleanForm.vue'
 import { cleanOrder } from '@/api/orders'
 
 import { toast } from 'vue-sonner'

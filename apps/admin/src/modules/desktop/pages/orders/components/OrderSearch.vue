@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import OrderSearchForm from '@forms/orders/OrderSearchForm.vue'
+import OrderSearchForm from './OrderSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { ORDER_STORE } from '../utils'
 

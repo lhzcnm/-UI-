@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UserFormBase from '@/components/forms/users/UserForm.vue'
+import UserFormBase from './UserForm.vue'
 
 import type { FormMode } from '@3un/shared'
 import { EMAIL_REG, IP_REG, PASSWORD_REG, PHONE_REG, USERNAME_REG } from '@3un/utils'

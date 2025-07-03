@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UserPointForm from '@forms/users/UserPointForm.vue'
+import UserPointForm from './UserPointForm.vue'
 
 import { toast } from 'vue-sonner'
 

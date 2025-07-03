@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PaidSearchForm from '@forms/users/PaidSearchForm.vue'
+import PaidSearchForm from './PaidSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { PAID_STORE } from '../utils'
 

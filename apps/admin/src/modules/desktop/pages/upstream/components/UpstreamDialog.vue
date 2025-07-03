@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UpstreamForm from '@/components/forms/UpstreamForm.vue'
+import UpstreamForm from './UpstreamForm.vue'
 
 import { API_TYPE } from '@3un/utils'
 

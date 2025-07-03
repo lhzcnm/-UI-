@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PackageForm from '@/components/forms/recharge/PackageForm.vue'
+import PackageForm from './PackageForm.vue'
 import { createRechargePackage, updateRechargePackage } from '@/api/recharge'
 import { PACKAGE_STORE } from '../utils'
 

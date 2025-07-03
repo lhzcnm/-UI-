@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UnlockForm from '@forms/service/UnlockForm.vue'
+import UnlockForm from './UnlockForm.vue'
 import { createUnlock, updateUnlock } from '@/api/services'
 import { UNLOCK_STORE } from '../utils'
 

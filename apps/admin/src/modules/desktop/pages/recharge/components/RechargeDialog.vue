@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RechargeForm from '@forms/recharge/RechargeForm.vue'
+import RechargeForm from './RechargeForm.vue'
 import { updateRecharge } from '@/api/recharge'
 import { RECHARGE_STORE } from '../utils'
 

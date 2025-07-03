@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LogSearchForm from '@forms/LogSearchForm.vue'
+import LogSearchForm from './LogSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { LOG_STORE } from '../utils'
 

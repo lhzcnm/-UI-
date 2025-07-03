@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MenuForm from '@/components/forms/wechat/MenuForm.vue'
+import MenuForm from './MenuForm.vue'
 
 import { toast } from 'vue-sonner'
 

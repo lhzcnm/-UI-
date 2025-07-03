@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ItemUpstreamForm from '@forms/service/ItemUpstreamForm.vue'
+import ItemUpstreamForm from './ItemUpstreamForm.vue'
 
 import { toast } from 'vue-sonner'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UserSearchForm from '@forms/users/UserSearchForm.vue'
+import UserSearchForm from './UserSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { USER_STORE } from '../utils'
 

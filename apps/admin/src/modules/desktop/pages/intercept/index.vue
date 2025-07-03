@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InterceptForm from './components/InterceptForm.vue'
+import InterceptForm from './components/InterceptDialog.vue'
 import { zInterceptForm } from '@/inters/intercept'
 import { getIntercepts } from '@/api/intercept'
 

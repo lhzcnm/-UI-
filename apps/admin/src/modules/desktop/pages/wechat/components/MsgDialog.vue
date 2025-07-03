@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MsgForm from '@/components/forms/wechat/MsgForm.vue'
+import MsgForm from './MsgForm.vue'
 import { createCustomMsg, updateCustomMsg } from '@/api/wechat'
 import { MSG_STORE } from '../utils'
 

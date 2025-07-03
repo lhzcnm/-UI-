@@ -1,48 +1,22 @@
 <script setup lang="ts">
-import InterceptForm from '@/components/forms/InterceptForm.vue'
+import type { InterceptForm } from '@/inters/intercept'
 
-import { createIntercept, updateIntercept } from '@/api/intercept'
-import { validate, VERIFY_MSG, type ValidRule } from '@/utils'
-
-import { INTERCEPT_STORE } from '../utils'
-import { IP_REG } from '@3un/utils'
-
-const store = inject(INTERCEPT_STORE)!
-
-function validForm() {
-  const ip = store.formBase.ip
-  const rules: ValidRule[] = [
-    { rule: !!ip, message: VERIFY_MSG.REQ_IP, },
-    { rule: IP_REG.test(ip), message: VERIFY_MSG.FMT_IP, },
-  ]
-
-  return validate(rules)
-}
-
-async function handleCreate() {
-  const data = await createIntercept(store.formBase)
-  store.intercepts.push(data)
-  store.visibleBase = false
-}
-
-async function handleUpdate() {
-  const intercept = store.intercepts[store.index!]
-  const body = { ...store.formBase, id: intercept.id }
-  await updateIntercept(body)
-
-  store.intercepts[store.index!] = { ...intercept, ...body }
-  store.visibleBase = false
-}
+const form = defineModel<InterceptForm>({ required: true })
 </script>
 
 <template>
-  <FormDialog
-    v-model="store.visibleBase"
-    :index="store.index"
-    :update="handleUpdate"
-    :create="handleCreate"
-    :validate="validForm"
-  >
-    <InterceptForm v-model="store.formBase" />
-  </FormDialog>
+  <form class="space-y-4" @submit.prevent>
+    <div>
+      <label class="block text-sm text-label mb-1">拦截IP</label>
+      <XInput v-model="form.ip" placeholder="拦截IP" />
+    </div>
+    <div>
+      <label class="block text-sm text-label mb-1">过期时间(不选，默认永久)</label>
+      <XDatePicker v-model="form.expireTime" placeholder="过期时间" />
+    </div>
+    <div>
+      <label class="block text-sm text-label mb-1">备注</label>
+      <XTextarea v-model="form.comments" placeholder="备注" />
+    </div>
+  </form>
 </template>

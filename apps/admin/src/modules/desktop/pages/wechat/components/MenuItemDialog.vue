@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MenuItemForm from '@/components/forms/wechat/MenuItemForm.vue'
+import MenuItemForm from './MenuItemForm.vue'
 import { createWechatMenu, updateWechatMenu } from '@/api/wechat'
 import { MENU_STORE, MENU_TYPES } from '../utils'
 

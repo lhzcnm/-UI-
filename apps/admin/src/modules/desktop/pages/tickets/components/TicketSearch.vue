@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TicketSearchForm from '@forms/tickets/TicketSearchForm.vue'
+import TicketSearchForm from './TicketSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { TICKET_STORE } from '../utils'
 

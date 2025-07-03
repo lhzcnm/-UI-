@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import OrderForm from '@forms/orders/OrderForm.vue'
+import OrderForm from './OrderForm.vue'
 import { updateOrder } from '@/api/orders'
 import { ORDER_STORE } from '../utils'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RechargeSearchForm from '@forms/recharge/RechargeSearchForm.vue'
+import RechargeSearchForm from './RechargeSearchForm.vue'
 import { useCopy } from '@3un/utils'
 import { RECHARGE_STORE } from '../utils'
 

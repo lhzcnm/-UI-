@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupForm from '@forms/service/GroupForm.vue'
+import GroupForm from './GroupForm.vue'
 import { createServiceGroup, updateServiceGroup } from '@/api/services'
 import { GROUP_STORE } from '../utils'
 

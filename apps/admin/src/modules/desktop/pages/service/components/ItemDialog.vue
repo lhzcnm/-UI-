@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ItemForm from '@forms/service/ItemForm.vue'
+import ItemForm from './ItemForm.vue'
 
 import type { FormMode } from '@3un/shared'
 import { xconfirm } from '@3un/utils'

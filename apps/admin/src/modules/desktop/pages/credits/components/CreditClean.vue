@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CreditCleanForm from '@forms/credit/CreditCleanForm.vue'
+import CreditCleanForm from './CreditCleanForm.vue'
 import { cleanCredit } from '@/api/credits'
 
 import { toast } from 'vue-sonner'

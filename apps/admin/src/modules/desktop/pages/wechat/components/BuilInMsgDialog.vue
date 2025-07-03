@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BuiltInForm from '@/components/forms/wechat/BuiltInForm.vue'
+import BuiltInForm from './BuiltInForm.vue'
 import { updateBuiltInMsg, getBuiltInMsgList } from '@/api/wechat'
 import { MSG_STORE } from '../utils'
 
