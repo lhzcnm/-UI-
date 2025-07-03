@@ -23,21 +23,23 @@ watch(visible, (value) => !value && emit('close'))
     <Transition name="fade-in">
       <div
         v-if="visible"
-        class="fixed top-0 bottom-0 left-0 right-0 z-30 bg-black/40"
+        class="fixed top-0 bottom-0 left-0 right-0 z-40 bg-black/40"
         @click="visible = false"
       />
     </Transition>
+
     <Transition name="slide-bottom">
       <div
         v-if="visible"
         :class="twMerge(
-          'fixed left-0 right-0 bottom-0 z-30 will-change-transform',
+          'fixed left-0 right-0 bottom-0 z-40 will-change-transform',
           'h-[90%] bg-card rounded-t-[10px] overflow-y-auto',
           props.class,
         )"
       >
-        <div class="flex items-center justify-between p-4">
-          <h2 class="flex-1 mr-3 truncate text-xl font-medium">{{ props.title }}</h2>
+        <div class="w-16 h-2 mt-3 bg-muted rounded mx-auto" />
+        <div class="flex items-center justify-between px-4 pb-3">
+          <h2 class="flex-1 mr-3 truncate text-xl font-semibold">{{ props.title }}</h2>
           <button
             class="bg-muted rounded-full p-1 text-muted-foreground"
             @click="visible = false"

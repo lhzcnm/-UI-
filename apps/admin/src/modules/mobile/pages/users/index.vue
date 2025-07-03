@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import UserCard from './components/UserCard.vue'
+import UserSearch from './components/UserSearch.vue'
+import UserDialog from './components/UserDialog.vue'
+import UserDetail from './components/UserDetail.vue'
+
+import { USER_ROLE } from '@3un/utils'
+
 import { zUserExtraInfo, zUserForm, zUserSearchForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
 import type { UserListParams } from '@/inters/users'
+import { createList, toUndef } from '@/utils'
 import { getUsers } from '@/api/users'
-import { createList } from '@/utils'
 
 import { USER_STORE, type UsersStore } from './utils'
-import UserCard from './components/UserCard.vue'
 
 const store: UsersStore = reactive({
   extraInfo: zUserExtraInfo.parse({}),
@@ -31,6 +37,7 @@ const store: UsersStore = reactive({
 
 provide(USER_STORE, store)
 
+const route = useRoute()
 const loading = ref(false)
 
 watch(
@@ -44,6 +51,7 @@ watch(
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
+      planId: toUndef(store.formSearch.planId),
     })
   },
   { immediate: true },
@@ -56,11 +64,27 @@ function getList(params: UserListParams) {
   response.then((data) => store.users = data)
   response.finally(() => loading.value = false)
 }
+
+function openCreate() {
+  const isAdmin = route.query.q === 'admin'
+  store.formBase = zUserForm.parse({
+    role: isAdmin ? USER_ROLE.ADMIN : USER_ROLE.USER,
+  })
+
+  store.index = undefined
+  store.visibleBase = true
+}
+
+function resetSearch() {
+  store.formSearch = zUserSearchForm.parse({})
+  store.refresh = !store.refresh
+  store.page = 1
+}
 </script>
 
 <template>
   <div>
-    <Toolbar>
+    <Toolbar :loading="loading">
       <XSimplePagination
         v-model="store.page"
         :limit="store.limit"
@@ -70,20 +94,35 @@ function getList(params: UserListParams) {
       <template #extra>
         <div class="flex items-center justify-between">
           <div class="space-x-2">
-            <XButton icon="lucide:filter" label="筛选" />
-            <XButton icon="lucide:brush-cleaning" variant="outline" label="清空筛选" />
+            <XButton
+              label="筛选"
+              icon="lucide:filter"
+              @click="store.visibleSearch = true"
+            />
+            <XButton
+              label="清空筛选"
+              variant="outline"
+              icon="lucide:brush-cleaning"
+              @click="resetSearch"
+            />
           </div>
   
-          <XButton icon="lucide:plus" color="primary" label="新增用户" />
+          <XButton
+            label="新增用户"
+            color="primary"
+            icon="lucide:plus"
+            @click="openCreate"
+          />
         </div>
       </template>
     </Toolbar>
 
-    <section class="overflow-y-auto h-[calc(100vh-6.825rem)] space-y-2 p-3">
+    <section class="overflow-y-auto h-[calc(100vh-6.85rem)] space-y-2 p-3">
       <NoMessage
         v-if="store.users.list.length === 0"
-        class="bg-card border rounded-lg p-3"
+        class="h-auto bg-card border rounded-lg p-3"
       />
+
       <template v-else>
         <UserCard
           v-for="(user, index) in store.users.list"
@@ -91,5 +130,9 @@ function getList(params: UserListParams) {
         />
       </template>
     </section>
+
+    <UserSearch />
+    <UserDialog />
+    <UserDetail />
   </div>
 </template>

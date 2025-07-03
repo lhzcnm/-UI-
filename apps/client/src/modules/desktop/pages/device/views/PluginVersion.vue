@@ -20,6 +20,12 @@ import { Icon } from '@iconify/vue'
       </p>
       <div class="space-x-4 text-center">
         <PluginDownload />
+        <XButton
+          variant="soft" icon="lucide:refresh-cw"
+          @click="$router.go(0)"
+        >
+          刷新页面
+        </XButton>
       </div>
     </div>
   </div>

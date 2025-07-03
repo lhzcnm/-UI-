@@ -85,8 +85,10 @@ function handleCleanOrder() {
 }
 
 function resetSearch() {
-  store.formSearch = zCreditSearchForm.parse({})
-  router.replace({ path: route.path })
+  router.replace({
+    force: true,
+    path: route.path
+  })
 }
 </script>
 

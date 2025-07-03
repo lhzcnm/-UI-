@@ -42,11 +42,10 @@ export const messageHandlers = new Map<string, WebSocketHandler>()
 export const ws = useWebSocket(
   'ws://localhost:10000/ws',
   {
-    // autoReconnect: {
-    //   delay: 2000,
-    //   retries: 3,
-    // },
-    autoReconnect: true,
+    autoReconnect: {
+      delay: 2000,
+      retries: 3,
+    },
     heartbeat: {
       interval: 30000,
       pongTimeout: 3000,

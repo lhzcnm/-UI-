@@ -10,8 +10,8 @@ import { hash } from 'ohash'
 
 import type { UserListParams } from '@/inters/users'
 import { zUserExtraInfo, zUserForm, zUserPointForm, zUserSearchForm, zUserServiceForm } from '@/inters/users'
+import { createList, toUndef } from '@/utils'
 import { getUsers } from '@/api/users'
-import { createList } from '@/utils'
 
 import type { UsersStore } from './utils'
 import { columns } from './utils/columnUser'
@@ -58,6 +58,7 @@ watch(
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
+      planId: toUndef(store.formSearch.planId),
     })
   },
 )
@@ -96,8 +97,11 @@ function openCreate() {
 }
 
 function resetSearch() {
-  store.formSearch = zUserSearchForm.parse({})
-  router.replace({ path: route.path, query: {q: route.query.q} })
+  router.replace({
+    force: true,
+    path: route.path,
+    query: {q: route.query.q}
+  })
 }
 </script>
 

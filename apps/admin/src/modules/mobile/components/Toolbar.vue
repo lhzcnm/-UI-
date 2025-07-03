@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { twJoin, twMerge } from 'tailwind-merge'
+import { twJoin } from 'tailwind-merge'
 
+interface ToolbarProps {
+  loading?: boolean
+}
+
+defineProps<ToolbarProps>()
 const toggle = ref(false)
 </script>
 
 <template>
   <section class="relative">
     <div
-      :class="twMerge(
+      :class="twJoin(
         'relative z-10 flex justify-between',
         'px-3 py-2 border-b bg-card',
         toggle && 'border-dashed'
@@ -19,6 +24,10 @@ const toggle = ref(false)
         @click="toggle = !toggle"
       />
       <slot></slot>
+    </div>
+
+    <div v-show="loading" class="absolute w-full h-0.5 overflow-hidden bg-primary/10">
+      <div class="h-full w-1/3 x-animation-slide rounded bg-primary" />
     </div>
 
     <Transition name="fade-in">
@@ -36,6 +45,7 @@ const toggle = ref(false)
           'absolute top-full left-0 right-0 p-3',
           'bg-card border border-t-0 rounded-b-lg shadow-md',
         )"
+        @click.stop="toggle = false"
       >
         <slot name="extra" />
       </div>

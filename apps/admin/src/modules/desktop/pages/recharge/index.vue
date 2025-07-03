@@ -86,8 +86,8 @@ function getList(params: RechargeListParams) {
 }
 
 function resetSearch() {
-  store.formSearch = zRechargeSearchForm.parse({})
   router.replace({
+    force: true,
     path: route.path,
     query: { q: route.query.q },
   })

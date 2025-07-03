@@ -158,24 +158,19 @@ function handleBulkApiKey() {
 </script>
 
 <template>
-  <XDialog
+  <TheModal
     v-model="store.visibleBase"
     :title="options[mode].title"
-    :mask-closable="false"
-    ui-root="sm:max-w-lg sm:p-0"
-    ui-header="p-4 mb-0 border-b"
   >
     <UserForm
       v-model="store.formBase"
-      class="max-h-[75vh] p-4 overflow-y-auto"
+      class="p-4 pt-0"
       @update:bulk-api-key="handleBulkApiKey"
       @update:api-key="handleApiKey"
     />
-    <template #footer>
-      <div class="flex justify-end space-x-2 p-4 border-t">
-        <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
-        <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
-      </div>
-    </template>
-  </XDialog>
+    <div class="flex justify-end space-x-2 p-4 border-t">
+      <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
+      <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
+    </div>
+  </TheModal>
 </template>

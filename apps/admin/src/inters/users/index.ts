@@ -47,7 +47,7 @@ export const zUser = z.object({
 
   allowApi: z.boolean().default(false),
   loginAttempts: z.boolean().default(false),
-  userEmail: z.email().nullable().default(null),
+  userEmail: z.string().nullable().default(null),
   loginAllowedFromOtherCountry: z.boolean().default(true),
   // userLang: z.string().default(''),
   passwordUpdatedAt: z.string().nullable().default(null),
@@ -77,7 +77,7 @@ export type User = z.infer<typeof zUser>
 // Search
 export const zUserSearchForm = z.object({
   userId: z.number().optional(),
-  planId: z.number().optional(),
+  planId: z.number().default(-1),
   username: z.string().optional(),
   nickname: z.string().optional(),
   openId: z.string().optional(),

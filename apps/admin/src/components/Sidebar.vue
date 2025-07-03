@@ -58,12 +58,12 @@ function handleOtherClick(item: SidebarMenuChild) {
     </div>
 
     <nav class="flex-1 overflow-y-auto p-2 text-muted-foreground">
-      <ul class="flex flex-col sm:space-y-1">
+      <ul class="flex flex-col space-y-1">
         <SidebarItem v-for="menu in menus" :key="menu.path" :menu="menu" />
       </ul>
 
       <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">工具</p>
-      <ul class="flex flex-col sm:space-y-1">
+      <ul class="flex flex-col space-y-1">
         <li v-for="tool in tools" :key="tool.path">
           <button
             :class="twJoin(
@@ -82,7 +82,7 @@ function handleOtherClick(item: SidebarMenuChild) {
       </ul>
 
       <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">其他</p>
-      <ul class="flex flex-col sm:space-y-1">
+      <ul class="flex flex-col space-y-1">
         <li v-for="item in others" :key="item.path">
           <button
             :class="twJoin(

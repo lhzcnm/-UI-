@@ -22,6 +22,10 @@ export function formatNumberToThousands(value: number) {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
+export function toUndef(value: any) {
+  return value === -1 ? undefined : value
+}
+
 export const createList = useCopyFn(
   (limit: number = 20) => ({
     list    : [] as any[],

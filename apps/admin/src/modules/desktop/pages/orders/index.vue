@@ -99,8 +99,8 @@ function getList(params: OrderListParams) {
 }
 
 function resetSearch() {
-  store.formSearch = zOrderSearchForm.parse({})
   router.replace({
+    force: true,
     path: route.path,
     query: { q: route.query.q },
   })

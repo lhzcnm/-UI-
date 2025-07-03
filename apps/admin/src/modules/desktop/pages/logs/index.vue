@@ -75,8 +75,11 @@ function getList(params: LogListParams) {
 }
 
 function resetSearch() {
-  store.formSearch = zLogSearchForm.parse({})
-  router.replace({ path: route.path, query: {q: route.query.q}})
+  router.replace({
+    force: true,
+    path: route.path,
+    query: {q: route.query.q}
+  })
 }
 
 async function handleDelete() {
