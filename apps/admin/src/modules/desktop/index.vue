@@ -10,7 +10,7 @@ const { isFullscreen, toggle } = useFullscreen(rootRef)
 const serviceStore = useServiceStore()
 const levelStore = useLevelStore()
 
-Promise.all([
+await Promise.all([
   serviceStore.getItems(),
   serviceStore.getGroups(),
   levelStore.getList(),

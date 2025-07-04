@@ -87,7 +87,6 @@ function fillSelectedState(state = false) {
     v-model="store.visibleConvert"
     ui-root="sm:max-w-2xl"
     title="设置转换码"
-    draggable
   >
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-3">

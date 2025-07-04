@@ -45,9 +45,9 @@ function handleSubmit() {
 
 <template>
   <XDialog
-    v-model="visible"
+    v-model="visible" v-bind="$attrs"
     :title="options[mode].title"
-    v-bind="$attrs"
+    draggable
   >
     <slot></slot>
     <template #footer>

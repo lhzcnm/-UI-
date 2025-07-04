@@ -21,7 +21,7 @@ function handleCancel() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleSearch" title="搜索订单">
+  <XDialog v-model="store.visibleSearch" draggable title="搜索订单">
     <OrderSearchForm v-model="copied" />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

@@ -162,6 +162,7 @@ function handleBulkApiKey() {
     v-model="store.visibleBase"
     :title="options[mode].title"
     :mask-closable="false"
+    draggable
     ui-root="sm:max-w-lg sm:p-0"
     ui-header="p-4 mb-0 border-b"
   >

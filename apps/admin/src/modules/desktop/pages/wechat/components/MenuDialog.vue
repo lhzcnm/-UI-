@@ -28,7 +28,7 @@ async function handleUpdate() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleMenu" title="菜单管理">
+  <XDialog v-model="store.visibleMenu" draggable title="菜单管理">
     <MenuForm v-model="store.formMenu" />
     <template #footer>
       <div class="flex justify-end mt-4 space-x-2">

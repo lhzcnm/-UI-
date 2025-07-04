@@ -1,0 +1,125 @@
+<script setup lang="ts">
+import FieldDialog from './components/FieldDialog.vue'
+
+import { toast } from 'vue-sonner'
+
+import type { ServiceFieldListParams } from '@/inters/services'
+import { zServiceFieldForm } from '@/inters/services'
+import { deleteServiceField, getServiceFields } from '@/api/services'
+import { createList } from '@/utils'
+
+import { FIELD_STORE, type ServiceFieldStore } from './utils'
+import { columns } from './utils/columnField'
+
+const serviceStore = useServiceStore()
+await serviceStore.getItems()
+
+const store: ServiceFieldStore = reactive({
+  fields: createList(),
+
+  formBase: zServiceFieldForm.parse({}),
+  visibleBase: false,
+
+  refresh: false,
+  loading: false,
+  index  : undefined,
+  page   : 1,
+  limit  : 20,
+})
+
+provide(FIELD_STORE, store)
+
+const serviceId = ref<number>()
+const ids = ref<number[]>([])
+const loading = ref(false)
+
+watch(
+  [
+    () => serviceId.value,
+    () => store.page,
+    () => store.limit,
+    () => store.refresh,
+  ],
+  ([serviceId, page, limit]) => {
+    getList({ page, pageSize: limit, serviceId })
+  },
+  { immediate: true },
+)
+
+function getList(params: ServiceFieldListParams) {
+  loading.value = true
+
+  const response = getServiceFields(params)
+  response.then((data) => store.fields = data)
+  response.finally(() => loading.value = false)
+}
+
+function openCreate() {
+  store.formBase = zServiceFieldForm.parse({})
+  store.index = undefined
+  store.visibleBase = true
+}
+
+function handleDelete() {
+  if (!ids.value.length) {
+    toast.warning('请选择要删除的字段')
+    return
+  }
+
+  deleteServiceField(ids.value).then(() => {
+    store.refresh = !store.refresh
+  })
+}
+</script>
+
+<template>
+  <div>
+    <section class="flex justify-between p-3 border-b">
+      <div class="flex items-center">
+        <SelectService
+          v-model="serviceId"
+          ui-trigger="w-56"
+          clearable
+        />
+
+        <hr class="h-6 w-px mx-4 bg-border" />
+
+        <XButton
+          label="新增"
+          class="mr-2"
+          color="success"
+          icon="lucide:circle-plus"
+          @click="openCreate"
+        />
+
+        <XButton
+          label="批量删除"
+          color="danger"
+          icon="lucide:trash"
+          @click="handleDelete"
+        />
+      </div>
+
+      <XPagination
+        v-model="store.page"
+        v-model:limit="store.limit"
+        :total="store.fields.total"
+        :layouts="['total', 'prev', 'pager', 'next', 'sizes']"
+      />
+    </section>
+
+    <div class="p-3 pb-0">
+      <XTable
+        :data="store.fields.list"
+        :columns="columns"
+        :loading="loading"
+        row-key="id"
+        selection selected-key="id"
+        class="border h-[calc(100vh-8.75rem)]"
+        @select-change="ids = $event"
+      />
+    </div>
+
+    <FieldDialog />
+  </div>
+</template>

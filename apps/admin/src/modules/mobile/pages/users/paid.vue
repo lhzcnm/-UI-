@@ -94,7 +94,7 @@ function resetSearch() {
           :key="user.userId" :user="user" :index="index"
         />
       </template>
-  </section>
+    </section>
 
     <PaidSearch />
   </div>

@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import users from './mobile/users'
+import service from './mobile/service'
 
 const mobile: RouteRecordRaw = {
   path: '/m',
@@ -9,6 +10,7 @@ const mobile: RouteRecordRaw = {
   component: () => import('@mobile/index.vue'),
   children: [
     ...users,
+    ...service,
     {
       path: 'dashboard',
       name: 'Dashboard',

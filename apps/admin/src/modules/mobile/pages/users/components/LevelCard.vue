@@ -56,8 +56,8 @@ async function handleDelete() {
 </script>
 
 <template>
-  <div
-    class="bg-card rounded-lg border overflow-hidden"
+  <button
+    class="w-full text-left bg-card rounded-lg border overflow-hidden"
     @click="handleSubmit"
   >
     <div class="flex items-center justify-between p-3">
@@ -78,5 +78,5 @@ async function handleDelete() {
         <XButton size="sm" icon="lucide:trash-2" color="danger" label="删除" @click.stop="handleDelete" />
       </div>
     </div>
-  </div>
+  </button>
 </template>

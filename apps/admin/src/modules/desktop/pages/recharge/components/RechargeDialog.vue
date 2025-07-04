@@ -23,7 +23,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleUpdate" title="编辑">
+  <XDialog v-model="store.visibleUpdate" draggable title="编辑">
     <RechargeForm v-model="store.formUpdate" />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

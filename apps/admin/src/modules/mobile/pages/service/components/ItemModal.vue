@@ -102,36 +102,30 @@ async function handleResetPrice() {
 </script>
 
 <template>
-  <XDialog
+  <TheModal
     v-model="store.visibleBase"
     :title="options[mode].title"
-    :mask-closable="false"
-    draggable
-    ui-root="sm:max-w-lg sm:p-0"
-    ui-header="p-4 mb-0 border-b"
   >
     <ItemForm
       v-model="store.formBase"
       :is-create="isCreate"
       :reset-price="handleResetPrice"
-      class="max-h-[75vh] p-4 overflow-y-auto"
+      class="p-4 pt-0"
     />
-    <template #footer>
-      <div class="flex justify-between p-4 border-t">
-        <XButton
-          v-show="!isCreate"
-          color="danger"
-          icon="lucide:trash-2"
-          @click="handleDelete"
-        >
-          删除服务
-        </XButton>
+    <div class="flex justify-between p-4 border-t">
+      <XButton
+        v-show="!isCreate"
+        color="danger"
+        icon="lucide:trash-2"
+        @click="handleDelete"
+      >
+        删除服务
+      </XButton>
 
-        <div class="ml-auto space-x-2">
-          <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
-          <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
-        </div>
+      <div class="ml-auto space-x-2">
+        <XButton variant="soft" @click="store.visibleBase = false">取消</XButton>
+        <XButton :loading @click="handleSubmit">{{ options[mode].submitText }}</XButton>
       </div>
-    </template>
-  </XDialog>
+    </div>
+  </TheModal>
 </template>

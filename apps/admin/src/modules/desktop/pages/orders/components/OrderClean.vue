@@ -40,7 +40,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleClear" ui-root="sm:max-w-md" title="清理订单">
+  <XDialog v-model="store.visibleClear" draggable ui-root="sm:max-w-md" title="清理订单">
     <OrderCleanForm v-model="store.formClean" />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-6">

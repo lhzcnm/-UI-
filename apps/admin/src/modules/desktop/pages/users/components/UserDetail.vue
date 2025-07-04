@@ -37,6 +37,7 @@ const status = computed<XTagProps>(() => {
     ui-root="sm:max-w-xl sm:p-0"
     ui-header="p-4 pb-0"
     title="用户详情"
+    draggable
   >
     <div class="px-4 pb-4 space-y-4">
       <div class="flex items-center space-x-4 rounded p-4 border">

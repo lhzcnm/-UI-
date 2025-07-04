@@ -47,6 +47,7 @@ async function createType() {
     v-model="store.visibleType"
     ui-root="sm:max-w-lg"
     title="常见问题"
+    draggable
   >
     <div class="flex space-x-2 mb-2">
       <XInput v-model="type" placeholder="请输入常见问题" clearable />

@@ -14,7 +14,7 @@ function getLabel(id: number) {
 </script>
 
 <template>
-  <div class="border rounded">
+  <button class="w-full text-left bg-card rounded-lg border overflow-hidden">
     <div class="flex justify-between p-3">
       <div class="flex-1 min-w-0 mr-2">
         <p class="text-sm truncate">{{ getLabel(service.packageId) }}</p>
@@ -50,5 +50,5 @@ function getLabel(id: number) {
         />
       </div>
     </div>
-  </div>
+  </button>
 </template>

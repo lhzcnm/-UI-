@@ -31,7 +31,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleUpdate" title="修改订单">
+  <XDialog v-model="store.visibleUpdate" draggable title="修改订单">
     <OrderForm v-model="store.formUpdate" />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

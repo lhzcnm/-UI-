@@ -16,6 +16,7 @@ async function handleUpdate() {
   <XDialog
     v-model="store.visibleBuiltIn"
     title="编辑内置客服消息"
+    draggable
   >
     <BuiltInForm
       v-model="store.formBuiltIn"

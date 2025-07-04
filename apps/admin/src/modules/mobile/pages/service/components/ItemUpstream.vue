@@ -56,17 +56,20 @@ function handleSubmit() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleUpstream" draggable title="选择上游服务">
+  <TheModal
+    v-model="store.visibleUpstream"
+    title="选择上游服务"
+  >
     <ItemUpstreamForm
       v-model="store.formUpstream"
       v-model:service-list="serviceList"
       :upstreams="store.upstreams"
+      class="px-4"
     />
-    <template #footer>
-      <div class="flex justify-end space-x-2 mt-4">
-        <XButton variant="soft" @click="store.visibleUpstream = false">取消</XButton>
-        <XButton :loading="loading" @click="handleSubmit">确定</XButton>
-      </div>
-    </template>
-  </XDialog>
+
+    <div class="flex justify-end space-x-2 p-4">
+      <XButton variant="soft" @click="store.visibleUpstream = false">取消</XButton>
+      <XButton :loading="loading" @click="handleSubmit">确定</XButton>
+    </div>
+  </TheModal>
 </template>

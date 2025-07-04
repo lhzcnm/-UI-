@@ -70,6 +70,7 @@ async function getConfig() {
     v-model="iStore.showSetting" title="设置"
     uiRoot="sm:max-w-2xl sm:p-0 h-[600px]"
     uiHeader="p-3 pb-0"
+    draggable
   >
     <div class="flex h-[calc(100%-3.5rem)]">
       <div class="w-40 space-y-1 text-sm px-3 border-r">
