@@ -3,17 +3,17 @@ import ServiceCard from './ServiceCard.vue'
 
 import { toast } from 'vue-sonner'
 
-import { createUserService, deleteUserService } from '@/api/users'
+import { createLevelService, deleteLevelService } from '@/api/level'
+import { LEVEL_STORE } from '../utils'
 import { VERIFY_MSG } from '@/utils'
-import { USER_STORE } from '../utils'
-
-const store = inject(USER_STORE)!
-const loading = ref(false)
 
 const serviceStore = useServiceStore()
+const store = inject(LEVEL_STORE)!
+
+const loading = ref(false)
 
 function handleSubmit() {
-  const { packageId, price } = store.formService
+  const { packageId, price, freeCount } = store.formService
 
   if (!packageId) {
     toast.warning(VERIFY_MSG.REQ_SERVICE_ID)
@@ -23,13 +23,18 @@ function handleSubmit() {
     toast.warning(VERIFY_MSG.FMT_PRICE)
     return
   }
+  if (freeCount && !/^\d+$/.test(freeCount.toString())) {
+    toast.warning(VERIFY_MSG.FMT_FREE_COUNT)
+    return
+  }
 
   loading.value = true
 
-  const response = createUserService({
+  const response = createLevelService({
     packageId: store.formService.packageId,
-    userId: store.formService.userId,
-    price: store.formService.price || 0,
+    planId: store.formService.planId,
+    price: store.formService.price!,
+    freeCount: store.formService.freeCount || 0,
   })
 
   response.then((data) => store.services.push(data))
@@ -42,7 +47,7 @@ function handleSelect(id: number | string) {
 }
 
 function handleDelete(id: number, index: number) {
-  deleteUserService([id]).then(() => {
+  deleteLevelService(id).then(() => {
     store.services.splice(index, 1)
   })
 }
@@ -54,16 +59,32 @@ function handleDelete(id: number, index: number) {
     title="服务价格配置"
   >
     <div class="px-4 space-y-3">
-      <ServerSelect
-        v-model="store.formService.packageId"
-        @change="handleSelect"
-      />
+      <div>
+        <label class="block text-sm text-label mb-1">选择服务</label>
+        <ServerSelect
+          v-model="store.formService.packageId"
+          @change="handleSelect"
+        />
+      </div>
 
       <div class="flex space-x-2">
-        <XInput
-          v-model="store.formService.price"
-          placeholder="服务价格"
-        />
+        <div class="flex-1">
+          <label class="block text-sm text-label mb-1">服务价格</label>
+          <XInput
+            v-model="store.formService.price"
+            placeholder="服务价格"
+          />
+        </div>
+        <div class="flex-1">
+          <label class="block text-sm text-label mb-1">免费次数</label>
+          <XInput
+            v-model="store.formService.freeCount"
+            placeholder="免费次数"
+          />
+        </div>
+      </div>
+
+      <div class="flex justify-end">
         <XButton
           label="新增"
           icon="lucide:plus"

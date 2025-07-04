@@ -32,13 +32,21 @@ function getLabel(id: number) {
     </div>
 
     <div class="flex justify-between px-3 py-2 bg-muted border-t border-dashed">
-      <div class="flex items-center">
-        <span class="text-sm text-muted-foreground mr-2">点数:</span>
+      <div class="flex-1">
+        <label class="block text-sm text-muted-foreground mb-1">点数</label>
         <XInputNumber
           v-model="service.price"
           ui-root="bg-card"
           :step="0.01"
           :precision="2"
+        />
+      </div>
+
+      <div v-if="service.freeCount >= 0">
+        <label class="block text-sm text-muted-foreground mb-1">免费次数</label>
+        <XInputNumber
+          v-model="service.freeCount"
+          ui-root="bg-card"
         />
       </div>
     </div>

@@ -2,10 +2,10 @@
 import { toast } from 'vue-sonner'
 
 import { createLevelService } from '@/api/level'
+import { VERIFY_MSG } from '@/utils'
 
 import { columns } from '../utils/columnLevelService'
 import { LEVEL_STORE } from '../utils'
-import { VERIFY_MSG } from '@/utils'
 
 const serviceStore = useServiceStore()
 const store = inject(LEVEL_STORE)!

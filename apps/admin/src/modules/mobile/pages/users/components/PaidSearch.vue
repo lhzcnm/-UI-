@@ -22,13 +22,12 @@ function handleCancel() {
 </script>
 
 <template>
-  <XDialog v-model="store.visibleSearch" title="搜索用户">
-    <PaidSearchForm v-model="copied" />
-    <template #footer>
-      <div class="flex justify-end space-x-2 mt-4">
-        <XButton variant="soft" @click="handleCancel">取消</XButton>
-        <XButton @click="handleSubmit">搜索</XButton>
-      </div>
-    </template>
-  </XDialog>
+  <TheModal v-model="store.visibleSearch" title="搜索用户">
+    <PaidSearchForm v-model="copied" class="px-4" />
+
+    <div class="flex justify-end space-x-2 p-4">
+      <XButton variant="soft" @click="handleCancel">取消</XButton>
+      <XButton @click="handleSubmit">搜索</XButton>
+    </div>
+  </TheModal>
 </template>

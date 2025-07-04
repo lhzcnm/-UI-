@@ -29,13 +29,16 @@ async function handleUpdate() {
 </script>
 
 <template>
-  <FormDialog
+  <FormModal
     v-model="store.visibleBase"
     :index="store.index"
     :update="handleUpdate"
     :create="handleCreate"
     @close="formRef?.clearErrors"
   >
-    <LevelFormBase ref="formRef" v-model="store.formBase" />
-  </FormDialog>
+    <LevelFormBase
+      v-model="store.formBase"
+      ref="formRef" class="px-4"
+    />
+  </FormModal>
 </template>

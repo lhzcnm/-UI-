@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { Level } from '@/inters/level'
-import { zLevelForm, zLevelServiceForm } from '@/inters/level'
-
 import type { XBtnSplitOptions } from '@3un/ui'
 import { xconfirm } from '@3un/utils'
-import { LEVEL_STORE } from '../utils'
+
+import type { Level } from '@/inters/level'
+import { zLevelForm, zLevelServiceForm } from '@/inters/level'
 import { deleteLevel, getLevelServices } from '@/api/level'
+
+import { LEVEL_STORE } from '../utils'
 
 interface LevelActionProps {
   index: number

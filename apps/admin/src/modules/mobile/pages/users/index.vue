@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UserCard from './components/UserCard.vue'
 import UserSearch from './components/UserSearch.vue'
-import UserDialog from './components/UserDialog.vue'
+import UserModal from './components/UserModal.vue'
 import UserDetail from './components/UserDetail.vue'
 import UserPoint from './components/UserPoint.vue'
 import UserService from './components/UserService.vue'
@@ -141,7 +141,7 @@ function resetSearch() {
 
     <section class="overflow-y-auto h-[calc(100vh-6.85rem)] space-y-2 p-3">
       <NoMessage
-        v-if="store.users.list.length === 0"
+        v-if="!loading && store.users.list.length === 0"
         class="h-auto bg-card border rounded-lg p-3"
       />
 
@@ -155,7 +155,7 @@ function resetSearch() {
 
     <UserSearch :key="queryHash" />
 
-    <UserDialog />
+    <UserModal />
     <UserDetail />
     <UserPoint />
     <UserService />

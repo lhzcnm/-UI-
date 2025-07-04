@@ -46,6 +46,10 @@ const levelStore = useLevelStore()
       <XInput v-model="form.phone" placeholder="手机号" />
     </FormField>
 
+    <FormField label="会员到期" desc="会员到期时间">
+      <XNativeDate v-model="form.memberExp" placeholder="会员到期" />
+    </FormField>
+
     <FormField label="API 密钥" desc="用于 API 提交订单" variant="vertical">
       <XInput v-model="form.apiKey" placeholder="API 密钥" disabled />
       <XButton @click="emit('update:api-key')">刷新</XButton>
