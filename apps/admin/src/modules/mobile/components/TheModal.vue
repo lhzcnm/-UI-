@@ -37,11 +37,11 @@ watch(visible, (value) => !value && emit('close'))
           props.class,
         )"
       >
-        <div class="w-16 h-2 mt-3 bg-muted rounded mx-auto" />
+        <div class="w-16 h-1 my-2 bg-muted rounded mx-auto" />
         <div class="flex items-center justify-between px-4 pb-3">
           <h2 class="flex-1 mr-3 truncate text-xl font-semibold">{{ props.title }}</h2>
           <button
-            class="bg-muted rounded-full p-1 text-muted-foreground"
+            class="bg-muted rounded p-1 text-muted-foreground"
             @click="visible = false"
           >
             <Icon icon="lucide:x" class="size-5" />

@@ -34,13 +34,13 @@ router.beforeEach((to) => {
   // is mobile and not mobile path
   if (ua.isMobile && !isMobilePath) {
     if (!token) return '/m/auth'
-    return to.path.length > 1 ? `/m${to.path}` : '/m'
+    return to.fullPath.length > 1 ? `/m${to.fullPath}` : '/m'
   }
 
   // is pc and is mobile path
   if (!ua.isMobile && isMobilePath) {
     if (!token) return '/auth'
-    return to.path.replace('/m', '')
+    return to.fullPath.replace('/m', '')
   }
 })
 

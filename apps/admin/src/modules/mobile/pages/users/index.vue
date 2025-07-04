@@ -3,8 +3,11 @@ import UserCard from './components/UserCard.vue'
 import UserSearch from './components/UserSearch.vue'
 import UserDialog from './components/UserDialog.vue'
 import UserDetail from './components/UserDetail.vue'
+import UserPoint from './components/UserPoint.vue'
+import UserService from './components/UserService.vue'
 
 import { USER_ROLE } from '@3un/utils'
+import { hash } from 'ohash'
 
 import { zUserExtraInfo, zUserForm, zUserSearchForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
 import type { UserListParams } from '@/inters/users'
@@ -38,7 +41,10 @@ const store: UsersStore = reactive({
 provide(USER_STORE, store)
 
 const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
+
+const queryHash = computed(() => hash(route.query))
 
 watch(
   [
@@ -53,6 +59,20 @@ watch(
       ...store.formSearch,
       planId: toUndef(store.formSearch.planId),
     })
+  },
+)
+
+watch(
+  () => route.query,
+  ({ q, uid }) => {
+    store.formSearch = {
+      ...zUserSearchForm.parse({}),
+      userId: uid ? Number(uid) : undefined,
+      isAdmin: q === 'admin',
+    }
+
+    store.refresh = !store.refresh
+    store.page = 1
   },
   { immediate: true },
 )
@@ -76,9 +96,11 @@ function openCreate() {
 }
 
 function resetSearch() {
-  store.formSearch = zUserSearchForm.parse({})
-  store.refresh = !store.refresh
-  store.page = 1
+  router.replace({
+    force: true,
+    path: route.path,
+    query: {q: route.query.q}
+  })
 }
 </script>
 
@@ -131,8 +153,11 @@ function resetSearch() {
       </template>
     </section>
 
-    <UserSearch />
+    <UserSearch :key="queryHash" />
+
     <UserDialog />
     <UserDetail />
+    <UserPoint />
+    <UserService />
   </div>
 </template>

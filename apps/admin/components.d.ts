@@ -20,6 +20,7 @@ declare module 'vue' {
     SearchPlane: typeof import('./src/modules/desktop/components/SearchPlane.vue')['default']
     SearchRouteItem: typeof import('./src/modules/desktop/components/SearchRouteItem.vue')['default']
     SelectService: typeof import('./src/modules/desktop/components/SelectService.vue')['default']
+    ServerSelect: typeof import('./src/modules/mobile/components/ServerSelect.vue')['default']
     SettingPlane: typeof import('./src/modules/desktop/components/SettingPlane.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SidebarItem: typeof import('./src/components/SidebarItem.vue')['default']

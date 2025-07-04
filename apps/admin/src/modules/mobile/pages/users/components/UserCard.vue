@@ -46,7 +46,7 @@ async function handleClick() {
     <div class="flex justify-between">
       <div class="flex items-center space-x-2">
         <img :src="headImgUrl" alt="Avatar" class="size-8 rounded">
-        <span class="flex-1 truncate font-medium">{{ user.nickName || user.userName }}</span>
+        <span class="flex-1 min-w-0 truncate font-medium">{{ user.nickName || user.userName }}</span>
       </div>
 
       <div class="flex items-center space-x-1 bg-muted rounded px-2 py-0.5 text-muted-foreground">
@@ -62,7 +62,7 @@ async function handleClick() {
     </div>
 
     <div class="mt-1 space-y-1 text-sm">
-      <p>微信ID: {{ user.weiXinOpenid }}</p>
+      <p>微信ID: {{ user.weiXinOpenid || '未绑定' }}</p>
       <p>注册时间: {{ user.addedAt }}</p>
     </div>
   </button>

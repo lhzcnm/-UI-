@@ -1,11 +1,11 @@
 import { XButton, type XColDef, XInputNumber } from '@3un/ui'
 import { h } from 'vue'
 
-import type { LevelService } from '@/inters/level'
-import { deleteLevelService } from '@/api/level'
+import { deleteUserService } from '@/api/users'
+import type { UserService } from '@/inters/users'
 import { USER_STORE } from '.'
 
-export const columns: XColDef<LevelService> = [
+export const columns: XColDef<UserService> = [
   {
     key: 'packageId',
     title: '服务',
@@ -46,7 +46,7 @@ export const columns: XColDef<LevelService> = [
     render: (_, row, index) => {
       const store = inject(USER_STORE)!
       function handleDelete() {
-        deleteLevelService(row.id).then(() => {
+        deleteUserService([row.id]).then(() => {
           store.services.splice(index, 1)
         })
       }
