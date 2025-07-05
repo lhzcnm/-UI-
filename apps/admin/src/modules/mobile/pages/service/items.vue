@@ -109,8 +109,8 @@ function handleClear(type: ClearType) {
             <label class="block text-sm text-label mb-1">关键词</label>
             <XInput
               v-model="store.formSearch.keyword"
-              placeholder="请输入关键词"
               clearable
+              placeholder="请输入关键词"
               @clear="handleClear('keyword')"
             />
           </div>

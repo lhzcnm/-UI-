@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GroupDialog from './components/GroupDialog.vue'
+import GroupModal from './components/GroupModal.vue'
+import GroupCard from './components/GroupCard.vue'
 
 import { zServiceGroupForm } from '@/inters/services'
 import { GROUP_STORE, type ServiceGroupStore } from './utils'
-import { columns } from './utils/columnGroup'
 
 const serviceStore = useServiceStore()
 const store: ServiceGroupStore = reactive({
@@ -23,19 +23,17 @@ function openCreate() {
 
 <template>
   <div>
-    <section class="flex justify-between p-3 border-b">
+    <section class="flex justify-between px-3 py-2 bg-card border-b">
       <XButton icon="lucide:circle-plus" label="新增服务组" @click="openCreate" />
     </section>
 
-    <div class="p-3 pb-0">
-      <XTable
-        :data="serviceStore.groups"
-        :columns="columns"
-        row-key="categoryId"
-        class="border h-[calc(100vh-8.75rem)]"
+    <section class="overflow-y-auto h-[calc(100vh-6.85rem)] space-y-2 p-3">
+      <GroupCard
+        v-for="(item, index) in serviceStore.groups"
+        :key="item.categoryId" :item="item" :index="index"
       />
-    </div>
+    </section>
 
-    <GroupDialog />
+    <GroupModal />
   </div>
 </template>

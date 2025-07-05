@@ -6,8 +6,8 @@ const form = defineModel<UnlockCreateParams>({ required: true })
 const formRef = useTemplateRef('formRef')
 const serviceStore = useServiceStore()
 
-function handleSelected(value: number) {
-  const service = serviceStore.itemMap.get(value)
+function handleSelected(value: string | number) {
+  const service = serviceStore.itemMap.get(+value)
   if (service) form.value.name = service.packageTitle
 }
 
@@ -20,7 +20,10 @@ defineExpose({
 <template>
   <XForm ref="formRef" :model="form" :schema="zUnlockForm">
     <XFormItem label="服务ID" field="packageId">
-      <SelectService v-model="form.packageId" @selected="handleSelected" />
+      <NativeSelectService
+        v-model="form.packageId"
+        @change="handleSelected"
+      />
     </XFormItem>
 
     <XFormItem label="服务名称" field="name">

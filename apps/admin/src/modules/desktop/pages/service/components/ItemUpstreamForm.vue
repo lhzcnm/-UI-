@@ -51,6 +51,11 @@ function toggleSelectedService(e: MouseEvent) {
     form.value.externalNetworkId = serviceId
   }
 }
+
+function formatLabel(item: UpstreamService) {
+  const label = item.serviceName.replace(/^#[0-9]+-/, '')
+  return `${item.serviceId} - ${label}`
+}
 </script>
 
 <template>
@@ -106,9 +111,7 @@ function toggleSelectedService(e: MouseEvent) {
               class="inline-block size-4 mr-2 p-0.5 bg-primary text-white rounded-full"
               icon="lucide:check"
             />
-            <div class="flex-1 truncate">
-              {{ item.serviceId }} - {{ item.serviceName.replace(/^#[0-9]+-/, '') }}
-            </div>
+            <div class="flex-1 truncate">{{ formatLabel(item) }}</div>
             <span class="text-primary">￥{{ item.servicePrice }}</span>
           </button>
         </div>

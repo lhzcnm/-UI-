@@ -5,10 +5,15 @@ interface TheEmits {
 
 defineEmits<TheEmits>()
 
-const serviceId = defineModel<number>({ default: 0 })
-
 const serviceStore = useServiceStore()
-const groupId = ref(-1)
+
+const serviceId = defineModel<number>({ default: 0 })
+const groupId = ref(getGroupId(serviceId.value))
+
+function getGroupId(serviceId: number) {
+  const group = serviceStore.itemMap.get(serviceId)
+  return group?.categoryId || -1
+}
 
 const options = computed(() => {
   const findIndex = serviceStore.details.findIndex(item =>

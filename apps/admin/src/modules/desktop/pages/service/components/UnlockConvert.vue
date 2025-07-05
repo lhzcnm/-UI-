@@ -101,7 +101,7 @@ function fillSelectedState(state = false) {
         <label for="select-all" class="text-sm">全选</label>
       </div>
       <div class="flex items-center space-x-2">
-        <XButton label="增加新转换码" @click="handleCreate" />
+        <XButton label="增加转换码" @click="handleCreate" />
         <XButton label="删除" color="danger" @click="handleDelete" />
       </div>
     </div>

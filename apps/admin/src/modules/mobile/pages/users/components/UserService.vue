@@ -54,7 +54,7 @@ function handleDelete(id: number, index: number) {
     title="服务价格配置"
   >
     <div class="px-4 space-y-3">
-      <ServerSelect
+      <NativeSelectService
         v-model="store.formService.packageId"
         @change="handleSelect"
       />

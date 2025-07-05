@@ -7,7 +7,6 @@ const store = inject(UNLOCK_STORE)!
 
 const loading = ref(false)
 const convertCodes = ref<Unlock['convertCode']>([])
-const selectedItems = ref<boolean[]>([])
 
 watch(
   () => store.visibleConvert,
@@ -23,19 +22,8 @@ watch(
         { key: '', value: ''}
       ]
     }
-
-    fillSelectedState(false)
   },
 )
-
-const isAllSelected = computed(() =>
-  selectedItems.value.length > 0 &&
-  selectedItems.value.every(item => item)
-)
-
-function toggleSelectAll() {
-  fillSelectedState(!isAllSelected.value)
-}
 
 function handleSubmit() {
   loading.value = true
@@ -62,73 +50,55 @@ function handleSubmit() {
 
 function handleCreate() {
   convertCodes.value.unshift({ key: '', value: '' })
-  fillSelectedState(false)
 }
 
-function handleDelete() {
-  const filtered = convertCodes.value
-    .filter((_, index) => !selectedItems.value[index])
-
-  convertCodes.value = filtered
-  if (filtered.length === 0) {
-    convertCodes.value.push({ key: '', value: '' })
+function handleDelete(index: number) {
+  if (convertCodes.value.length > 1) {
+    convertCodes.value.splice(index, 1)
   }
-  
-  fillSelectedState(false)
-}
-
-function fillSelectedState(state = false) {
-  selectedItems.value = new Array(convertCodes.value.length).fill(state)
 }
 </script>
 
 <template>
-  <XDialog
+  <TheModal
     v-model="store.visibleConvert"
-    ui-root="sm:max-w-2xl"
     title="设置转换码"
   >
-    <div class="flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <input 
-          type="checkbox" 
-          id="select-all" 
-          class="size-4" 
-          :checked="isAllSelected"
-          @change="toggleSelectAll"
-        />
-        <label for="select-all" class="text-sm">全选</label>
-      </div>
-      <div class="flex items-center space-x-2">
-        <XButton label="增加新转换码" @click="handleCreate" />
-        <XButton label="删除" color="danger" @click="handleDelete" />
-      </div>
+    <div class="p-4 pt-0 border-b border-dashed">
+      <XButton label="增加转换码" @click="handleCreate" />
     </div>
-    <div class="mt-3 pr-1 space-y-3 overflow-y-auto max-h-[500px]">
+ 
+    <div class="space-y-3 p-4">
       <div
         v-for="(item, index) in convertCodes" :key="index"
-        class="flex items-start space-x-3"
+        class="border rounded-lg overflow-hidden"
       >
-        <input
-          v-model="selectedItems[index]"
-          type="checkbox" class="size-4 mt-1"
-        />
-        <div class="flex-1">
-          <label class="block text-sm mb-1">原始码</label>
-          <XInput v-model="item.key" placeholder="原始码" />
+        <div class="p-3">
+          <div class="mb-2">
+            <label class="block text-sm text-label mb-1">原始码</label>
+            <XInput v-model="item.key" placeholder="原始码" />
+          </div>
+          <div>
+            <label class="block text-sm text-label mb-1">转换码</label>
+            <XInput v-model="item.value" placeholder="转换码" />
+          </div>
         </div>
-        <div class="flex-1">
-          <label class="block text-sm mb-1">转换码</label>
-          <XInput v-model="item.value" placeholder="转换码" />
+
+        <div class="flex items-center justify-end px-3 py-2 border-t border-dashed bg-muted">
+          <XButton
+            v-if="convertCodes.length > 1"
+            size="sm"
+            color="danger"
+            label="删除"
+            @click="handleDelete(index)"
+          />
         </div>
       </div>
     </div>
 
-    <template #footer>
-      <div class="flex justify-end space-x-2 mt-4">
-        <XButton label="取消" variant="soft" @click="store.visibleConvert = false" />
-        <XButton label="确定" :loading="loading" @click="handleSubmit" />
-      </div>
-    </template>
-  </XDialog>
+    <div class="sticky bottom-0 bg-card border-t flex justify-end space-x-2 p-4">
+      <XButton label="取消" variant="soft" @click="store.visibleConvert = false" />
+      <XButton label="确定" :loading="loading" @click="handleSubmit" />
+    </div>
+  </TheModal>
 </template>

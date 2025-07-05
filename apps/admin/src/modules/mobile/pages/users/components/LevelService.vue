@@ -61,7 +61,7 @@ function handleDelete(id: number, index: number) {
     <div class="px-4 space-y-3">
       <div>
         <label class="block text-sm text-label mb-1">选择服务</label>
-        <ServerSelect
+        <NativeSelectService
           v-model="store.formService.packageId"
           @change="handleSelect"
         />

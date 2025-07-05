@@ -14,7 +14,7 @@ defineExpose({
 <template>
   <XForm ref="formRef" :model="form" :schema="zServiceFieldForm">
     <XFormItem label="服务名称" field="serviceId">
-      <SelectService v-model="form.serviceId" />
+      <NativeSelectService v-model="form.serviceId" />
     </XFormItem>
 
     <XFormItem label="字段名称" field="name">

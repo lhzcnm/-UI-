@@ -24,7 +24,7 @@ async function handleUpdate() {
 </script>
 
 <template>
-  <FormDialog
+  <FormModal
     v-model="store.visibleBase"
     :index="store.index"
     :update="handleUpdate"
@@ -32,6 +32,10 @@ async function handleUpdate() {
     :validate="formRef?.validateForm"
     @close="formRef?.clearErrors"
   >
-    <GroupForm ref="formRef" v-model="store.formBase" />
-  </FormDialog>
+    <GroupForm
+      ref="formRef"
+      v-model="store.formBase"
+      class="px-4"
+    />
+  </FormModal>
 </template>

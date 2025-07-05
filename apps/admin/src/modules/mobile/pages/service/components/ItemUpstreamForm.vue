@@ -10,21 +10,12 @@ interface ItemUpstreamFormProps {
   upstreams: Upstream[]
 }
 
-const props = defineProps<ItemUpstreamFormProps>()
+defineProps<ItemUpstreamFormProps>()
 
 const form = defineModel<UpstreamServiceForm>({ required: true })
 const serviceList = defineModel<UpstreamService[]>('serviceList', { required: true })
 
-const searchApiId = ref<string>('')
 const searchServiceName = ref<string>('')
-
-const _upstreams = computed(() => {
-  const search = searchApiId.value.trim().toLowerCase()
-  return props.upstreams.filter(item =>
-    item.apiId.toString().includes(search) ||
-    item.apiTitle.toLowerCase().includes(search)
-  )
-})
 
 const _services = computed(() => {
   const search = searchServiceName.value.trim().toLowerCase()
@@ -34,8 +25,10 @@ const _services = computed(() => {
   )
 })
 
-async function handleUpstreamChange(apiId: number) {
-  const data = await getUpstreamServices(apiId)
+async function handleUpstreamChange(apiId: number | string) {
+  if (apiId === '-1') return serviceList.value = []
+
+  const data = await getUpstreamServices(Number(apiId))
   serviceList.value = data
 }
 
@@ -51,26 +44,26 @@ function toggleSelectedService(e: MouseEvent) {
     form.value.externalNetworkId = serviceId
   }
 }
+
+function formatLabel(item: UpstreamService) {
+  const label = item.serviceName.replace(/^#[0-9]+-/, '')
+  return `${item.serviceId} - ${label}`
+}
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent>
     <div>
       <label class="block text-label text-sm font-medium mb-1">上游接口名称</label>
-      <XSelect
+      <XNativeSelect
         v-model="form.apiId"
-        v-model:input="searchApiId"
+        :options="upstreams"
+        :default="-1"
+        value-key="apiId"
+        label-key="apiTitle"
         placeholder="请选择上游接口"
-        clearable filterable
-
-        @selected="handleUpstreamChange"
-        @clear="serviceList = []"
-      >
-        <XSelectItem
-          v-for="item in _upstreams" :key="item.apiId"
-          :value="item.apiId" :label="`${item.apiId} - ${item.apiTitle}`"
-        />
-      </XSelect>
+        @change="handleUpstreamChange"
+      />
     </div>
 
     <div>
@@ -106,9 +99,7 @@ function toggleSelectedService(e: MouseEvent) {
               class="inline-block size-4 mr-2 p-0.5 bg-primary text-white rounded-full"
               icon="lucide:check"
             />
-            <div class="flex-1 truncate">
-              {{ item.serviceId }} - {{ item.serviceName.replace(/^#[0-9]+-/, '') }}
-            </div>
+            <div class="flex-1 truncate">{{ formatLabel(item) }}</div>
             <span class="text-primary">￥{{ item.servicePrice }}</span>
           </button>
         </div>

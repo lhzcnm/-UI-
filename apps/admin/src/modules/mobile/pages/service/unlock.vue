@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import UnlockDialog from './components/UnlockDialog.vue'
+import UnlockCard from './components/UnlockCard.vue'
+import UnlockModal from './components/UnlockModal.vue'
 import UnlockConvert from './components/UnlockConvert.vue'
 
 import { zUnlockForm } from '@/inters/services'
 import { getUnlockList } from '@/api/services'
 
 import { UNLOCK_STORE, type UnlockStore } from './utils'
-import { columns } from './utils/columnUnlock'
 
 const store: UnlockStore = reactive({
   unlocks: [],
@@ -35,23 +35,21 @@ function openCreate() {
 
 <template>
   <div>
-    <section class="p-3 border-b">
+    <section class="px-3 py-2 bg-card border-b">
       <XButton
         icon="lucide:circle-plus"
         label="新增" @click="openCreate"
       />
     </section>
 
-    <div class="p-3 pb-0">
-      <XTable
-        :data="store.unlocks"
-        :columns="columns"
-        row-key="id"
-        class="border h-[calc(100vh-8.75rem)]"
+    <section class="overflow-y-auto h-[calc(100vh-6.85rem)] space-y-2 p-3">
+      <UnlockCard
+        v-for="(item, index) in store.unlocks"
+        :key="item.id" :item="item" :index="index"
       />
-    </div>
+    </section>
 
-    <UnlockDialog />
+    <UnlockModal />
     <UnlockConvert />
   </div>
 </template>
