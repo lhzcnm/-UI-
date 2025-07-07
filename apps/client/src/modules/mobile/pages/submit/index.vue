@@ -13,6 +13,7 @@ import type { Order, OrderSubmitResult } from '@/api/orders'
 import { ua, IMEIValidator } from '@3un/utils'
 import { getSubmitImei, base64ToFile } from '@/utils'
 import { IMEI_TYPE, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
+import type { XNativeSelectValue } from '@3un/ui'
 
 import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
@@ -66,7 +67,7 @@ onBeforeMount(() => {
 
 function getGroupId(serviceId: number) {
   const group = serviceStore.services.get(serviceId)
-  return group?.parentId || 0
+  return group?.parentId || -1
 }
 
 function handleScan() {
@@ -210,9 +211,9 @@ function getImageData(localId: string) {
   })
 }
 
-function handleServiceChange(value: string | number) {
-  store.service = serviceStore.services.get(+value)
-  store.serviceId = +value
+function handleServiceChange(value: XNativeSelectValue) {
+  store.service = serviceStore.services.get(+value!)
+  store.serviceId = +value!
   store.rawOrders = []
   store.count = 0
 
@@ -374,6 +375,7 @@ function handlePushMsgChange(value: boolean) {
       <div class="space-y-2">
         <XNativeSelect
           v-model="form.groupId"
+          :default="-1"
           :options="[...serviceStore.details]"
           @change="form.serviceId = 0"
           placeholder="请选择服务组"
@@ -383,8 +385,9 @@ function handlePushMsgChange(value: boolean) {
         />
         <XNativeSelect
           v-model="form.serviceId"
+          :default="0"
           :options="options"
-          :disabled="!form.groupId"
+          :disabled="form.groupId === -1"
           @change="handleServiceChange"
           placeholder="请选择服务"
           label-key="title"

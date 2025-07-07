@@ -27,6 +27,9 @@ export interface Setting {
   // 会员信息
   memberInfo: string
 
+  // API 使用说明
+  apiUsageInfo: string
+
   // 最大充值金额
   maxRechargeAmount: number
   // 最小充值金额

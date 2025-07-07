@@ -2,8 +2,9 @@
 import CardSection from './components/CardSection.vue'
 import IncomeSection from './components/IncomeSection.vue'
 import OrderSection from './components/OrderSection.vue'
-import RealtimeOrderSection from './components/RealtimeOrderSection.vue'
 import ServiceSection from './components/ServiceSection.vue'
+import UserRanking from './components/UserRanking.vue'
+import RealtimeOrderSection from './components/RealtimeOrderSection.vue'
 
 import * as echarts from 'echarts/core'
 import { LineChart, BarChart } from 'echarts/charts'
@@ -45,9 +46,15 @@ provide(STORE, store)
   <div class="p-6 space-y-6">
     <CardSection />
 
-    <RealtimeOrderSection />
-    <OrderSection />
-    <IncomeSection />
+    <div class="flex space-x-6">
+      <div class="flex-1 space-y-6">
+        <RealtimeOrderSection />
+        <OrderSection />
+      </div>
+
+      <UserRanking />
+    </div>
     <ServiceSection />
+    <IncomeSection />
   </div>
 </template>

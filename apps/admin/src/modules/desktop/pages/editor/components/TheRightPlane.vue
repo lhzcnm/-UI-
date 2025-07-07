@@ -25,6 +25,7 @@ const options = [
   { label: '滑动公告', value: 'scrollingAnnc', icon: 'lucide:scroll-text' },
   { label: '弹窗公告', value: 'popupAnnc', icon: 'lucide:message-square' },
   { label: '充值说明', value: 'paymentInfo', icon: 'lucide:credit-card' },
+  { label: 'API使用说明', value: 'apiUsageInfo', icon: 'lucide:key-round' },
 ]
 
 const selectedOption = computed(() => 
@@ -128,7 +129,7 @@ function handleRefresh() {
       <XButton label="保存" @click="handleSave" />
     </div>
 
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 min-h-0 flex flex-col">
       <div class="flex items-center justify-between border-b bg-card px-4 py-2">
         <h4 class="text-sm text-label">内容预览</h4>
         <XButton

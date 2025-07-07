@@ -4,7 +4,7 @@ import { ORDER_STATUS } from '@3un/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 const serviceStore = useServiceStore()
-const groupId = ref(0)
+const groupId = ref(-1)
 
 const options = computed(() => {
   const findIndex = serviceStore.details.findIndex(item =>
@@ -30,6 +30,7 @@ const statusOptions = [
       <div class="flex items-center space-x-2">
         <XNativeSelect
           v-model="groupId"
+          :default="-1"
           :options="[...serviceStore.details]"
           @change="form.serviceId = 0"
           placeholder="请选择服务组"
@@ -39,7 +40,8 @@ const statusOptions = [
         <XNativeSelect
           v-model="form.serviceId"
           :options="options"
-          :disabled="!groupId"
+          :disabled="groupId === -1"
+          :default="0"
           placeholder="请选择服务"
           label-key="title"
           value-key="id"

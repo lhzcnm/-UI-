@@ -2,6 +2,7 @@
 import FormCard from './components/FormCard.vue'
 import DataCard from './components/DataCard.vue'
 import BulkApiCard from './components/BulkApiCard.vue'
+import ApiKeyCard from './components/ApiKeyCard.vue'
 import AppCard from './components/AppCard.vue'
 
 const store = useUserStore()
@@ -45,7 +46,8 @@ const qrcode = computed(() => {
       <FormCard />
       <section class="flex-1">
         <DataCard />
-        <div class="flex items-start gap-4 mt-4">
+        <div class="flex flex-wrap items-start gap-4 mt-4">
+          <ApiKeyCard />
           <BulkApiCard />
           <AppCard v-if="mode === 'SanHe'" />
         </div>

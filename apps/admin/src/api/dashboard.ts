@@ -1,4 +1,5 @@
 import type { OrderStatItem, RangeStatParams, TodoCountItem } from "@/inters/dashboard"
+import type { User } from "@/inters/users"
 import http from "@/utils/http"
 
 type IncomeRangeFn = (params: RangeStatParams) => Promise<Record<string, string>>
@@ -34,4 +35,9 @@ export const getRealtimeOrder: RealtimeOrderFn = async () => {
 type TodoCountFn = () => Promise<TodoCountItem>
 export const getTodoCount: TodoCountFn = async () => {
   return (await http.get('/dashboard/todo-count')).data
+}
+
+type UserRankFn = () => Promise<User[]>
+export const getUserRank: UserRankFn = async () => {
+  return (await http.get('/dashboard/rank')).data
 }

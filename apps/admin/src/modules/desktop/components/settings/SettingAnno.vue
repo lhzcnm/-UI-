@@ -77,5 +77,17 @@ function handleEdit(type: string) {
         @click="handleEdit('paymentInfo')"
       />
     </FormField>
+
+    <FormField
+      label="API使用说明"
+      desc="API KEY 使用说明"
+      :content-flex="false"
+    >
+      <XButton
+        label="编辑" size="sm"
+        icon="lucide:edit"
+        @click="handleEdit('apiUsageInfo')"
+      />
+    </FormField>
   </div>
 </template>

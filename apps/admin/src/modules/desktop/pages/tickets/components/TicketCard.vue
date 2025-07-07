@@ -24,10 +24,9 @@ function getAvatar(headImgUrl: string | null) {
 </script>
 
 <template>
-  <a
-    href="javascript:void(0)"
+  <button
     :class="twJoin(
-      'block p-3 bg-card border rounded-lg',
+      'block w-full text-left p-3 bg-card border rounded-lg',
       'dark:hover:border-hover transition-colors hover:shadow',
       active && 'ring-2 ring-primary bg-primary/20'
     )"
@@ -55,5 +54,5 @@ function getAvatar(headImgUrl: string | null) {
         {{ ticket.time }}
       </span>
     </div>
-  </a>
+  </button>
 </template>

@@ -33,6 +33,8 @@ export interface Settings {
   scrollingAnnc: string
   // 支付信息
   paymentInfo: string
+  // API 使用说明
+  apiUsageInfo: string
 
   // 最大充值金额
   maxRechargeAmount: number

@@ -136,7 +136,7 @@ function handleDisplayData(data: OrderStatItem[]) {
 </script>
 
 <template>
-  <section class="border rounded">
+  <section class="border rounded overflow-hidden">
     <div class="flex items-center p-3 border-b">
       <h3 class="text-lg font-bold">实时订单统计</h3>
 

@@ -46,14 +46,14 @@ async function handleSubmit() {
 
   if (device && selected.value > 1) {
     const { ActivationLock, NetworkLock, Warranty } = device.summary
-
-    if (options.activationLock && !ActivationLock)
+    console.log(ActivationLock, NetworkLock, Warranty)
+    if (options.activationLock && ActivationLock === '--')
       return toast.warning('请先查询激活锁')
 
-    if (options.networkLock && !NetworkLock)
+    if (options.networkLock && NetworkLock === '--')
       return toast.warning('请先查询网络锁')
 
-    if (options.warranty && !Warranty)
+    if (options.warranty && Warranty === '--')
       return toast.warning('请先查询保修期限')
   }
 

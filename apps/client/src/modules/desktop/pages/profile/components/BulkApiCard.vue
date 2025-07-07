@@ -13,7 +13,7 @@ async function handleCopy() {
 }
 
 async function handleRefresh() {
-  await store.refreshApi()
+  await store.refreshBulkApi()
   toast.success('刷新成功')
 }
 
@@ -23,14 +23,14 @@ async function handleOpenBulkCheckApi() {
     return
   }
 
-  await store.refreshApi()
+  await store.openBulkApi()
   toast.success('开通成功')
 }
 </script>
 
 <template>
   <div class="border rounded-lg p-6 bg-card">
-    <h3 class="text-lg mb-4">API 信息</h3>
+    <h3 class="text-lg mb-4">批量查询 API</h3>
 
     <div v-if="store.info.bulkCheckApi" class="space-y-2">
       <div class="flex items-center space-x-2 px-3 h-10 bg-muted rounded-lg">

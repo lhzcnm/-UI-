@@ -151,6 +151,14 @@ defineExpose({
           <Icon icon="lucide:strikethrough" class="size-5" />
           <div class="x-tooltip-text top120">删除线</div>
         </button>
+        <button
+          class="x-tooltip hover:bg-muted rounded p-1.5"
+          :class="{'bg-muted': editor.isActive('codeBlock')}"
+          @click="editor.chain().focus().toggleCodeBlock().run()"
+        >
+          <Icon icon="lucide:code" class="size-5" />
+          <div class="x-tooltip-text top120">代码块</div>
+        </button>
       </div>
 
       <hr class="h-5 w-px mx-2 bg-border" />
@@ -211,6 +219,6 @@ defineExpose({
       </div>
     </div>
 
-    <EditorContent :editor="editor" class="p-3" />  
+    <EditorContent :editor="editor" class="p-3 overflow-y-auto" />  
   </div>
 </template>

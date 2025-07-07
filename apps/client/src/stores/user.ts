@@ -29,9 +29,25 @@ export const useUserStore = defineStore('userStore', () => {
     saveInfo()
   }
 
+  async function openBulkApi() {
+    const [bulkKey, _] = await Promise.all([
+      userApi.apiBulkKey(),
+      userApi.apiKey(),
+    ])
+
+    info.value.bulkCheckApi = bulkKey.data
+    saveInfo()
+  }
+
+  async function refreshBulkApi() {
+    const bulkKey = await userApi.apiBulkKey()
+    info.value.bulkCheckApi = bulkKey.data
+    saveInfo()
+  }
+
   async function refreshApi() {
     const { data } = await userApi.apiKey()
-    info.value.bulkCheckApi = data
+    info.value.apiKey = data
     saveInfo()
   }
 
@@ -53,6 +69,8 @@ export const useUserStore = defineStore('userStore', () => {
     getInfo,
     updateCredit,
     updateName,
+    openBulkApi,
+    refreshBulkApi,
     refreshApi,
     saveInfo,
     logout,

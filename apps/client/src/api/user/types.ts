@@ -6,6 +6,7 @@ export interface UserApi {
   servicePrices(): R<UserServicePrice[]>
 
   apiKey(): R<string>
+  apiBulkKey(): R<string>
   bindWechat(): R<string>
 
   updateInfo(params: UserUpdateNameParams): R<void>
@@ -37,6 +38,8 @@ export interface UserInfo {
   memberExp: string
   usageDays: number
   enableDevice: boolean
+  apiKey: string
+  allowApi: boolean
   bulkCheckApi: string
   rechargeCount: string
   totalReceipts: string

@@ -8,7 +8,9 @@ export const userApi: UserApi = {
   credit: () => http.get('user/credits'),
   servicePrices: () => http.get('user/only/prices'),
 
-  apiKey: () => http.get('user/api/key'),
+  apiBulkKey: () => http.get('user/bulk-key'),
+  apiKey: () => http.get('user/api-key'),
+
   bindWechat: () => http.get('wx/bind/qrcode'),
 
   updateInfo: (params) => http.put('user/info', params),
