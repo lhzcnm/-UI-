@@ -11,7 +11,7 @@ const levelStore = useLevelStore()
       <label class="block text-label text-sm mb-1">会员等级</label>
       <XNativeSelect
         v-model="form.planId"
-        :default="-1"
+        :default="undefined"
         :options="levelStore.levels"
         placeholder="请选择会员等级"
         value-key="pricePlanId"

@@ -13,12 +13,12 @@ const form = defineModel<OrderUpdateForm>({ required: true })
     </div>
     <div>
       <label class="block text-sm text-label mb-1">订单状态</label>
-      <XSelect v-model="form.codeStatusId">
-        <XSelectItem
-          v-for="item in ORDER_STATUS_LIST" :key="item.value"
-          :value="item.value" :label="item.label"
-        />
-      </XSelect>
+      <XNativeSelect
+        v-model="form.codeStatusId"
+        :options="ORDER_STATUS_LIST"
+        value-key="value"
+        label-key="label"
+      />
     </div>
     <div>
       <label class="block text-sm text-label mb-1">订单结果</label>

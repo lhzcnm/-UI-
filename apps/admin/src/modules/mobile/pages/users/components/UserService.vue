@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ServiceCard from './ServiceCard.vue'
 
+import type { XNativeSelectValue } from '@3un/ui'
 import { toast } from 'vue-sonner'
 
 import { createUserService, deleteUserService } from '@/api/users'
@@ -36,8 +37,8 @@ function handleSubmit() {
   response.finally(() => loading.value = false)
 }
 
-function handleSelect(id: number | string) {
-  const servce = serviceStore.itemMap.get(Number(id))
+function handleSelect(value: XNativeSelectValue) {
+  const servce = serviceStore.itemMap.get(+value!)
   if (servce) store.formService.price = servce.packagePrice
 }
 

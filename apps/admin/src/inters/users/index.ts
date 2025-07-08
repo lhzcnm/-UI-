@@ -77,7 +77,7 @@ export type User = z.infer<typeof zUser>
 // Search
 export const zUserSearchForm = z.object({
   userId: z.number().optional(),
-  planId: z.number().default(-1),
+  planId: z.number().optional(),
   username: z.string().optional(),
   nickname: z.string().optional(),
   openId: z.string().optional(),

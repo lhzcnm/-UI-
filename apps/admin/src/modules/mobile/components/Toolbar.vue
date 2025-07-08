@@ -10,7 +10,7 @@ const toggle = ref(false)
 </script>
 
 <template>
-  <section class="relative">
+  <section class="sticky top-0">
     <div
       :class="twJoin(
         'relative z-10 flex justify-between',

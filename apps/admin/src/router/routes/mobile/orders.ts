@@ -4,12 +4,12 @@ const orders: RouteRecordRaw[] = [
   {
     path: 'orders',
     name: 'Orders',
-    component: () => import('@desktop/pages/orders/index.vue'),
+    component: () => import('@mobile/pages/orders/index.vue'),
   },
   {
     path: 'orders/verify',
     name: 'OrdersVerify',
-    component: () => import('@desktop/pages/orders/verify.vue'),
+    component: () => import('@mobile/pages/orders/verify.vue'),
   },
 ]
 

@@ -9,10 +9,10 @@ import UserService from './components/UserService.vue'
 import { USER_ROLE } from '@3un/utils'
 import { hash } from 'ohash'
 
-import { zUserExtraInfo, zUserForm, zUserSearchForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
 import type { UserListParams } from '@/inters/users'
-import { createList, toUndef } from '@/utils'
+import { zUserExtraInfo, zUserForm, zUserSearchForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
 import { getUsers } from '@/api/users'
+import { createList } from '@/utils'
 
 import { USER_STORE, type UsersStore } from './utils'
 
@@ -57,7 +57,6 @@ watch(
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
-      planId: toUndef(store.formSearch.planId),
     })
   },
 )

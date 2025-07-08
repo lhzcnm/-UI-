@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { UnlockCreateParams } from '@/inters/services'
 import { zUnlockForm } from '@/inters/services'
+import type { XNativeSelectValue } from '@3un/ui'
 
 const form = defineModel<UnlockCreateParams>({ required: true })
 const formRef = useTemplateRef('formRef')
 const serviceStore = useServiceStore()
 
-function handleSelected(value: string | number) {
-  const service = serviceStore.itemMap.get(+value)
+function handleSelected(value: XNativeSelectValue) {
+  const service = serviceStore.itemMap.get(+value!)
   if (service) form.value.name = service.packageTitle
 }
 

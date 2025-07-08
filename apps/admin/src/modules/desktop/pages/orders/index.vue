@@ -192,6 +192,7 @@ const handleBatchEdit = selectDecorator(() => {
     originalStatus: item.codeStatusId,
     serverOrderId: item.orderIdFromServer,
     code: item.code.trim().split('<br>').join('\n'),
+    codeId: item.codeId,
   }))
 
   router.push('/batch-edit-orders')
@@ -273,7 +274,7 @@ const handleBatchEdit = selectDecorator(() => {
           @click="handlePushOrder"
         />
         <XButton
-          icon="lucide:check" size="sm"
+          icon="lucide:check-circle" size="sm"
           color="success" label="接受订单"
           @click="handleAcceptOrder"
         />

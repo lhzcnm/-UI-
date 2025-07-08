@@ -3,6 +3,7 @@ import type { UpstreamServiceForm } from '@/inters/services'
 import type { Upstream, UpstreamService } from '@/inters/upstream'
 import { getUpstreamServices } from '@/api/upstream'
 
+import type { XNativeSelectValue } from '@3un/ui'
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
@@ -25,7 +26,7 @@ const _services = computed(() => {
   )
 })
 
-async function handleUpstreamChange(apiId: number | string) {
+async function handleUpstreamChange(apiId: XNativeSelectValue) {
   if (apiId === '-1') return serviceList.value = []
 
   const data = await getUpstreamServices(Number(apiId))

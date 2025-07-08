@@ -17,3 +17,9 @@ export interface TodoCountItem {
   verifying : number
   processing: number
 }
+
+export interface UserStatItem {
+  today: number
+  total: number
+  yesterday: number
+}

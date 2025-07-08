@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { XNativeSelectValue } from '@3un/ui'
+
 interface TheEmits {
-  (e: 'change', value: number | string): void
+  (e: 'change', value: XNativeSelectValue): void
 }
 
 defineEmits<TheEmits>()
@@ -39,6 +41,7 @@ const options = computed(() => {
     <XNativeSelect
       v-model="serviceId"
       :options="options"
+      :default="0"
       :disabled="groupId === -1"
       @change="$emit('change', $event)"
       placeholder="请选择服务"

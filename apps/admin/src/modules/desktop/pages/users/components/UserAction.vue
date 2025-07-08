@@ -19,8 +19,9 @@ const options: XBtnSplitOptions = [
   { label: '查看详情', icon: 'lucide:eye', command: openDetail },
   { label: '积分设置', icon: 'lucide:dollar-sign', command: openPoint },
   { label: '服务设置', icon: 'lucide:server', command: openService },,
+  { label: '订单历史', icon: 'lucide:shopping-cart', command: toOrderHistory },
   { label: '积分记录', icon: 'lucide:coins', command: toCredits },
-  { label: '支付记录', icon: 'lucide:credit-card', command: toRecharge },
+  { label: '充值记录', icon: 'lucide:credit-card', command: toRecharge },
   { label: '登录日志', icon: 'lucide:location-edit', command: toLoginLogs },,
   { label: '永久删除', icon: 'lucide:trash-2', command: handleDelete },
 ]
@@ -79,6 +80,14 @@ function toRecharge() {
   const uid = props.row.userId
   router.push({
     name: 'Recharge',
+    query: { uid },
+  })
+}
+
+function toOrderHistory() {
+  const uid = props.row.userId
+  router.push({
+    name: 'Orders',
     query: { uid },
   })
 }

@@ -19,7 +19,10 @@ await Promise.all([
   <div class="flex flex-col h-screen">
     <MobileHeader />
     <RouterView v-slot="{ Component }" :key="route.path">
-      <main v-if="Component" class="flex-1 overflow-y-auto bg-zinc-100 dark:bg-black">
+      <main
+        v-if="Component"
+        class="flex-1 overflow-y-auto bg-zinc-100 dark:bg-black"
+      >
         <Transition name="fade-in" mode="out-in">
           <Suspense>
             <component :is="Component" />
