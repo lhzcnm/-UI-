@@ -54,6 +54,7 @@ provide(STORE, store)
 
       <UserRanking />
     </div>
+
     <ServiceSection />
     <IncomeSection />
   </div>

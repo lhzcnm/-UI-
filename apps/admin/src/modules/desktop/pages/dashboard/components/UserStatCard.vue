@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import TrendChart from './TrendChart.vue'
-
 import { twMerge } from 'tailwind-merge'
 import { Icon, type IconifyIcon } from '@iconify/vue'
 
@@ -11,10 +9,9 @@ interface StatCardProps {
   today: string | number
   yesterday: string | number
   icon: string | IconifyIcon
-  data: [string, number][]
 }
 
-const { title, today, yesterday, icon, data } = defineProps<StatCardProps>()
+const { title, today, yesterday, icon } = defineProps<StatCardProps>()
 const growth = computed(() => estimateGrowth(today, yesterday))
 
 function estimateGrowth(
@@ -62,7 +59,5 @@ function estimateGrowth(
         <span class="text-muted-foreground">较昨日</span>
       </div>
     </div>
-
-    <TrendChart v-if="data.length > 0" :data="data" class="h-16" />
   </div>
 </template>

@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { getUserRank } from '@/api/dashboard'
-import type { User } from '@/inters/users'
+import type { UserList } from '@/inters/users'
+import { createList } from '@/utils'
 
-const list = ref<User[]>([])
+const users = ref<UserList>(createList())
 
-await getList()
-async function getList() {
-  list.value = await getUserRank()
-}
+const loading = ref(false)
+const page = ref(1)
+
+watch(
+  page,
+  (val) => {
+    loading.value = true
+    getUserRank(val)
+      .then((res) => users.value = res)
+      .finally(() => loading.value = false)
+  },
+  { immediate: true }
+)
 
 function getAvatar(url: string | null) {
   const mode = import.meta.env.VITE_APP_MODE
@@ -21,12 +31,21 @@ function getAvatar(url: string | null) {
   <section class="border rounded w-96 overflow-hidden">
     <div class="flex items-center justify-between p-3 border-b">
       <h3 class="text-lg font-bold">积分排行榜</h3>
+      <XSimplePagination
+        v-model="page"
+        size="sm"
+        :limit="10"
+        :total="users.total"
+      />
     </div>
 
-    <div class="px-3 divide-y">
+    <div class="relative divide-y">
+      <div v-show="loading" class="absolute w-full h-0.5 overflow-hidden bg-primary/10">
+        <div class="h-full w-1/3 x-animation-slide rounded bg-primary" />
+      </div>
       <div
-        v-for="item in list" :key="item.userId"
-        class="py-3"
+        v-for="item in users.list" :key="item.userId"
+        class="p-3"
       >
         <div class="flex items-center justify-between">
           <img

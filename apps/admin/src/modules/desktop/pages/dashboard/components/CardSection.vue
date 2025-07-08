@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TodayStatCard from './TodayStatCard.vue'
 
-import { getIncomeRange, getOrderRange, getIncomeTrend, getOrderTrend } from '@/api/dashboard'
+import { getIncomeRange, getOrderRange, getIncomeTrend, getOrderTrend, getUserToday } from '@/api/dashboard'
 import { STORE } from '../utils'
 
 const store = inject(STORE)!
@@ -12,6 +12,9 @@ const incomeYesterday = ref('0')
 const orderToday = ref(0)
 const orderYesterday = ref(0)
 
+const userToday = ref(0)
+const userYesterday = ref(0)
+
 const incomeTrend = ref<Array<[string, number]>>([])
 const orderTrend = ref<Array<[string, number]>>([])
 
@@ -21,6 +24,8 @@ await Promise.all([
 
   getIncomeTrendStat(),
   getOrderTrendStat(),
+
+  getUserStat(),
 ])
 
 async function getIncomeStat() {
@@ -65,6 +70,13 @@ async function getOrderTrendStat() {
   orderTrend.value = Object.entries(data)
     .map(([key, value]) => [key, Number(value)])
 }
+
+async function getUserStat() {
+  const data = await getUserToday()
+
+  userToday.value = data.today || 0
+  userYesterday.value = data.yesterday || 0
+}
 </script>
 
 <template>
@@ -83,6 +95,14 @@ async function getOrderTrendStat() {
       :today="orderToday"
       :yesterday="orderYesterday"
       icon="lucide:shopping-cart"
+    />
+
+    <TodayStatCard
+      title="今日用户"
+      :data="[]"
+      :today="userToday"
+      :yesterday="userYesterday"
+      icon="lucide:users"
     />
   </section>
 </template>
