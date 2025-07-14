@@ -206,5 +206,19 @@ function handleCopy() {
         {{ order.remark }}
       </div>
     </div>
+
+    <div class="text-sm" v-if="order.recommends.length">
+      <div class="text-muted-foreground mb-1.5">推荐解锁服务：</div>
+      <ol class="bg-muted rounded p-3 list-decimal list-inside">
+        <li v-for="recommend in order.recommends" :key="recommend.packageId">
+          <a
+            :href="`/m/submit/${recommend.packageId}`"
+            class="underline active:text-success"
+          >
+            {{ recommend.packageId }} - {{ recommend.name }}
+          </a>
+        </li>
+      </ol>
+    </div>
   </div>
 </template>

@@ -22,6 +22,12 @@ export interface Order {
   remark: string
   result: string
   createTime: string
+  recommends: OrderRecommend[]
+}
+
+export interface OrderRecommend {
+  packageId: number
+  name: string
 }
 
 /** Table */

@@ -115,7 +115,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       imei: imeiList[i],
       remark: remark,
       result: '',
-      createTime: ''
+      createTime: '',
     })
   }
 

@@ -324,6 +324,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
       imei: item.imei,
       remark: form.remark,
       createTime: '刚刚',
+      recommends: [],
     })
   }
 

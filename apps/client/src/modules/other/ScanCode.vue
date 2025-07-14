@@ -24,11 +24,10 @@ function onScanCode() {
     scanType: ['qrCode', 'barCode'],
     fail: ({ errMsg }) => window.alert(errMsg),
     cancel: () => handleClose(),
-    success: ({ resultStr }) => {
-      const imei = resultStr.split(',')[1]
+    success: (result) => {
       const response = wxApi.scanCode({
+        code: result.resultStr,
         openId: openId!,
-        code: imei,
       })
 
       response.finally(() => handleClose())
