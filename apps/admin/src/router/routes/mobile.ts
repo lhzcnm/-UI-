@@ -3,6 +3,8 @@ import type { RouteRecordRaw } from 'vue-router'
 import users from './mobile/users'
 import service from './mobile/service'
 import orders from './mobile/orders'
+import recharge from './mobile/recharge'
+import wechat from './mobile/wechat'
 
 const mobile: RouteRecordRaw = {
   path: '/m',
@@ -13,10 +15,42 @@ const mobile: RouteRecordRaw = {
     ...users,
     ...service,
     ...orders,
+    ...recharge,
+    ...wechat,
     {
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@mobile/pages/dashboard/index.vue'),
+    },
+    {
+      path: 'logs',
+      name: 'Logs',
+      component: () => import('@mobile/pages/logs/index.vue'),
+    },
+    {
+      path: 'credits',
+      name: 'Credits',
+      component: () => import('@mobile/pages/credits/index.vue'),
+    },
+    {
+      path: 'intercept',
+      name: 'Intercept',
+      component: () => import('@mobile/pages/intercept/index.vue'),
+    },
+    {
+      path: 'tickets',
+      name: 'Tickets',
+      component: () => import('@mobile/pages/tickets/index.vue'),
+    },
+    {
+      path: 'upstream',
+      name: 'Upstream',
+      component: () => import('@mobile/pages/upstream/index.vue'),
+    },
+    {
+      path: 'settings',
+      name: 'Settings',
+      component: () => import('@mobile/pages/settings/index.vue'),
     },
   ],
 }

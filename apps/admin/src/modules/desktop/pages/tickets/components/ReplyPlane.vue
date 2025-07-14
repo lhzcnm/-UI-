@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { twJoin, twMerge } from 'tailwind-merge'
 import { TICKET_STATUS, xconfirm } from '@3un/utils'
+import { toast } from 'vue-sonner'
 
 import type { Ticket } from '@/inters/ticket'
 import { deleteTicket, updateTicket, createTicketReply } from '@/api/ticket'
 import { TICKET_STORE } from '../utils'
-import { toast } from 'vue-sonner'
 
 const store = inject(TICKET_STORE)!
 
@@ -93,20 +93,15 @@ async function handleDelete() {
           'border-b border-dashed p-4 pb-3',
         )"
       >
-        <h2 class="text-lg font-bold">{{ currentTicket.subject }}</h2>
+        <h2 class="text-lg font-bold truncate">
+          {{ currentTicket.subject }}
+        </h2>
         <div class="flex items-center space-x-2">
-          <XButton
-            size="sm"
-            variant="outline"
-            @click="handleToggle"
-          >
+          <XButton size="sm" variant="outline" @click="handleToggle">
             {{ isSolved ? '重新打开' : '关闭工单' }}
           </XButton>
 
-          <XButton
-            color="danger" size="sm"
-            @click="handleDelete"
-          >
+          <XButton color="danger" size="sm" @click="handleDelete">
             删除工单
           </XButton>
         </div>
@@ -116,15 +111,14 @@ async function handleDelete() {
         <div class="flex-1 overflow-y-auto space-y-4 p-4">
           <div
             v-for="reply in store.replies" :key="reply.id" 
-            :class="twMerge('flex items-start',
+            :class="twMerge(
+              'flex items-start',
               !isUser(reply.replyId) && 'flex-row-reverse'
             )"
           >
             <img 
               :src="getAvatar(reply.replyId)"
-              :class="twMerge(
-                'size-8 rounded-full object-cover flex-shrink-0',
-              )"
+              class="size-8 rounded-full object-cover flex-shrink-0"
               :alt="reply.replyId ? '客服' : '用户'"
               draggable="false"
             />

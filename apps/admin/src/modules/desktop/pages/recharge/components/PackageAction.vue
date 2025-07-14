@@ -27,7 +27,7 @@ function openUpdate() {
 }
 
 async function handleDelete() {
-  if (!await xconfirm('确定删除该记录吗？')) return
+  if (!await xconfirm('确定删除该套餐吗？')) return
 
   deleteRechargePackages([props.row.id]).then(() => {
     store.packages.splice(props.index, 1)

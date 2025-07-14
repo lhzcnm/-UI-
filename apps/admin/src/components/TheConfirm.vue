@@ -43,6 +43,7 @@ registerConfirm(confirm)
     :text="confirmOptions.text"
     :maskClosable="false"
     :closeBtn="false"
+    ui-text="tiptap"
     ui-mask="z-50"
   >
     <template #footer>

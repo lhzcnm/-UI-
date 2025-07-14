@@ -52,10 +52,12 @@ provide(STORE, store)
         <OrderSection />
       </div>
 
-      <UserRanking />
+      <UserRanking class="flex-shrink-0 min-w-96" />
     </div>
 
-    <ServiceSection />
-    <IncomeSection />
+    <div class="flex space-x-6">
+      <ServiceSection class="flex-1" />
+      <IncomeSection class="flex-1" />
+    </div>
   </div>
 </template>

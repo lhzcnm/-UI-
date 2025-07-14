@@ -44,7 +44,6 @@ declare module 'vue' {
     XFormItem: typeof import('@3un/ui')['XFormItem']
     XInput: typeof import('@3un/ui')['XInput']
     XInputNumber: typeof import('@3un/ui')['XInputNumber']
-    XModal: typeof import('@3un/ui')['XModal']
     XNativeDate: typeof import('@3un/ui')['XNativeDate']
     XNativeSelect: typeof import('@3un/ui')['XNativeSelect']
     XPagination: typeof import('@3un/ui')['XPagination']

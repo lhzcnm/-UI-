@@ -34,13 +34,19 @@ function handleChildClick(child: SidebarMenuChild) {
 function handleOtherClick(item: SidebarMenuChild) {
   if (item.path === 'logout') {
     http.get('/auth/logout').then(() => {
-      localStorage.clear()
       sessionStorage.clear()
+      localStorage.clear()
       router.push('/auth')
     })
   }
 
   if (item.path === 'settings') {
+    if (ua.isMobile) {
+      router.push('/settings')
+      iStore.showSidebar = false
+      return
+    }
+
     iStore.showSetting = true
   }
 }
@@ -62,24 +68,26 @@ function handleOtherClick(item: SidebarMenuChild) {
         <SidebarItem v-for="menu in menus" :key="menu.path" :menu="menu" />
       </ul>
 
-      <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">工具</p>
-      <ul class="flex flex-col space-y-1">
-        <li v-for="tool in tools" :key="tool.path">
-          <button
-            :class="twJoin(
-              'flex items-center justify-between w-full px-3 h-10 sm:h-8',
-              'rounded-md hover:bg-accent/15 hover:text-foreground transition-colors',
-              $route.path === tool.path && 'bg-accent/15 text-foreground',
-            )"
-            @click="handleChildClick(tool)"
-          >
-            <div class="flex items-center space-x-2">
-              <Icon v-if="tool.icon" :icon="tool.icon" class="size-4" />
-              <span>{{ tool.label }}</span>
-            </div>
-          </button>
-        </li>
-      </ul>
+      <template v-if="ua.isDesktop">
+        <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">工具</p>
+        <ul class="flex flex-col space-y-1">
+          <li v-for="tool in tools" :key="tool.path">
+            <button
+              :class="twJoin(
+                'flex items-center justify-between w-full px-3 h-10 sm:h-8',
+                'rounded-md hover:bg-accent/15 hover:text-foreground transition-colors',
+                $route.path === tool.path && 'bg-accent/15 text-foreground',
+              )"
+              @click="handleChildClick(tool)"
+            >
+              <div class="flex items-center space-x-2">
+                <Icon v-if="tool.icon" :icon="tool.icon" class="size-4" />
+                <span>{{ tool.label }}</span>
+              </div>
+            </button>
+          </li>
+        </ul>
+      </template>
 
       <p class="mt-6 mb-2 pl-3 text-xs text-muted-foreground">其他</p>
       <ul class="flex flex-col space-y-1">

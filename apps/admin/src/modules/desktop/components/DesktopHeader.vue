@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SearchPlane from './SearchPlane.vue'
-import TodoMsg from './TodoMsg.vue'
 
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'

@@ -29,8 +29,8 @@ export const columns: XColDef<Order> = [
       return h('a', {
         href: `/users?uid=${value}`,
         class: 'underline hover:text-success',
-        target: '_blank',
-        rel: 'opener',
+        // target: '_blank',
+        // rel: 'opener',
       }, value)
     },
   },

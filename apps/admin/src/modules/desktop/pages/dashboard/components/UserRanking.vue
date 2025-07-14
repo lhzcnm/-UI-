@@ -28,7 +28,7 @@ function getAvatar(url: string | null) {
 </script>
 
 <template>
-  <section class="border rounded w-96 overflow-hidden">
+  <section class="border rounded overflow-hidden">
     <div class="flex items-center justify-between p-3 border-b">
       <h3 class="text-lg font-bold">积分排行榜</h3>
       <XSimplePagination

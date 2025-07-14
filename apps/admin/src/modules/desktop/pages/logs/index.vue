@@ -145,7 +145,7 @@ async function handleDelete() {
         row-key="id"
         selection selected-key="id"
         class="border h-[calc(100vh-8.75rem)]"
-        @selection-change="ids = $event"
+        @select-change="ids = $event"
       />
     </div>
 

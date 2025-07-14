@@ -48,7 +48,7 @@ function handleEdit(type: string) {
 
     <FormField
       label="滚动公告"
-      desc="滑动公告，用于显示服务价格调整信息"
+      desc="首页顶部滚动公告"
       :content-flex="false"
     >
       <XSwitch

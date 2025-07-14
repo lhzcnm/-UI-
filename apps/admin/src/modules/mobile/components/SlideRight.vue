@@ -26,7 +26,7 @@ watch(visible, (value) => !value && emit('close'))
           <button class="absolute left-3 text-muted-foreground" @click="visible = false">
             <Icon icon="lucide:chevron-left" class="size-6" />
           </button>
-          <div class="pl-9 w-full -indent-9 text-center text-lg font-medium truncate">{{ title }}</div>
+          <div class="pl-9 text-lg font-medium truncate">{{ title }}</div>
         </section>
         <section class="flex-1 overflow-y-auto">
           <slot />

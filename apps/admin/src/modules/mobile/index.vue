@@ -13,6 +13,10 @@ await Promise.all([
   serviceStore.getGroups(),
   levelStore.getList(),
 ])
+
+iStore.startTodoTimer()
+
+onUnmounted(() => iStore.stopTodoTimer())
 </script>
 
 <template>

@@ -91,7 +91,7 @@ function handleAction(verify: number) {
         <span class="text-muted-foreground shrink-0">上游订单号：</span>
         <span class="font-medium break-all">{{ order.orderIdFromServer }}</span>
       </div>
-      <div class="flex items-center">
+      <div class="flex items-start">
         <span class="text-muted-foreground shrink-0">处理服务：</span>
         <span class="font-medium break-all">{{ serviceName }}</span>
       </div>

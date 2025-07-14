@@ -144,7 +144,7 @@ function handleCleanOrder() {
             icon="lucide:trash-2"
             @click="handleCleanOrder"
           />
-      </div>
+        </div>
       </template>
     </Toolbar>
 

@@ -1,14 +1,14 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-const routes: RouteRecordRaw[] = [
+const wechat: RouteRecordRaw[] = [
   {
-    path: '/wechat/menu',
-    component: () => import('@/modules/desktop/pages/wechat/menu.vue'),
+    path: 'wechat/menu',
+    component: () => import('@desktop/pages/wechat/menu.vue'),
   },
   {
-    path: '/wechat/message',
-    component: () => import('@/modules/desktop/pages/wechat/message.vue'),
+    path: 'wechat/message',
+    component: () => import('@desktop/pages/wechat/message.vue'),
   },
 ]
 
-export default routes
+export default wechat

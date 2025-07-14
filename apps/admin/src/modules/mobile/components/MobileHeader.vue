@@ -1,36 +1,48 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
+import { tv } from 'tailwind-variants'
 
 const iStore = useSystemStore()
+const foldIcon = computed(() => {
+  if (iStore.showSidebar) return 'lucide:panel-left-close'
+  else return 'lucide:panel-left-open'
+})
+
+const style = tv({
+  slots: {
+    root: 'flex items-center justify-between h-header px-2 border-b',
+    iconBtn: [
+      'p-2 rounded-full hover:bg-muted',
+      'text-muted-foreground transition-transform'
+    ]
+  },
+})
+
+const b = style()
 </script>
 
 <template>
-  <header class="flex items-center justify-between h-header px-2 border-b">
+  <header :class="b.root()">
     <div class="flex items-center space-x-1">
       <button
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground transition-transform"
+        :class="b.iconBtn()"
         @click="iStore.toggleSidebar"
         accesskey="b"
       >
-        <Icon :icon="iStore.showSidebar ? 'lucide:panel-left-close' : 'lucide:panel-left-open'" class="size-5" />
+        <Icon :icon="foldIcon" class="size-5" />
       </button>
 
       <Breadcrumb :items="iStore.breadcrumbItems" />
     </div>
 
     <div class="flex items-center space-x-1">
-      <button
-        accesskey="m"
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
-      >
-        <Icon icon="lucide:bell" class="size-5" />
-      </button>
+      <TodoMsg :ui-btn="b.iconBtn()" />
 
       <TheTheme ghost />
   
       <button
-        accesskey="s"
-        class="p-2 rounded-full hover:bg-muted text-muted-foreground"
+        :class="b.iconBtn()" accesskey="s"
+        @click="$router.push('/settings')"
       >
         <Icon icon="lucide:settings" class="size-5" />
       </button>

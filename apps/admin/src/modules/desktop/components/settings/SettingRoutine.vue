@@ -52,22 +52,45 @@ function handleSubmit() {
 <template>
   <div class="flex-1 flex flex-col">
     <div class="flex-1 divide-y px-4 overflow-y-auto">
-      <FormField label="网站地址" desc="网站地址">
+      <FormField
+        label="网站地址"
+        desc="请填写完整的网站地址"
+      >
         <XInput v-model="form.url" placeholder="https://www.example.com" />
       </FormField>
-      <FormField label="标题" desc="标题">
+
+      <FormField
+        label="标题"
+        desc="显示在浏览器标题栏的网站名称"
+      >
         <XInput v-model="form.title" placeholder="标题" />
       </FormField>
-      <FormField label="联系电话" desc="联系电话">
+
+      <FormField
+        label="联系电话"
+        desc="对外公布的客服或商务联系电话"
+      >
         <XInput v-model="form.phone" placeholder="联系电话" />
       </FormField>
-      <FormField label="邮箱" desc="邮箱">
+
+      <FormField
+        label="邮箱"
+        desc="用于接收系统通知的联系邮箱"
+      >
         <XInput v-model="form.email" placeholder="邮箱" />
       </FormField>
-      <FormField label="备案号" desc="备案号">
+
+      <FormField
+        label="备案号"
+        desc="工信部ICP备案号"
+      >
         <XInput v-model="form.beian" placeholder="备案号" />
       </FormField>
-      <FormField label="公司名称" desc="公司名称">
+
+      <FormField
+        label="公司名称"
+        desc="网站所属公司的全称"
+      >
         <XInput v-model="form.company" placeholder="公司名称" />
       </FormField>
     </div>

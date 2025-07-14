@@ -17,8 +17,8 @@ const form = reactive({
   enableTricket: settings.enableTricket,
   minRechargeAmount: settings.minRechargeAmount,
   maxRechargeAmount: settings.maxRechargeAmount,
-  invitePonit: configs['invite:point'],
-  inviteForPonit: configs['invite:for:point'],
+  invitePonit: +configs['invite:point'],
+  inviteForPonit: +configs['invite:for:point'],
   excludedWords: configs['filter:excluded_words']
     ? JSON.parse(configs['filter:excluded_words']).join('|')
     : '',
@@ -38,8 +38,8 @@ function handleSubmit() {
       { name: 'maxRechargeAmount', content: form.maxRechargeAmount.toString() },
     ]),
     updateConfig([
-      { key: 'invite:point', value: form.invitePonit },
-      { key: 'invite:for:point', value: form.inviteForPonit },
+      { key: 'invite:point', value: form.invitePonit.toString() },
+      { key: 'invite:for:point', value: form.inviteForPonit.toString() },
       {
         key: 'filter:excluded_words',
         value: JSON.stringify(
@@ -64,16 +64,24 @@ function handleSubmit() {
 <template>
   <div class="flex-1 flex flex-col">
     <div class="flex-1 divide-y px-6 pb-4 overflow-y-auto">
-      <FormField label="受邀请积分" desc="用户填写邀请码后获得的积分">
-        <XInput v-model="form.inviteForPonit" />
+      <FormField
+        label="受邀请积分"
+        desc="用户填写邀请码后获得的积分"
+        :content-flex="false"
+      >
+        <XInputNumber v-model="form.inviteForPonit" />
       </FormField>
-      <FormField label="邀请积分" desc="邀请用户获得的积分">
-        <XInput v-model="form.invitePonit" />
+      <FormField
+        label="邀请积分"
+        desc="邀请用户获得的积分"
+        :content-flex="false"
+      >
+        <XInputNumber v-model="form.invitePonit" />
       </FormField>
   
       <FormField
         label="最小充值金额"
-        desc="最小充值金额"
+        desc="用户充值时，最小充值金额"
         :content-flex="false"
       >
         <XInputNumber
@@ -84,7 +92,7 @@ function handleSubmit() {
       </FormField>
       <FormField
         label="最大充值金额"
-        desc="最大充值金额"
+        desc="用户充值时，最大充值金额"
         :content-flex="false"
       >
         <XInputNumber
