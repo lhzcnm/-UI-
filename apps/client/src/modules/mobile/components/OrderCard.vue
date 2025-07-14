@@ -102,8 +102,7 @@ function handleCopy() {
         v-if="isSubmit"
         :class="twJoin(
           'relative flex items-center justify-center',
-          'min-w-[32px] h-[32px] px-2',
-          'text-white font-bold rounded-lg text-sm',
+          'min-w-8 h-8 px-2 text-white font-bold rounded-lg text-sm',
           'bg-gradient-to-br from-primary/80 to-primary/40',
           'shadow-lg shadow-primary/20 backdrop-blur-sm',
 
