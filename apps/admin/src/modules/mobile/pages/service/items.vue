@@ -119,10 +119,17 @@ function handleClear(type: ClearType) {
     </Toolbar>
 
     <section class="overflow-y-auto h-[calc(100vh-6.85rem)] space-y-2 p-3">
-      <ItemCard
-        v-for="(item, index) in displayItems"
-        :key="item.packageId" :item="item" :index="index"
+      <NoMessage
+        v-if="displayItems.length === 0"
+        class="h-auto bg-card border rounded-lg p-3"
       />
+
+      <template v-else>
+        <ItemCard
+          v-for="(item, index) in displayItems"
+          :key="item.packageId" :item="item" :index="index"
+        />
+      </template>
     </section>
 
     <ItemModal />

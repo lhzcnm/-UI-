@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { Configs, Settings } from '@/inters/settings'
 import { updateSetting, updateConfig } from '@/api/settings'
+import { toast } from 'vue-sonner'
 
-interface SettingPlaneProps {
+interface TheProps {
   settings: Settings
   configs: Configs
 }
 
-const { settings, configs } =
-  defineProps<SettingPlaneProps>()
+const { settings, configs } = defineProps<TheProps>()
 
 const loading = ref(false)
 const form = reactive({
@@ -52,7 +52,8 @@ function handleSubmit() {
   ])
 
   response.then(() => {
-    iStore.showSetting = false
+    toast.success('修改成功')
+    iStore.showSetting = !iStore.showSetting
   })
 
   response.finally(() => {

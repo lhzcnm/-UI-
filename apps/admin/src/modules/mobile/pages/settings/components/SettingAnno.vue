@@ -1,14 +1,21 @@
 <script setup lang="ts">
+import AnnoEditModal from './AnnoEditModal.vue'
+
 import type { Configs, Settings } from '@/inters/settings'
 import { updateSetting } from '@/api/settings'
-import { xconfirm } from '@3un/utils'
 
-interface SettingPlaneProps {
+interface TheProps {
   settings: Settings
   configs: Configs
 }
 
-const { settings } = defineProps<SettingPlaneProps>()
+const { settings } = defineProps<TheProps>()
+
+const store = reactive({
+  visible: false,
+  type: '',
+  text: '',
+})
 
 const form = ref({
   enablePopupAnnc: settings.enablePopupAnnc,
@@ -21,8 +28,9 @@ function handleUpdate(val: boolean, name: string) {
 }
 
 function handleEdit(type: keyof typeof settings) {
-  const text = settings[type].toString()
-  xconfirm({ title: '预览', text })
+  store.text = settings[type].toString()
+  store.type = type
+  store.visible = true
 }
 </script>
 
@@ -38,8 +46,8 @@ function handleEdit(type: keyof typeof settings) {
         @change="handleUpdate($event, 'enablePopupAnnc')"
       />
       <XButton
-        label="浏览" size="sm"
-        icon="lucide:eye"
+        label="编辑" size="sm"
+        icon="lucide:edit"
         @click="handleEdit('popupAnnc')"
       />
     </FormField>
@@ -54,8 +62,8 @@ function handleEdit(type: keyof typeof settings) {
         @change="handleUpdate($event, 'enableScrollingAnnc')"
       />
       <XButton
-        label="浏览" size="sm"
-        icon="lucide:eye"
+        label="编辑" size="sm"
+        icon="lucide:edit"
         @click="handleEdit('scrollingAnnc')"
       />
     </FormField>
@@ -70,8 +78,8 @@ function handleEdit(type: keyof typeof settings) {
         @change="handleUpdate($event, 'enablePaymentInfo')"
       />
       <XButton
-        label="浏览" size="sm"
-        icon="lucide:eye"
+        label="编辑" size="sm"
+        icon="lucide:edit"
         @click="handleEdit('paymentInfo')"
       />
     </FormField>
@@ -82,10 +90,16 @@ function handleEdit(type: keyof typeof settings) {
       :content-flex="false"
     >
       <XButton
-        label="浏览" size="sm"
-        icon="lucide:eye"
+        label="编辑" size="sm"
+        icon="lucide:edit"
         @click="handleEdit('apiUsageInfo')"
       />
     </FormField>
+
+    <AnnoEditModal
+      v-model="store.visible"
+      v-model:text="store.text"
+      :type="store.type"
+    />
   </div>
 </template>

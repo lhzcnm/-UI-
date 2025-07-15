@@ -5,7 +5,7 @@ import { toast } from 'vue-sonner'
 import type { Order } from '@/inters/orders'
 import { updateOrderVerify } from '@/api/orders'
 
-import { ORDER_STORE } from '../utils'
+import { VERIFY_STORE } from '../utils'
 
 interface TheProps {
   order: Order
@@ -16,7 +16,7 @@ const props = defineProps<TheProps>()
 const { order } = props
 
 const serviceStore = useServiceStore()
-const store = inject(ORDER_STORE)!
+const store = inject(VERIFY_STORE)!
 
 const serviceName = computed(() => {
   const service = serviceStore.itemMap.get(order.packageId)

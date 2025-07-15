@@ -41,7 +41,7 @@ function handleHttpError(error: AxiosError<CR<null>>) {
     const options = {
       400: () => toast.warning(data.message),
       401: () => handleUnauthorized(),
-      403: () => toast.warning('权限不足'),
+      403: () => handleUnauthorized(),
       500: () => toast.error('服务器异常'),
     }
   

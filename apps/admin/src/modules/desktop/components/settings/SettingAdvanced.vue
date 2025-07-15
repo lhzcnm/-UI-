@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Configs, Settings } from '@/inters/settings'
 import { updateSetting, updateConfig } from '@/api/settings'
+import { toast } from 'vue-sonner'
 
 interface SettingPlaneProps {
   settings: Settings
@@ -52,6 +53,7 @@ function handleSubmit() {
   ])
 
   response.then(() => {
+    toast.success('修改成功')
     iStore.showSetting = false
   })
 
