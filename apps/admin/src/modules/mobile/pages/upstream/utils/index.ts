@@ -10,4 +10,6 @@ export interface UpstreamStore {
   visibleBase: boolean
 
   index: number | undefined
+  page: number
+  limit: number
 }

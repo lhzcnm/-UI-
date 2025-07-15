@@ -12,6 +12,8 @@ export interface ServiceStore {
   visibleBase: boolean
   visibleUpstream: boolean
   index: number | undefined
+  page: number
+  limit: number
 }
 
 interface ServiceSearch {

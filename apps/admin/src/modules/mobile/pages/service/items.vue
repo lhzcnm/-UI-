@@ -24,6 +24,8 @@ const store: ServiceStore = reactive({
   visibleUpstream: false,
 
   index: undefined,
+  page: 1,
+  limit: 10,
 })
 
 provide(SERVICE_STORE, store)
@@ -42,7 +44,7 @@ watch(
   { immediate: true },
 )
 
-const displayItems = computed(() => {
+const filteredItems = computed(() => {
   let items = serviceStore.items
   let { categoryId, keyword } = store.formSearch
   keyword = keyword.trim().toLowerCase()
@@ -61,6 +63,13 @@ const displayItems = computed(() => {
   }
 
   return items
+})
+
+const displayItems = computed(() => {
+  return filteredItems.value.slice(
+    (store.page - 1) * store.limit,
+    store.page * store.limit
+  )
 })
 
 initUpstreams()
@@ -84,11 +93,10 @@ function handleClear(type: ClearType) {
 <template>
   <div>
     <Toolbar>
-      <XButton
-        label="新增"
-        color="success"
-        icon="lucide:circle-plus"
-        @click="openCreate"
+      <XSimplePagination
+        v-model="store.page"
+        :limit="store.limit"
+        :total="filteredItems.length"
       />
 
       <template #extra>
@@ -104,7 +112,6 @@ function handleClear(type: ClearType) {
               label-key="category"
             />
           </div>
-
           <div>
             <label class="block text-sm text-label mb-1">关键词</label>
             <XInput
@@ -112,6 +119,15 @@ function handleClear(type: ClearType) {
               clearable
               placeholder="请输入关键词"
               @clear="handleClear('keyword')"
+            />
+          </div>
+          <div>
+            <label class="block text-sm text-label mb-1">操作</label>
+            <XButton
+              label="新增"
+              color="success"
+              icon="lucide:circle-plus"
+              @click="openCreate"
             />
           </div>
         </div>
