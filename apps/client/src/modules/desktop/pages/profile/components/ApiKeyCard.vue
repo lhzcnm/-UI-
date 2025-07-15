@@ -2,12 +2,12 @@
 import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 import { useClipboard } from '@vueuse/core'
-import { xconfirm } from '@3un/utils'
 
 import { maskText } from '@/utils'
 
 const store = useUserStore()
 const iStore = useSettingStore()
+const showApiUsageInfo = ref(false)
 
 const { copy } = useClipboard({ legacy: true })
 
@@ -20,17 +20,6 @@ async function handleRefresh() {
   await store.refreshApi()
   toast.success('刷新成功')
 }
-
-function openApiUsageInfo() {
-  const apiUsageInfo = iStore.settings.apiUsageInfo
-
-  xconfirm({
-    title: 'API 使用说明',
-    text: apiUsageInfo,
-    confirmText: '知道了',
-    cancelText: '取消',
-  })
-}
 </script>
 
 <template>
@@ -39,7 +28,7 @@ function openApiUsageInfo() {
       <h3 class="text-base font-medium">API KEY</h3>
       <button
         class="flex items-center space-x-1 text-sm text-muted-foreground"
-        @click="openApiUsageInfo"
+        @click="showApiUsageInfo = true"
       >
         <Icon icon="lucide:info" class="size-4" />
         <span class="text-sm">使用说明</span>
@@ -59,5 +48,13 @@ function openApiUsageInfo() {
         <XButton icon="lucide:copy" label="复制" color="success" @click="handleCopy" />
       </div>      
     </div>
+
+    <XDialog
+      v-model="showApiUsageInfo"
+      :text="iStore.settings.apiUsageInfo"
+      title="API 使用说明"
+      ui-root="sm:max-w-2xl"
+      ui-text="tiptap"
+    />
   </div>
 </template>

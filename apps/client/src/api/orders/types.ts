@@ -22,7 +22,7 @@ export interface Order {
   remark: string
   result: string
   createTime: string
-  recommends: OrderRecommend[]
+  recommends: OrderRecommend[] | null
 }
 
 export interface OrderRecommend {

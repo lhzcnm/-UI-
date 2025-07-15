@@ -19,9 +19,9 @@ const store = useUserStore()
           </data>
           <span class="text-sm text-muted-foreground">￥</span>
         </div>
-        <div class="space-x-3 text-sm mt-2">
-          <span class="text-success">充值总额 {{ store.info.totalReceipts }}</span>
-          <span class="text-warning">锁定积分 {{ store.info.rechargeCount }}</span>
+        <div class="space-y-1 text-sm mt-2">
+          <p class="text-success">充值总额 {{ store.info.totalReceipts }}</p>
+          <p class="text-warning">锁定积分 {{ store.info.rechargeCount }}</p>
         </div>
       </div>
       <div class="border rounded-lg p-4">
