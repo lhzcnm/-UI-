@@ -9,9 +9,15 @@ import { USER_ROLE } from '@3un/utils'
 import { hash } from 'ohash'
 
 import type { UserListParams } from '@/inters/users'
-import { zUserExtraInfo, zUserForm, zUserPointForm, zUserSearchForm, zUserServiceForm } from '@/inters/users'
 import { createList, toUndef } from '@/utils'
 import { getUsers } from '@/api/users'
+import {
+  zUserExtraInfo,
+  zUserForm,
+  zUserPointForm,
+  zUserSearchForm,
+  zUserServiceForm,
+} from '@/inters/users'
 
 import type { UsersStore } from './utils'
 import { columns } from './utils/columnUser'
@@ -157,7 +163,10 @@ function resetSearch() {
       />
     </div>
 
-    <UserSearch :key="queryHash" />
+    <UserSearch
+      :key="queryHash"
+    />
+
     <UserDialog />
     <UserPoint />
     <UserDetail />

@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import LogSearchForm from './LogSearchForm.vue'
-import { useCopy } from '@3un/utils'
+import { useCopyFn } from '@3un/utils'
 import { LOG_STORE } from '../utils'
 
 const store = inject(LOG_STORE)!
-const cloned = useCopy(store.formSearch)
+const cloned = useCopyFn(() => store.formSearch)
 const copied = ref(cloned())
+
+watch(
+  () => store.visibleSearch,
+  (val) => val && (copied.value = cloned()),
+)
 
 function handleSubmit() {
   store.formSearch = copied.value

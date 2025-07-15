@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import CreditSearchForm from './CreditSearchForm.vue'
-import { useCopy } from '@3un/utils'
+import { useCopyFn } from '@3un/utils'
 import { CREDIT_STORE } from '../utils'
 
 const store = inject(CREDIT_STORE)!
-const cloned = useCopy(store.formSearch)
+const cloned = useCopyFn(() => store.formSearch)
 const copied = ref(cloned())
+
+watch(
+  () => store.visibleSearch,
+  (val) => val && (copied.value = cloned()),
+)
 
 function handleSubmit() {
   store.formSearch = copied.value

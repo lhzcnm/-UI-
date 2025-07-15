@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import RechargeSearchForm from './RechargeSearchForm.vue'
 
-import { useCopy } from '@3un/utils'
+import { useCopyFn } from '@3un/utils'
 import { RECHARGE_STORE } from '../utils'
 
 const store = inject(RECHARGE_STORE)!
-const cloned = useCopy(store.formSearch)
+const cloned = useCopyFn(() => store.formSearch)
 const copied = ref(cloned())
+
+watch(
+  () => store.visibleSearch,
+  (val) => val && (copied.value = cloned()),
+)
 
 function handleSubmit() {
   store.formSearch = copied.value
