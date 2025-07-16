@@ -7,7 +7,4 @@ interface ImportMetaEnv {
   
   // storage key
   readonly VITE_ACCESS_TOKEN: string
-  readonly VITE_LEVEL_PLANS: string
-  readonly VITE_SERVICE_ITEMS: string
-  readonly VITE_SERVICE_GROUPS: string
 }

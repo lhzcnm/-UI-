@@ -19,7 +19,12 @@ import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
 import { wxApi } from '@/api/wx'
 
-const props = defineProps<{ id: string }>()
+interface TheProps {
+  id: string
+  imei: string
+}
+
+const props = defineProps<TheProps>()
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -45,7 +50,7 @@ const form = reactive({
   serviceId: +props.id,
   pushMsg: true,
   remark: '',
-  imei: '',
+  imei: props.imei || '',
 })
 
 const options = computed(() => {

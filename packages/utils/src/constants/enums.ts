@@ -100,20 +100,6 @@ export const API_TYPE_LIST = [
   { value: API_TYPE.CUSTOM, label: '自定义' },
 ]
 
-// Shop
-export enum SHOP_NAME {
-  CREDIT   = 1,
-  MONTHLY1 = 2,
-  MONTHLY2 = 3,
-  MONTHLY3 = 4,
-}
-export const SHOP_NAME_MAP: StatusMap = {
-  [SHOP_NAME.CREDIT]   : { color: 'success', label: '积分充值' },
-  [SHOP_NAME.MONTHLY1] : { color: 'primary', label: '包月会员一个月' },
-  [SHOP_NAME.MONTHLY2] : { color: 'warning', label: '包月会员两个月' },
-  [SHOP_NAME.MONTHLY3] : { color: 'danger', label: '包月会员三个月' },
-}
-
 // Order
 export enum ORDER_STATUS {
   WAIT        = 1,

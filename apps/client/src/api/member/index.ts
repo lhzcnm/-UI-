@@ -5,5 +5,5 @@ export * from './types'
 
 export const memberApi: MemberApi = {
   memberList: () => http.get('member/list'),
-  memberPkg: () => http.get('member/pkg'),
+  memberPkg: (id) => http.get(`member/pkg/${id}`),
 }

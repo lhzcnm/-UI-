@@ -6,6 +6,16 @@ import PackageAction from '../components/PackageAction.vue'
 
 export const columns: XColDef<RechargePackage> = [
   { key: 'id', title: '套餐ID', width: 72, align: 'center' },
+  {
+    key: 'planId',
+    title: '所属等级',
+    minWidth: 154,
+    render: (_, row) => {
+      const levelStore = useLevelStore()
+      const level = levelStore.levelMap.get(row.planId)
+      return h('span', level ? level.pricePlan : '未知等级')
+    },
+  },
   { key: 'shopName', title: '商品名称', minWidth: 154 },
   { key: 'price', title: '价格', minWidth: 108 },
   { key: 'month', title: '月数', minWidth: 108 },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { xconfirm, PAYMENT_STATUS_MAP, PAYMENT_METHOD_MAP, SHOP_NAME_MAP } from '@3un/utils'
+import { xconfirm, PAYMENT_STATUS_MAP, PAYMENT_METHOD_MAP } from '@3un/utils'
 import { Icon } from '@iconify/vue'
 
 import type { Recharge } from '@/inters/recharge'
@@ -14,6 +14,9 @@ interface RechargeActionProps {
 
 const props = defineProps<RechargeActionProps>()
 const store = inject(RECHARGE_STORE)!
+
+const packageStore = usePackageStore()
+const shop = packageStore.packageMap.get(props.item.shopId)
 
 function openUpdate() {
   store.formUpdate = {
@@ -93,7 +96,7 @@ async function handleDelete() {
 
     <div class="flex items-center justify-between px-3 py-2 border-t border-dashed">
       <span class="text-sm text-muted-foreground">
-        {{ SHOP_NAME_MAP[item.shopId].label }}
+        {{ shop ? shop.shopName : '积分充值' }}
       </span>
       <XButton
         label="删除"

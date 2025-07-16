@@ -12,7 +12,7 @@ const home: RouteRecordRaw = {
     },
     {
       name: 'Submit',
-      path: 'submit/:id(\\d{4})?',
+      path: 'submit/:id(\\d{4})?/:imei?',
       component: () => import('@desktop/pages/submit/index.vue'),
       props: true,
     },

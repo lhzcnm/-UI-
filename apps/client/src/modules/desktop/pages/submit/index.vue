@@ -16,7 +16,12 @@ import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
 import { xconfirm } from '@3un/utils'
 
-const props = defineProps<{ id: string }>()
+interface TheProps {
+  id: string
+  imei: string
+}
+
+const props = defineProps<TheProps>()
 
 const uStore = useUserStore()
 const store = useServiceStore()
@@ -52,6 +57,12 @@ await Promise.all([
   // Initialize service fields
   handleSelected(selectedId.value),
 ])
+
+const router = useRouter()
+
+if (props.imei) {
+  handleImport([props.imei], '')
+}
 
 async function handleSelected(value: number) {
   if (!value) return
@@ -276,6 +287,8 @@ function handleExport() {
 }
 
 function reset() {
+  router.replace({query: {}})
+
   imeis.value = []
   rawOrders.value = []
   submited.value = false

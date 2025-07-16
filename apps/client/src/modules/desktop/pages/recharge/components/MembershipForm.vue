@@ -4,52 +4,36 @@ import { toast } from 'vue-sonner'
 import { twMerge } from 'tailwind-merge'
 
 import type { RechargeMethod } from '@/api/recharge'
-import type { MemberPackage } from '@/api/member'
+import type { MemberItem, MemberPackage } from '@/api/member'
 import { rechargeApi } from '@/api/recharge'
 import { memberApi } from '@/api/member'
 import { RECHARGE_STORE } from '../utils'
 
-interface MembershipItem {
-  id: number
-  label: string
-  amount: number
-  saveAmount: string
-}
-
 const uStore = useUserStore()
 const serviceStore = useServiceStore()
-await serviceStore.getServices()
 
 const timer = ref(0)
-const selectedPlan = ref<MembershipItem>()
+const selectedPlan = ref<MemberItem>()
 const selectedPayment = ref<RechargeMethod>('wxpay')
 
 const memberPkg = ref<MemberPackage[]>([])
-const memberList = ref<MembershipItem[]>([])
+const memberList = ref<MemberItem[]>([])
 const pkgTotalAmount = ref(0)
 
 const store = inject(RECHARGE_STORE)!
 
-await Promise.all([
-  serviceStore.getServices(),
-  getMemberList(),
-  getMemberPkg(),
-])
+await serviceStore.getServices()
+await getMemberList()
 
 async function getMemberList() {
   const { data } = await memberApi.memberList()
-  const firstMonth = data[1]
-
-  memberList.value = data.splice(1).map(item => ({
-    saveAmount: (firstMonth.price * item.month - item.price).toFixed(2),
-    label: `${item.month} 个月`,
-    amount: item.price,
-    id: item.id,
-  }))
+  memberList.value = data.slice(1)
+  selectedPlan.value = data[1]
+  getMemberPkg(data[1].planId)
 }
 
-async function getMemberPkg() {
-  const { data } = await memberApi.memberPkg()
+async function getMemberPkg(id: number) {
+  const { data } = await memberApi.memberPkg(id)
   const total = data.reduce((total, item) => {
     if (!item.freeCount || !item.price) return total
     return total + item.price * item.freeCount
@@ -64,7 +48,7 @@ function handleRecharge() {
   const response = rechargeApi.create({
     openId: uStore.info.openId,
     type: selectedPayment.value,
-    amount: selectedPlan.value.amount,
+    amount: selectedPlan.value.price,
     id: selectedPlan.value.id,
   })
 
@@ -94,6 +78,11 @@ function checkRecharge() {
   }, 1300)
 }
 
+function pickPlan(item: MemberItem) {
+  selectedPlan.value = item
+  getMemberPkg(item.planId)
+}
+
 function isSamePrice(item: MemberPackage) {
   const service = serviceStore.services.get(item.id)
   return service?.price === item.price
@@ -104,7 +93,7 @@ function isSamePrice(item: MemberPackage) {
   <div class="bg-card border p-4 rounded-md space-y-6">
     <div class="space-y-3">
       <h3 class="text-lg font-medium">会员套餐</h3>
-      <div class="grid grid-cols-3 gap-3">
+      <div class="grid grid-cols-2 gap-3">
         <button
           v-for="item in memberList" :key="item.id"
           :class="twMerge(
@@ -112,16 +101,10 @@ function isSamePrice(item: MemberPackage) {
             'h-20 rounded-md bg-card border transition-all',
             selectedPlan?.id === item.id && 'ring-2 ring-primary bg-primary/10',
           )"
-          @click="selectedPlan = item"
+          @click="pickPlan(item)"
         >
-          <div class="text-lg font-medium">{{ item.label }}</div>
-          <div class="mt-1 text-lg text-primary">{{ item.amount }}元</div>
-          <span 
-            v-if="+item.saveAmount > 0" 
-            class="absolute -top-2 -right-2 px-2 py-0.5 text-xs bg-rose-500 text-white rounded-full"
-          >
-            省{{ item.saveAmount }}元
-          </span>
+          <div class="text-base font-medium">{{ item.shopName }}</div>
+          <div class="mt-1 text-lg text-primary">{{ item.price }}元</div>
         </button>
       </div>
     </div>

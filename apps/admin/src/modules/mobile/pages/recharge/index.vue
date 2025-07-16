@@ -33,10 +33,11 @@ provide(RECHARGE_STORE, store)
 
 const route = useRoute()
 const router = useRouter()
-
 const loading = ref(false)
 
 const queryHash = computed(() => hash(route.query))
+const packageStore = usePackageStore()
+await packageStore.getList()
 
 watch(
   [

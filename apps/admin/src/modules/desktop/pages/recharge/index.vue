@@ -40,6 +40,8 @@ const ids = ref<number[]>([])
 const loading = ref(false)
 
 const queryHash = computed(() => hash(route.query))
+const packageStore = usePackageStore()
+await packageStore.getList()
 
 watch(
   [

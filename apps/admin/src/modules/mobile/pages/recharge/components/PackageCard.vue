@@ -16,6 +16,9 @@ const props = defineProps<TheProps>()
 const store = inject(PACKAGE_STORE)!
 const item = props.item
 
+const levelStore = useLevelStore()
+const level = levelStore.levelMap.get(item.planId)
+
 function handleClick() {
   const price = +item.price
 
@@ -40,7 +43,7 @@ async function handleDelete() {
 <template>
   <div class="bg-card border rounded-lg" @click="handleClick">
     <div class="flex items-center justify-between p-3">
-      <h3 class="text-lg font-bold">{{ item.id }} | {{ item.shopName }}</h3>
+      <h3 class="text-lg">{{ item.id }}|{{ item.shopName }}</h3>
       <div class="flex items-center space-x-2">
         <XTag :label="`￥${item.price}`" color="warning" />
         <XTag :label="`${item.month}个月`" />
@@ -48,7 +51,9 @@ async function handleDelete() {
     </div>
 
     <div class="flex items-center justify-between px-3 py-2 border-t border-dashed">
-      <span class="text-sm text-muted-foreground">{{ item.createTime }}</span>
+      <span class="text-sm text-muted-foreground">
+        {{ level ? level.pricePlan : '未知等级' }}
+      </span>
       <XButton
         label="删除"
         icon="lucide:trash-2"

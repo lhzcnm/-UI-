@@ -12,7 +12,7 @@ import { UPSTREAM_STORE } from './utils'
 import { toast } from 'vue-sonner'
 
 const store: UpstreamStore = reactive({
-  upstreams: [],
+  upstreams: await getUpstreams(),
 
   formBase: zUpstreamForm.parse({}),
   visibleBase: false,
@@ -45,12 +45,6 @@ const displayUpstreams = computed(() => {
 
   return list
 })
-
-await getList()
-async function getList() {
-  const data = await getUpstreams()
-  store.upstreams = data
-}
 
 function openCreate() {
   store.formBase = zUpstreamForm.parse({})

@@ -8,7 +8,7 @@ import { columns } from './utils/column'
 import { INTERCEPT_STORE } from './utils'
 
 const store: InterceptStore = reactive({
-  intercepts: [],
+  intercepts: await getIntercepts(),
 
   formBase: zInterceptForm.parse({}),
   visibleBase: false,
@@ -17,12 +17,6 @@ const store: InterceptStore = reactive({
 })
 
 provide(INTERCEPT_STORE, store)
-
-await getList()
-async function getList() {
-  const data = await getIntercepts()
-  store.intercepts = data
-}
 
 function openCreate() {
   store.formBase = zInterceptForm.parse({})

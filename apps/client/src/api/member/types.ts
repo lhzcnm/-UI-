@@ -2,11 +2,12 @@ import type { R } from '@3un/shared'
 
 export interface MemberApi {
   memberList(): R<MemberItem[]>
-  memberPkg(): R<MemberPackage[]>
+  memberPkg(id: number): R<MemberPackage[]>
 }
 
 export interface MemberItem {
   id: number
+  planId: number
   shopName: string
   price: number
   month: number

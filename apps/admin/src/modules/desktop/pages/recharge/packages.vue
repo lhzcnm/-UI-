@@ -7,8 +7,11 @@ import { columns } from './utils/columnPackage'
 import { PACKAGE_STORE } from './utils'
 import { getRechargePackages } from '@/api/recharge'
 
+const levelStore = useLevelStore()
+await levelStore.getList()
+
 const store: PackageStore = reactive({
-  packages: [],
+  packages: await getRechargePackages(),
   
   formBase: zRechargePackageForm.parse({}),
   visibleBase: false,
@@ -18,11 +21,6 @@ const store: PackageStore = reactive({
 })
 
 provide(PACKAGE_STORE, store)
-
-await getList()
-async function getList() {
-  store.packages = await getRechargePackages()
-}
 
 function openCreate() {
   store.formBase = zRechargePackageForm.parse({})

@@ -59,6 +59,7 @@ declare global {
   const useLevelStore: typeof import('./src/stores/level')['useLevelStore']
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue')['useModel']
+  const usePackageStore: typeof import('./src/stores/package')['usePackageStore']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
   const useServiceStore: typeof import('./src/stores/service')['useServiceStore']

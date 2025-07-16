@@ -4,6 +4,7 @@ import { zRechargePackageForm } from '@/inters/recharge'
 
 const form = defineModel<RechargePackageForm>({ required: true })
 const formRef = useTemplateRef('formRef')
+const levelStore = useLevelStore()
 
 defineExpose({
   validateForm: () => formRef.value!.validateForm(),
@@ -13,6 +14,15 @@ defineExpose({
 
 <template>
   <XForm ref="formRef" :model="form" :schema="zRechargePackageForm">
+    <XFormItem label="所属等级">
+      <XNativeSelect
+        v-model="form.planId"
+        :options="levelStore.levels"
+        value-key="pricePlanId"
+        label-key="pricePlan"
+      />
+    </XFormItem>
+
     <XFormItem field="shopName" label="商品名称">
       <XInput v-model="form.shopName" placeholder="请输入商品名称" />
     </XFormItem>

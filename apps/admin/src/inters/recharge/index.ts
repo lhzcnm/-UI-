@@ -1,5 +1,5 @@
 import type { IList, IPage } from '@3un/shared'
-import { PAYMENT_METHOD, PAYMENT_STATUS, SHOP_NAME } from '@3un/utils'
+import { PAYMENT_METHOD, PAYMENT_STATUS } from '@3un/utils'
 import { z } from 'zod/v4'
 
 export * from './package'
@@ -23,7 +23,7 @@ export const zRecharge = z.object({
   // codeId: z.string().default(''),
   byAdmin: z.boolean().default(false),
   invoiceTime: z.string().default(''),
-  shopId: z.enum(SHOP_NAME).default(SHOP_NAME.CREDIT),
+  shopId: z.number().default(0),
 })
 
 export type Recharge = z.infer<typeof zRecharge>
@@ -34,7 +34,6 @@ export const zRechargeSearchForm = z.object({
   transactionId: z.string().optional(),
   paymentMethod: z.enum(PAYMENT_METHOD).optional(),
   paymentStatus: z.enum(PAYMENT_STATUS).optional(),
-  shopId: z.enum(SHOP_NAME).optional(),
   byAdmin: z.boolean().optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),

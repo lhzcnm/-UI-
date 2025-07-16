@@ -1,4 +1,4 @@
-import { PAYMENT_METHOD_MAP, PAYMENT_STATUS_MAP, SHOP_NAME_MAP } from '@3un/utils'
+import { PAYMENT_METHOD_MAP, PAYMENT_STATUS_MAP } from '@3un/utils'
 import { XTag, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 
@@ -62,9 +62,11 @@ export const columns: XColDef<Recharge> = [
   {
     key: 'shopId',
     title: '充值类型',
-    width: 108,
+    width: 128,
     render: (value) => {
-      return SHOP_NAME_MAP[value].label
+      const packageStore = usePackageStore()
+      const pkg = packageStore.packageMap.get(value)
+      return pkg ? pkg.shopName : '积分充值'
     },
   },
   {

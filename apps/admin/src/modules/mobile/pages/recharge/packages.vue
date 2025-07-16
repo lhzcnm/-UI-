@@ -8,6 +8,9 @@ import { getRechargePackages } from '@/api/recharge'
 import type { PackageStore } from './utils'
 import { PACKAGE_STORE } from './utils'
 
+const levelStore = useLevelStore()
+await levelStore.getList()
+
 const store: PackageStore = reactive({
   packages: await getRechargePackages(),
   

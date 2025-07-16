@@ -33,7 +33,7 @@ async function handleUpdate() {
 <template>
   <FormModal
     v-model="store.visibleBase"
-    class="h-[60%]"
+    class="h-[70%]"
     :index="store.index"
     :update="handleUpdate"
     :create="handleCreate"
