@@ -1,7 +1,10 @@
+<script setup lang="ts">
+const mode = import.meta.env.VITE_APP_MODE
+</script>
+
 <template>
-  <svg viewBox="0 0 30 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M7.2 1.368L4.308 6l2.94 5.352h-.672l-2.616-4.8-2.988 4.8H.3l6.18-9.84H1.716L.948 4.284h-.6L1.536.024h.6l-.252.912H7.2v.432zm7.74 4.14H7.728v-.576h4.944L14.064.084h.6l-1.38 4.848h1.656v.576zM9.516 4.32h-.6L7.92.084h.588L9.516 4.32zm2.256 0h-.588l-.84-4.236h.6l.828 4.236zM9.816 6.588l-1.56 5.16h-.612l1.56-5.16h.612zm5.016 5.16h-.6l-1.524-5.16h.612l1.512 5.16zM22.26.78l-6.132.228-.06 1.764h6.348v.588h-6.36l-.252 8.172h-.588L15.564.456 22.26.204V.78zm-.144 10.74h-4.992V4.908h4.992v6.612zm-.576-.576v-5.46H17.7v5.46h3.84zm8.376-6.216h-7.392l1.248-4.56h.6L23.28 4.152h5.916l-.66-3.12h.6l.78 3.696zm-.276 6.732h-6.744V5.808h6.744v5.652zm-.588-.576V6.396h-5.58v4.488h5.58z"
-      fill="currentColor" />
-  </svg>
+  <div class="flex items-center p-5">
+    <img class="w-5 h-5 mr-2" :src="`/${mode}/favicon.png`" alt="">
+    <img class="w-32" :src="`/${mode}/logo.svg`" alt="">
+  </div>
 </template>

@@ -18,7 +18,7 @@ const selectedPayment = ref<RechargeMethod>('wxpay')
 
 const memberPkg = ref<MemberPackage[]>([])
 const memberList = ref<MemberItem[]>([])
-const pkgTotalAmount = ref(0)
+const pkgTotalAmount = ref<string>('')
 
 const store = inject(RECHARGE_STORE)!
 
@@ -39,7 +39,7 @@ async function getMemberPkg(id: number) {
     return total + item.price * item.freeCount
   }, 0)
 
-  pkgTotalAmount.value = total * 30
+  pkgTotalAmount.value = (total * 30).toFixed(2)
   memberPkg.value = data
 }
 
