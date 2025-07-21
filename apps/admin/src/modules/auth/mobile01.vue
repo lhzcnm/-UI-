@@ -19,6 +19,7 @@ interface LoginMethodOption {
 type LoginMethod = keyof LoginMethodOptions
 const loginMethod = ref<LoginMethod>('password')
 const isAccountLogin = computed(() => loginMethod.value === 'password')
+const mode = import.meta.env.VITE_APP_MODE
 
 const loginBg = randomLoginBg()
 const loginMethods: LoginMethodOptions = {
@@ -55,7 +56,9 @@ function toggleLoginMethod() {
           <Icon icon="lucide:cog" class="size-8 text-white animate-spin-slow" />
         </div>
       </div>
-      <TheLogo height="2rem" />
+      <div class="flex justify-center">
+        <img class="w-40" :src="`/${mode}/logo.svg`"alt="">
+      </div>
     </div>
 
     <div class="flex-1 flex flex-col px-4">
