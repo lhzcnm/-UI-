@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSystemStore } from '@/stores/system'
 import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
 
@@ -9,6 +10,9 @@ const visibility = useDocumentVisibility()
 
 const iStore = useSettingStore()
 const uStore = useUserStore()
+const systemStore = useSystemStore()
+
+const isLogout = ref(false)
 
 await Promise.all([
   iStore.getSettings(),
@@ -39,6 +43,7 @@ const menus = [
     hide: !iStore.settings.enableTricket,
   },
   { label: '会员中心', path: '/profile', icon: 'iconoir:user' },
+  { label: '退出登录', path: '/logout', icon: 'iconoir:log-out'}
 ]
 
 watch(visibility, (cur, prev) => {
@@ -46,12 +51,19 @@ watch(visibility, (cur, prev) => {
     uStore.getInfo()
   }
 })
+
+function handleLogout() {
+  isLogout.value = false
+  uStore.logout()
+}
 </script>
 
 <template>
   <DesktopHeader />
   <div class="flex h-container">
-    <TheSidebar :menus />
+    <Transition name="slide-left">
+      <TheSidebar v-model="isLogout" v-if="systemStore.showSidebar" :menus />
+    </Transition>
 
     <RouterView v-slot="{ Component }" :key="route.path">
       <main v-if="Component" class="flex-1 overflow-y-auto">
@@ -67,4 +79,12 @@ watch(visibility, (cur, prev) => {
       </main>
     </RouterView>
   </div>
+  <XDialog v-model="isLogout" title="提示" text="是否确认退出登录">
+    <template #footer>
+      <div class="flex justify-between">
+        <XButton color="primary" variant="outline" label="取消" @click="isLogout = false" />
+        <XButton color="primary" label="确认" @click="handleLogout" />
+      </div>
+    </template>
+  </XDialog>
 </template>

@@ -57,6 +57,16 @@
   transform: translateX(100%);
 }
 
+/* 左侧滑入 */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
 /* 垂直滑动 */
 .slide-vertical-enter-active,
 .slide-vertical-leave-active {
