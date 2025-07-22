@@ -49,7 +49,7 @@ function handle(path: string) {
           'cursor-pointer transition-all duration-200',
           'hover:bg-primary/20 hover:text-primary',
           currentPath === menu.path && 'bg-primary/20 dark:bg-primary/30 text-primary',
-          menu.path.includes('logout') && 'mt-auto mb-12 border border-danger hover:bg-danger/20 hover:text-danger'
+          menu.path.includes('logout') && 'mt-auto hover:bg-danger/20 hover:text-danger'
         )"
         @click="handle(menu.path)"
       >

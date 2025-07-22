@@ -79,11 +79,35 @@ function handleLogout() {
       </main>
     </RouterView>
   </div>
-  <XDialog v-model="isLogout" title="提示" text="是否确认退出登录">
+  <XDialog
+    uiRoot="w-64 p-6 rounded-2xl shadow-xl"
+    :closeBtn="false"
+    :maskClosable="false"
+    v-model="isLogout"
+  >
+    <template #header>
+      <h2 class="text-lg font-semibold text-center text-gray-900 mb-2">提示</h2>
+    </template>
+
+    <template #default>
+      <p class="text-sm text-center text-gray-600 mb-6">是否确认退出登录</p>
+    </template>
+
     <template #footer>
-      <div class="flex justify-between">
-        <XButton color="primary" variant="outline" label="取消" @click="isLogout = false" />
-        <XButton color="primary" label="确认" @click="handleLogout" />
+      <div class="flex justify-around gap-4">
+        <XButton
+          class="w-16 !h-8 text-sm rounded-md"
+          color="primary"
+          variant="outline"
+          label="取消"
+          @click="isLogout = false"
+        />
+        <XButton
+          class="w-16 !h-8 text-sm rounded-md"
+          color="primary"
+          label="确认"
+          @click="handleLogout"
+        />
       </div>
     </template>
   </XDialog>

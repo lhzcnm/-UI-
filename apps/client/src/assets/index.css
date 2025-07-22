@@ -11,7 +11,7 @@
 @layer base {
   :root {
     --siderbar-w: 12rem;
-    --header-h: 4rem;
+    --header-h: 3.2rem;
 
     --mobile-header-h: 3.75rem;
     --mobile-footer-h: 3.5rem;

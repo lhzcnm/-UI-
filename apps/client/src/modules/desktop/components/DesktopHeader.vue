@@ -17,7 +17,7 @@ const foldIcon = computed(() => {
     <div class="flex items-center justify-between h-full border-b border-dashed">
       <div class="flex items-center">
         <TheLogo />
-        <Icon class="ml-16" width="28" :icon="foldIcon" @click="systemStore.toggleSidebar" />
+        <Icon class="ml-16 text-zinc-500 cursor-pointer" width="24" :icon="foldIcon" @click="systemStore.toggleSidebar" />
       </div>
       <nav class="flex items-center space-x-4">
         <RouterLink
