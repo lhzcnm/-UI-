@@ -49,7 +49,8 @@ const qrcode = computed(() => {
         <div class="flex flex-wrap items-start gap-4 mt-4">
           <ApiKeyCard />
           <BulkApiCard />
-          <AppCard v-if="mode === 'SanHe'" />
+          <!-- <AppCard v-if="mode === 'SanHe'" /> -->
+          <AppCard />
         </div>
       </section>
     </div>
