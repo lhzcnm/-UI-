@@ -29,7 +29,7 @@ async function handleOpenBulkCheckApi() {
 </script>
 
 <template>
-  <div class="border rounded-lg p-6 bg-card">
+  <div class="border rounded-lg p-6 mr-6 bg-card">
     <h3 class="text-lg mb-4">批量查询 API</h3>
 
     <div v-if="store.info.bulkCheckApi" class="space-y-2">

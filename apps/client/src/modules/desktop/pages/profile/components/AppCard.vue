@@ -7,7 +7,7 @@ function download(platform: string) {
 </script>
 
 <template>
-  <div class="border rounded-lg p-6 bg-card">
+  <div class="border rounded-lg p-6 mr-6 bg-card">
     <h3 class="text-lg mb-4">桌面应用</h3>
     <div class="space-x-2 whitespace-nowrap">
       <XButton

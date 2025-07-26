@@ -316,7 +316,7 @@ async function handleMustRead() {
   const result = await xconfirm({
     title: '服务说明',
     text: mustRead.value || '',
-    confirmText: '朕已知晓',
+    confirmText: '确认',
     cancelText: undefined,
   })
 

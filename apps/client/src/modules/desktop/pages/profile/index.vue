@@ -4,6 +4,7 @@ import DataCard from './components/DataCard.vue'
 import BulkApiCard from './components/BulkApiCard.vue'
 import ApiKeyCard from './components/ApiKeyCard.vue'
 import AppCard from './components/AppCard.vue'
+import AppCardNew from './components/AppCardNew.vue'
 
 const store = useUserStore()
 await store.getInfo(true)
@@ -12,7 +13,7 @@ const chatVisible = ref(false)
 const mode = import.meta.env.VITE_APP_MODE
 
 const qrcode = computed(() => {
-  const mode = import.meta.env.VITE_APP_MODE
+  // const mode = import.meta.env.VITE_APP_MODE
   return `/${mode}/customer_service_qrcode.jpg`
 })
 </script>
@@ -46,11 +47,15 @@ const qrcode = computed(() => {
       <FormCard />
       <section class="flex-1">
         <DataCard />
-        <div class="flex flex-wrap items-start gap-4 mt-4">
-          <ApiKeyCard />
-          <BulkApiCard />
-          <!-- <AppCard v-if="mode === 'SanHe'" /> -->
-          <AppCard />
+        <div class="flex flex-wrap flex-col items-start gap-2 mt-4">
+          <div class="flex">
+            <ApiKeyCard />
+            <BulkApiCard />
+          </div>
+          <div class="flex">
+            <AppCard v-if="mode === 'SanHe'" />
+            <AppCardNew />
+          </div>
         </div>
       </section>
     </div>
