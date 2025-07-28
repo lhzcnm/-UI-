@@ -23,20 +23,8 @@ function download(platform: number) {
         variant="outline"
         @click="download(46)"
       />
-
-      <!-- <XButton
-        icon="fa-brands:apple" label="macOS Arm 下载"
-        variant="outline" color="danger"
-        @click="download(47)"
-      />
-
-      <XButton
-        icon="fa-brands:apple" label="macOS Intel 下载"
-        variant="outline" color="danger"
-        @click="download(48)"
-      /> -->
       <XButtonSplit
-        variant="outline" icon="fa-brands:apple"
+        variant="outline" icon="fa-brands:apple" :openClick="true"
         class="bg-danger"
         label="MacOS下载" :options="options"
       />
