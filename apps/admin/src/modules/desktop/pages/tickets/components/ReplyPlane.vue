@@ -9,6 +9,8 @@ import { TICKET_STORE } from '../utils'
 
 const store = inject(TICKET_STORE)!
 
+const router = useRouter()
+
 const msg = ref('')
 const currentTicket = ref<Ticket>()
 const isSolved = ref(false)
@@ -81,6 +83,13 @@ async function handleDelete() {
     store.index = undefined
   }
 }
+
+function handleClick(id: number | null) {
+  if(!id) {
+    const userId = store.tickets.list[store.index!].userId
+    router.push(`/users?uid=${userId}`)
+  }
+}
 </script>
 
 <template>
@@ -119,8 +128,9 @@ async function handleDelete() {
             <img 
               :src="getAvatar(reply.replyId)"
               class="size-8 rounded-full object-cover flex-shrink-0"
+              :class="{ 'cursor-pointer': !reply.replyId }"
               :alt="reply.replyId ? '客服' : '用户'"
-              draggable="false"
+              draggable="false" @click="handleClick(reply.replyId)"
             />
             <div
               :class="twMerge(
