@@ -76,10 +76,10 @@ function handleVerify() {
     return
   }
 
-  window.confirm('确定开启验证吗？') && (() => {
+  window.confirm('是否确认反馈该订单?') && (() => {
     orderApi.verify(id).then(() => {
       order.value.verify = ORDER_VERIFY.REPLIED
-      toast.success('已提交验证')
+      toast.success('已提交反馈')
     })
   })()
 }
@@ -180,7 +180,7 @@ function handleCopy() {
             @click="handleVerify"
           >
             <Icon icon="lucide:info" class="size-4" />
-            <span class="text-xs">开启验证</span>
+            <span class="text-xs">反馈订单</span>
           </button>
 
           <button
