@@ -72,7 +72,7 @@ function handleVerify() {
   const daysDiff = diff / (24 * 3600 * 1000)
 
   if (daysDiff > 3) {
-    toast.info('订单超过 3 天，不支持验证结果')
+    toast.info('订单超过 3 天，不支持订单反馈')
     return
   }
 
