@@ -1,1 +1,1 @@
-export type Action = 'account' | 'wechat' | 'phone' | 'email' | 'password'
+export type Action = 'account' | 'wechat' | 'phone' | 'email' | 'password' | 'qrcode'

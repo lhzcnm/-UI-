@@ -4,6 +4,8 @@ import { ua } from '@3un/utils'
 
 import type { Action } from '../types'
 
+import InviteCode from './InviteCode.vue'
+
 const visibleForm = ref(false)
 const activeForm = ref<Action | null>(null)
 
@@ -33,6 +35,11 @@ const settingOptions = [
     icon: 'hugeicons:wechat',
     action: 'wechat',
   },
+  {
+    label: '推荐码',
+    icon: 'lucide:qr-code',
+    action: 'qrcode',
+  },
 ].filter(item => !!item)
 
 const activeTitle = computed(() => {
@@ -42,6 +49,7 @@ const activeTitle = computed(() => {
     phone: '修改手机号',
     email: '修改邮箱',
     wechat: '微信绑定',
+    qrcode: '生成推荐码'
   }
 
   return options[activeForm.value as Action]
@@ -97,9 +105,10 @@ function closeForm() {
       class="p-3"
     />
     <PasswordForm
-      v-else
+      v-else-if="activeForm === 'password'"
       :on-close="closeForm"
       class="p-3 space-y-3"
     />
+    <InviteCode v-else-if="activeForm === 'qrcode'" />
   </SlideRight>
 </template>
