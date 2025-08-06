@@ -6,16 +6,42 @@ import ApiKeyCard from './components/ApiKeyCard.vue'
 import AppCard from './components/AppCard.vue'
 import AppCardNew from './components/AppCardNew.vue'
 
+import axios from 'axios'
+
 const store = useUserStore()
 await store.getInfo(true)
 
 const chatVisible = ref(false)
+const inviteVisible = ref(false)
+const inviteImg = ref('')
+
 const mode = import.meta.env.VITE_APP_MODE
+const baseUrl = import.meta.env.VITE_API_URL
 
 const qrcode = computed(() => {
-  // const mode = import.meta.env.VITE_APP_MODE
   return `/${mode}/customer_service_qrcode.jpg`
 })
+
+async function generInviteCode() {
+  const { data } = await axios.get(
+    `${baseUrl}/wx/invite/${store.info.openId}`,
+    {
+      responseType: 'blob',
+      headers: {
+        Authorization: localStorage.getItem('access_token')
+      }
+    })
+
+  inviteImg.value = URL.createObjectURL(data)
+}
+
+onBeforeUnmount(() => {
+  URL.revokeObjectURL(inviteImg.value)
+})
+
+await Promise.all([
+  store.getInfo(true),
+])
 </script>
 
 <template>
@@ -24,6 +50,17 @@ const qrcode = computed(() => {
       <h2 class="text-xl">个人中心</h2>
 
       <div class="flex items-center space-x-2">
+        <XPopover
+          v-model="inviteVisible" trigger="click"
+          ui-content="p-4" closeOnClickOutside
+        >
+          <template #trigger>
+            <XButton icon="lucide:qr-code" label="推荐码" @click="generInviteCode" />
+          </template>
+          <div class="w-64 border rounded overflow-hidden">
+            <img v-if="inviteImg" :src="inviteImg" alt="推荐码" draggable="false" class="size-full">
+          </div>
+        </XPopover>
         <XPopover
           v-model="chatVisible" trigger="hover"
           ui-content="p-4"
