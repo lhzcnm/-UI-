@@ -4,7 +4,7 @@ import type { R } from '@3un/shared'
 export interface WxApi {
   accessToken(code: string): R<string>
   config(url: string): R<ConfigOption>
-  invite(openId: string): R<Blob>
+  invite(openId: string): R<string>
   ocr(data: FormData): R<string>
   scanCode(params: ScanCodeParams): R<string>
   submit(params: WxSubmitParams): R<string>
