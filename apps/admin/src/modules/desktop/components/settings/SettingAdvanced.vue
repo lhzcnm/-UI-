@@ -23,6 +23,7 @@ const form = reactive({
   excludedWords: configs['filter:excluded_words']
     ? JSON.parse(configs['filter:excluded_words']).join('|')
     : '',
+  invite: settings.invite,
 })
 
 const iStore = useSystemStore()
@@ -37,6 +38,7 @@ function handleSubmit() {
       { name: 'enableTricket', status: form.enableTricket },
       { name: 'minRechargeAmount', content: form.minRechargeAmount.toString() },
       { name: 'maxRechargeAmount', content: form.maxRechargeAmount.toString() },
+      { name: 'invite', content: form.invite }
     ]),
     updateConfig([
       { key: 'invite:point', value: form.invitePonit.toString() },
@@ -80,6 +82,14 @@ function handleSubmit() {
       >
         <XInputNumber v-model="form.invitePonit" />
       </FormField>
+
+      <FormField
+        label="推荐码文本"
+        desc="推荐码生成公众号发送文本"
+        variant="vertical"
+      >
+        <XTextarea class="h-32" v-model="form.invite" />
+      </FormField>
   
       <FormField
         label="最小充值金额"
@@ -115,7 +125,7 @@ function handleSubmit() {
           rows="8"
         />
       </FormField>
-  
+
       <FormField
         label="允许网页注册"
         desc="关闭后，将不允许用户通过网页注册"

@@ -35,6 +35,8 @@ export interface Settings {
   paymentInfo: string
   // API 使用说明
   apiUsageInfo: string
+  // 邀请码生成文本
+  invite: string
 
   // 最大充值金额
   maxRechargeAmount: number
