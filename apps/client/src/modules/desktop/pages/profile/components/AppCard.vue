@@ -8,7 +8,7 @@ function download(platform: string) {
 
 <template>
   <div class="border rounded-lg p-6 mr-6 bg-card">
-    <h3 class="text-lg mb-4">桌面应用</h3>
+    <h3 class="text-lg mb-4">批量查询助手</h3>
     <div class="space-x-2 whitespace-nowrap">
       <XButton
         icon="fa-brands:windows" label="Windows 下载"

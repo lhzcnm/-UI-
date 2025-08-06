@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const mode = import.meta.env.VITE_APP_MODE
+// const mode = import.meta.env.VITE_APP_MODE
 const options = [
   { label: 'ARM架构', command: () => download(47) },
   { label: 'Intel架构', command: () => download(48) },
@@ -14,8 +14,8 @@ function download(platform: number) {
 <template>
   <div class="border rounded-lg p-6 mr-6 bg-card">
     <h3 class="text-lg mb-4">
-      桌面应用 
-      <span class="text-danger font-bold" v-if="mode === 'SanHe'"> - 新</span>
+      三和助手 - 标签|设备信息|批量查询
+      <!-- <span class="text-danger font-bold" v-if="mode === 'SanHe'"> - 新</span> -->
     </h3>
     <div class="space-x-2 whitespace-nowrap">
       <XButton
