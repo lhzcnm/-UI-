@@ -12,6 +12,7 @@ const list = [
   { mode: 'IFunlock', obfuscator: true },
   { mode: 'JiuXing', obfuscator: true },
   { mode: 'U4GSM', obfuscator: true },
+  { mode: 'Usimlte', obfuscator: true },
 ]
 
 await Promise.all(list.map(run))
