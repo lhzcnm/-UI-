@@ -10,6 +10,8 @@ export interface OrderApi {
   submitExport(data: OrderSubmitExportParams): R<string>
 
   verify(id: number): R<void>
+
+  printOrderResult(data: string[]): R<ArrayBuffer>
 }
 
 export interface Order {

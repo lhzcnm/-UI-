@@ -9,6 +9,7 @@ import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { columns } from './utils/columns'
 import { orderApi } from '@/api/orders'
 import { toast } from 'vue-sonner'
+import axios from 'axios'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -18,6 +19,8 @@ const limit = ref(20)
 
 const selectRows = ref<string[]>([])
 const { copy } = useClipboard({ legacy: true })
+
+const baseUrl = import.meta.env.VITE_API_URL
 
 const store: HistoryStore = reactive({
   orders: form.orders,
@@ -66,6 +69,62 @@ function handleCopy() {
   copy(selectRows.value.join('\n'))
   toast.success('已复制到剪贴板')
 }
+
+async function handlePrint() {
+  const params: string[] = []
+  params.length = 0
+  
+  if(selectRows.value.length === 0) {
+    toast.warning('请选择订单后重试')
+    return
+  }
+
+  for(const index of selectRows.value) {
+    const filters = store.orders.list.filter(item => item.imei === index).map(item => item.result)
+    params.push(...filters)
+  }
+
+  if(params.length === 0) {
+    toast.warning('您选择订单数量为0, 无法操作')
+    return
+  }
+
+  try {
+    const { data } = await axios.post(`${baseUrl}/order/print`, params, {
+      headers: {
+        'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
+      },
+      'responseType': 'arraybuffer',
+    })
+  
+    const blob = new Blob([data], { type: 'application/pdf' })
+    const pdfUrl = URL.createObjectURL(blob)
+    handleOpenWindow(pdfUrl)
+
+  } catch(e) {
+    console.log(e)
+  }
+
+}
+
+function handleOpenWindow(url: string) {
+  const openWindow = window.open(url, '_blank')
+    openWindow!.onload = () => {
+      try {
+        // 添加延迟确保PDF渲染完成
+        setTimeout(() => {
+          openWindow!.print()
+          // 打印后释放URL
+          openWindow!.onbeforeunload = () => {
+            URL.revokeObjectURL(url)
+          }
+        }, 1000)
+      } catch (err) {
+        console.error('打印失败:', err)
+        URL.revokeObjectURL(url)
+      }
+    }
+}
 </script>
 
 <template>
@@ -74,6 +133,7 @@ function handleCopy() {
       <div class="space-x-2 whitespace-nowrap">
         <XButton label="搜索" @click="openSearch" />
         <XButton color="success" label="导出" @click="openExport" />
+        <XButton color="warning" label="打印结果" @click="handlePrint" />
         <XButton variant="soft" label="复制 IMEI" @click="handleCopy" />
       </div>
 
