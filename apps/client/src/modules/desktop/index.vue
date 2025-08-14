@@ -5,6 +5,7 @@ import TheSidebar from './components/TheSidebar.vue'
 
 import { useDocumentVisibility } from '@vueuse/core'
 import { generateMenu } from '@/utils/menu'
+import { ua } from '@3un/utils'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -59,11 +60,13 @@ function handleLogout() {
 }
 
 onMounted(() => {
-  document.addEventListener('contextmenu', (e) => {
-    e.preventDefault()
-    // generate Rclick menu
-    generateMenu(e)
-  })
+  if(ua.browser === 'Unknown') {
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+      // generate Rclick menu
+      generateMenu(e)
+    })
+  }
 })
 </script>
 
