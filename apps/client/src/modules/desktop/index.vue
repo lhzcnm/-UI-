@@ -4,6 +4,7 @@ import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
 
 import { useDocumentVisibility } from '@vueuse/core'
+import { generateMenu } from '@/utils/menu'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -56,6 +57,14 @@ function handleLogout() {
   isLogout.value = false
   uStore.logout()
 }
+
+onMounted(() => {
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+    // generate Rclick menu
+    generateMenu(e)
+  })
+})
 </script>
 
 <template>
