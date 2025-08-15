@@ -4,8 +4,7 @@ import { twJoin } from 'tailwind-merge'
 
 const route = useRoute()
 const iStore = useSystemStore()
-const rootRef = useTemplateRef<HTMLElement>('root')
-const { isFullscreen, toggle } = useFullscreen(rootRef)
+const { isFullscreen, toggle } = useFullscreen(document.documentElement)
 
 const serviceStore = useServiceStore()
 const levelStore = useLevelStore()
