@@ -11,7 +11,7 @@ export const getRecharges: RechargeListFn = async (body) => {
 
 type RechargeUpdateFn = (params: RechargeUpdateParams) => Promise<void>
 export const updateRecharge: RechargeUpdateFn = async (params) => {
-  await http.put('/payment/edit', { params })
+  await http.put('/payment/edit', params )
 }
 
 type RechargeDeleteFn = (data: number[]) => Promise<void>
