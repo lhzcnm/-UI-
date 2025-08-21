@@ -43,6 +43,10 @@ const queryHash = computed(() => hash(route.query))
 const packageStore = usePackageStore()
 await packageStore.getList()
 
+const isAdmin = computed(() => {
+  return route.query.q === 'admin'
+})
+
 watch(
   [
     () => store.page,
@@ -54,6 +58,7 @@ watch(
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
+      byAdmin: (!isAdmin.value && store.formSearch.paymentMethod === 5) ? true : store.formSearch.byAdmin
     })
   },
 )
