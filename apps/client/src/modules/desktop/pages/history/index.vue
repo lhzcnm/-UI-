@@ -7,9 +7,10 @@ import { useClipboard } from '@vueuse/core'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { columns } from './utils/columns'
-import { orderApi } from '@/api/orders'
+import { orderApi, type GeneratePictureParms } from '@/api/orders'
 import { toast } from 'vue-sonner'
 import axios from 'axios'
+import ImgOrder from './components/ImgOrder.vue'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -27,8 +28,11 @@ const store: HistoryStore = reactive({
   searchForm: { ...form.search },
   exportForm: { ...form.export },
   visibleSearch: false,
-  visibleExport: false
+  visibleExport: false,
+  visibleOrderImg: false,
 })
+
+const imgUrls = reactive<string[]>([])
 
 provide(HISTORY_STORE, store)
 
@@ -94,7 +98,7 @@ async function handlePrint() {
       headers: {
         'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
       },
-      'responseType': 'arraybuffer',
+      'responseType': 'blob',
     })
   
     const blob = new Blob([data], { type: 'application/pdf' })
@@ -104,7 +108,6 @@ async function handlePrint() {
   } catch(e) {
     console.log(e)
   }
-
 }
 
 function handleOpenWindow(url: string) {
@@ -125,6 +128,51 @@ function handleOpenWindow(url: string) {
       }
     }
 }
+
+function handleGenerate() {
+  imgUrls.length = 0
+
+  if(selectRows.value.length === 0) {
+    toast.warning('请选择订单后重试')
+    return
+  }
+
+  store.visibleOrderImg = true
+  for(let imei of selectRows.value) {
+    const order = store.orders.list.find(item => item.imei === imei)!
+    const service = serviceStore.services.get(order.serviceId)!
+  
+    const params: GeneratePictureParms = {
+      codeId: order.id.toString(),
+      code: order.result,
+      codeStatusId: order!.status,
+      imei: order.imei,
+      credits: order.credits.toString(),
+      comments: order.remark,
+      packageTitle: service.title,
+      dataTime: order.createTime,
+    }
+  
+    axios.post(`${baseUrl}/order/picture`, params, {
+      headers: {
+        'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
+      },
+      'responseType': 'blob',
+    }).then(({ data }) => {
+      const blob = new Blob([data], { type: 'image/png' })
+      const url = URL.createObjectURL(blob)
+      imgUrls.push(url)
+    })
+  }
+}
+
+function handleClose() {
+  store.visibleOrderImg = false
+
+  for(const url of imgUrls) {
+    URL.revokeObjectURL(url)
+  }
+}
 </script>
 
 <template>
@@ -135,6 +183,7 @@ function handleOpenWindow(url: string) {
         <XButton color="success" label="导出" @click="openExport" />
         <XButton color="warning" label="打印结果" @click="handlePrint" />
         <XButton variant="soft" label="复制 IMEI" @click="handleCopy" />
+        <XButton variant="soft" color="success" label="生成图片" @click="handleGenerate" />
       </div>
 
       <XPagination
@@ -164,5 +213,6 @@ function handleOpenWindow(url: string) {
 
     <SearchOrder />
     <ExportOrder />
+    <ImgOrder :imgs="imgUrls" @close="handleClose" />
   </div>
 </template>

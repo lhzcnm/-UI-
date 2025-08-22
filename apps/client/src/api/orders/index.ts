@@ -12,6 +12,4 @@ export const orderApi: OrderApi = {
 
   submit: (params) => http.post(`order/submit`, params),
   submitExport: (params) => http.post(`order/submit/export`, params),
-
-  printOrderResult: (params) => http.post(`/order/print`, params, { responseType: 'arraybuffer' })
 }

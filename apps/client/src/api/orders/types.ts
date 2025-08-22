@@ -10,8 +10,6 @@ export interface OrderApi {
   submitExport(data: OrderSubmitExportParams): R<string>
 
   verify(id: number): R<void>
-
-  printOrderResult(data: string[]): R<ArrayBuffer>
 }
 
 export interface Order {
@@ -103,4 +101,15 @@ export interface OrderSubmitExportParams {
   orderIdList: number[]
   imeiList: string[]
   serviceId: number
+}
+
+export interface GeneratePictureParms {
+  code: string,
+  codeStatusId: number,
+  imei: string,
+  credits: string,
+  codeId: string,
+  comments: string,
+  dataTime: string,
+  packageTitle: string,
 }
