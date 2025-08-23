@@ -5,7 +5,10 @@ import { twJoin } from 'tailwind-merge'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { orderApi } from '@/api/orders'
+import { orderApi, type GeneratePictureParms, type Order } from '@/api/orders'
+import ImgOrder from './components/ImgOrder.vue'
+import type { ImgOrderItem } from './types'
+import axios from 'axios'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -21,7 +24,16 @@ const store: HistoryStore = reactive({
   exportForm: { ...form.export },
   visibleSearch: false,
   visibleExport: false,
+  visibleImg: false,
 })
+
+const imgOrder = reactive<ImgOrderItem>({
+  img: '',
+  id: 0,
+  imei: '',
+})
+
+const baseUrl = import.meta.env.VITE_API_URL
 
 provide(HISTORY_STORE, store)
 
@@ -42,6 +54,44 @@ watch(
   },
   { immediate: true },
 )
+
+function handleGenerate(order: Order) {
+  const service = serviceStore.services.get(order.serviceId)!
+
+  const params: GeneratePictureParms = {
+    codeId: order.id.toString(),
+    code: order.result,
+    codeStatusId: order.status,
+    imei: order.imei,
+    credits: order.credits.toString(),
+    comments: order.remark,
+    packageTitle: service.title,
+    dataTime: order.createTime,
+  }
+
+  axios.post(`${baseUrl}/order/picture`, params , {
+    headers: {
+      'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
+    },
+    'responseType': 'blob',
+  }).then(({ data }) => {
+    const blob = new Blob([data], { type: 'image/png' })
+    const url = URL.createObjectURL(blob)
+    imgOrder.id = order.id
+    imgOrder.imei = order.imei
+    imgOrder.img = url
+  }).finally(() => {
+    store.visibleImg = true
+  })
+}
+
+function handleClose() {
+  URL.revokeObjectURL(imgOrder.img)
+}
+
+onUnmounted(() => {
+  handleClose()
+})
 </script>
 
 <template>
@@ -74,11 +124,13 @@ watch(
         <OrderCard
           v-for="order in store.orders.list"
           :key="order.id" :order="order"
+          @generate="handleGenerate"
         />
       </template>
     </section>
 
     <SearchOrder />
     <ExportOrder />
+    <ImgOrder :imgOrder @close="handleClose" />
   </div>
 </template>

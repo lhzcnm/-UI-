@@ -9,6 +9,7 @@ export interface HistoryStore {
   exportForm: OrderExportForm
   visibleSearch: boolean
   visibleExport: boolean
+  visibleImg: boolean
 }
 
 type HistoryStoreKey = InjectionKey<HistoryStore>

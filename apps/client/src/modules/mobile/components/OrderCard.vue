@@ -22,7 +22,12 @@ interface OrderCardProps {
   index?: number
 }
 
+interface OrderCardEmits {
+  generate: [order: Order]
+}
+
 const props = defineProps<OrderCardProps>()
+const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
 
 const order = ref(props.order)
@@ -190,6 +195,15 @@ function handleCopy() {
           >
             <Icon icon="lucide:clipboard-copy" class="size-4" />
             <span class="text-xs">复制</span>
+          </button>
+
+          <button
+            v-if="status.isSuccess"
+            class="inline-flex items-center space-x-0.5 text-muted-foreground"
+            @click="emits('generate', order)"
+          >
+            <Icon icon="lucide:instagram" class="size-4" />
+            <span class="text-xs">生成图片</span>
           </button>
         </div>
       </div>

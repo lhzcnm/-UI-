@@ -11,6 +11,7 @@ import { orderApi, type GeneratePictureParms } from '@/api/orders'
 import { toast } from 'vue-sonner'
 import axios from 'axios'
 import ImgOrder from './components/ImgOrder.vue'
+import type { ImgOrderItem } from './types'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -32,7 +33,7 @@ const store: HistoryStore = reactive({
   visibleOrderImg: false,
 })
 
-const imgUrls = reactive<string[]>([])
+const imgOrders = reactive<ImgOrderItem[]>([])
 
 provide(HISTORY_STORE, store)
 
@@ -130,7 +131,8 @@ function handleOpenWindow(url: string) {
 }
 
 function handleGenerate() {
-  imgUrls.length = 0
+  handleClose()
+  imgOrders.length = 0
 
   if(selectRows.value.length === 0) {
     toast.warning('请选择订单后重试')
@@ -161,7 +163,11 @@ function handleGenerate() {
     }).then(({ data }) => {
       const blob = new Blob([data], { type: 'image/png' })
       const url = URL.createObjectURL(blob)
-      imgUrls.push(url)
+      imgOrders.push({
+        id: order.id,
+        imei: order.imei,
+        img: url,
+      })
     })
   }
 }
@@ -169,10 +175,14 @@ function handleGenerate() {
 function handleClose() {
   store.visibleOrderImg = false
 
-  for(const url of imgUrls) {
-    URL.revokeObjectURL(url)
+  for(const order of imgOrders) {
+    URL.revokeObjectURL(order.img)
   }
 }
+
+onUnmounted(() => {
+  handleClose()
+})
 </script>
 
 <template>
@@ -213,6 +223,6 @@ function handleClose() {
 
     <SearchOrder />
     <ExportOrder />
-    <ImgOrder :imgs="imgUrls" @close="handleClose" />
+    <ImgOrder :imgOrders="imgOrders" @close="handleClose" />
   </div>
 </template>
