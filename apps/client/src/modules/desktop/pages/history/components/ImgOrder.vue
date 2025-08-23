@@ -38,8 +38,8 @@ function handleClick(order: ImgOrderItem) {
           <span>这里空空如也</span>
         </template>
         <template v-else>
-          <div class="border rounded relative" v-for="(order) in imgOrders" :key="order.id" :alt="order.id">
-            <img :src="order.img" :alt="order.img">
+          <div class="border rounded relative" v-for="(order) in imgOrders" :key="order.id">
+            <img :src="order.img" :alt="`${order.id}_${order.imei}`">
             <div class="absolute top-2 right-2 z-20">
               <XButton variant="ghost" label="下载" @click="handleClick(order)" />
             </div>
