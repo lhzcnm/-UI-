@@ -97,6 +97,7 @@ function handleCopy() {
 
 <template>
   <div
+    :id="`order${order.id}`"
     :class="twMerge(
       'bg-card rounded-lg p-4 space-y-4 shadow-sm',
       className,
@@ -128,7 +129,7 @@ function handleCopy() {
     <div class="text-sm">
       <div class="flex items-start">
         <span class="text-muted-foreground shrink-0">处理服务：</span>
-        <span class="font-medium break-all">{{ serviceName }}</span>
+        <span class="font-medium break-all whitespace-nowrap">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">
@@ -167,7 +168,7 @@ function handleCopy() {
     </div>
 
     <div class="text-sm">
-      <div class="flex items-center justify-between mb-1.5">
+      <div class="no-export flex items-center justify-between mb-1.5">
         <span class="text-muted-foreground">订单结果：</span>
         <div class="flex items-center space-x-3">
           <button

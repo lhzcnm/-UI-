@@ -9,6 +9,7 @@ import { orderApi, type GeneratePictureParms, type Order } from '@/api/orders'
 import ImgOrder from './components/ImgOrder.vue'
 import type { ImgOrderItem } from './types'
 import axios from 'axios'
+import * as htmlToImage from 'html-to-image'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -56,27 +57,46 @@ watch(
 )
 
 function handleGenerate(order: Order) {
-  const service = serviceStore.services.get(order.serviceId)!
+  // const service = serviceStore.services.get(order.serviceId)!
 
-  const params: GeneratePictureParms = {
-    codeId: order.id.toString(),
-    code: order.result,
-    codeStatusId: order.status,
-    imei: order.imei,
-    credits: order.credits.toString(),
-    comments: order.remark,
-    packageTitle: service.title,
-    dataTime: order.createTime,
-  }
+  // const params: GeneratePictureParms = {
+  //   codeId: order.id.toString(),
+  //   code: order.result,
+  //   codeStatusId: order.status,
+  //   imei: order.imei,
+  //   credits: order.credits.toString(),
+  //   comments: order.remark,
+  //   packageTitle: service.title,
+  //   dataTime: order.createTime,
+  // }
 
-  axios.post(`${baseUrl}/order/picture`, params , {
-    headers: {
-      'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
-    },
-    'responseType': 'blob',
-  }).then(({ data }) => {
-    const blob = new Blob([data], { type: 'image/png' })
-    const url = URL.createObjectURL(blob)
+  // axios.post(`${baseUrl}/order/picture`, params , {
+  //   headers: {
+  //     'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
+  //   },
+  //   'responseType': 'blob',
+  // }).then(({ data }) => {
+  //   const blob = new Blob([data], { type: 'image/png' })
+  //   const url = URL.createObjectURL(blob)
+  //   imgOrder.id = order.id
+  //   imgOrder.imei = order.imei
+  //   imgOrder.img = url
+  // }).finally(() => {
+  //   store.visibleImg = true
+  // })
+
+  const dom = document.getElementById(`order${order.id}`)!
+
+  htmlToImage.toPng(dom, {
+    cacheBust: true,
+    skipFonts: true,
+    filter: (domNode) => {
+      if(domNode instanceof HTMLElement) {
+        if(domNode.classList.contains('no-export')) return false
+      }
+      return true
+    }
+  }).then((url) => {
     imgOrder.id = order.id
     imgOrder.imei = order.imei
     imgOrder.img = url
@@ -115,7 +135,7 @@ onUnmounted(() => {
       />
     </section>
 
-    <section class="space-y-3 my-3">
+    <section class="mt-2 flex flex-col gap-2">
       <NoMessage
         v-if="store.orders.list.length === 0"
         class="bg-card border rounded-lg p-3"
