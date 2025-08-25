@@ -15,14 +15,12 @@ const store = inject(HISTORY_STORE)!
 
 const { imgOrder } = defineProps<ImgOrderProps>()
 
-// 图片加载状态
 const imageLoaded = ref(false)
 const imageError = ref(false)
 
 function onImageLoad() {
   imageLoaded.value = true
 }
-
 function onImageError() {
   imageError.value = true
 }
@@ -34,25 +32,40 @@ function onImageError() {
     @close="emits('close')"
   >
     <template #default>
-      <div class="p-4 flex flex-col items-center gap-4">
-        <div class="relative group">
-          <img 
-            v-show="imageLoaded"
-            class="border-2 border-border rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-105 object-contain max-w-full max-h-96"
-            :src="imgOrder.img" 
-            :alt="`订单${imgOrder.id} - ${imgOrder.imei}`"
-            @load="onImageLoad"
-            @error="onImageError"
-          />
+      <div class="px-2">
+        <div class="bg-background rounded-xl shadow-md border border-border p-6 max-w-[400px] mx-auto">
+          
+          <div class="text-center border-b border-border pb-2 mb-4">
+            <h2 class="text-lg font-bold">订单凭证</h2>
+            <p class="text-sm">ID: {{ imgOrder.id }} ｜ IMEI: {{ imgOrder.imei }}</p>
+          </div>
+  
+          <div class="relative">
+            <img 
+              v-show="imageLoaded"
+              class="rounded-md border border-border object-contain max-w-full max-h-72 mx-auto"
+              :src="imgOrder.img" 
+              :alt="`订单${imgOrder.id} - ${imgOrder.imei}`"
+              @load="onImageLoad"
+              @error="onImageError"
+            />
+            <p v-if="imageError" class="text-danger text-center">图片加载失败</p>
+          </div>
+  
+          <div class="mt-4 text-center text-xs">
+            <p>生成时间：{{ new Date().toLocaleString() }}</p>
+          </div>
         </div>
-        
-        <a
-          :href="imgOrder.img" 
-          :download="`${imgOrder.id}_${imgOrder.imei}.png`"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200 shadow-md hover:shadow-lg"
-        >
-          <span>下载图片</span>
-        </a>
+  
+        <div class="mt-6 flex justify-center">
+          <a
+            :href="imgOrder.img" 
+            :download="`${imgOrder.id}_${imgOrder.imei}.png`"
+            class="px-5 py-2 bg-primary text-white rounded-md shadow hover:bg-primary-dark transition"
+          >
+            下载图片
+          </a>
+        </div>
       </div>
     </template>
   </SlideRight>

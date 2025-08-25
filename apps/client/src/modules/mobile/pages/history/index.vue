@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
+import OrderExportImg from '@/components/shared/OrderExportImg.vue'
 import { twJoin } from 'tailwind-merge'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { orderApi, type GeneratePictureParms, type Order } from '@/api/orders'
+import { orderApi, type Order } from '@/api/orders'
 import ImgOrder from './components/ImgOrder.vue'
 import type { ImgOrderItem } from './types'
-import axios from 'axios'
 import * as htmlToImage from 'html-to-image'
+import { h, render } from 'vue'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -34,7 +35,7 @@ const imgOrder = reactive<ImgOrderItem>({
   imei: '',
 })
 
-const baseUrl = import.meta.env.VITE_API_URL
+// const baseUrl = import.meta.env.VITE_API_URL
 
 provide(HISTORY_STORE, store)
 
@@ -84,24 +85,36 @@ function handleGenerate(order: Order) {
   // }).finally(() => {
   //   store.visibleImg = true
   // })
+  const container = document.createElement('div')
+  document.body.append(container)
+  container.className = `p-3 fixed opacity-0 pointer-events-none overflow-y-auto`
+
+  const vnode = h(OrderExportImg, {
+    order,
+  })
+
+  render(vnode, container)
 
   const dom = document.getElementById(`order${order.id}`)!
 
-  htmlToImage.toPng(dom, {
+  htmlToImage.toBlob(dom, {
     cacheBust: true,
     skipFonts: true,
-    filter: (domNode) => {
+    filter: (domNode: HTMLElement) => {
       if(domNode instanceof HTMLElement) {
         if(domNode.classList.contains('no-export')) return false
       }
       return true
     }
-  }).then((url) => {
+  }).then((blob: Blob | null) => {
+    const url = URL.createObjectURL(blob!)
     imgOrder.id = order.id
     imgOrder.imei = order.imei
     imgOrder.img = url
   }).finally(() => {
     store.visibleImg = true
+    render(null, container)
+    container.remove()
   })
 }
 

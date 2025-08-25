@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import { toast } from 'vue-sonner'
 import { twMerge, twJoin } from 'tailwind-merge'
-import { useClipboard, useThrottleFn } from '@vueuse/core'
 
 import type { Order } from '@/api/orders'
-import { orderApi } from '@/api/orders'
 import {
   ORDER_STATUS_MAP,
   ORDER_VERIFY_MAP,
   ORDER_STATUS,
-  ORDER_VERIFY,
 } from '@3un/utils'
-import { stripHtml } from '@3un/utils'
 
 interface OrderCardProps {
   order: Order
@@ -22,13 +17,8 @@ interface OrderCardProps {
   index?: number
 }
 
-interface OrderCardEmits {
-  generate: [order: Order]
-}
-
 const props = defineProps<OrderCardProps>()
-const emits = defineEmits<OrderCardEmits>()
-const { isSubmit, class: className } = props
+const { isSubmit } = props
 
 const order = ref(props.order)
 const serviceStore = useServiceStore()
@@ -44,62 +34,13 @@ const status = computed(() => ({
   isProcessing: order.value.status === ORDER_STATUS.PROCESSING,
   isWait: order.value.status === ORDER_STATUS.WAIT,
 }))
-
-const verify = computed(() => ({
-  isNormal: order.value.verify === ORDER_VERIFY.NORMAL,
-  isReplied: order.value.verify === ORDER_VERIFY.REPLIED,
-  isSolved: order.value.verify === ORDER_VERIFY.SOLVED,
-  isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
-}))
-
-const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success('复制成功'))
-
-const iStore = useSettingStore()
-
-const isShowVerify = computed(() => {
-  return iStore.settings.enableOrderVerify &&
-    verify.value.isNormal &&
-    status.value.isSuccess
-})
-
-const handleRefresh = useThrottleFn(() => {
-  orderApi.item(order.value.id).then((response) => {
-    order.value = response.data
-    toast.success('刷新成功')
-  })
-}, 500)
-
-function handleVerify() {
-  const { id, createTime } = order.value
-  const createUnix = new Date(createTime).getTime()
-  const diff = Date.now() - createUnix
-  const daysDiff = diff / (24 * 3600 * 1000)
-
-  if (daysDiff > 3) {
-    toast.info('订单超过 3 天，不支持订单反馈')
-    return
-  }
-
-  window.confirm('是否确认反馈该订单?') && (() => {
-    orderApi.verify(id).then(() => {
-      order.value.verify = ORDER_VERIFY.REPLIED
-      toast.success('已提交反馈')
-    })
-  })()
-}
-
-function handleCopy() {
-  const items = order.value.result.split('<br>')
-  copy(items.map(stripHtml).join('\n'))
-}
 </script>
 
 <template>
   <div
+    :id="`order${order.id}`"
     :class="twMerge(
-      'bg-card rounded-lg p-4 space-y-4 shadow-sm',
-      className,
+      'h-full bg-card rounded-lg p-4 shadow-sm',
     )"
   >
     <div class="flex items-center justify-between space-x-3">
@@ -128,7 +69,7 @@ function handleCopy() {
     <div class="text-sm">
       <div class="flex items-start">
         <span class="text-muted-foreground shrink-0">处理服务：</span>
-        <span class="font-medium break-all">{{ serviceName }}</span>
+        <span class="font-medium break-all whitespace-nowrap">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">
@@ -141,7 +82,6 @@ function handleCopy() {
             'p-1.5 text-muted-foreground',
             'opacity-0 group-hover:opacity-100 transition-opacity',
           )"
-          @click="copy(order.imei)"
         >
           <Icon icon="lucide:clipboard-copy" class="size-4" />
         </button>
@@ -149,7 +89,7 @@ function handleCopy() {
 
       <div v-if="order.createTime" class="flex items-center">
         <span class="text-muted-foreground shrink-0">提交时间：</span>
-        <span class="font-medium">{{ order.createTime }}</span>
+        <span class="font-medium whitespace-nowrap">{{ order.createTime }}</span>
       </div>
 
       <div class="flex items-center">
@@ -169,43 +109,6 @@ function handleCopy() {
     <div class="text-sm">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-muted-foreground">订单结果：</span>
-        <div class="flex items-center space-x-3">
-          <button
-            v-if="!isSubmit && status.isProcessing"
-            class="inline-flex items-center space-x-0.5 text-muted-foreground"
-            @click="handleRefresh"
-          >
-            <Icon icon="lucide:refresh-cw" class="size-4" />
-            <span class="text-xs">刷新</span>
-          </button>
-
-          <button
-            v-if="isShowVerify"
-            class="inline-flex items-center space-x-0.5 text-muted-foreground"
-            @click="handleVerify"
-          >
-            <Icon icon="lucide:info" class="size-4" />
-            <span class="text-xs">反馈订单</span>
-          </button>
-
-          <button
-            v-if="status.isSuccess"
-            class="inline-flex items-center space-x-0.5 text-muted-foreground"
-            @click="handleCopy"
-          >
-            <Icon icon="lucide:clipboard-copy" class="size-4" />
-            <span class="text-xs">复制</span>
-          </button>
-
-          <button
-            v-if="status.isSuccess"
-            class="inline-flex items-center space-x-0.5 text-muted-foreground"
-            @click="emits('generate', order)"
-          >
-            <Icon icon="lucide:instagram" class="size-4" />
-            <span class="text-xs">生成图片</span>
-          </button>
-        </div>
       </div>
 
       <div
