@@ -87,7 +87,7 @@ function handleGenerate(order: Order) {
   // })
   const container = document.createElement('div')
   document.body.append(container)
-  container.className = `p-3 fixed opacity-0 pointer-events-none overflow-y-auto`
+  container.className = `fixed opacity-0`
 
   const vnode = h(OrderExportImg, {
     order,
@@ -100,12 +100,6 @@ function handleGenerate(order: Order) {
   htmlToImage.toBlob(dom, {
     cacheBust: true,
     skipFonts: true,
-    filter: (domNode: HTMLElement) => {
-      if(domNode instanceof HTMLElement) {
-        if(domNode.classList.contains('no-export')) return false
-      }
-      return true
-    }
   }).then((blob: Blob | null) => {
     const url = URL.createObjectURL(blob!)
     imgOrder.id = order.id
