@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
+import ImgOrder from './components/ImgOrder.vue'
+import OrderExportImg from '@/components/shared/OrderExportImg.vue'
 
 import { useClipboard } from '@vueuse/core'
+import { toast } from 'vue-sonner'
+import axios from 'axios'
+import { h, render } from 'vue'
+import * as html2image from 'html-to-image'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { columns } from './utils/columns'
-import { orderApi, type GeneratePictureParms } from '@/api/orders'
-import { toast } from 'vue-sonner'
-import axios from 'axios'
-import ImgOrder from './components/ImgOrder.vue'
+import { orderApi, type Order } from '@/api/orders'
 import type { ImgOrderItem } from './types'
 
 const serviceStore = useServiceStore()
@@ -71,7 +74,14 @@ function handleCopy() {
     return
   }
 
-  copy(selectRows.value.join('\n'))
+  const res: string[] = []
+
+  for(let id of selectRows.value) {
+    const order = store.orders.list.find(item => item.id === +id)!
+    res.push(order.imei)
+  }
+
+  copy(res.join('\n'))
   toast.success('已复制到剪贴板')
 }
 
@@ -84,8 +94,8 @@ async function handlePrint() {
     return
   }
 
-  for(const index of selectRows.value) {
-    const filters = store.orders.list.filter(item => item.imei === index).map(item => item.result)
+  for(const id of selectRows.value) {
+    const filters = store.orders.list.filter(item => item.id === +id).map(item => item.result)
     params.push(...filters)
   }
 
@@ -139,35 +149,72 @@ function handleGenerate() {
     return
   }
 
-  store.visibleOrderImg = true
-  for(let imei of selectRows.value) {
-    const order = store.orders.list.find(item => item.imei === imei)!
-    const service = serviceStore.services.get(order.serviceId)!
+  // for(let imei of selectRows.value) {
+  //   const order = store.orders.list.find(item => item.imei === imei)!
+  //   const service = serviceStore.services.get(order.serviceId)!
   
-    const params: GeneratePictureParms = {
-      codeId: order.id.toString(),
-      code: order.result,
-      codeStatusId: order!.status,
-      imei: order.imei,
-      credits: order.credits.toString(),
-      comments: order.remark,
-      packageTitle: service.title,
-      dataTime: order.createTime,
-    }
+  //   const params: GeneratePictureParms = {
+  //     codeId: order.id.toString(),
+  //     code: order.result,
+  //     codeStatusId: order!.status,
+  //     imei: order.imei,
+  //     credits: order.credits.toString(),
+  //     comments: order.remark,
+  //     packageTitle: service.title,
+  //     dataTime: order.createTime,
+  //   }
   
-    axios.post(`${baseUrl}/order/picture`, params, {
-      headers: {
-        'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
-      },
-      'responseType': 'blob',
-    }).then(({ data }) => {
-      const blob = new Blob([data], { type: 'image/png' })
-      const url = URL.createObjectURL(blob)
+  //   axios.post(`${baseUrl}/order/picture`, params, {
+  //     headers: {
+  //       'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
+  //     },
+  //     'responseType': 'blob',
+  //   }).then(({ data }) => {
+  //     const blob = new Blob([data], { type: 'image/png' })
+  //     const url = URL.createObjectURL(blob)
+  //     imgOrders.push({
+  //       id: order.id,
+  //       imei: order.imei,
+  //       img: url,
+  //     })
+  //   })
+  // }
+
+  const orders: Order[] = []
+
+  for(let id of selectRows.value) {
+    const order = store.orders.list.find(item => item.id === +id)!
+    orders.push(order)
+  }
+
+  for(let order of orders) {
+    const container = document.createElement('div')
+    document.body.append(container)
+    container.className = `opacity-0 flex`
+
+    const vnode = h(OrderExportImg, { order })
+
+    render(vnode, container)
+
+    const dom = document.getElementById(`order${order.id}`)!
+
+    console.dir(dom)
+    console.log(dom.getBoundingClientRect()!.width)
+
+    html2image.toBlob(dom, {
+      cacheBust: true,
+      skipFonts: true,
+    }).then((blob: Blob | null) => {
+      const url = URL.createObjectURL(blob!)
       imgOrders.push({
         id: order.id,
         imei: order.imei,
         img: url,
       })
+    }).finally(() => {
+      store.visibleOrderImg = true
+      render(null, container)
+      container.remove()
     })
   }
 }
@@ -216,7 +263,7 @@ onUnmounted(() => {
       :columns="columns"
       :loading="loading"
       row-key="id"
-      selected-key="imei" selection
+      selected-key="id" selection
       class="h-[calc(100%-3rem)] border"
       @select-change="selectRows = $event"
     />

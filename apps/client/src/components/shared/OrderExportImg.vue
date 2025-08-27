@@ -8,7 +8,6 @@ import {
   ORDER_STATUS_MAP,
   ORDER_VERIFY_MAP,
   ORDER_STATUS,
-  ua,
 } from '@3un/utils'
 
 interface OrderCardProps {
@@ -41,7 +40,7 @@ const status = computed(() => ({
   <div
     :id="`order${order.id}`"
     :class="twMerge(
-      'bg-card rounded-lg p-4 shadow-sm',
+      'flex flex-col bg-card rounded-lg p-4 shadow-sm',
     )"
   >
     <div class="flex items-center justify-between space-x-3">
@@ -114,9 +113,8 @@ const status = computed(() => ({
 
       <div
         :class="twMerge(
-          'bg-muted rounded px-3 py-3 whitespace-pre-line overflow-x-auto',
-          ua.isWechat && ''
-          )"
+          'inline-block whitespace-nowrap p-3 bg-muted rounded overflow-x-auto w-full'
+        )"
         v-html="order.result.trim() || '订单处理中...'"
       />
     </div>

@@ -87,7 +87,7 @@ function handleGenerate(order: Order) {
   // })
   const container = document.createElement('div')
   document.body.append(container)
-  container.className = `fixed opacity-0`
+  container.className = `opacity-0 flex`
 
   const vnode = h(OrderExportImg, {
     order,
