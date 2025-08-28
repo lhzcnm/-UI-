@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
-import OrderExportImg from '@/components/shared/OrderExportImg.vue'
-import { twJoin } from 'tailwind-merge'
+import OrderVoucher from '@/components/shared/OrderVoucher.vue'
 
+import { twJoin } from 'tailwind-merge'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { orderApi, type Order } from '@/api/orders'
@@ -98,7 +98,7 @@ function handleGenerate(order: Order) {
   document.body.append(container)
   container.className = `opacity-0 flex`
 
-  const vnode = h(OrderExportImg, {
+  const vnode = h(OrderVoucher, {
     order,
   })
 
@@ -109,6 +109,8 @@ function handleGenerate(order: Order) {
   htmlToImage.toBlob(dom, {
     cacheBust: true,
     skipFonts: true,
+    // pixelRatio: window.devicePixelRatio,
+    pixelRatio: 2,
   }).then((blob: Blob | null) => {
     const url = URL.createObjectURL(blob!)
     imgOrder.id = order.id

@@ -14,16 +14,6 @@ const emits = defineEmits<ImgOrderEmits>()
 const store = inject(HISTORY_STORE)!
 
 const { imgOrder } = defineProps<ImgOrderProps>()
-
-const imageLoaded = ref(false)
-const imageError = ref(false)
-
-function onImageLoad() {
-  imageLoaded.value = true
-}
-function onImageError() {
-  imageError.value = true
-}
 </script>
 
 <template>
@@ -33,7 +23,7 @@ function onImageError() {
   >
     <template #default>
       <div class="px-2">
-        <div class="bg-background rounded-xl shadow-md border border-border p-6 max-w-[400px] mx-auto">
+        <!-- <div class="bg-background rounded-xl shadow-md border border-border p-6 max-w-[400px] mx-auto">
           
           <div class="text-center border-b border-border pb-2 mb-4">
             <h2 class="text-lg font-bold">订单凭证</h2>
@@ -55,9 +45,10 @@ function onImageError() {
           <div class="mt-4 text-center text-xs">
             <p>生成时间：{{ new Date().toLocaleString() }}</p>
           </div>
-        </div>
+        </div> -->
+        <img :src="imgOrder.img" alt="">
   
-        <div class="mt-6 flex justify-center">
+        <div class="my-4 flex justify-center">
           <a
             :href="imgOrder.img" 
             :download="`${imgOrder.id}_${imgOrder.imei}.png`"

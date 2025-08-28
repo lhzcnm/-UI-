@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
-
 import { twMerge, twJoin } from 'tailwind-merge'
 
 import type { Order } from '@/api/orders'
@@ -41,12 +39,11 @@ const status = computed(() => ({
 
 <template>
   <div
-    :id="`order${order.id}`"
     :class="twMerge(
-      'flex flex-col bg-card',
+      'flex flex-col bg-card min-w-80',
     )"
   >
-    <div class="bg-zinc-100 dark:bg-zinc-800 p-2 text-xl">
+    <div class="w-full text-center bg-zinc-100 dark:bg-zinc-800 p-2 text-lg">
       <span>公众号: </span>
       <span>{{ appName }}</span>
     </div>
@@ -69,8 +66,8 @@ const status = computed(() => ({
         </span>
         <span v-else class="text-base font-medium">{{ order.id }}</span>
         <div class="flex space-x-2">
-          <XTag v-bind="ORDER_STATUS_MAP[order.status]" />
-          <XTag v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
+          <XTag size="sm" v-bind="ORDER_STATUS_MAP[order.status]" />
+          <XTag size="sm" v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
         </div>
       </div>
       
@@ -85,14 +82,6 @@ const status = computed(() => ({
             <span class="text-muted-foreground shrink-0">数据来源：</span>
             <span class="font-medium font-mono">{{ order.imei }}</span>
           </div>
-          <button
-            :class="twJoin(
-              'p-1.5 text-muted-foreground',
-              'opacity-0 group-hover:opacity-100 transition-opacity',
-            )"
-          >
-            <Icon icon="lucide:clipboard-copy" class="size-4" />
-          </button>
         </div>
   
         <div v-if="order.createTime" class="flex items-center">
@@ -121,18 +110,18 @@ const status = computed(() => ({
   
         <div
           :class="twMerge(
-            'inline-block whitespace-nowrap p-3 bg-muted rounded overflow-x-auto w-full'
+            'whitespace-nowrap p-3 bg-muted rounded overflow-x-auto w-full'
           )"
           v-html="order.result.trim() || '订单处理中...'"
         />
       </div>
 
-      <div class="text-sm" v-if="order.remark">
+      <!-- <div class="text-sm" v-if="order.remark">
         <div class="text-muted-foreground mb-1.5">订单备注：</div>
         <div class="w-full inline-block bg-muted rounded p-3 whitespace-pre-line">
           {{ order.remark }}
         </div>
-      </div>
+      </div> -->
 
       <div class="text-sm" v-if="order.recommends && order.recommends.length">
         <div class="text-muted-foreground mb-1.5">推荐解锁服务：</div>

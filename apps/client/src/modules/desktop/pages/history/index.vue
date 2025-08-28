@@ -2,7 +2,7 @@
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
 import ImgOrder from './components/ImgOrder.vue'
-import OrderExportImg from '@/components/shared/OrderExportImg.vue'
+import OrderVoucher from '@/components/shared/OrderVoucher.vue'
 
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
@@ -195,7 +195,7 @@ function handleGenerate() {
     document.body.append(container)
     container.className = `opacity-0 flex`
 
-    const vnode = h(OrderExportImg, { order })
+    const vnode = h(OrderVoucher, { order })
 
     render(vnode, container)
 
