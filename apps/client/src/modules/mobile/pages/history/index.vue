@@ -11,12 +11,14 @@ import ImgOrder from './components/ImgOrder.vue'
 import type { ImgOrderItem } from './types'
 import * as htmlToImage from 'html-to-image'
 import { h, render } from 'vue'
+import { toast } from 'vue-sonner'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
 
 const page = ref(1)
 const pageSize = ref(20)
+const generated = ref<boolean>(false)
 
 const mainNode = document.getElementById('main')
 
@@ -85,6 +87,13 @@ function handleGenerate(order: Order) {
   // }).finally(() => {
   //   store.visibleImg = true
   // })
+  if(generated.value) {
+    toast.warning('请勿重复点击')
+    return
+  }
+
+  generated.value = true
+
   const container = document.createElement('div')
   document.body.append(container)
   container.className = `opacity-0 flex`
@@ -109,6 +118,7 @@ function handleGenerate(order: Order) {
     store.visibleImg = true
     render(null, container)
     container.remove()
+    generated.value = false
   })
 }
 

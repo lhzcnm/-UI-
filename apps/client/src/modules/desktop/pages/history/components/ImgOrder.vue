@@ -39,7 +39,7 @@ function handleClick(order: ImgOrderItem) {
         </template>
         <template v-else>
           <div class="border rounded relative" v-for="(order) in imgOrders" :key="order.id">
-            <img class="border rounded m-2" :src="order.img" :alt="`${order.id}_${order.imei}`">
+            <img class="border m-2" :src="order.img" :alt="`${order.id}_${order.imei}`">
             <div class="absolute top-2 right-2 z-20">
               <XButton variant="ghost" label="下载" @click="handleClick(order)" />
             </div>

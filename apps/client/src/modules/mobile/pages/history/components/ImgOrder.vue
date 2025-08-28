@@ -43,7 +43,7 @@ function onImageError() {
           <div class="relative">
             <img 
               v-show="imageLoaded"
-              class="rounded-md border border-border object-contain max-w-full max-h-80 mx-auto"
+              class="border border-border object-contain max-w-full max-h-80 mx-auto"
               :src="imgOrder.img" 
               :alt="`订单${imgOrder.id} - ${imgOrder.imei}`"
               @load="onImageLoad"

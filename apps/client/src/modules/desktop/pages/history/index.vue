@@ -23,6 +23,8 @@ const page = ref(1)
 const limit = ref(20)
 
 const selectRows = ref<string[]>([])
+const generated = ref<boolean>(false)
+
 const { copy } = useClipboard({ legacy: true })
 
 const baseUrl = import.meta.env.VITE_API_URL
@@ -181,6 +183,7 @@ function handleGenerate() {
   // }
 
   const orders: Order[] = []
+  generated.value = true
 
   for(let id of selectRows.value) {
     const order = store.orders.list.find(item => item.id === +id)!
@@ -198,9 +201,6 @@ function handleGenerate() {
 
     const dom = document.getElementById(`order${order.id}`)!
 
-    console.dir(dom)
-    console.log(dom.getBoundingClientRect()!.width)
-
     html2image.toBlob(dom, {
       cacheBust: true,
       skipFonts: true,
@@ -215,6 +215,7 @@ function handleGenerate() {
       store.visibleOrderImg = true
       render(null, container)
       container.remove()
+      generated.value = false
     })
   }
 }
@@ -240,7 +241,7 @@ onUnmounted(() => {
         <XButton color="success" label="导出" @click="openExport" />
         <XButton color="warning" label="打印结果" @click="handlePrint" />
         <XButton variant="soft" label="复制 IMEI" @click="handleCopy" />
-        <XButton variant="soft" color="success" label="生成图片" @click="handleGenerate" />
+        <XButton variant="soft" color="success" label="生成图片" :disabled="generated" @click="handleGenerate" />
       </div>
 
       <XPagination
