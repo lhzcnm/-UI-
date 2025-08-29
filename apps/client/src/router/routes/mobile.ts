@@ -51,6 +51,12 @@ const mobile: RouteRecordRaw = {
       meta: { hideHeader: true },
       component: () => import('@mobile/pages/profile/index.vue'),
     },
+    {
+      path: 'tools',
+      name: 'Tools',
+      meta: { hideHeader: true, hideFooter: true },
+      component: () => import('@mobile/pages/tools/index.vue'),
+    },
   ],
 }
 
