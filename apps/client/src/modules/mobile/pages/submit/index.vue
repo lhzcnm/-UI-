@@ -53,6 +53,12 @@ const form = reactive({
   imei: props.imei || '',
 })
 
+const mode = import.meta.env.VITE_APP_MODE
+
+const textBtnModes = [
+  'JiuXing',
+]
+
 const options = computed(() => {
   const findIndex = serviceStore.details
     .findIndex(item => item.id === form.groupId)
@@ -407,16 +413,34 @@ function handlePushMsgChange(value: boolean) {
       <div class="flex items-center justify-between mb-2">
         <h2 class="font-medium">IMEI/SN 信息</h2>
         <div class="flex items-center space-x-2">
-          <button 
-            :class="twJoin(
-              'flex items-center justify-center size-8',
-              'bg-muted text-muted-foreground rounded-full',
-            )"
-            @click="handleFileInput"
-            title="导入文件"
-          >
-            <Icon icon="lucide:file-input" />
-          </button>
+          <template v-if="textBtnModes.includes(mode)">
+            <button 
+              :class="twJoin(
+                'flex items-center justify-center',
+                'text-muted-foreground rounded-full',
+                'h-8 text-sm bg-muted'
+              )"
+              @click="handleFileInput"
+              title="导入文件"
+            >
+              <!-- <Icon icon="lucide:file-input" /> -->
+              <!-- <XTag color="info" label="导入" /> -->
+              <span>导入</span>
+            </button>
+          </template>
+          <template v-else>
+            <button 
+              :class="twJoin(
+                'flex items-center justify-center size-8',
+                'bg-muted text-muted-foreground rounded-full',
+              )"
+              @click="handleFileInput"
+              title="导入文件"
+            >
+              <Icon icon="lucide:file-input" />
+            </button>
+          </template>
+
           <button
             v-if="ua.isWechat"
             :class="twJoin(
