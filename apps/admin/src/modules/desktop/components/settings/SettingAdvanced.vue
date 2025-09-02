@@ -73,14 +73,14 @@ function handleSubmit() {
         desc="用户填写邀请码后获得的积分"
         :content-flex="false"
       >
-        <XInputNumber v-model="form.inviteForPonit" />
+        <XInputNumber :precision="2" :step="0.01" v-model="form.inviteForPonit" />
       </FormField>
       <FormField
         label="邀请积分"
         desc="邀请用户获得的积分"
         :content-flex="false"
       >
-        <XInputNumber v-model="form.invitePonit" />
+        <XInputNumber :precision="2" :step="0.01" v-model="form.invitePonit" />
       </FormField>
 
       <FormField
