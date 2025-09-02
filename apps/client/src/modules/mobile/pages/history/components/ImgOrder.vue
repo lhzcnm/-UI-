@@ -23,29 +23,6 @@ const { imgOrder } = defineProps<ImgOrderProps>()
   >
     <template #default>
       <div class="px-2">
-        <!-- <div class="bg-background rounded-xl shadow-md border border-border p-6 max-w-[400px] mx-auto">
-          
-          <div class="text-center border-b border-border pb-2 mb-4">
-            <h2 class="text-lg font-bold">订单凭证</h2>
-            <p class="text-sm">ID: {{ imgOrder.id }} ｜ IMEI: {{ imgOrder.imei }}</p>
-          </div>
-  
-          <div class="relative">
-            <img 
-              v-show="imageLoaded"
-              class="border border-border object-contain max-w-full max-h-80 mx-auto"
-              :src="imgOrder.img" 
-              :alt="`订单${imgOrder.id} - ${imgOrder.imei}`"
-              @load="onImageLoad"
-              @error="onImageError"
-            />
-            <p v-if="imageError" class="text-danger text-center">图片加载失败</p>
-          </div>
-  
-          <div class="mt-4 text-center text-xs">
-            <p>生成时间：{{ new Date().toLocaleString() }}</p>
-          </div>
-        </div> -->
         <img :src="imgOrder.img" alt="">
   
         <div class="my-4 flex justify-center">

@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
+import * as html2image from 'html-to-image'
 
 import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
+import OrderVoucher from '@/components/shared/OrderVoucher.vue'
+import { h, render } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const order = ref<Order>()
 const loading = ref(true)
+const generated = ref(false)
+const orderImg = ref<string>('')
 
 const store = useSettingStore()
 const serviceStore = useServiceStore()
@@ -38,6 +43,54 @@ async function getOrder() {
     loading.value = false
   }
 }
+
+function handleGenerate(order: Order) {
+  if(generated.value) {
+    return toast.warning('请勿重复生成')
+  }
+
+  const container = document.createElement('div')
+  document.body.append(container)
+  container.className = `opacity-0 flex`
+
+  const vnode = h(OrderVoucher, {
+    order,
+  })
+
+  render(vnode, container)
+
+  const dom = document.getElementById(`order${order.id}`)!
+
+  html2image.toBlob(dom, {
+    cacheBust: true,
+    skipFonts: true,
+    pixelRatio: 2,
+  }).then((blob: Blob | null) => {
+    const url = URL.createObjectURL(blob!)
+    orderImg.value = url
+    toast.success('图片生成成功, 点击图片即可开启下载')
+    generated.value = true
+  }).finally(() => {
+    render(null, container)
+    container.remove()
+  })
+}
+
+function handleDownload() {
+  const a = document.createElement('a')
+
+  a.href = orderImg.value
+  a.download = `${order.value?.id}_${order.value?.imei}`
+  
+  a.click()
+  a.remove()
+}
+
+onUnmounted(() => {
+  if(orderImg.value) {
+    URL.revokeObjectURL(orderImg.value)
+  }
+})
 </script>
 
 <template>
@@ -46,11 +99,14 @@ async function getOrder() {
       <Fallback v-if="loading" />
   
       <template v-else>
-        <OrderCard v-if="order" :order="order" />
+        <OrderCard v-if="order" :order="order" @generate="handleGenerate" />
         <div v-else class="p-8 text-center text-muted-foreground">
           未找到订单信息
         </div>
-  
+
+        <div class="mt-4" v-if="generated" @click="handleDownload">
+          <img :src="orderImg" alt="" />
+        </div>
         <BaseFooter />
       </template>
     </div>

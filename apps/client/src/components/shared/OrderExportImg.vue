@@ -74,7 +74,7 @@ const status = computed(() => ({
       <div class="text-sm">
         <div class="flex items-start">
           <span class="text-muted-foreground shrink-0">处理服务：</span>
-          <span class="font-medium break-all whitespace-nowrap">{{ serviceName }}</span>
+          <span class="font-medium break-all whitespace-pre-line">{{ serviceName }}</span>
         </div>
   
         <div class="flex items-center group">

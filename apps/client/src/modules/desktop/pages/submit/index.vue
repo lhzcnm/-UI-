@@ -44,6 +44,8 @@ const comments = ref<string>('')
 
 const selectedId = ref(+props.id)
 
+const sizes = [50, 150, 200, 300, 500]
+
 const orders = computed(() => {
   return rawOrders.value.slice(
     (page.value - 1) * limit.value,
@@ -357,7 +359,14 @@ async function handleMustRead() {
         v-model="page"
         v-model:limit="limit"
         :total="rawOrders.length"
-        hideOnSinglePage
+        :sizes
+        :layouts="[
+          'total',
+          'sizes',
+          'prev',
+          'pager',
+          'next',
+        ]"
       />
     </section>
   
