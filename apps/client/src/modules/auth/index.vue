@@ -15,7 +15,10 @@ await store.getSettings()
   >
     <div class="flex justify-between items-center w-full h-20 px-4 sm:px-0">
       <TheLogo size="2rem" />
-      <TheTheme size="1.5rem" />
+      <div class="flex space-x-2">
+        <LanguageSwitch />
+        <TheTheme size="1.5rem" />
+      </div>
     </div>
     <main
       :class="twJoin(

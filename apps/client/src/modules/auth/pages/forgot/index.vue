@@ -17,6 +17,8 @@ const form: ForgotPswForm = reactive({
   confirmPassword: '',
 })
 
+const { t } = useI18n()
+
 async function sendCaptcha() {
   const isPhone = /^1[3-9]\d{9}$/.test(form.target)
   const targetReg = isPhone ? PHONE_REG : EMAIL_REG
@@ -66,7 +68,7 @@ async function resetPassword() {
       password,
     })
 
-    toast.success('密码重置成功')
+    toast.success(t('submit.success', { action: `${t('auth.placeholder.pwd')}${t('action.reset')}` }))
     router.push('/auth')
   }
   catch (err) {
@@ -78,21 +80,21 @@ async function resetPassword() {
 <template>
   <div class="flex-1 py-4 sm:py-0">
     <div>
-      <h2 class="text-2xl font-bold mb-4">重置密码</h2>
+      <h2 class="text-2xl font-bold mb-4">{{ t('auth.forget.title') }}</h2>
       <form class="space-y-4" @submit.prevent="onSubmit">
-        <XInput v-model="form.target" placeholder="邮箱、手机号" />
+        <XInput v-model="form.target" :placeholder="t('auth.forget.auth')" />
         <div class="flex items-center space-x-2">
-          <XInput v-model="form.code" placeholder="验证码" />
+          <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
           <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-            {{ isRunning ? `${count} 秒后重发` : '发送验证码' }}
+            {{ isRunning ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
           </XButton>
         </div>
-        <XInput v-model="form.password" type="password" placeholder="密码" />
-        <XInput v-model="form.confirmPassword" type="password" placeholder="确认密码" />
+        <XInput v-model="form.password" type="password" :placeholder="t('auth.forget.pwd')" />
+        <XInput v-model="form.confirmPassword" type="password" :placeholder="t('auth.forget.confirmPwd')" />
 
         <div class="flex items-center space-x-2">
-          <XButton label="账号登录" variant="soft" type="button" @click="router.push('/auth')"></XButton>
-          <XButton class="w-full" type="submit">重置</XButton>
+          <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="router.push('/auth')"></XButton>
+          <XButton class="w-full" type="submit" :label="t('auth.forget.button')" />
         </div>
       </form>
     </div>

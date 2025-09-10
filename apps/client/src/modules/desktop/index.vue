@@ -21,6 +21,8 @@ await Promise.all([
   uStore.getInfo(),
 ])
 
+const { t } = useI18n()
+
 const hideDevice =
   import.meta.env.VITE_APP_DEVICE === 'false' ||
   // 用户未开启设备

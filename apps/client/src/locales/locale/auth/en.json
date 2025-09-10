@@ -1,0 +1,34 @@
+{
+  "auth": {
+    "method": {
+      "third": "Third-party login methods",
+      "account": "Account login",
+      "phone": "Phone number login",
+      "wechat": "WeChat scan login"
+    },
+    "placeholder": {
+      "userName": "Username",
+      "pwd": "Password",
+      "phone": "Phone number",
+      "vertify": "Verification code",
+      "countdown": "{action} seconds to resend",
+      "sendVerty": "Send verification code"
+    },
+    "login": "Login",
+    "noAccount": "No account",
+    "register": "Register now",
+    "forget": {
+      "title": "Reset Password",
+      "label": "Forgot Password",
+      "auth": "Email/Phone Number",
+      "pwd": "Password",
+      "confirmPwd": "Confirm Password",
+      "button": "Reset"
+    },
+    "refresh": "Click to refresh",
+    "backTo": "Back to {action}",
+    "prompt": {
+      "register": "Registration function, not yet available"
+    }
+  }
+}

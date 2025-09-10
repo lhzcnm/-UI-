@@ -4,8 +4,10 @@ import { defineConfig, type PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Imports from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import I18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { UIResolver } from '@3un/ui/resolver'
+import path from 'node:path'
 
 function resolve(path: string) {
   return fileURLToPath(new URL(path, import.meta.url))
@@ -17,7 +19,7 @@ export default defineConfig({
     vue(),
     Imports({
       ignore: ['h'],
-      imports: ['vue', 'vue-router'],
+      imports: ['vue', 'vue-router', 'vue-i18n'],
       dirs: ['src/stores', 'src/composables'],
     }),
     Components({
@@ -28,6 +30,11 @@ export default defineConfig({
         'src/modules/mobile/components/*.vue',
         'src/modules/desktop/components/*.vue',
       ],
+    }),
+    I18nPlugin({
+      include: path.resolve(__dirname,'src/locales/locale/**'),
+      allowDynamic: true,
+      runtimeOnly: false,
     }),
     visualizer({ filename: './dist/stats.html' }) as PluginOption,
   ],

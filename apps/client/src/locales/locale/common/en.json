@@ -1,0 +1,13 @@
+{
+  "submit": {
+    "success": "{action} succeeded",
+    "fail": "{action} failed"
+  },
+  "action": {
+    "operation": "Operation",
+    "reset": "Reset",
+    "submit": "Submit",
+    "delete": "Delete",
+    "export": "Export"
+  }
+}

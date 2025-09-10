@@ -1,0 +1,15 @@
+{
+  "barItem": {
+    "home": "首页",
+    "query": "订单查询",
+    "device": "我的设备",
+    "recharge": "积分充值",
+    "workOrder": "我的工单",
+    "profile": "会员中心",
+    "history": {
+      "order": "我的订单",
+      "point": "积分记录"
+    },
+    "logout": "退出登录"
+  }
+}

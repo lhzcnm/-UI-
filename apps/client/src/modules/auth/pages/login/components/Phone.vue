@@ -12,6 +12,7 @@ const router = useRouter()
 
 const form = reactive({ phone: '', code: '' })
 const { count, isRunning, startCountdown } = useCountdown()
+const { t } = useI18n()
 
 async function sendCaptcha() {
   const validRule = [{ rule: !!form.phone, message: VERIFY_MSG.PHONE }]
@@ -52,19 +53,19 @@ defineExpose({
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-4">手机号登录</h2>
+    <h2 class="text-2xl font-bold mb-4">{{ t('auth.method.phone') }}</h2>
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <XInput v-model="form.phone" placeholder="手机号" />
+      <XInput v-model="form.phone" :placeholder="t('auth.placeholder.phone')" />
       <div class="flex items-center space-x-2">
-        <XInput v-model="form.code" placeholder="验证码" />
+        <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
         <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-          {{ isRunning ? `${count} 秒后重发` : '发送验证码' }}
+          {{ isRunning ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
         </XButton>
       </div>
 
       <div class="flex items-center space-x-2">
-        <XButton label="账号登录" variant="soft" type="button" @click="mode = 'account'"></XButton>
-        <XButton class="w-full" label="登录" type="submit" />
+        <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="mode = 'account'"></XButton>
+        <XButton class="w-full" :label="t('auth.login')" type="submit" />
       </div>
     </form>
   </div>

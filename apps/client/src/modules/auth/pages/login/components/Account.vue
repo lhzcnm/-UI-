@@ -18,6 +18,8 @@ const form = reactive({
   password: '',
 })
 
+const { t } = useI18n()
+
 function rules(data: typeof form) {
   const { username, password } = data
   return [
@@ -57,24 +59,24 @@ defineExpose({
 function toRegister() {
   // const flag = store.settings.enableRegister
   // if (flag) router.push('/auth/register')
-  toast.info('注册功能，暂未开放')
+  toast.info(t('auth.prompt.register'))
 }
 </script>
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-4">账号登录</h2>
+    <h2 class="text-2xl font-bold mb-4">{{ t('auth.method.account') }}</h2>
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <XInput v-model="form.username" placeholder="用户名" />
-      <XInput v-model="form.password" type="password" placeholder="密码 / API KEY" />
-      <XButton class="w-full" label="登录" type="submit" />
+      <XInput v-model="form.username" :placeholder="t('auth.placeholder.userName')" />
+      <XInput v-model="form.password" type="password" :placeholder="`${t('auth.placeholder.pwd')} / API KEY`" />
+      <XButton class="w-full" :label="t('auth.login')" type="submit" />
     </form>
     <div class="flex items-center justify-between mt-3 text-muted-foreground text-sm">
-      <span>没有账号？<a href="javascript:void(0)" class="hover:underline" @click="toRegister">立即注册</a></span>
-      <RouterLink class="hover:underline" to="/auth/forgot">忘记密码?</RouterLink>
+      <span>{{ t('auth.noAccount') }}?<a href="javascript:void(0)" class="hover:underline text-primary" @click="toRegister">{{ t('auth.register') }}</a></span>
+      <RouterLink class="hover:underline" to="/auth/forgot">{{ t('auth.forget.label') }}?</RouterLink>
     </div>
     <div class="mt-6">
-      <hr class="hr-fade-content text-muted-foreground mb-2" data-content="第三方登录方式">
+      <hr class="hr-fade-content text-muted-foreground mb-2" :data-content="t('auth.method.third')">
       <div class="flex items-center justify-center space-x-2 select-none">
         <a href="javascript:void(0)" @click="mode = 'wechat'" class="rounded-full bg-teal-500 p-1">
           <Icon icon="mage:we-chat" class="size-7 sm:size-6 text-white" />

@@ -22,6 +22,16 @@
     storedTheme && localStorage.setItem('theme', applyTheme)
     html.classList.add(applyTheme)
   })()
+
+  ;(function initLocale() {
+    let locale = localStorage.getItem('locale')
+
+    if(!locale) {
+      locale = navigator.language.startsWith('zh') ? 'zh' : 'en'
+    }
+
+    localStorage.setItem('locale', locale)
+  })()
   </script>
 </head>
 <body class="noto-sans-sc">
