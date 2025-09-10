@@ -14,6 +14,8 @@ const countdown = ref(7200)
 const qrcode = useQRCode(text)
 let timer = 0
 
+const { t } = useI18n()
+
 watch(
   () => store.visible,
   (newValue) => {
@@ -72,7 +74,7 @@ function handleClose() {
       <div v-if="!store.isComplete" class="flex flex-col items-center justify-center space-y-4 p-4">
         <div class="flex space-x-1 items-center">
           <Icon icon="ri:wechat-pay-fill" class="size-9 text-success" />
-          <div class="text-2xl font-medium">微信支付</div>
+          <div class="text-2xl font-medium">{{ t('recharge.qrcode.title') }}</div>
         </div>
 
         <div
@@ -87,13 +89,13 @@ function handleClose() {
               'text-center text-sm',
             )"
           >
-            二维码已过期
+            {{ t('recharge.qrcode.expired') }}
           </div>
         </div>
 
         <div class="text-center text-sm text-muted-foreground">
-          <div v-if="!isExpired">二维码有效期：{{ formatTime(countdown) }}</div>
-          <div>请使用微信扫码完成支付</div>
+          <div v-if="!isExpired">{{ t('recharge.qrcode.validity') }}: {{ formatTime(countdown) }}</div>
+          <div>{{ t('recharge.qrcode.text') }}</div>
         </div>
       </div>
       <div v-else class="flex flex-col items-center justify-center space-y-4 p-8">
@@ -104,7 +106,7 @@ function handleClose() {
           />
           <div class="absolute top-0 bottom-0 left-0 right-0 size-16 rounded-full border-4 border-success animate-circle-expand" />
         </div>
-        <div class="text-xl font-medium text-success opacity-0 animate-fade-up">支付成功</div>
+        <div class="text-xl font-medium text-success opacity-0 animate-fade-up">{{ t('recharge.qrcode.success') }}</div>
       </div>
     </Transition>
   </XDialog>

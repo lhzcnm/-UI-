@@ -5,6 +5,8 @@ import { PAYMENT_STATUS_MAP } from '@3un/utils'
 import { twMerge } from 'tailwind-merge'
 
 defineProps<{ item: InvoiceItem }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -20,7 +22,7 @@ defineProps<{ item: InvoiceItem }>()
       <div>
         <div class="flex space-x-1 text-muted-foreground">
           <Icon icon="lucide:credit-card" class="size-4" />
-          <span class="text-xs">账单金额</span>
+          <span class="text-xs">{{ t('recharge.history.amount') }}</span>
         </div>
         <p class="text-xl font-semibold text-primary">
           ￥{{ item.amount }}
@@ -29,7 +31,7 @@ defineProps<{ item: InvoiceItem }>()
       <div>
         <div class="flex space-x-1 text-muted-foreground">
           <Icon icon="lucide:coins" class="size-4" />
-          <span class="text-xs">实际到账</span>
+          <span class="text-xs">{{ t('recharge.history.real') }}</span>
         </div>
         <p
           :class="twMerge(

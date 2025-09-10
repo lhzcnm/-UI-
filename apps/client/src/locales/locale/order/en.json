@@ -32,6 +32,12 @@
     },
     "listRender": {
       "serviceNotFound": "Service Not Found"
+    },
+    "form": {
+      "status": {
+        "title": "Order Status",
+        "placeholder": "Please Select Status"
+      }
     }
   }
 }

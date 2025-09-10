@@ -25,9 +25,11 @@ provide(RECHARGE_STORE, store)
 
 const activeTab = ref<TabMode>(props.tab || 'recharge')
 
+const { t } = useI18n()
+
 const options: XSegmentedOption[] = [
-  { label: '余额充值', value: 'recharge', icon: 'lucide:wallet' },
-  { label: '开通会员', value: 'membership', icon: 'lucide:crown' }
+  { label: t('recharge.segment.balance'), value: 'recharge', icon: 'lucide:wallet' },
+  { label: t('recharge.segment.member'), value: 'membership', icon: 'lucide:crown' }
 ]
 </script>
 
@@ -35,7 +37,7 @@ const options: XSegmentedOption[] = [
   <div class="p-4 h-full flex space-x-4">
     <section class="w-[30rem] shrink-0">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-xl font-medium">积分充值</h2>
+        <h2 class="text-xl font-medium">{{ t('recharge.title') }}</h2>
         <XSegmented
           v-model="activeTab"
           :options="options"

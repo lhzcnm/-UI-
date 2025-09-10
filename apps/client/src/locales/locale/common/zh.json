@@ -13,7 +13,8 @@
     "connect": "连接",
     "copy": "复制",
     "refresh": "刷新",
-    "print": "打印"
+    "print": "打印",
+    "recharge": "充值"
   },
   "prompt": {
     "title": "提示",

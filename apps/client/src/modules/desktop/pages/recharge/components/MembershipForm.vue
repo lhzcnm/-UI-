@@ -20,6 +20,8 @@ const memberPkg = ref<MemberPackage[]>([])
 const memberList = ref<MemberItem[]>([])
 const pkgTotalAmount = ref<string>('')
 
+const { t } = useI18n()
+
 const store = inject(RECHARGE_STORE)!
 
 await serviceStore.getServices()
@@ -70,7 +72,7 @@ function checkRecharge() {
     response.then(({ data }) => {
       if (!data) return
 
-      toast.success('充值成功')
+      toast.success(t('submit.success', { action: t('action.recharge') }))
       uStore.updateCredit()
       store.isComplete = true
       window.clearInterval(timer.value)
@@ -92,7 +94,7 @@ function isSamePrice(item: MemberPackage) {
 <template>
   <div class="bg-card border p-4 rounded-md space-y-6">
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">会员套餐</h3>
+      <h3 class="text-lg font-medium">{{ t('recharge.member.title') }}</h3>
       <div class="grid grid-cols-2 gap-3">
         <button
           v-for="item in memberList" :key="item.id"
@@ -110,7 +112,7 @@ function isSamePrice(item: MemberPackage) {
     </div>
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">支付方式</h3>
+      <h3 class="text-lg font-medium">{{ t('recharge.method.title') }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
         <button
           :class="twMerge(
@@ -120,7 +122,7 @@ function isSamePrice(item: MemberPackage) {
           @click="selectedPayment = 'wxpay'"
         >
           <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
-          <span>微信</span>
+          <span>{{ t('recharge.method.wechat') }}</span>
         </button>
         <button
           :class="twMerge(
@@ -130,16 +132,16 @@ function isSamePrice(item: MemberPackage) {
           @click="selectedPayment = 'alipay'"
         >
           <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
-          <span>支付宝</span>
+          <span>{{ t('recharge.method.ali') }}</span>
         </button>
       </div>
     </div>
 
     <div class="space-y-3 overflow-y-auto max-h-[400px]">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg text-warning">会员权益</h3>
+        <h3 class="text-lg text-warning">{{ t('recharge.member.rights.title') }}</h3>
         <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-          每月最高将为您节省：<b class="text-danger">{{ pkgTotalAmount }}元</b>
+          {{ t('recharge.member.rights.text1') }}: <b class="text-danger">{{ pkgTotalAmount }}元</b>
         </span>
       </div>
 
@@ -154,12 +156,12 @@ function isSamePrice(item: MemberPackage) {
 
           <div class="flex justify-between space-x-2 mt-1 text-sm">
             <p v-if="item.freeCount" class="text-muted-foreground">
-              <span>原价{{ item.price }}元/次。现在</span>
-              <span class="text-primary font-bold">每天 {{ item.freeCount }} 次</span>
-              <span>免费查询</span>
+              <span>{{ t('recharge.member.rights.text2', { price: item.price }) }}</span>
+              <span class="text-primary font-bold">{{ t('recharge.member.rights.text3', { count: item.freeCount }) }}</span>
+              <span>{{ t('recharge.member.rights.text4') }}</span>
               <div v-if="!isSamePrice(item)">
-                <span>超过 {{ item.freeCount }} 次，则使用</span>
-                <span>优惠价{{ item.price }}/次</span>
+                <span>{{ t('recharge.member.rights.text5', { count: item.freeCount }) }}</span>
+                <span>{{ t('recharge.member.rights.text6', { price: item.price }) }}</span>
               </div>
             </p>
           </div>
@@ -169,7 +171,7 @@ function isSamePrice(item: MemberPackage) {
 
     <div class="flex items-center justify-end">
       <XButton
-        label="立即开通"
+        :label="t('recharge.button.member')"
         :disabled="!selectedPlan"
         @click="handleRecharge"
       />

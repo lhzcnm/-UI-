@@ -16,6 +16,8 @@ const selectedAmount = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
 const store = inject(RECHARGE_STORE)!
 
+const { t } = useI18n()
+
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
   return amount < 200 ? Number((amount * 0.01).toFixed(2)) : 0
@@ -26,12 +28,12 @@ const rechargeAmount = computed(() => {
 })
 
 const amountList = [
-  { label: '10 元', value: 10 },
-  { label: '50 元', value: 50 },
-  { label: '100 元', value: 100 },
-  { label: '200 元', info: '免手续费', value: 200 },
-  { label: '500 元', info: '免手续费', value: 500 },
-  { label: '1000 元', info: '免手续费', value: 1000 },
+  { label: '￥10', value: 10 },
+  { label: '￥50', value: 50 },
+  { label: '￥100', value: 100 },
+  { label: '￥200', info: t('recharge.handleFee'), value: 200 },
+  { label: '￥500', info: t('recharge.handleFee'), value: 500 },
+  { label: '￥1000', info: t('recharge.handleFee'), value: 1000 },
 ]
 
 function handleCustomAmount(value: any) {
@@ -49,11 +51,11 @@ function handleRecharge() {
   const maxAmount = +iStore.settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAmount) {
-    return toast.warning(`充值金额不能小于 ${minAmount} 元`)
+    return toast.warning(t('recharge.amount.min', { amount: minAmount }))
   }
 
   if (rechargeAmount.value > maxAmount) {
-    return toast.warning(`充值金额不能大于 ${maxAmount} 元`)
+    return toast.warning(t('recharge.amount.max', { amount: maxAmount }))
   }
 
   const response = rechargeApi.create({
@@ -81,7 +83,7 @@ function checkRecharge() {
     response.then(({ data }) => {
       if (!data) return
 
-      toast.success('充值成功')
+      toast.success(t('submit.success', { action: t('action.recharge') }))
       uStore.updateCredit()
       store.isComplete = true
       window.clearInterval(store.timer)
@@ -94,7 +96,7 @@ function checkRecharge() {
   <div class="bg-card border p-4 rounded-md space-y-6">
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">充值金额</h3>
+      <h3 class="text-lg font-medium">{{ t('recharge.balance.title') }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">
         <button
           v-for="item in amountList" :key="item.value"
@@ -110,17 +112,17 @@ function checkRecharge() {
         </button>
       </div>
       <div class="flex items-center space-x-2">
+        <span>￥</span>
         <XInput
-          placeholder="自定义充值金额"
+          :placeholder="t('recharge.amount.placeholder')"
           :model-value="customAmount ? customAmount : ''"
           @update:model-value="handleCustomAmount"
         />
-        <span>元</span>
       </div>
     </div>
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">支付方式</h3>
+      <h3 class="text-lg font-medium">{{ t('recharge.method.title') }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
         <button
           :class="twMerge(
@@ -130,7 +132,7 @@ function checkRecharge() {
           @click="selectedPayment = 'wxpay'"
         >
           <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
-          <span>微信</span>
+          <span>{{ t('recharge.method.wechat') }}</span>
         </button>
         <button
           :class="twMerge(
@@ -140,7 +142,7 @@ function checkRecharge() {
           @click="selectedPayment = 'alipay'"
         >
           <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
-          <span>支付宝</span>
+          <span>{{ t('recharge.method.ali') }}</span>
         </button>
       </div>
     </div>
@@ -149,7 +151,7 @@ function checkRecharge() {
       v-if="iStore.settings.enablePaymentInfo"
       class="bg-muted p-3 rounded-md"
     >
-      <p class="mb-2 font-medium">充值说明：</p>
+      <p class="mb-2 font-medium">{{ t('recharge.info.title') }}: </p>
       <div
         class="tiptap text-sm text-muted-foreground"
         v-html="iStore.settings.paymentInfo"
@@ -158,26 +160,26 @@ function checkRecharge() {
 
     <div class="space-y-2">
       <div class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>充值金额</span>
-        <span>{{ rechargeAmount }} 元</span>
+        <span>{{ t('recharge.balance.compAmount.title') }}</span>
+        <span>￥{{ rechargeAmount }}</span>
       </div>
       
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>手续费(1%)</span>
-        <span>{{ serviceFee }} 元</span>
+        <span>{{ t('recharge.balance.compAmount.handle') }}(1%)</span>
+        <span>￥{{ serviceFee }}</span>
       </div>
       
       <div class="flex items-center justify-between pt-2 border-t">
-        <span>应付金额</span>
+        <span>{{ t('recharge.balance.compAmount.real') }}</span>
         <span class="text-lg font-medium text-danger">
-          {{ (rechargeAmount + serviceFee).toFixed(2) }} 元
+          ￥{{ (rechargeAmount + serviceFee).toFixed(2) }}
         </span>
       </div>
     </div>
 
     <div class="flex items-center justify-end">
       <XButton
-        label="立即充值"
+        :label="t('recharge.button.balance')"
         :disabled="selectedAmount === 0 && customAmount === 0"
         @click="handleRecharge"
       />

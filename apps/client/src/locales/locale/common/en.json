@@ -13,7 +13,8 @@
     "connect": "Connect",
     "copy": "Copy",
     "refresh": "Refresh",
-    "print": "Print"
+    "print": "Print",
+    "recharge": "Recharge"
   },
   "prompt": {
     "title": "Prompt",

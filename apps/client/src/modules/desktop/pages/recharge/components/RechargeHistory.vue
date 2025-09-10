@@ -11,6 +11,8 @@ const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
 const bills = ref<InvoicesResponse>(IPage)
 const store = inject(RECHARGE_STORE)!
 
+const { t } = useI18n()
+
 watch(() => store.isComplete, () => getList())
 watch(page, getList, { immediate: true })
 
@@ -36,7 +38,7 @@ function handleExport() {
   <section class="flex-1 min-w-max bg-card border rounded-md">
     <div class="flex items-center justify-between p-4">
       <XButton
-        icon="lucide:arrow-down-to-line" label="导出记录" color="success"
+        icon="lucide:arrow-down-to-line" :label="t('recharge.button.export')" color="success"
         :loading="loading" @click="handleExport"
       />
       <XPagination
@@ -47,7 +49,7 @@ function handleExport() {
     </div>
 
     <div class="h-[calc(100%-5.25rem)] overflow-y-auto px-4">
-      <NoMessage v-if="bills.total === 0" title="暂无记录" />
+      <NoMessage v-if="bills.total === 0" :title="t('recharge.history.dataNull')" />
       <div v-else class="grid gap-3 grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
         <BillCard
           v-for="item in bills.list"
