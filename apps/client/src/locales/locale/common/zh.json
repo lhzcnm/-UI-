@@ -25,7 +25,8 @@
   },
   "service": {
     "title": "服务",
-    "placeholder": "请选择服务"
+    "placeholder": "请选择服务",
+    "notFound": "服务不存在"
   },
   "valid": {
     "null": "{field}为空",

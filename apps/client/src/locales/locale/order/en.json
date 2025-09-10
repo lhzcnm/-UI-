@@ -30,9 +30,6 @@
       "orderTimeout": "This function is not supported for orders over three days old",
       "vertified": "Submitted for verification"
     },
-    "listRender": {
-      "serviceNotFound": "Service Not Found"
-    },
     "form": {
       "status": {
         "title": "Order Status",

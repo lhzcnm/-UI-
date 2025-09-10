@@ -21,7 +21,7 @@ export function getOrderColumns(): XColDef<Order> {
         const service = serviceStore.services.get(value)
         return service
           ? `${service.id} - ${service.title}`
-          : t('order.listRender.serviceNotFound')
+          : t('service.notFound')
       },
     },
     { key: 'imei', title: 'IMEI/SN', width: 158 },

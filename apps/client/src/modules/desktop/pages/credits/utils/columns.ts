@@ -4,62 +4,66 @@ import { h } from 'vue'
 
 const store = useServiceStore()
 
-export const columns: XColDef<CreditLogItem> = [
-  {
-    key: 'packageId',
-    title: '项目',
-    width: 220,
-    render: (value) => {
-      if (!value) return '积分充值'
-      const service = store.services.get(value)
-      return service ? `${service.id} - ${service.title}` : '服务不存在'
-    }
-  },
-  {
-    key: 'imeiNo',
-    title: 'IMEI',
-    width: 180
-  },
-  {
-    key: 'credits',
-    title: '变动金额',
-    width: 88,
-    render: (value: number, row) => {
-      const isSubmit = /订单提交|查询订单|Code Request/.test(row.description)
-      const isReduce = isSubmit || row.description === '管理员扣除积分'
-      let label = Math.abs(value).toString()
-      let color
+export function getCreditColumns(): XColDef<CreditLogItem> {
+  const { t } = useI18n()
 
-      if (isReduce) {
-        if (value > 0) label = `-${label}`
-        color = 'text-danger' 
+  return [
+    {
+      key: 'packageId',
+      title: t('credit.listCol.service'),
+      width: 220,
+      render: (value) => {
+        if (!value) return '积分充值'
+        const service = store.services.get(value)
+        return service ? `${service.id} - ${service.title}` : t('service.notFound')
       }
-      else {
-        color = 'text-success'
-        label = `+${label}`
-      }
+    },
+    {
+      key: 'imeiNo',
+      title: 'IMEI',
+      width: 180
+    },
+    {
+      key: 'credits',
+      title: t('credit.listCol.amount'),
+      width: 88,
+      render: (value: number, row) => {
+        const isSubmit = /订单提交|查询订单|Code Request/.test(row.description)
+        const isReduce = isSubmit || row.description === t('credit.text.minus')
+        let label = Math.abs(value).toString()
+        let color
 
-      return h('span', { class: color }, label)
+        if (isReduce) {
+          if (value > 0) label = `-${label}`
+          color = 'text-danger' 
+        }
+        else {
+          color = 'text-success'
+          label = `+${label}`
+        }
+
+        return h('span', { class: color }, label)
+      }
+    },
+    {
+      key: 'description',
+      title: t('credit.listCol.reason'),
+      width: 280
+    },
+    {
+      key: 'historyDtTm',
+      title: t('credit.listCol.time'),
+      width: 180
+    },
+    {
+      key: 'ip',
+      title: 'IP',
+      width: 180
+    },
+    {
+      key: 'comments',
+      title: t('credit.listCol.commment'),
+      minWidth: 180
     }
-  },
-  {
-    key: 'description',
-    title: '变更原因',
-    width: 280
-  },
-  {
-    key: 'historyDtTm',
-    title: '变更时间',
-    width: 180
-  },
-  {
-    key: 'ip',
-    title: 'IP',
-    width: 180
-  },
-  {
-    key: 'comments',
-    title: '备注',
-    minWidth: 180
-  }
-]
+  ]
+}

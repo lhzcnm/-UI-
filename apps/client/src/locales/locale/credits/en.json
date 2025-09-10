@@ -1,0 +1,14 @@
+{
+  "credit": {
+    "listCol": {
+      "service": "Service",
+      "amount": "Amount",
+      "reason": "Reason",
+      "time": "Time",
+      "commment": "Remark"
+    },
+    "text": {
+      "minus": "Administrator deductions"
+    }
+  }
+}

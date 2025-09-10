@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CreditLogsResponse } from '@/api/user'
 import { userApi } from '@/api/user'
-import { columns } from './utils/columns'
+import { getCreditColumns } from './utils/columns'
 
 const page = ref(1)
 const limit = ref(20)
@@ -12,6 +12,8 @@ const loading = ref(false)
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
+
+const columns = getCreditColumns()
 
 watch(
   [page, limit],

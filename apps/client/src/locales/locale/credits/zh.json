@@ -1,0 +1,14 @@
+{
+  "credit": {
+    "listCol": {
+      "service": "服务",
+      "amount": "变动金额",
+      "reason": "变动原因",
+      "time": "变更时间",
+      "commment": "备注"
+    },
+    "text": {
+      "minus": "管理员扣除积分"
+    }
+  }
+}

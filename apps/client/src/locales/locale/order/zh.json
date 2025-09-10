@@ -30,9 +30,6 @@
       "orderTimeout": "订单超过三天, 不支持该功能",
       "vertified": "已提交验证"
     },
-    "listRender": {
-      "serviceNotFound": "服务不存在"
-    },
     "form": {
       "status": {
         "title": "订单状态",

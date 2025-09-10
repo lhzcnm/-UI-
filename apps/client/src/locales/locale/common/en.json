@@ -25,7 +25,8 @@
   },
   "service": {
     "title": "Service",
-    "placeholder": "Please select a service"
+    "placeholder": "Please select a service",
+    "notFound": "Service Not Found"
   },
   "valid": {
     "null": "{field} is empty",
