@@ -1,5 +1,7 @@
 {
   "all": "All",
+  "dataNull": "No records",
+  "unknown": "Unknown",
   "submit": {
     "success": "{action} succeeded",
     "fail": "{action} failed"

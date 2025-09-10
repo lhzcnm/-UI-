@@ -9,6 +9,9 @@ const uStore = useUserStore()
 const store = inject(TICKET_STORE)!
 
 const msg = ref('')
+
+const { t } = useI18n()
+
 const isSolved = computed(() => {
   const status = currentTicket.value!.statusId
   return status === TICKET_STATUS.SOLVED
@@ -22,7 +25,7 @@ const currentTicket = computed(() => {
 function handleSubmit() {
   if (isSolved.value) return
   if (msg.value.trim() === '') {
-    toast.warning('不能发送空消息')
+    toast.warning(t('ticket.prompt.msgNull'))
     return
   }
 
@@ -64,7 +67,7 @@ function handleSubmit() {
               :class="twMerge(
                 'size-8 rounded-full object-cover flex-shrink-0',
               )"
-              :alt="reply.replyId ? '客服' : '用户'"
+              :alt="reply.replyId ? t('ticket.customer') : t('ticket.user')"
               draggable="false"
             />
             <div
@@ -87,11 +90,11 @@ function handleSubmit() {
               'w-full h-full pl-2 text-base sm:text-sm bg-transparent',
               'resize-none focus:outline-none'
             )"
-            placeholder="请输入回复内容"
+            :placeholder="t('ticket.placeholder.chat')"
             rows="5"
           />
           <XButton
-            label="发送"
+            :label="t('ticket.title.Send')"
             :disabled="isSolved"
             @click="handleSubmit"
           />

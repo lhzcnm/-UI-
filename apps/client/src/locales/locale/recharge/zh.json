@@ -42,7 +42,6 @@
       "placeholder": "自定义充值金额"
     },
     "history": {
-      "dataNull": "暂无记录",
       "amount": "账单金额",
       "real": "实际到账"
     },

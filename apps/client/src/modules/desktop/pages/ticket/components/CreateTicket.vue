@@ -6,6 +6,8 @@ import { ticketApi } from '@/api/tickets'
 const store = inject(TICKET_STORE)!
 const submitLoading = ref(false)
 
+const { t } = useI18n()
+
 function handleSubmit() {
   submitLoading.value = true
 
@@ -26,14 +28,16 @@ function handleSubmit() {
     v-model="store.visibleCreate"
     :close-on-esc="false"
     :mask-closable="false"
-    title="创建工单"
+    :title="t('ticket.title.create')"
   >
     <BaseForm v-model="store.createForm" :type-list="store.types" />
 
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">
-        <XButton variant="soft" @click="store.visibleCreate = false">取消</XButton>
-        <XButton :loading="submitLoading" @click="handleSubmit">提交</XButton>
+        <ButtonGroup
+          :layouts="['cancel', 'submit']"
+          @cancel="store.visibleCreate = false" @submit="handleSubmit"
+        />
       </div>
     </template>
   </XDialog>

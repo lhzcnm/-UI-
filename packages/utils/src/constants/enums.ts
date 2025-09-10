@@ -167,14 +167,14 @@ export enum TICKET_PRIORITY {
   LOW    = 2,
 }
 export const TICKET_PRIORITY_MAP: StatusMap = {
-  [TICKET_PRIORITY.HIGH]   : { color: 'danger', label: '紧急' },
-  [TICKET_PRIORITY.MEDIUM] : { color: 'primary', label: '普通' },
-  [TICKET_PRIORITY.LOW]    : { color: 'info', label: '可以等待' },
+  [TICKET_PRIORITY.HIGH]   : { color: 'danger', label: '紧急', key: 'status.ticket.0' },
+  [TICKET_PRIORITY.MEDIUM] : { color: 'primary', label: '普通', key: 'status.ticket.1' },
+  [TICKET_PRIORITY.LOW]    : { color: 'info', label: '可以等待', key: 'status.ticket.2' },
 }
 export const TICKET_PRIORITY_LIST = [
-  { value: TICKET_PRIORITY.HIGH, label: '紧急' },
-  { value: TICKET_PRIORITY.MEDIUM, label: '普通' },
-  { value: TICKET_PRIORITY.LOW, label: '可以等待' },
+  { value: TICKET_PRIORITY.HIGH, label: '紧急', key: 'status.ticket.0' },
+  { value: TICKET_PRIORITY.MEDIUM, label: '普通', key: 'status.ticket.1' },
+  { value: TICKET_PRIORITY.LOW, label: '可以等待', key: 'status.ticket.2' },
 ]
 
 // Ticket Type

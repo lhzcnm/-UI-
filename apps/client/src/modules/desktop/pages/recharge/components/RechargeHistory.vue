@@ -49,7 +49,7 @@ function handleExport() {
     </div>
 
     <div class="h-[calc(100%-5.25rem)] overflow-y-auto px-4">
-      <NoMessage v-if="bills.total === 0" :title="t('recharge.history.dataNull')" />
+      <NoMessage v-if="bills.total === 0" :title="t('dataNull')" />
       <div v-else class="grid gap-3 grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
         <BillCard
           v-for="item in bills.list"

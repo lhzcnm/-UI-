@@ -1,5 +1,7 @@
 {
   "all": "全部",
+  "dataNull": "暂无记录",
+  "unknown": "未知",
   "submit": {
     "success": "{action}成功",
     "fail": "{action}失败"

@@ -1,0 +1,25 @@
+{
+  "ticket": {
+    "form": {
+      "type": "Ticket Type",
+      "level": "Priority Level",
+      "topic": "Ticket Subject",
+      "msg": "Feedback Content"
+    },
+    "title": {
+      "create": "Create Ticket",
+      "send": "Send"
+    },
+    "button": "New Ticket",
+    "customer": "Customer",
+    "user": "User",
+    "placeholder": {
+      "chat": "Enter reply content",
+      "topic": "e.g.: Order unlock failed",
+      "msg": "Order No: 7890\nIMEI: 351234123412345"
+    },
+    "prompt": {
+      "msgNull": "Cannot send an empty message"
+    }
+  }
+}

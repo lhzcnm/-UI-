@@ -42,7 +42,6 @@
       "placeholder": "Custom recharge amount"
     },
     "history": {
-      "dataNull": "No records",
       "amount": "Bill Amount",
       "real": "Actual Received"
     },

@@ -11,6 +11,11 @@
       "1": "Feedback",
       "2": "Solved",
       "3": "Refund"
+    },
+    "ticket": {
+      "0": "Urgent",
+      "1": "Normal",
+      "2": "Can Wait"
     }
   }
 }
