@@ -131,10 +131,10 @@ export enum ORDER_VERIFY {
   REFUNDED  = 3,
 }
 export const ORDER_VERIFY_MAP: StatusMap = {
-  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常' },
-  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈' },
-  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决' },
-  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款' },
+  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', key: 'status.vertify.0' },
+  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', key: 'status.vertify.1' },
+  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', key: 'status.vertify.2' },
+  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', key: 'status.vertify.3' },
 }
 export const ORDER_VERIFY_LIST = [
   { value: ORDER_VERIFY.NORMAL, label: '正常' },
