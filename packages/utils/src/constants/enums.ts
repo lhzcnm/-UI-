@@ -117,10 +117,10 @@ export const ORDER_STATUS_MAP: StatusMap = {
   [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', key: 'status.order.4' },
 }
 export const ORDER_STATUS_LIST = [
-  { value: ORDER_STATUS.WAIT, label: '等待提交' },
-  { value: ORDER_STATUS.SUCCESS, label: '处理成功' },
-  { value: ORDER_STATUS.FAILED, label: '处理失败' },
-  { value: ORDER_STATUS.PROCESSING, label: '正在处理' },
+  { value: ORDER_STATUS.WAIT, label: 'status.order.1' },
+  { value: ORDER_STATUS.SUCCESS, label: 'status.order.2' },
+  { value: ORDER_STATUS.FAILED, label: 'status.order.3' },
+  { value: ORDER_STATUS.PROCESSING, label: 'status.order.4' },
 ]
 
 // Order Verify
