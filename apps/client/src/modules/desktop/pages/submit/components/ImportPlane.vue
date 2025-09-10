@@ -21,6 +21,8 @@ const open   = ref(false)
 const imei   = ref('')
 const remark = ref('')
 
+const { t } = useI18n()
+
 const validImeiList = computed(() => {
   const service = store.services.get(props.selectedId)
   const imeiType = service?.imeiType || IMEI_TYPE.NONE
@@ -30,7 +32,7 @@ const validImeiList = computed(() => {
 
 function handleSubmit() {
   if (validImeiList.value.length === 0) {
-    toast.warning('IMEI/SN 不能为空')
+    toast.warning(t('valid.null', { field: 'IMEI/SN' }))
     return
   }
 
@@ -71,7 +73,7 @@ async function handleFile(file: File) {
     imei.value = text
   } catch (error) {
     console.error('[File parse error]', error)
-    toast.error('文件解析错误')
+    toast.error(t('valid.fileError'))
   }
 }
 </script>
@@ -79,7 +81,7 @@ async function handleFile(file: File) {
 <template>
   <XPopover v-model="open" @closed="handleClosed">
     <template #trigger>
-      <XButton label="导入" :disabled="!selectedId" />
+      <XButton :label="t('button.import')" :disabled="!selectedId" />
     </template>
 
     <div class="space-y-3 w-80 p-4">
@@ -88,22 +90,24 @@ async function handleFile(file: File) {
         rows="10" autofocus
         @dragover.prevent
         @drop.prevent="handleDrop"
-        placeholder="每行一个 IMEI/SN&#13;&#10;&#13;&#10;可以拖动文件到此导入&#13;&#10;支持 txt、csv、xlsx、xls 等"
+        :placeholder="t('imei.placeholder')"
       />
-      <XTextarea v-model="remark" placeholder="您的备注信息" />
+      <XTextarea v-model="remark" :placeholder="t('remark.placeholder')" />
 
       <div class="flex items-center justify-between space-x-2">
         <a
-          href="javascript:void(0)" title="查看正确的 IMEI/SN"
+          href="javascript:void(0)" :title="t('imei.view')"
           class="text-sm text-muted-foreground hover:bg-muted rounded-md px-2 py-1 -ml-2"
           @click="imei = validImeiList.join('\n')"
         >
-          <span class="mr-1">有效数量</span>
+          <span class="mr-1">{{ t('imei.valid') }}</span>
           <span class="text-primary">{{ validImeiList.length }}</span>
         </a>
         <div class="flex justify-end space-x-2">
-          <XButton label="取消" variant="soft" @click="open = false" size="sm" />
-          <XButton label="导入" @click="handleSubmit" size="sm" />
+          <ButtonGroup
+            :layouts="['cancel', 'import']" size="sm"
+            @cancel="open = false" @import="handleSubmit"
+          />
         </div>
       </div>
     </div>

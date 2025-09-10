@@ -1,0 +1,24 @@
+{
+  "query": {
+    "prompt": {
+      "repeat": "请勿重复提交",
+      "serviveNull": "请先选择服务",
+      "importNull": "请先导入订单",
+      "imeiNotExist": "IMEI不存在",
+      "exportNotSub": "订单未提交",
+      "pushRes": "确认不接收公众号推送结果吗?\n订单量较大时,建议关闭"
+    },
+    "submit": "提交订单",
+    "viewRes": "请前往'我的订单'页面查看结果",
+    "service": "服务说明",
+    "pushRes": "推送结果",
+    "listCol": {
+      "index": "序号",
+      "service": "服务",
+      "point": "积分",
+      "status": "订单状态",
+      "result": "订单结果",
+      "remark": "备注"
+    }
+  }
+}

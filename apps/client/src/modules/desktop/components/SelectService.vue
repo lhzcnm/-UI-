@@ -8,6 +8,8 @@ const modal = defineModel<number>()
 const emits = defineEmits<XSelectEmits>()
 const input = ref('')
 
+const { t } = useI18n()
+
 const filteredServices = computed(() => {
   const inputValue = input.value.trim().toLowerCase()
   if (!inputValue) return store.details
@@ -54,13 +56,13 @@ function highlightText(text: string, keyword: string) {
     v-model="modal"
     v-model:input="input"
     v-bind="$attrs"
-    filterable 
-    placeholder="请选择服务"
+    filterable
+    :placeholder="t('service.placeholder')"
     placement="bottom-start"
     @selected="emits('selected', $event)"
   >
     <XSelectGroup
-      v-for="detail in filteredServices"
+      v-for="detail in filteredServices" uiTitle="text-danger"
       :key="detail.id" :title="detail.title"
     >
       <XSelectItem

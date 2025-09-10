@@ -3,10 +3,12 @@ import type { ConfirmOptions } from '@3un/utils'
 import { registerConfirm } from '@3un/utils'
 import { isString } from '@3un/ui'
 
+const { t } = useI18n()
+
 const defaultOptions = {
-  title: '提示',
-  cancelText: '取消',
-  confirmText: '确定',
+  title: t('prompt.title'),
+  cancelText: t('button.cancel'),
+  confirmText: t('button.confirm'),
   text: '',
 }
 

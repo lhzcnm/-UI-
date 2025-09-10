@@ -11,7 +11,7 @@ import { h } from 'vue'
 
 import type { Service } from '@/api/services'
 import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
-import { getDefaultColumns, mergeColumns } from './utils/columns'
+import { getDefaultColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi } from '@/api/orders'
 import { xconfirm } from '@3un/utils'
@@ -26,12 +26,13 @@ const props = defineProps<TheProps>()
 const uStore = useUserStore()
 const store = useServiceStore()
 const { connect, close } = useWsStore()
+const { t } = useI18n()
 
 const page = ref(1)
 const limit = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
-const columns = shallowRef<XTableColumn[]>(getDefaultColumns())
+const columns = shallowRef<XTableColumn[]>(getDefaultColumns(t))
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
@@ -43,6 +44,7 @@ const imeis = ref<string[]>([])
 const comments = ref<string>('')
 
 const selectedId = ref(+props.id)
+
 
 const sizes = [50, 150, 200, 300, 500]
 
@@ -78,11 +80,24 @@ async function handleSelected(value: number) {
   await handleServiceCols(value)
 }
 
+function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
+  const defaultCols = getDefaultColumns(t)
+  const len = defaultCols.length
+  const frontCols = defaultCols.slice(0, len - 2)
+  const endCols = defaultCols.slice(-1)
+
+  return [
+    ...frontCols,
+    ...serviceCols,
+    ...endCols
+  ]
+}
+
 async function handleServiceCols(value: number) {
   const { data } = await serviceApi.header(value)
 
   if (data.length === 0) {
-    columns.value = getDefaultColumns()
+    columns.value = getDefaultColumns(t)
     return
   }
 
@@ -136,11 +151,12 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
 }
 
 function handleSubmit() {
-  if (submited.value) return toast.warning('请勿重复提交')
+  if(submitLoading.value) return
+  if (submited.value) return toast.warning(t('query.prompt.repeat'))
   const service = store.services.get(selectedId.value)
 
-  if (!service) return toast.warning('请先选择服务')
-  if (orders.value.length === 0) return toast.warning('请导入订单')
+  if (!service) return toast.warning(t('query.prompt.serviveNull'))
+  if (orders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
   submitLoading.value = true
 
   if (service.isUnlock) return submitOrder(service)
@@ -157,7 +173,7 @@ function submitQueryOrder(service: Service) {
     status,
     (value) => {
       if (value !== 'OPEN') {
-        console.warn('[3un] WebSocket 连接失败', value)
+        console.warn(`[3un] WebSocket ${t('action.submit.fail', { action: t('action.connect') })}`, value)
         return
       }
 
@@ -189,14 +205,14 @@ function submitOrder(service: Service) {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success('提交成功，请稍后前往"我的订单"页面查看')
+      toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('')}`)
     }
 
     renderSubmitOrderResult(data)
   })
 
   response.catch((err) => {
-    console.error('[3un] 提交订单失败', err)
+    console.error(`[3un] ${t('submit.fail', { action: t('query.submit') })}`, err)
     close()
   })
 
@@ -211,7 +227,7 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 
   for (let item of data) {
     const index = imeis.value.indexOf(item.imei)
-    if (index === -1) return console.error('[3un] IMEI 不存在', item)
+    if (index === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, item)
 
     const isFailed = item.status === ORDER_STATUS.FAILED
     if (isFailed) handleCount()
@@ -230,7 +246,7 @@ function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
   const index = imeis.value.indexOf(data.imei)
-  if (index === -1) return console.error('[3un] IMEI 不存在', data)
+  if (index === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, data)
 
   const resultCol = columns.value[5].key
   const hasResult = resultCol === 'result'
@@ -268,12 +284,12 @@ function handleCount() {
 function handleExport() {
   const ids = rawOrders.value.map((item) => item.id)
   if (!selectedId.value || !ids?.length) {
-    toast.warning('订单列表为空')
+    toast.warning(t('query.prompt.importNull'))
     return
   }
 
   if (!submited.value) {
-    toast.warning('订单未提交，无法导出')
+    toast.warning(t('query.prompt.exportNotSub'))
     return
   }
 
@@ -308,17 +324,16 @@ async function handlePushMsgChange(value: boolean) {
   if (value) return
 
   const result = await xconfirm`
-    确定不接收公众号推送结果吗？<br>
-    订单量较大时，建议关闭!
+    ${t('query.prompt.pushRes')}
   `
   if (!result) pushMsg.value = true
 }
 
 async function handleMustRead() {
   const result = await xconfirm({
-    title: '服务说明',
+    title: t('query.service'),
     text: mustRead.value || '',
-    confirmText: '确认',
+    confirmText: t('button.confirm'),
     cancelText: undefined,
   })
 
@@ -339,18 +354,18 @@ async function handleMustRead() {
           :selected-id="selectedId"
           @submit="handleImport"
         />
-
-        <XButton label="提交" :loading="submitLoading" @click="handleSubmit" />
-        <XButton label="导出" color="success" @click="handleExport" />
-        <XButton label="清空" color="danger" @click="reset" />
+        <ButtonGroup
+          :layouts="['submit', 'export', 'clear']"
+          @submit="handleSubmit" @export="handleExport" @clear="reset"
+        />
         <XButton
           v-show="mustRead" variant="outline"
-          label="服务说明" color="warning"
+          :label="t('query.service')" color="warning"
           @click="handleMustRead"
         />
 
         <XSwitch
-          v-model="pushMsg" label="推送结果"
+          v-model="pushMsg" :label="t('query.pushRes')"
           @change="handlePushMsgChange"
         />
       </div>

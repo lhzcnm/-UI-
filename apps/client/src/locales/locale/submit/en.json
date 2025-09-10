@@ -1,0 +1,24 @@
+{
+  "query": {
+    "prompt": {
+      "repeat": "Do not submit repeatedly",
+      "serviveNull": "Please select a service first",
+      "importNull": "Please import the order first",
+      "imeiNotExist": "IMEI does not exist",
+      "exportNotSub": "Order not submitted",
+      "pushRes": "Are you sure you don't want to receive results via WeChat official account push?"
+    },
+    "submit": "Submit Order",
+    "viewRes": "Please go to 'My Orders' page to view results",
+    "service": "Service Description",
+    "pushRes": "Push Result",
+    "listCol": {
+      "index": "Index",
+      "service": "Service",
+      "point": "Points",
+      "status": "Status",
+      "result": "Result",
+      "remark": "Remarks"
+    }
+  }
+}
