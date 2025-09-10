@@ -18,13 +18,14 @@ const visible = ref(false)
 
 const { popupAnnc, enablePopupAnnc } = iStore.settings
 const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
+const { t } = useI18n()
 
 onMounted(async () => {
   if (!anncVisible.value) return
   const result = await xconfirm({
-    title: '公告',
+    title: t('announcement.title'),
     text: popupAnnc,
-    confirmText: '确定',
+    confirmText: t('button.confirm'),
     cancelText: undefined,
   })
 
@@ -70,7 +71,7 @@ function handleServiceItemClick(event: MouseEvent) {
     </section>
 
     <section v-if="commonList.length" class="mt-8">
-      <h2 class="text-xl font-bold mb-3">常用服务</h2>
+      <h2 class="text-xl font-bold mb-3">{{ t('home.service') }}</h2>
       <div
         class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]"
         @click="handleServiceItemClick"

@@ -9,5 +9,12 @@
     "submit": "Submit",
     "delete": "Delete",
     "export": "Export"
+  },
+  "prompt": {
+    "title": "Prompt",
+    "confirm": "Confirm to {action}?"
+  },
+  "announcement": {
+    "title": "Announcement"
   }
 }

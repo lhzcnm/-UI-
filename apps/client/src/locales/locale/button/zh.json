@@ -1,0 +1,15 @@
+{
+  "button": {
+    "filter": "筛选",
+    "import": "导入",
+    "export": "导出",
+    "submit": "提交",
+    "confirm": "确认",
+    "clear": "清空",
+    "print": "打印",
+    "copy": "复制",
+    "generate": "生成",
+    "add": "新增",
+    "cancel": "取消"
+  }
+}

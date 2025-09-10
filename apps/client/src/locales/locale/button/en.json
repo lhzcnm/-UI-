@@ -1,0 +1,15 @@
+{
+  "button": {
+    "filter": "Filter",
+    "import": "Import",
+    "export": "Export",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "clear": "Clear",
+    "print": "Print",
+    "copy": "Copy",
+    "generate": "Generate",
+    "add": "Add",
+    "cancel": "Cancel"
+  }
+}

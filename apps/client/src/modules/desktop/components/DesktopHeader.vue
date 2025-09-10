@@ -31,6 +31,7 @@ const foldIcon = computed(() => {
           <span class="text-sm">{{ uStore.info.credits }}</span>
         </RouterLink>
 
+        <LanguageSwitch />
         <TheTheme />
         <TheAvatar class="size-8" />
       </nav>

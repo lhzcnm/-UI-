@@ -1,15 +1,15 @@
 {
   "barItem": {
     "home": "Home",
-    "query": "Order Query",
-    "device": "My Devices",
-    "recharge": "Points Recharge",
-    "workOrder": "My Work Orders",
-    "profile": "Member Center",
+    "query": "Query",
+    "device": "Devices",
+    "recharge": "Recharge",
+    "workOrder": "Tickets",
+    "profile": "Profile",
     "history": {
-      "order": "My Orders",
-      "point": "Points History"
+      "order": "Orders",
+      "point": "Points"
     },
-    "logout": "LogOut"
+    "logout": "Logout"
   }
 }

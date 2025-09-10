@@ -1,0 +1,11 @@
+{
+  "home": {
+    "service": "Common Services",
+    "dialog": {
+      "service": "Services"
+    },
+    "placeholder": {
+      "service": "Search Service"
+    }
+  }
+}

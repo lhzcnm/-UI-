@@ -1,0 +1,11 @@
+{
+  "home": {
+    "service": "常用服务",
+    "dialog": {
+      "service": "服务列表"
+    },
+    "placeholder": {
+      "service": "搜索服务"
+    }
+  }
+}

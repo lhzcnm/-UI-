@@ -10,6 +10,7 @@ const visible = defineModel<boolean>({ required: true })
 
 const router = useRouter()
 const search = ref('')
+const { t } = useI18n()
 
 const filteredChildren = computed<ServiceView[]>(() => {
   if (!search.value) return props.group.children as ServiceView[]
@@ -56,12 +57,12 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <XDialog
-    v-model="visible" title="服务列表"
+    v-model="visible" :title="t('home.dialog.service')"
     ui-root="sm:max-w-screen-md"
     @close="search = ''"
   >
     <div class="space-y-4">
-      <XInput v-model="search" placeholder="搜索服务" ui-root="w-64" autofocus clearable />
+      <XInput v-model="search" :placeholder="t('home.placeholder.service')" ui-root="w-64" autofocus clearable />
       <div class="h-[min(calc(100vh-240px),600px)] overflow-y-auto" type="auto">
         <div
           class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]"

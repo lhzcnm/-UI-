@@ -3,6 +3,8 @@ import type { ServiceView } from '@/api/services'
 import { twJoin } from 'tailwind-merge'
 
 const { data } = defineProps<{ data: ServiceView }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -19,10 +21,10 @@ const { data } = defineProps<{ data: ServiceView }>()
             'px-2 py-0.5 text-xs font-semibold text-white',
             'bg-gradient-to-b from-primary to-blue-600 rounded-full shadow-sm'
           )"
-        >新!</span>
+        >{{ t('service.new') }} !</span>
       </h3>
       <div class="flex justify-end text-xs">
-        <XTag color="danger">积分 {{ data.price }}</XTag>
+        <XTag color="danger">{{ t('service.point') }}: {{ data.price }}</XTag>
         <XTag color="success" class="ml-1">{{ data.taken }}</XTag>
       </div>
     </div>

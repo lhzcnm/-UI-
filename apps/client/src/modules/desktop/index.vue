@@ -29,25 +29,25 @@ const hideDevice =
   !uStore.info.enableDevice
 
 const menus = [
-  { label: '首页',    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
-  { label: '订单查询', path: '/submit', icon: 'iconoir:atom' },
+  { label: t('barItem.home'),    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
+  { label: t('barItem.query'), path: '/submit', icon: 'iconoir:atom' },
   {
-    label: '我的设备',
+    label: t('barItem.device'),
     path: '/device',
     icon: 'iconoir:laptop-charging',
     hide: hideDevice,
   },
-  { label: '我的订单', path: '/history', icon: 'iconoir:page-flip' },
-  { label: '积分充值', path: '/recharge', icon: 'iconoir:credit-card' },
-  { label: '积分记录', path: '/credits', icon: 'iconoir:bitcoin-rotate-out' },
+  { label: t('barItem.history.order'), path: '/history', icon: 'iconoir:page-flip' },
+  { label: t('barItem.recharge'), path: '/recharge', icon: 'iconoir:credit-card' },
+  { label: t('barItem.history.point'), path: '/credits', icon: 'iconoir:bitcoin-rotate-out' },
   {
-    label: '我的工单',
+    label: t('barItem.workOrder'),
     path: '/ticket',
     icon: 'iconoir:chat-lines',
     hide: !iStore.settings.enableTricket,
   },
-  { label: '会员中心', path: '/profile', icon: 'iconoir:user' },
-  { label: '退出登录', path: '/logout', icon: 'iconoir:log-out'}
+  { label: t('barItem.profile'), path: '/profile', icon: 'iconoir:user' },
+  { label: t('barItem.logout'), path: '/logout', icon: 'iconoir:log-out'}
 ]
 
 watch(visibility, (cur, prev) => {
@@ -100,27 +100,18 @@ onMounted(() => {
     v-model="isLogout"
   >
     <template #header>
-      <h2 class="text-lg font-semibold text-center text-gray-900 mb-2">提示</h2>
+      <h2 class="text-lg font-semibold text-center text-gray-900 mb-2">{{ t('prompt.title') }}</h2>
     </template>
 
     <template #default>
-      <p class="text-sm text-center text-gray-600 mb-6">是否确认退出登录</p>
+      <p class="text-sm text-center text-gray-600 mb-6">{{ t('prompt.confirm', { action: t('barItem.logout') }) }}</p>
     </template>
 
     <template #footer>
       <div class="flex justify-around gap-4">
-        <XButton
-          class="w-16 !h-8 text-sm rounded-md"
-          color="primary"
-          variant="outline"
-          label="取消"
-          @click="isLogout = false"
-        />
-        <XButton
-          class="w-16 !h-8 text-sm rounded-md"
-          color="primary"
-          label="确认"
-          @click="handleLogout"
+        <ButtonGroup
+          :layouts="['cancel', 'confirm']"
+          @cancel="isLogout = false" @confirm="handleLogout"
         />
       </div>
     </template>

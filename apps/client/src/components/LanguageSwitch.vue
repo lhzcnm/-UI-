@@ -26,7 +26,7 @@ function handleClick(lang: string) {
   >
     <template #trigger>
       <button
-        class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        class="bg-muted text-muted-foreground p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
       >
         <Icon
           icon="lucide:languages"
