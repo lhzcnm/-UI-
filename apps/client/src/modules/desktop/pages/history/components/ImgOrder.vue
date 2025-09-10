@@ -16,6 +16,8 @@ const emits = defineEmits<ImgOrderEmits>()
 
 const store = inject(HISTORY_STORE)!
 
+const { t } = useI18n()
+
 function handleClick(order: ImgOrderItem) {
   const a = document.createElement('a')
   
@@ -28,23 +30,19 @@ function handleClick(order: ImgOrderItem) {
 
 <template>
   <XDialog
-    v-model="store.visibleOrderImg" maskClosable draggable title="图片展示"
+    v-model="store.visibleOrderImg" maskClosable draggable
+    :title="t('order.title.img')"
     uiRoot="sm:max-w-[32rem] h-[calc(100vh-10rem)] flex flex-col"
     @close="emits('close')"
   >
     <template #default>
-      <div class="h-full overflow-auto flex flex-col gap-2">
-        <template v-if="imgOrders.length === 0">
-          <span>这里空空如也</span>
-        </template>
-        <template v-else>
-          <div class="border rounded relative" v-for="(order) in imgOrders" :key="order.id">
-            <img class="border m-2" :src="order.img" :alt="`${order.id}_${order.imei}`">
-            <div class="absolute top-2 right-2 z-20">
-              <XButton variant="ghost" label="下载" @click="handleClick(order)" />
-            </div>
+      <div class="h-full overflow-auto flex flex-col space-y-2">
+        <div class="border rounded relative" v-for="(order) in imgOrders" :key="order.id">
+          <img class="border m-2" :src="order.img" :alt="`${order.id}_${order.imei}`">
+          <div class="absolute top-2 right-2 z-20">
+            <XButton variant="ghost" :label="t('button.download')" @click="handleClick(order)" />
           </div>
-        </template>
+        </div>
       </div>
     </template>
   </XDialog>

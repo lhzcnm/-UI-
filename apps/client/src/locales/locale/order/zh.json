@@ -1,0 +1,43 @@
+{
+  "order": {
+    "button": {
+      "print": "打印结果",
+      "generate": "生成图片",
+      "table": {
+        "copy": "复制结果",
+        "vertify": "开启验证"
+      }
+    },
+    "listCol": {
+      "service": "服务",
+      "status": "订单状态",
+      "vertify": "验证状态",
+      "result": "订单结果",
+      "creaTime": "提交时间",
+      "remark": "备注"
+    },
+    "placeholder": {
+      "status": "请输入订单状态"
+    },
+    "title": {
+      "export": "导出订单",
+      "img": "订单图片",
+      "filter": "筛选订单"
+    },
+    "prompt": {
+      "order": "请选择订单",
+      "copy": "已复制",
+      "orderTimeout": "订单超过三天, 不支持该功能",
+      "vertified": "已提交验证"
+    },
+    "listRender": {
+      "serviceNotFound": "服务不存在"
+    },
+    "form": {
+      "status": {
+        "title": "订单状态",
+        "placeholder": "请选择订单状态"
+      }
+    }
+  }
+}

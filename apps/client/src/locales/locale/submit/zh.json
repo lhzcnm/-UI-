@@ -15,10 +15,15 @@
     "listCol": {
       "index": "序号",
       "service": "服务",
-      "point": "积分",
       "status": "订单状态",
       "result": "订单结果",
       "remark": "备注"
+    },
+    "imei": {
+      "title": "IMEI/SN",
+      "placeholder": "每行一个 IMEI/SN\n\n可以拖动文件到此导入\n支持 txt、csv、xlsx、xls 等",
+      "view": "查看正确的IMEI",
+      "valid": "有效数量"
     }
   }
 }

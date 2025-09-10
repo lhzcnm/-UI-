@@ -8,6 +8,8 @@ import { downloadURL } from '@3un/utils'
 const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
 
+const { t } = useI18n()
+
 function handleSubmit() {
   submitLoading.value = true
 
@@ -33,14 +35,16 @@ function handleSubmit() {
     v-model="store.visibleExport"
     :close-on-esc="false"
     :mask-closable="false"
-    title="导出订单"
+    :title="t('order.title.export')"
   >
     <BaseForm v-model="store.exportForm" />
 
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">
-        <XButton variant="soft" @click="store.visibleExport = false">取消</XButton>
-        <XButton :loading="submitLoading" @click="handleSubmit">导出</XButton>
+        <ButtonGroup
+          :layouts="['cancel', 'confirm']"
+          @cancel="store.visibleExport = false" @confirm="handleSubmit"
+        />
       </div>
     </template>
   </XDialog>

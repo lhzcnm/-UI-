@@ -90,17 +90,17 @@ async function handleFile(file: File) {
         rows="10" autofocus
         @dragover.prevent
         @drop.prevent="handleDrop"
-        :placeholder="t('imei.placeholder')"
+        :placeholder="t('query.imei.placeholder')"
       />
       <XTextarea v-model="remark" :placeholder="t('remark.placeholder')" />
 
       <div class="flex items-center justify-between space-x-2">
         <a
-          href="javascript:void(0)" :title="t('imei.view')"
+          href="javascript:void(0)" :title="t('query.imei.view')"
           class="text-sm text-muted-foreground hover:bg-muted rounded-md px-2 py-1 -ml-2"
           @click="imei = validImeiList.join('\n')"
         >
-          <span class="mr-1">{{ t('imei.valid') }}</span>
+          <span class="mr-1">{{ t('query.imei.valid') }}</span>
           <span class="text-primary">{{ validImeiList.length }}</span>
         </a>
         <div class="flex justify-end space-x-2">

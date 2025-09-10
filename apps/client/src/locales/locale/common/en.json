@@ -1,4 +1,5 @@
 {
+  "all": "All",
   "submit": {
     "success": "{action} succeeded",
     "fail": "{action} failed"
@@ -9,7 +10,10 @@
     "submit": "Submit",
     "delete": "Delete",
     "export": "Export",
-    "connect": "Connect"
+    "connect": "Connect",
+    "copy": "Copy",
+    "refresh": "Refresh",
+    "print": "Print"
   },
   "prompt": {
     "title": "Prompt",
@@ -26,14 +30,16 @@
     "null": "{field} is empty",
     "fileError": "File parsing error"
   },
-  "imei": {
-    "title": "IMEI/SN",
-    "placeholder": "One IMEI/SN per line\n\nYou can drag files here to import\nSupports txt, csv, xlsx, xls, etc.",
-    "view": "View correct IMEI",
-    "valid": "Valid quantity"
-  },
   "remark": {
     "title": "Remarks",
     "placeholder": "Your remarks"
+  },
+  "date": {
+    "title": "Date",
+    "placeholder": "Please Select Date Range"
+  },
+  "imei": {
+    "title": "IMEI/SN",
+    "placeholder": "Please Input IMEI/SN"
   }
 }

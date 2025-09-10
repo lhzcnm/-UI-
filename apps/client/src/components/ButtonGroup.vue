@@ -8,9 +8,7 @@ const ButtonLayouts = [
   "submit",
   "confirm",
   "clear",
-  "print",
   "copy",
-  "generate",
   "add",
   "cancel",
 ] as const
@@ -58,15 +56,13 @@ const { t } = useI18n()
 const buttonConfigs: ButtonConfig = {
   filter: { color: 'primary', variant: 'solid' },
   import: { color: 'primary', variant: 'solid' },
-  export: { color: 'warning', variant: 'solid' },
+  export: { color: 'success', variant: 'solid' },
   submit: { color: 'primary', variant: 'solid' },
   confirm: { color: 'primary', variant: 'solid' },
   clear: { color: 'danger', variant: 'solid' },
-  print: { color: 'danger', variant: 'solid' },
   copy: { color: 'primary', variant: 'ghost', },
-  generate: { color: 'success', variant: 'ghost' },
   add: { color: 'primary', variant: 'solid' },
-  cancel: { color: 'primary', variant: 'outline' },
+  cancel: { color: 'primary', variant: 'soft' },
 }
 
 const buttonLabels: ButtonLabel = {
@@ -76,9 +72,7 @@ const buttonLabels: ButtonLabel = {
   submit: t('button.submit'),
   confirm: t('button.confirm'),
   clear: t('button.clear'),
-  print: t('button.print'),
   copy: t('button.copy'),
-  generate: t('button.generate'),
   add: t('button.add'),
   cancel: t('button.cancel'),
 }

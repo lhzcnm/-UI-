@@ -5,6 +5,12 @@
       "2": "Success",
       "3": "Failed",
       "4": "Processing"
+    },
+    "vertify": {
+      "0": "Normal",
+      "1": "Feedback",
+      "2": "Solved",
+      "3": "Refund"
     }
   }
 }

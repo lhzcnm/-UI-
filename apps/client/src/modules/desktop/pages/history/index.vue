@@ -12,7 +12,7 @@ import * as html2image from 'html-to-image'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { columns } from './utils/columns'
+import { getOrderColumns } from './utils/columns'
 import { orderApi, type Order } from '@/api/orders'
 import type { ImgOrderItem } from './types'
 
@@ -26,6 +26,7 @@ const selectRows = ref<string[]>([])
 const generated = ref<boolean>(false)
 
 const { copy } = useClipboard({ legacy: true })
+const { t } = useI18n()
 
 const baseUrl = import.meta.env.VITE_API_URL
 
@@ -43,6 +44,8 @@ const imgOrders = reactive<ImgOrderItem[]>([])
 provide(HISTORY_STORE, store)
 
 const loading = ref(false)
+
+const columns = getOrderColumns()
 
 watch(
   [page, limit],
@@ -72,7 +75,7 @@ function openExport() {
 
 function handleCopy() {
   if (selectRows.value.length === 0) {
-    toast.warning('请先选择要复制的行')
+    toast.warning(t('order.prompt.order'))
     return
   }
 
@@ -84,7 +87,7 @@ function handleCopy() {
   }
 
   copy(res.join('\n'))
-  toast.success('已复制到剪贴板')
+  toast.success(t('order.prompt.copy'))
 }
 
 async function handlePrint() {
@@ -92,18 +95,13 @@ async function handlePrint() {
   params.length = 0
   
   if(selectRows.value.length === 0) {
-    toast.warning('请选择订单后重试')
+    toast.warning(t('order.prompt.order'))
     return
   }
 
   for(const id of selectRows.value) {
     const filters = store.orders.list.filter(item => item.id === +id).map(item => item.result)
     params.push(...filters)
-  }
-
-  if(params.length === 0) {
-    toast.warning('您选择订单数量为0, 无法操作')
-    return
   }
 
   try {
@@ -127,16 +125,13 @@ function handleOpenWindow(url: string) {
   const openWindow = window.open(url, '_blank')
     openWindow!.onload = () => {
       try {
-        // 添加延迟确保PDF渲染完成
         setTimeout(() => {
           openWindow!.print()
-          // 打印后释放URL
           openWindow!.onbeforeunload = () => {
             URL.revokeObjectURL(url)
           }
         }, 1000)
       } catch (err) {
-        console.error('打印失败:', err)
         URL.revokeObjectURL(url)
       }
     }
@@ -147,40 +142,9 @@ function handleGenerate() {
   imgOrders.length = 0
 
   if(selectRows.value.length === 0) {
-    toast.warning('请选择订单后重试')
+    toast.warning(t('order.prompt.order'))
     return
   }
-
-  // for(let imei of selectRows.value) {
-  //   const order = store.orders.list.find(item => item.imei === imei)!
-  //   const service = serviceStore.services.get(order.serviceId)!
-  
-  //   const params: GeneratePictureParms = {
-  //     codeId: order.id.toString(),
-  //     code: order.result,
-  //     codeStatusId: order!.status,
-  //     imei: order.imei,
-  //     credits: order.credits.toString(),
-  //     comments: order.remark,
-  //     packageTitle: service.title,
-  //     dataTime: order.createTime,
-  //   }
-  
-  //   axios.post(`${baseUrl}/order/picture`, params, {
-  //     headers: {
-  //       'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
-  //     },
-  //     'responseType': 'blob',
-  //   }).then(({ data }) => {
-  //     const blob = new Blob([data], { type: 'image/png' })
-  //     const url = URL.createObjectURL(blob)
-  //     imgOrders.push({
-  //       id: order.id,
-  //       imei: order.imei,
-  //       img: url,
-  //     })
-  //   })
-  // }
 
   const orders: Order[] = []
   generated.value = true
@@ -237,11 +201,13 @@ onUnmounted(() => {
   <div class="p-4 h-full">
     <section class="flex justify-between space-x-2 mb-3">
       <div class="space-x-2 whitespace-nowrap">
-        <XButton label="搜索" @click="openSearch" />
-        <XButton color="success" label="导出" @click="openExport" />
-        <XButton color="warning" label="打印结果" @click="handlePrint" />
-        <XButton variant="soft" label="复制 IMEI" @click="handleCopy" />
-        <XButton variant="soft" color="success" label="生成图片" :disabled="generated" @click="handleGenerate" />
+        <ButtonGroup
+          :layouts="['filter', 'export']"
+          @filter="openSearch" @export="openExport"
+        />
+        <XButton color="warning" :label="t('order.button.print')" @click="handlePrint" />
+        <XButton variant="soft" :label="`${t('button.copy')} IMEI`" @click="handleCopy" />
+        <XButton variant="soft" color="success" :label="t('order.button.generate')" :disabled="generated" @click="handleGenerate" />
       </div>
 
       <XPagination
@@ -250,10 +216,10 @@ onUnmounted(() => {
         :total="store.orders.total"
         :layouts="[
           'total',
+          'sizes',
           'prev',
           'pager',
           'next',
-          'sizes',
           'jumper',
         ]"
       />

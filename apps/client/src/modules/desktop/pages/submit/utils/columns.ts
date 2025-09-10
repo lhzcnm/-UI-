@@ -22,7 +22,7 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
       }
     },
     { key: 'imei', title: 'IMEI/SN', width: 158 },
-    { key: 'credits', title: t('query.listCol.point'), width: 58 },
+    { key: 'credits', title: t('service.point'), width: 58 },
     {
       key: 'status',
       title: t('query.listCol.status'),

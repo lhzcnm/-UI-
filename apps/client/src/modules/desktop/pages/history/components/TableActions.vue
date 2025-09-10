@@ -35,8 +35,10 @@ const verify = {
 const store = inject(HISTORY_STORE)!
 const focreHide = ref(false)
 
+const { t } = useI18n()
+
 const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success('复制成功'))
+watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
 
 const iStore = useSettingStore()
 
@@ -49,7 +51,7 @@ const isShowVerify = computed(() => {
 
 const handleRefresh = useThrottleFn(() => {
   orderApi.item(row.id).then(({ data }) => {
-    toast.success('刷新成功')
+    toast.success(t('submit.success', { action: t('action.refresh') }))
 
     if (data.status === ORDER_STATUS.SUCCESS) {
       focreHide.value = true
@@ -69,12 +71,12 @@ function handleVerify() {
   const daysDiff = diff / (24 * 3600 * 1000)
 
   if (daysDiff > 3) {
-    toast.info('订单超过 3 天，不支持验证结果')
+    toast.info(t('order.prompt.orderTimeout'))
     return
   }
 
   orderApi.verify(id).then(() => {
-    toast.success('已提交验证')
+    toast.success(t('order.prompt.vertified'))
 
     focreHide.value = true
     store.orders.list[index] = {
@@ -93,20 +95,20 @@ function handleCopy() {
 <template>
   <div class="space-x-1 pt-1">
     <XButton
-      color="success" label="复制结果"
+      color="success" :label="t('order.button.table.copy')"
       size="sm" @click="handleCopy"
     />
 
     <XButton
       v-if="isShowVerify"
       variant="outline" color="warning"
-      label="开启验证" size="sm"
+      :label="t('order.button.table.vertify')" size="sm"
       @click="handleVerify"
     />
 
     <XButton
       v-if="status.isProcessing && !focreHide"
-      label="刷新" size="sm"
+      :label="t('button.refresh')" size="sm"
       @click="handleRefresh"
     />
   </div>

@@ -7,7 +7,11 @@ import { orderApi } from '@/api/orders'
 const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
 
+const { t } = useI18n()
+
 function handleSubmit() {
+  if(submitLoading.value) return
+
   submitLoading.value = true
 
   const size = store.orders.pageSize
@@ -39,7 +43,7 @@ function handleReset() {
     v-model="store.visibleSearch"
     :close-on-esc="false"
     :mask-closable="false"
-    title="搜索订单"
+    :title="t('order.title.filter')"
   >
     <BaseForm v-model="store.searchForm" />
 
@@ -47,12 +51,14 @@ function handleReset() {
       <div class="flex justify-between space-x-2 mt-4">
         <XButton
           :loading="submitLoading"
-          label="重置" color="success"
+          :label="t('button.reset')" color="success"
           @click="handleReset"
         />
         <div class="space-x-2">
-          <XButton variant="soft" @click="store.visibleSearch = false">取消</XButton>
-          <XButton :loading="submitLoading" @click="handleSubmit">搜索</XButton>
+          <ButtonGroup
+            :layouts="['cancel', 'confirm']"
+            @cancel="store.visibleSearch = false" @confirm="handleSubmit"
+          />
         </div>
       </div>
     </template>

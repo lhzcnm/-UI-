@@ -1,0 +1,37 @@
+{
+  "order": {
+    "button": {
+      "print": "Print Result",
+      "generate": "Generate Image",
+      "table": {
+        "copy": "Copy Result",
+        "vertify": "Vertify"
+      }
+    },
+    "listCol": {
+      "service": "Service",
+      "status": "Order Status",
+      "vertify": "Verify Status",
+      "result": "Order Result",
+      "creaTime": "Submit Time",
+      "remark": "Remarks"
+    },
+    "placeholder": {
+      "status": "Enter Order Status"
+    },
+    "title": {
+      "export": "Export Orders",
+      "img": "Order Image",
+      "filter": "Filter Orders"
+    },
+    "prompt": {
+      "order": "Please Select Service",
+      "copy": "Copied",
+      "orderTimeout": "This function is not supported for orders over three days old",
+      "vertified": "Submitted for verification"
+    },
+    "listRender": {
+      "serviceNotFound": "Service Not Found"
+    }
+  }
+}

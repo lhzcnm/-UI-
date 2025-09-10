@@ -1,4 +1,5 @@
 {
+  "all": "全部",
   "submit": {
     "success": "{action}成功",
     "fail": "{action}失败"
@@ -9,7 +10,10 @@
     "submit": "提交",
     "delete": "删除",
     "export": "导出",
-    "connect": "连接"
+    "connect": "连接",
+    "copy": "复制",
+    "refresh": "刷新",
+    "print": "打印"
   },
   "prompt": {
     "title": "提示",
@@ -26,14 +30,16 @@
     "null": "{field}为空",
     "fileError": "文件解析错误"
   },
-  "imei": {
-    "title": "IMEI/SN",
-    "placeholder": "每行一个 IMEI/SN\n\n可以拖动文件到此导入\n支持 txt、csv、xlsx、xls 等",
-    "view": "查看正确的IMEI",
-    "valid": "有效数量"
-  },
   "remark": {
     "title": "备注信息",
     "placeholder": "您的备注信息"
+  },
+  "date": {
+    "title": "日期",
+    "placeholder": "请选择时间范围"
+  },
+  "imei": {
+    "title": "IMEI/SN",
+    "placeholder": "请输入IMEI/SN"
   }
 }
