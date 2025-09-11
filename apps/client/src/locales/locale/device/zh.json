@@ -1,0 +1,100 @@
+{
+  "device": {
+    "plugin": {
+      "miss": {
+        "title": "未检测到插件运行",
+        "text": "如果插件未运行, 请先启动插件, 再刷新页面\n如果插件未安装, 请点击下方按钮下载安装插件"
+      },
+      "wait": {
+        "title": "等待 iPone 连接",
+        "text": "请使用 USB 线连接 iPhone 到电脑\n并确保启用\"信任此电脑\""
+      },
+      "toLow": {
+        "title": "检测到插件版本过低",
+        "text": "请点击下方按钮安装最新插件"
+      }
+    },
+    "button": {
+      "download": "下载插件",
+      "refresh": "刷新页面",
+      "copy": "一键复制",
+      "print": "打印标签",
+      "view": "查看设备",
+      "inRecover": "进入恢复模式",
+      "outRecover": "退出恢复模式"
+    },
+    "list": {
+      "title": "设备列表",
+      "total": "共 {total} 台设备",
+      "hasNew": "发现新版本, 点击下载新版本"
+    },
+    "card": {
+      "serial": "序列号",
+      "type": "型号"
+    },
+    "date": "{month}月{day}日 星期{weekday}",
+    "info": {
+      "imgLoading": "截图加载中",
+      "button": {
+        "reset": "重启",
+        "shutdown": "关机",
+        "refresh": "刷新"
+      },
+      "grid": {
+        "sn": "序列号",
+        "imei": "串号",
+        "typeNumber": "型号号码",
+        "prodType": "产品类型",
+        "system": "系统版本",
+        "motherNo": "主板序号",
+        "activeStatus": "激活状态",
+        "netLock": "网络锁",
+        "activeLock": "激活锁",
+        "deadLine": "保修期限",
+        "wifiAddr": "WiFi地址",
+        "region": "销售地区",
+        "iCloudBackup": "iCloud备份",
+        "cpu": "CPU类型",
+        "actived": {
+          "already": "已激活",
+          "not": "未激活",
+          "nega": "反激活"
+        },
+        "query": {
+          "confirm": "当前账户该服务已无免费查询次数\n如果继续查询将扣除 {point} 积分",
+          "last": "查看上次查询结果",
+          "ing": "查询中",
+          "re": "重新查询",
+          "now": "立即查询"
+        },
+        "open": {
+          "already": "已开启",
+          "not": "未开启"
+        }
+      },
+      "disk": {
+        "space": "存储空间",
+        "total": "总容量",
+        "system": "系统占用",
+        "data": "用户数据",
+        "useful": "可用空间"
+      },
+      "battery": {
+        "title": "电池信息",
+        "status": "充电状态",
+        "health": "健康度",
+        "capacity": "设计容量",
+        "max": "最大可用容量",
+        "cycle": "循环次数",
+        "temperature": "电池温度",
+        "charge": {
+          "ing": "正在充电",
+          "max": "电池满电"
+        }
+      },
+      "color": {
+        "unknown": "未知颜色"
+      }
+    }
+  }
+}

@@ -2,6 +2,8 @@
 import { useThrottleFn } from '@vueuse/core'
 import { ua } from '@3un/utils'
 
+const { t } = useI18n()
+
 const handleDownload = useThrottleFn(
   (id?: number) => {
     const baseUrl = import.meta.env.VITE_API_URL
@@ -19,14 +21,14 @@ const handleDownload = useThrottleFn(
 
 const options = [
   { label: 'Windows', command: () => handleDownload(43) },,
-  { label: 'MacOS M系列', command: () => handleDownload(44) },
-  { label: 'MacOS Intel系列', command: () => handleDownload(45) },
+  { label: 'MacOS Arm', command: () => handleDownload(44) },
+  { label: 'MacOS Intel', command: () => handleDownload(45) },
 ]
 </script>
 
 <template>
   <XButtonSplit
-    label="下载插件" :options="options"
+    :label="t('device.button.download')" :options="options"
     @click="handleDownload()"
   />
 </template>

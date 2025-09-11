@@ -48,5 +48,18 @@
   "imei": {
     "title": "IMEI/SN",
     "placeholder": "Please Input IMEI/SN"
+  },
+  "command": {
+    "title": "Command {action}",
+    "success": "Sent"
+  },
+  "weekday": {
+    "0": "SunDay",
+    "1": "MonDay",
+    "2": "TuesDay",
+    "3": "WednesDay",
+    "4": "ThursDay",
+    "5": "FriDay",
+    "6": "SaturDay"
   }
 }

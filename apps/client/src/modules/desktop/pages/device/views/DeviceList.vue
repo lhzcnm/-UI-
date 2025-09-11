@@ -4,19 +4,21 @@ import PluginDownload from '../components/PluginDowload.vue'
 import { STORE } from '../utils'
 
 const store = inject(STORE)!
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div>
     <div class="flex justify-between items-center mb-4">
       <div>
-        <h2 class="text-xl font-bold text-foreground">设备列表</h2>
-        <p class="text-sm text-muted-foreground">共 {{ store.deviceMap.size }} 台设备</p>
+        <h2 class="text-xl font-bold text-foreground">{{ t('device.list.title') }}</h2>
+        <p class="text-sm text-muted-foreground">{{ t('device.list.total', { total: store.deviceMap.size }) }}</p>
       </div>
 
       <div v-if="store.hasNewVersion" class="text-right">
         <div class="text-sm text-warning mb-1">
-          发现新版本, 点击下载最新版本:
+          {{ t('device.list.hasNew') }}:
         </div>
         <PluginDownload size="sm" />
       </div>

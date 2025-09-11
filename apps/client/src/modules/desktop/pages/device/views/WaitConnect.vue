@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -11,9 +13,9 @@ import { Icon } from '@iconify/vue'
       </div>
     </div>
     <div class="mt-12 text-center space-y-4">
-      <h2 class="text-2xl font-semibold text-foreground">等待 iPhone 连接</h2>
-      <p class="text-base text-muted-foreground max-w-md">
-        请使用 USB 线连接 iPhone 到电脑<br>并确保已启用"信任此电脑"。
+      <h2 class="text-2xl font-semibold text-foreground">{{ t('device.plugin.wait.title') }}</h2>
+      <p class="text-base text-muted-foreground max-w-md whitespace-pre">
+        {{ t('device.plugin.wait.text') }}
       </p>
     </div>
   </div>

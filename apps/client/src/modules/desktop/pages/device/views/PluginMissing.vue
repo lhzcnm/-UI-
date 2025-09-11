@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import PluginDownload from '../components/PluginDowload.vue'
 import { Icon } from '@iconify/vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -13,11 +15,10 @@ import { Icon } from '@iconify/vue'
     </div>
     <div class="mt-12 text-center space-y-4">
       <h2 class="text-2xl font-semibold text-foreground">
-        未检测到插件运行
+        {{ t('device.plugin.miss.title') }}
       </h2>
-      <p class="text-base text-muted-foreground max-w-md">
-        如果插件未运行，请先启动插件，再刷新页面。<br>
-        如果插件未安装，请点击下方按钮下载安装插件。
+      <p class="text-base text-muted-foreground max-w-md whitespace-pre">
+        {{ t('device.plugin.miss.text') }}
       </p>
       <div class="space-x-4 text-center">
         <PluginDownload />
@@ -25,7 +26,7 @@ import { Icon } from '@iconify/vue'
           variant="soft" icon="lucide:refresh-cw"
           @click="$router.go(0)"
         >
-          刷新页面
+          {{ t('device.button.refresh') }}
         </XButton>
       </div>
     </div>

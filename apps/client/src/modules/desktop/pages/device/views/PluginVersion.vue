@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import PluginDownload from '../components/PluginDowload.vue'
 import { Icon } from '@iconify/vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -13,10 +15,10 @@ import { Icon } from '@iconify/vue'
     </div>
     <div class="mt-12 text-center space-y-4">
       <h2 class="text-2xl font-semibold text-foreground">
-        检测到插件版本过低
+        {{ t('device.plugin.toLow.title') }}
       </h2>
       <p class="text-base text-muted-foreground max-w-md">
-        请点击下方按钮下载安装最新插件。
+        {{ t('device.plugin.toLow.text') }}
       </p>
       <div class="space-x-4 text-center">
         <PluginDownload />
@@ -24,7 +26,7 @@ import { Icon } from '@iconify/vue'
           variant="soft" icon="lucide:refresh-cw"
           @click="$router.go(0)"
         >
-          刷新页面
+          {{ t('device.button.refresh') }}
         </XButton>
       </div>
     </div>

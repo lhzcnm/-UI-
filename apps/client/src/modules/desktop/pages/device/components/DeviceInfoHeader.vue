@@ -7,6 +7,7 @@ import { wsFetch, STORE, getCopyToken } from '../utils'
 
 const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
+const { t } = useI18n()
 
 const isRecoveryMode = ref(false)
 const isPrinting = ref(false)
@@ -19,13 +20,13 @@ function handleRecoveryMode() {
 
 async function handleEnterRecoveryMode(uniqueId: string) {
   await wsFetch({ type: 'enterRecoveryMode', Uid: uniqueId })
-  toast.success('指令已发送')
+  toast.success(t('command.title', { action: t('command.success') }))
   isRecoveryMode.value = true
 }
 
 async function handleExitRecoveryMode(uniqueId: string) {
   await wsFetch({ type: 'exitRecoveryMode', Uid: uniqueId })
-  toast.success('指令已发送')
+  toast.success(t('command.title', { action: t('command.success') }))
   isRecoveryMode.value = false
 }
 
@@ -39,7 +40,7 @@ function handleCopy() {
   const tokens = getCopyToken(device.summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
-  toast.success('复制成功')
+  toast.success(t('submit.success', { action: t('action.copy') }))
 }
 
 const diskCapacity = computed(() => {
@@ -88,21 +89,21 @@ const colorLabel = computed(() => {
       <XButton
         v-if="store.deviceMap.size"
         icon="lucide:list"
-        label="设备列表" size="sm"
+        :label="t('device.list.title')" size="sm"
         @click="store.deviceStatus = 'list'"
       />
 
       <XButton size="sm" color="success" @click="handleRecoveryMode">
-        {{ isRecoveryMode ? '退出恢复模式' : '进入恢复模式' }}
+        {{ isRecoveryMode ? t('device.button.outRecover') : t('device.button.inRecover') }}
       </XButton>
 
       <XButton
         icon="lucide:copy" size="sm"
-        label="一键复制" @click="handleCopy"
+        :label="t('device.button.copy')" @click="handleCopy"
       />
       <XButton
         icon="lucide:printer"
-        size="sm" label="打印标签"
+        size="sm" :label="t('device.button.print')"
         :loading="isPrinting"
         @click="handlePrint"
       />

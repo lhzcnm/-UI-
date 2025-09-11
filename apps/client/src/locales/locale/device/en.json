@@ -1,0 +1,100 @@
+{
+  "device": {
+    "plugin": {
+      "miss": {
+        "title": "Plugin not detected",
+        "text": "If the plugin is not running, please start the plugin and refresh the page.\nIf the plugin is not installed, click the button below to download and install it."
+      },
+      "wait": {
+        "title": "Waiting for iPhone connection",
+        "text": "Please connect your iPhone to the computer using a USB cable\nand make sure to enable \"Trust This Computer\"."
+      },
+      "toLow": {
+        "title": "Plugin version too low",
+        "text": "Please click the button below to install the latest plugin."
+      }
+    },
+    "button": {
+      "download": "Download Plugin",
+      "refresh": "Refresh Page",
+      "copy": "Copy",
+      "print": "Print Label",
+      "view": "View Device",
+      "inRecover": "Enter Recovery Mode",
+      "outRecover": "Exit Recovery Mode"
+    },
+    "list": {
+      "title": "Device List",
+      "total": "Total {total} devices",
+      "hasNew": "New version found, click to download"
+    },
+    "card": {
+      "serial": "Serial Number",
+      "type": "Model"
+    },
+    "date": "{weekday} {month}/{day}",
+    "info": {
+      "imgLoading": "img is loading",
+      "button": {
+        "reset": "Restart",
+        "shutdown": "Shutdown",
+        "refresh": "Refresh"
+      },
+      "grid": {
+        "sn": "S/N",
+        "imei": "IMEI",
+        "typeNumber": "Model No",
+        "prodType": "Type",
+        "system": "OS Ver",
+        "motherNo": "Board No",
+        "activeStatus": "Status",
+        "netLock": "Net Lock",
+        "activeLock": "Active Lock",
+        "deadLine": "Wty End",
+        "wifiAddr": "WiFi Addr",
+        "region": "Region",
+        "iCloudBackup": "iCloud",
+        "cpu": "CPU",
+        "actived": {
+          "already": "Actived",
+          "not": "Inactive",
+          "nega": "Deactivated"
+        },
+        "query": {
+          "confirm": "No free queries left.\nContinue will cost {point} pts",
+          "last": "Last Result",
+          "ing": "Checking",
+          "re": "Retry",
+          "now": "Check Now"
+        },
+        "open": {
+          "already": "Actived",
+          "not": "Not enabled"
+        }
+      },
+      "disk": {
+        "space": "Storage",
+        "total": "Total",
+        "system": "System",
+        "data": "Data",
+        "useful": "Useful"
+      },
+      "battery": {
+        "title": "Battery",
+        "status": "Charge",
+        "health": "Health",
+        "capacity": "Design Cap",
+        "max": "Max Cap.",
+        "cycle": "Cycles",
+        "temperature": "Temp",
+        "charge": {
+          "ing": "Charging",
+          "max": "Full"
+        }
+      },
+      "color": {
+        "unknown": "Ubknown Color"
+      }
+    }
+  }
+}

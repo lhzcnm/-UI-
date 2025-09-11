@@ -40,6 +40,8 @@ const [datasets, countriesMap] = await Promise.all([
 
 const version = ref('')
 
+const { t } = useI18n()
+
 watch(
   ws.data,
   async (value: string) => {
@@ -176,7 +178,7 @@ function getProduct(data: DeviceBaseInfo) {
     if (Array.isArray(product)) product = product[0]  
   }
 
-  let color = '未知颜色'
+  let color = t('device.info.color.unknown')
   if (data.DeviceColor in product) {
     color = product[data.DeviceColor]
   }
@@ -195,7 +197,7 @@ function getProduct(data: DeviceBaseInfo) {
   return {
     Name: product ? product.Name : data.ProductType,
     Chip: product ? product.Chip : data.CPUArchitecture,
-    ModelNumber: modelNumber || '未知',
+    ModelNumber: modelNumber || t('unknown'),
     Color: color,
   }
 }
@@ -214,7 +216,7 @@ function getSalesRegion(regionInfo: string): SaleRegion {
   }
 
   return {
-    chinese: '未知',
+    chinese: t('unknown'),
     english: 'Unknown'
   }
 }
@@ -239,8 +241,8 @@ function handleSummary(
     UniqueDeviceID  : info.UniqueDeviceID,
     Ecid            : info.Ecid.toUpperCase(),
     WiFiAddress     : maskText(info.WiFiAddress, 9, 11),
-    ActivationState : info.ActivationState ? '已激活' : '未激活',
-    iCloud          : ICloud.CloudBackupEnabled ? '已开启' : '未开启',
+    ActivationState : info.ActivationState ? t('device.info.grid.actived.already') : t('device.info.grid.actived.not'),
+    iCloud          : ICloud.CloudBackupEnabled ? t('device.info.grid.open.already') : t('device.info.grid.open.not'),
     CPU             : product.Chip || '--',
     SalesRegion     : salesRegion,
 

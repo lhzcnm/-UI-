@@ -17,6 +17,7 @@ const style = tv({
 
 const store = inject(STORE)!
 const uStore = useUserStore()
+const { t, locale } = useI18n()
 
 const { copy } = useClipboard({ legacy: true })
 
@@ -31,7 +32,7 @@ const cache = computed({
 })
 
 const defaultState = form.value.ActivationState
-const isActivated = ref(defaultState === '已激活')
+const isActivated = ref(defaultState === t('device.info.grid.actived.already'))
 
 const loadings = reactive({
   networkLock: false,
@@ -45,7 +46,9 @@ async function handleActivation() {
   
   await wsFetch({ type: suffix, Uid: uniqueId })
   isActivated.value = !isActivated.value
-  form.value.ActivationState = isActivated.value ? '已激活' : '未激活'
+  form.value.ActivationState = isActivated.value
+    ? t('device.info.grid.status.already')
+    : t('device.info.grid.status.not')
 }
 
 async function handleNetworkLock() {
@@ -123,8 +126,7 @@ async function checkFreecount(type: string) {
   const { data } = await http.get(`/device/query/${type}`)
   if (data.freeCount > 0) return true
   return await xconfirm`
-    当前账户该服务已无免费查询次数<br>
-    如果继续查询，将扣除 ${data.price} 积分
+    ${t('device.info.grid.query.confirm', { point: data.point })}
   `
 }
 
@@ -134,7 +136,7 @@ async function cp(event: MouseEvent) {
 
   if (text && text.trim()) {
     await copy(text.trim())
-    toast.success('复制成功')
+    toast.success(t('submit.success', { action: t('action.copy') }))
   }
 }
 
@@ -150,37 +152,37 @@ const b = style()
   <div class="flex gap-4 p-4 bg-card">
     <div class="flex-1 space-y-1">
       <div>
-        <span :class="b.label()">序列号</span>
+        <span :class="b.label()">{{ t('device.info.grid.sn') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.SerialNumber }}
         </span>
       </div>
       <div>
-        <span :class="b.label()">串号</span>
+        <span :class="b.label()">{{ t('device.info.grid.imei') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.Imei }}
         </span>
       </div>
       <div>
-        <span :class="b.label()">型号号码</span>
+        <span :class="b.label()">{{ t('device.info.grid.typeNumber') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.ModelNumber }} {{ form.RegionInfo }}
         </span>
       </div>
       <div>
-        <span :class="b.label()">产品类型</span>
+        <span :class="b.label()">{{ t('device.info.grid.prodType') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.ProductType }}
         </span>
       </div>
       <div>
-        <span :class="b.label()">系统版本</span>
+        <span :class="b.label()">{{ t('device.info.grid.system') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.ProductVersion }} ({{ form.BuildVersion }})
         </span>
       </div>
       <div>
-        <span :class="b.label()">主板序号</span>
+        <span :class="b.label()">{{ t('device.info.grid.motherNo') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.MLBSerialNumber }}
         </span>
@@ -201,25 +203,26 @@ const b = style()
 
     <div class="flex-1 space-y-1">
       <div class="flex items-center">
-        <span :class="b.label()">激活状态</span>
+        <span :class="b.label()">{{ t('device.info.grid.activeStatus') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ form.ActivationState }}
           </span>
           <button class="ml-2 text-primary" @click="handleActivation">
-            {{ isActivated ? '反激活' : '激活' }}
+            {{ isActivated ? t('device.info.grid.actived.nega') : t('device.info.grid.actived.already') }}
           </button>
         </div>
       </div>
       <div class="flex items-center"> 
-        <span :class="b.label()">网络锁</span>
+        <span :class="b.label()">{{ t('device.info.grid.netLock') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <button
             v-if="!cache.showNetworkLock"
-            v-text="'查看上次查询结果'"
             class="text-primary hover:text-primary/85"
             @click="showPrevCache('showNetworkLock')"
-          />
+          >
+            {{ t('device.info.grid.query.last') }}
+          </button>
           <span v-else v-html="form.NetworkLock" :class="b.value()" @click="cp" />
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary whitespace-nowrap"
@@ -228,21 +231,22 @@ const b = style()
           >
             <template v-if="loadings.networkLock">
               <Icon icon="lucide:loader-2" class="animate-spin" />
-              <span>查询中...</span>
+              <span>{{ t('device.info.grid.query.ing') }}...</span>
             </template>
-            <span v-else>{{ cache.hasNetworkLock ? '重新查询' : '立即查询' }}</span>
+            <span v-else>{{ cache.hasNetworkLock ? t('device.info.grid.query.re') : t('device.info.grid.query.now') }}</span>
           </button>
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">激活锁</span>
+        <span :class="b.label()">{{ t('device.info.grid.activeLock') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <button
             v-if="!cache.showActivationLock"
-            v-text="'查看上次查询结果'"
             class="text-primary hover:text-primary/85"
             @click="showPrevCache('showActivationLock')"
-          />
+          >
+            {{ t('device.info.grid.query.last') }}
+          </button>
           <span v-else v-html="form.ActivationLock" :class="b.value()" @click="cp" />
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary whitespace-nowrap"
@@ -251,21 +255,22 @@ const b = style()
           >
             <template v-if="loadings.activationLock">
               <Icon icon="lucide:loader-2" class="animate-spin" />
-              <span>查询中...</span>
+              <span>{{ t('device.info.grid.query.ing') }}...</span>
             </template>
-            <span v-else>{{ cache.hasActivationLock ? '重新查询' : '立即查询' }}</span>
+            <span v-else>{{ cache.hasActivationLock ? t('device.info.grid.query.re') : t('device.info.grid.query.now') }}</span>
           </button>
         </div>
       </div>
       <div class="flex items-start">
-        <span :class="b.label()">保修期限</span>
+        <span :class="b.label()">{{ t('device.info.grid.deadLine') }}</span>
         <div class="flex-1 flex items-start justify-between">
           <button
             v-if="!cache.showWarranty"
-            v-text="'查看上次查询结果'"
             class="text-primary hover:text-primary/85"
             @click="showPrevCache('showWarranty')"
-          />
+          >
+            {{ t('device.info.grid.query.last') }}
+          </button>
           <span v-else v-html="form.Warranty" :class="b.value()" @click="cp" />
           <button
             class="flex items-center space-x-1.5 ml-2 text-primary whitespace-nowrap"
@@ -274,14 +279,14 @@ const b = style()
           >
             <template v-if="loadings.warranty">
               <Icon icon="lucide:loader-2" class="animate-spin" />
-              <span>查询中...</span>
+              <span>{{ t('device.info.grid.query.ing') }}...</span>
             </template>
-            <span v-else>{{ cache.hasWarranty ? '重新查询' : '立即查询' }}</span>
+            <span v-else>{{ cache.hasWarranty ? t('device.info.grid.query.re') : t('device.info.grid.query.now') }}</span>
           </button>
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">WiFi地址</span>
+        <span :class="b.label()">{{ t('device.info.grid.wifiAddr') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ form.WiFiAddress.toUpperCase() }}
@@ -289,15 +294,15 @@ const b = style()
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">销售地区</span>
+        <span :class="b.label()">{{ t('device.info.grid.region') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ form.SalesRegion.chinese }}
+            {{ locale === 'zh' ? form.SalesRegion.chinese : form.SalesRegion.english }}
           </span>
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">iCloud备份</span>
+        <span :class="b.label()">{{ t('device.info.grid.iCloudBackup') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ form.iCloud }}
@@ -305,7 +310,7 @@ const b = style()
         </div>
       </div>
       <div class="flex items-center">
-        <span :class="b.label()">CPU类型</span>
+        <span :class="b.label()">{{ t('device.info.grid.cpu') }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.CPU }}
         </span>

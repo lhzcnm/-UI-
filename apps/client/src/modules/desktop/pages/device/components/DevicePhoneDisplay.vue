@@ -13,6 +13,8 @@ const b = tv({
   ],
 })
 
+const { t } = useI18n()
+
 const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
@@ -119,21 +121,21 @@ function getCurrentDate() {
   const now = new Date()
   const day = now.getDate()
   const month = now.getMonth() + 1
-  const weekday = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()]
-  
-  return `${month}月${day}日 星期${weekday}`
+  const weekday = t(`weekday.${now.getDay()}`)
+
+  return t('device.date', { month, day, weekday })
 }
 
 async function onRestart() {
   const [_, uniqueId] = store.selected.split(':')
   await wsFetch({ type: 'reboot', Uid: uniqueId })
-  toast.success('指令已发送')
+  toast.success(t('command.title', { action: t('command.success') }))
 }
 
 async function onShutdown() {
   const [_, uniqueId] = store.selected.split(':')
   await wsFetch({ type: 'shutdown', Uid: uniqueId })
-  toast.success('指令已发送')
+  toast.success(t('command.title', { action: t('command.success') }))
 }
 
 async function onRefresh() {
@@ -189,7 +191,7 @@ async function onRefresh() {
           <div class="absolute size-full flex items-center justify-center">
             <div class="flex flex-col justify-center items-center px-1 py-2 border rounded bg-muted/50">
               <Icon icon="lucide:loader" class="size-6 animate-spin" />
-              <span class="inline-block text-sm mt-3">截图加载中...</span>
+              <span class="inline-block text-sm mt-3">{{ t('device.info.imgLoading') }}...</span>
             </div>
           </div>
         </template>
@@ -213,15 +215,15 @@ async function onRefresh() {
     <div class="flex justify-center space-x-4 mt-6 text-muted-foreground">
       <button :class="b()" @click="handleRestart">
         <Icon icon="lucide:rotate-cw" />
-        <span>重启</span>
+        <span>{{ t('device.info.button.reset') }}</span>
       </button>
       <button :class="b()" @click="handleShutdown">
         <Icon icon="lucide:power" />
-        <span>关机</span>
+        <span>{{ t('device.info.button.shutdown') }}</span>
       </button>
       <button :class="b()" @click="handleRefresh">
         <Icon icon="lucide:refresh-ccw" />
-        <span>刷新</span>
+        <span>{{ t('device.info.button.refresh') }}</span>
       </button>
     </div>
   </div>

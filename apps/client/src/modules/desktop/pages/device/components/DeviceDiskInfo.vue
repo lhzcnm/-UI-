@@ -3,6 +3,8 @@ import { STORE, formatSize } from '../utils'
 
 const store = inject(STORE)!
 
+const { t } = useI18n()
+
 const diskInfo = computed(() => {
   const { memory } = store.deviceMap.get(store.selected)!
   const total = memory.TotalDiskCapacity
@@ -27,10 +29,10 @@ function getPercentage(part: number, total: number) {
 
 <template>
   <div class="p-4 overflow-hidden bg-card border rounded-lg">
-    <div class="text-lg font-medium mb-4">存储空间</div>
+    <div class="text-lg font-medium mb-4">{{ t('device.info.disk.space') }}</div>
     <div class="mb-3">
       <div class="flex justify-between mb-1">
-        <span class="text-sm">总容量</span>
+        <span class="text-sm">{{ t('device.info.disk.total') }}</span>
         <span class="text-sm">{{ diskInfo.totalDiskCapacity }}</span>
       </div>
       <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
@@ -40,7 +42,7 @@ function getPercentage(part: number, total: number) {
 
     <div class="mb-3">
       <div class="flex justify-between mb-1">
-        <span class="text-sm">系统占用</span>
+        <span class="text-sm">{{ t('device.info.disk.system') }}</span>
         <span class="text-sm">
           {{ diskInfo.totalSystemCapacity }}
           ({{ diskInfo.totalSystemCapacityPer }}%)
@@ -56,7 +58,7 @@ function getPercentage(part: number, total: number) {
 
     <div class="mb-3">
       <div class="flex justify-between mb-1">
-        <span class="text-sm">用户数据</span>
+        <span class="text-sm">{{ t('device.info.disk.data') }}</span>
         <span class="text-sm">
           {{ diskInfo.totalDataCapacity }}
           ({{ diskInfo.totalDataCapacityPer }}%)
@@ -72,7 +74,7 @@ function getPercentage(part: number, total: number) {
 
     <div>
       <div class="flex justify-between mb-1">
-        <span class="text-sm">可用空间</span>
+        <span class="text-sm">{{ t('device.info.disk.useful') }}</span>
         <span class="text-sm">
           {{ diskInfo.amountDataAvailable }}
           ({{ diskInfo.amountDataAvailablePer }}%)
