@@ -32,7 +32,7 @@ async function handleRefresh() {
         @click="showApiUsageInfo = true"
       >
         <Icon icon="lucide:info" class="size-4" />
-        <span class="text-sm">{{ t('profile.apiKey.userInfo') }}</span>
+        <span class="text-sm">{{ t('profile.apiKey.useInfo') }}</span>
       </button>
     </div>
 
@@ -45,7 +45,7 @@ async function handleRefresh() {
       </div>
 
       <div class="space-x-2">
-        <XButton icon="lucide:refresh-cw" :label="t('button.refresh')" @click="handleRefresh" />
+        <XButton icon="lucide:refresh-cw" :label="t('button.fresh')" @click="handleRefresh" />
         <XButton icon="lucide:copy" :label="t('button.copy')" color="success" @click="handleCopy" />
       </div>      
     </div>

@@ -41,14 +41,14 @@ function rules(data: typeof form) {
   const targetReg = isPhone ? PHONE_REG : EMAIL_REG
 
   return [
-    { rule: !!target, message: VERIFY_MSG.TARGET },
-    { rule: targetReg.test(target), message: VERIFY_MSG.TARGET_FORMAT },
-    { rule: CAPTCHA_REG.test(code), message: VERIFY_MSG.CODE },
+    { rule: !!target, message: t(VERIFY_MSG.TARGET) },
+    { rule: targetReg.test(target), message: t(VERIFY_MSG.TARGET_FORMAT) },
+    { rule: CAPTCHA_REG.test(code), message: t(VERIFY_MSG.CODE) },
 
-    { rule: !!password, message: VERIFY_MSG.PASSWORD },
-    { rule: /\d|\w/.test(password), message: VERIFY_MSG.PASSWORD_LESS },
-    { rule: PASSWORD_REG.test(password), message: VERIFY_MSG.PASSWORD_FORMAT },
-    { rule: password === confirmPassword, message: VERIFY_MSG.PASSWORD_CONFIRM },
+    { rule: !!password, message: t(VERIFY_MSG.PASSWORD) },
+    { rule: /\d|\w/.test(password), message: t(VERIFY_MSG.PASSWORD_LESS) },
+    { rule: PASSWORD_REG.test(password), message: t(VERIFY_MSG.PASSWORD_FORMAT) },
+    { rule: password === confirmPassword, message: t(VERIFY_MSG.PASSWORD_CONFIRM) },
   ]
 }
 

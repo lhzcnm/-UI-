@@ -1,0 +1,27 @@
+{
+  "valid": {
+    "profile": {
+      "phone": "手机号不能为空",
+      "phone_format": "手机号格式不正确",
+
+      "target": "邮箱/手机号不能为空",
+      "target_format": "邮箱/手机号格式不正确",
+
+      "email": "邮箱不能为空",
+      "email_format": "邮箱格式不正确",
+
+      "code": "验证码不能为空",
+      "code_format": "验证码格式不正确",
+
+      "username": "账号不能为空",
+      "username_length": "账号长度在 6-16 位之间",
+      "username_format": "账号格式不正确",
+
+      "password": "密码不能为空",
+      "password_less": "密码至少含有一位数字、字母",
+      "password_length": "密码长度在 8-18 位之间",
+      "password_format": "密码格式不正确",
+      "password_confirm": "两次密码不一致"
+    }
+  }
+}

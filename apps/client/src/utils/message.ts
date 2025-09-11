@@ -1,23 +1,23 @@
 export enum VERIFY_MSG {
-  PHONE = '手机号不能为空',
-  PHONE_FORMAT = '手机号格式不正确',
+  PHONE = 'valid.profile.phone',
+  PHONE_FORMAT = 'valid.profile.phone_format',
 
-  TARGET = '邮箱/手机号不能为空',
-  TARGET_FORMAT = '邮箱/手机号格式不正确',
+  TARGET = 'valid.profile.target',
+  TARGET_FORMAT = 'valid.profile.target_format',
 
-  EMAIL = '邮箱不能为空',
-  EMAIL_FORMAT = '邮箱格式不正确',
+  EMAIL = 'valid.profile.email',
+  EMAIL_FORMAT = 'valid.profile.email_format',
 
-  CODE = '验证码不能为空',
-  CODE_FORMAT = '验证码格式不正确',
+  CODE = 'valid.profile.code',
+  CODE_FORMAT = 'valid.profile.code_format',
 
-  USERNAME = '账号不能为空',
-  USERNAME_LENGTH = '账号长度在 6-16 位之间',
-  USERNAME_FORMAT = '账号格式不正确',
+  USERNAME = 'valid.profile.username',
+  USERNAME_LENGTH = 'valid.profile.username_length',
+  USERNAME_FORMAT = 'valid.profile.username_format',
 
-  PASSWORD = '密码不能为空',
-  PASSWORD_LESS = '密码至少含有一位数字、字母',
-  PASSWORD_LENGTH = '密码长度在 8-18 位之间',
-  PASSWORD_FORMAT = '密码格式不正确',
-  PASSWORD_CONFIRM = '两次密码不一致',
+  PASSWORD = 'valid.profile.password',
+  PASSWORD_LESS = 'valid.profile.password_less',
+  PASSWORD_LENGTH = 'valid.profile.password_length',
+  PASSWORD_FORMAT = 'valid.profile.password_format',
+  PASSWORD_CONFIRM = 'valid.profile.password_confirm',
 }

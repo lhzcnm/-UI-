@@ -22,8 +22,8 @@ const { t } = useI18n()
 
 async function sendCode() {
   const rules = [
-    { rule: !!emailForm.email, message: VERIFY_MSG.EMAIL },
-    { rule: EMAIL_REG.test(emailForm.email), message: VERIFY_MSG.EMAIL_FORMAT },
+    { rule: !!emailForm.email, message: t(VERIFY_MSG.EMAIL) },
+    { rule: EMAIL_REG.test(emailForm.email), message: t(VERIFY_MSG.EMAIL_FORMAT) },
   ]
 
   if (!validate(rules)) return
@@ -34,11 +34,11 @@ async function sendCode() {
 
 async function submitForm() {
   const rules = [
-    { rule: !!emailForm.email, message: VERIFY_MSG.EMAIL },
-    { rule: EMAIL_REG.test(emailForm.email), message: VERIFY_MSG.EMAIL_FORMAT },
+    { rule: !!emailForm.email, message: t(VERIFY_MSG.EMAIL) },
+    { rule: EMAIL_REG.test(emailForm.email), message: t(VERIFY_MSG.EMAIL_FORMAT) },
 
-    { rule: !!emailForm.code, message: VERIFY_MSG.CODE },
-    { rule: CAPTCHA_REG.test(emailForm.code), message: VERIFY_MSG.CODE_FORMAT },
+    { rule: !!emailForm.code, message: t(VERIFY_MSG.CODE) },
+    { rule: CAPTCHA_REG.test(emailForm.code), message: t(VERIFY_MSG.CODE_FORMAT) },
   ]
 
   if (!validate(rules)) return

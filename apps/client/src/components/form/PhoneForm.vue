@@ -21,8 +21,8 @@ const phoneForm = reactive({
 
 async function sendCode() {
   const rules = [
-    { rule: !!phoneForm.phone, message: VERIFY_MSG.PHONE },
-    { rule: PHONE_REG.test(phoneForm.phone), message: VERIFY_MSG.PHONE_FORMAT },
+    { rule: !!phoneForm.phone, message: t(VERIFY_MSG.PHONE) },
+    { rule: PHONE_REG.test(phoneForm.phone), message: t(VERIFY_MSG.PHONE_FORMAT) },
   ]
 
   if (!validate(rules)) return
@@ -33,10 +33,10 @@ async function sendCode() {
 
 async function submitForm() {
   const rules = [
-    { rule: !!phoneForm.phone, message: VERIFY_MSG.PHONE },
-    { rule: PHONE_REG.test(phoneForm.phone), message: VERIFY_MSG.PHONE_FORMAT },
-    { rule: !!phoneForm.code, message: VERIFY_MSG.CODE },
-    { rule: CAPTCHA_REG.test(phoneForm.code), message: VERIFY_MSG.CODE_FORMAT },
+    { rule: !!phoneForm.phone, message: t(VERIFY_MSG.PHONE) },
+    { rule: PHONE_REG.test(phoneForm.phone), message: t(VERIFY_MSG.PHONE_FORMAT) },
+    { rule: !!phoneForm.code, message: t(VERIFY_MSG.CODE) },
+    { rule: CAPTCHA_REG.test(phoneForm.code), message: t(VERIFY_MSG.CODE_FORMAT) },
   ]
 
   if (!validate(rules)) return

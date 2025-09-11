@@ -13,9 +13,9 @@ const { t } = useI18n()
 async function submitForm() {
   const username = account.value.trim()
   const rules = [
-    { rule: !!username, message: VERIFY_MSG.USERNAME },
-    { rule: username.length >= 6 && username.length <= 16, message: VERIFY_MSG.USERNAME_LENGTH },
-    { rule: USERNAME_REG.test(username), message: VERIFY_MSG.USERNAME_FORMAT },
+    { rule: !!username, message: t(VERIFY_MSG.USERNAME) },
+    { rule: username.length >= 6 && username.length <= 16, message: t(VERIFY_MSG.USERNAME_LENGTH) },
+    { rule: USERNAME_REG.test(username), message: t(VERIFY_MSG.USERNAME_FORMAT) },
   ]
 
   if (!validate(rules)) return
