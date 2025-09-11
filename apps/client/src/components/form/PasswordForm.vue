@@ -12,6 +12,7 @@ const props = defineProps<{ onClose: () => void }>()
 const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'password_countdown'
 })
+const { t } = useI18n()
 
 const form = reactive({
   target         : '',
@@ -62,22 +63,22 @@ async function submitForm() {
     password: password
   })
 
-  toast.success('密码修改成功')
+  toast.success(t('submit.success', { action: t('action.modify') }))
   props.onClose()
 }
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent="submitForm" autocomplete="off">
-    <XInput v-model="form.target" name="phone" placeholder="请输入手机号或邮箱" />
+    <XInput v-model="form.target" name="phone" :placeholder="t('profile.placeholder.pwd')" />
     <div class="flex space-x-2">
-      <XInput v-model="form.code" name="code" placeholder="请输入验证码" />
+      <XInput v-model="form.code" name="code" :placeholder="t('profile.placeholder.vertify')" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCaptcha">
-        {{ isRunning ? `${count} 秒后重发` : '获取验证码' }}
+        {{ isRunning ? t('profile.placeholder.countdown', { action: count }) : t('profile.button.sendVerty') }}
       </XButton>
     </div>
-    <XInput v-model="form.password" name="password" type="password" placeholder="新密码" />
-    <XInput v-model="form.confirmPassword" name="confirmPassword" type="password" placeholder="确认新密码" />
-    <XButton type="submit" class="w-full">确认修改</XButton>
+    <XInput v-model="form.password" name="password" type="password" :placeholder="t('profile.placeholder.newPwd')" />
+    <XInput v-model="form.confirmPassword" name="confirmPassword" type="password" :placeholder="t('profile.placeholder.confirmPwd')" />
+    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
   </form>
 </template>

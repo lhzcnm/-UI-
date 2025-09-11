@@ -8,6 +8,8 @@ const props = defineProps<{ onClose: () => void }>()
 const store = useUserStore()
 const account = ref('')
 
+const { t } = useI18n()
+
 async function submitForm() {
   const username = account.value.trim()
   const rules = [
@@ -19,7 +21,7 @@ async function submitForm() {
   if (!validate(rules)) return
   store.updateName(username)
 
-  toast.success('修改成功')
+  toast.success(t('submit.success', { action: t('action.modify') }))
   props.onClose()
 }
 </script>
@@ -27,9 +29,9 @@ async function submitForm() {
 <template>
   <form class="space-y-4" @submit.prevent="submitForm">
     <div>
-      <p class="mb-3">当前账号：<b>{{ store.info.username }}</b></p>
-      <XInput v-model="account" name="username" placeholder="请输入登录的账号" />
+      <p class="mb-3">{{ t('profile.form.title.current') }}: <b>{{ store.info.username }}</b></p>
+      <XInput v-model="account" name="username" :placeholder="t('profile.placeholder.account')" />
     </div>
-    <XButton type="submit" class="w-full">确定</XButton>
+    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
   </form>
 </template>

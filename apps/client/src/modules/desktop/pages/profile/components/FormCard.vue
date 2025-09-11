@@ -8,15 +8,16 @@ import type { Action } from '../types'
 import { twJoin } from 'tailwind-merge'
 
 const store = useUserStore()
+const { t } = useI18n()
 
 const activeForm = ref<Action | null>(null)
 const activeTitle = computed(() => {
   const options = {
-    account: '账号修改',
-    password: '密码修改',
-    phone: '手机号修改',
-    email: '邮箱修改',
-    wechat: '微信绑定',
+    account: t('profile.form.title.account'),
+    password: t('profile.form.title.pwd'),
+    phone: t('profile.form.title.phone'),
+    email: t('profile.form.title.email'),
+    wechat: t('profile.form.title.wechat'),
   }
 
   return options[activeForm.value as Action]
@@ -37,36 +38,36 @@ function closeForm() {
 
     <div class="relative mt-4">
       <FormField
-        label="账号" class="mb-4"
-        action-text="修改"
+        :label="t('profile.form.label.account')" class="mb-4"
+        :action-text="t('profile.edit')"
         :value="store.info.username"
         @action="showForm('account')"
       />
 
       <FormField
-        label="微信" class="mb-4"
-        :value="store.info.openId ? '已绑定' : '未绑定'"
-        :action-text="store.info.openId ? '换绑' : '绑定'"
+        :label="t('profile.form.label.wechat')" class="mb-4"
+        :value="store.info.openId ? t('profile.params.bind.binding') : t('profile.params.bind.unbound')"
+        :action-text="store.info.openId ? t('profile.params.bind.change') : t('profile.params.bind.title')"
         @action="showForm('wechat')"
       />
 
       <FormField
-        label="手机号" class="mb-4"
-        :value="store.info.phone || '未绑定'"
-        :action-text="store.info.phone ? '修改' : '绑定'"
+        :label="t('profile.form.label.phone')" class="mb-4"
+        :value="store.info.phone || t('profile.params.bind.unbound')"
+        :action-text="store.info.phone ? t('profile.edit') : t('profile.params.bind.title')"
         @action="showForm('phone')"
       />
 
       <FormField
-        label="邮箱" class="mb-4"
-        :value="store.info.email || '未绑定'"
-        :action-text="store.info.email ? '修改' : '绑定'"
+        :label="t('profile.form.label.email')" class="mb-4"
+        :value="store.info.email || t('profile.params.bind.unbound')"
+        :action-text="store.info.email ? t('profile.edit') : t('profile.params.bind.title')"
         @action="showForm('email')"
       />
 
       <FormField
         class="mb-4"
-        label="密码" action-text="修改"
+        :label="t('profile.form.label.pwd')" :action-text="t('profile.edit')"
         value="********" type="password"
         @action="showForm('password')"
       />

@@ -16,7 +16,10 @@
     "copy": "复制",
     "refresh": "刷新",
     "print": "打印",
-    "recharge": "充值"
+    "recharge": "充值",
+    "activate": "开通",
+    "bind": "绑定",
+    "modify": "修改"
   },
   "prompt": {
     "title": "提示",

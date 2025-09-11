@@ -3,6 +3,7 @@ import { Icon } from '@iconify/vue'
 import { userApi } from '@/api/user'
 
 const imageURL = ref('')
+const { t } = useI18n()
 
 onMounted(async () => getQRCode())
 
@@ -22,6 +23,6 @@ async function getQRCode() {
         </div>
       </div>
     </div>
-    <p class="text-sm text-muted-foreground">请使用微信扫描二维码进行绑定</p>
+    <p class="text-sm text-muted-foreground">{{ t('profile.placeholder.wechat') }}</p>
   </div>
 </template>

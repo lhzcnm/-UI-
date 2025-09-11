@@ -18,6 +18,8 @@ const emailForm = reactive({
   code: '',
 })
 
+const { t } = useI18n()
+
 async function sendCode() {
   const rules = [
     { rule: !!emailForm.email, message: VERIFY_MSG.EMAIL },
@@ -46,20 +48,20 @@ async function submitForm() {
     code: emailForm.code,
   })
 
-  toast.success('邮箱绑定成功')
+  toast.success(t('submit.success', { action: t('action.bind') }))
   props.onClose()
 }
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent="submitForm">
-    <XInput v-model="emailForm.email" type="email" placeholder="请输入邮箱" />
+    <XInput v-model="emailForm.email" type="email" :placeholder="t('profile.placeholder.email')" />
     <div class="flex space-x-2">
-      <XInput v-model="emailForm.code" placeholder="请输入验证码" />
+      <XInput v-model="emailForm.code" :placeholder="t('profile.placeholder.vertify')" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCode">
-        {{ isRunning ? `${count} 秒后重发` : '获取验证码' }}
+        {{ isRunning ? t('profile.placeholder.countdown', { action: count }) : t('profile.button.sendVerty') }}
       </XButton>
     </div>
-    <XButton type="submit" class="w-full">确认绑定</XButton>
+    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
   </form>
 </template>

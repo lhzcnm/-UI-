@@ -10,15 +10,16 @@ const iStore = useSettingStore()
 const showApiUsageInfo = ref(false)
 
 const { copy } = useClipboard({ legacy: true })
+const { t } = useI18n()
 
 async function handleCopy() {
   await copy(store.info.apiKey)
-  toast.success('复制成功')
+  toast.success(t('submit.success', { action: t('action.copy') }))
 }
 
 async function handleRefresh() {
   await store.refreshApi()
-  toast.success('刷新成功')
+  toast.success(t('submit.success', { action: t('action.refresh') }))
 }
 </script>
 
@@ -31,7 +32,7 @@ async function handleRefresh() {
         @click="showApiUsageInfo = true"
       >
         <Icon icon="lucide:info" class="size-4" />
-        <span class="text-sm">使用说明</span>
+        <span class="text-sm">{{ t('profile.apiKey.userInfo') }}</span>
       </button>
     </div>
 
@@ -44,15 +45,15 @@ async function handleRefresh() {
       </div>
 
       <div class="space-x-2">
-        <XButton icon="lucide:refresh-cw" label="刷新" @click="handleRefresh" />
-        <XButton icon="lucide:copy" label="复制" color="success" @click="handleCopy" />
+        <XButton icon="lucide:refresh-cw" :label="t('button.refresh')" @click="handleRefresh" />
+        <XButton icon="lucide:copy" :label="t('button.copy')" color="success" @click="handleCopy" />
       </div>      
     </div>
 
     <XDialog
       v-model="showApiUsageInfo"
       :text="iStore.settings.apiUsageInfo"
-      title="API 使用说明"
+      :title="t('profile.apiKey.info')"
       ui-root="sm:max-w-2xl"
       ui-text="tiptap"
     />

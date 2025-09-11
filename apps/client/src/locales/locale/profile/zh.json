@@ -1,0 +1,76 @@
+{
+  "profile": {
+    "title": "个人中心",
+    "button": {
+      "invite": "推荐码",
+      "customer": "联系客服",
+      "quit": "安全退出",
+      "api": "开通批量查询 API KEY",
+      "sendVerty": "发送验证码"
+    },
+    "apiKey": {
+      "title": "批量查询 API",
+      "useInfo": "使用说明",
+      "info": "API使用说明"
+    },
+    "software": {
+      "old": "批量查询助手",
+      "new": "三和助手 - 标签|设备信息|批量查询"
+    },
+    "stat": {
+      "title": "数据统计",
+      "balance": "可用余额",
+      "amount": "充值总额",
+      "lock": "锁定积分",
+      "order": "订单总数",
+      "success": "成功",
+      "fail": "失败",
+      "memberExpire": "会员到期",
+      "notActivate": "未开通",
+      "reNewal": "立即续费",
+      "activateNow": "立即开通",
+      "useDay": "使用天数",
+      "day": "天"
+    },
+    "form": {
+      "title": {
+        "account": "账号修改",
+        "pwd": "密码修改",
+        "phone": "手机号修改",
+        "email": "邮箱修改",
+        "wechat": "微信绑定",
+        "current": "当前账号"
+      },
+      "label": {
+        "account": "账号",
+        "wechat": "微信",
+        "phone": "手机号",
+        "email": "邮箱",
+        "pwd": "密码"
+      }
+    },
+    "placeholder": {
+      "wechat": "请使用微信扫描二维码进行绑定",
+      "phone": "请输入手机号",
+      "pwd": "请输入手机号或者邮箱",
+      "newPwd": "新密码",
+      "confirmPwd": "请确认新密码",
+      "email": "请输入邮箱",
+      "account": "请输入登录账号",
+      "vertify": "请输入验证码",
+      "countdown": "{action}秒后重发"
+    },
+    "params": {
+      "bind": {
+        "title": "绑定",
+        "binding": "已绑定",
+        "unbound": "未绑定",
+        "change": "换绑"
+      }
+    },
+    "edit": "修改",
+    "prompt": {
+      "apiError": "低于 {point} 积分不支持开通"
+    }
+  }
+}

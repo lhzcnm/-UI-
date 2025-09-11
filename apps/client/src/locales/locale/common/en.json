@@ -16,7 +16,10 @@
     "copy": "Copy",
     "refresh": "Refresh",
     "print": "Print",
-    "recharge": "Recharge"
+    "recharge": "Recharge",
+    "activate": "Activate",
+    "bind": "Bind",
+    "modify": "Modify"
   },
   "prompt": {
     "title": "Prompt",

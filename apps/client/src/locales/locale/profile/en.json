@@ -1,0 +1,76 @@
+{
+  "profile": {
+    "title": "Profile Center",
+    "button": {
+      "invite": "Referral Code",
+      "customer": "Contact Support",
+      "quit": "Secure Logout",
+      "api": "Enable Bulk Query API KEY",
+      "sendVerty": "Send code"
+    },
+    "apiKey": {
+      "title": "Bulk Query API",
+      "useInfo": "Usage Guide",
+      "info": "API Usage Instructions"
+    },
+    "software": {
+      "old": "Bulk Query Assistant",
+      "new": "Sanhe Assistant - Tags, Device Info, Bulk Query"
+    },
+    "stat": {
+      "title": "Statistics",
+      "balance": "Available Balance",
+      "amount": "Total Recharge",
+      "lock": "Locked Points",
+      "order": "Total Orders",
+      "success": "Success",
+      "fail": "Failed",
+      "memberExpire": "Membership Expiry",
+      "notActivate": "Not Activated",
+      "reNewal": "Renew Now",
+      "activateNow": "Activate Now",
+      "useDay": "Usage Days",
+      "day": "days"
+    },
+    "form": {
+      "title": {
+        "account": "Edit Account",
+        "pwd": "Change Password",
+        "phone": "Update Phone Number",
+        "email": "Update Email",
+        "wechat": "Bind WeChat",
+        "current": "Current"
+      },
+      "label": {
+        "account": "Account",
+        "wechat": "WeChat",
+        "phone": "Phone Number",
+        "email": "Email",
+        "pwd": "Password"
+      }
+    },
+    "placeholder": {
+      "wechat": "Scan the QR code with WeChat to bind",
+      "phone": "Enter phone number",
+      "pwd": "Enter phone number or email",
+      "newPwd": "New password",
+      "confirmPwd": "Confirm new password",
+      "email": "Enter email",
+      "account": "Enter login account",
+      "vertify": "verification code",
+      "countdown": "{action} seconds to resend"
+    },
+    "params": {
+      "bind": {
+        "title": "Bind",
+        "binding": "Bound",
+        "unbound": "Unbound",
+        "change": "Rebind"
+      }
+    },
+    "edit": "Edit",
+    "prompt": {
+      "apiError": "API requires at least {point} points"
+    }
+  }
+}

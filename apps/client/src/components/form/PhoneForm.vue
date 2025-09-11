@@ -12,6 +12,7 @@ const props = defineProps<{ onClose(): void }>()
 const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'phone_countdown'
 })
+const { t } = useI18n()
 
 const phoneForm = reactive({
   phone: '',
@@ -45,20 +46,20 @@ async function submitForm() {
     code: phoneForm.code
   })
 
-  toast.success('手机号绑定成功')
+  toast.success(t('submit.success', { action: t("action.bind") }))
   props.onClose()
 }
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent="submitForm">
-    <XInput v-model="phoneForm.phone" type="tel" placeholder="请输入手机号" />
+    <XInput v-model="phoneForm.phone" type="tel" :placeholder="t('profile.placeholder.phone')" />
     <div class="flex space-x-2">
-      <XInput v-model="phoneForm.code" placeholder="请输入验证码" />
+      <XInput v-model="phoneForm.code" :placeholder="t('profile.placeholder.vertify')" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCode">
-        {{ isRunning ? `${count} 秒后重发` : '获取验证码' }}
+        {{ isRunning ? t('profile.placeholder.countdown', { action: count }) : t('profile.button.sendVerty') }}
       </XButton>
     </div>
-    <XButton type="submit" class="w-full">确认绑定</XButton>
+    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
   </form>
 </template>

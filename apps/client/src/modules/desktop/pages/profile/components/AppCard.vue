@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 function download(platform: string) {
   const baseUrl = import.meta.env.VITE_API_URL
   const type = platform === 'windows' ? 1 : 2
@@ -8,16 +10,17 @@ function download(platform: string) {
 
 <template>
   <div class="border rounded-lg p-6 mr-6 bg-card">
-    <h3 class="text-lg mb-4">批量查询助手</h3>
+    <!-- <h3 class="text-lg mb-4">批量查询助手</h3> -->
+    <h3 class="text-lg mb-4">{{ t('profile.software.old') }}</h3>
     <div class="space-x-2 whitespace-nowrap">
       <XButton
-        icon="fa-brands:windows" label="Windows 下载"
+        icon="fa-brands:windows" label="Windows"
         variant="outline"
         @click="download('windows')"
       />
 
       <XButton
-        icon="fa-brands:apple" label="macOS 下载"
+        icon="fa-brands:apple" label="macOS"
         variant="outline" color="danger"
         @click="download('macos')"
       />
