@@ -11,6 +11,8 @@ const curLocale = ref<string>()
 curLocale.value = systemStore.locale ?? navigator.language
 
 function handleClick(lang: string) {
+  if(systemStore.locale === lang) return
+  
   visible.value = false
   curLocale.value = lang
 

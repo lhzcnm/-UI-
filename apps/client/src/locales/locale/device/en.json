@@ -84,7 +84,7 @@
         "status": "Charge",
         "health": "Health",
         "capacity": "Design Cap",
-        "max": "Max Cap.",
+        "max": "Max Cap",
         "cycle": "Cycles",
         "temperature": "Temp",
         "charge": {

@@ -20,7 +20,7 @@ const batteryInfo = computed(() => {
     designCapacity: design,
     isCharging: battery.IsCharging,
     currentCapacity: battery.CurrentCapacity,
-    label: battery.IsCharging ? t('device.info.battery.charge.ing') : (isFull ? t('device.info.battery.charge.full') : t('device.info.battery.charge.ing')),
+    label: battery.IsCharging ? t('device.info.battery.charge.ing') : (isFull ? t('device.info.battery.charge.max') : t('device.info.battery.charge.ing')),
     healthPercentage: ((current / design) * 100).toFixed(2),
     nominalChargeCapacity: battery.NominalChargeCapacity,
     temperature: battery.Temperature / 100,
