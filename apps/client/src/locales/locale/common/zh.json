@@ -45,7 +45,7 @@
   },
   "remark": {
     "title": "备注信息",
-    "placeholder": "您的备注信息"
+    "placeholder": "您的备注信息(可选)"
   },
   "date": {
     "title": "日期",

@@ -8,6 +8,7 @@ import { SUBMIT_STORE } from '../utils'
 
 const store = inject(SUBMIT_STORE)!
 const exportLoading = ref(false)
+const { t } = useI18n()
 
 const page = ref(1)
 const pageSize = ref(10)
@@ -27,7 +28,7 @@ const progress = computed<number>(() => {
 function handleExport() {
   const ids = store.rawOrders.map((item) => item.id)
   if (!store.serviceId || !ids?.length) {
-    toast.warning('请选择服务')
+    toast.warning(t('service.select'))
     return
   }
 
@@ -44,11 +45,11 @@ function handleExport() {
 </script>
 
 <template>
-  <TheModal v-model="store.visible" title="订单结果">
+  <TheModal v-model="store.visible" :title="t('query.title.mobile.result')">
     <section class="relative px-4 pb-3 flex justify-between items-center">
       <XButton
         color="success"
-        label="导出"
+        :label="t('button.export')"
         :loading="exportLoading"
         @click="handleExport"
       />

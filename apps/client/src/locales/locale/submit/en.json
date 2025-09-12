@@ -6,7 +6,10 @@
       "importNull": "Please import the order first",
       "imeiNotExist": "IMEI does not exist",
       "exportNotSub": "Order not submitted",
-      "pushRes": "Are you sure you don't want to receive results via WeChat official account push?"
+      "orderHandle": "Processing order",
+      "pushRes": "Are you sure you don't want to receive results via WeChat official account push?",
+      "scan": "IMEI/SN not recognized",
+      "file": "Failed to parse the file"
     },
     "submit": "Submit Order",
     "viewRes": "Please go to 'My Orders' page to view results",
@@ -24,6 +27,21 @@
       "placeholder": "One IMEI/SN per line\n\nYou can drag files here to import\nSupports txt, csv, xlsx, xls, etc.",
       "view": "View correct IMEI",
       "valid": "Valid quantity"
+    },
+    "button": {
+      "mobile": {
+        "image": "Select Image",
+        "camera": "Take Photo",
+        "pushRes": "Push Result (large load off)"
+      }
+    },
+    "title": {
+      "mobile": {
+        "result": "Order Result"
+      }
+    },
+    "info": {
+      "additional": "Additional Information"
     }
   }
 }

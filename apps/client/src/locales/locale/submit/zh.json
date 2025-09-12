@@ -6,7 +6,10 @@
       "importNull": "请先导入订单",
       "imeiNotExist": "IMEI不存在",
       "exportNotSub": "订单未提交",
-      "pushRes": "确认不接收公众号推送结果吗?\n订单量较大时,建议关闭"
+      "orderHandle": "订单处理中",
+      "pushRes": "确认不接收公众号推送结果吗?\n订单量较大时,建议关闭",
+      "scan": "识别不到IMEI/SN",
+      "file": "文件解析错误"
     },
     "submit": "提交订单",
     "viewRes": "请前往'我的订单'页面查看结果",
@@ -24,6 +27,21 @@
       "placeholder": "每行一个 IMEI/SN\n\n可以拖动文件到此导入\n支持 txt、csv、xlsx、xls 等",
       "view": "查看正确的IMEI",
       "valid": "有效数量"
+    },
+    "button": {
+      "mobile": {
+        "img": "选择图片",
+        "photograph": "拍照识别",
+        "pushRes": "推送结果(提交量较大时，建议关闭)"
+      }
+    },
+    "title": {
+      "mobile": {
+        "result": "订单结果"
+      }
+    },
+    "info": {
+      "additional": "附加信息"
     }
   }
 }

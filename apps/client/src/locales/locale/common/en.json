@@ -45,7 +45,7 @@
   },
   "remark": {
     "title": "Remarks",
-    "placeholder": "Your remarks"
+    "placeholder": "Your remarks(Optional)"
   },
   "date": {
     "title": "Date",

@@ -32,6 +32,8 @@ await serviceStore.getServices()
 const { connect, close } = useWsStore()
 const uStore = useUserStore()
 
+const { t } = useI18n()
+
 const store: SubmitStore = reactive({
   service: undefined,
   serviceId: 0,
@@ -82,7 +84,7 @@ function getGroupId(serviceId: number) {
 }
 
 function handleScan() {
-  if (!store.serviceId) return toast.warning('请先选择服务')
+  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
 
   window.wx.scanQRCode({
     needResult: 1,
@@ -90,7 +92,7 @@ function handleScan() {
     fail: (res: any) => window.alert(res.errMsg),
     success: (res: any) => {
       const imei = res.resultStr.split(',')[1]
-      if (!imei) return toast.warning('识别不到IMEI/SN')
+      if (!imei) return toast.warning(t('query.prompt.scan'))
 
       const trimed = form.imei.trim()
       form.imei = trimed ? `${trimed}\n${imei}` : imei
@@ -99,7 +101,7 @@ function handleScan() {
 }
 
 async function handleFileChange(event: Event) {
-  if (!store.serviceId) return toast.warning('请先选择服务')
+  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
 
   const file = (event.target as HTMLInputElement).files![0]
   const extension = file.name.split('.').pop()!.toLowerCase()
@@ -122,7 +124,7 @@ async function handleFileChange(event: Event) {
     form.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
   } catch (error) {
     console.error('[File parse error]', error)
-    toast.error('文件解析错误')
+    toast.error(t('query.prompt.file'))
   }
 }
 
@@ -139,7 +141,7 @@ function handleImei(text = '') {
 }
 
 function handlePhoto() {
-  if (!store.serviceId) return toast.warning('请先选择服务')
+  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
 
   window.wx.chooseImage({
     sizeType: ['original'],
@@ -168,7 +170,7 @@ function handlePhoto() {
 }
 
 function handlePickImage() {
-  if (!store.serviceId) return toast.warning('请先选择服务')
+  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
 
   window.wx.chooseImage({
     count: 9,
@@ -199,7 +201,7 @@ function handlePickImage() {
 }
 
 function handleFileInput() {
-  if (!store.serviceId) return toast.warning('请先选择服务')
+  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
   fileInputRef.value?.click()
 }
 
@@ -235,11 +237,11 @@ function handleServiceChange(value: XNativeSelectValue) {
 
 function handleSubmit() {
   if (!store.service) {
-    return toast.warning('请先选择服务')
+    return toast.warning(t('query.prompt.serviveNull'))
   }
 
   if (!form.imei.trim()) {
-    return toast.warning('未识别到 IMEI/SN')
+    return toast.warning(t('query.prompt.scan'))
   }
 
   submitLoading.value = true
@@ -293,7 +295,7 @@ function submitOrder(service: Service) {
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success('提交成功，请稍后前往"订单"页面查看')
+      toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
       return
     }
 
@@ -329,7 +331,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
       id: 0, index: i,
       serviceId: form.serviceId,
       credits: store.service?.price || 0,
-      result: isFailed ? item.message : '订单处理中',
+      result: isFailed ? item.message : t('query.prompt.orderHandle'),
       verify: ORDER_VERIFY.NORMAL,
       status: item.status,
       imei: item.imei,
@@ -365,7 +367,7 @@ function handleCount() {
 function handlePushMsgChange(value: boolean) {
   if (value) return
   
-  const confirm = window.confirm('确定不接收公众号推送结果吗？')
+  const confirm = window.confirm(t('query.prompt.pushRes'))
   if (!confirm) form.pushMsg = true
 }
 </script>
@@ -374,13 +376,13 @@ function handlePushMsgChange(value: boolean) {
   <div class="p-4 m-3 space-y-4 bg-card rounded-lg">
     <div>
       <div class="flex items-center justify-between mb-2">
-        <h2 class="font-medium">选择服务</h2>
+        <h2 class="font-medium">{{ t('service.select') }}</h2>
         <RouterLink
           v-if="form.serviceId"
           :to="`/service/${form.serviceId}`"
           class="flex items-center text-sm text-muted-foreground"
         >
-          查看服务说明
+          {{ t('query.service') }}
           <Icon icon="lucide:chevron-right" />
         </RouterLink>
       </div>
@@ -390,7 +392,7 @@ function handlePushMsgChange(value: boolean) {
           :default="-1"
           :options="[...serviceStore.details]"
           @change="form.serviceId = 0"
-          placeholder="请选择服务组"
+          :placeholder="t('serviceGroup.placeholder')"
           label-key="title"
           value-key="id"
           class="w-full"
@@ -401,7 +403,7 @@ function handlePushMsgChange(value: boolean) {
           :options="options"
           :disabled="form.groupId === -1"
           @change="handleServiceChange"
-          placeholder="请选择服务"
+          :placeholder="t('service.placeholder')"
           label-key="title"
           value-key="id"
           class="w-full"
@@ -411,7 +413,7 @@ function handlePushMsgChange(value: boolean) {
 
     <div>
       <div class="flex items-center justify-between mb-2">
-        <h2 class="font-medium">IMEI/SN 信息</h2>
+        <h2 class="font-medium">IMEI/SN</h2>
         <div class="flex items-center space-x-2">
           <template v-if="textBtnModes.includes(mode)">
             <button 
@@ -421,11 +423,8 @@ function handlePushMsgChange(value: boolean) {
                 'h-8 text-sm bg-muted'
               )"
               @click="handleFileInput"
-              title="导入文件"
             >
-              <!-- <Icon icon="lucide:file-input" /> -->
-              <!-- <XTag color="info" label="导入" /> -->
-              <span>导入</span>
+              <span>{{ t('button.import') }}</span>
             </button>
           </template>
           <template v-else>
@@ -435,7 +434,6 @@ function handlePushMsgChange(value: boolean) {
                 'bg-muted text-muted-foreground rounded-full',
               )"
               @click="handleFileInput"
-              title="导入文件"
             >
               <Icon icon="lucide:file-input" />
             </button>
@@ -448,7 +446,6 @@ function handlePushMsgChange(value: boolean) {
               'bg-muted text-muted-foreground rounded-full',
             )"
             @click="handleScan"
-            title="扫码"
           >
             <Icon icon="lucide:scan-line" />
           </button>
@@ -458,7 +455,7 @@ function handlePushMsgChange(value: boolean) {
       <div class="relative">
         <XTextarea
           v-model="form.imei" rows="5"
-          placeholder="IMEI/SN，一行一个&#13;&#10;支持导入 txt、csv、xlsx、xls 文件"
+          :placeholder="t('query.imei.placeholder')"
         />
         <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
           <Icon icon="svg-spinners:270-ring" class="text-primary" />
@@ -474,34 +471,34 @@ function handlePushMsgChange(value: boolean) {
 
       <div v-if="ua.isWechat" class="flex items-center justify-between space-x-2">
         <XButton
-          class="w-full" label="选择图片"
+          class="w-full" :label="t('query.button.mobile.image')"
           color="success" icon="lucide:image-up" @click="handlePickImage"
         />
         <XButton
-          class="w-full" label="拍照识别"
+          class="w-full" :label="t('query.button.mobile.camera')"
           icon="lucide:camera" @click="handlePhoto"
         />
       </div>
     </div>
 
     <div>
-      <h2 class="font-medium mb-2">附加信息</h2>
+      <h2 class="font-medium mb-2">{{ t('query.info.additional') }}</h2>
       <XTextarea 
         v-model="form.remark"
-        placeholder="备注信息（可选）"
+        :placeholder="t('remark.placeholder')"
         class="mb-3"
       />
 
       <XSwitch
         v-model="form.pushMsg"
-        label="推送结果(提交量较大时，建议关闭)"
+        :label="t('query.button.mobile.pushRes')"
         @change="handlePushMsgChange"
       />
     </div>
 
     <XButton
       class="w-full"
-      label="提交订单"
+      :label="t('button.submit')"
       :loading="submitLoading"
       @click="handleSubmit"
     />

@@ -30,6 +30,7 @@ const props = defineProps<OrderCardProps>()
 const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
 const { t } = useI18n()
+const route = useRoute()
 
 const order = ref(props.order)
 const serviceStore = useServiceStore()
@@ -52,6 +53,8 @@ const verify = computed(() => ({
   isSolved: order.value.verify === ORDER_VERIFY.SOLVED,
   isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
 }))
+
+const isHistory = computed(() => route.path.includes('history'))
 
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
@@ -121,8 +124,8 @@ function handleCopy() {
       </span>
       <span v-else class="text-base font-medium">{{ order.id }}</span>
       <div class="flex space-x-2">
-        <XTag v-bind="ORDER_STATUS_MAP[order.status]" />
-        <XTag v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
+        <XTag :color="ORDER_STATUS_MAP[order.status].color" :label="t(ORDER_STATUS_MAP[order.status].key!)" />
+        <XTag v-if="!isSubmit" :color="ORDER_VERIFY_MAP[order.verify].color" :label="t(ORDER_VERIFY_MAP[order.verify].key!)" />
       </div>
     </div>
 
@@ -199,7 +202,7 @@ function handleCopy() {
           </button>
 
           <button
-            v-if="status.isSuccess"
+            v-if="status.isSuccess && isHistory"
             class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="emits('generate', order)"
           >
