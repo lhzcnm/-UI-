@@ -36,7 +36,7 @@ const { t } = useI18n()
           >
             {{ store.info.userOrder.total }}
           </data>
-          <span class="text-sm text-muted-foreground">个</span>
+          <span class="text-sm text-muted-foreground">{{ t('profile.stat.piece') }}</span>
         </div>
         <div class="space-x-3 text-sm mt-2">
           <span class="text-success">{{ t('profile.stat.success') }} {{ store.info.userOrder.success }}</span>

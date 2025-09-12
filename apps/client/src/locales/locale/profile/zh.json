@@ -30,7 +30,8 @@
       "reNewal": "立即续费",
       "activateNow": "立即开通",
       "useDay": "使用天数",
-      "day": "天"
+      "day": "天",
+      "piece": "个"
     },
     "form": {
       "title": {
@@ -47,6 +48,9 @@
         "phone": "手机号",
         "email": "邮箱",
         "pwd": "密码"
+      },
+      "bind": {
+        "not": "未绑定"
       }
     },
     "placeholder": {
@@ -71,6 +75,44 @@
     "edit": "修改",
     "prompt": {
       "apiError": "低于 {point} 积分不支持开通"
+    },
+    "mobile": {
+      "title": {
+        "account": "我的账户"
+      },
+      "text": {
+        "detail": "详情"
+      },
+      "button": {
+        "bill": "账单",
+        "recharge": "充值"
+      },
+      "info": {
+        "title": "个人中心",
+        "account": "账号",
+        "wechat": "微信",
+        "phone": "手机",
+        "mail": "邮箱"
+      },
+      "balance": "余额",
+      "order": "总订单",
+      "handle": "处理中",
+      "recharge": {
+        "point": "积分记录",
+        "recharge": "充值记录",
+        "change": "积分变更记录"
+      },
+      "setting": {
+        "phone": "修改手机号",
+        "mail": "修改邮箱",
+        "pwd": "修改密码",
+        "account": "修改登录账号",
+        "wechat": "微信绑定",
+        "invite": "生成推荐码"
+      },
+      "prompt": {
+        "download": "请点击右上角\n在浏览器打开\n下载邀请码"
+      }
     }
   }
 }

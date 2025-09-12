@@ -14,6 +14,7 @@ const loading = ref(false)
 
 const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
 const logs = ref<CreditLogsResponse>(IPage)
+const { t } = useI18n()
 
 watch(
   page,
@@ -33,7 +34,7 @@ watch(
 
 <template>
   <div class="h-full">
-    <BackHeader title="积分变更记录" />
+    <BackHeader :title="t('credit.title')" />
 
     <Fallback v-if="loading" />
     <template v-else>
@@ -49,7 +50,7 @@ watch(
           :total="logs.total"
         />
         <span class="text-sm text-muted-foreground">
-          总共 {{ logs.total }} 条记录
+          {{ t('credit.total', { count: logs.total }) }}
         </span>
       </div>
 

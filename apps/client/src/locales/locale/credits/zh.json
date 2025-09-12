@@ -1,5 +1,6 @@
 {
   "credit": {
+    "title": "积分变更记录",
     "listCol": {
       "service": "服务",
       "amount": "变动金额",
@@ -9,6 +10,16 @@
     },
     "text": {
       "minus": "管理员扣除积分"
-    }
+    },
+    "card": {
+      "out": "服务消费",
+      "serviceIn": "服务退款",
+      "pointIn": "积分充值",
+      "amount": "变动金额",
+      "balance": "余额",
+      "service": "服务",
+      "remark": "备注"
+    },
+    "total": "总共 {count} 条记录"
   }
 }

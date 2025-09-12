@@ -106,7 +106,7 @@ function isSamePrice(item: MemberPackage) {
           @click="pickPlan(item)"
         >
           <div class="text-base font-medium">{{ item.shopName }}</div>
-          <div class="mt-1 text-lg text-primary">{{ item.price }}元</div>
+          <div class="mt-1 text-lg text-primary">￥{{ item.price }}</div>
         </button>
       </div>
     </div>

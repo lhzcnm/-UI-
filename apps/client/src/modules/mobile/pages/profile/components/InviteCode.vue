@@ -6,6 +6,8 @@ const store = useUserStore()
 
 const inviteImg = ref('')
 
+const { t } = useI18n()
+
 const baseUrl = import.meta.env.VITE_API_URL
 
 async function generInviteCodeImg() {
@@ -30,7 +32,9 @@ async function generInviteCodeImg() {
 }
 
 function showTip() {
-  alert('请点击右上角\n在浏览器打开\n下载邀请码')
+  if(ua.isMobile && ua.isWechat && ua.os.toLowerCase() !== 'ios') {
+    alert(t('profile.mobile.prompt.download'))
+  }
 }
 
 function downloadFile(url: string) {

@@ -8,23 +8,24 @@ import { maskText } from '@/utils'
 
 const store = useUserStore()
 const iStore = useSettingStore()
+const { t } = useI18n()
 
 const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success('复制成功'))
+watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
 
 async function handleRefresh() {
   await store.refreshApi()
-  toast.success('刷新成功')
+  toast.success(t('submit.success', { action: t('action.refresh') }))
 }
 
 function openApiUsageInfo() {
   const apiUsageInfo = iStore.settings.apiUsageInfo
 
   xconfirm({
-    title: 'API 使用说明',
+    title: t('profile.apiKey.info'),
     text: apiUsageInfo,
-    confirmText: '知道了',
-    cancelText: '取消',
+    confirmText: t('button.confirm'),
+    cancelText: t('button.cancel'),
   })
 }
 </script>
@@ -38,7 +39,7 @@ function openApiUsageInfo() {
         @click="openApiUsageInfo"
       >
         <Icon icon="lucide:info" class="size-4" />
-        <span class="text-sm">使用说明</span>
+        <span class="text-sm">{{ t('profile.apiKey.useInfo') }}</span>
       </button>
     </div>
 
@@ -51,12 +52,12 @@ function openApiUsageInfo() {
     <div class="flex items-center space-x-2 mt-3">
       <XButton
         icon="lucide:refresh-cw"
-        class="flex-1" label="刷新"
+        class="flex-1" :label="t('button.fresh')"
         @click="handleRefresh"
       />
       <XButton
         icon="lucide:copy" class="flex-1"
-        color="success" label="复制"
+        color="success" :label="t('button.copy')"
         @click="copy(store.info.apiKey)"
       />
     </div>

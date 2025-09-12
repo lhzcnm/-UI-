@@ -42,8 +42,10 @@
       "placeholder": "自定义充值金额"
     },
     "history": {
+      "title": "充值记录",
       "amount": "账单金额",
-      "real": "实际到账"
+      "real": "实际到账",
+      "total": "总共 {count} 条记录"
     },
     "qrcode": {
       "title": "微信支付",

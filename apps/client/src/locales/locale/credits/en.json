@@ -1,14 +1,25 @@
 {
   "credit": {
+    "title": "Points History",
     "listCol": {
       "service": "Service",
       "amount": "Amount",
       "reason": "Reason",
       "time": "Time",
-      "commment": "Remark"
+      "commment": "Note"
     },
     "text": {
-      "minus": "Administrator deductions"
-    }
+      "minus": "Points deducted by admin"
+    },
+    "card": {
+      "out": "Service Consumption",
+      "serviceIn": "Service Refund",
+      "pointIn": "Points Recharge",
+      "amount": "Amount",
+      "balance": "Balance",
+      "service": "Service",
+      "remark": "Remark"
+    },
+    "total": "Total {count} records"
   }
 }

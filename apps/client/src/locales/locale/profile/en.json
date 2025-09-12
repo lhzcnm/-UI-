@@ -30,7 +30,8 @@
       "reNewal": "Renew Now",
       "activateNow": "Activate Now",
       "useDay": "Usage Days",
-      "day": "days"
+      "day": "days",
+      "piece": "pieces"
     },
     "form": {
       "title": {
@@ -47,6 +48,9 @@
         "phone": "Phone Number",
         "email": "Email",
         "pwd": "Password"
+      },
+      "bind": {
+        "not": "Unbound"
       }
     },
     "placeholder": {
@@ -71,6 +75,44 @@
     "edit": "Edit",
     "prompt": {
       "apiError": "API requires at least {point} points"
+    },
+    "mobile": {
+      "title": {
+        "account": "My Account"
+      },
+      "text": {
+        "detail": "Details"
+      },
+      "button": {
+        "bill": "Bill",
+        "recharge": "Recharge"
+      },
+      "info": {
+        "title": "Profile",
+        "account": "Account",
+        "wechat": "WeChat",
+        "phone": "Phone",
+        "mail": "Email"
+      },
+      "balance": "Balance",
+      "order": "Total Orders",
+      "handle": "Processing",
+      "recharge": {
+        "point": "Point Records",
+        "recharge": "Recharge Records",
+        "change": "Point Change Records"
+      },
+      "setting": {
+        "phone": "Change Phone",
+        "mail": "Change Email",
+        "pwd": "Change Password",
+        "account": "Change Login Account",
+        "wechat": "Bind WeChat",
+        "invite": "Generate Invite Code"
+      },
+      "prompt": {
+        "download": "Click the top right\nOpen in browser\nDownload invite code"
+      }
     }
   }
 }

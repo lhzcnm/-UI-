@@ -13,17 +13,19 @@ const props = defineProps<RechargeMobileProps>()
 const activeTab = ref<TabMode>(props.tab || 'recharge')
 
 const iStore = useSettingStore()
+const { t } = useI18n()
+
 await iStore.getSettings()
 
 const options: XSegmentedOption[] = [
-  { label: '余额充值', value: 'recharge', icon: 'lucide:wallet' },
-  { label: '开通会员', value: 'membership', icon: 'lucide:crown' }
+  { label: t('recharge.segment.balance'), value: 'recharge', icon: 'lucide:wallet' },
+  { label: t('recharge.segment.member'), value: 'membership', icon: 'lucide:crown' }
 ]
 </script>
 
 <template>
   <div class="h-full">
-    <BackHeader title="积分充值" />
+    <BackHeader :title="t('recharge.title')" />
     <div class="px-3 pb-6 h-[calc(100%-var(--mobile-header-h))] overflow-y-auto">
       <XSegmented class="my-3 bg-card" v-model="activeTab" :options="options" />
 

@@ -72,5 +72,10 @@
     "4": "ThursDay",
     "5": "FriDay",
     "6": "SaturDay"
+  },
+  "footer": {
+    "msg1": "SanHe Query",
+    "msg2": "LuShenSanHe",
+    "msg3": "Copyright"
   }
 }

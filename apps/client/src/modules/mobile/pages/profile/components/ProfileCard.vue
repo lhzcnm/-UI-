@@ -4,23 +4,25 @@ import { Icon } from '@iconify/vue'
 const store = useUserStore()
 const visibleInfo = defineModel<boolean>({ required: true })
 
+const { t } = useI18n()
+
 const order = store.info.userOrder
 const accountStats = [
-  { label: '余额', value: store.info.credits },
-  { label: '总订单', value: order.total },
-  { label: '处理中', value: order.total - order.success - order.failed },
+  { label: t('profile.mobile.balance'), value: store.info.credits },
+  { label: t('profile.mobile.order'), value: order.total },
+  { label: t('profile.mobile.handle'), value: order.total - order.success - order.failed },
 ]
 </script>
 
 <template>
   <section class="mb-3 p-4 bg-card rounded-lg">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-base font-medium">我的账户</h3>
+      <h3 class="text-base font-medium">{{ t('profile.mobile.title.account') }}</h3>
       <button
         class="flex-1 flex items-center justify-end space-x-1 text-sm text-muted-foreground"
         @click="visibleInfo = true"
       >
-        详情 <Icon icon="lucide:chevron-right" class="size-4" />
+        {{ t('profile.mobile.text.detail') }} <Icon icon="lucide:chevron-right" class="size-4" />
       </button>
     </div>
     <div class="grid grid-cols-3 gap-3">
@@ -39,13 +41,13 @@ const accountStats = [
         variant="soft" color="danger"
         @click="$router.push('/m/credits')"
       >
-        账单
+        {{ t('profile.mobile.button.bill') }}
       </XButton>
       <XButton
         class="w-full" icon="lucide:wallet"
         @click="$router.push('/m/recharge')"
       >
-        充值
+        {{ t('profile.mobile.button.recharge') }}
       </XButton>
     </div>
   </section>

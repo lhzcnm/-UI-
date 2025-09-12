@@ -9,6 +9,8 @@ const limit = ref(20)
 const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
 const bills = ref<InvoicesResponse>(IPage)
 
+const { t } = useI18n()
+
 watch(
   page,
   async (value) => {
@@ -25,7 +27,7 @@ watch(
 
 <template>
   <div class="h-full">
-    <BackHeader title="充值记录" />
+    <BackHeader :title="t('recharge.history.title')" />
 
     <div
       :class="twJoin(
@@ -39,7 +41,7 @@ watch(
         :total="bills.total"
       />
       <span class="text-sm text-muted-foreground">
-        总共 {{ bills.total }} 条记录
+        {{ t('recharge.history.total', { count: bills.total }) }}
       </span>
     </div>
 

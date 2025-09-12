@@ -4,6 +4,7 @@ import { twMerge, twJoin } from 'tailwind-merge'
 
 const { item } = defineProps<{ item: CreditLogItem }>()
 const store = useServiceStore()
+const { t } = useI18n()
 
 const isSubmit = /订单提交|查询订单|Code Request/.test(item.description)
 const isReduce = isSubmit || item.description === '管理员扣除积分'
@@ -12,9 +13,9 @@ const service = item.packageId && store.services.get(item.packageId)
 const title = getTitle()
 
 function getTitle() {
-  if (isSubmit) return '服务消费'
-  if (item.packageId) return '服务退款'
-  return '积分充值'
+  if (isSubmit) return t('credit.card.out')
+  if (item.packageId) return t('credit.card.serviceIn')
+  return t('credit.card.pointIn')
 }
 </script>
 
@@ -36,7 +37,7 @@ function getTitle() {
 
     <div class="grid grid-cols-2 mb-2">
       <div class="text-center">
-        <span class="text-sm">变动金额</span>
+        <span class="text-sm">{{ t('credit.card.amount') }}</span>
         <div
           :class="twMerge(
             'text-lg font-bold text-success',
@@ -47,7 +48,7 @@ function getTitle() {
         </div>
       </div>
       <div class="text-center">
-        <span class="text-sm">余额</span>
+        <span class="text-sm">{{ t('credit.card.balance') }}</span>
         <div class="text-lg font-bold text-primary">
           {{ item.creditsLeft }}
         </div>
@@ -63,12 +64,12 @@ function getTitle() {
     >
       <template v-if="service && item.packageId">
         <div class="truncate">
-          服务: {{ item.packageId }} - {{ service.title }}
+          {{ t('credit.card.service') }}: {{ item.packageId }} - {{ service.title }}
         </div>
         <div>IMEI/SN: <span class="font-mono">{{ item.imeiNo }}</span></div>
       </template>
-      <div v-if="item.ip">IP地址: <span class="font-mono">{{ item.ip }}</span></div>
-      <div v-if="item.comments">备注: {{ item.comments }}</div>
+      <div v-if="item.ip">IP: <span class="font-mono">{{ item.ip }}</span></div>
+      <div v-if="item.comments">{{ t('credit.card.remark') }}: {{ item.comments }}</div>
     </div>
   </div>
 </template>

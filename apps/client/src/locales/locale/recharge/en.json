@@ -17,7 +17,7 @@
     "member": {
       "title": "Membership Plan",
       "rights": {
-        "title": "Membership Benefits",
+        "title": "Benefits",
         "text1": "Save every month",
         "text2": "Original price {price}/time. Now",
         "text3": "{count} times per day",
@@ -42,8 +42,10 @@
       "placeholder": "Custom recharge amount"
     },
     "history": {
+      "title": "Recharge History",
       "amount": "Bill Amount",
-      "real": "Actual Received"
+      "real": "Actual Received",
+      "total": "Total {count} records"
     },
     "qrcode": {
       "title": "WeChat Payment",

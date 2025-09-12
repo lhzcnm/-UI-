@@ -9,34 +9,36 @@ import type { Action } from '../types'
 const visibleForm = ref(false)
 const activeForm = ref<Action | null>(null)
 
+const { t } = useI18n()
+
 const settingOptions = [
   {
-    label: '修改手机号',
+    label: t('profile.mobile.setting.phone'),
     icon: 'lucide:smartphone',
     action: 'phone',
   },
   {
-    label: '修改邮箱',
+    label: t('profile.mobile.setting.mail'),
     icon: 'lucide:mail',
     action: 'email',
   },
   {
-    label: '修改密码',
+    label: t('profile.mobile.setting.pwd'),
     icon: 'lucide:key',
     action: 'password',
   },
   {
-    label: '修改登录账号',
+    label: t('profile.mobile.setting.account'),
     icon: 'lucide:user',
     action: 'account',
   },
   !ua.isWechat && {
-    label: '微信绑定',
+    label: t('profile.mobile.setting.wechat'),
     icon: 'hugeicons:wechat',
     action: 'wechat',
   },
   {
-    label: '推荐码',
+    label: t('profile.mobile.setting.invite'),
     icon: 'lucide:qr-code',
     action: 'qrcode',
   },
@@ -44,12 +46,12 @@ const settingOptions = [
 
 const activeTitle = computed(() => {
   const options = {
-    account: '修改登录账号',
-    password: '修改密码',
-    phone: '修改手机号',
-    email: '修改邮箱',
-    wechat: '微信绑定',
-    qrcode: '生成推荐码',
+    account: t('profile.mobile.setting.account'),
+    password: t('profile.mobile.setting.pwd'),
+    phone: t('profile.mobile.setting.phone'),
+    email: t('profile.mobile.setting.mail'),
+    wechat: t('profile.mobile.setting.wechat'),
+    qrcode: t('profile.mobile.setting.invite'),
   }
 
   return options[activeForm.value as Action]

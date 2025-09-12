@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
+const { t } = useI18n()
+
 const operationOptions = [
-  { label: '积分充值', icon: 'lucide:wallet', action: 'recharge' },
-  { label: '充值记录', icon: 'lucide:shopping-cart', action: 'bill' },
-  { label: '积分变更记录', icon: 'lucide:dollar-sign', action: 'credits' },
+  { label: t('profile.mobile.recharge.point'), icon: 'lucide:wallet', action: 'recharge' },
+  { label: t('profile.mobile.recharge.recharge'), icon: 'lucide:shopping-cart', action: 'bill' },
+  { label: t('profile.mobile.recharge.change'), icon: 'lucide:dollar-sign', action: 'credits' },
 ]
 </script>
 
