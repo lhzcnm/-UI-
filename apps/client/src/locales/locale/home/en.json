@@ -1,6 +1,7 @@
 {
   "home": {
     "service": "Common Services",
+    "list": "Service Overview",
     "dialog": {
       "service": "Services"
     },

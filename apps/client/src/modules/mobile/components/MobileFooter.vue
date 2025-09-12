@@ -5,17 +5,19 @@ import { Icon } from '@iconify/vue'
 const store = useSettingStore()
 const route = useRoute()
 
+const { t } = useI18n()
+
 const routes = [
-  { name: '首页', path: '/m', icon: 'iconoir:home-alt-slim-horiz' },
-  { name: '订单', path: '/m/history', icon: 'iconoir:page-flip' },
-  { name: '提交订单', path: '/m/submit', icon: 'iconoir:atom' },
+  { name: t('barItem.mobile.home'), path: '/m', icon: 'iconoir:home-alt-slim-horiz' },
+  { name: t('barItem.mobile.order'), path: '/m/history', icon: 'iconoir:page-flip' },
+  { name: t('barItem.mobile.submit'), path: '/m/submit', icon: 'iconoir:atom' },
   {
-    name: '反馈',
+    name: t('barItem.mobile.feedback'),
     path: '/m/ticket',
     icon: 'iconoir:chat-lines',
     hide: !store.settings.enableTricket,
   },
-  { name: '我的', path: '/m/profile', icon: 'iconoir:user' },
+  { name: t('barItem.mobile.profile'), path: '/m/profile', icon: 'iconoir:user' },
 ]
 
 const currentPath = computed(() => {

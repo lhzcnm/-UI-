@@ -19,13 +19,14 @@ await Promise.all([
 
 const { popupAnnc, enablePopupAnnc } = iStore.settings
 const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
+const { t } = useI18n()
 
 onMounted(async () => {
   if (!anncVisible.value) return
   const result = await xconfirm({
-    title: '公告',
+    title: t('announcement.title'),
     text: popupAnnc,
-    confirmText: '确定',
+    confirmText: t('button.confirm'),
     cancelText: undefined,
   })
 
@@ -87,7 +88,7 @@ function handleServiceItemClick(event: MouseEvent) {
     />
 
     <section v-if="commonList.length" class="mb-4">
-      <h2 class="text-lg font-bold mb-3">常用服务</h2>
+      <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
       <div class="space-y-2" @click="handleServiceItemClick">
         <ServiceItemCard
           v-for="item in commonList"
@@ -99,7 +100,7 @@ function handleServiceItemClick(event: MouseEvent) {
 
     <section class="my-4">
       <div class="flex justify-between items-center mb-2">
-        <h2 class="text-lg font-bold">服务列表</h2>
+        <h2 class="text-lg font-bold">{{ t('home.list') }}</h2>
         <div class="space-x-2">
           <button 
             v-for="page in totalPages" :key="page - 1"

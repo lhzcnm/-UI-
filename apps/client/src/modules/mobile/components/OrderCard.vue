@@ -29,6 +29,7 @@ interface OrderCardEmits {
 const props = defineProps<OrderCardProps>()
 const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
+const { t } = useI18n()
 
 const order = ref(props.order)
 const serviceStore = useServiceStore()
@@ -53,7 +54,7 @@ const verify = computed(() => ({
 }))
 
 const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success('复制成功'))
+watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
 
 const iStore = useSettingStore()
 
@@ -66,7 +67,7 @@ const isShowVerify = computed(() => {
 const handleRefresh = useThrottleFn(() => {
   orderApi.item(order.value.id).then((response) => {
     order.value = response.data
-    toast.success('刷新成功')
+    toast.success(t('submit.success', { action: t('action.refresh') }))
   })
 }, 500)
 
@@ -77,14 +78,14 @@ function handleVerify() {
   const daysDiff = diff / (24 * 3600 * 1000)
 
   if (daysDiff > 3) {
-    toast.info('订单超过 3 天，不支持订单反馈')
+    toast.info(t('order.prompt.orderTimeout'))
     return
   }
 
-  window.confirm('是否确认反馈该订单?') && (() => {
+  window.confirm(t('order.prompt.vertifyConfirm')) && (() => {
     orderApi.verify(id).then(() => {
       order.value.verify = ORDER_VERIFY.REPLIED
-      toast.success('已提交反馈')
+      toast.success(t('order.prompt.vertified'))
     })
   })()
 }
@@ -125,15 +126,15 @@ function handleCopy() {
       </div>
     </div>
 
-    <div class="text-sm">
+    <div class="text-sm whitespace-pre">
       <div class="flex items-start">
-        <span class="text-muted-foreground shrink-0">处理服务：</span>
+        <span class="text-muted-foreground shrink-0">{{ t('order.listCol.service' )}}: </span>
         <span class="font-medium break-all">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">
         <div class="flex items-center">
-          <span class="text-muted-foreground shrink-0">数据来源：</span>
+          <span class="text-muted-foreground shrink-0">{{ t('order.listCol.dataSource') }}: </span>
           <span class="font-medium font-mono">{{ order.imei }}</span>
         </div>
         <button
@@ -148,12 +149,12 @@ function handleCopy() {
       </div>
 
       <div v-if="order.createTime" class="flex items-center">
-        <span class="text-muted-foreground shrink-0">提交时间：</span>
+        <span class="text-muted-foreground shrink-0">{{ t('order.listCol.creaTime') }}: </span>
         <span class="font-medium">{{ order.createTime }}</span>
       </div>
 
       <div class="flex items-center">
-        <span class="text-muted-foreground shrink-0">消耗积分：</span>
+        <span class="text-muted-foreground shrink-0">{{ t('order.listCol.point.title') }}: </span>
         <span
           :class="twJoin(
             'font-medium text-danger',
@@ -162,13 +163,13 @@ function handleCopy() {
         >
           {{ order.credits }}
         </span>
-        <span v-if="status.isFailed" class="text-xs">(已退回)</span>
+        <span v-if="status.isFailed" class="text-xs">{{ t('order.listCol.point.fail') }}</span>
       </div>
     </div>
 
     <div class="text-sm">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-muted-foreground">订单结果：</span>
+        <span class="text-muted-foreground">{{ t('order.listCol.result') }}</span>
         <div class="flex items-center space-x-3">
           <button
             v-if="!isSubmit && status.isProcessing"
@@ -176,7 +177,7 @@ function handleCopy() {
             @click="handleRefresh"
           >
             <Icon icon="lucide:refresh-cw" class="size-4" />
-            <span class="text-xs">刷新</span>
+            <span class="text-xs">{{ t('button.fresh') }}</span>
           </button>
 
           <button
@@ -185,7 +186,7 @@ function handleCopy() {
             @click="handleVerify"
           >
             <Icon icon="lucide:info" class="size-4" />
-            <span class="text-xs">反馈订单</span>
+            <span class="text-xs">{{ t('order.button.table.vertify') }}</span>
           </button>
 
           <button
@@ -194,7 +195,7 @@ function handleCopy() {
             @click="handleCopy"
           >
             <Icon icon="lucide:clipboard-copy" class="size-4" />
-            <span class="text-xs">复制</span>
+            <span class="text-xs">{{ t('button.copy') }}</span>
           </button>
 
           <button
@@ -203,7 +204,7 @@ function handleCopy() {
             @click="emits('generate', order)"
           >
             <Icon icon="lucide:instagram" class="size-4" />
-            <span class="text-xs">生成图片</span>
+            <span class="text-xs">{{ t('order.button.generate') }}</span>
           </button>
         </div>
       </div>
@@ -215,14 +216,14 @@ function handleCopy() {
     </div>
 
     <div class="text-sm" v-if="order.remark">
-      <div class="text-muted-foreground mb-1.5">订单备注：</div>
+      <div class="text-muted-foreground mb-1.5">{{ t('order.listCol.remark') }}: </div>
       <div class="bg-muted rounded p-3">
         {{ order.remark }}
       </div>
     </div>
 
     <div class="text-sm" v-if="order.recommends && order.recommends.length">
-      <div class="text-muted-foreground mb-1.5">推荐解锁服务：</div>
+      <div class="text-muted-foreground mb-1.5">{{ t('order.listCol.recommend') }}: </div>
       <ol class="bg-muted rounded p-3 list-decimal list-inside">
         <li v-for="recommend in order.recommends" :key="recommend.packageId">
           <a

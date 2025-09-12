@@ -8,9 +8,11 @@ import { toast } from 'vue-sonner'
 const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
 
+const { t } = useI18n()
+
 function handleSubmit() {
   if (!store.exportForm.serviceId) {
-    return toast.warning('需要选择服务')
+    return toast.warning(t('prompt.serviceNull'))
   }
 
   submitLoading.value = true
@@ -38,12 +40,12 @@ function handleClose() {
 <template>
   <TheModal
     v-model="store.visibleExport"
-    title="导出订单" class="h-[78%]"
+    :title="t('order.title.export')" class="h-[78%]"
     @close="handleClose"
   >
     <BaseForm v-model="store.exportForm" class="px-4" />
     <div class="flex justify-end p-4">
-      <XButton color="success" :loading="submitLoading" @click="handleSubmit">导出订单</XButton>
+      <XButton color="success" :loading="submitLoading" @click="handleSubmit">{{ t('order.button.mobile.export') }}</XButton>
     </div>
   </TheModal>
 </template>

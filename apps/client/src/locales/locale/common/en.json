@@ -23,15 +23,21 @@
   },
   "prompt": {
     "title": "Prompt",
-    "confirm": "Are you sure to {action}?"
+    "confirm": "Are you sure to {action}?",
+    "serviceNull": "Please Select Service"
   },
   "announcement": {
     "title": "Announcement"
   },
+  "serviceGroup": {
+    "title": "Service Group",
+    "placeholder": "select group"
+  },
   "service": {
     "title": "Service",
-    "placeholder": "Please select a service",
-    "notFound": "Service Not Found"
+    "select": "Service Selection",
+    "placeholder": "select a service",
+    "notFound": "Service not found"
   },
   "valid": {
     "null": "{field} is empty",
@@ -43,7 +49,12 @@
   },
   "date": {
     "title": "Date",
-    "placeholder": "Please Select Date Range"
+    "placeholder": "Please Select Date Range",
+    "mobile": {
+      "title": "Submitted At",
+      "start": "Start Time",
+      "end": "End Time"
+    }
   },
   "imei": {
     "title": "IMEI/SN",

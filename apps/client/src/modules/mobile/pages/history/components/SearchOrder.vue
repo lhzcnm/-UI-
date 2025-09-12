@@ -6,6 +6,7 @@ import { orderApi } from '@/api/orders'
 const store = inject(HISTORY_STORE)!
 
 const submitLoading = ref(false)
+const { t } = useI18n()
 
 function handleSubmit() {
   submitLoading.value = true
@@ -36,12 +37,12 @@ function handleReset() {
 <template>
   <TheModal
     v-model="store.visibleSearch"
-    title="搜索订单" class="h-[78%]"
+    :title="t('order.title.filter')" class="h-[78%]"
   >
     <BaseForm v-model="store.searchForm" class="px-4" />
     <div class="flex justify-end space-x-2 p-4">
-      <XButton color="success" variant="soft" @click="handleReset">重置表单</XButton>
-      <XButton :loading="submitLoading" @click="handleSubmit">搜索订单</XButton>
+      <XButton color="success" variant="soft" @click="handleReset">{{ t('order.button.mobile.reset') }}</XButton>
+      <XButton :loading="submitLoading" @click="handleSubmit">{{ t('order.button.mobile.search') }}</XButton>
     </div>
   </TheModal>
 </template>

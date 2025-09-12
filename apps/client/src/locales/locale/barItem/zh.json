@@ -10,6 +10,13 @@
       "order": "我的订单",
       "point": "积分记录"
     },
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "mobile": {
+      "home": "首页",
+      "order": "订单",
+      "submit": "提交订单",
+      "feedback": "反馈",
+      "profile": "我的"
+    }
   }
 }

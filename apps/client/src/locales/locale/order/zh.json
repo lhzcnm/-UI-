@@ -6,15 +6,33 @@
       "table": {
         "copy": "复制结果",
         "vertify": "开启验证"
+      },
+      "mobile": {
+        "export": "导出订单",
+        "download": "下载图片",
+        "status": {
+          "-1": "全部",
+          "2": "成功",
+          "3": "失败",
+          "4": "处理中"
+        },
+        "reset": "重置表单",
+        "search": "搜索订单"
       }
     },
     "listCol": {
       "service": "服务",
+      "dataSource": "数据来源",
       "status": "订单状态",
       "vertify": "验证状态",
       "result": "订单结果",
       "creaTime": "提交时间",
-      "remark": "备注"
+      "remark": "备注",
+      "point": {
+        "title": "下好几份",
+        "fail": "(已退回)"
+      },
+      "recommend": "推荐解锁服务"
     },
     "placeholder": {
       "status": "请输入订单状态"
@@ -28,7 +46,8 @@
       "order": "请选择订单",
       "copy": "已复制",
       "orderTimeout": "订单超过三天, 不支持该功能",
-      "vertified": "已提交验证"
+      "vertified": "已提交验证",
+      "vertifyConfirm": "是否确认验证订单?"
     },
     "form": {
       "status": {

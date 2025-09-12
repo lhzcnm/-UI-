@@ -9,7 +9,7 @@ import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { orderApi, type Order } from '@/api/orders'
 import ImgOrder from './components/ImgOrder.vue'
 import type { ImgOrderItem } from './types'
-import * as htmlToImage from 'html-to-image'
+import * as html2Image from 'html-to-image'
 import { h, render } from 'vue'
 import { toast } from 'vue-sonner'
 
@@ -37,8 +37,6 @@ const imgOrder = reactive<ImgOrderItem>({
   imei: '',
 })
 
-// const baseUrl = import.meta.env.VITE_API_URL
-
 provide(HISTORY_STORE, store)
 
 watch(
@@ -60,33 +58,6 @@ watch(
 )
 
 function handleGenerate(order: Order) {
-  // const service = serviceStore.services.get(order.serviceId)!
-
-  // const params: GeneratePictureParms = {
-  //   codeId: order.id.toString(),
-  //   code: order.result,
-  //   codeStatusId: order.status,
-  //   imei: order.imei,
-  //   credits: order.credits.toString(),
-  //   comments: order.remark,
-  //   packageTitle: service.title,
-  //   dataTime: order.createTime,
-  // }
-
-  // axios.post(`${baseUrl}/order/picture`, params , {
-  //   headers: {
-  //     'Authorization': localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
-  //   },
-  //   'responseType': 'blob',
-  // }).then(({ data }) => {
-  //   const blob = new Blob([data], { type: 'image/png' })
-  //   const url = URL.createObjectURL(blob)
-  //   imgOrder.id = order.id
-  //   imgOrder.imei = order.imei
-  //   imgOrder.img = url
-  // }).finally(() => {
-  //   store.visibleImg = true
-  // })
   if(generated.value) {
     toast.warning('请勿重复点击')
     return
@@ -106,10 +77,9 @@ function handleGenerate(order: Order) {
 
   const dom = document.getElementById(`order${order.id}`)!
 
-  htmlToImage.toBlob(dom, {
+  html2Image.toBlob(dom, {
     cacheBust: true,
     skipFonts: true,
-    // pixelRatio: window.devicePixelRatio,
     pixelRatio: 2,
   }).then((blob: Blob | null) => {
     const url = URL.createObjectURL(blob!)
@@ -143,8 +113,10 @@ onUnmounted(() => {
       )"
     >
       <div class="space-x-2">
-        <XButton label="搜索" @click="store.visibleSearch = true" />
-        <XButton label="导出" color="success" @click="store.visibleExport = true" />
+        <ButtonGroup
+          :layouts="['filter', 'export']"
+          @filter="store.visibleSearch = true" @export="store.visibleExport = true"
+        />
       </div>
 
       <XSimplePagination

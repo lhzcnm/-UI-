@@ -1,6 +1,7 @@
 {
   "home": {
     "service": "常用服务",
+    "list": "服务总览",
     "dialog": {
       "service": "服务列表"
     },

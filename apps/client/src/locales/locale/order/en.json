@@ -6,15 +6,33 @@
       "table": {
         "copy": "Copy Result",
         "vertify": "Vertify"
+      },
+      "mobile": {
+        "export": "Export",
+        "download": "Download",
+        "status": {
+          "-1": "All",
+          "2": "Success",
+          "3": "Failed",
+          "4": "Processing"
+        },
+        "reset": "Reset",
+        "search": "Search"
       }
     },
     "listCol": {
       "service": "Service",
+      "dataSource": "Source",
       "status": "Order Status",
       "vertify": "Verify Status",
       "result": "Order Result",
       "creaTime": "Submit Time",
-      "remark": "Remarks"
+      "remark": "Remarks",
+      "point": {
+        "title": "Points",
+        "fail": "(Returned)"
+      },
+      "recommend": "Recommended unlock service"
     },
     "placeholder": {
       "status": "Enter Order Status"
@@ -28,7 +46,8 @@
       "order": "Please Select Service",
       "copy": "Copied",
       "orderTimeout": "This function is not supported for orders over three days old",
-      "vertified": "Submitted for verification"
+      "vertified": "Submitted for verification",
+      "vertifyConfirm": "Are you sure to verify the order?"
     },
     "form": {
       "status": {

@@ -10,6 +10,13 @@
       "order": "Orders",
       "point": "Points"
     },
-    "logout": "Logout"
+    "logout": "Logout",
+    "mobile": {
+      "home": "Home",
+      "order": "Orders",
+      "submit": "Submit",
+      "feedback": "Feedback",
+      "profile": "Profile"
+    }
   }
 }

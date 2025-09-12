@@ -13,12 +13,14 @@ interface ImgOrderEmits {
 const emits = defineEmits<ImgOrderEmits>()
 const store = inject(HISTORY_STORE)!
 
+const { t } = useI18n()
+
 const { imgOrder } = defineProps<ImgOrderProps>()
 </script>
 
 <template>
   <SlideRight
-    title="生成图片" v-model="store.visibleImg"
+    :title="t('order.title.img')" v-model="store.visibleImg"
     @close="emits('close')"
   >
     <template #default>
@@ -31,7 +33,7 @@ const { imgOrder } = defineProps<ImgOrderProps>()
             :download="`${imgOrder.id}_${imgOrder.imei}.png`"
             class="px-5 py-2 bg-primary text-white rounded-md shadow hover:bg-primary-dark transition"
           >
-            下载图片
+            {{ t('order.button.mobile.download') }}
           </a>
         </div>
       </div>
