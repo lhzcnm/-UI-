@@ -20,6 +20,8 @@ provide(TICKET_STORE, store)
 
 const visibleReply = ref(false)
 
+const { t } = useI18n()
+
 await Promise.all([
   getList(),
   getTypes(),
@@ -49,7 +51,7 @@ function getTicketType(type: number) {
 <template>
   <div class="p-3">
     <section class="bg-card border rounded-lg p-3 mb-3">
-      <XButton label="新增工单" @click="store.visibleCreate = true" />
+      <XButton :label="t('ticket.button')" @click="store.visibleCreate = true" />
     </section>
 
     <section class="space-y-3">
