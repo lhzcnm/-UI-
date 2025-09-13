@@ -128,11 +128,7 @@ const handleCopyImei = selectDecorator(() => {
       .map(item => item.imeiNo)
       .filter(Boolean)
       .join('\n')
-  ).then((res) => {
-    console.log(res)
-  }).catch((err) => {
-    console.log(err)
-  })
+  )
   toast.success('复制成功')
 })
 
