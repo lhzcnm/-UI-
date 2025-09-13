@@ -13,7 +13,7 @@ const uStore = useUserStore()
 const customAmount = ref(0)
 const selectedAmount = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
@@ -25,13 +25,21 @@ const rechargeAmount = computed(() => {
 })
 
 const amountList = [
-  { label: '10 元', value: 10 },
-  { label: '50 元', value: 50 },
-  { label: '100 元', value: 100 },
-  { label: '200 元', info: t('recharge.handleFee'), value: 200 },
-  { label: '500 元', info: t('recharge.handleFee'), value: 500 },
-  { label: '1000 元', info: t('recharge.handleFee'), value: 1000 },
+  { label: '￥10', value: 10 },
+  { label: '￥50', value: 50 },
+  { label: '￥100', value: 100 },
+  { label: '￥200', info: t('recharge.handleFee'), value: 200 },
+  { label: '￥500', info: t('recharge.handleFee'), value: 500 },
+  { label: '￥1000', info: t('recharge.handleFee'), value: 1000 },
 ]
+
+const rechargeInfo = computed(() => {
+  return locale.value === 'zh'
+    ? iStore.settings.paymentInfo
+    : iStore.settings.paymentInfoEn
+      ? iStore.settings.paymentInfoEn
+      : iStore.settings.paymentInfo
+})
 
 function handleCustomAmount(value: any) {
   if (!value) return
@@ -163,7 +171,7 @@ function onBridgeReady(config: WXInvokeConfig) {
       <p class="mb-2 font-medium">{{ t('recharge.info.title') }}: </p>
       <div
         class="tiptap text-sm text-muted-foreground"
-        v-html="iStore.settings.paymentInfo"
+        v-html="rechargeInfo"
       />
     </div>
 

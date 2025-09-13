@@ -17,15 +17,31 @@ await Promise.all([
   iStore.getSettings(),
 ])
 
-const { popupAnnc, enablePopupAnnc } = iStore.settings
+const { popupAnnc, popupAnncEn, enablePopupAnnc, scrollingAnnc, scrollingAnncEn } = iStore.settings
 const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const confirmContent = computed(() => {
+  return locale.value === 'zh'
+    ? popupAnnc
+    : popupAnncEn
+      ? popupAnncEn
+      : popupAnnc
+})
+
+const bullerBoardContent = computed(() => {
+  return locale.value === 'zh'
+    ? scrollingAnnc
+    : scrollingAnncEn
+      ? scrollingAnncEn
+      : scrollingAnnc
+})
 
 onMounted(async () => {
   if (!anncVisible.value) return
   const result = await xconfirm({
     title: t('announcement.title'),
-    text: popupAnnc,
+    text: confirmContent.value,
     confirmText: t('button.confirm'),
     cancelText: undefined,
   })
@@ -83,7 +99,7 @@ function handleServiceItemClick(event: MouseEvent) {
   <div class="p-3">
     <XBulletinBoard
       v-if="iStore.settings.enableScrollingAnnc"
-      class="px-2 py-3 mb-4" :text="iStore.settings.scrollingAnnc"
+      class="px-2 py-3 mb-4" :text="bullerBoardContent"
       :style="{ '--bg': 'hsl(var(--card))' }"
     />
 

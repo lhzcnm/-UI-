@@ -172,7 +172,7 @@ function handleCopy() {
 
     <div class="text-sm">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-muted-foreground">{{ t('order.listCol.result') }}</span>
+        <span class="text-muted-foreground">{{ t('order.listCol.result') }}: </span>
         <div class="flex items-center space-x-3">
           <button
             v-if="!isSubmit && status.isProcessing"

@@ -42,6 +42,7 @@ export interface ServiceView {
 export interface ServiceHeader {
   serviceId: number
   name: string
+  nameEn: string
   width: number
   sortNum: number
 }

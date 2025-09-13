@@ -27,6 +27,15 @@ export interface Setting {
   // 会员信息
   memberInfo: string
 
+  // 弹窗公告内容
+  popupAnncEn: string
+  // 滚动公告内容
+  scrollingAnncEn: string
+  // 支付信息
+  paymentInfoEn: string
+  // 会员信息
+  memberInfoEn: string
+
   // API 使用说明
   apiUsageInfo: string
 
