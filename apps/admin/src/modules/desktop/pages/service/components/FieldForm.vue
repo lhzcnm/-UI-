@@ -21,6 +21,10 @@ defineExpose({
       <XInput v-model="form.name" placeholder="字段名称" />
     </XFormItem>
 
+    <XFormItem label="字段名称EN" field="nameEn">
+      <XInput v-model="form.nameEn" placeholder="字段名称EN" />
+    </XFormItem>
+
     <XFormItem label="字段宽度">
       <XInputNumber v-model="form.width" :step="10" placeholder="字段宽度" />
     </XFormItem>

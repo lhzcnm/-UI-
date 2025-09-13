@@ -9,9 +9,11 @@ export const useServiceStore = defineStore('serviceStore', () => {
   const services = shallowRef<Map<number, Service>>(new Map())
 
   async function getServices() {
+    const locale = useI18n().locale.value
+
     const data = await useFetchWithCache({
       fetchFn: async () => (await serviceApi.list()).data,
-      key: import.meta.env.VITE_SERVICES,
+      key: `${import.meta.env.VITE_SERVICES}_${locale}`,
     })
 
     services.value.clear()

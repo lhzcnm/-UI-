@@ -17,6 +17,7 @@ export const columns: XColDef<RechargePackage> = [
     },
   },
   { key: 'shopName', title: '商品名称', minWidth: 154 },
+  { key: 'shopNameEn', title: '商品名称EN', minWidth: 154 },
   { key: 'price', title: '价格', minWidth: 108 },
   { key: 'month', title: '月数', minWidth: 108 },
   { key: 'createTime', title: '创建时间', width: 180 },

@@ -3,6 +3,7 @@ import AnnoEditModal from './AnnoEditModal.vue'
 
 import type { Configs, Settings } from '@/inters/settings'
 import { updateSetting } from '@/api/settings'
+import type { XBtnSplitOptions } from '@3un/ui'
 
 interface TheProps {
   settings: Settings
@@ -23,6 +24,50 @@ const form = ref({
   enableScrollingAnnc: settings.enableScrollingAnnc,
 })
 
+const popupOptions: XBtnSplitOptions = [
+  {
+    label: '中文',
+    command: () => handleEdit('popupAnnc'),
+  },
+  {
+    label: '英文',
+    command: () => handleEdit('popupAnncEn'),
+  },
+]
+
+const scrollOptions: XBtnSplitOptions = [
+  {
+    label: '中文',
+    command: () => handleEdit('scrollingAnnc'),
+  },
+  {
+    label: '英文',
+    command: () => handleEdit('scrollingAnncEn'),
+  },
+]
+
+const paymentOptions: XBtnSplitOptions = [
+  {
+    label: '中文',
+    command: () => handleEdit('paymentInfo'),
+  },
+  {
+    label: '英文',
+    command: () => handleEdit('paymentInfoEn'),
+  },
+]
+
+const apiOptions: XBtnSplitOptions = [
+  {
+    label: '中文',
+    command: () => handleEdit('apiUsageInfo'),
+  },
+  {
+    label: '英文',
+    command: () => handleEdit('apiUsageInfoEn'),
+  },
+]
+
 function handleUpdate(val: boolean, name: string) {
   updateSetting([{ name, status: val }])
 }
@@ -35,7 +80,7 @@ function handleEdit(type: keyof typeof settings) {
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col divide-y">
+  <div class="flex-1 flex flex-col px-4 overflow-y-auto space-y-2">
     <FormField
       label="弹窗公告"
       desc="每次进入网站首页弹出的公告"
@@ -45,10 +90,11 @@ function handleEdit(type: keyof typeof settings) {
         v-model="form.enablePopupAnnc"
         @change="handleUpdate($event, 'enablePopupAnnc')"
       />
-      <XButton
+      <XButtonSplit
+        ui-trigger="z-50"
+        openClick
         label="编辑" size="sm"
-        icon="lucide:edit"
-        @click="handleEdit('popupAnnc')"
+        :options="popupOptions"
       />
     </FormField>
 
@@ -61,10 +107,11 @@ function handleEdit(type: keyof typeof settings) {
         v-model="form.enableScrollingAnnc"
         @change="handleUpdate($event, 'enableScrollingAnnc')"
       />
-      <XButton
+      <XButtonSplit
+        ui-trigger="z-50"
+        openClick
         label="编辑" size="sm"
-        icon="lucide:edit"
-        @click="handleEdit('scrollingAnnc')"
+        :options="scrollOptions"
       />
     </FormField>
 
@@ -77,10 +124,11 @@ function handleEdit(type: keyof typeof settings) {
         v-model="form.enablePaymentInfo"
         @change="handleUpdate($event, 'enablePaymentInfo')"
       />
-      <XButton
+      <XButtonSplit
+        ui-trigger="z-50"
+        openClick
         label="编辑" size="sm"
-        icon="lucide:edit"
-        @click="handleEdit('paymentInfo')"
+        :options="paymentOptions"
       />
     </FormField>
 
@@ -89,13 +137,13 @@ function handleEdit(type: keyof typeof settings) {
       desc="API KEY 使用说明"
       :content-flex="false"
     >
-      <XButton
+      <XButtonSplit
+        ui-trigger="z-50"
+        openClick
         label="编辑" size="sm"
-        icon="lucide:edit"
-        @click="handleEdit('apiUsageInfo')"
+        :options="apiOptions"
       />
     </FormField>
-
     <AnnoEditModal
       v-model="store.visible"
       v-model:text="store.text"

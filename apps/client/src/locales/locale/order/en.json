@@ -43,7 +43,7 @@
       "filter": "Filter Orders"
     },
     "prompt": {
-      "order": "Please Select Service",
+      "order": "Please Select Order",
       "copy": "Copied",
       "orderTimeout": "This function is not supported for orders over three days old",
       "vertified": "Submitted for verification",

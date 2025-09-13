@@ -5,13 +5,15 @@ import { userApi } from '@/api/user'
 import { useFetchWithCache } from '@3un/utils'
 
 export const useUserStore = defineStore('userStore', () => {
-  const uKey = import.meta.env.VITE_USER_INFO
   const info = ref<UserInfo>({} as UserInfo)
 
   async function getInfo(force = false) {
+    const locale = useI18n().locale.value
+
     const data = await useFetchWithCache({
       fetchFn: async () => (await userApi.info()).data,
-      key: uKey, force,
+      key: `${import.meta.env.VITE_USER_INFO}_${locale}`,
+      force,
     })
 
     info.value = data
@@ -60,8 +62,9 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   function saveInfo() {
+    const locale = useI18n().locale.value
     const userInfo = JSON.stringify(info.value)
-    sessionStorage.setItem(uKey, userInfo)
+    sessionStorage.setItem(`${import.meta.env.VITE_USER_INFO}_${locale}`, userInfo)
   }
 
   return {

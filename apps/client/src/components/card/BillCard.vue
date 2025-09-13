@@ -15,7 +15,7 @@ const { t } = useI18n()
       <span class="text-sm font-medium text-card-foreground">
         {{ item.paymentMethod }}
       </span>
-      <XTag v-bind="PAYMENT_STATUS_MAP[item.paymentStatusId]" />
+      <XTag :color="PAYMENT_STATUS_MAP[item.paymentStatusId].color" :label="t(PAYMENT_STATUS_MAP[item.paymentStatusId].key!)" />
     </div>
 
     <div class="flex justify-between">

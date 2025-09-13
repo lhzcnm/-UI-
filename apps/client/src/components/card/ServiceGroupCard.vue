@@ -7,6 +7,8 @@ interface ServiceGroupCardProps {
 }
 
 defineProps<ServiceGroupCardProps>()
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -18,9 +20,9 @@ defineProps<ServiceGroupCardProps>()
     )"
   >
     <div class="space-y-1">
-      <h3 class="font-bold break-all">{{ group.title }}</h3>
+      <h3 class="font-bold break-all whitespace-nowrap truncate">{{ group.title }}</h3>
       <span class="text-sm text-muted-foreground">
-        共 {{ group.children.length }} 项服务
+        {{ t('stat.total', { count: group.children.length, field: t('service.title') }) }}
       </span>
     </div>
   </a>

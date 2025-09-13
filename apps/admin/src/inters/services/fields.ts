@@ -13,6 +13,11 @@ export const zServiceField = z.object({
   name: z.string()
     .min(1, VERIFY_MSG.REQ_FIELD_NAME)
     .default(''),
+  
+  nameEn: z.string()
+    .min(1, VERIFY_MSG.REQ_FIELD_NAME)
+    .nullable()
+    .default(''),
 
   width: z.number().default(180),
   sortNum: z.number().default(0),

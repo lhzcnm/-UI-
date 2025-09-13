@@ -16,6 +16,15 @@
       "0": "Urgent",
       "1": "Normal",
       "2": "Can Wait"
+    },
+    "payment": {
+      "1": "Unpaid",
+      "2": "Paid"
+    },
+    "workFold": {
+      "0": "pending",
+      "1": "processing",
+      "2": "resolved"
     }
   }
 }

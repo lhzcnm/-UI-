@@ -26,7 +26,6 @@ const { t } = useI18n()
   >
     <div class="flex items-center justify-between mb-3">
       <h3 class="flex-1 truncate">{{ ticket.subject }}</h3>
-      <!-- <XTag v-bind="TICKET_STATUS_MAP[ticket.statusId]" /> -->
       <XTag :color="TICKET_STATUS_MAP[ticket.statusId].color" :label="t(TICKET_STATUS_MAP[ticket.statusId].key!)" />
     </div>
     <div class="flex items-center justify-between text-xs">

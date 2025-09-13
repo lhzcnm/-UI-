@@ -77,5 +77,8 @@
     "msg1": "SanHe Query",
     "msg2": "LuShenSanHe",
     "msg3": "Copyright"
+  },
+  "stat": {
+    "total": "Total {count} {field}"
   }
 }

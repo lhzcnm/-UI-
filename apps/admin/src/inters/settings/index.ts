@@ -35,8 +35,15 @@ export interface Settings {
   paymentInfo: string
   // API 使用说明
   apiUsageInfo: string
-  // 邀请码生成文本
-  invite: string
+  // 弹窗公告内容
+  popupAnncEn: string
+  // 滚动公告内容
+  scrollingAnncEn: string
+  // 支付信息
+  paymentInfoEn: string
+  // API 使用说明
+  apiUsageInfoEn: string
+
 
   // 最大充值金额
   maxRechargeAmount: number
@@ -58,6 +65,8 @@ export interface Settings {
   enableTricket: boolean
   // 是否启用订单审核
   enableOrderVerify: boolean
+  // 邀请码生成文本
+  invite: string
 }
 
 // Config

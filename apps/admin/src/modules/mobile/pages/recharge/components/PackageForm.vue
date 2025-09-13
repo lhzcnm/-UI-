@@ -27,6 +27,10 @@ defineExpose({
       <XInput v-model="form.shopName" placeholder="请输入商品名称" />
     </XFormItem>
 
+    <XFormItem field="shopNameEn" label="商品名称EN">
+      <XInput v-model="form.shopNameEn" placeholder="请输入商品名称EN" />
+    </XFormItem>
+
     <XFormItem label="价格">
       <XInputNumber v-model="form.price" :min="1" :step="1" />
     </XFormItem>

@@ -23,10 +23,16 @@ const options = [
   { label: '中文服务说明', value: 'service', icon: 'lucide:file-text' },
   { label: '英文服务说明', value: 'service-en', icon: 'lucide:globe' },
   { label: '滑动公告', value: 'scrollingAnnc', icon: 'lucide:scroll-text' },
+  { label: '滑动公告EN', value: 'scrollingAnncEn', icon: 'lucide:scroll-text' },
   { label: '弹窗公告', value: 'popupAnnc', icon: 'lucide:message-square' },
+  { label: '弹窗公告EN', value: 'popupAnncEn', icon: 'lucide:message-square' },
   { label: '充值说明', value: 'paymentInfo', icon: 'lucide:credit-card' },
+  { label: '充值说明EN', value: 'paymentInfoEn', icon: 'lucide:credit-card' },
   { label: 'API使用说明', value: 'apiUsageInfo', icon: 'lucide:key-round' },
+  { label: 'API使用说明EN', value: 'apiUsageInfoEn', icon: 'lucide:key-round' },
 ]
+
+
 
 const selectedOption = computed(() => 
   options.find(opt => opt.value === store.selectedType)
@@ -46,6 +52,7 @@ function handleSelectType(value: string) {
   if (value.startsWith('service')) return
 
   const content = store.settings[value] as string
+
   props.setHtml!(content || '')
   previewHtml.value = content || ''
 }

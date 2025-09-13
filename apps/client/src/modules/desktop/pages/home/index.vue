@@ -16,15 +16,23 @@ const defaultGroup = { id: 0, title: '', children: [] }
 const current = ref<ServiceDetail>(defaultGroup)
 const visible = ref(false)
 
-const { popupAnnc, enablePopupAnnc } = iStore.settings
+const { popupAnnc, popupAnncEn, enablePopupAnnc } = iStore.settings
 const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const confirmText = computed(() => {
+  return locale.value === 'zh'
+    ? popupAnnc
+    : popupAnncEn 
+      ? popupAnncEn
+      : popupAnnc
+})
 
 onMounted(async () => {
   if (!anncVisible.value) return
   const result = await xconfirm({
     title: t('announcement.title'),
-    text: popupAnnc,
+    text: confirmText.value,
     confirmText: t('button.confirm'),
     cancelText: undefined,
   })
@@ -35,6 +43,10 @@ onMounted(async () => {
 })
 
 const commonList = getCommonList(store.services)
+
+const bulletinBoardText = computed(() => {
+  return locale.value === 'zh' ? iStore.settings.scrollingAnnc : iStore.settings.scrollingAnncEn
+})
 
 function openGroupDialog(group: ServiceDetail) {
   current.value = group
@@ -58,7 +70,7 @@ function handleServiceItemClick(event: MouseEvent) {
   <div class="p-4">
     <XBulletinBoard
       v-if="iStore.settings.enableScrollingAnnc"
-      class="mb-4" :text="iStore.settings.scrollingAnnc"
+      class="mb-4" :text="bulletinBoardText"
       :style="{ '--bg': 'hsl(var(--card))' }"
     />
 

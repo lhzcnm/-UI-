@@ -9,9 +9,10 @@ export const useSettingStore = defineStore('settingStore', () => {
   const originUrl = ref('')
 
   async function getSettings() {
+    const locale = useI18n().locale.value
     const data = await useFetchWithCache({
       fetchFn: async () => (await settingApi.get()).data,
-      key: import.meta.env.VITE_SETTINGS,
+      key: `${import.meta.env.VITE_SETTINGS}_${locale}`,
     })
 
     settings.value = data

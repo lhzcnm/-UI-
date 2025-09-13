@@ -94,7 +94,7 @@ function handleSubmit() {
             rows="5"
           />
           <XButton
-            :label="t('ticket.title.Send')"
+            :label="t('ticket.title.send')"
             :disabled="isSolved"
             @click="handleSubmit"
           />

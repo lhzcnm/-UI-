@@ -16,7 +16,7 @@ const selectedAmount = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
 const store = inject(RECHARGE_STORE)!
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
@@ -35,6 +35,14 @@ const amountList = [
   { label: '￥500', info: t('recharge.handleFee'), value: 500 },
   { label: '￥1000', info: t('recharge.handleFee'), value: 1000 },
 ]
+
+const rechargeInfo = computed(() => {
+  return locale.value === 'zh'
+    ? iStore.settings.paymentInfo
+    : iStore.settings.paymentInfoEn
+      ? iStore.settings.paymentInfoEn
+      : iStore.settings.paymentInfo
+})
 
 function handleCustomAmount(value: any) {
   if (!value) return
@@ -154,7 +162,7 @@ function checkRecharge() {
       <p class="mb-2 font-medium">{{ t('recharge.info.title') }}: </p>
       <div
         class="tiptap text-sm text-muted-foreground"
-        v-html="iStore.settings.paymentInfo"
+        v-html="rechargeInfo"
       />
     </div>
 

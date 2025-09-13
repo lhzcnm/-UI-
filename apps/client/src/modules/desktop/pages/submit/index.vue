@@ -26,7 +26,7 @@ const props = defineProps<TheProps>()
 const uStore = useUserStore()
 const store = useServiceStore()
 const { connect, close } = useWsStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const page = ref(1)
 const limit = ref(50)
@@ -103,12 +103,12 @@ async function handleServiceCols(value: number) {
 
   const serviceCols: XTableColumn[] = []
   for (const item of data) {
-    const { name, width } = item
+    const { name, nameEn, width } = item
     const field = hash(name)
 
     serviceCols.push({
       key: field,
-      title: name,
+      title: locale.value === 'zh' ? name : nameEn ? nameEn : name,
       width: width,
       tdClassName: 'leading-6 py-1',
       render: (_: any, row: any) => {

@@ -40,14 +40,14 @@ const status = computed(() => ({
 <template>
   <div
     :class="twMerge(
-      'flex flex-col bg-card min-w-80',
+      'flex flex-col bg-card w-80 min-w-80 max-w-96',
     )"
   >
     <div class="w-full text-center bg-zinc-100 dark:bg-zinc-800 p-2 text-lg">
       <span>公众号: </span>
       <span>{{ appName }}</span>
     </div>
-    <div class="p-4 flex flex-col">
+    <div class="w-full p-4 flex flex-col">
       <div class="flex items-center justify-between space-x-3">
         <span
           v-if="isSubmit"
@@ -71,10 +71,10 @@ const status = computed(() => ({
         </div>
       </div>
       
-      <div class="text-sm">
-        <div class="flex items-start">
+      <div class="w-full text-sm flex flex-col">
+        <div class="flex-1 flex items-center">
           <span class="text-muted-foreground shrink-0">处理服务：</span>
-          <span class="font-medium break-all whitespace-pre-line">{{ serviceName }}</span>
+          <span class="font-medium break-all whitespace-nowrap">{{ serviceName }}</span>
         </div>
   
         <div class="flex items-center group">
