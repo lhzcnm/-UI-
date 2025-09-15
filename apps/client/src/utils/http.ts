@@ -16,10 +16,14 @@ const http = axios.create({
 http.interceptors.request.use(config => {
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)
-  const locale = localStorage.getItem('locale')
-
+  
   config.headers.Authorization = token
-  config.headers['Accept-Language'] = locale ?? 'zh'
+
+  if(!config.headers['Accept-Language'])
+  {
+    const locale = localStorage.getItem('locale')
+    config.headers['Accept-Language'] = locale ?? 'zh'
+  }
 
   return config
 })

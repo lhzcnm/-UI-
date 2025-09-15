@@ -1,7 +1,8 @@
 import type { R } from '@3un/shared'
+import type { AxiosRequestConfig } from 'axios'
 
 export interface MemberApi {
-  memberList(): R<MemberItem[]>
+  memberList(config?: AxiosRequestConfig): R<MemberItem[]>
   memberPkg(id: number): R<MemberPackage[]>
 }
 

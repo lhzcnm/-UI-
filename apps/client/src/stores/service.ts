@@ -9,7 +9,7 @@ export const useServiceStore = defineStore('serviceStore', () => {
   const services = shallowRef<Map<number, Service>>(new Map())
 
   async function getServices() {
-    const locale = useI18n().locale.value
+    const locale = localStorage.getItem('locale') ?? 'zh'
 
     const data = await useFetchWithCache({
       fetchFn: async () => (await serviceApi.list()).data,

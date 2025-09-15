@@ -30,6 +30,11 @@ export const columns: XColDef<ServiceField> = [
     width: 128,
   },
   {
+    key: 'nameEn',
+    title: '字段名称EN',
+    width: 208,
+  },
+  {
     key: 'width',
     title: '字段宽度',
     width: 128,

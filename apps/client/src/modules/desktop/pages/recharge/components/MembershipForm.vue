@@ -28,10 +28,28 @@ await serviceStore.getServices()
 await getMemberList()
 
 async function getMemberList() {
-  const { data } = await memberApi.memberList()
+  let { data } = await memberApi.memberList()
   memberList.value = data.slice(1)
+
+  const hasNull = memberList.value.some(item => !item.shopName)
+
+  if(hasNull) {
+    data = await getMemberMiniList()
+    memberList.value = data
+  }
+
   selectedPlan.value = data[1]
   getMemberPkg(data[1].planId)
+}
+
+async function getMemberMiniList() {
+  const { data } = await memberApi.memberList({
+    headers: {
+      'Accept-Language': 'zh'
+    }
+  })
+
+  return data.slice(1)
 }
 
 async function getMemberPkg(id: number) {

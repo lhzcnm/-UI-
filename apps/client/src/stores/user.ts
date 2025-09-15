@@ -8,7 +8,7 @@ export const useUserStore = defineStore('userStore', () => {
   const info = ref<UserInfo>({} as UserInfo)
 
   async function getInfo(force = false) {
-    const locale = useI18n().locale.value
+    const locale = localStorage.getItem('locale') ?? 'zh'
 
     const data = await useFetchWithCache({
       fetchFn: async () => (await userApi.info()).data,
