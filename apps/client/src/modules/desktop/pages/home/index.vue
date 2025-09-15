@@ -23,7 +23,7 @@ const { t, locale } = useI18n()
 const confirmText = computed(() => {
   return locale.value === 'zh'
     ? popupAnnc
-    : popupAnncEn 
+    : popupAnncEn.trim()
       ? popupAnncEn
       : popupAnnc
 })
@@ -45,7 +45,7 @@ onMounted(async () => {
 const commonList = getCommonList(store.services)
 
 const bulletinBoardText = computed(() => {
-  return locale.value === 'zh' ? iStore.settings.scrollingAnnc : iStore.settings.scrollingAnncEn
+  return locale.value === 'zh' ? iStore.settings.scrollingAnnc : iStore.settings.scrollingAnncEn.trim() ? iStore.settings.scrollingAnncEn : iStore.settings.scrollingAnnc
 })
 
 function openGroupDialog(group: ServiceDetail) {
