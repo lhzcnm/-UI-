@@ -11,7 +11,8 @@ withDefaults(
 )
 
 const mode = import.meta.env.VITE_APP_MODE
-const logo = await import(`./logo/${mode}.vue`)
+const locale = localStorage.getItem('locale')
+const logo = await import(`./logo/${mode}/${locale}.vue`)
 </script>
 
 <template>
