@@ -25,7 +25,7 @@ const { t } = useI18n()
         <XSelectItem :value="-1" :label="t('all')" />
         <XSelectItem
           v-for="item in ORDER_STATUS_LIST" :key="item.value"
-          :value="item.value" :label="t(item.label)"
+          :value="item.value" :label="t(item.key)"
         />
       </XSelect>
     </div>

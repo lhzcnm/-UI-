@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { TicketItem, TicketType } from '@/api/tickets'
+import type { TicketItem, TicketOption } from '@/api/tickets'
 
 import { TICKET_STATUS_MAP } from '@3un/utils'
 import { twJoin } from 'tailwind-merge'
 
 interface TicketItemProps {
-  type: TicketType | undefined
+  type: TicketOption | undefined
   ticket: TicketItem
   active: boolean
 }
@@ -32,7 +32,7 @@ const { t } = useI18n()
       <div class="flex items-center space-x-2">
         <span class="size-1.5 bg-primary rounded-full" />
         <span class="text-muted-foreground">
-          {{ type ? type.departmentName : t('unknown') }}
+          {{ type ? type.label : t('unknown') }}
         </span>
       </div>
       <span class="text-muted-foreground">

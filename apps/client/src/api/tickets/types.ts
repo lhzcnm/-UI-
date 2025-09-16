@@ -60,3 +60,8 @@ export interface TicketType {
   status: number
   deptOrder: number
 }
+
+export interface TicketOption {
+  id: number
+  label: string
+}

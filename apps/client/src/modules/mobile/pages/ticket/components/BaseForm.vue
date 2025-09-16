@@ -40,8 +40,8 @@ handleOptions()
         v-model="form.type"
         :options="typeList"
         :default="TICKET_TYPE.ORDER"
-        value-key="departmentId"
-        label-key="departmentName"
+        value-key="id"
+        label-key="label"
       />
     </div>
 

@@ -13,6 +13,8 @@ declare module 'vue-router' {
   interface RouteMeta {
     hideHeader?: boolean
     hideFooter?: boolean
+    hideSidebar?: boolean
+    noAuthRequired?: boolean
   }
 }
 
@@ -28,7 +30,10 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(async (to) => {
+const storeRoutes = ["store"]
+
+router.beforeEach(async (to, from) => {
+  const iStore = useSystemStore()
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)
 
@@ -50,8 +55,16 @@ router.beforeEach(async (to) => {
 
   // handle auth
   const isAuth = to.path.includes('auth')
-  if (!isAuth && !token) return '/auth'
+  if (!isAuth && !token && !to.meta.noAuthRequired) return '/auth'
   if (isAuth && token) return '/'
+
+  // const isFromStore = storeRoutes.some(item => {
+  //   return from.path.includes(item)
+  // })
+  // if (isAuth && isFromStore) {
+  //   iStore.setFromRoute(from.path)
+  //   return true
+  // }
   
   const isMobilePath = to.path.startsWith('/m')
   

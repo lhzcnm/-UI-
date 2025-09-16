@@ -10,7 +10,15 @@ const iStore = useSettingStore()
 const showApiUsageInfo = ref(false)
 
 const { copy } = useClipboard({ legacy: true })
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const apiUsageContent = computed(() => {
+  return locale.value === 'zh'
+    ? iStore.settings.apiUsageInfo
+    : iStore.settings.apiUsageInfoEn
+      ? iStore.settings.apiUsageInfoEn
+      : iStore.settings.apiUsageInfo
+})
 
 async function handleCopy() {
   await copy(store.info.apiKey)
@@ -52,7 +60,7 @@ async function handleRefresh() {
 
     <XDialog
       v-model="showApiUsageInfo"
-      :text="iStore.settings.apiUsageInfo"
+      :text="apiUsageContent"
       :title="t('profile.apiKey.info')"
       ui-root="sm:max-w-2xl"
       ui-text="tiptap"

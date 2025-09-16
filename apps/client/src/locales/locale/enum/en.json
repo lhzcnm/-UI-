@@ -26,5 +26,11 @@
       "1": "processing",
       "2": "resolved"
     }
+  },
+  "type": {
+    "ticket": {
+      "16": "Recharge refund issue",
+      "17": "Order issue"
+    }
   }
 }

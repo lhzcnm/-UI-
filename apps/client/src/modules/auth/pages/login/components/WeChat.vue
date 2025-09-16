@@ -7,6 +7,7 @@ import authApi from '@auth/api'
 
 const mode = defineModel<LoginMode>({ required: true })
 
+const iStore = useSystemStore()
 const nonce = ref('')
 const imageURL = ref('')
 const expiredMask = ref(false)
@@ -32,7 +33,12 @@ function validQrcode() {
 
   response.then(async ({ data }) => {
     localStorage.setItem(key, data)
-    await router.push('/')
+
+    if(iStore.fromRoute) {
+      router.push(iStore.fromRoute)
+    } else {
+      await router.push('/')
+    }
   })
 
   response.finally(() => {

@@ -117,10 +117,10 @@ export const ORDER_STATUS_MAP: StatusMap = {
   [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', key: 'status.order.4' },
 }
 export const ORDER_STATUS_LIST = [
-  { value: ORDER_STATUS.WAIT, label: 'status.order.1' },
-  { value: ORDER_STATUS.SUCCESS, label: 'status.order.2' },
-  { value: ORDER_STATUS.FAILED, label: 'status.order.3' },
-  { value: ORDER_STATUS.PROCESSING, label: 'status.order.4' },
+  { value: ORDER_STATUS.WAIT, label: '等待提交', key: 'status.order.1' },
+  { value: ORDER_STATUS.SUCCESS, label: '处理成功', key: 'status.order.2' },
+  { value: ORDER_STATUS.FAILED, label: '处理失败', key: 'status.order.3' },
+  { value: ORDER_STATUS.PROCESSING, label: '正在处理', key: 'status.order.4' },
 ]
 
 // Order Verify
@@ -183,10 +183,10 @@ export enum TICKET_TYPE {
   ORDER    = 17,
 }
 export const TICKET_TYPE_MAP: StatusMap = {
-  [TICKET_TYPE.RECHARGE] : { color: 'success', label: '充值退款问题' },
-  [TICKET_TYPE.ORDER]    : { color: 'warning', label: '订单问题' },
+  [TICKET_TYPE.RECHARGE] : { color: 'success', label: '充值退款问题', key: 'type.ticket.16' },
+  [TICKET_TYPE.ORDER]    : { color: 'warning', label: '订单问题', key: 'type.ticket.17' },
 }
 export const TICKET_TYPE_LIST = [
-  { value: TICKET_TYPE.RECHARGE, label: '充值退款问题' },
-  { value: TICKET_TYPE.ORDER, label: '订单问题' },
+  { value: TICKET_TYPE.RECHARGE, label: '充值退款问题', key: 'type.ticket.16' },
+  { value: TICKET_TYPE.ORDER, label: '订单问题', key: 'type.ticket.17' },
 ]

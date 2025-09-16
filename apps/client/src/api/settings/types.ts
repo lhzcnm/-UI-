@@ -33,11 +33,11 @@ export interface Setting {
   scrollingAnncEn: string
   // 支付信息
   paymentInfoEn: string
-  // 会员信息
-  memberInfoEn: string
 
   // API 使用说明
   apiUsageInfo: string
+  // API 使用说明
+  apiUsageInfoEn: string
 
   // 最大充值金额
   maxRechargeAmount: number

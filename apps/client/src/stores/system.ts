@@ -6,6 +6,7 @@ import { defineStore } from 'pinia'
 export const useSystemStore = defineStore('system', () => {
   const showSidebar = useStorage<boolean>('show-sidebar', ua.isDesktop)
   const locale = useStorage<string>('locale', '', localStorage)
+  const fromRoute = ref<string>('')
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
@@ -16,11 +17,17 @@ export const useSystemStore = defineStore('system', () => {
     i18n.global.locale.value = locale.value
   }
 
+  function setFromRoute(route: string) {
+    fromRoute.value = route
+  }
+
   return {
     showSidebar,
     locale,
+    fromRoute,
 
     toggleSidebar,
     setLocale,
+    setFromRoute,
   }
 })

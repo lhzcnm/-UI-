@@ -32,8 +32,6 @@ const options = [
   { label: 'API使用说明EN', value: 'apiUsageInfoEn', icon: 'lucide:key-round' },
 ]
 
-
-
 const selectedOption = computed(() => 
   options.find(opt => opt.value === store.selectedType)
 )
@@ -62,6 +60,8 @@ async function handleSave() {
     toast.error('请选择编辑类型')
     return
   }
+
+  console.log(props.getHtml!())
 
   const html = props.getHtml!() || ''
 

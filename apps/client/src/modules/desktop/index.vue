@@ -73,10 +73,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <DesktopHeader />
+  <DesktopHeader v-if="!route.meta.hideHeader" />
   <div class="flex h-container">
     <Transition name="slide-left">
-      <TheSidebar v-model="isLogout" v-if="systemStore.showSidebar" :menus />
+      <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
     </Transition>
 
     <RouterView v-slot="{ Component }" :key="route.path">
@@ -105,6 +105,7 @@ onMounted(() => {
 
     <template #default>
       <p class="text-sm text-center text-gray-600 mb-6">{{ t('prompt.confirm', { action: t('barItem.logout') }) }}</p>
+      t('order.button.print')
     </template>
 
     <template #footer>
