@@ -10,6 +10,7 @@ export const zService = z.object({
 
   apiName: z.nullable(z.string()).default(null),
   packagePrice: z.number().default(0),
+  storePrice: z.number().default(0),
 
   tmpTitle: z.string().default(''),
   packageTitle: z.string().default(''),
