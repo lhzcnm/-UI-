@@ -42,7 +42,7 @@ export const PAYMENT_STATUS_LIST = [
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  ADMIN  = 5,
+  ADMIN  = 7,
   ALIPAY = 8,
   WECHAT = 9,
 }
