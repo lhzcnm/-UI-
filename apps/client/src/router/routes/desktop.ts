@@ -50,7 +50,7 @@ const home: RouteRecordRaw = {
         hideHeader: true,
         hideSidebar: true,
         noAuthRequired: true,
-      }
+      },
     },
   ]
 }

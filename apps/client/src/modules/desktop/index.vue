@@ -16,10 +16,12 @@ const systemStore = useSystemStore()
 
 const isLogout = ref(false)
 
-await Promise.all([
-  iStore.getSettings(),
-  uStore.getInfo(),
-])
+if(!route.meta.noAuthRequired) {
+  await Promise.all([
+    iStore.getSettings(),
+    uStore.getInfo(),
+  ])
+}
 
 const { t } = useI18n()
 
@@ -51,15 +53,13 @@ const menus = [
 ]
 
 watch(visibility, (cur, prev) => {
-  if (cur === 'visible' && prev === 'hidden') {
+  if ((cur === 'visible' && prev === 'hidden') && !route.meta.noAuthRequired) {
     uStore.getInfo()
   }
 })
 
-function handleLogout() {
-  isLogout.value = false
-  uStore.logout()
-}
+const isStore = computed(() => route.path.includes('store'))
+
 
 onMounted(() => {
   if(ua.browser === 'Unknown') {
@@ -73,48 +73,41 @@ onMounted(() => {
 </script>
 
 <template>
-  <DesktopHeader v-if="!route.meta.hideHeader" />
-  <div class="flex h-container">
-    <Transition name="slide-left">
-      <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
-    </Transition>
-
-    <RouterView v-slot="{ Component }" :key="route.path">
-      <main v-if="Component" class="flex-1 overflow-y-auto">
-        <Transition name="fade-in" mode="out-in">
-          <Suspense>
-            <component :is="Component" />
-
-            <template #fallback>
-              <Fallback />
-            </template>
-          </Suspense>
+  <div v-if="isStore">
+    <RouterView v-slot="{ Component }"  :key="route.path">
+      <Suspense>
+        <Transition name="fade-in">
+          <component :is="Component" />
         </Transition>
-      </main>
+        <template #fallback>
+          <Fallback />
+        </template>
+      </Suspense>
     </RouterView>
   </div>
-  <XDialog
-    uiRoot="w-64 p-6 rounded-2xl shadow-xl"
-    :closeBtn="false"
-    :maskClosable="false"
-    v-model="isLogout"
-  >
-    <template #header>
-      <h2 class="text-lg font-semibold text-center text-gray-900 mb-2">{{ t('prompt.title') }}</h2>
-    </template>
 
-    <template #default>
-      <p class="text-sm text-center text-gray-600 mb-6">{{ t('prompt.confirm', { action: t('barItem.logout') }) }}</p>
-      t('order.button.print')
-    </template>
+  <div v-else>
+    <DesktopHeader v-if="!route.meta.hideHeader" />
+    <div class="flex h-container">
+      <Transition name="slide-left">
+        <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
+      </Transition>
+  
+      <RouterView v-slot="{ Component }" :key="route.path">
+        <main v-if="Component" class="flex-1 overflow-y-auto">
+          <Transition name="fade-in" mode="out-in">
+            <Suspense>
+              <component :is="Component" />
+  
+              <template #fallback>
+                <Fallback />
+              </template>
+            </Suspense>
+          </Transition>
+        </main>
+      </RouterView>
+    </div>
+  </div>
 
-    <template #footer>
-      <div class="flex justify-around gap-4">
-        <ButtonGroup
-          :layouts="['cancel', 'confirm']"
-          @cancel="isLogout = false" @confirm="handleLogout"
-        />
-      </div>
-    </template>
-  </XDialog>
+  <LogoutDialog />
 </template>

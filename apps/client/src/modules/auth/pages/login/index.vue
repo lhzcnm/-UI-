@@ -6,8 +6,6 @@ import WeChat from './components/WeChat.vue'
 import type { LoginMode } from '@auth/types'
 import authApi from '@auth/api'
 
-const iStore = useSystemStore()
-
 const phoneRef = useTemplateRef('phoneRef')
 const accountRef = useTemplateRef('accountRef')
 

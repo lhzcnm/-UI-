@@ -5,7 +5,6 @@ import CreateTicket from './components/CreateTicket.vue'
 import type { TicketStore } from './utils'
 import { TICKET_STORE, form } from './utils'
 import { ticketApi } from '@/api/tickets'
-import { TICKET_TYPE_MAP } from '@3un/utils'
 
 const store: TicketStore = reactive({
   tickets: [],
@@ -35,10 +34,11 @@ async function getList() {
 async function getTypes() {
   const { data } = await ticketApi.issueList()
 
-  store.types = data.map(item =>({
-    id: item.departmentId,
-    label: t(TICKET_TYPE_MAP[item.departmentId].key!),
-  }))
+  store.types = data
+  // store.types = data.map(item =>({
+  //   id: item.departmentId,
+  //   label: t(TICKET_TYPE_MAP[item.departmentId].key!),
+  // }))
 }
 
 function checkoutTicket(index: number) {
@@ -50,7 +50,7 @@ function checkoutTicket(index: number) {
 }
 
 function getTicketType(type: number) {
-  return store.types.find(t => t.id === type)
+  return store.types.find(t => t.departmentId === type)
 }
 </script>
 

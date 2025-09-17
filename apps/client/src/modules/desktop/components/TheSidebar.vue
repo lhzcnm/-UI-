@@ -8,8 +8,9 @@ const props = defineProps<{ menus: SidebarMenu[] }>()
 const route = useRoute()
 const router = useRouter()
 const wsStore = useWsStore()
+const iStore = useSystemStore()
 
-const isLogout = defineModel({ required: true })
+// const isLogout = defineModel({ required: true })
 
 const currentPath = computed(() => {
   let cur = route.path
@@ -29,7 +30,7 @@ const currentPath = computed(() => {
 
 function handle(path: string) {
   if(path.includes('logout')) {
-    isLogout.value = true
+    iStore.logout = true
     return
   }
   wsStore.close()

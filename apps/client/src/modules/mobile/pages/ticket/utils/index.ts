@@ -1,4 +1,4 @@
-import type { TicketCreateForm, TicketItem, TicketReplyItem, TicketOption } from '@/api/tickets'
+import type { TicketCreateForm, TicketItem, TicketReplyItem, TicketType } from '@/api/tickets'
 import type { InjectionKey } from 'vue'
 
 import { TICKET_PRIORITY, TICKET_TYPE } from '@3un/utils'
@@ -6,7 +6,7 @@ import { TICKET_PRIORITY, TICKET_TYPE } from '@3un/utils'
 export interface TicketStore {
   tickets: TicketItem[]
   replies: TicketReplyItem[]
-  types: TicketOption[]
+  types: TicketType[]
   createForm: TicketCreateForm
   visibleCreate: boolean
   index: number | undefined

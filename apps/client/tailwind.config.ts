@@ -24,6 +24,8 @@ export default withTV({
 
         'mobile-header': 'var(--mobile-header-h)',
         'mobile-footer': 'var(--mobile-footer-h)',
+        'store-header': 'var(--store-header-h)',
+        'store-container': 'calc(100vh - var(--store-header-h))',
       },
       maxWidth: {
         'container': 'calc(100vw - var(--siderbar-w))',

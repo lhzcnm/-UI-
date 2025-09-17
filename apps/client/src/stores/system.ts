@@ -7,6 +7,7 @@ export const useSystemStore = defineStore('system', () => {
   const showSidebar = useStorage<boolean>('show-sidebar', ua.isDesktop)
   const locale = useStorage<string>('locale', '', localStorage)
   const fromRoute = ref<string>('')
+  const logout = ref<boolean>(false)
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
@@ -25,6 +26,7 @@ export const useSystemStore = defineStore('system', () => {
     showSidebar,
     locale,
     fromRoute,
+    logout,
 
     toggleSidebar,
     setLocale,

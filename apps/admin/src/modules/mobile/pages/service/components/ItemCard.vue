@@ -73,6 +73,10 @@ function handleConfigApi() {
           <span class="mr-1">服务价格:</span>
           <span>{{ item.packagePrice }}</span>
         </div>
+        <div>
+          <span class="mr-1">商品服务价格:</span>
+          <span>{{ item.storePrice }}</span>
+        </div>
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t border-dashed">

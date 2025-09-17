@@ -32,7 +32,7 @@ function handleClick(lang: string) {
       >
         <Icon
           icon="lucide:languages"
-          class="text-zinc-70 dark:text-zinc-200 size-5"
+          class="size-5"
         />
       </button>
     </template>

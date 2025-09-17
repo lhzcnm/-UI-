@@ -27,22 +27,20 @@ export function getCreditColumns(): XColDef<CreditLogItem> {
       key: 'credits',
       title: t('credit.listCol.amount'),
       width: 88,
-      render: (value: number, row) => {
-        const isSubmit = /订单提交|查询订单|Code Request/.test(row.description)
-        const isReduce = isSubmit || row.description === t('credit.text.minus')
-        let label = Math.abs(value).toString()
+      render: (value: number) => {
+        // const isSubmit = /订单提交|查询订单|Code Request/.test(row.description)
+        // const isReduce = value < 0
+        // let label = Math.abs(value).toString()
         let color
 
-        if (isReduce) {
-          if (value > 0) label = `-${label}`
+        if (value < 0) {
           color = 'text-danger' 
         }
         else {
           color = 'text-success'
-          label = `+${label}`
         }
 
-        return h('span', { class: color }, label)
+        return h('span', { class: color }, value)
       }
     },
     {

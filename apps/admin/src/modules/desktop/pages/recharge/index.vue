@@ -58,7 +58,7 @@ watch(
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
-      byAdmin: (!isAdmin.value && store.formSearch.paymentMethod === 5) ? true : store.formSearch.byAdmin
+      byAdmin: (!isAdmin.value && store.formSearch.paymentMethod === 7) ? true : store.formSearch.byAdmin
     })
   },
 )

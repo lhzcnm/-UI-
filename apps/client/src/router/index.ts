@@ -58,13 +58,13 @@ router.beforeEach(async (to, from) => {
   if (!isAuth && !token && !to.meta.noAuthRequired) return '/auth'
   if (isAuth && token) return '/'
 
-  // const isFromStore = storeRoutes.some(item => {
-  //   return from.path.includes(item)
-  // })
-  // if (isAuth && isFromStore) {
-  //   iStore.setFromRoute(from.path)
-  //   return true
-  // }
+  const isFromStore = storeRoutes.some(item => {
+    return from.path.includes(item)
+  })
+  if (isAuth && isFromStore) {
+    iStore.setFromRoute(from.path)
+    return true
+  }
   
   const isMobilePath = to.path.startsWith('/m')
   

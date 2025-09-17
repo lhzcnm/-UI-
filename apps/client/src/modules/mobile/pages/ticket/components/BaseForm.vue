@@ -2,47 +2,60 @@
 import { Icon } from '@iconify/vue'
 
 import type { TicketCreateForm, TicketType } from '@/api/tickets'
-import { TICKET_TYPE, TICKET_PRIORITY_LIST } from '@3un/utils'
+import { TICKET_PRIORITY_LIST, TICKET_TYPE_MAP } from '@3un/utils'
 
 interface BaseFormProps {
   typeList: TicketType[]
 }
 
-interface TicketOptions {
-  value: number,
-  label: string,
-}
-
 defineProps<BaseFormProps>()
 const form = defineModel<TicketCreateForm>({ required: true })
 
-const ticketOptions = reactive<TicketOptions[]>([])
+// const ticketOptions = reactive<TicketOptions[]>([])
 
 const { t } = useI18n()
 
-function handleOptions() {
-  for(let item of TICKET_PRIORITY_LIST) {
-    ticketOptions.push({
-      value: item.value,
-      label: t(item.key)
-    })
-  }
-}
+// function handleOptions() {
+//   for(let item of TICKET_PRIORITY_LIST) {
+//     ticketOptions.push({
+//       value: item.value,
+//       label: t(item.key)
+//     })
+//   }
+// }
 
-handleOptions()
+// handleOptions()
 </script>
 
 <template>
   <form class="space-y-3" @submit.prevent>
     <div class="space-y-1">
       <label class="text-label text-sm">{{ t('ticket.form.type') }}</label>
-      <XNativeSelect
+      <!-- <XNativeSelect
         v-model="form.type"
         :options="typeList"
         :default="TICKET_TYPE.ORDER"
         value-key="id"
         label-key="label"
-      />
+      /> -->
+      <div class="flex-1 relative">
+        <Icon
+          icon="lucide:chevron-down" :width="20"
+          class="
+            absolute right-2 top-1/2 transform -translate-y-1/2
+            pointer-events-none text-muted-foreground bg-card
+          "
+        />
+        <select
+          class="w-full h-10 border rounded px-2 appearance-none ring-1 ring-input outline-none focus:ring-primary"
+          v-model="form.type"
+        >
+          <option
+            v-for="option in typeList" :key="option.departmentId"
+            :value="option.departmentId"
+          >{{ t(TICKET_TYPE_MAP[option.departmentId].key!) }}</option>
+        </select>
+      </div>
     </div>
 
     <div class="space-y-1 flex flex-col">
@@ -55,7 +68,7 @@ handleOptions()
         label-key="label"
       /> -->
       <div class="flex-1 relative">
-        <Icon 
+        <Icon
           icon="lucide:chevron-down" :width="20"
           class="
             absolute right-2 top-1/2 transform -translate-y-1/2
@@ -67,9 +80,9 @@ handleOptions()
           v-model="form.priority"
         >
           <option
-            v-for="option in ticketOptions" :key="option.label"
+            v-for="option in TICKET_PRIORITY_LIST" :key="option.key"
             :value="option.value"
-          >{{ option.label }}</option>
+          >{{ t(option.key) }}</option>
         </select>
       </div>
     </div>

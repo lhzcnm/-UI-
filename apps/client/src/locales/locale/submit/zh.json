@@ -30,8 +30,8 @@
     },
     "button": {
       "mobile": {
-        "img": "选择图片",
-        "photograph": "拍照识别",
+        "image": "选择图片",
+        "camera": "拍照识别",
         "pushRes": "推送结果(提交量较大时，建议关闭)"
       }
     },

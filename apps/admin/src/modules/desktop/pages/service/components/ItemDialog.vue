@@ -33,7 +33,7 @@ const loading = ref(false)
 function getRules(form: ServiceCreateParams) {
   const {
     tmpTitle, packageTitle, packageTitleLocal,
-    packagePrice, timeTaken, timeTakenLocal
+    packagePrice, storePrice, timeTaken, timeTakenLocal
   } = form
 
   return [
@@ -41,6 +41,7 @@ function getRules(form: ServiceCreateParams) {
     { rule: !!packageTitle, message: '服务名称不能为空' },
     { rule: !!packageTitleLocal, message: '服务名称(EN)不能为空' },
     { rule: !!packagePrice, message: '服务价格不能为0' },
+    { rule: !!storePrice, message: '商城服务价格不能为0' },
     { rule: !!timeTaken, message: '处理时间不能为空' },
     { rule: !!timeTakenLocal, message: '处理时间(EN)不能为空' },
   ] as ValidRule[]
