@@ -45,7 +45,6 @@ const comments = ref<string>('')
 
 const selectedId = ref(+props.id)
 
-
 const sizes = [50, 150, 200, 300, 500]
 
 const orders = computed(() => {

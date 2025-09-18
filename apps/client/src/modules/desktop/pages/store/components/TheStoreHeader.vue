@@ -3,7 +3,10 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="h-store-header grid items-center justify-items-center bg-zinc-50 dark:bg-zinc-900 shadow-md" style="grid-template-columns: auto 1fr auto;">
+  <div
+    class="h-store-header grid items-center justify-items-center bg-zinc-50 dark:bg-zinc-900 shadow-sm"
+    style="grid-template-columns: auto 1fr auto;"
+  >
     <section class="size-full border-r border-dashed flex items-center px-4">
       <TheLogo />
     </section>

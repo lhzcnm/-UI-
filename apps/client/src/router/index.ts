@@ -53,6 +53,8 @@ router.beforeEach(async (to, from) => {
   // handle other path
   if (isOtherPath) return true
 
+  const isStore = to.path.includes('store')
+  if(isStore && !token) {}
   // handle auth
   const isAuth = to.path.includes('auth')
   if (!isAuth && !token && !to.meta.noAuthRequired) return '/auth'
@@ -84,5 +86,9 @@ async function handleWxAuthCallback(code: string) {
   const { data } = await wxApi.accessToken(code)
   localStorage.setItem(key, data)
 }
+
+// async function handleStoreVisitorAuth() {
+  
+// }
 
 export default router

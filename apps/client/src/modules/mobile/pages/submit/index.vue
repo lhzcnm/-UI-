@@ -80,6 +80,7 @@ onBeforeMount(() => {
 
 function getGroupId(serviceId: number) {
   const group = serviceStore.services.get(serviceId)
+  console.log(group)
   return group?.parentId || -1
 }
 

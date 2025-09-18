@@ -45,7 +45,12 @@ onMounted(async () => {
 const commonList = getCommonList(store.services)
 
 const bulletinBoardText = computed(() => {
-  return locale.value === 'zh' ? iStore.settings.scrollingAnnc : iStore.settings.scrollingAnncEn ? iStore.settings.scrollingAnncEn : iStore.settings.scrollingAnnc
+  console.log(iStore.settings.scrollingAnncEn)
+  return locale.value === 'zh'
+    ? iStore.settings.scrollingAnnc
+    : iStore.settings.scrollingAnncEn
+      ? iStore.settings.scrollingAnncEn
+      : iStore.settings.scrollingAnnc
 })
 
 function openGroupDialog(group: ServiceDetail) {
