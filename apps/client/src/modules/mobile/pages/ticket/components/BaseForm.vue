@@ -47,7 +47,7 @@ const { t } = useI18n()
           "
         />
         <select
-          class="w-full h-10 border rounded px-2 appearance-none ring-1 ring-input outline-none focus:ring-primary"
+          class="w-full bg-transparent h-10 border rounded px-2 appearance-none ring-1 ring-input outline-none focus:ring-primary"
           v-model="form.type"
         >
           <option
@@ -76,7 +76,7 @@ const { t } = useI18n()
           "
         />
         <select
-          class="w-full h-10 border rounded px-2 appearance-none ring-1 ring-input outline-none focus:ring-primary"
+          class="w-full h-10 border bg-transparent rounded px-2 appearance-none ring-1 ring-input outline-none focus:ring-primary"
           v-model="form.priority"
         >
           <option

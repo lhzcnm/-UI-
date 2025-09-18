@@ -16,7 +16,8 @@
     "placeholder": {
       "chat": "Enter reply content",
       "topic": "e.g.: Order unlock failed",
-      "msg": "Order No: 7890\nIMEI: 351234123412345"
+      "msg": "Order No: 7890\nIMEI: 351234123412345",
+      "select": "Ticket Type"
     },
     "prompt": {
       "msgNull": "Cannot send an empty message"

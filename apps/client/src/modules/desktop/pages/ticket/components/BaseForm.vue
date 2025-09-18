@@ -16,7 +16,7 @@ const { t } = useI18n()
   <form class="space-y-4" @submit.prevent>
     <div class="space-y-1">
       <label class="text-label text-sm">{{ t('ticket.form.type') }}</label>
-      <XSelect v-model="form.type">
+      <XSelect v-model="form.type" :placeholder="t('ticket.placeholder.select')">
         <XSelectItem
           v-for="item in props.typeList" :key="item.departmentId"
           :value="item.departmentId" :label="t(TICKET_TYPE_MAP[item.departmentId].key!)"
