@@ -3,6 +3,7 @@ import type { UserInfo } from '@/api/user'
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import { useFetchWithCache } from '@3un/utils'
+import i18n from '@/locales'
 
 export const useUserStore = defineStore('userStore', () => {
   const info = ref<UserInfo>({} as UserInfo)
@@ -62,7 +63,7 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   function saveInfo() {
-    const locale = useI18n().locale.value
+    const locale = i18n.global.locale
     const userInfo = JSON.stringify(info.value)
     sessionStorage.setItem(`${import.meta.env.VITE_USER_INFO}_${locale}`, userInfo)
   }

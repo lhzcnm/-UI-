@@ -45,7 +45,6 @@ onMounted(async () => {
 const commonList = getCommonList(store.services)
 
 const bulletinBoardText = computed(() => {
-  console.log(iStore.settings.scrollingAnncEn)
   return locale.value === 'zh'
     ? iStore.settings.scrollingAnnc
     : iStore.settings.scrollingAnncEn
