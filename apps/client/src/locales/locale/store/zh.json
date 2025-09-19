@@ -2,6 +2,9 @@
   "store": {
     "order": {
       "search": "搜索订单"
+    },
+    "service": {
+      "view": "服务详情"
     }
   }
 }

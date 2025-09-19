@@ -1,11 +1,12 @@
 import type { InjectionKey } from 'vue'
 
-import type { ServiceGroup } from '../api/types'
+// import type { ServiceGroup } from '../api/types'
 import type { Service, ServiceDetail } from '@/api/services'
 import type { FormType } from './types'
 
 export interface MarketStore {
   visibleOrder: boolean,
+  visibleDetail: boolean,
 
   services: ServiceDetail[],
   serviceMap: Map<number, Service>,

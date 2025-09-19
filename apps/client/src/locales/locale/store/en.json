@@ -2,6 +2,9 @@
   "store": {
     "order": {
       "search": "Order"
+    },
+    "service": {
+      "view": "Service Detail"
     }
   }
 }

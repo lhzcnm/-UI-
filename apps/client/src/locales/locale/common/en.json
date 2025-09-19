@@ -56,6 +56,10 @@
       "end": "End Time"
     }
   },
+  "keyword": {
+    "title": "Keyword",
+    "placeholder": "Keyword"
+  },
   "imei": {
     "title": "IMEI/SN",
     "placeholder": "Please Input IMEI/SN"

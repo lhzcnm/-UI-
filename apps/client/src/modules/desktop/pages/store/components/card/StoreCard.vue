@@ -11,11 +11,14 @@ interface StoreCardProps {
 }
 
 interface StoreCardEmits {
-  submit: [id: number]
+  submit: [id: number],
+  view: [id: number],
 }
 
 defineProps<StoreCardProps>()
 const emits = defineEmits<StoreCardEmits>()
+
+const { t } = useI18n()
 
 function stripHtml(html: string | null) {
   if(!html) return ''
@@ -46,9 +49,11 @@ function stripHtml(html: string | null) {
       {{ stripHtml(desc) }}
     </div>
     <div class="flex justify-between items-center text-sm text-muted-foreground">
-      <button class="flex items-center space-x-1 hover:text-foreground transition">
+      <button
+        class="flex items-center space-x-1 hover:text-foreground transition"
+        @click="emits('view', id)">
         <Icon icon="lucide:eye" class="w-4 h-4" />
-        <span>查看详情</span>
+        <span>{{ t('store.service.view') }}</span>
       </button>
       <button
         class="flex items-center space-x-1 text-danger hover:text-danger/80 transition"

@@ -1,4 +1,13 @@
+import type { R } from '@3un/shared'
 
+export interface StoreApi {
+  service: (data: ServiceParams) => R<null>,
+}
+
+export interface ServiceParams {
+  serviceId?: number,
+  groupId?: number,
+}
 
 export interface ServiceItem {
   serviceId: number,

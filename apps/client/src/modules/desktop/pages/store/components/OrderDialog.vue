@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { MARKET_STORE } from '../utils/symbol'
 import BaseForm from './BaseForm.vue'
+
+import { MARKET_STORE } from '../utils/symbol'
 
 interface OrderDialogEmits {
   confirm: [],

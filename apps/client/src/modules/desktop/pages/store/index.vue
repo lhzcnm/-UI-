@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import StoreMain from './components/StoreMain.vue'
 import TheStoreHeader from './components/TheStoreHeader.vue'
+import OrderDialog from './components/OrderDialog.vue'
 
-import type { ServiceGroup } from './api/types'
+import { EMAIL_REG, PHONE_REG } from '@3un/utils'
+
+// import type { ServiceGroup } from './api/types'
 import { MARKET_STORE, type MarketStore } from './utils/symbol'
 import { serviceApi, type Service } from '@/api/services'
-import OrderDialog from './components/OrderDialog.vue'
 import { toast } from 'vue-sonner'
 import { validate, type ValidRule } from '@/utils'
-import { EMAIL_REG, PHONE_REG } from '@3un/utils'
+import ServiceDetail from './components/ServiceDetail.vue'
+import MainHeader from './components/MainHeader.vue'
+import MainContainer from './components/MainContainer.vue'
 
 const store = reactive<MarketStore>({
   visibleOrder: false,
+  visibleDetail: false,
+
   services: [],
   serviceMap: new Map<number, Service>(),
 
@@ -106,10 +111,17 @@ onMounted(() => {
   <div class="h-screen flex flex-col">
     <TheStoreHeader />
 
-    <main class="py-2 h-store-container overflow-y-auto">
-      <StoreMain />
+    <main class="py-4 h-store-container mx-32 flex flex-col">
+      <MainHeader />
+      <section
+        ref="serviceContainer"
+        class="flex-1 mt-4 space-y-4 overflow-y-auto"
+        style="scrollbar-width: none;">
+        <MainContainer />
+      </section>
     </main>
 
     <OrderDialog @confirm="handleConfirm" />
+    <ServiceDetail :desc="store.selectService.mustRead" />
   </div>
 </template>

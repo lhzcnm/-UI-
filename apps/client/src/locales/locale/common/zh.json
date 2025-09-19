@@ -64,6 +64,10 @@
     "title": "指令{action}",
     "success": "已发送"
   },
+  "keyword": {
+    "title": "关键词",
+    "placeholder": "请输入关键词"
+  },
   "weekday": {
     "0": "日",
     "1": "一",

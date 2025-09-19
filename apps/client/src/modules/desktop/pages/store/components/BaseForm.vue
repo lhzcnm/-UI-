@@ -17,8 +17,8 @@ const form = defineModel<FormType>({ required: true })
     </XFormItem>
     <XFormItem v-if="service.mustRead" label="服务说明">
       <div
-        class="bg-zinc-100 dark:bg-zinc-800 border border-border rounded">
-        <span v-html="service.mustRead"></span>
+        class="py-2 bg-zinc-100 dark:bg-zinc-800 border border-border rounded">
+        <span class="" v-html="service.mustRead"></span>
       </div>
     </XFormItem>
     <XFormItem label="服务价格">
