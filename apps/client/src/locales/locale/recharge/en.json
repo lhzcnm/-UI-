@@ -1,7 +1,7 @@
 {
   "recharge": {
     "title": "Points Recharge",
-    "handleFee": "No handling fee",
+    "handleFee": "Cost Free",
     "segment": {
       "balance": "Balance",
       "member": "Membership"

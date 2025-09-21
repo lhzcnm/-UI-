@@ -98,7 +98,7 @@
       "order": "Total Orders",
       "handle": "Processing",
       "recharge": {
-        "point": "Point Records",
+        "point": "Point Recharge",
         "recharge": "Recharge Records",
         "change": "Point Change Records"
       },
@@ -111,7 +111,8 @@
         "invite": "Generate Invite Code"
       },
       "prompt": {
-        "download": "Click the top right\nOpen in browser\nDownload invite code"
+        "download": "Click the top right\nOpen in browser\nDownload invite code",
+        "inviteCode": "Save Image"
       }
     }
   }

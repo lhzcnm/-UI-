@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 import type { Order } from '@/api/orders'
 
 interface OrderVoucherProps {
   order: Order,
+  component: Component,
 }
 
-defineProps<OrderVoucherProps>()
+const props = defineProps<OrderVoucherProps>()
 </script>
 
 <template>
@@ -13,7 +16,7 @@ defineProps<OrderVoucherProps>()
     <div class="bg-background shadow-md border border-border p-6 mx-auto">
       <div class="relative flex justify-center items-center">
         <div class="scale-95">
-          <OrderExportImg :order />
+            <component :is="props.component" :order />
         </div>
       </div>
     </div>

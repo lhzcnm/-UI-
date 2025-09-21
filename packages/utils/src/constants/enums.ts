@@ -1,4 +1,5 @@
-import type { StatusMap } from '@3un/shared'
+import type { StatusMap, TypeMap } from '@3un/shared'
+import { IMEI_AND_SN_REG, IMEI_REG, SN_REG } from './regexs'
 
 // User Role
 export enum USER_ROLE {
@@ -19,7 +20,32 @@ export enum IMEI_TYPE {
   SN         = 4,
   IMEI_OR_SN = 6,
 }
-
+export const IMEI_TYPE_MAP: TypeMap = {
+  [IMEI_TYPE.NONE]       : {
+    value: IMEI_TYPE.NONE,
+    label: 'IMEI/SN',
+    key: 'type.imei.5',
+    regex: IMEI_AND_SN_REG,
+  },
+  [IMEI_TYPE.IMEI]       : {
+    value: IMEI_TYPE.IMEI,
+    label: 'IMEI',
+    key: 'type.imei.2',
+    regex: IMEI_REG,
+  },
+  [IMEI_TYPE.SN]         : {
+    value: IMEI_TYPE.SN,
+    label: 'SN',
+    key: 'type.imei.4',
+    regex: SN_REG,
+  },
+  [IMEI_TYPE.IMEI_OR_SN] : {
+    value: IMEI_TYPE.IMEI_OR_SN,
+    label: 'IMEI/SN',
+    key: 'type.imei.6',
+    regex: IMEI_AND_SN_REG,
+  },
+}
 // Recharge Type
 export enum RECHARGE_TYPE {
   BALANCE    = 1,
@@ -42,7 +68,7 @@ export const PAYMENT_STATUS_LIST = [
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  ADMIN  = 7,
+  ADMIN  = 5,
   ALIPAY = 8,
   WECHAT = 9,
 }

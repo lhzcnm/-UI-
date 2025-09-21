@@ -1,7 +1,7 @@
 {
   "recharge": {
     "title": "积分充值",
-    "handleFee": "免手续费",
+    "handleFee": "手续费0",
     "segment": {
       "balance": "余额充值",
       "member": "开通会员"

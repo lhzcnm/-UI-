@@ -5,6 +5,13 @@
     },
     "service": {
       "view": "服务详情"
+    },
+    "form": {
+      "phone": "手机号",
+      "mail": "邮箱"
+    },
+    "valid": {
+      "pushType": "请输入手机号或邮箱"
     }
   }
 }

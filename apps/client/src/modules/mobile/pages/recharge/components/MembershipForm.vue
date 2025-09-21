@@ -18,8 +18,13 @@ const pkgTotalAmount = ref<string>('')
 
 const { t } = useI18n()
 
+// const mode = import.meta.env.VITE_APP_MODE
+
+// const injectModes = ['Usimlte', 'ZSunlock']
+
 await serviceStore.getServices()
 await getMemberList()
+
 
 async function getMemberList() {
   let { data } = await memberApi.memberList()
@@ -33,7 +38,9 @@ async function getMemberList() {
   }
 
   selectedPlan.value = data[1]
-  getMemberPkg(data[1].planId)
+  if(data.length > 1) {
+    getMemberPkg(data[1].planId)
+  }
 }
 
 async function getMemberMiniList() {

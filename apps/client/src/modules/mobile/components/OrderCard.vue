@@ -132,7 +132,7 @@ function handleCopy() {
     <div class="text-sm whitespace-pre">
       <div class="flex items-start">
         <span class="text-muted-foreground shrink-0">{{ t('order.listCol.service' )}}: </span>
-        <span class="font-medium break-all">{{ serviceName }}</span>
+        <span class="font-medium break-all whitespace-pre-line">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">

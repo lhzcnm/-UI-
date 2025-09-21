@@ -23,9 +23,7 @@ const { t, locale } = useI18n()
 const confirmText = computed(() => {
   return locale.value === 'zh'
     ? popupAnnc
-    : popupAnncEn
-      ? popupAnncEn
-      : popupAnnc
+    : (popupAnncEn && popupAnncEn.trim()) || popupAnnc
 })
 
 onMounted(async () => {

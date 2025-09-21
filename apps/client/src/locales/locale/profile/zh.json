@@ -98,7 +98,7 @@
       "order": "总订单",
       "handle": "处理中",
       "recharge": {
-        "point": "积分记录",
+        "point": "积分充值",
         "recharge": "充值记录",
         "change": "积分变更记录"
       },
@@ -111,7 +111,8 @@
         "invite": "生成推荐码"
       },
       "prompt": {
-        "download": "请点击右上角\n在浏览器打开\n下载邀请码"
+        "download": "请点击右上角\n在浏览器打开\n下载邀请码",
+        "inviteCode": "保存图片"
       }
     }
   }

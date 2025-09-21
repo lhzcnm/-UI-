@@ -35,12 +35,16 @@ const status = computed(() => ({
   isProcessing: order.value.status === ORDER_STATUS.PROCESSING,
   isWait: order.value.status === ORDER_STATUS.WAIT,
 }))
+
+const cleanResult = computed(() => {
+  return order.value.result.replace(/<img[^>]*>/,'') || ''
+})
 </script>
 
 <template>
   <div
     :class="twMerge(
-      'flex flex-col bg-card w-80 min-w-80 max-w-96',
+      'flex flex-col bg-card',
     )"
   >
     <div class="w-full text-center bg-zinc-100 dark:bg-zinc-800 p-2 text-lg">
@@ -67,6 +71,7 @@ const status = computed(() => ({
         <span v-else class="text-base font-medium">{{ order.id }}</span>
         <div class="flex space-x-2">
           <XTag size="sm" v-bind="ORDER_STATUS_MAP[order.status]" />
+          <!-- <XTag size="sm" label="处理成功" :color="ORDER_STATUS_MAP[order.status].color" /> -->
           <XTag size="sm" v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
         </div>
       </div>
@@ -74,7 +79,7 @@ const status = computed(() => ({
       <div class="w-full text-sm flex flex-col">
         <div class="flex-1 flex items-center">
           <span class="text-muted-foreground shrink-0">处理服务：</span>
-          <span class="font-medium break-all whitespace-nowrap">{{ serviceName }}</span>
+          <span class="font-medium whitespace-nowrap">{{ serviceName }}</span>
         </div>
   
         <div class="flex items-center group">
@@ -112,16 +117,9 @@ const status = computed(() => ({
           :class="twMerge(
             'whitespace-nowrap p-3 bg-muted rounded overflow-x-auto w-full'
           )"
-          v-html="order.result.trim() || '订单处理中...'"
+          v-html="cleanResult || '订单处理中...'"
         />
       </div>
-
-      <!-- <div class="text-sm" v-if="order.remark">
-        <div class="text-muted-foreground mb-1.5">订单备注：</div>
-        <div class="w-full inline-block bg-muted rounded p-3 whitespace-pre-line">
-          {{ order.remark }}
-        </div>
-      </div> -->
 
       <div class="text-sm" v-if="order.recommends && order.recommends.length">
         <div class="text-muted-foreground mb-1.5">推荐解锁服务：</div>

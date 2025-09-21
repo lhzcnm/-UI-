@@ -32,7 +32,7 @@ function handleClick(order: ImgOrderItem) {
   <XDialog
     v-model="store.visibleOrderImg" maskClosable draggable
     :title="t('order.title.img')"
-    uiRoot="sm:max-w-[32rem] h-[calc(100vh-10rem)] flex flex-col"
+    uiRoot="sm:max-w-[48rem] h-[calc(100vh-10rem)] flex flex-col w-auto"
     @close="emits('close')"
   >
     <template #default>

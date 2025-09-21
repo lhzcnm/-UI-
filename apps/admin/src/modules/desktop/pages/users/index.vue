@@ -22,6 +22,7 @@ import {
 import type { UsersStore } from './utils'
 import { columns } from './utils/columnUser'
 import { USER_STORE } from './utils'
+import type { XTableExpose } from '@3un/ui'
 
 const store: UsersStore = reactive({
   extraInfo: zUserExtraInfo.parse({}),
@@ -52,6 +53,8 @@ const router = useRouter()
 
 const loading = ref(false)
 const queryHash = computed(() => hash(route.query))
+
+const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
@@ -90,6 +93,8 @@ function getList(params: UserListParams) {
   const response = getUsers(params)
   response.then((data) => store.users = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function openCreate() {
@@ -155,6 +160,7 @@ function resetSearch() {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :columns="columns"
         :data="store.users.list"
         :loading="loading"

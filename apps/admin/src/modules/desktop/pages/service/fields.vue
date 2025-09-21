@@ -10,6 +10,7 @@ import { createList } from '@/utils'
 
 import { FIELD_STORE, type ServiceFieldStore } from './utils'
 import { columns } from './utils/columnField'
+import type { XTableExpose } from '@3un/ui'
 
 const serviceStore = useServiceStore()
 await serviceStore.getItems()
@@ -32,6 +33,7 @@ provide(FIELD_STORE, store)
 const serviceId = ref<number>()
 const ids = ref<number[]>([])
 const loading = ref(false)
+const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
@@ -52,6 +54,8 @@ function getList(params: ServiceFieldListParams) {
   const response = getServiceFields(params)
   response.then((data) => store.fields = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function openCreate() {
@@ -110,6 +114,7 @@ function handleDelete() {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :data="store.fields.list"
         :columns="columns"
         :loading="loading"

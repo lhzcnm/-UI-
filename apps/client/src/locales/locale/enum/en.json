@@ -31,6 +31,12 @@
     "ticket": {
       "16": "Recharge refund issue",
       "17": "Order issue"
+    },
+    "imei": {
+      "2": "IMEI",
+      "4": "Serial number",
+      "5": "IMEI/SN",
+      "6": "IMEI/SN"
     }
   }
 }

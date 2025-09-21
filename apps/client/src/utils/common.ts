@@ -1,6 +1,6 @@
 import type { Service } from '@/api/services'
 
-import { IMEI_AND_SN_REG, IMEIValidator, SNValidator } from '@3un/utils'
+import { IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
 
 export function findAllIMEIAndSNs(str: string) {
@@ -107,4 +107,9 @@ export function getCommonList(buckets: Map<number, Service>) {
     .filter(item => commonIdList.includes(item.id))
 
   return [...hotList, ...commonList]
+}
+
+export function validateImei(imei: string, type: IMEI_TYPE) {
+  if(IMEI_TYPE_MAP[type].regex.test(imei)) return true
+  return false
 }

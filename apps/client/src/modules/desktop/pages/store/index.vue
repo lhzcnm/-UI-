@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import TheStoreHeader from './components/TheStoreHeader.vue'
+import ServiceDetail from './components/ServiceDetail.vue'
+import MainContainer from './components/MainContainer.vue'
 import OrderDialog from './components/OrderDialog.vue'
+import MainHeader from './components/MainHeader.vue'
 
 import { EMAIL_REG, PHONE_REG } from '@3un/utils'
+import { toast } from 'vue-sonner'
 
 // import type { ServiceGroup } from './api/types'
 import { MARKET_STORE, type MarketStore } from './utils/symbol'
 import { serviceApi, type Service } from '@/api/services'
-import { toast } from 'vue-sonner'
-import { validate, type ValidRule } from '@/utils'
-import ServiceDetail from './components/ServiceDetail.vue'
-import MainHeader from './components/MainHeader.vue'
-import MainContainer from './components/MainContainer.vue'
+import { validate, validateImei, type ValidRule } from '@/utils'
 
 const store = reactive<MarketStore>({
   visibleOrder: false,
@@ -42,10 +42,14 @@ const store = reactive<MarketStore>({
     isNew: false,
     isHot: false,
     isUnlock: false,
-  }
+  },
 })
 
 provide(MARKET_STORE, store)
+
+const { t } = useI18n()
+
+const serviceContainer = ref<HTMLElement | null>(null)
 
 watch(
   [() => store.groupId, () => store.serviceId],
@@ -63,37 +67,44 @@ async function getServices() {
       store.serviceMap.set(service.id, service)
     }
   }
+
+  serviceContainer.value?.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
 }
 
 function handleConfirm() {
+  if(!store.createOrder.imei) {
+    return toast.warning(t('valid.store.imeiNull'))
+  }
+
   if(store.createOrder.pushRes) {
     if(!store.createOrder.phone && !store.createOrder.mail) {
-      return toast.warning('请填写手机号或者邮箱')
+      return toast.warning(t('store.valid.pushType'))
     }
   }
 
-  const rules: ValidRule[] = [
-    {
-      rule: !!store.createOrder.imei,
-      message: '请输入imei',
-    },
-  ]
+  const rules: ValidRule[] = []
 
   if(store.createOrder.phone) {
     rules.push({
       rule: PHONE_REG.test(store.createOrder.phone),
-      message: '请输入正确的手机号'
+      message: t('valid.invalid', { field: t('store.form.phone') }),
     })
   }
 
   if(store.createOrder.mail) {
     rules.push({
       rule: EMAIL_REG.test(store.createOrder.mail),
-      message: '请输入正确的邮箱号'
+      message: t('valid.invalid', { field: t('store.form.mail') }),
     })
   }
 
   if(!validate(rules)) return
+
+  if(!validateImei(store.createOrder.imei, store.selectService.imeiType))
+    return toast.warning(t('valid.invalid', { field: "IMEI/SN" }))
 }
 
 await getServices()

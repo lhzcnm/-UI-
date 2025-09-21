@@ -8,6 +8,7 @@ import type { Action } from '../types'
 
 const visibleForm = ref(false)
 const activeForm = ref<Action | null>(null)
+const inviteCodeVisible = ref<boolean>(false)
 
 const { t } = useI18n()
 
@@ -44,6 +45,15 @@ const settingOptions = [
   },
 ].filter(item => !!item)
 
+// watch(
+//   () => activeForm.value,
+//   (newVal) => {
+//     if(newVal === 'qrcode') {
+//       inviteCodeVisible.value = true
+//     }
+//   }
+// )
+
 const activeTitle = computed(() => {
   const options = {
     account: t('profile.mobile.setting.account'),
@@ -58,8 +68,13 @@ const activeTitle = computed(() => {
 })
 
 function showForm(type: Action) {
+  if(type === 'qrcode') {
+    inviteCodeVisible.value = true
+    return
+  }
   activeForm.value = type
   visibleForm.value = true
+
 }
 
 function closeForm() {
@@ -82,6 +97,7 @@ function closeForm() {
   </section>
 
   <SlideRight
+    v-if="activeForm !== 'qrcode'"
     v-model="visibleForm"
     :title="activeTitle"
     header-class="border-b"
@@ -111,6 +127,8 @@ function closeForm() {
       :on-close="closeForm"
       class="p-3 space-y-3"
     />
-    <InviteCode v-else-if="activeForm === 'qrcode'" />
   </SlideRight>
+  <Transition name="slide-right">
+    <InviteCode v-if="inviteCodeVisible" v-model="inviteCodeVisible" />
+  </Transition>
 </template>

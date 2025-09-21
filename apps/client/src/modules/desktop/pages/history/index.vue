@@ -15,6 +15,8 @@ import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { getOrderColumns } from './utils/columns'
 import { orderApi, type Order } from '@/api/orders'
 import type { ImgOrderItem } from './types'
+import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
+import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -26,7 +28,7 @@ const selectRows = ref<string[]>([])
 const generated = ref<boolean>(false)
 
 const { copy } = useClipboard({ legacy: true })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const baseUrl = import.meta.env.VITE_API_URL
 
@@ -157,9 +159,10 @@ function handleGenerate() {
   for(let order of orders) {
     const container = document.createElement('div')
     document.body.append(container)
-    container.className = `opacity-0 flex`
+    // container.className = `opacity-0 flex`
+    container.className = `flex`
 
-    const vnode = h(OrderVoucher, { order })
+    const vnode = h(OrderVoucher, { order, component: locale.value === 'zh' ? OrderExportImgZh : OrderExportImgEn })
 
     render(vnode, container)
 

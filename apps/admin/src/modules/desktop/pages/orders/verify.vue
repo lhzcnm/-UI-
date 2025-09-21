@@ -10,6 +10,7 @@ import { createList } from '@/utils'
 import type { VerifyStore } from './utils'
 import { columns } from './utils/columnVerify'
 import { VERIFY_STORE } from './utils'
+import type { XTableExpose } from '@3un/ui'
 
 const store: VerifyStore = reactive({
   orders: createList(),
@@ -23,6 +24,7 @@ provide(VERIFY_STORE, store)
 
 const loading = ref(false)
 const selected = shallowRef<Order[]>([])
+const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
@@ -48,6 +50,8 @@ function getList(params: OrderListParams) {
   const response = getOrders(params)
   response.then(data => store.orders = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function handleReply(verify: number) {
@@ -106,6 +110,7 @@ function handleReply(verify: number) {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :columns="columns"
         :loading="loading"
         :data="store.orders.list"

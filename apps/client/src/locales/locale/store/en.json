@@ -5,6 +5,13 @@
     },
     "service": {
       "view": "Service Detail"
+    },
+    "form": {
+      "phone": "Phone",
+      "mail": "Mail"
+    },
+    "valid": {
+      "pushType": "Please Input Phone or mail"
     }
   }
 }

@@ -8,7 +8,7 @@ import { maskText } from '@/utils'
 
 const store = useUserStore()
 const iStore = useSettingStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
@@ -19,7 +19,11 @@ async function handleRefresh() {
 }
 
 function openApiUsageInfo() {
-  const apiUsageInfo = iStore.settings.apiUsageInfo
+  const apiUsageInfo = locale.value === 'zh'
+    ? iStore.settings.apiUsageInfo
+    : iStore.settings.apiUsageInfoEn
+      ? iStore.settings.apiUsageInfoEn
+      : iStore.settings.apiUsageInfo
 
   xconfirm({
     title: t('profile.apiKey.info'),

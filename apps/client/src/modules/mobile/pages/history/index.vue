@@ -2,6 +2,8 @@
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
 import OrderVoucher from '@/components/shared/OrderVoucher.vue'
+import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
+import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 
 import { twJoin } from 'tailwind-merge'
 import type { HistoryStore } from './utils'
@@ -19,6 +21,8 @@ await serviceStore.getServices()
 const page = ref(1)
 const pageSize = ref(20)
 const generated = ref<boolean>(false)
+
+const { locale } = useI18n()
 
 const mainNode = document.getElementById('main')
 
@@ -69,9 +73,7 @@ function handleGenerate(order: Order) {
   document.body.append(container)
   container.className = `opacity-0 flex`
 
-  const vnode = h(OrderVoucher, {
-    order,
-  })
+const vnode = h(OrderVoucher, { order, component: locale.value === 'zh' ? OrderExportImgZh : OrderExportImgEn })
 
   render(vnode, container)
 

@@ -38,7 +38,7 @@ export const columns: XColDef<Credit> = [
     title: '变动金额',
     width: 88,
     render: (value: number, row) => {
-      const isSubmit = /订单提交|查询订单|Code Request/.test(row.description)
+      const isSubmit = /订单提交|Code Request|提交订单/.test(row.description)
       const isReduce = isSubmit || row.description === '管理员扣除积分'
       let label = Math.abs(value).toString()
       let color

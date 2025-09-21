@@ -7,6 +7,8 @@ import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
 import OrderVoucher from '@/components/shared/OrderVoucher.vue'
 import { h, render } from 'vue'
+import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
+import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,6 +21,8 @@ const orderImg = ref<string>('')
 const store = useSettingStore()
 const serviceStore = useServiceStore()
 const codeId = Number(route.query.codeId)
+
+const { locale } = useI18n()
 
 await Promise.all([
   serviceStore.getServices(),
@@ -55,6 +59,7 @@ function handleGenerate(order: Order) {
 
   const vnode = h(OrderVoucher, {
     order,
+    component: locale.value === 'zh' ? OrderExportImgZh : OrderExportImgEn,
   })
 
   render(vnode, container)

@@ -34,6 +34,15 @@ export type FormMode = 'create' | 'update'
 type StatusMapItem = { color: XTagColor, label: string, key?: string }
 export type StatusMap = Record<number, StatusMapItem>
 
+// Type Map
+type TypeMapItem = {
+  label: string,
+  value: string | number,
+  regex: RegExp,
+  key?: string,
+}
+export type TypeMap = Record<number, TypeMapItem>
+
 // Utils
 export type WithId<T, ID extends string> = Partial<T> & { [key in ID]: number }
 export type IK<T> = InjectionKey<T>
