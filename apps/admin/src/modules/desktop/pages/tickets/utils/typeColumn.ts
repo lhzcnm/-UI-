@@ -1,4 +1,4 @@
-import { XButton, XInput, XInputNumber, XSwitch, type XBtnSplitOption, type XColDef } from "@3un/ui"
+import { XButtonSplit, XInput, XInputNumber, XSwitch, type XBtnSplitOption, type XColDef } from "@3un/ui"
 import { h, inject } from "vue"
 
 import type { TicketType } from "@/inters/ticket"
@@ -10,11 +10,11 @@ export const column: XColDef<TicketType> = [
     key: 'departmentName',
     title: '常见问题',
     minWidth: 150,
-    render: (_, raw) => {
+    render: (_, row) => {
       return h(XInput, {
-        modelValue: raw.departmentName,
-        "onUpdate:modelValue": (val: string) => {
-          raw.departmentName = val ?? ''
+        modelValue: row.departmentName,
+        "onUpdate:modelValue": (val: string | number | null | undefined) => {
+          row.departmentName = val?.toString() ?? ''
         }
       })
     }
@@ -23,11 +23,11 @@ export const column: XColDef<TicketType> = [
     key: 'departmentNameEn',
     title: '常见问题En',
     minWidth: 150,
-    render: (_, raw) => {
+    render: (_, row) => {
       return h(XInput, {
-        modelValue: raw.departmentNameEn,
-        "onUpdate:modelValue": (val: string) => {
-          raw.departmentName = val ?? ''
+        modelValue: row.departmentNameEn,
+        "onUpdate:modelValue": (val: string | number | null | undefined) => {
+          row.departmentName = val?.toString() ?? ''
         }
       })
     }
@@ -88,23 +88,29 @@ export const column: XColDef<TicketType> = [
     render: (_, row, index) => {
       const store = inject(TICKET_STORE)!
 
-      const options: XBtnSplitOption[] = [
-        {
-          label: ""
-        }
-      ]
-      const handleDelete = () => {
+      function handleDelete() {
         deleteTicketType(row.departmentId).then(() => {
           store.types.splice(index, 1)
         })
       }
 
-      return h(XButton, {
-        icon: 'lucide:trash-2',
-        color: 'danger',
-        size: 'sm',
-        label: '删除',
-        onClick: handleDelete,
+      function handleUpdate() {
+        console.log(row)
+        // updateTicketType(row).then(() => {
+        //   toast.success('更新成功')
+        // })
+      }
+      const options: XBtnSplitOption[] = [
+        {
+          label: "删除",
+          command: () => handleDelete(),
+        }
+      ]
+
+      return h(XButtonSplit, {
+        options,
+        label: '更新',
+        onClick: () => handleUpdate(),
       })
     }
   },
