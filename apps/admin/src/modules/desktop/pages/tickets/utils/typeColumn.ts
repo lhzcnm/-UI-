@@ -1,4 +1,4 @@
-import { XButton, XInputNumber, XSwitch, type XColDef } from "@3un/ui"
+import { XButton, XInput, XInputNumber, XSwitch, type XBtnSplitOption, type XColDef } from "@3un/ui"
 import { h, inject } from "vue"
 
 import type { TicketType } from "@/inters/ticket"
@@ -10,6 +10,27 @@ export const column: XColDef<TicketType> = [
     key: 'departmentName',
     title: '常见问题',
     minWidth: 150,
+    render: (_, raw) => {
+      return h(XInput, {
+        modelValue: raw.departmentName,
+        "onUpdate:modelValue": (val: string) => {
+          raw.departmentName = val ?? ''
+        }
+      })
+    }
+  },
+  {
+    key: 'departmentNameEn',
+    title: '常见问题En',
+    minWidth: 150,
+    render: (_, raw) => {
+      return h(XInput, {
+        modelValue: raw.departmentNameEn,
+        "onUpdate:modelValue": (val: string) => {
+          raw.departmentName = val ?? ''
+        }
+      })
+    }
   },
   {
     key: 'status',
@@ -66,6 +87,12 @@ export const column: XColDef<TicketType> = [
     width: 78,
     render: (_, row, index) => {
       const store = inject(TICKET_STORE)!
+
+      const options: XBtnSplitOption[] = [
+        {
+          label: ""
+        }
+      ]
       const handleDelete = () => {
         deleteTicketType(row.departmentId).then(() => {
           store.types.splice(index, 1)

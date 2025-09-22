@@ -30,6 +30,7 @@ async function createType() {
 
   const response = createTicketType({
     departmentName: type.value,
+    departmentNameEn: type.value,
     departmentDes: type.value,
     deptOrder: 1,
     status: 0,
@@ -45,7 +46,7 @@ async function createType() {
 <template>
   <XDialog
     v-model="store.visibleType"
-    ui-root="sm:max-w-lg"
+    ui-root="sm:max-w-xl"
     title="常见问题"
     draggable
   >

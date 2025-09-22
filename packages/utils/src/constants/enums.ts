@@ -209,16 +209,22 @@ export enum TICKET_TYPE {
   ORDER    = 17,
   RECHARGE_LUSHEN = 1,
   ORDER_LUSHEN = 2,
+  RECHARGE_IFUNLOCK = 21,
+  ORDER_IFUNLOCK = 22,
 }
 export const TICKET_TYPE_MAP: StatusMap = {
   [TICKET_TYPE.RECHARGE] : { color: 'success', label: '充值退款问题', key: 'type.ticket.16' },
   [TICKET_TYPE.ORDER]    : { color: 'warning', label: '订单问题', key: 'type.ticket.17' },
   [TICKET_TYPE.RECHARGE_LUSHEN] : { color: 'success', label: '充值退款问题', key: 'type.ticket.16' },
   [TICKET_TYPE.ORDER_LUSHEN]    : { color: 'warning', label: '订单问题', key: 'type.ticket.17' },
+  [TICKET_TYPE.RECHARGE_IFUNLOCK] : { color: 'success', label: '充值退款问题', key: 'type.ticket.16' },
+  [TICKET_TYPE.ORDER_IFUNLOCK]    : { color: 'warning', label: '订单问题', key: 'type.ticket.17' },
 }
 export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.RECHARGE, label: '充值退款问题', key: 'type.ticket.16' },
   { value: TICKET_TYPE.ORDER, label: '订单问题', key: 'type.ticket.17' },
   { value: TICKET_TYPE.RECHARGE_LUSHEN, label: '充值退款问题', key: 'type.ticket.16' },
   { value: TICKET_TYPE.ORDER_LUSHEN, label: '订单问题', key: 'type.ticket.17' },
+  { value: TICKET_TYPE.RECHARGE_IFUNLOCK, label: '充值退款问题', key: 'type.ticket.16' },
+  { value: TICKET_TYPE.ORDER_IFUNLOCK, label: '订单问题', key: 'type.ticket.17' },
 ]

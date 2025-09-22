@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TicketCreateForm, TicketType } from '@/api/tickets'
-import { TICKET_PRIORITY_LIST, TICKET_TYPE_MAP } from '@3un/utils'
+import { TICKET_PRIORITY_LIST } from '@3un/utils'
 
 interface BaseFormProps {
   typeList: TicketType[]
@@ -19,7 +19,7 @@ const { t } = useI18n()
       <XSelect v-model="form.type" :placeholder="t('ticket.placeholder.select')">
         <XSelectItem
           v-for="item in props.typeList" :key="item.departmentId"
-          :value="item.departmentId" :label="t(TICKET_TYPE_MAP[item.departmentId].key!)"
+          :value="item.departmentId" :label="item.departmentName"
         />
       </XSelect>
     </div>

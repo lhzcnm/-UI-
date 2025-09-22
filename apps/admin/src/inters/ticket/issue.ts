@@ -4,6 +4,7 @@ import { z } from 'zod/v4'
 export const zTicketType = z.object({
   departmentId: z.number().default(0),
   departmentName: z.string().default(''),
+  departmentNameEn: z.string().default('').nullable(),
   departmentDes: z.string().default(''),
   // addedOn: z.string().default(''),
   status: z.number().default(0),
