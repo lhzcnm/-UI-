@@ -7,6 +7,8 @@ import { twMerge } from 'tailwind-merge'
 defineProps<{ item: InvoiceItem }>()
 
 const { t } = useI18n()
+
+// console.log(isNaN(+props.item.credits))
 </script>
 
 <template>
@@ -15,7 +17,10 @@ const { t } = useI18n()
       <span class="text-sm font-medium text-card-foreground">
         {{ item.paymentMethod }}
       </span>
-      <XTag :color="PAYMENT_STATUS_MAP[item.paymentStatusId].color" :label="t(PAYMENT_STATUS_MAP[item.paymentStatusId].key!)" />
+      <XTag
+        :color="PAYMENT_STATUS_MAP[item.paymentStatusId].color"
+        :label="t(PAYMENT_STATUS_MAP[item.paymentStatusId].key!)"
+      />
     </div>
 
     <div class="flex justify-between">
@@ -28,7 +33,7 @@ const { t } = useI18n()
           ￥{{ item.amount }}
         </p>
       </div>
-      <div>
+      <div>      
         <div class="flex space-x-1 text-muted-foreground">
           <Icon icon="lucide:coins" class="size-4" />
           <span class="text-xs">{{ t('recharge.history.real') }}</span>

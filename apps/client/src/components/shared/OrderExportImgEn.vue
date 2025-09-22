@@ -20,7 +20,7 @@ const { isSubmit } = props
 
 const order = ref(props.order)
 
-const appName = import.meta.env.VITE_APP_NAME
+const appName = import.meta.env.VITE_APP_NAME_EN
 
 const serviceStore = useServiceStore()
 const serviceName = computed(() => {
@@ -48,7 +48,7 @@ const cleanResult = computed(() => {
     )"
   >
     <div class="w-full text-center bg-zinc-100 dark:bg-zinc-800 p-2 text-lg">
-      <span>公众号: </span>
+      <span>Official: </span>
       <span>{{ appName }}</span>
     </div>
     <div class="w-full p-4 flex flex-col">
@@ -71,30 +71,39 @@ const cleanResult = computed(() => {
         <span v-else class="text-base font-medium">{{ order.id }}</span>
         <div class="flex space-x-2">
           <!-- <XTag size="sm" label="Success" :color="ORDER_STATUS_MAP[order.status].color" /> -->
-          <XTag size="sm" v-bind="ORDER_STATUS_MAP[order.status]" />
-          <XTag size="sm" v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
+          <XTag
+            size="sm"
+            :label="ORDER_STATUS_MAP[order.status].labelEn"
+            :color="ORDER_STATUS_MAP[order.status].color"
+          />
+          <XTag
+            v-if="!isSubmit"
+            size="sm"
+            :label="ORDER_VERIFY_MAP[order.verify].labelEn"
+            :color="ORDER_VERIFY_MAP[order.verify].color"
+          />
         </div>
       </div>
       
       <div class="w-full text-sm flex flex-col">
-        <div class="flex-1 flex items-center">
+        <div class="flex-1 flex items-center whitespace-pre">
           <span class="text-muted-foreground shrink-0">Service: </span>
           <span class="font-medium whitespace-nowrap">{{ serviceName }}</span>
         </div>
   
         <div class="flex items-center group">
-          <div class="flex items-center">
+          <div class="flex items-center whitespace-pre">
             <span class="text-muted-foreground shrink-0">Source: </span>
             <span class="font-medium font-mono">{{ order.imei }}</span>
           </div>
         </div>
   
-        <div v-if="order.createTime" class="flex items-center">
+        <div v-if="order.createTime" class="flex items-center whitespace-pre">
           <span class="text-muted-foreground shrink-0">Submit Time: </span>
           <span class="font-medium whitespace-nowrap">{{ order.createTime }}</span>
         </div>
   
-        <div class="flex items-center">
+        <div class="flex items-center whitespace-pre">
           <span class="text-muted-foreground shrink-0">Points: </span>
           <span
             :class="twJoin(

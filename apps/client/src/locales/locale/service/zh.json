@@ -1,6 +1,16 @@
 {
   "service": {
     "point": "积分",
-    "new": "新"
+    "new": "新",
+    "info": {
+      "null": "未找到服务信息",
+      "price": "服务价格",
+      "taken": "服务耗时",
+      "desc": "服务说明",
+      "descNull": "暂无服务说明"
+    },
+    "mobile": {
+      "button": "提交订单"
+    }
   }
 }

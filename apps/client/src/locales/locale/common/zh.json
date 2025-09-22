@@ -84,5 +84,9 @@
   },
   "stat": {
     "total": "共 {count} 项 {field}"
+  },
+  "request": {
+    "timeout": "请求超时，请稍后重试",
+    "error": "请求失败，请稍后重试"
   }
 }

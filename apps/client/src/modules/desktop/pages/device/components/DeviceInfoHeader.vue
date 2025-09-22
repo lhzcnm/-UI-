@@ -3,11 +3,11 @@ import { twJoin } from 'tailwind-merge'
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import { wsFetch, STORE, getCopyToken } from '../utils'
+import { wsFetch, STORE, getCopyToken, getCopyTokenEn } from '../utils'
 
 const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const isRecoveryMode = ref(false)
 const isPrinting = ref(false)
@@ -37,7 +37,7 @@ async function handlePrint() {
 
 function handleCopy() {
   const device = store.deviceMap.get(store.selected)!
-  const tokens = getCopyToken(device.summary)
+  const tokens = locale.value === 'zh' ? getCopyToken(device.summary) : getCopyTokenEn(device.summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
   toast.success(t('submit.success', { action: t('action.copy') }))

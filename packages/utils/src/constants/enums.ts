@@ -137,10 +137,10 @@ export enum ORDER_STATUS {
   PROCESSING  = 4,
 }
 export const ORDER_STATUS_MAP: StatusMap = {
-  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', key: 'status.order.1' },
-  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功', key: 'status.order.2' },
-  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败', key: 'status.order.3' },
-  [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', key: 'status.order.4' },
+  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.order.1' },
+  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功', labelEn: 'Success', key: 'status.order.2' },
+  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败', labelEn: 'Failed', key: 'status.order.3' },
+  [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', labelEn: 'Processing', key: 'status.order.4' },
 }
 export const ORDER_STATUS_LIST = [
   { value: ORDER_STATUS.WAIT, label: '等待提交', key: 'status.order.1' },
@@ -157,10 +157,10 @@ export enum ORDER_VERIFY {
   REFUNDED  = 3,
 }
 export const ORDER_VERIFY_MAP: StatusMap = {
-  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', key: 'status.vertify.0' },
-  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', key: 'status.vertify.1' },
-  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', key: 'status.vertify.2' },
-  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', key: 'status.vertify.3' },
+  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', labelEn: 'Normal', key: 'status.vertify.0' },
+  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', labelEn: 'Feedback', key: 'status.vertify.1' },
+  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', labelEn: 'Solved', key: 'status.vertify.2' },
+  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', labelEn: 'Refund', key: 'status.vertify.3' },
 }
 export const ORDER_VERIFY_LIST = [
   { value: ORDER_VERIFY.NORMAL, label: '正常' },

@@ -31,7 +31,7 @@ export interface IList<T> {
 export type FormMode = 'create' | 'update'
 
 // Status Map
-type StatusMapItem = { color: XTagColor, label: string, key?: string }
+type StatusMapItem = { color: XTagColor, label: string, labelEn?: string, key?: string }
 export type StatusMap = Record<number, StatusMapItem>
 
 // Type Map

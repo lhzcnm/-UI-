@@ -18,6 +18,7 @@ import type { XNativeSelectValue } from '@3un/ui'
 import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
 import { wxApi } from '@/api/wx'
+import type { AxiosResponse } from 'axios'
 
 interface TheProps {
   id: string
@@ -164,6 +165,17 @@ function handlePhoto() {
           form.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
           formatLoading.value = false
         })
+
+        response.catch((err) => {
+          if(err.code === "ECONNABORTED") {
+            return toast.error(t('request.timeout'))
+          }
+          return toast.error(t('request.error'))
+        })
+
+        response.finally(() => {
+          formatLoading.value = false
+        })
       })
     },
   })
@@ -186,8 +198,17 @@ function handlePickImage() {
         const formData = new FormData()
         formData.append('file', file)
 
-        const response = await wxApi.ocr(formData)
-        return response.data
+        try {
+          const response = await wxApi.ocr(formData)
+          return response.data
+        } catch (err: AxiosResponse | any) {
+          if(err.code === "ECONNABORTED") {
+            return toast.error(t('request.timeout'))
+          }
+          return toast.error(t('request.error'))
+        } finally {
+          formatLoading.value = false
+        }
       }))
 
       const ocrText = result.toString()

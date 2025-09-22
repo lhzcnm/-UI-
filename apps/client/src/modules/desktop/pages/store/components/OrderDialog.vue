@@ -18,7 +18,9 @@ function handleClose() {
 
 <template>
   <XDialog
-    v-model="store.visibleOrder" :closeOnEsc="false" :mask-closable="false"
+    v-model="store.visibleOrder"
+    :closeOnEsc="false" :mask-closable="false"
+    draggable
     title="下单确认" :close-btn="false" ui-root="sm:max-w-lg"
   >
     <template #default>

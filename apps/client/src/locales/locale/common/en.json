@@ -84,5 +84,9 @@
   },
   "stat": {
     "total": "Total {count} {field}"
+  },
+  "request": {
+    "timeout": "Request timeout, please try again later",
+    "error": "Request failed, please try again later"
   }
 }

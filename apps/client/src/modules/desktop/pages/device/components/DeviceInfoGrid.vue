@@ -10,7 +10,7 @@ import { wsFetch, STORE } from '../utils'
 
 const style = tv({
   slots: {
-    label: 'inline-block w-[88px] text-muted-foreground',
+    label: 'inline-block min-w-[88px] text-muted-foreground mr-2',
     value: 'cursor-pointer hover:text-primary active:text-primary/80 break-all',
   },
 })
