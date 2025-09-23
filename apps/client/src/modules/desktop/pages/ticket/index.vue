@@ -29,6 +29,8 @@ async function getList() {
 
 async function getTypes() {
   store.types = (await ticketApi.issueList()).data
+
+  store.createForm.type = store.types[0]?.departmentId
 }
 </script>
 

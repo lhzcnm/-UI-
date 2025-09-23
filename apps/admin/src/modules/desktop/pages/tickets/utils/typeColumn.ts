@@ -1,5 +1,6 @@
 import { XButtonSplit, XInput, XInputNumber, XSwitch, type XBtnSplitOption, type XColDef } from "@3un/ui"
 import { h, inject } from "vue"
+import { toast } from "vue-sonner"
 
 import type { TicketType } from "@/inters/ticket"
 import { updateTicketType, deleteTicketType } from "@/api/ticket"
@@ -27,7 +28,7 @@ export const column: XColDef<TicketType> = [
       return h(XInput, {
         modelValue: row.departmentNameEn,
         "onUpdate:modelValue": (val: string | number | null | undefined) => {
-          row.departmentName = val?.toString() ?? ''
+          row.departmentNameEn = val?.toString() ?? ''
         }
       })
     }
@@ -95,13 +96,15 @@ export const column: XColDef<TicketType> = [
       }
 
       function handleUpdate() {
-        console.log(row)
-        // updateTicketType(row).then(() => {
-        //   toast.success('更新成功')
-        // })
+        // console.log(row)
+        updateTicketType(row).then(() => {
+          toast.success('更新成功')
+        })
       }
+
       const options: XBtnSplitOption[] = [
         {
+          icon: 'lucide:trash-2',
           label: "删除",
           command: () => handleDelete(),
         }
@@ -110,6 +113,8 @@ export const column: XColDef<TicketType> = [
       return h(XButtonSplit, {
         options,
         label: '更新',
+        size: 'sm',
+        uiTrigger: 'z-50',
         onClick: () => handleUpdate(),
       })
     }

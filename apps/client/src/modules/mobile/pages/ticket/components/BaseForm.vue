@@ -2,7 +2,7 @@
 import { Icon } from '@iconify/vue'
 
 import type { TicketCreateForm, TicketType } from '@/api/tickets'
-import { TICKET_PRIORITY_LIST, TICKET_TYPE_MAP } from '@3un/utils'
+import { TICKET_PRIORITY_LIST } from '@3un/utils'
 
 interface BaseFormProps {
   typeList: TicketType[]
@@ -13,18 +13,17 @@ const form = defineModel<TicketCreateForm>({ required: true })
 
 // const ticketOptions = reactive<TicketOptions[]>([])
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-// function handleOptions() {
-//   for(let item of TICKET_PRIORITY_LIST) {
-//     ticketOptions.push({
-//       value: item.value,
-//       label: t(item.key)
-//     })
-//   }
-// }
+function handleDepartName(item: TicketType) {
+  let res = item.departmentName
 
-// handleOptions()
+  if(locale.value === 'en' && item.departmentNameEn) {
+    res = item.departmentNameEn
+  }
+
+  return res
+}
 </script>
 
 <template>
@@ -53,7 +52,7 @@ const { t } = useI18n()
           <option
             v-for="option in typeList" :key="option.departmentId"
             :value="option.departmentId"
-          >{{ t(TICKET_TYPE_MAP[option.departmentId].key!) }}</option>
+          >{{ handleDepartName(option) }}</option>
         </select>
       </div>
     </div>

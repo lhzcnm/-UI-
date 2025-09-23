@@ -46,7 +46,7 @@ async function createType() {
 <template>
   <XDialog
     v-model="store.visibleType"
-    ui-root="sm:max-w-xl"
+    ui-root="sm:max-w-2xl"
     title="常见问题"
     draggable
   >

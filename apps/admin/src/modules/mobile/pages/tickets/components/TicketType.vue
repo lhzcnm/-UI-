@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 
-import { createTicketType, deleteTicketType, getTicketTypes } from '@/api/ticket'
+import { createTicketType, deleteTicketType, getTicketTypes, updateTicketType } from '@/api/ticket'
 import { TICKET_STORE } from '../utils'
 import type { TicketType } from '@/inters/ticket'
 
@@ -29,6 +29,7 @@ async function createType() {
 
   const response = createTicketType({
     departmentName: type.value,
+    departmentNameEn: type.value,
     departmentDes: type.value,
     deptOrder: 1,
     status: 0,
@@ -43,6 +44,12 @@ async function createType() {
 function handleDelete(item: TicketType, index: number) {
   deleteTicketType(item.departmentId).then(() => {
     store.types.splice(index, 1)
+  })
+}
+
+function handleUpdate(item: TicketType) {
+  updateTicketType(item).then(() => {
+    toast.success('更新成功')
   })
 }
 </script>
@@ -62,9 +69,48 @@ function handleDelete(item: TicketType, index: number) {
         v-for="(item, index) in store.types" :key="item.departmentId"
         class="border rounded-md"
       >
-        <h3 class="p-3">
+        <!-- <h3 class="p-3">
           {{ item.departmentId }} - {{ item.departmentName }}
-        </h3>
+        </h3> -->
+        <div class="p-2 first:mb-2 space-y-2">
+          <!-- <FormField label="常见问题" desc="中文名称" variant="vertical">
+            <XInput
+              v-model="item.departmentName"
+              placeholder="请输入常见问题(中文)"
+              clearable
+            />
+          </FormField>
+          <FormField label="常见问题" desc="英文名称" variant="vertical">
+            <XInput
+              v-model="item.departmentNameEn"
+              placeholder="请输入常见问题(英文)"
+              clearable
+            />
+          </FormField> -->
+          <div class="text-xl font-bold">
+            <span>{{ item.departmentId }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-muted-foreground">
+              <span class="font-bold">中文名称</span>
+            </span>
+            <XInput
+              v-model="item.departmentName"
+              placeholder="请输入常见问题(中文)"
+              clearable
+            />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-muted-foreground">
+              <span class="font-bold">英文名称</span>
+            </span>
+            <XInput
+              v-model="item.departmentNameEn"
+              placeholder="请输入常见问题(英文)"
+              clearable
+            />
+          </div>
+        </div>
 
         <div class="flex justify-between bg-muted border-t border-dashed px-3 py-2">
           <XSwitch
@@ -73,13 +119,22 @@ function handleDelete(item: TicketType, index: number) {
             :activeValue="0"
             :inactiveValue="1"
           />
-          <XButton
-            label="删除"
-            size="sm"
-            color="danger"
-            icon="lucide:trash-2"
-            @click="handleDelete(item, index)"
-          />
+          <div class="flex space-x-2">
+            <XButton
+              label="更新"
+              size="sm"
+              color="primary"
+              icon="lucide:trash-2"
+              @click="handleUpdate(item)"
+            />
+            <XButton
+              label="删除"
+              size="sm"
+              color="danger"
+              icon="lucide:trash-2"
+              @click="handleDelete(item, index)"
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -56,6 +56,7 @@ export interface TicketReplyItem {
 export interface TicketType {
   departmentId: number
   departmentName: string
+  departmentNameEn: string
   departmentDes: string
   status: number
   deptOrder: number

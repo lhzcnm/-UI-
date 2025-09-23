@@ -9,17 +9,27 @@ interface BaseFormProps {
 const props = defineProps<BaseFormProps>()
 const form = defineModel<TicketCreateForm>({ required: true })
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+function handleDepartName(item: TicketType) {
+  let res = item.departmentName
+
+  if(locale.value === 'en' && item.departmentNameEn) {
+    res = item.departmentNameEn
+  }
+
+  return res
+}
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent>
     <div class="space-y-1">
       <label class="text-label text-sm">{{ t('ticket.form.type') }}</label>
-      <XSelect v-model="form.type" :placeholder="t('ticket.placeholder.select')">
+      <XSelect v-model="form.type">
         <XSelectItem
           v-for="item in props.typeList" :key="item.departmentId"
-          :value="item.departmentId" :label="item.departmentName"
+          :value="item.departmentId" :label="handleDepartName(item)"
         />
       </XSelect>
     </div>

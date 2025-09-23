@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TicketItem, TicketType } from '@/api/tickets'
 
-import { TICKET_STATUS_MAP, TICKET_TYPE_MAP } from '@3un/utils'
+import { TICKET_STATUS_MAP } from '@3un/utils'
 import { twJoin } from 'tailwind-merge'
 
 interface TicketItemProps {
@@ -10,9 +10,22 @@ interface TicketItemProps {
   active: boolean
 }
 
-defineProps<TicketItemProps>()
+const props = defineProps<TicketItemProps>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const departName = computed(() => {
+  if(!props.type) return ''
+
+  let res = props.type.departmentName
+
+  if(props.type.departmentNameEn && locale.value === 'en') {
+    res = props.type.departmentNameEn
+  }
+
+  return res
+
+})
 </script>
 
 <template>
@@ -32,7 +45,7 @@ const { t } = useI18n()
       <div class="flex items-center space-x-2">
         <span class="size-1.5 bg-primary rounded-full" />
         <span class="text-muted-foreground">
-          {{ type ? t(TICKET_TYPE_MAP[type.departmentId].key!) : t('unknown') }}
+          {{ type ? departName : t('unknown') }}
         </span>
       </div>
       <span class="text-muted-foreground">
