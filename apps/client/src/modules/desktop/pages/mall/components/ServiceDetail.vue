@@ -12,18 +12,22 @@ defineProps<ServiceDetailProps>()
 <template>
   <XDialog
     v-model="store.visibleDetail"
-    ui-root="sm:max-w-lg"
+    ui-root="sm:max-w-lg max-h-[80%] flex flex-col"
     title="服务详情"
   >
     <template #default>
       <div
-        class="flex flex-col gap-2"
-        v-if="desc">
-        <span class="text-lg font-bold">说明</span>
-        <div class="bg-zinc-100 dark:bg-zinc-800 rounded py-2">
-          <span class="" v-html="desc"></span>
+        class="h-full flex flex-col gap-2 overflow-y-auto"
+        style="scrollbar-width: none;">
+        <div class="bg-zinc-100 dark:bg-zinc-800 rounded p-2"
+        v-html="desc">
         </div>
       </div>
     </template>
+    <!-- <template #footer>
+      <div>
+        <XButton label="确认" />
+      </div>
+    </template> -->
   </XDialog>
 </template>

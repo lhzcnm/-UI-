@@ -5,7 +5,7 @@ import { twJoin } from 'tailwind-merge'
 
 interface StoreCardProps {
   id: number,
-  price: number,
+  price: string,
   title: string,
   desc: string | null,
 }
@@ -51,12 +51,12 @@ function stripHtml(html: string | null) {
     <div class="flex justify-between items-center text-sm text-muted-foreground">
       <button
         class="flex items-center space-x-1 hover:text-foreground transition"
-        @click="emits('view', id)">
+        @click="emits('view', id)" v-if="desc">
         <Icon icon="lucide:eye" class="w-4 h-4" />
         <span>{{ t('store.service.view') }}</span>
       </button>
       <button
-        class="flex items-center space-x-1 text-danger hover:text-danger/80 transition"
+        class="ml-auto flex items-center space-x-1 text-danger hover:text-danger/80 transition"
         @click="emits('submit', id)">
         <Icon icon="lucide:shopping-cart" class="w-4 h-4" />
         <span>下单</span>

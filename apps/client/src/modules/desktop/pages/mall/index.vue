@@ -5,13 +5,14 @@ import MainContainer from './components/MainContainer.vue'
 import OrderDialog from './components/OrderDialog.vue'
 import MainHeader from './components/MainHeader.vue'
 
-import { EMAIL_REG, PHONE_REG } from '@3un/utils'
+import { EMAIL_REG, IMEI_TYPE_MAP, PHONE_REG } from '@3un/utils'
 import { toast } from 'vue-sonner'
 
-// import type { ServiceGroup } from './api/types'
 import { MARKET_STORE, type MarketStore } from './utils/symbol'
-import { serviceApi, type Service } from '@/api/services'
-import { validate, validateImei, type ValidRule } from '@/utils'
+import { type Service } from '@/api/services'
+import { validate, type ValidRule } from '@/utils'
+import { storeAuth, storeServices } from './api'
+import type { ServiceParams } from './api/types'
 
 const store = reactive<MarketStore>({
   visibleOrder: false,
@@ -19,9 +20,14 @@ const store = reactive<MarketStore>({
 
   services: [],
   serviceMap: new Map<number, Service>(),
+  groupMap: new Map<number, string>(),
 
-  groupId: -1,
-  serviceId: -1,
+  serviceSearch: {
+    serverId: -1,
+    groupId: -1,
+    serverName: '',
+  },
+
   createOrder: {
     serviceId: -1,
     price: 0,
@@ -36,6 +42,7 @@ const store = reactive<MarketStore>({
     parentId: -1,
     title: '',
     price: 0,
+    storePrice: '0.00',
     taken: '',
     imeiType: 5,
     mustRead: '',
@@ -52,26 +59,25 @@ const { t } = useI18n()
 const serviceContainer = ref<HTMLElement | null>(null)
 
 watch(
-  [() => store.groupId, () => store.serviceId],
-  async () => await getServices()
+  () => store.serviceSearch,
+  async () => await getServices(),
+  {
+    deep: true,
+  }
 )
 
 async function getServices() {
-  const { data } = await serviceApi.list()
-
-  store.services = data
-
-  store.serviceMap.clear()
-  for(let item of data) {
-    for (let service of item.children) {
-      store.serviceMap.set(service.id, service)
-    }
+  const params: ServiceParams = {
+    serverId: store.serviceSearch.serverId !== -1 ? store.serviceSearch.serverId : undefined,
+    groupId: store.serviceSearch.groupId !== -1 ? store.serviceSearch.groupId : undefined,
+    serverName: store.serviceSearch.serverName ? store.serviceSearch.serverName : undefined,
   }
 
-  serviceContainer.value?.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
+  store.services.length = 0
+  store.serviceMap.clear()
+
+  const { data } = await storeServices(params)
+  store.services = data
 }
 
 function handleConfirm() {
@@ -85,7 +91,12 @@ function handleConfirm() {
     }
   }
 
-  const rules: ValidRule[] = []
+  const rules: ValidRule[] = [
+    {
+      rule: IMEI_TYPE_MAP[store.selectService.imeiType].regex.test(store.createOrder.imei),
+      message: "请输入正确的imei/sn",
+    },
+  ]
 
   if(store.createOrder.phone) {
     rules.push({
@@ -102,18 +113,33 @@ function handleConfirm() {
   }
 
   if(!validate(rules)) return
-
-  if(!validateImei(store.createOrder.imei, store.selectService.imeiType))
-    return toast.warning(t('valid.invalid', { field: "IMEI/SN" }))
 }
 
-await getServices()
+async function doStoreAuth() {
+  const key = import.meta.env.VITE_ACCESS_TOKEN
+  if(localStorage.getItem(key)) return
+
+  const { data } = await storeAuth()
+  localStorage.setItem(key, data)
+}
+
+await Promise.all([
+  doStoreAuth(),
+  getServices(),
+])
 
 onMounted(() => {
   const order = localStorage.getItem('order')
 
   if(order) {
     console.log('continue order')
+  }
+
+  for(const item of store.services) {
+    store.groupMap.set(item.id, item.title)
+    for(const service of item.children) {
+      store.serviceMap.set(service.id, service)
+    }
   }
 })
 </script>
@@ -122,12 +148,11 @@ onMounted(() => {
   <div class="h-screen flex flex-col">
     <TheStoreHeader />
 
-    <main class="py-4 h-store-container mx-32 flex flex-col">
-      <MainHeader />
+    <main class="py-4 h-store-container flex flex-col">
+      <MainHeader class="px-32" />
       <section
         ref="serviceContainer"
-        class="flex-1 mt-4 space-y-4 overflow-y-auto"
-        style="scrollbar-width: none;">
+        class="flex-1 mt-4 space-y-4 px-32 overflow-y-auto">
         <MainContainer />
       </section>
     </main>

@@ -7,6 +7,7 @@ const store = inject(MARKET_STORE)!
 
 function handleSubmit(id: number) {
   store.selectService = store.serviceMap.get(id)!
+
   store.visibleOrder = true
 }
 
@@ -34,7 +35,7 @@ function handleView(id: number) {
         v-for="service in group.children"
         :key="service.id"
         :id="service.id"
-        :price="service.price ?? 0"
+        :price="service.storePrice ?? '0.00'"
         :title="service.title"
         :desc="service.mustRead"
         @submit="handleSubmit"

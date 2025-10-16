@@ -30,7 +30,7 @@ const router = createRouter({
   ],
 })
 
-const storeRoutes = ["store"]
+const storeRoutes = ["mall"]
 
 router.beforeEach(async (to, from) => {
   const iStore = useSystemStore()
@@ -75,8 +75,8 @@ router.beforeEach(async (to, from) => {
     return to.path.length > 1 ? `/m${to.path}` : '/m'
   }
 
-  // is pc and is mobile path
-  if (!ua.isMobile && isMobilePath) {
+  // is pc and is mobile path and is not mall
+  if (isFromStore && !ua.isMobile && isMobilePath) {
     return to.path.replace('/m', '')
   }
 })
@@ -86,9 +86,5 @@ async function handleWxAuthCallback(code: string) {
   const { data } = await wxApi.accessToken(code)
   localStorage.setItem(key, data)
 }
-
-// async function handleStoreVisitorAuth() {
-  
-// }
 
 export default router

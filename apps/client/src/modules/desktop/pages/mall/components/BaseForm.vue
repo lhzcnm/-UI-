@@ -12,16 +12,18 @@ defineProps<FormProps>()
 const form = defineModel<FormType>({ required: true })
 
 const { t } = useI18n()
+
+// const orderFormRef = ref<HTMLElement | null>(null)
 </script>
 
 <template>
-  <XForm class="max-h-[40rem] overflow-y-auto" style="scrollbar-width: none;">
+  <XForm ref="OrderFormRef" class="max-h-[40rem] overflow-y-auto p-1" style="scrollbar-width: none;">
     <XFormItem label="服务">
       <XInput disabled :model-value="service.title" />
     </XFormItem>
     <XFormItem v-if="service.mustRead" label="服务说明">
       <div
-        class="py-2 bg-zinc-100 dark:bg-zinc-800 border border-border rounded">
+        class="p-2 bg-zinc-100 dark:bg-zinc-800 border border-border rounded">
         <span class="" v-html="service.mustRead"></span>
       </div>
     </XFormItem>
@@ -33,7 +35,7 @@ const { t } = useI18n()
     </XFormItem>
     <XFormItem label="服务价格">
       <div class="p-2 text-muted-foreground bg-zinc-100 dark:bg-zinc-800 border border-border rounded">
-        <span>￥{{ service.price }}</span>
+        <span>￥{{ service.storePrice ?? '0.00' }}</span>
       </div>
     </XFormItem>
     <XFormItem :label="IMEI_TYPE_MAP[service.imeiType ?? 5].label">
