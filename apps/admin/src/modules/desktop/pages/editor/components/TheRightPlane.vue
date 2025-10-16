@@ -30,6 +30,14 @@ const options = [
   { label: '充值说明EN', value: 'paymentInfoEn', icon: 'lucide:credit-card' },
   { label: 'API使用说明', value: 'apiUsageInfo', icon: 'lucide:key-round' },
   { label: 'API使用说明EN', value: 'apiUsageInfoEn', icon: 'lucide:key-round' },
+  { label: '靓机/小花报价单温馨提示', value: 'beautyMachinePrompt', icon: 'lucide:file-signature' },
+  { label: '靓机/小花报价单温馨提示EN', value: 'beautyMachinePromptEn', icon: 'lucide:file-signature' },
+  { label: '花机/内爆报价单温馨提示', value: 'flowerMachinePrompt', icon: 'lucide:file-signature' },
+  { label: '花机/内爆报价单温馨提示EN', value: 'flowerMachinePromptEn', icon: 'lucide:file-signature' },
+  { label: '卡贴外版报价单温馨提示', value: 'stickerForeignPromt', icon: 'lucide:file-signature' },
+  { label: '卡贴外版报价单温馨提示EN', value: 'stickerForeignPromtEn', icon: 'lucide:file-signature' },
+  { label: '外版无锁报价单温馨提示', value: 'cardUnlockedPrompt', icon: 'lucide:file-signature' },
+  { label: '外版无锁报价单温馨提示EN', value: 'cardUnlockedPromptEn', icon: 'lucide:file-signature' },
 ]
 
 const selectedOption = computed(() => 
@@ -61,8 +69,6 @@ async function handleSave() {
     return
   }
 
-  console.log(props.getHtml!())
-
   const html = props.getHtml!() || ''
 
   if (store.selectedType.startsWith('service')) {
@@ -75,9 +81,15 @@ async function handleSave() {
     })
   }
   else {
-    await updateSetting([
-      { name: store.selectedType, content: html },
-    ])
+    try {
+      await updateSetting([
+        { name: store.selectedType, content: html },
+      ])
+
+      store.settings[store.selectedType] = html
+    } catch {
+      return toast.error("未知错误, 请重试")
+    }
   }
 
   toast.success('保存成功')

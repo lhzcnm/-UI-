@@ -67,6 +67,16 @@ export interface Settings {
   enableOrderVerify: boolean
   // 邀请码生成文本
   invite: string
+
+  // 报价单
+  beautyMachinePrompt: string
+  flowerMachinePrompt: string
+  stickerForeignPromt: string
+  cardUnlockedPrompt: string
+  beautyMachinePromptEn: string
+  flowerMachinePromptEn: string
+  stickerForeignPromtEn: string
+  cardUnlockedPromptEn: string
 }
 
 // Config

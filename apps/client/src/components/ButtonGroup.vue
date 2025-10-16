@@ -11,6 +11,7 @@ const ButtonLayouts = [
   "copy",
   "add",
   "cancel",
+  "fresh",
 ] as const
 
 type ButtonLayout = (typeof ButtonLayouts)[number]
@@ -37,6 +38,7 @@ interface ButtonGroupEmits {
   generate: [],
   add: [],
   cancel: [],
+  fresh: [],
 }
 
 type ButtonConfig = Record<ButtonLayout, ButtonConfigItem>
@@ -63,6 +65,7 @@ const buttonConfigs: ButtonConfig = {
   copy: { color: 'primary', variant: 'ghost', },
   add: { color: 'primary', variant: 'solid' },
   cancel: { color: 'primary', variant: 'soft' },
+  fresh: { color: 'success', variant: 'outline' }
 }
 
 const buttonLabels: ButtonLabel = {
@@ -75,6 +78,7 @@ const buttonLabels: ButtonLabel = {
   copy: t('button.copy'),
   add: t('button.add'),
   cancel: t('button.cancel'),
+  fresh: t('button.fresh')
 }
 
 function handleClick(layout: ButtonLayout) {

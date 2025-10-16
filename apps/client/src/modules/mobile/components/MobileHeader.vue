@@ -16,6 +16,7 @@ import { twJoin } from 'tailwind-merge'
       <nav class="flex items-center space-x-3">
         <LanguageSwitch />
         <TheTheme />
+        <FreshButton />
         <TheAvatar class="size-8" />
       </nav>
     </div>

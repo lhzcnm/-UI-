@@ -73,7 +73,7 @@ function handleGenerate(order: Order) {
   document.body.append(container)
   container.className = `opacity-0 flex`
 
-const vnode = h(OrderVoucher, { order, component: locale.value === 'zh' ? OrderExportImgZh : OrderExportImgEn })
+  const vnode = h(OrderVoucher, { order, component: locale.value === 'zh' ? OrderExportImgZh : OrderExportImgEn })
 
   render(vnode, container)
 

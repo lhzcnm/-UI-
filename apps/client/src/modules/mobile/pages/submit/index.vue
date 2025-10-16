@@ -10,7 +10,7 @@ import type { SubmitStore } from './utils'
 import type { Service } from '@/api/services'
 import type { Order, OrderSubmitResult } from '@/api/orders'
 
-import { ua, IMEIValidator } from '@3un/utils'
+import { ua, IMEIValidator, xconfirm } from '@3un/utils'
 import { getSubmitImei, base64ToFile } from '@/utils'
 import { IMEI_TYPE, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import type { XNativeSelectValue } from '@3un/ui'
@@ -315,8 +315,15 @@ function submitOrder(service: Service) {
   response.then(({ data }) => {
     serviceStore.addRecentService(service.id)
 
+    const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : '提交成功'}`)
+
     if (service.isUnlock) {
-      toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
+      // toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
+      xconfirm({
+        title: "订单结果",
+        text: errorOrders.join('<br>'),
+      })
+      
       return
     }
 
@@ -333,6 +340,7 @@ function submitOrder(service: Service) {
 
   response.finally(() => {
     submitLoading.value = false
+    form.imei = ""
   })
 }
 

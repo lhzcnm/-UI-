@@ -204,7 +204,7 @@ function submitOrder(service: Service) {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('')}`)
+      toast.success(`${t('submit.success', { action: t('action.submit') })}}`)
     }
 
     renderSubmitOrderResult(data)

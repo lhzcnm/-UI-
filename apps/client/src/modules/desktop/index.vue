@@ -94,7 +94,7 @@ onMounted(() => {
       </Transition>
   
       <RouterView v-slot="{ Component }" :key="route.path">
-        <main v-if="Component" class="flex-1 overflow-y-auto">
+        <main v-if="Component" class="flex-1">
           <Transition name="fade-in" mode="out-in">
             <Suspense>
               <component :is="Component" />
