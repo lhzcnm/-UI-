@@ -340,7 +340,6 @@ function submitOrder(service: Service) {
 
   response.finally(() => {
     submitLoading.value = false
-    form.imei = ""
   })
 }
 
@@ -351,6 +350,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
     const item = data[i]
 
     const index = validImeiList.value.indexOf(item.imei)
+
     if (index === -1) return console.error('[3un] IMEI 不存在', item)
 
     const isFailed = item.status === ORDER_STATUS.FAILED
