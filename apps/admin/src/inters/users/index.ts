@@ -17,7 +17,7 @@ export const zUser = z.object({
   // countryId: z.number().default(0),
   phone: z.string().nullable().default(null),
 
-  addedAt: z.string().default(''),
+  addedAt: z.string().nullable().default(''),
   // updatedAt: z.string().default(''),
   // addedBy: z.number().nullable().default(null),
   // updatedBy: z.number().nullable().default(null),

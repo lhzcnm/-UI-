@@ -77,6 +77,10 @@ export interface Settings {
   flowerMachinePromptEn: string
   stickerForeignPromtEn: string
   cardUnlockedPromptEn: string
+
+  // 商城
+  mallWarmReminderEN: string
+  mallWarmReminderZH: string
 }
 
 // Config

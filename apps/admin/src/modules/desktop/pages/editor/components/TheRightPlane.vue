@@ -38,6 +38,8 @@ const options = [
   { label: '卡贴外版报价单温馨提示EN', value: 'stickerForeignPromtEn', icon: 'lucide:file-signature' },
   { label: '外版无锁报价单温馨提示', value: 'cardUnlockedPrompt', icon: 'lucide:file-signature' },
   { label: '外版无锁报价单温馨提示EN', value: 'cardUnlockedPromptEn', icon: 'lucide:file-signature' },
+  { label: '商城下单提示', value: 'mallWarmReminderZH', icon: 'lucide:credit-card' },
+  { label: '商城下单提示EN', value: 'mallWarmReminderEN', icon: 'lucide:credit-card' },
 ]
 
 const selectedOption = computed(() => 
