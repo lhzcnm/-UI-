@@ -4,8 +4,6 @@ import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
 
 import { useDocumentVisibility } from '@vueuse/core'
-import { generateMenu } from '@/utils/menu'
-import { ua } from '@3un/utils'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -16,9 +14,10 @@ const systemStore = useSystemStore()
 
 const isLogout = ref(false)
 
+await iStore.getSettings()
+
 if(!route.meta.noAuthRequired) {
   await Promise.all([
-    iStore.getSettings(),
     uStore.getInfo(),
   ])
 }
@@ -58,18 +57,7 @@ watch(visibility, (cur, prev) => {
   }
 })
 
-const isStore = computed(() => route.path.includes('store'))
-
-
-onMounted(() => {
-  if(ua.browser === 'Unknown') {
-    document.addEventListener('contextmenu', (e) => {
-      e.preventDefault()
-      // generate Rclick menu
-      generateMenu(e)
-    })
-  }
-})
+const isStore = computed(() => route.path.includes('mall'))
 </script>
 
 <template>

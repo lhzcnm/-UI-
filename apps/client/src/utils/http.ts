@@ -41,6 +41,7 @@ function handleResponse(response: AxiosResponse) {
 }
 
 function handleHttpError(error: AxiosError<CR<null>>) {
+  const uStore = useUserStore()
   if (error.response) {
     const { data, status } = error.response
     const options = {
@@ -49,8 +50,10 @@ function handleHttpError(error: AxiosError<CR<null>>) {
       403: () => toast.warning('权限不足'),
       500: () => toast.error('服务器异常'),
     }
-  
-    options[status as keyof typeof options]()
+
+    if(uStore.info.userId) {
+      options[status as keyof typeof options]()
+    }
   }
   else {
     toast.error('网络异常，请稍后再试')

@@ -77,3 +77,24 @@ export function stripHtml(html: string): string {
     .replace(/\s+/g, ' ')     // 将多个空格合并为一个
     .trim()                   // 去除首尾空格
 }
+
+/**
+ * 
+ * @param fn 
+ * @param delay 
+ * @returns 
+ * 经过一定延时后执行函数
+ */
+export function debounce(fn: Function, delay: number = 1000) {
+  let timer: ReturnType<typeof setTimeout> | null = null
+
+  return function(...args: any) {
+    if(timer) {
+      clearTimeout(timer)
+    }
+
+    timer = setTimeout(() => {
+      fn.apply(args)
+    }, delay)
+  }
+}

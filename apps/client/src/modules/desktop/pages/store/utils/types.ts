@@ -1,5 +1,7 @@
 import type { Service } from '@/api/services'
 
+export type StoreStatus = 'serviceStore' | 'serviceDetail' | 'deviceStore'
+
 export interface FormType {
   serviceId: number,
   price: number,

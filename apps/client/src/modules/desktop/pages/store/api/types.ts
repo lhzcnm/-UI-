@@ -1,9 +1,3 @@
-// import type { R } from '@3un/shared'
-
-// export interface StoreApi {
-//   service: (data: ServiceParams) => R<null>,
-// }
-
 export interface ServiceParams {
   serverId?: number,
   groupId?: number,
@@ -27,7 +21,10 @@ export interface ServiceItem {
 export interface ServiceGroup {
   id: number,
   title: string,
-  children: ServiceItem[]
+}
+
+export interface ServiceDetail extends ServiceGroup {
+  children: ServiceItem[],
 }
 
 export interface GroupOption {
@@ -38,4 +35,17 @@ export interface GroupOption {
 export interface ServiceOption {
   serviceId: number,
   name: string,
+}
+
+export interface SubmitParams {
+  serviceId: string,
+  groupId: number,
+  imeiList: string[],
+  isBulk: boolean,
+}
+
+export interface StorePayParams {
+  id: string,
+  amount: number,
+  type: string,
 }

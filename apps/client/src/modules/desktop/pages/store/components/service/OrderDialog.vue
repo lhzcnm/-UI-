@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import BaseForm from './BaseForm.vue'
 
-import { MARKET_STORE } from '../utils/symbol'
+import { SERVICE_STORE } from '@desktop/pages/store//utils/symbol'
 
 interface OrderDialogEmits {
   confirm: [],
 }
 
-const store = inject(MARKET_STORE)!
+const store = inject(SERVICE_STORE)!
 
 const emits = defineEmits<OrderDialogEmits>()
+
+const { t } = useI18n()
 
 function handleClose() {
   store.visibleOrder = false
@@ -21,7 +23,7 @@ function handleClose() {
     v-model="store.visibleOrder"
     :closeOnEsc="false" :mask-closable="false"
     draggable
-    title="下单确认" :close-btn="false" ui-root="sm:max-w-lg"
+    :title="t('mall.dialog.title')" :close-btn="false" ui-root="sm:max-w-lg"
   >
     <template #default>
       <BaseForm v-model="store.createOrder"

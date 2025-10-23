@@ -12,6 +12,9 @@
     },
     "valid": {
       "pushType": "Please Input Phone or mail"
+    },
+    "prompt": {
+      "imei": "You can separate multiple entries using ',' or line breaks"
     }
   }
 }

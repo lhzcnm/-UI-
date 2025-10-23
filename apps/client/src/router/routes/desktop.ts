@@ -43,9 +43,9 @@ const home: RouteRecordRaw = {
       component: () => import('@desktop/pages/profile/index.vue'),
     },
     {
-      path: 'mall',
-      name: 'Mall',
-      component: () => import('@desktop/pages/mall/index.vue'),
+      path: 'store',
+      name: 'Store',
+      component: () => import('@desktop/pages/store/index.vue'),
       meta: {
         hideHeader: true,
         hideSidebar: true,

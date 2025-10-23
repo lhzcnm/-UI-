@@ -15,12 +15,19 @@ export const USER_ROLE_MAP: StatusMap = {
 
 // Imei Type
 export enum IMEI_TYPE {
+  NULL       = 0,
   NONE       = 5,
   IMEI       = 2,
   SN         = 4,
   IMEI_OR_SN = 6,
 }
 export const IMEI_TYPE_MAP: TypeMap = {
+  [IMEI_TYPE.NULL]       : {
+    value: IMEI_TYPE.NONE,
+    label: 'IMEI/SN',
+    key: 'type.imei.5',
+    regex: IMEI_AND_SN_REG,
+  },
   [IMEI_TYPE.NONE]       : {
     value: IMEI_TYPE.NONE,
     label: 'IMEI/SN',
