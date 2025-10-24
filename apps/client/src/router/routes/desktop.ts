@@ -61,5 +61,4 @@ if (import.meta.env.VITE_APP_DEVICE === 'true') {
     component: () => import('@desktop/pages/device/index.vue'),
   })
 }
-
 export default home

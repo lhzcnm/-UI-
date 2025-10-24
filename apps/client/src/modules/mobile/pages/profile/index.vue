@@ -5,6 +5,7 @@ import ApiKeyCard from './components/ApiKeyCard.vue'
 import InfoPlane from './components/InfoPlane.vue'
 import FormPlane from './components/FormPlane.vue'
 import RechargePlane from './components/RechargePlane.vue'
+import QuoteCard from './components/quote/QuoteRealTimeCard.vue'
 
 const store = useUserStore()
 const iStore = useSettingStore()
@@ -33,6 +34,7 @@ await store.getInfo(true)
 
     <ProfileCard v-model="visibleInfo" />
     <InfoPlane v-model="visibleInfo" />
+    <QuoteCard/>
     <ApiKeyCard />
     <BulkApiCard />
     <RechargePlane />
