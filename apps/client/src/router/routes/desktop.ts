@@ -52,6 +52,16 @@ const home: RouteRecordRaw = {
         noAuthRequired: true,
       },
     },
+    {
+      path: 'store/device',
+      name: 'DeviceStore',
+      component: () => import('@desktop/pages/store/Device.vue'),
+      meta: {
+        hideHeader: true,
+        hideSidebar: true,
+        noAuthRequired: true,
+      },
+    },
   ]
 }
 

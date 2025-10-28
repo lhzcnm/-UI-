@@ -2,6 +2,7 @@
 import PayMethod from '../PayMethod.vue'
 
 import { SERVICE_STORE } from '../../utils/symbol'
+import { toast } from 'vue-sonner';
 
 interface ConfirmDialogEmits {
   submit: []
@@ -14,6 +15,9 @@ const emits = defineEmits<ConfirmDialogEmits>()
 const visiblePayMethod = ref<boolean>(false)
 
 function handleClick() {
+  if(store.imeiList.length === 0) {
+    return toast.warning('未检测到有效imei')
+  }
   if(!visiblePayMethod.value) {
     visiblePayMethod.value = true
   } else {
@@ -33,7 +37,7 @@ function handleClick() {
         <div class="flex flex-col">
           <div class="flex flex-col">
             <span>您提交的有效IMEI数量为{{ store.imeiList.length }}, 是否确认提交?</span>
-            <div class="bg-zinc-100 rounded p-2 flex flex-col">
+            <div class="bg-zinc-100 dark:bg-zinc-900 rounded p-2 flex flex-col">
               <span v-for="imei in store.imeiList" :key="imei">{{ imei }}</span>
             </div>
           </div>

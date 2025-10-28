@@ -1,42 +1,42 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import { SERVICE_STORE } from '../utils/symbol'
-import type { StoreStatus } from '../utils/types'
-
 interface RouteItem {
   name: string,
   icon: string,
   mode: string,
-  view: StoreStatus,
+  view: string,
+  path: string,
 }
 
 const { t } = useI18n()
-
-const store = inject(SERVICE_STORE)!
+const route = useRoute()
+const router = useRouter()
 
 const stores: RouteItem[] = [
   {
     name: t('mall.views.service'),
     icon: 'lucide:wifi',
     mode: 'service',
-    view: 'serviceStore',
+    view: 'Store',
+    path: '/store',
   },
   {
     name: t('mall.views.device'),
     icon: 'lucide:pc-case',
     mode: 'device',
-    view: 'deviceStore',
+    view: 'DeviceStore',
+    path: '/store/device',
   },
 ]
 
-function handleClick(view: StoreStatus) {
-  store.storeStatus = view
+function handleClick(path: string) {
+  router.push(path)
 }
 </script>
 
 <template>
-  <div class="h-store-header grid items-center justify-items-center shadow-md bg-background"
+  <div class="h-store-header grid items-center justify-items-center shadow-md backdrop-blur-md border-b border-white/10"
        style="grid-template-columns: auto 1fr auto;">
     <section class="size-full border-r border-dashed flex items-center px-4">
       <TheLogo size="36" />
@@ -47,8 +47,8 @@ function handleClick(view: StoreStatus) {
       >
         <button
           class="bg-transparent border-r p-2 last:border-r-0"
-          :class="{ 'text-primary border-b border-b-primary': store.storeStatus.includes(item.mode) }"
-          @click="handleClick(item.view)">
+          :class="{ 'text-primary border-b border-b-primary': route.name === item.view }"
+          @click="handleClick(item.path)">
           <div class="flex items-center space-x-1">
             <Icon class="size-6" :icon="item.icon" />
             <span class="text-lg">{{ item.name }}</span>
@@ -65,7 +65,6 @@ function handleClick(view: StoreStatus) {
       />
       <LanguageSwitch />
       <TheTheme />
-      <!-- <StoreAvatar :url="store.userInfo?.avatar" /> -->
     </section>
   </div>
 </template>

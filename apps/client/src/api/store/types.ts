@@ -42,10 +42,17 @@ export interface SubmitParams {
   groupId: number,
   imeiList: string[],
   isBulk: boolean,
+  isPushNotification: boolean,
+  phoneNumber: string,
+  email: string,
 }
 
 export interface StorePayParams {
   id: string,
   amount: number,
   type: string,
+}
+
+export interface ChatAiParams {
+  prompt: string,
 }

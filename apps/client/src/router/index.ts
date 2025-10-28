@@ -32,7 +32,9 @@ const router = createRouter({
 
 // const storeRoutes = ["mall"]
 
-router.beforeEach(async (to) => {
+router.beforeEach(async (to, from) => {
+  console.log(to)
+  console.log(from)
   // const iStore = useSystemStore()
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
 
-import { SERVICE_STORE } from '../../utils/symbol'
 import { Icon } from '@iconify/vue'
+
+import { SERVICE_STORE } from '../../utils/symbol'
 
 const store = inject(SERVICE_STORE)!
 
@@ -25,6 +26,7 @@ watch(
 <template>
   <XDialog
     v-model="store.visibleQrcode"
+    :mask-closable="false"
   >
     <template #default>
       <div class="flex flex-col justify-center">
