@@ -42,7 +42,7 @@ const colors: ColorItem[] = [
   }
 ]
 
-// 监听图片弹窗关闭时，自动关闭报价页按钮  
+// 监听图片弹窗关闭时，自动关闭报价页按钮
 watch(
   () => store.IsImageDialog,
   (val) => {
@@ -201,7 +201,8 @@ async function fetchQuoteImage(type?: number) {
 
     // 更新 store 数据（直接覆盖，无需先清空再 push）
     store.quotationImageData = [...quotationRes]
-
+    console.log(store.quotationImageData.length);
+    
     // 如果有数据，则显示图片弹窗
     if (store.quotationImageData.length) {
       store.IsCreateQuote = false
@@ -254,8 +255,8 @@ quoteFilter()
 
     <div class="relative h-12 flex items-center justify-center bg-gradient-to-r from-sky-100 via-purple-100 to-pink-100 shadow-md border-b border-gray-200">
       <Icon
-        icon="weui:back-filled"
-        class="absolute left-3 size-5 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
+        icon="charm:circle-minus"
+        class="absolute right-3 size-6 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
         @click="store.IsCreateQuote = false"
       />
       <div class="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 drop-shadow-md select-none">
@@ -266,7 +267,7 @@ quoteFilter()
     <div class="px-4 py-3 mb-2 bg-white/80 dark:bg-black backdrop-blur-md rounded-b-3xl shadow-md shadow-gray-400">
       <div class="flex items-center space-x-4">
         <div class="w-26 text-gray-700 dark:text-white font-medium">{{ t('quote.QuoteFilter.QuoteWatermark') }}:</div>
-        <XInput :placeholder="t('quote.QuoteFilter.WatermarkName')" class="flex-1 dark:border-gray-500" v-model="watermark"/>
+        <XInput :placeholder="t('quote.QuoteFilter.WatermarkName')" class="flex-1" v-model="watermark"/>
       </div>
     
       <div>
@@ -303,13 +304,13 @@ quoteFilter()
       >
         <div class="flex items-center mb-3">
           <div class="w-32 text-gray-700 dark:text-white font-medium">{{ t('quote.QuoteFilter.NowQuoteCard.NowQuote') }}:</div>
-          <div class="flex-1 border border-gray-300 dark:border-gray-500 rounded text-sm text-gray-600 dark:text-white text-center py-1 cursor-pointer" @click.stop>{{ item }}</div>
+          <div class="flex-1 border border-gray-300 rounded text-sm text-gray-600 dark:text-white text-center py-1 cursor-pointer" @click.stop>{{ item }}</div>
         </div>
       
-        <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-start">
           <div class="w-32 text-gray-700 dark:text-white font-medium">{{ t('quote.QuoteFilter.NowQuoteCard.AllQuote') }}:</div>
           <div class="flex-1 space-y-2">
-            <select v-model="updateSelect" class="w-full p-2 rounded-lg border border-gray-300 bg-white dark:bg-black text-gray-700 dark:text-gray-500 text-sm" @click.stop>
+            <select v-model="updateSelect" class="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm" @click.stop>
               <option value="2">{{ t('quote.QuoteFilter.NowQuoteCard.AddPrice') }}</option>
               <option value="1">{{ t('quote.QuoteFilter.NowQuoteCard.ReducePrice') }}</option>
               <!-- <option value="2">按比例下调(自动取整十数)</option> -->
@@ -319,13 +320,12 @@ quoteFilter()
               <div class="w-12 h-10 flex items-center justify-center rounded-lg bg-gray-200 text-gray-700 font-medium">￥</div>
             </div>
           </div>
-          <div v-show="store.phoneStatusArr.includes(item)" class="absolute top-15 right-5 text-lg text-gray-400/60 dark:text-gray-400 italic">{{ t('quote.QuoteFilter.NowQuoteCard.statu') }}</div>
+          <div v-show="store.phoneStatusArr.includes(item)" class="absolute bottom-5 left-5 text-lg text-gray-400/60 dark:text-gray-400 italic">{{ t('quote.QuoteFilter.NowQuoteCard.statu') }}</div>
         </div>
       </div>
-    
     </section>
   
-    <div class="relative h-12 flex justify-evenly items-center text-white">
+    <div class="relative h-20 flex justify-evenly items-center text-white">
       <button @click="personalizedClick()" class="w-2/5 h-10 mb-1 rounded-full shadow shadow-gray-400 bg-gradient-to-br from-black/80 from-30% to-black/20 to-70% hover:scale-105 transition-all duration-300">{{ t('quote.QuoteButton.CustomAdjustment') }}</button>
       <button @click="quoteImage()" class="w-2/5 h-10 mb-1 rounded-full shadow shadow-gray-400  bg-gradient-to-br from-black/80 from-30% to-black/20 to-70% hover:scale-105 transition-all duration-300">{{ t('quote.QuoteButton.CreateQuotation') }}</button>
     </div>

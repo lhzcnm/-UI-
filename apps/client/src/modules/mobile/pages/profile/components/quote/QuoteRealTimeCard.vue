@@ -1,18 +1,37 @@
 <script setup lang="ts">
 import router from '@/router'
 import { Icon } from '@iconify/vue'
+import { PriceRefresh } from '../../../quote/api/quote'
+
+const { t } = useI18n()
+const isRefreshing = ref(false)
+
+async function refreshPrice() {
+  if (isRefreshing.value) return // 防止重复触发
+  isRefreshing.value = true
+
+  try {
+    await PriceRefresh()
+    router.push('quote')
+    console.log(1);
+    
+  } catch (error) {
+    console.error('价格刷新失败:', error)
+  } finally {
+    isRefreshing.value = false
+  }
+}
 
 </script>
 
 <template>
-  <section class="mb-3 bg-card rounded-lg text-sm"  @click="router.push('quote')">
+  <section class="mb-3 bg-card rounded-lg text-sm"  @click="refreshPrice()">
 
     <div class="flex flex-row justify-between px-4 pt-4">
-      <span class="text-lg">报价单</span>
+      <span class="text-lg">{{ t('quote.Title')  }}</span>
       
       <div class="flex flex-rows items-center text-muted-foreground">
-        <span>详情 </span>
-        <Icon icon="akar-icons:chevron-right"></Icon>
+        {{ t('profile.mobile.text.detail') }} <Icon icon="lucide:chevron-right" class="size-4" />
       </div>
     </div>
 
@@ -26,7 +45,7 @@ import { Icon } from '@iconify/vue'
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">香港拿货价</div>
+            <div class="text-gray-900">{{ t('quote.RealQuote.HongKong') }}</div>
           </div>
         
         </div>
@@ -39,7 +58,7 @@ import { Icon } from '@iconify/vue'
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">远望新机价</div>
+            <div class="text-gray-900">{{ t('quote.RealQuote.FarVision') }}</div>
           </div>
         
         </div>
@@ -52,7 +71,7 @@ import { Icon } from '@iconify/vue'
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">飞扬零售价</div>
+            <div class="text-gray-900">{{ t('quote.RealQuote.Flying') }}</div>
           </div>
         
         </div>
@@ -65,7 +84,7 @@ import { Icon } from '@iconify/vue'
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">其他报价</div>
+            <div class="text-gray-900">{{ t('quote.RealQuote.Other') }}</div>
           </div>
         
         </div>

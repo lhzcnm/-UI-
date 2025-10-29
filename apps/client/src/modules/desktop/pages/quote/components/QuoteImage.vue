@@ -37,6 +37,14 @@ const isScrolling = ref(false)
 let scrollTimer: number | null = null
 const quotationImageRef = ref<HTMLElement | null>(null)
 
+function handleScroll() {
+  isScrolling.value = true
+  if (scrollTimer) clearTimeout(scrollTimer)
+  scrollTimer = window.setTimeout(() => {
+    isScrolling.value = false
+  }, 200)
+}
+
 watch(
   () => store.quotationImageType,
   async () => {
@@ -48,14 +56,6 @@ watch(
     }
   }
 )
-
-function handleScroll() {
-  isScrolling.value = true
-  if (scrollTimer) clearTimeout(scrollTimer)
-  scrollTimer = window.setTimeout(() => {
-    isScrolling.value = false
-  }, 200)
-}
 
 // 生成图片函数
 async function generateImage() {
@@ -241,7 +241,7 @@ onUnmounted(() => {
       @click="store.IsImageDialog = false"
       id="quotationImage"
       ref="quotationImageRef"
-      class="h-full overflow-y-auto w-full bg-white text-gray-800 text-[7px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      class="h-full overflow-y-auto w-full bg-white text-gray-800 text-sm [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <!-- 顶部标题 -->
       <div
@@ -259,15 +259,6 @@ onUnmounted(() => {
       <!-- 内容主体 -->
       <div class="w-full">
         <template v-for="(series, si) in store.quoteNewImageData" :key="si">
-          <!-- 分类标题 -->
-          <!-- <div
-            :class="`bg-orange-300 w-full h-8 text-white flex items-center justify-center px-3  font-semibold text-xs`"
-          >
-            {{ series.type == 1 ? 'iPhone 系列报价' : '' }}
-          </div> -->
-        
-        
-          <!-- 表格循环 -->
           <template v-for="(phone, i) in series.models" :key="i">
             <!-- ✅ 每个型号独立表头 -->
             <div
@@ -276,7 +267,7 @@ onUnmounted(() => {
               {{ phone.model }} {{ t('quote.ImageTableType.Series')}}
             </div>
           
-            <table class="w-full border-collapse text-center text-[7px] border border-gray-400">
+            <table class="w-full border-collapse text-center text-sm border border-gray-400">
               <thead>
                 <tr class="bg-white text-black">
                   <th class="border border-gray-400 p-1 font-semibold">{{t('quote.ImageTableType.Capacity')}}</th>
@@ -340,7 +331,7 @@ onUnmounted(() => {
       v-if="store.quotationImageType !== 2"
       id="quotationImage"
       ref="quotationImageRef"
-      class="border-1 w-full h-full bg-white overflow-y-auto relative text-[7px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      class="border-1 w-full h-full bg-white overflow-y-auto relative text-sm [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
       <div
@@ -362,7 +353,7 @@ onUnmounted(() => {
         
           <table
             ref="quoteTableRef"
-            class="w-full border-collapse text-center text-[7px] border border-gray-400 mb-1"
+            class="w-full border-collapse text-center text-sm border border-gray-400 mb-1"
           >
             <thead>
               <tr class="bg-white text-black">
@@ -470,6 +461,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 <style scoped>
 .fade-scale-enter-active,

@@ -100,8 +100,8 @@ onMounted(resetSearch)
              backdrop-blur-md shadow-md border-b border-white/20 dark:border-gray-700 select-none"
     >
       <Icon
-        icon="weui:back-filled"
-        class="absolute left-3 size-5 text-gray-600 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 cursor-pointer"
+        icon="charm:circle-minus"
+        class="absolute right-3 size-6 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
         @click="store.IsSearchQuote = false"
       />
       <div

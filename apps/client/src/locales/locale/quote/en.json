@@ -1,0 +1,89 @@
+{
+  "quote": {
+    "Title": "Quotation",
+    "Image": "/SanHe/EnglishPhoto.jpg",
+    "QuoteButton": {
+      "CreateQuotation": "Create Quotation",
+      "CustomAdjustment": "Custom Adjustment",
+      "ConfirmModel": "Confirm Model",
+      "ClearSelection": "Clear Selection"
+    },
+    "FriendlyReminder": {
+      "Content": "Friendly Reminder:\nAll models must be original (battery replacement allowed) and pass iTools/3uTools full green check with no pop-up alerts.\nDevices with repaired motherboards or severely damaged devices are not accepted — please confirm the device condition in advance.\nPrices are based on the date of receipt. Reconfirmation is required if the validity period is exceeded.\n\nRefurbished: Excellent overall appearance; original casing and screen; fully functional.\nPremium: Original condition; no dents on the frame, no scratches on the screen, minimal signs of use.\nMinor Wear: Slight signs of use; small dents on the frame or minor scratches on the screen.\nMajor Wear: Noticeable signs of use; multiple dents on the frame or visible screen damage.\nTestable Defect: Devices with screen explosion, display abnormalities, or other issues that can still be tested for a quote.",
+      "NewContent": "Friendly Reminder:\nFactory Sealed: Brand new, unopened, complete accessories, intact packaging, no activation record.\nQuotation is for reference only. Final pricing will be based on inspection results. Valid on the date of receipt.\niTools/3uTools full green check with no pop-up alerts."
+    },
+    "RealQuote": {
+      "Real": "Live Quote Sheet",
+      "HongKong": "HK Wholesale",
+      "FarVision": "Yuanwang New",
+      "Flying": "Feiyang Retail",
+      "Other": "Additional Quotes"
+    },
+    "AdvancedFunctions": {
+      "Advanced": "Advanced Features",
+      "Search": "Search Function",
+      "SearchContent": "Support precise search by memory, features, appearance, and other criteria to quickly locate the target model.",
+      "Personalized": "Personalized Quotation",
+      "PersonalizedContent": "Generate a personalized quotation with one click based on the selected model and parameters for a more professional presentation.",
+      "Customer": "Exclusive Support",
+      "CustomerContent": "One-on-one dedicated customer support offering real-time communication and a personalized service experience."
+    },
+    "PersonalizedQuotation": {
+      "Popular": "Popular Models"
+    },
+    "QuoteFilter": {
+      "Customized": "Customized Quotation",
+      "QuoteWatermark": "Quote Watermark",
+      "WatermarkName": "Enter your watermark name",
+      "QuoteColor": "Quote Color",
+      "Color": {
+        "black": "Starry Black",
+        "yellow": "Gold",
+        "green": "Grass Green",
+        "sky": "Sky Blue",
+        "orange": "Orange",
+        "red": "Rose Red"
+      },
+      "NowQuoteCard": {
+        "NowQuote": "Current Quote",
+        "AllQuote": "Edit All",
+        "AddPrice": "Increase by Amount",
+        "ReducePrice": "Decrease by Amount",
+        "statu": "Selected"
+      }
+    },
+    "QuoteFilterSheet": {
+      "Customization": "Personalized Customization",
+      "SelectModel": "Select Model",
+      "SelectInput": "Click here to select"
+    },
+    "ImageTableType": {
+        "Series": "Series",
+        "Color": "Color",
+        "China": "China Version",
+        "England": "US Version",
+        "Capacity": "Capacity",
+        "Remark": "Remark",
+        "Models": "Models",
+        "HongKong": "HK Wholesale Quote",
+        "FarVision": "Yuanwang New Quote",
+        "Flying": "Feiyang Retail Quote"
+      },
+      "PopularModel":{
+      "PopularModel":"Popular Model",
+      "Memory": "Memory",
+      "Refurbished": "Refurbished",
+      "Premium": "Premium",
+      "MinorWear": "Minor Wear",
+      "MajorWear": "Major Wear",
+      "TestableDefect": "Testable Defect"
+    },
+    "SearchFunction":{
+      "SearchFunction": "Search Function",
+      "UsedPhone": "Used Phone",
+      "NewPhone": "New Phone",
+      "SelectModel": "Select Model",
+      "Appearance": "Appearance / Wear"
+    }
+  }
+}

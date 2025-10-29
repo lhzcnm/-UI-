@@ -12,6 +12,7 @@ import { QUOTE_STORE, type quoteType } from './utils/store'
 // import type { HotModelType } from '../utils/quoteType'
 
 const IsShow = ref('home')
+const { t } = useI18n()
 const store = reactive<quoteType>({
   IsCustomer: false     ,
   IsCreateQuote: false   ,
@@ -23,7 +24,7 @@ const store = reactive<quoteType>({
 
   isImageAdd: false,
 
-  phoneStatusArr: ['香港拿货价','远望新机价','飞扬零售价'],
+  phoneStatusArr:  [`${t('quote.RealQuote.HongKong')}`,`${t('quote.RealQuote.FarVision')}`,`${t('quote.RealQuote.Flying')}`],
 
   hotModelType: [],
   hotModel: [],
@@ -33,16 +34,25 @@ const store = reactive<quoteType>({
   quoteImagePageBtnIsOpen: false,
   quotationImageType: 0,
   quotationImageData: [],
+  quoteNewImageData: [],
 
   params: {
     type: 1,
     iPhoneModel: [],
-    modleId: undefined,
+    modelId: undefined,
     add: 0,
     reduce: 0 
   },
+  newParams:{
+    iPhoneModel: [],
+    modelId: undefined,
+    add: 0,
+    reduce: 0
+  },
   quoteFilterData: [],
   quoteFilterDataName: [],
+  newQuoteFilterData: [],
+  newQuoteFilterDataName: [],
 
   searchData: [],
   searchType: {
@@ -54,7 +64,18 @@ const store = reactive<quoteType>({
     big:'',
     model:'',
     status: ''
-  }
+  },
+  newSearchData: [],
+  newSearchType: {
+    models: [],
+    bigs: [],
+    statuses: []
+  },
+  newSearch:{
+    big:'',
+    model:'',
+    status: ''
+  },
 })
 
 // 监听报价单图片的弹窗关闭是图片样式恢复成默认
@@ -77,8 +98,6 @@ async function GetHotModelData() {
     console.error('获取热门机型失败：', error)
   }
 }
-
-
 
 GetHotModelData()
 provide(QUOTE_STORE, store)
@@ -115,7 +134,7 @@ onBeforeUnmount(() => {
 
     <!-- 热门客服 -->
     <XDialog v-model="store.IsCustomer">
-      <img src="/SanHe/customer_service_qrcode.jpg" alt="">
+      <img src="/SanHe/customer_service_qrcode.jpg" alt="" class="rounded-xl">
     </XDialog>
 
     <!-- 报价单弹窗 -->

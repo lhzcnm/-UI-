@@ -19,8 +19,8 @@ function isOpen() {
   <section class="bg-zinc-100 dark:bg-black h-screen flex flex-col">
     <div class="relative h-12 flex items-center justify-center bg-gradient-to-r from-sky-100 via-purple-100 to-pink-100 shadow-md border-b border-gray-200">
       <Icon
-        icon="weui:back-filled"
-        class="absolute left-3 size-5 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
+        icon="charm:circle-minus"
+        class="absolute right-3 size-6 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
         @click="store.IsPopularModels = false"
       />
       <div class="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 drop-shadow-md select-none">

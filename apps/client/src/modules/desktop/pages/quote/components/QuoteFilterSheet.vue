@@ -204,8 +204,8 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 800): T {
     <!-- 顶部标题栏 -->
     <div class="relative h-12 flex items-center justify-center bg-gradient-to-r from-sky-100 via-purple-100 to-pink-100 shadow-md border-b border-gray-200">
       <Icon
-        icon="weui:back-filled"
-        class="absolute left-3 size-5 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
+        icon="charm:circle-minus"
+        class="absolute right-3 size-6 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
         @click="store.IsTailored = false"
       />
       <div class="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 drop-shadow-md select-none">
@@ -235,7 +235,7 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 800): T {
           </div>
 
           <div v-show="store.params.iPhoneModel.length === 0"
-             class="italic text-gray-400 absolute top-2 right-5 -translate-x-1/2 select-none">
+             class="italic text-gray-400 absolute top-2 right-1/4 -translate-x-1/2 select-none">
             {{ t('quote.QuoteFilterSheet.SelectInput') }}
           </div>
         </div>
@@ -255,7 +255,7 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 800): T {
           </div>
 
           <div v-show="store.newParams.iPhoneModel.length === 0"
-             class="italic text-gray-400 absolute top-2 right-5 -translate-x-1/2 select-none">
+             class="italic text-gray-400 absolute top-2 right-1/4 -translate-x-1/2 select-none">
             {{ t('quote.QuoteFilterSheet.SelectInput') }}
           </div>
         </div>

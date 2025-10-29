@@ -22,7 +22,7 @@ async function GetHotModel(type: string) {
 
 <template>
   
-  <section class="relative px-2 mx-auto my-4 max-w-6xl rounded-3xl bg-gradient-to-br from-white/90 to-gray-100/60 dark:from-black/90 dark:to-black/50 shadow-md border border-white/40 backdrop-blur-md overflow-hidden">
+  <section class="relative px-2 mx-auto my-4 w-full rounded-3xl bg-gradient-to-br from-white/90 to-gray-100/60 dark:from-black/90 dark:to-black/50 shadow-md border border-white/40 backdrop-blur-md overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-tr from-sky-100/40 via-purple-100/30 to-pink-100/30 blur-3xl opacity-50"></div>
   
     <div class="relative text-center py-4">
