@@ -110,7 +110,7 @@ async function generateImage() {
         const finalUrl = URL.createObjectURL(finalBlob)
         const a = document.createElement('a')
         a.href = finalUrl
-        a.download = '报价单_带水印.png'
+        a.download = '报价单.png'
         a.click()
         a.remove()
         URL.revokeObjectURL(finalUrl)
@@ -449,15 +449,15 @@ onUnmounted(() => {
 
   <QuoteFreeDialog
     v-model="freeShowDialog"
-    title="免费次数已用完"
-    message="是否使用积分生成报价单？"
+    :title="t('quote.QuoteImage.FreeDialog')"
+    :message="t('quote.QuoteImage.UsePoint')"
     @confirm="handleConfirm"
   />
 
   <QuoteFreeDialog
     v-model="InsufficientPoints"
-    title="积分不足"
-    message="是否去充值积分？"
+    :title="t('quote.QuoteImage.PointsDialog')"
+    :message="t('quote.QuoteImage.TopUpPoints')"
     @confirm="handleConfirmPoint"
   />
 </template>

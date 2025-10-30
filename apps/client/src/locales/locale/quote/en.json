@@ -86,6 +86,12 @@
       "NewPhone": "New Phone",
       "SelectModel": "Select Model",
       "Appearance": "Appearance / Wear"
+    },
+    "QuoteImage": {
+      "PointsDialog": "Insufficient points",
+      "TopUpPoints": "Do you want to top up your points?",
+      "FreeDialog": "Free attempts have been used up",
+      "UsePoint": "Do you want to use points to generate the quote?"
     }
   }
 }

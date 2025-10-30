@@ -86,6 +86,12 @@
       "NewPhone": "新机",
       "SelectModel": "选择型号",
       "Appearance": "外观/磨损"
+    },
+    "QuoteImage":{
+      "PointsDialog": "积分不足",
+      "TopUpPoints": "是否去充值积分？",
+      "FreeDialog": "免费次数已用完",
+      "UsePoint": "是否使用积分生成报价单？"
     }
   }
 }

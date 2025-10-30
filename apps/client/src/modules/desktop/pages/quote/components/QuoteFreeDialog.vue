@@ -1,3 +1,34 @@
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
+
+
+defineProps({
+  modelValue: { type: Boolean, required: true },
+  title: { type: String, default: '' },
+  message: { type: String, default: '' },
+  cancelText: { type: String, default: () => {
+        const { t } = useI18n()
+        return t('button.cancel')
+      }},
+  confirmText: { type: String, default: () => {
+        const { t } = useI18n()
+        return t('button.confirm')
+      }}
+  })
+
+const emit = defineEmits(['update:modelValue', 'confirm', 'cancel'])
+
+const close = () => emit('update:modelValue', false)
+const cancel = () => {
+  emit('cancel')
+  close()
+}
+const confirm = () => {
+  emit('confirm')
+  close()
+}
+</script>
+
 <template>
   <transition name="fade">
     <div
@@ -36,29 +67,6 @@
   </transition>
 </template>
 
-<script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-
-defineProps({
-  modelValue: { type: Boolean, required: true },
-  title: { type: String, default: '' },
-  message: { type: String, default: '' },
-  cancelText: { type: String, default: '取消' },
-  confirmText: { type: String, default: '确定' }
-})
-
-const emit = defineEmits(['update:modelValue', 'confirm', 'cancel'])
-
-const close = () => emit('update:modelValue', false)
-const cancel = () => {
-  emit('cancel')
-  close()
-}
-const confirm = () => {
-  emit('confirm')
-  close()
-}
-</script>
 
 <style scoped>
 .fade-enter-active,
