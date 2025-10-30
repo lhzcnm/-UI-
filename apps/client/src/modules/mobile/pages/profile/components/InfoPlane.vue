@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { maskText } from '@/utils'
+// import { maskText } from '@/utils'
 // import { ua } from '@3un/utils'
 
 const store = useUserStore()
