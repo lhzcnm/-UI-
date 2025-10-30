@@ -112,7 +112,7 @@ provide(QUOTE_STORE, store)
       class="fixed top-4 right-4 z-50 p-2 bg-white/90 text-gray-800 hover:bg-white/100 hover:text-gray-900 shadow-md rounded-full transition-all duration-300 flex items-center justify-center"
     >
     <Icon icon="ci:chevron-left" class="size-5"/>
-      返回
+      {{ t('quote.QuoteButton.Return') }}
     </button>
 
   </div>

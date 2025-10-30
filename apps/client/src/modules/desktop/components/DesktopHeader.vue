@@ -6,7 +6,7 @@ import router from '@/router'
 
 const uStore = useUserStore()
 const systemStore = useSystemStore()
-
+const { t } = useI18n()
 const foldIcon = computed(() => {
   if(systemStore.showSidebar) return 'lucide:panel-left-close'
   return 'lucide:panel-left-open'
@@ -31,7 +31,7 @@ const foldIcon = computed(() => {
                  text-white text-sm rounded-full shadow-lg 
                  hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer
                  text-center select-none">
-          免费报价单
+          {{ t('quote.QuoteButton.FreeQuote') }}
         </div>
 
         <RouterLink

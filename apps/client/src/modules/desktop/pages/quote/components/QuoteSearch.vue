@@ -96,8 +96,7 @@ onMounted(resetSearch)
 
     <!-- 标题栏 -->
     <div
-      class="relative h-12 flex items-center justify-center bg-gradient-to-r from-sky-200/60 via-purple-200/50 to-pink-200/60 dark:from-sky-900/40 dark:via-purple-900/40 dark:to-pink-900/40 
-             backdrop-blur-md shadow-md border-b border-white/20 dark:border-gray-700 select-none"
+      class="relative h-12 flex items-center justify-center backdrop-blur-md shadow-md border-b border-white/20 dark:border-gray-700 select-none"
     >
       <Icon
         icon="charm:circle-minus"

@@ -6,7 +6,9 @@
       "CreateQuotation": "Create Quotation",
       "CustomAdjustment": "Custom Adjustment",
       "ConfirmModel": "Confirm Model",
-      "ClearSelection": "Clear Selection"
+      "ClearSelection": "Clear Selection",
+      "FreeQuote":"Free Quote",
+      "Return": "return"
     },
     "FriendlyReminder": {
       "Content": "Friendly Reminder:\nAll models must be original (battery replacement allowed) and pass iTools/3uTools full green check with no pop-up alerts.\nDevices with repaired motherboards or severely damaged devices are not accepted — please confirm the device condition in advance.\nPrices are based on the date of receipt. Reconfirmation is required if the validity period is exceeded.\n\nRefurbished: Excellent overall appearance; original casing and screen; fully functional.\nPremium: Original condition; no dents on the frame, no scratches on the screen, minimal signs of use.\nMinor Wear: Slight signs of use; small dents on the frame or minor scratches on the screen.\nMajor Wear: Noticeable signs of use; multiple dents on the frame or visible screen damage.\nTestable Defect: Devices with screen explosion, display abnormalities, or other issues that can still be tested for a quote.",

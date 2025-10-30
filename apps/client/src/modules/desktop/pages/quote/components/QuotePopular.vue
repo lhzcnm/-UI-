@@ -17,7 +17,7 @@ function isOpen() {
 
 <template>
   <section class="bg-zinc-100 dark:bg-black h-screen flex flex-col">
-    <div class="relative h-12 flex items-center justify-center bg-gradient-to-r from-sky-100 via-purple-100 to-pink-100 shadow-md border-b border-gray-200">
+    <div class="relative h-12 flex items-center justify-center">
       <Icon
         icon="charm:circle-minus"
         class="absolute right-3 size-6 text-gray-600 hover:text-sky-600 transition-colors duration-300 cursor-pointer"
