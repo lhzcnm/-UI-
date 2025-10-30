@@ -6,6 +6,7 @@ import TimeDisplay from './tool/TimeDisplay.vue'
 import RootTool from './tool/RootTool.vue'
 
 import { TOOL_STORE, ToolStatus, type ToolGlobalStore } from '../utils/symbol'
+import OrderSearchView from './tool/OrderSearchView.vue'
 
 const store = reactive<ToolGlobalStore>({
   toolStatus: ToolStatus.ROOT,
@@ -103,6 +104,7 @@ const component = defineComponentMap<Record<ToolStatus, Component>>({
   [ToolStatus.ROOT]: RootTool,
   [ToolStatus.LANGUAGE]: LanuageSwitchView,
   [ToolStatus.GROUP]: ServiceGroupView,
+  [ToolStatus.ORDER]: OrderSearchView,
 })
 
 onMounted(() => {
@@ -139,7 +141,6 @@ onMounted(() => {
 
           <div class="w-full h-8 pl-2 flex justify-between items-center">
             <TimeDisplay />
-
           </div>
 
           <Transition name="slide-right">

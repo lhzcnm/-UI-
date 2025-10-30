@@ -3,6 +3,11 @@ import { twJoin } from 'tailwind-merge'
 
 const store = useSettingStore()
 await store.getSettings()
+
+onMounted(() => {
+  const guestKey = import.meta.env.VITE_GUEST_TOKEN
+  localStorage.removeItem(guestKey)
+})
 </script>
 
 <template>

@@ -20,7 +20,7 @@ const emits = defineEmits<StoreCardEmits>()
 const style = tv({
   slots: {
     root: [
-      "group flex flex-col p-6 rounded-2xl border border-white/30 dark:border-zinc-800 cursor-pointer",
+      "group flex flex-col p-6 rounded-2xl border border-white/30 dark:border-zinc-800 cursor-pointer min-w-[320px]",
       "bg-white dark:bg-zinc-900/40 backdrop-blur-xl",
       "transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:scale-[1.02] hover:border-primary/30"
     ],

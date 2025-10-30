@@ -69,9 +69,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="h-screen pb-2 flex flex-col space-y-4">
     <main class="h-full px-32 flex flex-col items-center justify-center">
-      <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(180.00deg,rgba(185,251,255,1),rgba(209,201,241,1)100%)] dark:bg-[linear-gradient(180deg,#0f2027,#203a43,#2c5364)] opacity-20 overflow-hidden z-0">
+      <div class="absolute inset-0 pointer-events-none bg-[linear-gradient(180.00deg,rgba(185,251,255,1),rgba(209,201,241,1)100%)] dark:bg-[linear-gradient(180deg,#0f2027,#203a43,#2c5364)] opacity-20 dark:opacity-30 overflow-hidden z-0">
       </div>
-
       <component :is="component[store.storeStatus]" />
     </main>
     <TheGlobalTool v-model="store.visibleTool" />

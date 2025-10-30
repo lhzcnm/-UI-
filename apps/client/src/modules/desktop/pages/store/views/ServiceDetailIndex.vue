@@ -3,18 +3,18 @@ import BaseForm from '../components/service/BaseForm.vue'
 import ServiceDetail from '../components/service/ServiceDetail.vue'
 import QrcodeDialog from '../components/service/QrcodeDialog.vue'
 import ConfirmDialog from '../components/service/ConfirmDialog.vue'
+import StoreOrderCard from '@/components/card/StoreOrderCard.vue'
+import SubmitPrompt from '../components/service/SubmitPrompt.vue'
 
 import { toast } from 'vue-sonner'
 import { EMAIL_REG, ORDER_STATUS, ORDER_VERIFY, PHONE_REG } from '@3un/utils'
+import { tv } from 'tailwind-variants'
 
-import type { FormType, StoreOrder, StoreOrderView, StoreSubmitOrder } from '../utils/types'
+import type { FormType, StoreOrder, StoreOrderView } from '../utils/types'
 import { SERVICE_STORE } from '../utils/symbol'
 import { getSubmitImei, validate, type ValidRule } from '@/utils'
-import type { ServiceItem, StorePayParams, SubmitParams } from '@/api/store/types'
+import type { OrderSubmitResp, ServiceItem, StorePayParams, SubmitParams } from '@/api/store/types'
 import { checkQrcode, storePay, storeSubmit } from '@/api/store'
-import StoreOrderCard from '../components/card/StoreOrderCard.vue'
-import { tv } from 'tailwind-variants'
-import SubmitPrompt from '../components/service/SubmitPrompt.vue'
 
 const store = inject(SERVICE_STORE)!
 
@@ -31,6 +31,7 @@ const { storeConnect, close } = useWsStore()
 
 const { t } = useI18n()
 
+
 let count = 0
 let timer: ReturnType<typeof setInterval> | null = null
 
@@ -44,10 +45,6 @@ watch(
     }
   }
 )
-
-// const currentTime = computed(() => {
-//   return dayjs().valueOf()
-// })
 
 function handleCancel() {
   store.visibleTool = false
@@ -169,6 +166,7 @@ function handleOrderSubmit() {
   const service: ServiceItem = store.selectService
 
   store.rawOrder = processWaitList(service)
+
   count = store.imeiList.length
   form.imei = ''
 
@@ -246,6 +244,7 @@ function submitOrder(service: ServiceItem) {
     if(service.isUnlock) {
       return toast.success("解锁订单提交成功，结果处理完成后会通过手机号或邮箱通知你。")
     }
+
     renderSubmitOrder(data)    
   }).catch((err) => {
     console.error(`[3un] ${t('submit.fail', { action: t('query.submit') })}`, err)
@@ -256,7 +255,7 @@ function submitOrder(service: ServiceItem) {
 function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as StoreOrder
 
-  const index = store.imeiList.indexOf(data.imei)
+  let index = store.imeiList.indexOf(data.imei)
 
   if(index === -1) {
     return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, data)
@@ -270,7 +269,7 @@ function handleOrder(rawData: string) {
   }
 }
 
-function renderSubmitOrder(data: StoreSubmitOrder[]) {
+function renderSubmitOrder(data: OrderSubmitResp[]) {
   const result = []
   const imeiList = store.imeiList
 
@@ -312,10 +311,10 @@ const style = tv({
     section: [
       'rounded-2xl shadow-[0_0_40px_-20px_rgba(0,0,0,0.2)] border border-border p-6 transition-all duration-300',
       'bg-layer-light dark:bg-layer-dark backdrop-blur-lg hover:shadow-[0_0_50px_-15px_rgba(0,0,0,0.25)]',
-      'flex flex-col space-y-4 bg-white dark:bg-black'
+      'flex flex-col space-y-4 bg-white dark:bg-black',
     ],
     order: [
-      'min-w-96 flex flex-col space-y-4'
+      'min-w-96 flex flex-col space-y-4',
     ],
   }
 })
@@ -352,9 +351,9 @@ onBeforeUnmount(() => {
       <div class="p-4 flex-1 overflow-y-auto flex flex-col space-y-4" style="scrollbar-width: none;">
         <template
           v-if="store.rawOrder.length !== 0"
-          v-for="order in store.rawOrder" :key="`${order.id}`">
+          v-for="(order, index) in store.rawOrder" :key="`${order.id}`">
           <StoreOrderCard
-            :order
+            :order :index
           />
         </template>
       </div>

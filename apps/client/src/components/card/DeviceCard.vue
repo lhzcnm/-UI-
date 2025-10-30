@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { CATEGORY_MAP_LIST } from '../../utils/device';
-import type { ProductItem } from '../../utils/types'
+import { CATEGORY_MAP_LIST } from '@desktop/pages/store/utils/device'
+import type { ProductItem } from '@desktop/pages/store/utils/types'
 
 interface ProductCardProps {
   product: ProductItem,

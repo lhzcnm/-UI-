@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DeviceCategory } from '../../utils/types'
+import type { DeviceCategory } from '@desktop/pages/store/utils/types'
 
 interface CategoryProps {
   categorys: DeviceCategory[]

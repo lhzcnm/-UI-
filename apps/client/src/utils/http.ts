@@ -24,6 +24,12 @@ http.interceptors.request.use(config => {
     const locale = localStorage.getItem('locale')
     config.headers['Accept-Language'] = locale ?? 'zh'
   }
+  const storeKey = import.meta.env.VITE_GUEST_TOKEN
+  const storeToken = localStorage.getItem(storeKey)
+
+  if(storeToken) {
+    config.headers['satoken-mall'] = storeToken
+  }
 
   return config
 })

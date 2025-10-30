@@ -8,13 +8,12 @@ interface WSConnectParams {
 }
 
 export const useWsStore = defineStore('wsStore', () => {
-  const baseUrl = import.meta.env.VITE_WS_URL
-  const storeBaseUrl = import.meta.env.VITE_STORE_WS_URL
-  const key = import.meta.env.VITE_ACCESS_TOKEN
   let wxCache: UseWebSocketReturn<any> | null = null
   let storeCache: UseWebSocketReturn<any> | null = null
 
   function connect<T extends string>(params: WSConnectParams) {
+    const baseUrl = import.meta.env.VITE_WS_URL
+    const key = import.meta.env.VITE_ACCESS_TOKEN
     let token = localStorage.getItem(key)
     if (!token) token = sessionStorage.getItem(key)
 
@@ -33,10 +32,12 @@ export const useWsStore = defineStore('wsStore', () => {
   }
 
   function storeConnect<T extends string>(params: WSConnectParams) {
+    const baseUrl = import.meta.env.VITE_STORE_WS_URL
+    const key = import.meta.env.VITE_GUEST_TOKEN
     let token = localStorage.getItem(key)
     if (!token) token = sessionStorage.getItem(key)
 
-    const url = `${storeBaseUrl}?token=${token}&${qs(params)}`
+    const url = `${baseUrl}?token=${token}&${qs(params)}`
     const ws = useWebSocket<T>(url, {
       autoReconnect: true,
       heartbeat: {

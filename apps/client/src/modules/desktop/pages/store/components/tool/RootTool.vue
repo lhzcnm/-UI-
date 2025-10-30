@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import ThemeTool from './ThemeTool.vue'
-import TimeDisplay from './TimeDisplay.vue'
 import LanuageTool from './LanuageTool.vue'
 
 import { tv } from 'tailwind-variants'
 import ServiceGroupTool from './ServiceGroupTool.vue'
+import OrderSearchTool from './OrderSearchTool.vue'
+import HomeTool from './HomeTool.vue'
+import AuthTool from './AuthTool.vue'
 
 const style = tv({
   base: [
@@ -22,13 +24,15 @@ const style = tv({
   <div class="flex-1 flex flex-col">
     <div class="mt-4 w-full flex flex-col space-y-2 items-center">
       <TheLogo size="36" />
-      <!-- <TimeDisplay /> -->
     </div>
 
     <div class="grid grid-cols-4 p-4 overflow-y-auto gap-x-2 gap-y-2" style="scrollbar-width: none;">
+      <HomeTool :class="style()" />
+      <AuthTool :class="style()" />
       <ThemeTool :class="style()" />
       <LanuageTool :class="style()" />
       <ServiceGroupTool :class="style()" />
+      <OrderSearchTool :class="style()" />
     </div>
   </div>
 </template>

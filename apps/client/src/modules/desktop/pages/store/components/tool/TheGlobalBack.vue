@@ -15,7 +15,7 @@ const store = inject(TOOL_STORE)!
 const style = tv({
   base: [
     'h-16 w-full pl-2 space-x-2',
-    'flex items-center'
+    'flex items-center border-b'
   ]
 })
 
@@ -28,6 +28,6 @@ function handleClick() {
   <button
     :class="style()" @click="handleClick">
     <Icon icon="lucide:chevron-left" class="size-12" />
-    <span class="text-xl">{{ name }}</span>
+    <span class="text-2xl">{{ name }}</span>
   </button>
 </template>

@@ -98,6 +98,7 @@ export enum SUBMIT_METHOD {
   WECHAT  = 3,
   WEB     = 4,
   APP     = 5,
+  STORE   = 6,
 }
 export const SUBMIT_METHOD_MAP: StatusMap = {
   [SUBMIT_METHOD.NONE]    : { color: 'info', label: '未知' },
@@ -106,6 +107,7 @@ export const SUBMIT_METHOD_MAP: StatusMap = {
   [SUBMIT_METHOD.WECHAT]  : { color: 'success', label: '公众号' },
   [SUBMIT_METHOD.WEB]     : { color: 'warning', label: '网页端' },
   [SUBMIT_METHOD.APP]     : { color: 'success', label: 'app端'},
+  [SUBMIT_METHOD.STORE]     : { color: 'success', label: '商城'},
 }
 export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.NONE, label: '未知' },
@@ -114,6 +116,7 @@ export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.WECHAT, label: '公众号' },
   { value: SUBMIT_METHOD.WEB, label: '网页端' },
   { value: SUBMIT_METHOD.APP, label: 'app端' },
+  { value: SUBMIT_METHOD.STORE, label: '商城' },
 ]
 
 // API Type

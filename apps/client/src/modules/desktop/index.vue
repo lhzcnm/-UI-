@@ -56,46 +56,26 @@ watch(visibility, (cur, prev) => {
     uStore.getInfo()
   }
 })
-
-const isStore = computed(() => route.path.includes('mall'))
 </script>
 
 <template>
-  <div v-if="isStore">
-    <RouterView v-slot="{ Component }"  :key="route.path">
-      <Suspense>
-        <Transition name="fade-in">
-          <component :is="Component" />
+  <DesktopHeader v-if="!route.meta.hideHeader" />
+  <div class="flex h-container">
+    <Transition name="slide-left">
+      <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
+    </Transition>
+    <RouterView v-slot="{ Component }" :key="route.path">
+      <main v-if="Component" class="flex-1">
+        <Transition name="fade-in" mode="out-in">
+          <Suspense>
+            <component :is="Component" />
+            <template #fallback>
+              <Fallback />
+            </template>
+          </Suspense>
         </Transition>
-        <template #fallback>
-          <Fallback />
-        </template>
-      </Suspense>
+      </main>
     </RouterView>
   </div>
-
-  <div v-else>
-    <DesktopHeader v-if="!route.meta.hideHeader" />
-    <div class="flex h-container">
-      <Transition name="slide-left">
-        <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
-      </Transition>
-  
-      <RouterView v-slot="{ Component }" :key="route.path">
-        <main v-if="Component" class="flex-1">
-          <Transition name="fade-in" mode="out-in">
-            <Suspense>
-              <component :is="Component" />
-  
-              <template #fallback>
-                <Fallback />
-              </template>
-            </Suspense>
-          </Transition>
-        </main>
-      </RouterView>
-    </div>
-  </div>
-
   <LogoutDialog />
 </template>

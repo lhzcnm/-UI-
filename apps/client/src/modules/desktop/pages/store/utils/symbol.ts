@@ -1,7 +1,7 @@
 import type { InjectionKey } from 'vue'
 
 import type { StoreOrderView, StoreStatus } from './types'
-import type { ServiceDetail, ServiceItem, ServiceParams } from '../api/types'
+import type { ServiceDetail, ServiceItem, ServiceParams } from '@/api/store/types'
 import type { UserInfo } from '@/api/user'
 
 export interface ServiceStore {
@@ -39,6 +39,7 @@ export enum ToolStatus {
   ROOT     = 0,
   LANGUAGE = 1,
   GROUP    = 2,
+  ORDER    = 3,
 }
 
 export interface ToolGlobalStore {

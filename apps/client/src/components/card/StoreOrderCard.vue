@@ -9,6 +9,7 @@ import type { StoreOrderView } from '@desktop/pages/store/utils/types'
 
 interface StoreOrderCardProps {
   order: StoreOrderView,
+  index: number,
 }
 
 const props = defineProps<StoreOrderCardProps>()
@@ -47,10 +48,6 @@ const style = tv({
     content: [
       'text-sm text-zinc-600 dark:text-zinc-300 leading-6 space-y-1 mt-2 whitespace-pre-line'
     ],
-    // status: [
-    //   'absolute bottom-3 right-4 text-xs font-medium px-2 py-1 rounded-md',
-    //   'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20'
-    // ],
     tooltip: [
       'absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-black/40 backdrop-blur-sm rounded-2xl',
       'text-xs text-zinc-700 dark:text-zinc-300 font-medium opacity-0 transition-opacity duration-200 select-none',
@@ -86,14 +83,10 @@ function handleClick() {
     @mouseleave="isHover = false"
   >
     <div :class="b.index()" :style="{ backgroundColor: color }">
-      #{{ order.index }}
+      #{{ index + 1 }}
     </div>
 
     <div :class="b.content()" v-html="orderResult"></div>
-
-    <!-- <div :class="[b.status(),]">
-      {{ t(ORDER_STATUS_MAP[order.status].key!) }}
-    </div> -->
 
     <XTag
       class="absolute bottom-3 right-4"

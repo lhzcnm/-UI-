@@ -39,7 +39,7 @@ async function getServices() {
 // }
 
 async function doStoreAuth() {
-  const key = import.meta.env.VITE_ACCESS_TOKEN
+  const key = import.meta.env.VITE_GUEST_TOKEN
   if(localStorage.getItem(key)) return
 
   const { data } = await storeAuth()

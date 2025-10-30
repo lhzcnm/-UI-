@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import StoreCard from '../card/StoreCard.vue'
+import StoreCard from '@/components/card/StoreCard.vue'
 
+import type { ServiceItem } from '@/api/store/types'
 import { SERVICE_STORE } from '@desktop/pages/store/utils/symbol'
-
-import type { ServiceItem } from '@desktop/pages/store/api/types'
 
 const store = inject(SERVICE_STORE)!
 
