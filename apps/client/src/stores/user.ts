@@ -1,11 +1,40 @@
 import type { UserInfo } from '@/api/user'
-
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import { useFetchWithCache } from '@3un/utils'
+// import type { quoteIhone } from '@/modules/mobile/pages/profile/utils'
+
+export interface price{
+  big: number
+  LikeNewPhone: number
+  StylishPhone: number
+  ScratchPhone: number
+  PartsPhone: number
+}
+
+//测试类型
+export interface popularModelsType{
+  name: string
+  price: price[]
+}
+
+interface Quote{
+  
+
+  PopularModelsObj: popularModelsType
+  PopularModelsData: popularModelsType[]
+
+  
+}
 import i18n from '@/locales'
 
 export const useUserStore = defineStore('userStore', () => {
+  const quote = ref<Quote>({
+
+    PopularModelsObj: {} as popularModelsType,
+    PopularModelsData: [],
+
+  })
   const info = ref<UserInfo>({} as UserInfo)
 
   async function getInfo(force = false) {
@@ -69,6 +98,7 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   return {
+    quote,
     info,
     getInfo,
     updateCredit,

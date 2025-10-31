@@ -1,0 +1,97 @@
+{
+  "quote": {
+    "Title": "报价单",
+    "Image": "/SanHe/ChinaPhoto.jpg",
+    "QuoteButton": {
+      "CreateQuotation": "生成报价单",
+      "CustomAdjustment": "个性化调整",
+      "ConfirmModel": "确认型号",
+      "ClearSelection": "清空已选",
+      "FreeQuote":"免费报价单",
+      "Return": "返回"
+    },
+    "FriendlyReminder": {
+      "Content": "温馨提示:\n所有机型要求原装（可更换电芯），爱思/沙漏检测全绿，不弹窗\n主板维修机、炸弹机不收，请提前确认机器状态\n报价以签收当日为准，超过期限需重新确认价格\n\n充新：整体外观优秀，外壳及屏幕未经过更换，功能正常\n靓机：原装成色好，边框无磕碰、屏幕无划痕、无明显使用痕迹\n小花：轻微使用痕迹，边框小磕碰或屏幕细微划痕\n大花：明显使用痕迹，边框多处磕碰或屏幕存在硬伤\n内爆可测：屏幕内爆、显示异常等问题，可接受检测报价",
+      "NewContent": "温馨提示:\n原封：全新未拆封，配件齐全，外包装无破损，无激活记录\n报价仅供参考，最终价格以实际验机为准，签收当日报价有效\n爱思/沙漏检测全绿，无弹窗"
+    },
+    "RealQuote": {
+      "Real": "实时报价单",
+      "HongKong": "香港拿货价",
+      "FarVision": "远望新机价",
+      "Flying": "飞扬零售价",
+      "Other": "其他报价"
+    },
+    "AdvancedFunctions": {
+      "Advanced": "高级功能区",
+      "Search": "搜索功能",
+      "SearchContent": "支持按内存、功能、外观等条件精准搜索，快速定位目标机型。",
+      "Personalized": "个性化报价单",
+      "PersonalizedContent": "根据选择的机型与参数，一键生成专属报价单，展示更专业。",
+      "Customer": "专属客服",
+      "CustomerContent": "一对一专属客服支持，提供实时沟通与个性化服务体验。"
+    },
+    "PersonalizedQuotation": {
+      "Popular": "高人气机型"
+    },
+    "QuoteFilter": {
+      "Customized": "个性化报价单",
+      "QuoteWatermark": "报价单水印",
+      "WatermarkName": "请输入您的水印名称",
+      "QuoteColor": "报价单颜色",
+      "Color": {
+        "black": "星空黑",
+        "yellow": "土豪金",
+        "green": "青草绿",
+        "sky": "天空蓝",
+        "orange": "活力橙",
+        "red": "玫瑰红"
+      },
+      "NowQuoteCard": {
+        "NowQuote": "当前报价单",
+        "AllQuote": "整单修改",
+        "AddPrice": "按金额上调",
+        "ReducePrice": "按金额下调",
+        "statu": "已选"
+      }
+    },
+    "QuoteFilterSheet": {
+      "Customization": "个性化定制",
+      "SelectModel":"选择型号",
+      "SelectInput": "点击此处进行选择"
+    },
+    "ImageTableType":{
+        "Series": "系列",
+        "Color": "颜色",
+        "China": "国行",
+        "England": "美版",
+        "Capacity": "容量",
+        "Remark": "备注",
+        "Models": "型号",
+        "HongKong": "香港拿货报价单",
+        "FarVision": "远望新机价报价单",
+        "Flying": "飞扬零售报价单"
+      },
+    "PopularModel":{
+      "PopularModel":"热门型号",
+      "Memory": "内存",
+      "Refurbished": "充新",
+      "Premium": "靓机",
+      "MinorWear": "小花",
+      "MajorWear": "大花",
+      "TestableDefect": "内爆可测"
+    },
+    "SearchFunction":{
+      "SearchFunction": "搜索功能",
+      "UsedPhone": "二手机",
+      "NewPhone": "新机",
+      "SelectModel": "选择型号",
+      "Appearance": "外观/磨损"
+    },
+    "QuoteImage":{
+      "PointsDialog": "积分不足",
+      "TopUpPoints": "是否去充值积分？",
+      "FreeDialog": "免费次数已用完",
+      "UsePoint": "是否使用积分生成报价单？"
+    }
+  }
+}

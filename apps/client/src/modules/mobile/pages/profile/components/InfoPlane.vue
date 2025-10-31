@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { maskText } from '@/utils'
+// import { maskText } from '@/utils'
 // import { ua } from '@3un/utils'
 
 const store = useUserStore()
+
+console.log(store)
 
 const { t } = useI18n()
 </script>
@@ -84,7 +86,7 @@ const { t } = useI18n()
           </div>
           <div class="text-sm text-muted-foreground">
             <div>{{ t('profile.mobile.info.account') }}: {{ store.info.username }}</div>
-            <div class="font-mono">{{ t('profile.mobile.info.wechat') }}: {{ maskText(store.info.openId, 8, 18) || t('profile.form.bind.not') }}</div>
+            <div class="font-mono">{{ t('profile.mobile.info.wechat') }}: {{ t('profile.form.bind.not') }}</div>
             <div>{{ t('profile.mobile.info.phone') }}: {{ store.info.phone || t('profile.form.bind.not') }}</div>
             <div>{{ t('profile.mobile.info.mail') }}: {{ store.info.email || t('profile.form.bind.not') }}</div>
           </div>

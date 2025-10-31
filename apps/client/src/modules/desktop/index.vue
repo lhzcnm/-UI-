@@ -32,6 +32,7 @@ const hideDevice =
 
 const menus = [
   { label: t('barItem.home'),    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
+  // { label: t('barItem.quote'), path: '/quote', icon: 'circum:receipt' },
   { label: t('barItem.query'), path: '/submit', icon: 'iconoir:atom' },
   {
     label: t('barItem.device'),

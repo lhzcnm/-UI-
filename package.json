@@ -15,6 +15,7 @@
   "devDependencies": {
     "@iconify/vue": "5",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
+    "@types/dom-to-image": "^2.6.7",
     "@types/node": "22",
     "@types/postcss-import": "^14.0.3",
     "@vitejs/plugin-vue": "^5.2.4",
