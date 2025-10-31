@@ -21,7 +21,7 @@ export interface Service {
   storePrice: string
   taken: string
   imeiType: IMEI_TYPE
-  mustRead: string | null
+  mustRead: string
   isNew: boolean
   isHot: boolean
   isUnlock: boolean

@@ -59,6 +59,20 @@ export interface Setting {
   enableTricket: boolean
   // 是否启用订单审核
   enableOrderVerify: boolean
+
+  // 报价单
+  beautyMachinePrompt: string
+  flowerMachinePrompt: string
+  stickerForeignPromt: string
+  cardUnlockedPrompt: string
+  beautyMachinePromptEn: string
+  flowerMachinePromptEn: string
+  stickerForeignPromtEn: string
+  cardUnlockedPromptEn: string
+
+  // 商城
+  mallWarmReminderEN: string
+  mallWarmReminderZH: string
 }
 
 // export interface Setting {

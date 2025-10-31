@@ -15,12 +15,19 @@ export const USER_ROLE_MAP: StatusMap = {
 
 // Imei Type
 export enum IMEI_TYPE {
+  NULL       = 0,
   NONE       = 5,
   IMEI       = 2,
   SN         = 4,
   IMEI_OR_SN = 6,
 }
 export const IMEI_TYPE_MAP: TypeMap = {
+  [IMEI_TYPE.NULL]       : {
+    value: IMEI_TYPE.NONE,
+    label: 'IMEI/SN',
+    key: 'type.imei.5',
+    regex: IMEI_AND_SN_REG,
+  },
   [IMEI_TYPE.NONE]       : {
     value: IMEI_TYPE.NONE,
     label: 'IMEI/SN',
@@ -91,6 +98,7 @@ export enum SUBMIT_METHOD {
   WECHAT  = 3,
   WEB     = 4,
   APP     = 5,
+  STORE   = 6,
 }
 export const SUBMIT_METHOD_MAP: StatusMap = {
   [SUBMIT_METHOD.NONE]    : { color: 'info', label: '未知' },
@@ -99,6 +107,7 @@ export const SUBMIT_METHOD_MAP: StatusMap = {
   [SUBMIT_METHOD.WECHAT]  : { color: 'success', label: '公众号' },
   [SUBMIT_METHOD.WEB]     : { color: 'warning', label: '网页端' },
   [SUBMIT_METHOD.APP]     : { color: 'success', label: 'app端'},
+  [SUBMIT_METHOD.STORE]     : { color: 'success', label: '商城'},
 }
 export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.NONE, label: '未知' },
@@ -107,6 +116,7 @@ export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.WECHAT, label: '公众号' },
   { value: SUBMIT_METHOD.WEB, label: '网页端' },
   { value: SUBMIT_METHOD.APP, label: 'app端' },
+  { value: SUBMIT_METHOD.STORE, label: '商城' },
 ]
 
 // API Type

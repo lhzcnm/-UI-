@@ -24,6 +24,12 @@ http.interceptors.request.use(config => {
     const locale = localStorage.getItem('locale')
     config.headers['Accept-Language'] = locale ?? 'zh'
   }
+  const storeKey = import.meta.env.VITE_GUEST_TOKEN
+  const storeToken = localStorage.getItem(storeKey)
+
+  if(storeToken) {
+    config.headers['satoken-mall'] = storeToken
+  }
 
   return config
 })
@@ -49,7 +55,7 @@ function handleHttpError(error: AxiosError<CR<null>>) {
       403: () => toast.warning('权限不足'),
       500: () => toast.error('服务器异常'),
     }
-  
+
     options[status as keyof typeof options]()
   }
   else {

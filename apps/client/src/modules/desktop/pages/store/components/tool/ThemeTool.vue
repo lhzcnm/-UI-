@@ -1,0 +1,33 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+
+import { THEME } from '@3un/utils'
+
+import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
+
+interface ThemeToolProps extends ToolGlobalProps {}
+
+defineProps<ThemeToolProps>()
+
+const theme = inject(THEME)!
+const html = document.documentElement
+
+function toggleTheme() {
+  theme.value.isDark = !theme.value.isDark
+  const target = theme.value.isDark ? 'dark' : 'light'
+
+  localStorage.setItem('theme', target)
+  html.className = html.className.replace(theme.value.name, target)
+  theme.value.name = target
+}
+</script>
+
+<template>
+  <button :class="class" @click="toggleTheme()">
+    <Icon
+      :icon="theme.isDark ? 'openmoji:crescent-moon' : 'openmoji:sun'"
+      class="size-10 transition-transform duration-300"
+    />
+    <span class="text-sm">切换主题</span>
+  </button>
+</template>

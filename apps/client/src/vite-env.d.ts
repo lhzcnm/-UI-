@@ -14,6 +14,7 @@ interface ImportMetaEnv {
 
   // Storage
   readonly VITE_ACCESS_TOKEN: string
+  readonly VITE_GUEST_TOKEN: string
   readonly VITE_RECENT_SERVICES: string
   readonly VITE_USER_INFO: string
   readonly VITE_SERVICES: string

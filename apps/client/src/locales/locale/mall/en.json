@@ -1,0 +1,26 @@
+{
+  "mall": {
+    "service": {
+      "detail": "Service Details",
+      "name": "Service Name",
+      "price": "Service Price"
+    },
+    "submit": {
+      "push": "Push Result",
+      "recommend": "Recommend to Open",
+      "hit": "Phone/Email",
+      "pushHit": "Fill in either one or both",
+      "phone": "Push Phone Number",
+      "mail": "Push Email",
+      "btn": "Place Order",
+      "type": "Support Type"
+    },
+    "dialog": {
+      "title": "Order Confirmation"
+    },
+    "views": {
+      "service": "Information Service Mall",
+      "device": "Device/Accessory Mall"
+    }
+  }
+}

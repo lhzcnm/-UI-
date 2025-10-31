@@ -4,8 +4,6 @@ import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
 
 import { useDocumentVisibility } from '@vueuse/core'
-import { generateMenu } from '@/utils/menu'
-import { ua } from '@3un/utils'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -16,9 +14,10 @@ const systemStore = useSystemStore()
 
 const isLogout = ref(false)
 
+await iStore.getSettings()
+
 if(!route.meta.noAuthRequired) {
   await Promise.all([
-    iStore.getSettings(),
     uStore.getInfo(),
   ])
 }
@@ -58,57 +57,26 @@ watch(visibility, (cur, prev) => {
     uStore.getInfo()
   }
 })
-
-const isStore = computed(() => route.path.includes('store'))
-
-
-onMounted(() => {
-  if(ua.browser === 'Unknown') {
-    document.addEventListener('contextmenu', (e) => {
-      e.preventDefault()
-      // generate Rclick menu
-      generateMenu(e)
-    })
-  }
-})
 </script>
 
 <template>
-  <div v-if="isStore">
-    <RouterView v-slot="{ Component }"  :key="route.path">
-      <Suspense>
-        <Transition name="fade-in">
-          <component :is="Component" />
+  <DesktopHeader v-if="!route.meta.hideHeader" />
+  <div class="flex h-container">
+    <Transition name="slide-left">
+      <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
+    </Transition>
+    <RouterView v-slot="{ Component }" :key="route.path">
+      <main v-if="Component" class="flex-1">
+        <Transition name="fade-in" mode="out-in">
+          <Suspense>
+            <component :is="Component" />
+            <template #fallback>
+              <Fallback />
+            </template>
+          </Suspense>
         </Transition>
-        <template #fallback>
-          <Fallback />
-        </template>
-      </Suspense>
+      </main>
     </RouterView>
   </div>
-
-  <div v-else>
-    <DesktopHeader v-if="!route.meta.hideHeader" />
-    <div class="flex h-container">
-      <Transition name="slide-left">
-        <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
-      </Transition>
-  
-      <RouterView v-slot="{ Component }" :key="route.path">
-        <main v-if="Component" class="flex-1">
-          <Transition name="fade-in" mode="out-in">
-            <Suspense>
-              <component :is="Component" />
-  
-              <template #fallback>
-                <Fallback />
-              </template>
-            </Suspense>
-          </Transition>
-        </main>
-      </RouterView>
-    </div>
-  </div>
-
   <LogoutDialog />
 </template>

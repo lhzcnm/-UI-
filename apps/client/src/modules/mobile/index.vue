@@ -13,9 +13,12 @@ const loadConfig = !isDev && ua.isWechat
 
 await Promise.all([
   iStore.getSettings(),
-  uStore.getInfo(),
   loadConfig && getWxConfig(),
 ])
+
+if(!route.meta.noAuthRequired) {
+  await uStore.getInfo()
+}
 
 async function getWxConfig() {
   const url = (iStore.originUrl || location.href).split('#')[0]
@@ -36,7 +39,7 @@ async function getWxConfig() {
 
 <template>
   <div class="fixed top-0 bottom-0 left-0 right-0 flex flex-col">
-    <MobileHeader v-show="!route.meta.hideHeader"/>
+    <MobileHeader v-show="!route.meta.hideHeader" />
 
     <RouterView v-slot="{ Component }" :key="route.path">
       <main
