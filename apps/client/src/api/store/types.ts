@@ -1,4 +1,4 @@
-import type { ORDER_STATUS } from '@3un/utils';
+import type { ORDER_STATUS } from '@3un/utils'
 
 export interface ServiceParams {
   serverId?: number,
@@ -55,10 +55,6 @@ export interface StorePayParams {
   type: string,
 }
 
-export interface ChatAiParams {
-  prompt: string,
-}
-
 export interface OrderSearchParams {
   imei: string,
   orderNumber: string,
@@ -69,3 +65,5 @@ export interface OrderSubmitResp {
   status: ORDER_STATUS,
   message: string,
 }
+
+export interface StoreRefundParams {}
