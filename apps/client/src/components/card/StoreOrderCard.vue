@@ -94,19 +94,29 @@ function handleClick() {
       :label="t(ORDER_STATUS_MAP[order.status].key!)" />
 
     <div
-      v-if="order.status === ORDER_STATUS.SUCCESS"
       :class="[b.tooltip(), isHover && b.tooltipVisible()]"
     >
-      <div :class="b.toolBox()">
+      <div
+        v-if="order.status === ORDER_STATUS.SUCCESS"
+        :class="b.toolBox()">
         <button
           :class="b.toolBtn()"
           @click.stop="handleClick">
           点击复制订单结果
         </button>
 
-        <button
+        <!-- <button
           :class="b.toolBtn()">
           ai分析
+        </button> -->
+      </div>
+      <div
+        v-if="order.status === ORDER_STATUS.FAILED"
+        :class="b.toolBox()">
+        <button
+          :class="b.toolBtn()"
+          @click.stop="handleClick">
+          申请退款
         </button>
       </div>
     </div>

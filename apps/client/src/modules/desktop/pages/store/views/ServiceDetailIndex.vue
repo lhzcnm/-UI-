@@ -114,31 +114,31 @@ function formatImei() {
 }
 
 function handleSubmit() {
-  const params: StorePayParams = {
-    id: '3',
-    amount: store.imeiList.length * +store.selectService.storePrice,
-    type: store.payType
-  }
+  // const params: StorePayParams = {
+  //   id: '3',
+  //   amount: store.imeiList.length * +store.selectService.storePrice,
+  //   type: store.payType
+  // }
 
-  storePay(params).then(({ data }) => {
-    if(store.payType === 'wxpay') {
-      store.url = data
-      store.visibleQrcode = true
-    } else if(store.payType === 'alipay') {
-      const a = document.createElement('a')
+  // storePay(params).then(({ data }) => {
+  //   if(store.payType === 'wxpay') {
+  //     store.url = data
+  //     store.visibleQrcode = true
+  //   } else if(store.payType === 'alipay') {
+  //     const a = document.createElement('a')
 
-      a.href = data
-      a.target = '_blank'
-      a.click()
-      a.remove()
-    }
+  //     a.href = data
+  //     a.target = '_blank'
+  //     a.click()
+  //     a.remove()
+  //   }
 
-    validQrcode()
-  }).catch(() => {
-    return toast.warning("生成支付二维码失败, 请尝试重新提交")
-  })
-  // store.rawOrder.length = 0
-  // handleOrderSubmit()
+  //   validQrcode()
+  // }).catch(() => {
+  //   return toast.warning("生成支付二维码失败, 请尝试重新提交")
+  // })
+  store.rawOrder.length = 0
+  handleOrderSubmit()
 }
 
 function validQrcode() {

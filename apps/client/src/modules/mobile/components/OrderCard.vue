@@ -202,7 +202,7 @@ function handleCopy() {
           </button>
 
           <button
-            v-if="status.isSuccess && isHistory"
+            v-if="status.isSuccess"
             class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="emits('generate', order)"
           >

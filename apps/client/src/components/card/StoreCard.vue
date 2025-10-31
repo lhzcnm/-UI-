@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
+import type { ClassNameValue } from 'tailwind-merge';
 import { tv } from 'tailwind-variants'
 
 interface StoreCardProps {
@@ -7,6 +8,7 @@ interface StoreCardProps {
   price: string,
   title: string,
   desc: string | null,
+  class?: ClassNameValue,
 }
 
 interface StoreCardEmits {
@@ -14,15 +16,15 @@ interface StoreCardEmits {
   view: [id: number],
 }
 
-defineProps<StoreCardProps>()
+const props = defineProps<StoreCardProps>()
 const emits = defineEmits<StoreCardEmits>()
 
 const style = tv({
   slots: {
     root: [
-      "group flex flex-col p-6 rounded-2xl border border-white/30 dark:border-zinc-800 cursor-pointer min-w-[320px]",
+      "flex flex-col p-6 rounded-2xl border border-white/30 dark:border-zinc-800 cursor-pointer min-w-[320px]",
       "bg-white dark:bg-zinc-900/40 backdrop-blur-xl",
-      "transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:scale-[1.02] hover:border-primary/30"
+      "transition-all duration-300"
     ],
     price: [
       "text-xl font-semibold bg-gradient-to-r from-fuchsia-500 to-indigo-400 text-transparent bg-clip-text drop-shadow-sm"
@@ -42,7 +44,7 @@ function stripHtml(html: string | null) {
 
 <template>
   <div
-    :class="b.root()"
+    :class="b.root({ class: props.class })"
     @click="emits('submit', id)">
     <div class="flex items-center justify-between mb-2">
       <h3 class="text-lg font-semibold line-clamp-2 tracking-tight text-zinc-800 dark:text-zinc-100">

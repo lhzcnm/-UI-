@@ -50,17 +50,23 @@ router.beforeEach(async (to) => {
   // handle other path
   if (isOtherPath) return true
 
-  // handle auth
   const isAuth = to.path.includes('auth')
-  if (!isAuth && !token && !to.meta.noAuthRequired) return '/auth'
-  if (isAuth && token) return '/'
-
   const isMobilePath = to.path.startsWith('/m')
-  
+
   // is mobile and not mobile path and not auth
   if (ua.isMobile && !isMobilePath && !isAuth) {
     return to.path.length > 1 ? `/m${to.path}` : '/m'
   }
+
+  if(!ua.isMobile && isMobilePath) {
+    return to.path.replace('/m', '')
+  }
+
+  // handle auth
+  if (!isAuth && !token && !to.meta.noAuthRequired) {
+    return '/auth'
+  }
+  if (isAuth && token) return '/'
 })
 
 async function handleWxAuthCallback(code: string) {

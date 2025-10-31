@@ -15,7 +15,7 @@ export async function storeSubmit(data: SubmitParams): R<OrderSubmitResp[]> {
   return await http.post("/mall/order/submit", data)
 }
 
-export async function storePay(data: StorePayParams): R<string> {
+export async function storePay(data: StorePayParams): R<any> {
   return await http.post('/mall/pay', data)
 }
 
