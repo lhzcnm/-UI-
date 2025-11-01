@@ -45,7 +45,7 @@ async function refreshPrice() {
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">{{ t('quote.RealQuote.HongKong') }}</div>
+            <div class="text-gray-900 dark:text-white">{{ t('quote.RealQuote.HongKong') }}</div>
           </div>
         
         </div>
@@ -53,12 +53,12 @@ async function refreshPrice() {
         <div class="w-1/4 ">
           <div class="p-1 flex justify-center items-center">
             <div class="w-4/5  aspect-square rounded-full flex items-center justify-center bg-gradient-to-tr from-blue-500 to-gray-100 text-white font-bold text-md shadow-inner">
-              iPhone
+              VIVO
             </div>
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">{{ t('quote.RealQuote.FarVision') }}</div>
+            <div class="text-gray-900 dark:text-white">{{ t('quote.RealQuote.FarVision') }}</div>
           </div>
         
         </div>
@@ -66,25 +66,25 @@ async function refreshPrice() {
         <div class="w-1/4 ">
           <div class="p-1 flex justify-center items-center">
             <div class="w-4/5  aspect-square rounded-full flex items-center justify-center bg-gradient-to-tr from-orange-600 to-gray-100 text-white font-bold text-md shadow-inner">
-              iPhone
+              HUAWEI
             </div>
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">{{ t('quote.RealQuote.Flying') }}</div>
+            <div class="text-gray-900 dark:text-white">{{ t('quote.RealQuote.Flying') }}</div>
           </div>
         
         </div>
 
-        <div class="w-1/4 ">
+        <div class="w-1/4">
           <div class="p-1 flex justify-center items-center">
-            <div class="w-4/5  aspect-square rounded-full flex items-center justify-center bg-gradient-to-tr from-gray-500 to-gray-100 text-white font-bold text-md shadow-inner">
-              iPhone
+            <div class="w-4/5 text-xs aspect-square rounded-full flex items-center justify-center bg-gradient-to-tr from-gray-500 to-gray-100 text-white font-bold text-md shadow-inner">
+              SAMSUNG
             </div>
           </div>
         
           <div class="text-center pb-4">
-            <div class="text-gray-900">{{ t('quote.RealQuote.Other') }}</div>
+            <div class="text-gray-900 dark:text-white">{{ t('quote.RealQuote.Other') }}</div>
           </div>
         
         </div>
