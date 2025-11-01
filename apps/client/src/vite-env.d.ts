@@ -9,6 +9,7 @@ interface ImportMetaEnv {
 
   // Api
   readonly VITE_API_URL: string
+  readonly VITE_API_URL_SECOND: string
   readonly VITE_WS_URL: string
 
   // Storage
