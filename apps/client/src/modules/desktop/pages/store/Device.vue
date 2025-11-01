@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import DeviceCard from '@/components/card/DeviceCard.vue'
+// import DeviceCard from '@/components/card/DeviceCard.vue'
 import DeviceCategory from './components/device/DeviceCategory.vue'
 import DeviceHeader from './components/device/DeviceHeader.vue'
 import TheStoreHeader from './components/TheStoreHeader.vue'
-import { deviceCategorys, products } from './utils/device'
+import { deviceCategorys } from './utils/device'
 
 import { DEVICE_STORE, type DeviceStore } from './utils/symbol'
 
@@ -15,15 +15,15 @@ const store = reactive<DeviceStore>({
 
 provide(DEVICE_STORE, store)
 
-const deviceProducts = computed(() => {
-  let res = products
+// const deviceProducts = computed(() => {
+//   let res = products
 
-  if(store.selectCategory !== 0) {
-    res = res.filter(item => item.category === store.selectCategory)
-  }
+//   if(store.selectCategory !== 0) {
+//     res = res.filter(item => item.category === store.selectCategory)
+//   }
 
-  return res
-})
+//   return res
+// })
 </script>
 
 <template>
@@ -37,10 +37,10 @@ const deviceProducts = computed(() => {
       </section>
   
       <section class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <DeviceCard
+        <!-- <DeviceCard
           v-for="product in deviceProducts" :key="product.id"
           :product="product"
-        />
+        /> -->
       </section>
     </main>
   </div>
