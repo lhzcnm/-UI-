@@ -411,11 +411,11 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 w-full  p-2 text-center z-50"
       >
         <button
           @click="generateFree()"
-          class="relative h-12 w-56  text-lg font-semibold tracking-wide text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 overflow-hidden group"
+          class="relative h-12 w-56 mx-auto  text-lg font-semibold tracking-wide text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 overflow-hidden group"
         >
           <span class="relative z-10 flex items-center justify-center gap-2">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
@@ -478,12 +478,12 @@ onUnmounted(() => {
 }
 
 .fade-scale-enter-from {
-  transform: translate(-50%, 100%) scale(0.9);
+  transform: translate(0%, 100%) scale(0.9);
   opacity: 0;
 }
 
 .fade-scale-leave-to {
-  transform: translate(-50%, 150%) scale(0.9);
+  transform: translate(0%, 100%) scale(0.9);
   opacity: 0;
 }
 
