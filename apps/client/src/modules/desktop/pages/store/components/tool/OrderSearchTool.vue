@@ -6,7 +6,7 @@ import { TOOL_STORE, ToolStatus } from '@desktop/pages/store/utils/symbol'
 
 interface OrderSearchToolProps extends ToolGlobalProps {}
 
-defineProps<OrderSearchToolProps>()
+const props = defineProps<OrderSearchToolProps>()
 
 const store = inject(TOOL_STORE)!
 
@@ -17,7 +17,7 @@ function handleClick() {
 
 <template>
   <button
-    :class="class"
+    :class="props.class"
     @click="handleClick"
   >
     <Icon

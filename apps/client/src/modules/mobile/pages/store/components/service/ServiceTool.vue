@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { SERVICE_STORE } from '@mobile/pages/store/utils/symbol'
+// import { SERVICE_STORE } from '@mobile/pages/store/utils/symbol'
 
-const store = inject(SERVICE_STORE)!
+// const store = inject(SERVICE_STORE)!
 
 onMounted(() => {
   

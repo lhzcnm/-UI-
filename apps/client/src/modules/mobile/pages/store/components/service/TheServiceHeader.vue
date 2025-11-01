@@ -3,7 +3,7 @@ import { Icon } from '@iconify/vue'
 
 import { tv } from 'tailwind-variants'
 
-import type { StoreType, StoreTypeItem } from '@mobile/pages/store/utils/type'
+import type { StoreType, StoreTypeItem } from '@mobile/pages/store/utils/types'
 import { SERVICE_STORE } from '@mobile/pages/store/utils/symbol'
 
 const store = inject(SERVICE_STORE)!

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const store = useSettingStore()
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 
 const prompt = computed(() => {
   return locale.value === 'zh'

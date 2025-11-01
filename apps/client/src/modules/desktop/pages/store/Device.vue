@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DeviceCard from './components/card/DeviceCard.vue'
+import DeviceCard from '@/components/card/DeviceCard.vue'
 import DeviceCategory from './components/device/DeviceCategory.vue'
 import DeviceHeader from './components/device/DeviceHeader.vue'
 import TheStoreHeader from './components/TheStoreHeader.vue'

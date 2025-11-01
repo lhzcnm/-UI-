@@ -7,7 +7,7 @@ import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
 
 interface ThemeToolProps extends ToolGlobalProps {}
 
-defineProps<ThemeToolProps>()
+const props = defineProps<ThemeToolProps>()
 
 const theme = inject(THEME)!
 const html = document.documentElement
@@ -23,7 +23,7 @@ function toggleTheme() {
 </script>
 
 <template>
-  <button :class="class" @click="toggleTheme()">
+  <button :class="props.class" @click="toggleTheme()">
     <Icon
       :icon="theme.isDark ? 'openmoji:crescent-moon' : 'openmoji:sun'"
       class="size-10 transition-transform duration-300"

@@ -5,7 +5,7 @@ import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
 
 interface HomeToolProps extends ToolGlobalProps {}
 
-defineProps<HomeToolProps>()
+const props = defineProps<HomeToolProps>()
 
 const router = useRouter()
 
@@ -16,7 +16,7 @@ function handleClick() {
 
 <template>
   <button
-    :class="class"
+    :class="props.class"
     @click="handleClick"
   >
     <Icon

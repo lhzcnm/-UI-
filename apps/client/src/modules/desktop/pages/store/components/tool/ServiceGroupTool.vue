@@ -9,7 +9,7 @@ interface ServiceGroupToolProps extends ToolGlobalProps {}
 const store = inject(TOOL_STORE)!
 const serviceStore = inject(SERVICE_STORE)!
 
-defineProps<ServiceGroupToolProps>()
+const props = defineProps<ServiceGroupToolProps>()
 
 function handleClick() {
   store.toolStatus = ToolStatus.GROUP
@@ -19,7 +19,7 @@ function handleClick() {
 
 <template>
   <button
-    :class="class"
+    :class="props.class"
     @click="handleClick"
   >
     <Icon

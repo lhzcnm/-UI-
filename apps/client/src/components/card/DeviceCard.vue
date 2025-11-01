@@ -6,7 +6,7 @@ interface ProductCardProps {
   product: ProductItem,
 }
 
-const props = defineProps<ProductCardProps>()
+defineProps<ProductCardProps>()
 
 // const specs = computed(() => {
 //   return Object.entries(props.product.specs).map(([key, value]) => ({

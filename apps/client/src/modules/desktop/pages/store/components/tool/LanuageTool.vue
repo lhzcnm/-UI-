@@ -8,7 +8,7 @@ interface LanuageToolProps extends ToolGlobalProps {}
 
 const store = inject(TOOL_STORE)!
 
-defineProps<LanuageToolProps>()
+const props = defineProps<LanuageToolProps>()
 
 function handleClick() {
   store.toolStatus = ToolStatus.LANGUAGE
@@ -17,7 +17,7 @@ function handleClick() {
 
 <template>
   <button
-    :class="class"
+    :class="props.class"
     @click="handleClick"
   >
     <Icon

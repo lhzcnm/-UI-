@@ -5,7 +5,7 @@ import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
 
 interface AuthToolProps extends ToolGlobalProps {}
 
-defineProps<AuthToolProps>()
+const props = defineProps<AuthToolProps>()
 
 const router = useRouter()
 
@@ -18,7 +18,7 @@ function handleClick() {
 
 <template>
   <button
-    :class="class"
+    :class="props.class"
     @click="handleClick"
   >
     <Icon

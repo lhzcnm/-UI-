@@ -30,7 +30,6 @@ const props = defineProps<OrderCardProps>()
 const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
 const { t } = useI18n()
-const route = useRoute()
 
 const order = ref(props.order)
 const serviceStore = useServiceStore()
@@ -54,7 +53,7 @@ const verify = computed(() => ({
   isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
 }))
 
-const isHistory = computed(() => route.path.includes('history'))
+// const isHistory = computed(() => route.path.includes('history'))
 
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))

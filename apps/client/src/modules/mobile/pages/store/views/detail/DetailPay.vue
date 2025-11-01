@@ -60,9 +60,9 @@ function handlePay() {
   })
 }
 
-async function handleImport() {
+// async function handleImport() {
   
-}
+// }
 </script>
 
 <template>
