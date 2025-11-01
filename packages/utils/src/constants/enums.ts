@@ -1,4 +1,4 @@
-import type { StatusMap, TypeMap } from '@3un/shared'
+import type { StatusMap, TypeListItem, TypeMap } from '@3un/shared'
 import { IMEI_AND_SN_REG, IMEI_REG, SN_REG } from './regexs'
 
 // User Role
@@ -225,4 +225,14 @@ export const TICKET_TYPE_MAP: StatusMap = {
 export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.RECHARGE, label: '充值退款问题', key: 'type.ticket.16' },
   { value: TICKET_TYPE.ORDER, label: '订单问题', key: 'type.ticket.17' },
+]
+
+export enum QUOTATION_TYPE {
+  HONGKONG = 1,
+  FLYING   = 3,
+}
+
+export const QUOTATION_MAP_LIST: TypeListItem[] = [
+  { value: QUOTATION_TYPE.HONGKONG, label: '香港拿货报价单' },
+  { value: QUOTATION_TYPE.FLYING, label: '飞扬零售报价单' },
 ]

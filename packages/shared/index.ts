@@ -43,6 +43,13 @@ type TypeMapItem = {
 }
 export type TypeMap = Record<number, TypeMapItem>
 
+// Type list item
+export type TypeListItem = {
+  value: number,
+  label: string,
+  key?: string,
+}
+
 // Utils
 export type WithId<T, ID extends string> = Partial<T> & { [key in ID]: number }
 export type IK<T> = InjectionKey<T>
