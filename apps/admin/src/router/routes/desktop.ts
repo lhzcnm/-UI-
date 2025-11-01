@@ -6,6 +6,7 @@ import wechat from './desktop/wechat'
 import orders from './desktop/orders'
 import tools from './desktop/tools'
 import recharge from './desktop/recharge'
+import quotaitons from './desktop/quotation'
 
 const desktop: RouteRecordRaw = {
   path: '/',
@@ -19,6 +20,7 @@ const desktop: RouteRecordRaw = {
     ...orders,
     ...tools,
     ...recharge,
+    ...quotaitons,
     {
       path: 'dashboard',
       name: 'Dashboard',

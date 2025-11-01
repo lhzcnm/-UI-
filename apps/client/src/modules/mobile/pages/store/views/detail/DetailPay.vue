@@ -53,9 +53,15 @@ function handlePay() {
       a.click()
       a.remove()
     }
+
+
   }).catch(() => {
     return toast.error('生成支付二维码失败')
   })
+}
+
+async function handleImport() {
+  
 }
 </script>
 
@@ -65,7 +71,7 @@ function handlePay() {
   >
     <div class="flex flex-col space-y-2">
       <span class="text-base font-medium text-zinc-800 dark:text-zinc-200">
-        有效 IMEI 数量：
+        有效 IMEI 数量: 
         <span class="font-semibold text-primary">{{ store.createOrder.imeiList.length }}</span>
       </span>
       <div

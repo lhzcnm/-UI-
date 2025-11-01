@@ -82,6 +82,16 @@ export const menus: SidebarMenu[] = [
     ],
   },
   {
+    label: '报价单管理',
+    path: '/quotaitons',
+    icon: 'lucide:clipboard-list',
+    children: [
+      { label: '旧机报价', match: 'jiuji', path: '/quotaitons' },
+      { label: '新机报价', match: 'xinji', path: '/quotaitons/new' },
+      { label: '报价单类型', match: 'leixing', path: '/quotaitons/type' },
+    ]
+  },
+  {
     label: '充值管理',
     path: '/recharge',
     icon: 'lucide:credit-card',

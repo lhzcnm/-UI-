@@ -133,7 +133,7 @@ onMounted(() => {
       </label>
     </div>
 
-    <div v-show="form.pushRes" class="flex space-x-3">
+    <div v-show="form.pushRes" class="flex flex-col space-x-3">
       <label class="flex flex-col w-full text-sm text-zinc-600 dark:text-zinc-400">
         <span class="mb-1 font-medium">手机号</span>
         <input
