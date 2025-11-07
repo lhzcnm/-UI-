@@ -8,6 +8,7 @@ import VoucherForm from './components/VoucherForm.vue'
 import type { XSegmentedOption } from '@3un/ui'
 import type { RechargeStore, TabMode } from './utils'
 import { RECHARGE_STORE } from './utils'
+import { createList } from '@/utils'
 
 interface RechargeIndexProps {
   tab?: TabMode
@@ -19,7 +20,9 @@ const store: RechargeStore = reactive({
   url: '',
   visible: false,
   isComplete: false,
+  refresh: false,
   timer: 0,
+  bills: createList(),
 })
 
 provide(RECHARGE_STORE, store)

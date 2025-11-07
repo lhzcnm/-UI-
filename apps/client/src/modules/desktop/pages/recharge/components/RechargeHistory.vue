@@ -14,7 +14,20 @@ const store = inject(RECHARGE_STORE)!
 const { t } = useI18n()
 
 watch(() => store.isComplete, () => getList())
-watch(page, getList, { immediate: true })
+watch(
+  (
+    [
+      () => page.value,
+      () => store.refresh,
+    ]
+  ),
+  () => {
+    getList(page.value)
+  },
+  {
+    immediate: true,
+  }
+)
 
 async function getList(page = 1) {
   const { data } = await userApi.invoices({
@@ -22,7 +35,7 @@ async function getList(page = 1) {
     page,
   })
 
-  bills.value = data
+  store.bills = data
 }
 
 function handleExport() {
@@ -49,10 +62,10 @@ function handleExport() {
     </div>
 
     <div class="h-[calc(100%-5.25rem)] overflow-y-auto px-4">
-      <NoMessage v-if="bills.total === 0" :title="t('dataNull')" />
+      <NoMessage v-if="store.bills.total === 0" :title="t('dataNull')" />
       <div v-else class="grid gap-3 grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
         <BillCard
-          v-for="item in bills.list"
+          v-for="item in store.bills.list"
           :key="item.paymentId"
           :item="item"
         />

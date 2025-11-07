@@ -3,9 +3,11 @@ import { toast } from 'vue-sonner'
 import { XInput } from '@3un/ui'
 
 import { voucherApi, type DecryptParams } from '@/api/voucher'
+import { RECHARGE_STORE } from '../utils'
 
 const code = ref<string>('')
 const disabled = ref<boolean>(false)
+const store = inject(RECHARGE_STORE)!
 
 const { t } = useI18n()
 
@@ -17,9 +19,10 @@ function handleRecharge() {
     code: code.value
   }
   voucherApi.decrypt(params).then(() => {
-    return toast.success(t('submit.success', { action: t('button.exchange') }))
+    toast.success(t('submit.success', { action: t('button.exchange') }))
+    store.refresh = true
   }).catch(({ message }) => {
-    return toast.warning(message)
+    toast.warning(message)
   }).finally(() => {
     disabled.value = false
     code.value = ''
