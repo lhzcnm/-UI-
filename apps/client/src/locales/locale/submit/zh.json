@@ -9,7 +9,8 @@
       "orderHandle": "订单处理中",
       "pushRes": "确认不接收公众号推送结果吗?\n订单量较大时,建议关闭",
       "scan": "识别不到IMEI/SN",
-      "file": "文件解析错误"
+      "file": "文件解析错误",
+      "balance": "当前余额"
     },
     "submit": "提交订单",
     "viewRes": "请前往'我的订单'页面查看结果",
@@ -37,11 +38,13 @@
     },
     "title": {
       "mobile": {
-        "result": "订单结果"
+        "result": "订单结果",
+        "success": "提交成功"
       }
     },
     "info": {
       "additional": "附加信息"
-    }
+    },
+    "submitCount": "可提交 {count} 个订单"
   }
 }

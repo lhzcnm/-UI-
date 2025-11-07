@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CATEGORY_MAP_LIST } from '@desktop/pages/store/utils/device'
+import { CATEGORY_MAP_LIST } from '@3un/utils'
 import type { ProductItem } from '@desktop/pages/store/utils/types'
 
 interface ProductCardProps {
@@ -7,12 +7,6 @@ interface ProductCardProps {
 }
 
 defineProps<ProductCardProps>()
-
-// const specs = computed(() => {
-//   return Object.entries(props.product.specs).map(([key, value]) => ({
-//     key, value
-//   }))
-// })
 </script>
 
 <template>

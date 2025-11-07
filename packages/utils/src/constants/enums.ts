@@ -227,6 +227,7 @@ export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.ORDER, label: '订单问题', key: 'type.ticket.17' },
 ]
 
+// Quote Type
 export enum QUOTATION_TYPE {
   HONGKONG = 1,
   FLYING   = 3,
@@ -235,4 +236,50 @@ export enum QUOTATION_TYPE {
 export const QUOTATION_MAP_LIST: TypeListItem[] = [
   { value: QUOTATION_TYPE.HONGKONG, label: '香港拿货报价单' },
   { value: QUOTATION_TYPE.FLYING, label: '飞扬零售报价单' },
+]
+
+// Store Device Type
+export enum CATEGORY_MAP {
+  ALL         = 0,
+  PHONE       = 1,
+  WATCH       = 2,
+  ACCESSORIES = 3,
+}
+
+export const CATEGORY_MAP_LIST = {
+  [CATEGORY_MAP.ALL]: {name: '全部'},
+  [CATEGORY_MAP.PHONE]: { name: 'IPhone' },
+  [CATEGORY_MAP.WATCH]: { name: 'Watch' },
+  [CATEGORY_MAP.ACCESSORIES]: { name: 'Accessories' },
+}
+
+// Refund Status
+export enum REFUND_STATUS {
+  WAIT     = 5,
+  SOLVED   = 6,
+  REJECTED = 7,
+}
+
+export const REFUND_STATUS_MAP: StatusMap = {
+  [REFUND_STATUS.WAIT]     : { color: 'primary', label: '退款待处理' },
+  [REFUND_STATUS.SOLVED]   : { color: 'success', label: '退款处理完成' },
+  [REFUND_STATUS.REJECTED] : { color: 'info', label: '不可退款' },
+}
+
+export enum VOUCHER_STATUS {
+  USEFUL  = 0,
+  USED    = 1,
+  FAILURE = 2,
+}
+
+export const VOUCHER_STATUS_MAP: StatusMap = {
+  [VOUCHER_STATUS.USEFUL] : { color: 'primary', label: '未使用' },
+  [VOUCHER_STATUS.USED] : { color: 'success', label: '已使用' },
+  [VOUCHER_STATUS.FAILURE] : { color: 'info', label: '已失效' },
+}
+
+export const VOUCHER_STATUS_List: TypeListItem[] = [
+  { value: VOUCHER_STATUS.USEFUL, label: '未使用' },
+  { value: VOUCHER_STATUS.USED, label: '已使用' },
+  { value: VOUCHER_STATUS.FAILURE, label: '已失效' },
 ]

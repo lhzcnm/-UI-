@@ -8,6 +8,7 @@ export interface SubmitStore {
   rawOrders: Order[]
   visible: boolean
   count: number
+  serviceHeader: string[]
 }
 
 type SubmitStoreKey = InjectionKey<SubmitStore>

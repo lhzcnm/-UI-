@@ -4,10 +4,11 @@ import { Icon } from '@iconify/vue'
 
 import { toast } from 'vue-sonner'
 import { twJoin } from 'tailwind-merge'
+import dayjs from 'dayjs'
 import * as XLSX from 'xlsx'
 
 import type { SubmitStore } from './utils'
-import type { Service } from '@/api/services'
+import { serviceApi, type Service } from '@/api/services'
 import type { Order, OrderSubmitResult } from '@/api/orders'
 
 import { ua, IMEIValidator, xconfirm } from '@3un/utils'
@@ -33,7 +34,7 @@ await serviceStore.getServices()
 const { connect, close } = useWsStore()
 const uStore = useUserStore()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const store: SubmitStore = reactive({
   service: undefined,
@@ -41,6 +42,7 @@ const store: SubmitStore = reactive({
   rawOrders: [],
   visible: false,
   count: 0,
+  serviceHeader: [],
 })
 
 provide(SUBMIT_STORE, store)
@@ -73,7 +75,12 @@ const options = computed(() => {
 const validImeiList = computed(() => handleImei(form.imei))
 const fileInputRef = useTemplateRef('fileInputRef')
 
-onBeforeMount(() => {
+const usefulCount = computed(() => {
+  if(!store.service) return
+  return Math.floor(+uStore.info.credits / store.service.price)
+})
+
+onBeforeMount(async () => {
   if (!props.id) return
   store.serviceId = +props.id
   store.service = serviceStore.services.get(+props.id)
@@ -99,6 +106,12 @@ function handleScan() {
       form.imei = trimed ? `${trimed}\n${imei}` : imei
     },
   })
+}
+
+async function handleServiceCols(value: number) {
+  const { data } = await serviceApi.header(value)
+
+  store.serviceHeader = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
 }
 
 async function handleFileChange(event: Event) {
@@ -250,6 +263,7 @@ function handleServiceChange(value: XNativeSelectValue) {
   store.serviceId = +value!
   store.rawOrders = []
   store.count = 0
+  handleServiceCols(+value!)
 
   if (form.imei.trim()) {
     form.imei = handleImei(form.imei).join('\n')
@@ -315,14 +329,16 @@ function submitOrder(service: Service) {
   response.then(({ data }) => {
     serviceStore.addRecentService(service.id)
 
-    const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : '提交成功'}`)
+    const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : t('query.title.mobile.success')}`)
 
     if (service.isUnlock) {
       // toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
       xconfirm({
-        title: "订单结果",
+        title: t('query.title.mobile.result'),
         text: errorOrders.join('<br>'),
       })
+
+      form.imei = ""
       
       return
     }
@@ -365,7 +381,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
       status: item.status,
       imei: item.imei,
       remark: form.remark,
-      createTime: '刚刚',
+      createTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       recommends: [],
     })
   }
@@ -383,7 +399,7 @@ function handleOrder(order: Order) {
   }
 }
 
-function handleCount() {
+async function handleCount() {
   store.count = store.count - 1
 
   if (store.count === 0) {
@@ -481,11 +497,12 @@ function handlePushMsgChange(value: boolean) {
         </div>
       </div>
 
-      <div class="relative">
+      <div class="relative mb-2">
         <XTextarea
           v-model="form.imei" rows="5"
           :placeholder="t('query.imei.placeholder')"
         />
+        <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
         <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
           <Icon icon="svg-spinners:270-ring" class="text-primary" />
         </div>

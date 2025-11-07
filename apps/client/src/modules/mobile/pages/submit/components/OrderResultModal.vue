@@ -37,6 +37,7 @@ function handleExport() {
     imeiList: store.rawOrders.map((item) => item.imei),
     serviceId: store.serviceId,
     orderIdList: ids,
+    excelHead: store.serviceHeader,
   })
 
   response.then(({ data }) => downloadURL(data))

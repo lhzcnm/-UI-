@@ -9,7 +9,8 @@
       "orderHandle": "Processing order",
       "pushRes": "Are you sure you don't want to receive results via WeChat official account push?",
       "scan": "IMEI/SN not recognized",
-      "file": "Failed to parse the file"
+      "file": "Failed to parse the file",
+      "balance": "Curr. Balance"
     },
     "submit": "Submit Order",
     "viewRes": "Please go to 'My Orders' page to view results",
@@ -37,11 +38,13 @@
     },
     "title": {
       "mobile": {
-        "result": "Order Result"
+        "result": "Order Result",
+        "success": "Submit Success"
       }
     },
     "info": {
       "additional": "Additional Information"
-    }
+    },
+    "submitCount": "You can submit {count} orders"
   }
 }

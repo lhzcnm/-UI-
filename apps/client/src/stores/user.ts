@@ -92,7 +92,7 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   function saveInfo() {
-    const locale = i18n.global.locale
+    const locale = i18n.global.locale.value
     const userInfo = JSON.stringify(info.value)
     sessionStorage.setItem(`${import.meta.env.VITE_USER_INFO}_${locale}`, userInfo)
   }

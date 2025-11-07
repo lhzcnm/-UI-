@@ -22,7 +22,7 @@ const emits = defineEmits<StoreCardEmits>()
 const style = tv({
   slots: {
     root: [
-      "flex flex-col p-6 rounded-2xl border border-white/30 dark:border-zinc-800 cursor-pointer min-w-[320px]",
+      "flex flex-col p-6 rounded-2xl border border-white/30 dark:border-zinc-800 cursor-pointer",
       "bg-white dark:bg-zinc-900/40 backdrop-blur-xl",
       "transition-all duration-300"
     ],

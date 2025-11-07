@@ -69,6 +69,7 @@ export interface OrderExportParams {
   imeiList?: string[]
   startTime?: string
   endTime?: string
+  excelHead: string[]
 }
 export interface OrderExportForm {
   serviceId: number
@@ -101,6 +102,7 @@ export interface OrderSubmitExportParams {
   orderIdList: number[]
   imeiList: string[]
   serviceId: number
+  excelHead: string[]
 }
 
 export interface GeneratePictureParms {

@@ -3,6 +3,7 @@ import RechargeForm from './components/RechargeForm.vue'
 import MembershipForm from './components/MembershipForm.vue'
 import RechargeHistory from './components/RechargeHistory.vue'
 import RechargeQrcode from './components/RechargeQrcode.vue'
+import VoucherForm from './components/VoucherForm.vue'
 
 import type { XSegmentedOption } from '@3un/ui'
 import type { RechargeStore, TabMode } from './utils'
@@ -29,7 +30,8 @@ const { t } = useI18n()
 
 const options: XSegmentedOption[] = [
   { label: t('recharge.segment.balance'), value: 'recharge', icon: 'lucide:wallet' },
-  { label: t('recharge.segment.member'), value: 'membership', icon: 'lucide:crown' }
+  { label: t('recharge.segment.member'), value: 'membership', icon: 'lucide:crown' },
+  { label: t('recharge.segment.voucher'), value: 'voucher', icon: 'lucide:ticket-check' }
 ]
 </script>
 
@@ -47,6 +49,7 @@ const options: XSegmentedOption[] = [
 
       <RechargeForm v-show="activeTab === 'recharge'" />
       <MembershipForm v-show="activeTab === 'membership'" />
+      <VoucherForm v-show="activeTab === 'voucher'" />
       <RechargeQrcode />
     </section>
 

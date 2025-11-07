@@ -104,7 +104,6 @@ function checkRecharge() {
 
 <template>
   <div class="bg-card border p-4 rounded-md space-y-6">
-
     <div class="space-y-3">
       <h3 class="text-lg font-medium">{{ t('recharge.balance.title') }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">

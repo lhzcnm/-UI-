@@ -44,6 +44,7 @@ const imeis = ref<string[]>([])
 const comments = ref<string>('')
 
 const selectedId = ref(+props.id)
+const headers = shallowRef<string[]>([])
 
 const sizes = [50, 150, 200, 300, 500]
 
@@ -95,6 +96,8 @@ function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
 async function handleServiceCols(value: number) {
   const { data } = await serviceApi.header(value)
 
+  headers.value = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
+
   if (data.length === 0) {
     columns.value = getDefaultColumns(t)
     return
@@ -103,7 +106,8 @@ async function handleServiceCols(value: number) {
   const serviceCols: XTableColumn[] = []
   for (const item of data) {
     const { name, nameEn, width } = item
-    const field = hash(name)
+
+    const field = hash(locale.value === 'zh' ? name : nameEn ? nameEn : name)
 
     serviceCols.push({
       key: field,
@@ -177,7 +181,6 @@ function submitQueryOrder(service: Service) {
       }
 
       submitOrder(service)
-      uStore.updateCredit()
     },
     { once: true }
   )
@@ -187,6 +190,7 @@ function submitQueryOrder(service: Service) {
 
     handleOrder(value)
     handleCount()
+    uStore.updateCredit()
   })
 }
 
@@ -271,7 +275,7 @@ function processOrderResult(content: string) {
   return result
 }
 
-function handleCount() {
+async function handleCount() {
   count = count - 1
 
   if (count === 0) {
@@ -297,6 +301,7 @@ function handleExport() {
     serviceId: selectedId.value,
     imeiList: imeis.value,
     orderIdList: ids,
+    excelHead: headers.value,
   })
 
   response.then(({ data }) => downloadURL(data))
@@ -341,8 +346,8 @@ async function handleMustRead() {
 </script>
 
 <template>
-  <div class="p-4 h-full">
-    <section class="flex items-center justify-between mb-3">
+  <div class="p-4 h-full w-full">
+    <section class=" w-full flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
         <SelectService
           v-model="selectedId"
