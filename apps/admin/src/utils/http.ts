@@ -57,9 +57,9 @@ function handleHttpError(error: AxiosError<CR<null>>) {
 async function handleUnauthorized() {
   toast.warning('身份认证过期，请重新登录')
 
-  // localStorage.clear()
-  // sessionStorage.clear()
-  // window.location.reload()
+  localStorage.clear()
+  sessionStorage.clear()
+  window.location.reload()
 }
 
 export default http

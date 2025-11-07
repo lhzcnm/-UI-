@@ -50,6 +50,16 @@ export const menus: SidebarMenu[] = [
     children: [
       { label: '全部订单', match: 'quandingdan', path: '/orders' },
       {
+        label: '商城订单',
+        match: '商城订单',
+        path: '/orders/mall',
+        icon: 'lucide:handbag',
+        badge: () => {
+          const iStore = useSystemStore()
+          return iStore.todoCount.processing
+        },
+      },
+      {
         label: '订单验证',
         match: 'dingdanyanzheng',
         path: '/orders/verify',
@@ -81,16 +91,16 @@ export const menus: SidebarMenu[] = [
       },
     ],
   },
-  {
-    label: '报价单管理',
-    path: '/quotaitons',
-    icon: 'lucide:clipboard-list',
-    children: [
-      { label: '旧机报价', match: 'jiuji', path: '/quotaitons' },
-      { label: '新机报价', match: 'xinji', path: '/quotaitons/new' },
-      { label: '报价单类型', match: 'leixing', path: '/quotaitons/type' },
-    ]
-  },
+  // {
+  //   label: '报价单管理',
+  //   path: '/quotaitons',
+  //   icon: 'lucide:clipboard-list',
+  //   children: [
+  //     { label: '旧机报价', match: 'jiuji', path: '/quotaitons' },
+  //     { label: '新机报价', match: 'xinji', path: '/quotaitons/new' },
+  //     { label: '报价单类型', match: 'leixing', path: '/quotaitons/type' },
+  //   ]
+  // },
   {
     label: '充值管理',
     path: '/recharge',
@@ -119,6 +129,12 @@ export const menus: SidebarMenu[] = [
       { label: '菜单栏', match: 'caidanlan', path: '/wechat/menu' },
       { label: '客服消息', match: 'kefuxiaoxi', icon: 'lucide:message-circle-more', path: '/wechat/message' },
     ],
+  },
+  {
+    label: '积分券管理',
+    path: '/voucher',
+    icon: 'lucide:ticket',
+    match: 'jifenquan',
   },
   {
     label: '积分记录',

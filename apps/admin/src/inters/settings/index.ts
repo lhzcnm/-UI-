@@ -49,6 +49,11 @@ export interface Settings {
   maxRechargeAmount: number
   // 最小充值金额
   minRechargeAmount: number
+  
+  // 最大充值金额
+  maxVoucherAmount: number
+  // 最小充值金额
+  minVoucherAmount: number
 
   // 是否启用弹窗公告
   enablePopupAnnc: boolean

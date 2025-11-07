@@ -8,6 +8,12 @@ export const columns: XColDef<UserPaid> = [
     key: 'userId',
     title: 'ID',
     width: 72,
+    render: (value) => {
+      return h('a', {
+        href: `/users?uid=${value}`,
+        class: 'underline hover:text-success'
+      }, value)
+    }
   },
   {
     key: 'headImgUrl',
