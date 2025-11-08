@@ -121,8 +121,6 @@ async function handleServiceCols(value: number) {
   }
 
   columns.value = mergeColumns(serviceCols)
-
-  console.log(columns)
 }
 
 function handleImport(imeiList: string[], remark: string) {

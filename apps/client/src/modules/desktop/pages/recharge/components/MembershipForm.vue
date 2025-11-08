@@ -24,10 +24,6 @@ const { t } = useI18n()
 
 const store = inject(RECHARGE_STORE)!
 
-// const mode = import.meta.env.VITE_APP_MODE
-
-// const injectModes = ['Usimlte', 'ZSunlock']
-
 await serviceStore.getServices()
 await getMemberList()
 

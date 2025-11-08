@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useSystemStore } from '@/stores/system'
 import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
+
+import { useSystemStore } from '@/stores/system'
 
 import { useDocumentVisibility } from '@vueuse/core'
 
