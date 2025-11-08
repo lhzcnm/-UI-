@@ -75,19 +75,25 @@ export const PAYMENT_STATUS_LIST = [
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  ADMIN  = 5,
-  ALIPAY = 8,
-  WECHAT = 9,
+  ADMIN   = 5,
+  ADMINERR   = 7,
+  ALIPAY  = 8,
+  WECHAT  = 9,
+  VOUCHER = 10,
 }
 export const PAYMENT_METHOD_MAP: StatusMap = {
   [PAYMENT_METHOD.ADMIN]  : { color: 'warning', label: '管理员充值' },
+  [PAYMENT_METHOD.ADMINERR]  : { color: 'warning', label: '管理员充值' },
   [PAYMENT_METHOD.ALIPAY] : { color: 'primary', label: '支付宝' },
   [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
+  [PAYMENT_METHOD.VOUCHER] : { color: 'success', label: '积分券' },
 }
 export const PAYMENT_METHOD_LIST = [
   { value: PAYMENT_METHOD.ADMIN, label: '管理员充值' },
+  { value: PAYMENT_METHOD.ADMINERR, label: '管理员充值' },
   { value: PAYMENT_METHOD.ALIPAY, label: '支付宝' },
   { value: PAYMENT_METHOD.WECHAT, label: '微信' },
+  { value: PAYMENT_METHOD.VOUCHER, label: '积分券' },
 ]
 
 // Submit Method
@@ -275,7 +281,7 @@ export enum VOUCHER_STATUS {
 export const VOUCHER_STATUS_MAP: StatusMap = {
   [VOUCHER_STATUS.USEFUL] : { color: 'primary', label: '未使用' },
   [VOUCHER_STATUS.USED] : { color: 'success', label: '已使用' },
-  [VOUCHER_STATUS.FAILURE] : { color: 'info', label: '已失效' },
+  [VOUCHER_STATUS.FAILURE] : { color: 'danger', label: '已失效' },
 }
 
 export const VOUCHER_STATUS_List: TypeListItem[] = [
