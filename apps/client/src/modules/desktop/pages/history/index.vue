@@ -17,6 +17,7 @@ import { orderApi, type Order } from '@/api/orders'
 import type { ImgOrderItem } from './types'
 import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
 import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
+import { ORDER_STATUS } from '@3un/utils'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -157,6 +158,9 @@ function handleGenerate() {
   }
 
   for(let order of orders) {
+    if(order.status === ORDER_STATUS.FAILED) {
+      continue
+    }
     const container = document.createElement('div')
     document.body.append(container)
     // container.className = `opacity-0 flex`

@@ -4,7 +4,6 @@ import { twMerge, twJoin } from 'tailwind-merge'
 import type { Order } from '@/api/orders'
 import {
   ORDER_STATUS_MAP,
-  ORDER_VERIFY_MAP,
   ORDER_STATUS,
 } from '@3un/utils'
 
@@ -51,7 +50,7 @@ const cleanResult = computed(() => {
       <span>Official: </span>
       <span>{{ appName }}</span>
     </div>
-    <div class="w-full p-4 flex flex-col">
+    <div class="w-full flex flex-col py-2">
       <div class="flex items-center justify-between space-x-3">
         <span
           v-if="isSubmit"
@@ -69,18 +68,12 @@ const cleanResult = computed(() => {
           <span class="transform -rotate-3">{{ index }}</span>
         </span>
         <span v-else class="text-base font-medium">{{ order.id }}</span>
-        <div class="flex space-x-2">
+        <div class="flex">
           <!-- <XTag size="sm" label="Success" :color="ORDER_STATUS_MAP[order.status].color" /> -->
           <XTag
             size="sm"
-            :label="ORDER_STATUS_MAP[order.status].labelEn"
+            label="Success"
             :color="ORDER_STATUS_MAP[order.status].color"
-          />
-          <XTag
-            v-if="!isSubmit"
-            size="sm"
-            :label="ORDER_VERIFY_MAP[order.verify].labelEn"
-            :color="ORDER_VERIFY_MAP[order.verify].color"
           />
         </div>
       </div>

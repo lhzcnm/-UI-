@@ -47,7 +47,8 @@
       "copy": "已复制",
       "orderTimeout": "订单超过三天, 不支持该功能",
       "vertified": "已提交验证",
-      "vertifyConfirm": "是否确认验证订单?"
+      "vertifyConfirm": "是否确认验证订单?",
+      "info": "图片生成成功, 点击图片即可下载"
     },
     "form": {
       "status": {

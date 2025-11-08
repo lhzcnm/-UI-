@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import OrderVoucher from '@/components/shared/OrderVoucher.vue'
+import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
+import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
+
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import * as html2image from 'html-to-image'
+import { h, render } from 'vue'
 
 import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
-import OrderVoucher from '@/components/shared/OrderVoucher.vue'
-import { h, render } from 'vue'
-import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
-import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -22,7 +23,7 @@ const store = useSettingStore()
 const serviceStore = useServiceStore()
 const codeId = Number(route.query.codeId)
 
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 
 await Promise.all([
   serviceStore.getServices(),
@@ -73,7 +74,7 @@ function handleGenerate(order: Order) {
   }).then((blob: Blob | null) => {
     const url = URL.createObjectURL(blob!)
     orderImg.value = url
-    toast.success('图片生成成功, 点击图片即可开启下载')
+    toast.success(t('order.prompt.info'))
     generated.value = true
   }).finally(() => {
     render(null, container)
