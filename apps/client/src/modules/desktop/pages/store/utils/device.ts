@@ -255,15 +255,3 @@ export const products: ProductItem[] = [
     }
   },
 ]
-
-export const CATEGORY_MAP = {
-  PHONE: 1,
-  WATCH: 2,
-  ACCESSORIES: 3,
-}
-
-export const CATEGORY_MAP_LIST = {
-  [CATEGORY_MAP.PHONE]: { name: 'IPhone' },
-  [CATEGORY_MAP.WATCH]: { name: 'Watch' },
-  [CATEGORY_MAP.ACCESSORIES]: { name: 'Accessories' },
-}

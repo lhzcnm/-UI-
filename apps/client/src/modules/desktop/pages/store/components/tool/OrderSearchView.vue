@@ -4,6 +4,9 @@ import TheGlobalBack from './TheGlobalBack.vue'
 
 import { tv } from 'tailwind-variants'
 import type { OrderSearchParams } from '@/api/store/types'
+import { toast } from 'vue-sonner'
+
+const { t } = useI18n()
 
 const orderNo = ref<string>('')
 const imei = ref<string>('')
@@ -26,6 +29,9 @@ const style = tv({
 const b = style()
 
 async function handleClick() {
+  if(!orderNo.value || !imei.value) {
+    return toast.warning(t('store.prompt.searchOrder'))
+  }
   const params: OrderSearchParams = {
     orderNumber: orderNo.value,
     imei: imei.value
@@ -37,12 +43,12 @@ async function handleClick() {
 
 <template>
   <div class="w-full flex flex-col">
-    <TheGlobalBack name="订单查询" />
+    <TheGlobalBack :name="t('store.tool.title.order')" />
     <div class="px-4 flex flex-col mt-8">
       <div class="flex flex-col space-y-5">
         <input
           :class="b.input()"
-          placeholder="订单号"
+          :placeholder="t('store.search.order.no')"
           v-model="orderNo" />
         <input
           :class="b.input()"
@@ -52,21 +58,21 @@ async function handleClick() {
         <div class="flex justify-center mt-2">
           <XButton
             class="w-full sm:w-1/2 h-12 sm:text-lg font-medium tracking-wide shadow-sm hover:shadow-md transition"
-            label="查询"
+            :label="t('store.search.button')"
             @click="handleClick"
           />
         </div>
       </div>
 
-      <div class="flex items-center text-sm text-zinc-400 dark:text-zinc-500 gap-3 mt-10">
+      <!-- <div class="flex items-center text-sm text-zinc-400 dark:text-zinc-500 gap-3 mt-10">
         <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
         <span>查询结果将在这里展示</span>
         <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
-      </div>
+      </div> -->
 
       <div class="mt-6 bg-white/60 dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-700 p-6 text-center text-zinc-500 dark:text-zinc-400 shadow-sm">
         <span v-if="result" v-html="result"></span>
-        <span v-else>暂无数据，请输入订单号和 IMEI 进行查询</span>
+        <span v-else>{{ t('store.search.null') }}</span>
       </div>
     </div>
   </div>

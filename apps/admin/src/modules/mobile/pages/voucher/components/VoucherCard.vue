@@ -17,13 +17,13 @@ interface VoucherCardProps {
   userId: number | null
 }
 
-interface VoucherCardEmits {
-  toggle: [id: number],
-  statusChange: [status: VOUCHER_STATUS],
-}
+// interface VoucherCardEmits {
+//   toggle: [id: number],
+//   statusChange: [status: VOUCHER_STATUS],
+// }
 
 const props = defineProps<VoucherCardProps>()
-const emits = defineEmits<VoucherCardEmits>()
+// const emits = defineEmits<VoucherCardEmits>()
 
 const store = inject(VOUCHER_STORE)!
 

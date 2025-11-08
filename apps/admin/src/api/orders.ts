@@ -3,6 +3,8 @@ import type { AxiosResponse } from 'axios'
 
 import { zOrder } from '@/inters/orders'
 import http from '@/utils/http'
+import type { IPage } from '@3un/shared'
+import { zMallOrder, type MallOrderList, type MallOrderRefundParams, type MallOrderRefundResp } from '@/inters/orders/mall'
 
 // Order
 type OrderListFn = (params: OrderListParams) => Promise<OrderList>
@@ -57,4 +59,18 @@ export const updateOrderVerify: OrderVerifyFn = (params) => {
 type OrderCleanFn = (time: string) => Promise<AxiosResponse>
 export const cleanOrder: OrderCleanFn = (time) => {
   return http.get(`/order/clean?time=${time}`)
+}
+
+// mall orders
+type OrderMallListFn = (params: IPage) => Promise<MallOrderList>
+export const getMallOrders: OrderMallListFn = async (params) => {
+  const { data } = await http.get<MallOrderList>('/order/mall', { params })
+  return { ...data, list: data.list.map((item) => zMallOrder.parse(item)) }
+}
+
+// mall order refund
+type OrderMallRefundFn = (data: MallOrderRefundParams) => Promise<MallOrderRefundResp>
+export const refundMallOrder: OrderMallRefundFn = async (body) => {
+  const { data } = await http.post('/mall/refund/apply', body)
+  return data
 }

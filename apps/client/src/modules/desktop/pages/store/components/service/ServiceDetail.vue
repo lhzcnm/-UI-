@@ -21,13 +21,13 @@ const { t } = useI18n()
             <span
               v-if="service.isHot"
               class="px-2 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-rose-500 to-orange-400 text-white shadow-sm">
-              热门服务
+              {{ t('store.service.hot') }}
             </span>
 
             <span
               v-if="service.isNew"
               class="px-2 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-green-400 text-white shadow-sm">
-              新上架
+              {{ t('store.service.new') }}
             </span>
           </div>
         </div>
@@ -36,9 +36,9 @@ const { t } = useI18n()
           class="flex items-center border border-primary/20 rounded-md dark:bg-zinc-800"
         >
           <div
-            class="w-24 min-w-[8rem] text-center py-2 rounded-l-md bg-zinc-300 dark:bg-zinc-600 border-r border-border"
+            class="w-24 min-w-[12rem] text-center py-2 rounded-l-md bg-zinc-300 dark:bg-zinc-600 border-r border-border"
           >
-            支持类型
+            {{ t('store.form.support') }}
           </div>
           <div class="flex-1 px-3">{{ t(IMEI_TYPE_MAP[service.imeiType].key!) }}</div>
         </div>
@@ -47,15 +47,15 @@ const { t } = useI18n()
           class="flex items-center border border-primary/20 rounded-md dark:bg-zinc-800"
         >
           <div
-            class="w-24 min-w-[8rem] text-center py-2 rounded-l-md bg-zinc-300 dark:bg-zinc-600 border-r border-border"
+            class="w-24 min-w-[12rem] text-center py-2 rounded-l-md bg-zinc-300 dark:bg-zinc-600 border-r border-border"
           >
-            服务处理用时
+            {{ t('store.form.taken') }}
           </div>
           <div class="flex-1 px-3">{{ service.taken }}</div>
         </div>
 
         <div class="flex-1 flex justify-end items-end text-base">
-          <span class="">单次查询金额: </span>
+          <span class="">{{ t('store.service.amount') }}: </span>
           <span class="text-orange-500 font-semibold text-lg ml-1">￥{{ service.storePrice }}</span>
         </div>
       </div>
@@ -65,7 +65,7 @@ const { t } = useI18n()
       >
         <div class="font-medium mb-2 flex items-center gap-1">
           <span class="i-heroicons-information-circle"></span>
-          服务详情
+          {{ t('store.service.view') }}
         </div>
         <div class="overflow-y-auto max-h-64" style="scrollbar-width: none;" v-html="service.mustRead">
         </div>

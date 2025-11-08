@@ -4,6 +4,9 @@ import type { QUOTATION_TYPE } from '@3un/utils'
 import type { Quotation, QuotationFormSearch } from '@/inters/quotation'
 
 export interface OldQuotationStore {
+  visibleSearch: boolean,
+  visibleEmit: boolean,
+
   page: number,
   limit: number,
 

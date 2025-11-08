@@ -6,6 +6,8 @@ import { TOOL_STORE, ToolStatus } from '@desktop/pages/store/utils/symbol'
 
 interface OrderSearchToolProps extends ToolGlobalProps {}
 
+const { t } = useI18n()
+
 const props = defineProps<OrderSearchToolProps>()
 
 const store = inject(TOOL_STORE)!
@@ -24,6 +26,6 @@ function handleClick() {
       icon="streamline-ultimate-color:book-search"
       class="size-10 text-primary"
     />
-    <span>订单查询</span>
+    <span>{{ t('store.tool.name.order') }}</span>
   </button>
 </template>

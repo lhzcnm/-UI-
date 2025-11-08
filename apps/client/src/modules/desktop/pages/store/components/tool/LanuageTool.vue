@@ -6,6 +6,8 @@ import { TOOL_STORE, ToolStatus } from '@desktop/pages/store/utils/symbol'
 
 interface LanuageToolProps extends ToolGlobalProps {}
 
+const { t } = useI18n()
+
 const store = inject(TOOL_STORE)!
 
 const props = defineProps<LanuageToolProps>()
@@ -24,6 +26,6 @@ function handleClick() {
       icon="lucide:languages"
       class="size-10 text-primary"
     />
-    <span>切换语言</span>
+    <span>{{ t('store.tool.name.lang') }}</span>
   </button>
 </template>

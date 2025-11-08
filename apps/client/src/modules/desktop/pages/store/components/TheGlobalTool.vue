@@ -4,9 +4,9 @@ import LanuageSwitchView from './tool/LanuageSwitchView.vue'
 import ServiceGroupView from './tool/ServiceGroupView.vue'
 import TimeDisplay from './tool/TimeDisplay.vue'
 import RootTool from './tool/RootTool.vue'
+import OrderSearchView from './tool/OrderSearchView.vue'
 
 import { TOOL_STORE, ToolStatus, type ToolGlobalStore } from '../utils/symbol'
-import OrderSearchView from './tool/OrderSearchView.vue'
 
 const store = reactive<ToolGlobalStore>({
   toolStatus: ToolStatus.ROOT,

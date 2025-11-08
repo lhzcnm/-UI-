@@ -35,13 +35,13 @@ const handleInput = debounce(() => {
 
 <template>
   <div class="w-full flex flex-col">
-    <TheGlobalBack name="服务组切换" />
+    <TheGlobalBack :name="t('store.tool.title.group')" />
 
     <div class="p-2 h-full flex flex-col space-y-3 overflow-y-auto" style="scrollbar-width: none;">
       <XInput
         ui-root="rounded-xl bg-white/30 dark:bg-zinc-800/60 border-none focus:ring-2 focus:ring-primary/40"
         v-model="name"
-        :placeholder="t('keyword.placeholder')"
+        :placeholder="t('store.search.service.name')"
         @input="handleInput"
       />
       <button

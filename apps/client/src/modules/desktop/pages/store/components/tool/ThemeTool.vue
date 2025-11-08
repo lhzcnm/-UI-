@@ -5,6 +5,8 @@ import { THEME } from '@3un/utils'
 
 import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
 
+const { t } = useI18n()
+
 interface ThemeToolProps extends ToolGlobalProps {}
 
 const props = defineProps<ThemeToolProps>()
@@ -28,6 +30,6 @@ function toggleTheme() {
       :icon="theme.isDark ? 'openmoji:crescent-moon' : 'openmoji:sun'"
       class="size-10 transition-transform duration-300"
     />
-    <span class="text-sm">切换主题</span>
+    <span class="text-sm">{{ t('store.tool.name.theme') }}</span>
   </button>
 </template>

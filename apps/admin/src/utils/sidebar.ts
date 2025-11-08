@@ -49,16 +49,16 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:shopping-bag',
     children: [
       { label: '全部订单', match: 'quandingdan', path: '/orders' },
-      {
-        label: '商城订单',
-        match: '商城订单',
-        path: '/orders/mall',
-        icon: 'lucide:handbag',
-        badge: () => {
-          const iStore = useSystemStore()
-          return iStore.todoCount.processing
-        },
-      },
+      // {
+      //   label: '商城订单',
+      //   match: '商城订单',
+      //   path: '/orders/mall',
+      //   icon: 'lucide:handbag',
+      //   badge: () => {
+      //     const iStore = useSystemStore()
+      //     return iStore.todoCount.processing
+      //   },
+      // },
       {
         label: '订单验证',
         match: 'dingdanyanzheng',
@@ -93,12 +93,12 @@ export const menus: SidebarMenu[] = [
   },
   // {
   //   label: '报价单管理',
-  //   path: '/quotaitons',
+  //   path: '/quotations',
   //   icon: 'lucide:clipboard-list',
   //   children: [
-  //     { label: '旧机报价', match: 'jiuji', path: '/quotaitons' },
-  //     { label: '新机报价', match: 'xinji', path: '/quotaitons/new' },
-  //     { label: '报价单类型', match: 'leixing', path: '/quotaitons/type' },
+  //     { label: '飞扬批发价', match: 'jiuji', path: '/quotations/feiyang' },
+  //     { label: '华强北新机价', match: 'xinji', path: '/quotations/hqb' },
+  //     { label: '香港新机价', match: 'leixing', path: '/quotations/hk' },
   //   ]
   // },
   {

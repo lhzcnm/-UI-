@@ -40,7 +40,7 @@ watch(
   (val) => {
     if(!val) {
       if(store.selectService.isUnlock) {
-        toast.warning("解锁类服务必须启用推送结果")
+        return toast.warning(t('store.prompt.unlock'))
       }
     }
   }
@@ -58,33 +58,33 @@ function handleConfirm() {
 
   if(service.isUnlock) {
     if(!form.pushRes) {
-      return toast.warning("解锁类服务必须启用推送结果")
+      return toast.warning(t('store.prompt.unlock'))
     }
   }
 
   if(form.pushRes) {
     if(!form.phone && !form.mail) {
-      return toast.warning("请输入手机号或邮箱")
+      return toast.warning(t('store.prompt.pushSource'))
     }
   }
 
   if(form.phone) {
     rules.push({
       rule: PHONE_REG.test(form.phone),
-      message: "请输入正确的手机号",
+      message: t('store.valid.profile.phone_format'),
     })
   }
 
   if(form.mail) {
     rules.push({
       rule: EMAIL_REG.test(form.mail),
-      message: "请输入正确的邮箱",
+      message: t('store.valid.profile.email_format'),
     })
   }
 
   rules.push({
     rule: !!form.imei,
-    message: "请输入imei/sn"
+    message: t('store.valid.store.imeiNull')
   })
 
   if(!validate(rules)) return
@@ -135,10 +135,8 @@ function handleSubmit() {
 
     validQrcode()
   }).catch(() => {
-    return toast.warning("生成支付二维码失败, 请尝试重新提交")
+    return toast.warning(t('store.prompt.qrcodeError'))
   })
-  // store.rawOrder.length = 0
-  // handleOrderSubmit()
 }
 
 function validQrcode() {
@@ -242,7 +240,7 @@ function submitOrder(service: ServiceItem) {
 
   storeSubmit(params).then(({ data }) => {
     if(service.isUnlock) {
-      return toast.success("解锁订单提交成功，结果处理完成后会通过手机号或邮箱通知你。")
+      return toast.success(t('store.prompt.submitUnlock'))
     }
 
     renderSubmitOrder(data)    
@@ -325,6 +323,7 @@ onMounted(() => {
   history.pushState(null, '', location.href)
   window.addEventListener('popstate', () => {
     store.rawOrder.length = 0
+    store.visibleTool = false
     store.storeStatus = "serviceStore"
   })
 })
@@ -345,7 +344,7 @@ onBeforeUnmount(() => {
     <section :class="[b.section(), b.order()]">
       <div class="flex items-center text-sm text-zinc-300 dark:text-zinc-600 gap-2">
         <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
-        <span>订单结果将在这里展示</span>
+        <span>{{ t('store.result') }}</span>
         <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
       </div>
       <div class="p-4 flex-1 overflow-y-auto flex flex-col space-y-4" style="scrollbar-width: none;">

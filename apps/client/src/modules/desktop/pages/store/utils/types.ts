@@ -1,6 +1,6 @@
 import type { OrderRecommend } from '@/api/orders'
 import type { Service } from '@/api/services'
-import type { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
+import type { CATEGORY_MAP, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import type { ClassNameValue } from 'tailwind-merge'
 
 export type StoreStatus = 'serviceStore' | 'serviceDetail' | 'DeviceStore'
@@ -57,7 +57,7 @@ export interface DeviceCategory {
 
 export interface ProductItem {
   id: number,
-  category: 0 | 1 | 2 | 3,
+  category: CATEGORY_MAP,
   name: string,
   price: number,
   originalPrice: number,

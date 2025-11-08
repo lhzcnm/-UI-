@@ -1,21 +1,21 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-const quotaitons: RouteRecordRaw[] = [
+const quotations: RouteRecordRaw[] = [
   {
-    path: 'quotaitons',
-    name: 'Quotaitons',
-    component: () => import('@desktop/pages/quotation/index.vue'),
+    path: 'quotations/feiyang',
+    name: 'QuotaitonsFeiyang',
+    component: () => import('@desktop/pages/quotation/feiyang.vue'),
   },
   {
-    path: 'quotaitons/new',
-    name: 'QuotaitonsNew',
-    component: () => import('@desktop/pages/quotation/new.vue'),
+    path: 'quotations/hk',
+    name: 'QuotaitonsHk',
+    component: () => import('@desktop/pages/quotation/hk.vue'),
   },
   {
-    path: 'quotaitons/type',
-    name: 'QuotaitonsType',
-    component: () => import('@desktop/pages/quotation/type.vue'),
+    path: 'quotations/hqb',
+    name: 'QuotaitonsHqb',
+    component: () => import('@desktop/pages/quotation/hqb.vue'),
   },
 ]
 
-export default quotaitons
+export default quotations

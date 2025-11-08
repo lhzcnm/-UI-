@@ -5,14 +5,16 @@ import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
 
 interface AuthToolProps extends ToolGlobalProps {}
 
+const { t } = useI18n()
+
 const props = defineProps<AuthToolProps>()
 
-const router = useRouter()
+// const router = useRouter()
 
 function handleClick() {
   localStorage.clear()
-  router.push('/auth')
-  location.reload()
+  sessionStorage.clear()
+  location.href = "/auth"
 }
 </script>
 
@@ -25,6 +27,6 @@ function handleClick() {
       icon="streamline-ultimate-color:login-key"
       class="size-10 text-primary"
     />
-    <span>会员登录</span>
+    <span>{{ t('store.tool.name.auth') }}</span>
   </button>
 </template>

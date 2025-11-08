@@ -6,6 +6,8 @@ import { SERVICE_STORE, TOOL_STORE, ToolStatus } from '@desktop/pages/store/util
 
 interface ServiceGroupToolProps extends ToolGlobalProps {}
 
+const { t } = useI18n()
+
 const store = inject(TOOL_STORE)!
 const serviceStore = inject(SERVICE_STORE)!
 
@@ -26,6 +28,6 @@ function handleClick() {
       icon="streamline-ultimate-color:server-refresh-1"
       class="size-10 text-primary"
     />
-    <span>服务组</span>
+    <span>{{ t('store.tool.name.group') }}</span>
   </button>
 </template>

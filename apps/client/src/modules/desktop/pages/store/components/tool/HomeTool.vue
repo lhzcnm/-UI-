@@ -5,6 +5,8 @@ import type { ToolGlobalProps } from '@desktop/pages/store/utils/types'
 
 interface HomeToolProps extends ToolGlobalProps {}
 
+const { t } = useI18n()
+
 const props = defineProps<HomeToolProps>()
 
 const router = useRouter()
@@ -23,6 +25,6 @@ function handleClick() {
       icon="streamline-ultimate-color:single-woman-home"
       class="size-10 text-primary"
     />
-    <span>网站首页</span>
+    <span>{{ t('store.tool.name.home') }}</span>
   </button>
 </template>
