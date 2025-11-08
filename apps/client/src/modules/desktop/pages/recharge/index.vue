@@ -14,6 +14,8 @@ interface RechargeIndexProps {
   tab?: TabMode
 }
 
+const uStore = useUserStore()
+
 const props = defineProps<RechargeIndexProps>()
 
 const store: RechargeStore = reactive({
@@ -24,6 +26,13 @@ const store: RechargeStore = reactive({
   timer: 0,
   bills: createList(),
 })
+
+watch(
+  () => store.refresh,
+  () => {
+    uStore.updateCredit()
+  }
+)
 
 provide(RECHARGE_STORE, store)
 
@@ -41,7 +50,7 @@ const options: XSegmentedOption[] = [
 <template>
   <div class="p-4 h-full flex space-x-4">
     <section class="w-[30rem] shrink-0">
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex flex-col items-center justify-between mb-3 space-y-2">
         <h2 class="text-xl font-medium">{{ t('recharge.title') }}</h2>
         <XSegmented
           v-model="activeTab"

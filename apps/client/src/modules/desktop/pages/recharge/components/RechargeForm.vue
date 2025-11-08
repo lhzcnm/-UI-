@@ -96,7 +96,7 @@ function checkRecharge() {
       toast.success(t('submit.success', { action: t('action.recharge') }))
       uStore.updateCredit()
       store.isComplete = true
-      store.refresh = true
+      store.refresh = !store.refresh
       window.clearInterval(store.timer)
     })
   }, 1300)

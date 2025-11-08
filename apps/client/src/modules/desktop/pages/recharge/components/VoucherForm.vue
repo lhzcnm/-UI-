@@ -20,7 +20,7 @@ function handleRecharge() {
   }
   voucherApi.decrypt(params).then(() => {
     toast.success(t('submit.success', { action: t('button.exchange') }))
-    store.refresh = true
+    store.refresh = !store.refresh
   }).catch(({ message }) => {
     toast.warning(message)
   }).finally(() => {

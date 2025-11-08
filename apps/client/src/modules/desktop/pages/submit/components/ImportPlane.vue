@@ -108,8 +108,8 @@ async function handleFile(file: File) {
       />
       <XTextarea v-model="remark" :placeholder="t('remark.placeholder')" />
 
-      <!-- <span v-if="props.selectedId" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
-      <span v-if="props.selectedId" class="text-sm text-muted-foreground">{{ t('query.submitCount', { count: usefulCount }) }}</span>
+      <span v-if="props.selectedId" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+      <!-- <span v-if="props.selectedId" class="text-sm text-muted-foreground">{{ t('query.submitCount', { count: usefulCount }) }}</span> -->
       <div class="flex items-center justify-between space-x-2">
         <a
           href="javascript:void(0)" :title="t('query.imei.view')"

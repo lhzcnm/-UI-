@@ -55,7 +55,8 @@ function handlePay() {
     }
 
 
-  }).catch(() => {
+  }).catch((err) => {
+    console.error(err)
     return toast.error('生成支付二维码失败')
   })
 }

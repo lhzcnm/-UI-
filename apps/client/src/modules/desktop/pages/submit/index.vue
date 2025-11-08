@@ -121,6 +121,8 @@ async function handleServiceCols(value: number) {
   }
 
   columns.value = mergeColumns(serviceCols)
+
+  console.log(columns)
 }
 
 function handleImport(imeiList: string[], remark: string) {
@@ -393,7 +395,7 @@ async function handleMustRead() {
       :data="orders"
       :columns="columns"
       row-key="index"
-      class="h-[calc(100%-3rem)] border"
+      class="h-[calc(100%-3rem)] w-full border"
     />
   </div>
 </template>

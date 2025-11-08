@@ -7,6 +7,8 @@ export interface SettingApi {
 export interface Setting {
   // 网站标题
   title: string
+  // 网站标题(En)
+  titleEn: string
   // 公司名称
   company: string
   // 联系电话
