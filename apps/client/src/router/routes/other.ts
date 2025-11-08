@@ -18,9 +18,9 @@ const other: RouteRecordRaw[] = [
     component: () => import('@/modules/other/OrderInfo.vue'),
   },
   {
-    path: '/quote',
-    name: 'quote',
-    component: () => import('@desktop/pages/quote/index.vue'),
+    path: '/quotation',
+    name: 'quotation',
+    component: () => import('@desktop/pages/quotation/index.vue'),
   }
 ]
 

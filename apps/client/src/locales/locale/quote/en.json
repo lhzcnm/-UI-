@@ -1,54 +1,56 @@
 {
   "quote": {
-    "Title": "Quotation",
+    "Title": "Quotation Sheet",
     "Image": "/SanHe/EnglishPhoto.jpg",
     "QuoteButton": {
-      "CreateQuotation": "Create Quotation",
-      "CustomAdjustment": "Custom Adjustment",
+      "CreateQuotation": "Generate Quotation",
+      "CustomAdjustment": "Personalized Adjustment",
       "ConfirmModel": "Confirm Model",
-      "ClearSelection": "Clear Selection",
-      "FreeQuote":"Free Quote",
-      "Return": "return"
+      "ClearSelection": "Clear Selected",
+      "FreeQuote": "Free Quotation",
+      "Return": "Return"
     },
     "FriendlyReminder": {
-      "Content": "Friendly Reminder:\nAll models must be original (battery replacement allowed) and pass iTools/3uTools full green check with no pop-up alerts.\nDevices with repaired motherboards or severely damaged devices are not accepted — please confirm the device condition in advance.\nPrices are based on the date of receipt. Reconfirmation is required if the validity period is exceeded.\n\nRefurbished: Excellent overall appearance; original casing and screen; fully functional.\nPremium: Original condition; no dents on the frame, no scratches on the screen, minimal signs of use.\nMinor Wear: Slight signs of use; small dents on the frame or minor scratches on the screen.\nMajor Wear: Noticeable signs of use; multiple dents on the frame or visible screen damage.\nTestable Defect: Devices with screen explosion, display abnormalities, or other issues that can still be tested for a quote.",
-      "NewContent": "Friendly Reminder:\nFactory Sealed: Brand new, unopened, complete accessories, intact packaging, no activation record.\nQuotation is for reference only. Final pricing will be based on inspection results. Valid on the date of receipt.\niTools/3uTools full green check with no pop-up alerts."
+      "HongKong": "Friendly Reminder:\nSealed: Brand new, unopened, complete accessories, packaging intact, no activation record.\nPrices are for reference only, final price is subject to actual inspection. Quotation valid on the day of receipt.\nAisi/Sandglass check all green, no popup",
+      "SamSung": "Friendly Reminder:\nSealed: Brand new, unopened, complete accessories, packaging intact, no activation record.\nPrices are for reference only, final price is subject to actual inspection. Quotation valid on the day of receipt.\nAisi/Sandglass check all green, no popup",
+      "Flying": "Friendly Reminder:\nAll models require original (battery replaceable), Aisi/Sandglass check all green, no popup.\nMainboard repair or damaged phones are not accepted, please confirm device status in advance.\nQuotation valid on the day of receipt; if overdue, price needs reconfirmation.\n\nRefurbished: Overall appearance excellent, shell and screen not replaced, fully functional.\nPremium: Original good condition, no frame damage, screen scratch-free, minimal signs of use.\nMinorWear: Slight signs of use, minor frame dents or fine screen scratches.\nMajorWear: Obvious signs of use, multiple frame dents or screen damage.",
+      "HuaQiangBei": "Friendly Reminder:\nSealed: Brand new, unopened, complete accessories, packaging intact, no activation record.\nPrices are for reference only, final price is subject to actual inspection. Quotation valid on the day of receipt.\nAisi/Sandglass check all green, no popup"
     },
     "RealQuote": {
-      "Real": "Live Quote Sheet",
-      "HongKong": "HK Wholesale",
-      "FarVision": "Yuanwang New",
-      "Flying": "Feiyang Retail",
-      "Other": "Additional Quotes"
+      "Real": "Real-time Price Trend",
+      "HongKong": "Hong Kong New Phone",
+      "FarVision": "Huaqiangbei New Phone",
+      "Flying": "Flying Retail",
+      "Other": "Hong Kong Samsung"
     },
     "AdvancedFunctions": {
-      "Advanced": "Advanced Features",
+      "Advanced": "Advanced Feature",
       "Search": "Search Function",
-      "SearchContent": "Support precise search by memory, features, appearance, and other criteria to quickly locate the target model.",
-      "Personalized": "Personalized Quotation",
-      "PersonalizedContent": "Generate a personalized quotation with one click based on the selected model and parameters for a more professional presentation.",
-      "Customer": "Exclusive Support",
-      "CustomerContent": "One-on-one dedicated customer support offering real-time communication and a personalized service experience."
+      "SearchContent": "Supports precise search by memory, function, appearance, etc., quickly locate target models.",
+      "Personalized": "Advanced Customization",
+      "PersonalizedContent": "Generate a personalized quotation sheet for selected models and parameters with one click, showing professional results.",
+      "Customer": "Dedicated Customer Service",
+      "CustomerContent": "One-on-one customer support, providing real-time communication and personalized service experience."
     },
     "PersonalizedQuotation": {
       "Popular": "Popular Models"
     },
     "QuoteFilter": {
-      "Customized": "Customized Quotation",
-      "QuoteWatermark": "Quote Watermark",
-      "WatermarkName": "Enter your watermark name",
-      "QuoteColor": "Quote Color",
+      "Customized": "Personalized Quotation Sheet",
+      "QuoteWatermark": "Trend Chart Watermark",
+      "WatermarkName": "Please enter your watermark name",
+      "QuoteColor": "Trend Chart Color",
       "Color": {
-        "black": "Starry Black",
-        "yellow": "Gold",
+        "black": "Star Black",
+        "yellow": "Luxury Gold",
         "green": "Grass Green",
         "sky": "Sky Blue",
         "orange": "Orange",
         "red": "Rose Red"
       },
       "NowQuoteCard": {
-        "NowQuote": "Current Quote",
-        "AllQuote": "Edit All",
+        "NowQuote": "Current Trend Chart",
+        "AllQuote": "Modify Entire Sheet",
         "AddPrice": "Increase by Amount",
         "ReducePrice": "Decrease by Amount",
         "statu": "Selected"
@@ -60,38 +62,99 @@
       "SelectInput": "Click here to select"
     },
     "ImageTableType": {
-        "Series": "Series",
-        "Color": "Color",
-        "China": "China Version",
-        "England": "US Version",
-        "Capacity": "Capacity",
-        "Remark": "Remark",
-        "Models": "Models",
-        "HongKong": "HK Wholesale Quote",
-        "FarVision": "Yuanwang New Quote",
-        "Flying": "Feiyang Retail Quote"
-      },
-      "PopularModel":{
-      "PopularModel":"Popular Model",
+      "Series": "Series",
+      "Color": "Color",
+      "China": "China Version",
+      "England": "US Version",
+      "Capacity": "Capacity",
+      "Remark": "Remark",
+      "Models": "Model",
+      "HongKong": "Hong Kong Real-time Price",
+      "SamSung": "Samsung Real-time Price",
+      "Flying": "Flying Real-time Price",
+      "HuaQiangBei": "Huaqiangbei Real-time Price"
+    },
+    "PopularModel": {
+      "PopularModel": "Popular Models",
       "Memory": "Memory",
       "Refurbished": "Refurbished",
       "Premium": "Premium",
       "MinorWear": "Minor Wear",
       "MajorWear": "Major Wear",
-      "TestableDefect": "Testable Defect"
+      "TestableDefect": "Internal Damage Testable"
     },
-    "SearchFunction":{
+    "SearchFunction": {
       "SearchFunction": "Search Function",
       "UsedPhone": "Used Phone",
       "NewPhone": "New Phone",
       "SelectModel": "Select Model",
-      "Appearance": "Appearance / Wear"
+      "Appearance": "Appearance/Wear"
     },
     "QuoteImage": {
-      "PointsDialog": "Insufficient points",
-      "TopUpPoints": "Do you want to top up your points?",
-      "FreeDialog": "Free attempts have been used up",
-      "UsePoint": "Do you want to use points to generate the quote?"
-    }
+      "PointsDialog": "Insufficient Points",
+      "TopUpPoints": "Do you want to top up points?",
+      "FreeDialog": "Free quota used up",
+      "UsePoint": "Do you want to use points to generate a quotation?"
+    },
+    "Tab": {
+      "Home": "Home",
+      "Retail": "Details",
+      "Fillter": "Personalized",
+      "Return": "Return"
+    },
+    "Colors": {
+      "Color1": "Black",
+      "Color2": "White",
+      "Color3": "Blue",
+      "Color4": "Purple",
+      "Color5": "Green",
+      "Color6": "Silver",
+      "Color7": "Orange",
+      "Color8": "Pink",
+      "Color9": "Ultramarine",
+      "Color10": "Teal",
+      "Color11": "Desert",
+      "Color12": "Primary Color",
+      "Color13": "Yellow",
+      "Color14": "Red"
+    },
+    "TableHeaders": {
+      "Header1": "Capacity",
+      "Header2": "Color",
+      "Header3": "Activated",
+      "Header4": "Not Activated",
+      "Header5": "Remark"
+    },
+    "TableHeaders1": {
+      "Header1": "Capacity",
+      "Header2": "Refurbished",
+      "Header3": "Premium",
+      "Header4": "Minor Wear",
+      "Header5": "Major Wear",
+      "Header6": "Remark"
+    },
+    "TableHeaders3": {
+      "Header1": "Capacity",
+      "Header2": "Status",
+      "Header3": "Color",
+      "Header4": "Standalone",
+      "Header5": "With Packaging",
+      "Header6": "New",
+      "Header7": "Remark"
+    },
+    "Tabs": {
+      "Tab1": "Hong Kong New Phone",
+      "Tab2": "Flying Retail",
+      "Tab3": "Huaqiangbei New Phone",
+      "Tab4": "Hong Kong Samsung"
+    },
+    "NoData": "No matching data",
+    "Generate": "Generate",
+    "EnterAmount":"Please enter amount",
+    "Filter": "Filter",
+    "ActivationStatus":"Activation Status",
+    "Appearance":"Appearance",
+    "confirmLeave":"Are you leaving?",
+    "message": "Rich content, waiting for your visit."
   }
 }

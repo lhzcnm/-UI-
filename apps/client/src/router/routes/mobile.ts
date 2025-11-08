@@ -62,7 +62,13 @@ const mobile: RouteRecordRaw = {
       name: 'Quote',
       meta: { hideHeader: true, hideFooter: true },
       component: () => import('@/modules/mobile/pages/quote/index.vue')
-    }
+    },
+    {
+      path: 'quotation',
+      name: 'Quotation',
+      meta: { hideHeader: true, hideFooter: true },
+      component: () => import('@/modules/mobile/pages/quotation/index.vue')
+    },
   ],
 }
 

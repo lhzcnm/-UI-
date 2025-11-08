@@ -26,7 +26,7 @@ const foldIcon = computed(() => {
       <nav class="flex items-center space-x-4">
         <!-- 报价单按钮点击进入报价单 -->
         <div 
-          @click="router.push('/quote')"
+          @click="router.push('/quotation')"
           class="inline-block px-3 py-2  bg-gradient-to-r from-sky-400 via-purple-500 to-pink-500
                  text-white text-sm rounded-full shadow-lg 
                  hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer
