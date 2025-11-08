@@ -84,6 +84,7 @@ export interface OrderSubmitParams {
   serviceId: number
   imeiList: string[]
   isBulk: boolean
+  language: string
   remark?: string
 }
 export interface OrderSubmitForm {

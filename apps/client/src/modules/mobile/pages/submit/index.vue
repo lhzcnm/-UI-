@@ -323,6 +323,7 @@ function submitOrder(service: Service) {
     imeiList: validImeiList.value,
     remark: form.remark,
     isBulk: !form.pushMsg,
+    language: locale.value,
   }
 
   const response = orderApi.submit(params)

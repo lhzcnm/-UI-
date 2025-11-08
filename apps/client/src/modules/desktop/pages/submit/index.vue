@@ -200,7 +200,8 @@ function submitOrder(service: Service) {
     serviceId: service.id,
     imeiList: imeis.value,
     remark: comments.value,
-    isBulk: !pushMsg.value
+    isBulk: !pushMsg.value,
+    language: locale.value,
   }
 
   const response = orderApi.submit(params)
