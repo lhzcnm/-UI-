@@ -16,7 +16,7 @@ function handleRecharge() {
 
   disabled.value = true
   const params: DecryptParams = {
-    code: code.value
+    code: code.value.trim(),
   }
   voucherApi.decrypt(params).then(() => {
     toast.success(t('submit.success', { action: t('button.exchange') }))

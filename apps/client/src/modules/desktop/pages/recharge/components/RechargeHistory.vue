@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { InvoicesResponse } from '@/api/user'
 import { RECHARGE_STORE } from '../utils'
 import { downloadURL } from '@3un/utils'
 import { userApi } from '@/api/user'
@@ -7,8 +6,6 @@ import { userApi } from '@/api/user'
 const page = ref(1)
 const loading = ref(false)
 
-const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
-const bills = ref<InvoicesResponse>(IPage)
 const store = inject(RECHARGE_STORE)!
 
 const { t } = useI18n()
@@ -57,7 +54,7 @@ function handleExport() {
       <XPagination
         v-model="page"
         hide-on-single-page
-        :size="20" :total="bills.total"
+        :limit="20" :total="store.bills.total"
       />
     </div>
 

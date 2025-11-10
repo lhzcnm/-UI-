@@ -5,7 +5,7 @@
       "serviveNull": "请先选择服务",
       "importNull": "请先导入订单",
       "imeiNotExist": "IMEI不存在",
-      "exportNotSub": "订单未提交",
+      "exportNotSub": "订单未处理完成, 不可导出",
       "orderHandle": "订单处理中",
       "pushRes": "确认不接收公众号推送结果吗?\n订单量较大时,建议关闭",
       "scan": "识别不到IMEI/SN",

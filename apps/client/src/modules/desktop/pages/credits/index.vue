@@ -32,12 +32,20 @@ watch(
 
 <template>
   <div class="p-4 h-full">
-    <section class="space-x-2 mb-3">
+    <section class="space-x-2 mb-3 flex justify-between">
+      <div></div>
       <XPagination
         v-model="page"
         v-model:limit="limit"
         :total="creditLogs.total"
-        :layouts="['total', 'sizes', 'prev', 'pager', 'next', 'jumper']"
+        :layouts="[
+          'total',
+          'prev',
+          'pager',
+          'next',
+          'sizes',
+          'jumper'
+        ]"
       />
     </section>
 

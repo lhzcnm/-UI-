@@ -67,9 +67,10 @@ export interface OrderExportParams {
   serviceId: number
   status?: ORDER_STATUS
   imeiList?: string[]
+  orderIdList?: string[]
   startTime?: string
   endTime?: string
-  excelHead: string[]
+  excelHead?: string[]
 }
 export interface OrderExportForm {
   serviceId: number

@@ -13,11 +13,11 @@ import * as html2image from 'html-to-image'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { getOrderColumns } from './utils/columns'
-import { orderApi, type Order } from '@/api/orders'
+import { orderApi, type Order, type OrderExportParams } from '@/api/orders'
 import type { ImgOrderItem } from './types'
 import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
 import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
-import { ORDER_STATUS } from '@3un/utils'
+import { downloadURL, ORDER_STATUS } from '@3un/utils'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -67,11 +67,23 @@ watch(
   { immediate: true }
 )
 
+watch(
+  () => selectRows.value,
+  () => {
+    console.log(selectRows)
+  }
+)
+
 function openSearch() {
   store.visibleSearch = true
 }
 
 function openExport() {
+  if(selectRows.value.length > 0) {
+    handleExport()
+    return
+  }
+
   store.exportForm = { ...form.export }
   store.visibleExport = true
 }
@@ -199,6 +211,26 @@ function handleClose() {
   }
 }
 
+function handleExport() {
+  console.log(selectRows.value)
+  const orderId = selectRows.value[0]
+  const index = store.orders.list.findIndex(item => item.id === +orderId)
+
+  if(index === -1) {
+    selectRows.value.length = 0
+    openExport()
+  }
+
+  const order = store.orders.list[index]
+  const params: OrderExportParams = {
+    serviceId: order.serviceId,
+    orderIdList: [order.id.toString()],
+  }
+  orderApi.export(params).then(({ data }) => {
+    downloadURL(data)
+  })
+}
+
 onUnmounted(() => {
   handleClose()
 })
@@ -223,10 +255,10 @@ onUnmounted(() => {
         :total="store.orders.total"
         :layouts="[
           'total',
-          'sizes',
           'prev',
           'pager',
           'next',
+          'sizes',
           'jumper',
         ]"
       />

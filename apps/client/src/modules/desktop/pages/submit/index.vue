@@ -106,7 +106,6 @@ async function handleServiceCols(value: number) {
   const serviceCols: XTableColumn[] = []
   for (const item of data) {
     const { name, nameEn, width } = item
-
     const field = hash(locale.value === 'zh' ? name : nameEn ? nameEn : name)
 
     serviceCols.push({
@@ -209,7 +208,7 @@ function submitOrder(service: Service) {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success(`${t('submit.success', { action: t('action.submit') })}}`)
+      toast.success(`${t('submit.success', { action: t('action.submit') })}`)
     }
 
     renderSubmitOrderResult(data)
@@ -228,6 +227,12 @@ function submitOrder(service: Service) {
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
   const errMsgCol = columns.value[5].key
   const result = []
+  const service = store.services.get(selectedId.value)
+
+  let text = "提交成功, 请前往<a href='/history' class='underline hover:text-success'>订单历史</a>查看结果"
+  if(locale.value !== 'zh') {
+    text = "Submission successful. Please go to <a href='/history' class='underline hover:text-success'>History</a> to view the result."
+  }
 
   for (let item of data) {
     const index = imeis.value.indexOf(item.imei)
@@ -238,7 +243,8 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 
     result.push({
       ...rawOrders.value[index],
-      ...(isFailed && { [errMsgCol]: item.message }),
+      // ...(isFailed && { [errMsgCol]: item.message ? item.message : "提交成功, 请前往订单历史查看结果" }),
+      ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
       status: item.status,
     })
   }
@@ -276,7 +282,7 @@ function processOrderResult(content: string) {
   return result
 }
 
-async function handleCount() {
+function handleCount() {
   count = count - 1
 
   if (count === 0) {
@@ -382,10 +388,10 @@ async function handleMustRead() {
         :sizes
         :layouts="[
           'total',
-          'sizes',
           'prev',
           'pager',
           'next',
+          'sizes',
         ]"
       />
     </section>

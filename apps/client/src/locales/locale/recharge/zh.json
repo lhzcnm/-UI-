@@ -30,7 +30,7 @@
     "voucher": {
       "title": "积分券兑换",
       "input": {
-        "placeholder": "请输入积分券码"
+        "placeholder": "请输入积分券"
       },
       "button": "立即兑换",
       "prompt": {

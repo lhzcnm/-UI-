@@ -5,12 +5,12 @@
       "serviveNull": "Please select a service first",
       "importNull": "Please import the order first",
       "imeiNotExist": "IMEI does not exist",
-      "exportNotSub": "Order not submitted",
+      "exportNotSub": "The order has not been processed completely and cannot be exported",
       "orderHandle": "Processing order",
       "pushRes": "Are you sure you don't want to receive results via WeChat official account push?",
       "scan": "IMEI/SN not recognized",
       "file": "Failed to parse the file",
-      "balance": "Curr. Balance"
+      "balance": "Balance"
     },
     "submit": "Submit Order",
     "viewRes": "Please go to 'My Orders' page to view results",
@@ -45,6 +45,6 @@
     "info": {
       "additional": "Additional Information"
     },
-    "submitCount": "You can submit {count} orders"
+    "submitCount": "Can submit {count} orders"
   }
 }
