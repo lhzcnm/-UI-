@@ -10,6 +10,10 @@ import { zVoucherCreate } from '@/inters/voucher'
 const store = inject(VOUCHER_STORE)!
 
 async function handleCreate() {
+  if(!store.createForm.amount || store.createForm.amount === 0) {
+    return toast.warning("积分券充值金额不能为0")
+  }
+  
   try {
     await createVoucher(store.createForm)
     store.visibleCreate = false
