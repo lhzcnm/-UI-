@@ -220,8 +220,6 @@ function handleExport() {
   }
   orderApi.export(params).then(({ data }) => {
     downloadURL(data)
-  }).finally(() => {
-    selectRows.value.length = 0
   })
 }
 
