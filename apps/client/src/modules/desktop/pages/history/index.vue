@@ -205,7 +205,6 @@ function handleClose() {
 }
 
 function handleExport() {
-  console.log(selectRows.value)
   const orderId = selectRows.value[0]
   const index = store.orders.list.findIndex(item => item.id === +orderId)
 
