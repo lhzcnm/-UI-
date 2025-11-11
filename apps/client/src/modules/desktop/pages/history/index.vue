@@ -67,13 +67,6 @@ watch(
   { immediate: true }
 )
 
-watch(
-  () => selectRows.value,
-  () => {
-    console.log(selectRows)
-  }
-)
-
 function openSearch() {
   store.visibleSearch = true
 }
@@ -228,6 +221,8 @@ function handleExport() {
   }
   orderApi.export(params).then(({ data }) => {
     downloadURL(data)
+  }).finally(() => {
+    selectRows.value.length = 0
   })
 }
 
