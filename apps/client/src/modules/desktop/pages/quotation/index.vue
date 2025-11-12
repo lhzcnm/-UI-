@@ -125,10 +125,10 @@ provide(QUOTE_STORE, store)
 </script>
 
 <template>
-  <div class="overflow-hidden h-screen">
-    <div class="flex flex-col w-full h-screen overflow-hidden">
+  <div class="overflow-hidden h-screen ">
+    <div class="flex flex-col w-full mx-auto h-screen overflow-hidden">
       <!-- 底部导航栏 -->
-      <section class="w-full h-16 fixed bottom-0 z-30 flex justify-around items-center 
+      <section class="w-1/2 h-16 fixed bottom-0 right-1/2 translate-x-1/2 z-30 flex justify-around items-center 
                backdrop-blur-md bg-white/70 dark:bg-black/40 
                border-t border-white/20 dark:border-gray-700/40 
                shadow rounded-t-2xl

@@ -10,7 +10,7 @@ const store = inject<QUOTE_STORE_TYPE>(QUOTE_STORE)!
 <template>
   <section class=" h-screen mb-14 flex flex-col overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 
-    <img class="w-full rounded-b-2xl shadow-md" :src="t('quote.Image')" alt="" @click="store.pageShow = 'fillter'">
+    <img class="w-1/2 mx-auto rounded-2xl shadow-lg mt-4" :src="t('quote.Image')" alt="" @click="store.pageShow = 'fillter'">
 
     <div class="px-4">
 

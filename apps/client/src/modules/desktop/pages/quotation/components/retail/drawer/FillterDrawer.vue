@@ -4,7 +4,7 @@ const { t } = useI18n()
 const props = defineProps({
   modelValue: { type: Boolean, default: false }, // 控制抽屉是否打开
   title: { type: String, default: 'quote.Filter' },          // 抽屉标题
-  width: { type: String, default: '2/3' }        // 抽屉宽度，Tailwind 格式，例如 '1/2', '2/3'
+  width: { type: String, default: '96' }        // 抽屉宽度，Tailwind 格式，例如 '1/2', '2/3'
 })
 
 const emit = defineEmits(['update:modelValue'])

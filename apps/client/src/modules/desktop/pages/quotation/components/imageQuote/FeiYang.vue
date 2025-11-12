@@ -121,7 +121,7 @@ onUnmounted(() => {
     <section
       id="createImage"
       ref="quoteImage"
-      class="border w-full h-full overflow-y-auto relative text-[10px] border-gray-200 dark:border-gray-700
+      class="border w-full h-full overflow-y-auto relative text-xs border-gray-200 dark:border-gray-700
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
@@ -160,7 +160,7 @@ onUnmounted(() => {
         <div class="flex">
           <table
             class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700
-                   text-center text-[10px] transition-colors duration-200"
+                   text-center text-xs transition-colors duration-200"
           >
             <colgroup>
               <col class="w-1/6" />
@@ -261,6 +261,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 <style scoped>
 .fade-scale-enter-active,

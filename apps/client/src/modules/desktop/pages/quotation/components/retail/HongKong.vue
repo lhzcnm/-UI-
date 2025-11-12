@@ -67,68 +67,64 @@ const filteredData = computed(() => {
 
 <template>
   <div
-    class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-colors duration-300 
-           bg-gray-50 dark:bg-black"
+    class="p-6 bg-gray-50 dark:bg-black"
+    :class="{
+      'flex justify-center items-start min-h-screen space-x-6': filteredData.length < 4, 
+      'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6': filteredData.length >= 4
+    }"
   >
     <!-- 无数据提示 -->
     <div
       v-if="!filteredData.length"
-      class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10"
+      class="col-span-full text-center text-gray-500 dark:text-gray-400 py-16"
     >
       {{ t('quote.NotData') }}
     </div>
 
-    <!-- 主卡片 -->
+    <!-- 渲染数据 -->
     <div
       v-for="(series, si) in filteredData"
       :key="si"
-      class="bg-white dark:bg-black border border-gray-200 dark:border-border
-             rounded-xl p-4 shadow-md hover:shadow-lg 
-             dark:hover:shadow-[0_0_12px_rgba(255,255,255,0.05)] 
-             transition-all duration-300"
+      class="bg-white dark:bg-black border border-gray-200 dark:border-border rounded-xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300"
     >
       <!-- 型号标题 -->
-      <h2
-        class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1 truncate 
-               border-b border-gray-100 dark:border-gray-800 pb-1"
-      >
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3 truncate border-b border-gray-100 dark:border-gray-800 pb-2">
         {{ series.type }}
       </h2>
 
       <template v-for="(model, mi) in series.models" :key="mi">
         <!-- 型号备注 -->
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 italic truncate">
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 italic truncate">
           {{ model.remark }}
         </p>
 
         <!-- 容量区块 -->
-        <div v-for="(p, pi) in model.memories" :key="pi" class="mb-3">
-          <h3
-            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 
-                   border-b border-gray-200 dark:border-gray-700 pb-0.5"
-          >
+        <div v-for="(p, pi) in model.memories" :key="pi" class="mb-6">
+          <h3 class="text-md font-medium text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">
             {{ p.memory }}
           </h3>
 
-          <div class="grid grid-cols-1 gap-2">
+          <div class="grid grid-cols-1 gap-6">
             <!-- 已激活 -->
-            <div v-if="p.active && p.active.length">
-              <h4 class="text-xs font-medium text-indigo-600 dark:text-indigo-400 mb-1">{{ t('quote.TableHeaders.Header3') }}</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div v-if="p.active && p.active.length" class="w-full col-span-full">
+              <h4 class="text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-3">
+                {{ t('quote.TableHeaders.Header3') }}
+              </h4>
+              <div class="w-full space-y-2">
                 <div
                   v-for="(item, idx) in p.active"
                   :key="'active-' + idx"
-                  class="rounded-lg p-2 border border-indigo-100 dark:border-indigo-900/40
+                  class="rounded-lg p-4 border border-indigo-100 dark:border-indigo-900/40
                          bg-indigo-50/70 dark:bg-indigo-950/40 
                          hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-all"
                 >
-                  <div class="flex justify-between items-center mb-1">
+                  <div class="flex justify-between items-center mb-2">
                     <span class="font-medium text-gray-900 dark:text-gray-100 text-sm">
                       {{ t(ColorEnumNames[item.color]) }}
                     </span>
                     <span class="text-xs text-indigo-600 dark:text-indigo-400">{{ t('quote.TableHeaders.Header3') }}</span>
                   </div>
-                  <div class="text-xs text-gray-700 dark:text-gray-300 flex flex-wrap justify-between gap-x-2">
+                  <div class="text-xs text-gray-700 dark:text-gray-300 flex flex-wrap justify-between gap-x-3">
                     <span>{{ t('quote.TableHeaders3.Header4') }}：￥{{ item.prices.primary }}</span>
                     <span>{{ t('quote.TableHeaders3.Header5') }}：￥{{ item.prices.secondary }}</span>
                     <span>{{ t('quote.TableHeaders3.Header6') }}：￥{{ item.prices.source }}</span>
@@ -138,23 +134,25 @@ const filteredData = computed(() => {
             </div>
 
             <!-- 未激活 -->
-            <div v-if="p.inactive && p.inactive.length">
-              <h4 class="text-xs font-medium text-red-600 dark:text-red-400 mb-1">{{ t('quote.TableHeaders.Header4') }}</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div v-if="p.inactive && p.inactive.length" class="w-full col-span-full">
+              <h4 class="text-sm font-medium text-red-600 dark:text-red-400 mb-3">
+                {{ t('quote.TableHeaders.Header4') }}
+              </h4>
+              <div class="w-full space-y-2">
                 <div
                   v-for="(item, idx) in p.inactive"
                   :key="'inactive-' + idx"
-                  class="rounded-lg p-2 border border-red-100 dark:border-red-900/40
+                  class="rounded-lg p-4 border border-red-100 dark:border-red-900/40
                          bg-red-50/70 dark:bg-red-950/40 
                          hover:bg-red-100 dark:hover:bg-red-900/60 transition-all"
                 >
-                  <div class="flex justify-between items-center mb-1">
+                  <div class="flex justify-between items-center mb-2">
                     <span class="font-medium text-gray-900 dark:text-gray-100 text-sm">
                       {{ t(ColorEnumNames[item.color]) }}
                     </span>
                     <span class="text-xs text-red-600 dark:text-red-400">{{ t('quote.TableHeaders.Header4') }}</span>
                   </div>
-                  <div class="text-xs text-gray-700 dark:text-gray-300 flex flex-wrap justify-between gap-x-2">
+                  <div class="text-xs text-gray-700 dark:text-gray-300 flex flex-wrap justify-between gap-x-3">
                     <span>{{ t('quote.TableHeaders3.Header4') }}：￥{{ item.prices.primary }}</span>
                     <span>{{ t('quote.TableHeaders3.Header5') }}：￥{{ item.prices.secondary }}</span>
                     <span>{{ t('quote.TableHeaders3.Header6') }}：￥{{ item.prices.source }}</span>
@@ -168,6 +166,7 @@ const filteredData = computed(() => {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 button {

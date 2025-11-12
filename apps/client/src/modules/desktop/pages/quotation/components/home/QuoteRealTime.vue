@@ -21,7 +21,7 @@ function openImage(id: number){
 <template>
   <!-- 实时报价单卡片 -->
   <section
-    class="relative mx-auto my-4 max-w-6xl rounded-3xl 
+    class="relative mx-auto my-4 w-1/2 rounded-3xl 
            bg-gradient-to-br from-white/90 to-gray-100/50 dark:from-black/90 dark:to-black/50
            shadow-md border border-white/30 backdrop-blur-xl overflow-hidden"
   >
@@ -48,7 +48,7 @@ function openImage(id: number){
                transition-all duration-300 ease-out"
       >
         <div
-          class="relative aspect-square w-full flex items-center justify-center rounded-full 
+          class="relative aspect-square w-1/2 flex items-center justify-center rounded-full 
                  bg-gradient-to-br shadow-md
                  transition-all duration-300 ease-out group-hover:scale-[1.08] 
                  group-hover:shadow-[0_6px_25px_rgba(0,0,0,0.15)]"

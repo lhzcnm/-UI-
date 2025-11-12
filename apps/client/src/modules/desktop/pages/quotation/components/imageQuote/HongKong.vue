@@ -105,7 +105,7 @@ onUnmounted(() => {
     <section
       ref="quoteImage"
       id="createImage1"
-      class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-[10px]
+      class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-xs
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
@@ -138,7 +138,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border text-center text-[10px] dark:border-gray-600">
+          <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
             <colgroup>
               <col class="w-1/7" />
               <col class="w-1/7" />
@@ -153,7 +153,7 @@ onUnmounted(() => {
                 <th
                   v-for="header in TABLE_HEADERS"
                   :key="header"
-                  class="border py-2  dark:border-gray-600"
+                  class="border py-2 dark:border-gray-600"
                 >
                   {{ t(header) }}
                 </th>
@@ -259,6 +259,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 <style scoped>
 /* 动画 */

@@ -46,7 +46,12 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div 
+    class="p-6 bg-gray-50 dark:bg-black"
+    :class="{
+      'flex justify-center items-start min-h-screen space-x-6': filteredData.length < 4,
+      'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6': filteredData.length >= 4
+    }">
     <!-- 无数据提示 -->
     <div
       v-if="!filteredData.length"
@@ -89,7 +94,7 @@ const filteredData = computed(() => {
               </div>
               <div class="flex flex-wrap justify-between text-xs text-gray-600 dark:text-gray-300 gap-1">
                 <span>{{ t('quote.TableHeaders.Header3') }}：￥{{ item.prices.primary }}</span>
-                <span>{{ t('quote.TableHeaders.Header4') }}：￥{{ item.prices.secondary }}</span>
+                <span class="text-red-500">{{ t('quote.TableHeaders.Header4') }}：￥{{ item.prices.secondary }}</span>
               </div>
             </div>
 

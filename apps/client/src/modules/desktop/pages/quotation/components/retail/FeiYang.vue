@@ -41,21 +41,20 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="p-6 bg-gray-50 dark:bg-black"
+    :class="{
+      'flex justify-center items-start min-h-screen space-x-6': filteredData.length < 4,
+      'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6': filteredData.length >= 4
+    }">
     <!-- 无数据提示 -->
-    <div
-      v-if="!filteredData.length"
-      class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10"
-    >
+    <div v-if="!filteredData.length"
+      class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10">
       {{ t('quote.NotData') }}
     </div>
 
-    <!-- 渲染数据 -->
-    <div
-      v-for="(series, si) in filteredData"
-      :key="si"
-      class="bg-white dark:bg-black border border-gray-200 dark:border-border rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300"
-    >
+    <!-- 渲染数据 --> 
+    <div v-for="(series, si) in filteredData" :key="si " :class="{ 'w-1/4': filteredData.length < 4 }"
+      class="bg-white dark:bg-black border border-gray-200 dark:border-border rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300">
       <!-- 型号 -->
       <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">
         {{ series.type }}
@@ -67,30 +66,27 @@ const filteredData = computed(() => {
       </p>
 
       <!-- 容量 + 价格 -->
-      <template v-for="(model) in series.models" >
+      <template v-for="(model) in series.models">
         <div class="mb-3">
           <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 border-b border-gray-200 dark:border-gray-700 pb-0.5">
             {{ model.memory }}
           </h3>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-            <div
-              v-for="(price, key) in model.prices"
-              :key="key"
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+            <div v-for="(price, key) in model.prices" :key="key"
               :class="{
-                'bg-indigo-50 dark:bg-indigo-900 hover:bg-indigo-100 dark:hover:bg-indigo-800': key==='new',
-                'bg-green-50 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-800': key==='good',
-                'bg-yellow-50 dark:bg-yellow-900 hover:bg-yellow-100 dark:hover:bg-yellow-800': key==='smallFlower',
-                'bg-red-50 dark:bg-red-900 hover:bg-red-100 dark:hover:bg-red-800': key==='bigFlower',
+                'bg-indigo-50 dark:bg-indigo-900 hover:bg-indigo-100 dark:hover:bg-indigo-800': key === 'new',
+                'bg-green-50 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-800': key === 'good',
+                'bg-yellow-50 dark:bg-yellow-900 hover:bg-yellow-100 dark:hover:bg-yellow-800': key === 'smallFlower',
+                'bg-red-50 dark:bg-red-900 hover:bg-red-100 dark:hover:bg-red-800': key === 'bigFlower',
               }"
-              class="rounded-lg p-2 transition-colors"
-            >
-              <div class="flex justify-between items-center mb-0.5">
+              class="rounded-lg p-3 transition-colors duration-300">
+              <div class="flex justify-between items-center mb-1">
                 <span class="font-medium text-gray-900 dark:text-gray-100 text-sm">
                   {{
-                    t(key==='new' ? 'quote.PopularModel.Refurbished'
-                    : key==='good' ? 'quote.PopularModel.Premium'
-                    : key==='smallFlower' ? 'quote.PopularModel.MinorWear'
+                    t(key === 'new' ? 'quote.PopularModel.Refurbished'
+                    : key === 'good' ? 'quote.PopularModel.Premium'
+                    : key === 'smallFlower' ? 'quote.PopularModel.MinorWear'
                     : 'quote.PopularModel.MajorWear')
                   }}
                 </span>
@@ -103,3 +99,4 @@ const filteredData = computed(() => {
     </div>
   </div>
 </template>
+

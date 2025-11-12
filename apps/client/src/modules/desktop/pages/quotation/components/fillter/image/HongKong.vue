@@ -134,7 +134,7 @@ onUnmounted(() => {
     <section
       ref="quoteImage"
       id="createImage1"
-      class="border w-full h-full overflow-y-auto relative text-[10px] border-gray-200 dark:border-gray-700 
+      class="border w-full h-full overflow-y-auto relative text-xs border-gray-200 dark:border-gray-700 
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsUpdateImageDialog = false"
     >
@@ -163,7 +163,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700 text-center text-[10px] transition-colors duration-200">
+          <table class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700 text-center text-xs transition-colors duration-200">
             <colgroup>
               <col class="w-1/7" />
               <col class="w-1/7" />
@@ -226,8 +226,8 @@ onUnmounted(() => {
           class="relative h-12 w-56 text-lg font-semibold tracking-wide text-white
                  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
                  dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700
-                 rounded-2xl shadow-lg dark:shadow-purple-800/50
-                 hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0
+                 rounded-2xl
+                 hover:-translate-y-0.5 active:translate-y-0
                  transition-all duration-300 overflow-hidden group"
         >
           <span class="relative z-10 flex items-center justify-center gap-2">
@@ -244,6 +244,7 @@ onUnmounted(() => {
     <QuoteFreeDialog v-model="InsufficientPoints" title="积分不足" message="是否去充值积分？" @confirm="handleConfirmPoint"/>
   </div>
 </template>
+
 
 <style scoped>
 .fade-scale-enter-active,

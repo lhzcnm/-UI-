@@ -66,7 +66,12 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div 
+    class="p-6 bg-gray-50 dark:bg-black"
+    :class="{
+      'flex justify-center items-start min-h-screen space-x-6': filteredData.length < 4, 
+      'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6': filteredData.length >= 4
+    }">
     <!-- 无数据提示 -->
     <div
       v-if="!filteredData.length"
@@ -99,7 +104,7 @@ const filteredData = computed(() => {
             <!-- 已激活 -->
             <div v-if="p.active && p.active.length">
               <h4 class="text-xs font-medium text-indigo-500 dark:text-indigo-400 mb-1">{{ t('quote.TableHeaders.Header3') }}</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="w-full space-y-2">
                 <div
                   v-for="(item, idx) in p.active"
                   :key="'active-' + idx"
@@ -121,7 +126,7 @@ const filteredData = computed(() => {
             <!-- 未激活 -->
             <div v-if="p.inactive && p.inactive.length">
               <h4 class="text-xs font-medium text-red-500 dark:text-red-400 mb-1">未激活</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="w-full space-y-2">
                 <div
                   v-for="(item, idx) in p.inactive"
                   :key="'inactive-' + idx"

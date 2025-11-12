@@ -14,6 +14,7 @@ const colorBool = ref(false)
 const watermark = ref('')
 // 创建一个对象来存储每个下拉框的选中值
 const updateSelectMap = reactive<Record<number, number>>({})
+
 ALL_QUOTATION.forEach((_, index) => {
   updateSelectMap[index] = 1; // 默认选择第一个选项，即 "加价"
 })
@@ -176,7 +177,7 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
 </script>
 
 <template>
-  <section class="h-screen pb-14 flex flex-col bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-black dark:via-gray-950 dark:to-black transition-all duration-500">
+  <section class="h-screen w-1/2 pb-14 flex flex-col fixed translate-x-1/2">
     <!-- 顶部筛选区 -->
     <div class="px-4 py-4 mb-3 bg-white/80 dark:bg-black backdrop-blur-xl rounded-b-3xl shadow-md border-b border-gray-200 dark:border-border transition-all">
       <!-- 水印输入 -->
@@ -204,7 +205,7 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
           />
         </div>
 
-        <div v-show="colorBool" class="grid grid-cols-3 sm:grid-cols-4 gap-3 text-white font-medium text-center w-full pr-2">
+        <div v-show="colorBool" class="grid grid-cols-3 sm:grid-cols-3 gap-3 text-white font-medium text-center w-full pr-2">
           <div
             v-for="(item, index) in QUOTE_FILLTER_COLOR"
             :key="index"
@@ -220,7 +221,7 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
     </div>
 
     <!-- 内容区 -->
-    <section class="flex-1 p-4 space-y-6 overflow-y-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <section class="grid grid-cols-2 gap-4 p-4  overflow-y-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div v-for="(item, index) in ALL_QUOTATION" :key="item" class="relative group bg-gradient-to-br from-white/80 via-gray-50/80 to-white/90 dark:from-black dark:via-gray-950/80 dark:to-gray-900/90 backdrop-blur-xl rounded-2xl p-5 border border-gray-200/50 dark:border-border shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
         <!-- 标题行 -->
         <div class="flex items-center justify-between mb-4">
@@ -243,18 +244,10 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
             {{ t('quote.QuoteFilter.NowQuoteCard.AllQuote') }}:
           </div>
 
-          <select
-            v-model="updateSelectMap[index]" 
-            class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-800 dark:via-purple-900 dark:to-pink-900
-                   text-gray-800 dark:text-gray-200 text-sm font-medium shadow-sm
-                   focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500
-                   hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200"
-            @click.stop
-          >
-            <option value="1">{{ t('quote.QuoteFilter.NowQuoteCard.AddPrice') }}</option>
-            <option value="2">{{ t('quote.QuoteFilter.NowQuoteCard.ReducePrice') }}</option>
-          </select>
+          <XSelect v-model="updateSelectMap[index]" placeholder="请选择(默认: 上调价格)">
+            <XSelectItem value="1">{{ t('quote.QuoteFilter.NowQuoteCard.AddPrice') }}</XSelectItem>
+            <XSelectItem value="2">{{ t('quote.QuoteFilter.NowQuoteCard.ReducePrice') }}</XSelectItem>
+          </XSelect>
 
           <XInput
             :placeholder="t('quote.EnterAmount')"

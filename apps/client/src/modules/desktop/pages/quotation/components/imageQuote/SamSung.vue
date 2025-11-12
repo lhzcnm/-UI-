@@ -99,7 +99,7 @@ onUnmounted(() => {
   <section
     id="createImage3"
     ref="quoteImage"
-    class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-[10px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     @click="store.IsImageDialog = false"
   >
     <!-- 顶部标题 -->
@@ -127,7 +127,7 @@ onUnmounted(() => {
       </div>
 
       <div class="flex">
-        <table class="w-full table-fixed border-collapse border text-center text-[10px] dark:border-gray-600">
+        <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
           <colgroup>
             <col class="w-1/7" />
             <col class="w-1/7" />
@@ -216,8 +216,8 @@ onUnmounted(() => {
           class="relative h-12 w-56 text-lg font-semibold tracking-wide text-white
                  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
                  dark:from-indigo-600 dark:via-purple-600 dark:to-pink-600
-                 rounded-2xl shadow-lg dark:shadow-purple-800/30
-                 hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0
+                 rounded-2xl
+                 hover:-translate-y-0.5 active:translate-y-0
                  transition-all duration-300 overflow-hidden group"
         >
           ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
@@ -239,6 +239,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 <style scoped>
 .fade-scale-enter-active,
