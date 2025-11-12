@@ -182,7 +182,7 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
     <div class="px-4 py-4 mb-3 bg-white/80 dark:bg-black backdrop-blur-xl rounded-b-3xl shadow-md border-b border-gray-200 dark:border-border transition-all">
       <!-- 水印输入 -->
       <div class="flex items-center space-x-4 mb-3">
-        <div class="w-28 text-gray-800 dark:text-gray-100 font-semibold text-sm">
+        <div class=" text-gray-800 dark:text-gray-100 font-semibold text-sm">
           {{ t('quote.QuoteFilter.QuoteWatermark') }}:
         </div>
         <XInput
@@ -195,7 +195,7 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
       <!-- 颜色筛选 -->
       <div>
         <div class="flex items-center mb-3 justify-between">
-          <div class="w-28 text-gray-800 dark:text-gray-100 font-semibold text-sm">
+          <div class=" text-gray-800 dark:text-gray-100 font-semibold text-sm">
             {{ t('quote.QuoteFilter.QuoteColor') }}:
           </div>
           <Icon
@@ -240,11 +240,11 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
 
         <!-- 价格调整行 -->
         <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2">
-          <div class="text-gray-700 dark:text-gray-300 font-semibold text-sm w-28 shrink-0">
+          <div class="text-gray-700 dark:text-gray-300 font-semibold text-sm shrink-0">
             {{ t('quote.QuoteFilter.NowQuoteCard.AllQuote') }}:
           </div>
 
-          <XSelect v-model="updateSelectMap[index]" placeholder="请选择(默认: 上调价格)">
+          <XSelect v-model="updateSelectMap[index]" :placeholder="t('quote.text')">
             <XSelectItem value="1">{{ t('quote.QuoteFilter.NowQuoteCard.AddPrice') }}</XSelectItem>
             <XSelectItem value="2">{{ t('quote.QuoteFilter.NowQuoteCard.ReducePrice') }}</XSelectItem>
           </XSelect>

@@ -77,7 +77,7 @@ const filteredData = computed(() => {
       v-if="!filteredData.length"
       class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10"
     >
-      暂无匹配数据
+      {{ t('quote.NoData') }}
     </div>
     
     <div

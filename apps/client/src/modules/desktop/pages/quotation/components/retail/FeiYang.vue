@@ -49,7 +49,7 @@ const filteredData = computed(() => {
     <!-- 无数据提示 -->
     <div v-if="!filteredData.length"
       class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10">
-      {{ t('quote.NotData') }}
+      {{ t('quote.NoData') }}
     </div>
 
     <!-- 渲染数据 --> 

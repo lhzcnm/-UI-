@@ -155,6 +155,7 @@
     "ActivationStatus":"Activation Status",
     "Appearance":"Appearance",
     "confirmLeave":"Are you leaving?",
-    "message": "Rich content, waiting for your visit."
+    "message": "Rich content, waiting for your visit.",
+    "text": "Please select (default: Increase Price)"
   }
 }
