@@ -134,7 +134,7 @@ onUnmounted(() => {
     <section
       id="createImage2"
       ref="quoteImage"
-      class="border w-full h-full overflow-y-auto relative text-xs 
+      class="border w-full h-full overflow-y-auto relative text-[8px] 
              border-gray-200 dark:border-gray-700 
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
@@ -145,14 +145,14 @@ onUnmounted(() => {
         dark:from-green-600 dark:to-green-400`"
       >
         {{ t('quote.ImageTableType.HuaQiangBei') }}
-        <div class="absolute bottom-0 right-2 text-xs font-thin italic opacity-90">
+        <div class="absolute bottom-0 right-2 text-[8px] font-thin italic opacity-90">
           {{ formatted.slice(0,10) }}
         </div>
       </div>
 
       <!-- 提示语 -->
       <div
-        class="bg-green-50 dark:bg-green-900/30 dark:text-green-300 text-center w-full px-2 py-1 leading-relaxed text-xs"
+        class="bg-green-50 dark:bg-green-900/30 dark:text-green-300 text-center w-full px-2 py-1 leading-relaxed text-[8px]"
         v-html="t('quote.FriendlyReminder.HuaQiangBei').replace(/\n/g, '<br />')"
       ></div>
 
@@ -169,7 +169,7 @@ onUnmounted(() => {
         <div class="flex">
           <table
             class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700
-                   text-center text-xs transition-colors duration-200"
+                   text-center text-[8px] transition-colors duration-200"
           >
             <colgroup>
               <col class="w-1/5" />
@@ -251,7 +251,7 @@ onUnmounted(() => {
                  hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0 
                  transition-all duration-300 overflow-hidden group"
         >
-          <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
           </span>
           <span
@@ -277,6 +277,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 
 <style scoped>

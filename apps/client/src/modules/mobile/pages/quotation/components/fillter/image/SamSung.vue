@@ -135,7 +135,7 @@ onUnmounted(() => {
     <section
       ref="quoteImage"
       id="createImage8"
-      class="border w-full h-full bg-white dark:bg-gray-900 overflow-y-auto relative text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden text-gray-800 dark:text-gray-100"
+      class="border w-full h-full bg-white dark:bg-gray-900 overflow-y-auto relative text-[8px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden text-gray-800 dark:text-gray-100"
       @click="store.IsUpdateImageDialog = false"
     >
       <!-- 顶部标题 -->
@@ -144,14 +144,14 @@ onUnmounted(() => {
         class="relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl"
       >
         {{ t('quote.ImageTableType.SamSung') }}
-        <div class="absolute bottom-0 right-2 text-xs font-thin italic text-gray-200 dark:text-gray-400">
+        <div class="absolute bottom-0 right-2 text-[8px] font-thin italic text-gray-200 dark:text-gray-400">
           {{ formatted.slice(0, 10) }}
         </div>
       </div>
 
       <!-- 提示语 -->
       <div
-        class="text-center w-full px-2 py-1 leading-relaxed text-xs dark:text-gray-200"
+        class="text-center w-full px-2 py-1 leading-relaxed text-[8px] dark:text-gray-200"
         v-html="t('quote.FriendlyReminder.SamSung').replace(/\n/g, '<br />')"
       ></div>
 
@@ -165,7 +165,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
+          <table class="w-full table-fixed border-collapse border text-center text-[8px] dark:border-gray-600">
             <colgroup>
               <col class="w-1/4">
               <col class="w-1/4">
@@ -174,7 +174,7 @@ onUnmounted(() => {
             </colgroup>
             <thead class="font-semibold bg-gray-200 dark:bg-gray-700 dark:text-gray-100">
               <tr>
-                <th v-for="header in TABLE_HEADERS" :key="header" class="border py-2 border-gray-300 dark:border-gray-600">{{ t(header) }}</th>
+                <th v-for="header in TABLE_HEADERS" :key="header" class="border py-2 border-gray-300 text-[8px] dark:border-gray-600">{{ t(header) }}</th>
               </tr>
             </thead>
             <tbody>
@@ -183,13 +183,13 @@ onUnmounted(() => {
                   <!-- 未激活行 -->
                   <template v-for="(item, idx) in price.colors" :key="'inactive-' + idx">
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border px-3 py-2 font-semibold align-middle dark:border-gray-600">
+                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border px-3 py-2 font-semibold align-middle text-[8px] dark:border-gray-600">
                         {{ price.memory }}
                       </td>
 
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.color }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
-                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border px-3 py-2 text-center align-middle dark:border-gray-600">
+                      <td class="border px-3 py-2 text-[8px] dark:border-gray-600">{{ item.color }}</td>
+                      <td class="border px-3 py-2 text-[8px] dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
+                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border px-3 py-2 text-center align-middle text-[8px] dark:border-gray-600">
                         {{ model.remark || '/' }}
                       </td>
                     </tr>
@@ -213,7 +213,7 @@ onUnmounted(() => {
           @click="generateFree()"
           class="relative h-12 w-56 text-lg font-semibold tracking-wide text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 overflow-hidden group"
         >
-          <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
           </span>
           <span

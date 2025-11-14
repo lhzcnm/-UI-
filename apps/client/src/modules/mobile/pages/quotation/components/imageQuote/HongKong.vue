@@ -111,7 +111,7 @@ onUnmounted(() => {
     <section
       ref="quoteImage"
       id="createImage1"
-      class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-xs
+      class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-[8px]
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
@@ -121,12 +121,12 @@ onUnmounted(() => {
         class="relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl"
       >
         {{ t('quote.ImageTableType.HongKong') }}
-        <div class="absolute bottom-0 right-2 text-xs font-thin italic">{{ formatted.slice(0, 10) }}</div>
+        <div class="absolute bottom-0 right-2 text-[8px] font-thin italic">{{ formatted.slice(0, 10) }}</div>
       </div>
 
       <!-- 提示语 -->
       <div
-        class="bg-orange-50 dark:bg-orange-900/30 dark:text-orange-200 text-center w-full px-2 py-1 leading-relaxed text-xs"
+        class="bg-orange-50 dark:bg-orange-900/30 dark:text-orange-200 text-center w-full px-2 py-1 leading-relaxed text-[8px]"
         v-html="t('quote.FriendlyReminder.HongKong').replace(/\n/g, '<br />')"
       ></div>
 
@@ -144,7 +144,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
+          <table class="w-full table-fixed border-collapse border text-center text-[8px] dark:border-gray-600">
             <colgroup>
               <col class="w-1/7" />
               <col class="w-1/7" />
@@ -178,23 +178,23 @@ onUnmounted(() => {
                         >
                           {{ price.memory }}
                         </td>
-                      
+                       
                         <!-- 颜色 -->
-                        <td class="border px-3 py-2 dark:border-gray-600">
+                        <td class="border py-2 dark:border-gray-600">
                           {{ item.color }}
                         </td>
-                      
+                       
                         <!-- 价格列 -->
-                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.Asis}} </td>
-                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices['Asis+'] }} </td>
-                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }} </td>
-                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.cpo }}</td>
-                      
+                        <td class="border py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.Asis}} </td>
+                        <td class="border py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices['Asis+'] }} </td>
+                        <td class="border py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }} </td>
+                        <td class="border py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.cpo }}</td>
+                       
                         <!-- 备注列（仅第一行显示） -->
                         <td
                           v-if="idx === 0"
                           :rowspan="price.colors.length"
-                          class="border px-3 py-2 text-center align-middle dark:border-gray-600"
+                          class="border py-2 text-center align-middle dark:border-gray-600"
                         >
                           {{ model.remark || '/' }}
                         </td>
@@ -225,7 +225,7 @@ onUnmounted(() => {
                  hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0
                  transition-all duration-300 overflow-hidden group"
         >
-          <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
           </span>
           <span
@@ -252,7 +252,6 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
-
 
 <style scoped>
 /* 动画 */

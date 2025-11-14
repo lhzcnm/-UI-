@@ -139,7 +139,7 @@ onUnmounted(() => {
     <section
       ref="quoteImage"
       id="createImage1"
-      class="border w-full h-full overflow-y-auto relative text-xs border-gray-200 dark:border-gray-700 
+      class="border w-full h-full overflow-y-auto relative text-[8px] border-gray-200 dark:border-gray-700 
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsUpdateImageDialog = false"
     >
@@ -149,12 +149,12 @@ onUnmounted(() => {
         class="relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl"
       >
         {{ t('quote.ImageTableType.HongKong') }}
-        <div class="absolute bottom-0 right-2 text-xs font-thin italic opacity-80">{{ formatted.slice(0, 10) }}</div>
+        <div class="absolute bottom-0 right-2 text-[8px] font-thin italic opacity-80">{{ formatted.slice(0, 10) }}</div>
       </div>
 
       <!-- 提示语 -->
       <div
-        class="text-center w-full px-2 py-1 leading-relaxed text-xs bg-gray-100 dark:bg-gray-800 dark:text-gray-300"
+        class="text-center w-full px-2 py-1 leading-relaxed text-[8px] bg-gray-100 dark:bg-gray-800 dark:text-gray-300"
         v-html="t('quote.FriendlyReminder.HongKong').replace(/\n/g, '<br />')"
       ></div>
 
@@ -168,7 +168,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700 text-center text-xs transition-colors duration-200">
+          <table class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700 text-center text-[8px] transition-colors duration-200">
             <colgroup>
               <col class="w-1/7" />
               <col class="w-1/7" />
@@ -180,7 +180,7 @@ onUnmounted(() => {
             </colgroup>
             <thead class="font-semibold bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
               <tr>
-                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-300 dark:border-gray-700 py-2">
+                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-300 dark:border-gray-700 py-2 text-[8px]">
                   {{ t(header) }}
                 </th>
               </tr>
@@ -193,15 +193,15 @@ onUnmounted(() => {
                     <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                       <td v-if="idx === 0" 
                         :rowspan="price.colors.length" 
-                        class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">
+                        class="border border-gray-200 dark:border-gray-700 py-2 font-semibold align-middle text-[8px]">
                         {{ price.memory }}
                       </td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.color }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices.Asis }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices['Asis+'] }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices.cpo }}</td>
-                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-center align-middle">
+                      <td class="border border-gray-200 dark:border-gray-700  py-2 text-[8px]">{{ item.color }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700  py-2 text-[8px]">{{ store.priceIcon }}: {{ item.prices.Asis }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700  py-2 text-[8px]">{{ store.priceIcon }}: {{ item.prices['Asis+'] }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700  py-2 text-[8px]">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700  py-2 text-[8px]">{{ store.priceIcon }}: {{ item.prices.cpo }}</td>
+                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border border-gray-200 dark:border-gray-700 py-2 text-center align-middle text-[8px]">
                         {{ model.remark || '/' }}
                       </td>
                     </tr>
@@ -228,7 +228,7 @@ onUnmounted(() => {
                  hover:-translate-y-0.5 active:translate-y-0
                  transition-all duration-300 overflow-hidden group"
         >
-          <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
           </span>
           <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0
@@ -242,7 +242,6 @@ onUnmounted(() => {
     <QuoteFreeDialog v-model="InsufficientPoints" title="积分不足" message="是否去充值积分？" @confirm="handleConfirmPoint"/>
   </div>
 </template>
-
 
 <style scoped>
 .fade-scale-enter-active,

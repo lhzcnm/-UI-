@@ -103,7 +103,7 @@ onUnmounted(() => {
   <section
     id="createImage3"
     ref="quoteImage"
-    class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-[8px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     @click="store.IsImageDialog = false"
   >
     <!-- 顶部标题 -->
@@ -111,14 +111,14 @@ onUnmounted(() => {
       :class="[quoteColors[1], 'relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl']"
     >
       {{ t('quote.ImageTableType.SamSung') }}
-      <div class="absolute bottom-0 right-2 text-xs font-thin italic opacity-90">
+      <div class="absolute bottom-0 right-2 text-[8px] font-thin italic opacity-90">
         {{ formatted.slice(0, 10) }}
       </div>
     </div>
 
     <!-- 提示语 -->
     <div
-      class="bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-200 text-center w-full px-2 py-1 leading-relaxed text-xs"
+      class="bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-200 text-center w-full px-2 py-1 leading-relaxed text-[8px]"
       v-html="t('quote.FriendlyReminder.SamSung').replace(/\n/g, '<br />')"
     ></div>
 
@@ -131,13 +131,12 @@ onUnmounted(() => {
       </div>
 
       <div class="flex">
-        <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
+        <table class="w-full table-fixed border-collapse border text-center text-[8px] dark:border-gray-600">
           <colgroup>
             <col class="w-1/4" />
             <col class="w-1/4" />
             <col class="w-1/4" />
             <col class="w-1/4" />
-       
           </colgroup>
           <thead class="bg-yellow-50 dark:bg-yellow-900/40 font-semibold">
             <tr>
@@ -163,13 +162,6 @@ onUnmounted(() => {
                     >
                       {{ price.memory }}
                     </td>
-                    <!-- <td
-                      class="border py-2 dark:border-gray-600"
-                      v-if="idx === 0"
-                      :rowspan="price.inactive.length"
-                    >
-                      {{ t('quote.TableHeaders.Header4') }}
-                    </td> -->
                     <td class="border px-3 py-2 dark:border-gray-600">{{ item.color }}</td>
                     <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
                     
@@ -182,23 +174,6 @@ onUnmounted(() => {
                     </td>
                   </tr>
                 </template>
-
-                <!-- 已激活 -->
-                <!-- <template v-for="(item, idx) in price.active" :key="'active-' + idx">
-                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                    <td
-                      class="border py-2 dark:border-gray-600"
-                      v-if="idx === 0"
-                      :rowspan="price.active.length"
-                    >
-                       {{ t('quote.TableHeaders.Header3') }}
-                    </td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
-                  </tr>
-                </template> -->
               </template>
             </template>
           </tbody>
@@ -241,7 +216,6 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
-
 
 <style scoped>
 .fade-scale-enter-active,

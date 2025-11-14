@@ -121,7 +121,7 @@ onUnmounted(() => {
     <section
       id="createImage"
       ref="quoteImage"
-      class="border w-full h-full overflow-y-auto relative text-xs border-gray-200 dark:border-gray-700
+      class="border w-full h-full overflow-y-auto relative text-[8px] border-gray-200 dark:border-gray-700
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
@@ -134,14 +134,14 @@ onUnmounted(() => {
         ]"
       >
         {{ t('quote.ImageTableType.Flying') }}
-        <div class="absolute bottom-0 right-2 text-xs font-thin italic opacity-90">
+        <div class="absolute bottom-0 right-2 text-[8px] font-thin italic opacity-90">
           {{ formatted.slice(0, 10) }}
         </div>
       </div>
 
       <!-- 提示语 -->
       <div
-        class="bg-red-50 dark:bg-red-900/30 dark:text-red-300 text-center w-full px-2 py-1 leading-relaxed text-xs"
+        class="bg-red-50 dark:bg-red-900/30 dark:text-red-300 text-center w-full px-2 py-1 leading-relaxed text-[8px]"
         v-html="t('quote.FriendlyReminder.Flying').replace(/\n/g, '<br />')"
       ></div>
 
@@ -160,7 +160,7 @@ onUnmounted(() => {
         <div class="flex">
           <table
             class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700
-                   text-center text-xs transition-colors duration-200"
+                   text-center text-[8px] transition-colors duration-200"
           >
             <colgroup>
               <col class="w-1/6" />
@@ -176,7 +176,7 @@ onUnmounted(() => {
                 <th
                   v-for="header in TABLE_HEADERS"
                   :key="header"
-                  class="border border-gray-200 dark:border-gray-700 py-2"
+                  class="border border-gray-200 dark:border-gray-700 py-2 text-[8px]"
                 >
                   {{ t(header) }}
                 </th>
@@ -186,19 +186,19 @@ onUnmounted(() => {
             <tbody>
               <template v-for="model in series.models" :key="model.memory">
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle text-[8px]">
                     {{ model.memory }} 
                   </td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-[8px]">
                     ￥: {{ model.prices.new }} 
                   </td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-[8px]">
                     ￥: {{ model.prices.good }} 
                   </td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-[8px]">
                     ￥: {{ model.prices.smallFlower }} 
                   </td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-[8px]">
                     ￥: {{ model.prices.bigFlower }} 
                   </td>
 
@@ -206,7 +206,7 @@ onUnmounted(() => {
                   <td
                     v-if="model === series.models[0]"
                     :rowspan="series.models.length"
-                    class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-center align-middle"
+                    class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-center align-middle text-[8px]"
                   >
                     {{ series.remark || '/' }}
                   </td>
@@ -234,7 +234,7 @@ onUnmounted(() => {
                  hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0
                  transition-all duration-300 overflow-hidden group"
         >
-          <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
           </span>
           <span
@@ -262,7 +262,6 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
-
 
 <style scoped>
 .fade-scale-enter-active,

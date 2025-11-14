@@ -133,7 +133,7 @@ onUnmounted(() => {
     <section
       id="createImage2"
       ref="quoteImage"
-      class="border border-gray-200 dark:border-gray-700 w-full h-full overflow-y-auto relative text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      class="border border-gray-200 dark:border-gray-700 w-full h-full overflow-y-auto relative text-[8px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsUpdateImageDialog = false"
     >
       <!-- 顶部标题 -->
@@ -141,14 +141,14 @@ onUnmounted(() => {
         :class="`${quoteColors[store.colorIndex]} relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl`"
       >
         {{ t('quote.ImageTableType.HuaQiangBei') }}
-        <div class="absolute bottom-0 right-2 text-xs font-thin italic text-gray-200 dark:text-gray-400">
+        <div class="absolute bottom-0 right-2 text-[8px] font-thin italic text-gray-200 dark:text-gray-400">
           {{ formatted.slice(0,10) }}
         </div>
       </div>
 
       <!-- 提示语 -->
       <div
-        class="text-center w-full px-2 py-1 leading-relaxed text-xs dark:text-gray-200"
+        class="text-center w-full px-2 py-1 leading-relaxed text-[8px] dark:text-gray-200"
         v-html="t('quote.FriendlyReminder.HuaQiangBei').replace(/\n/g, '<br />')"
       ></div>
 
@@ -161,7 +161,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
+          <table class="w-full table-fixed border-collapse border text-center text-[8px] dark:border-gray-600">
             <colgroup>
               <col class="w-1/5">
               <col class="w-1/5">
@@ -171,7 +171,7 @@ onUnmounted(() => {
             </colgroup>
             <thead class="font-semibold bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
               <tr>
-                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-300 px-3 py-2 dark:border-gray-600">
+                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-300 px-3 py-2 text-[8px] dark:border-gray-600">
                   {{ t(header) }}
                 </th>
               </tr>
@@ -185,23 +185,23 @@ onUnmounted(() => {
                       <td
                         v-if="idx === 0"
                         :rowspan="p.list.length"
-                        class="border px-3 py-2 font-semibold align-middle dark:border-gray-600"
+                        class="border px-3 py-2 font-semibold align-middle text-[8px] dark:border-gray-600"
                       >
                         {{ p.memory }}
                       </td>
 
                       <!-- 颜色 -->
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.color }}</td>
+                      <td class="border px-3 py-2 text-[8px] dark:border-gray-600">{{ item.color }}</td>
 
                       <!-- 各价格列 -->
-                      <td class="border px-3 py-2 dark:border-gray-600">￥： {{ item.prices.primary }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">￥： {{ item.prices.secondary }}</td>
+                      <td class="border px-3 py-2 text-[8px] dark:border-gray-600">￥： {{ item.prices.primary }}</td>
+                      <td class="border px-3 py-2 text-[8px] dark:border-gray-600">￥： {{ item.prices.secondary }}</td>
 
                       <!-- 备注（只显示一次） -->
                       <td
                         v-if="i === 0 && idx === 0"
                         :rowspan="model.prices.reduce((n, m) => n + m.list.length, 0)"
-                        class="border px-3 py-2 text-center align-middle dark:border-gray-600"
+                        class="border px-3 py-2 text-center align-middle text-[8px] dark:border-gray-600"
                       >
                         {{ model.remark || '/' }}
                       </td>
@@ -226,7 +226,7 @@ onUnmounted(() => {
           @click="generateFree()"
           class="relative h-12 w-56 text-lg font-semibold tracking-wide text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 overflow-hidden group"
         >
-          <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
             ✨ {{ t('quote.QuoteButton.CreateQuotation') }}
           </span>
           <span
