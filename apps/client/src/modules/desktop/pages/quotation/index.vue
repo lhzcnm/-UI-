@@ -27,6 +27,8 @@ import router from '@/router'
 const { t } = useI18n()
 // store 反应式数据
 const store = reactive<QUOTE_STORE_TYPE>({
+  priceIcon: 'HK$',
+  priceType: 3,
   watermark: '陆深三和',
   colorIndex: 0,
   loading: false,
@@ -53,6 +55,9 @@ const store = reactive<QUOTE_STORE_TYPE>({
   selectedColors: [],
 })
 const IsReturn = ref(false)
+
+const iStore = useSettingStore()
+
 function PageShow(item: string) {
   if(item !== 'return'){
     store.pageShow = item
@@ -75,7 +80,8 @@ const onConfirm = () => {
 async function getHQBData() {
   try {
     const res = await quoteApi.getHuaQiangBei()
-    store.HuaQiangBeiData = res || []
+    store.HuaQiangBeiData = res
+    
   } catch (error) {
     console.error('获取华强北数据失败：', error)
   } finally {
@@ -92,10 +98,26 @@ async function getFYData() {
   }
 }
 
+watch(
+  () => store.priceType,
+  () => {
+    getHKNewData()
+    getSXData()
+
+    const priceIcons: Record<number, string> = {
+      1: '￥',
+      2: '$',
+      3: 'HK$',
+    }
+
+    store.priceIcon = priceIcons[store.priceType] || ''
+  }
+)
 async function getHKNewData() {
   try {
-    const res = await quoteApi.GetHongKongNew()
+    const res = await quoteApi.GetHongKongNew({priceType: store.priceType})
     store.HongKongNewData = res
+
   } catch (error) {
     console.error('获取香港新机数据失败：', error)
   } finally {
@@ -104,20 +126,27 @@ async function getHKNewData() {
 
 async function getSXData() {
   try {
-    const res = await quoteApi.GetSanXin()
+    const res = await quoteApi.GetSanXin({priceType: store.priceType})
     store.SanSungData = res
+    console.log(res)
+
   } catch (error) {
     console.error('获取三星数据失败：', error)
   } finally {
   }
 }
 
+await Promise.all([
+  iStore.getSettings(),
+  getHQBData(),
+  getFYData(),
+  getHKNewData(),
+  getSXData(),
+])
+
 // 初始数据获取
 onMounted(() => {{
-    getHQBData()
-    getFYData()
-    getHKNewData()
-    getSXData()
+
 }})
 
 // 提供全局 store
@@ -125,7 +154,7 @@ provide(QUOTE_STORE, store)
 </script>
 
 <template>
-  <div class="overflow-hidden h-screen ">
+  <div class="overflow-hidden h-screen bg-gradient-to-br from-blue-300/20 from-30% to-white to-60%">
     <div class="flex flex-col w-full mx-auto h-screen overflow-hidden">
       <!-- 底部导航栏 -->
       <section class="w-1/2 h-16 fixed bottom-0 right-1/2 translate-x-1/2 z-30 flex justify-around items-center 
@@ -155,9 +184,9 @@ provide(QUOTE_STORE, store)
           </div>
         
           <div
-            class="mt-1 text-[12px] font-medium transition-all duration-300"
+            class="mt-1 text-[12px] font-medium dark:text-white transition-all duration-300"
             :class="store.pageShow === item.key 
-              ? 'text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-500 drop-shadow-sm'
+              ? 'text-transparent dark:text-sky-400 bg-clip-text bg-gradient-to-r from-sky-400 to-blue-500 drop-shadow-sm'
               : 'text-gray-500 dark:text-gray-400 group-hover:text-sky-400'">
             {{ item.label }}
           </div>

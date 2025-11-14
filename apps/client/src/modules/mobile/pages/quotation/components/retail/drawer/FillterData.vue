@@ -2,23 +2,22 @@
 import { quoteApi } from '../../../api/http'
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../../utils/store'
 import { ref, inject, watch, onMounted } from 'vue'
-import { ColorEnumNames,ConditionNames } from '../../../utils/menu'
+import { ConditionNames } from '../../../utils/menu'
 
 const store = inject<QUOTE_STORE_TYPE>(QUOTE_STORE)!
 
 // 可选项
 const types = ref<string[]>([])
 const sizes = ref<string[]>([])
-const statuses = ref<number[]>([])  // 确保状态是数字数组
 const appearances = ref<number[]>([]) // ✅ 外观为数字数组
-const colors = ref<number[]>([])
+const colors = ref<string[]>([])
 
 // 临时选中项
 const tempSelectedTypes = ref<string[]>([])
 const tempSelectedSizes = ref<string[]>([])
 const tempSelectedStatuses = ref<number[]>([])  // 改为数字数组
 const tempSelectedAppearances = ref<number[]>([])
-const tempSelectedColors = ref<number[]>([])
+const tempSelectedColors = ref<string[]>([])
 const { t } = useI18n()
 /** 初始化临时选中项 */
 function initTempSelected() {
@@ -62,7 +61,7 @@ function toggleSelection(
       break
     case 'color':
       arr = tempSelectedColors.value
-      value = Number(value)  // 将颜色值转换为数字
+      value = value 
       break
     default:
       return
@@ -97,7 +96,7 @@ async function HQBSearchData() {
   const res = await quoteApi.HuaQiangBeiSearch()
   types.value = res.models
   sizes.value = res.memories
-  colors.value = res.colors.map((c: number) => Number(c))
+  colors.value = res.colors
 }
 
 /** 获取飞扬搜索数据 */
@@ -113,16 +112,17 @@ async function HKNewData() {
   const res = await quoteApi.HongKongNew()
   types.value = res.models
   sizes.value = res.memories
-  statuses.value = res.status.map((status: string) => Number(status))  // 转换为数字数组
+  // statuses.value = res.status.map((status: string) => Number(status))  // 转换为数字数组
+  console.log(res.colors)
+  
   colors.value = res.colors
 }
 
-/** 获取香港新机的搜索数据 */
+/** 获取香港三星的搜索数据 */
 async function SXSearchData() {
   const res = await quoteApi.SanXin()
   types.value = res.models
   sizes.value = res.memories
-  statuses.value = res.status.map((status: string) => Number(status))  // 转换为数字数组
   colors.value = res.colors
 }
 
@@ -144,8 +144,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col justify-between">
-    <div class="space-y-3 overflow-y-auto pb-4">
+  <div class="h-full flex flex-col justify-between">
+    <div class="h-[calc(100%-3rem)] space-y-3 overflow-y-auto pb-10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <!-- 型号 -->
       <div>
         <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('quote.ImageTableType.Models') }}</div>
@@ -183,7 +183,7 @@ onMounted(() => {
       </div>
 
       <!-- 状态 -->
-      <div v-show="store.activeTab == 3 || store.activeTab == 0">
+      <!-- <div v-show="store.activeTab == 3 || store.activeTab == 0">
         <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('quote.ActivationStatus') }}</div>
         <div class="flex flex-wrap gap-2">
           <button
@@ -195,10 +195,10 @@ onMounted(() => {
               ? 'bg-blue-600 text-white border-blue-600 shadow-md'
               : 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'"
           >
-            {{ s == 2 ? t('quote.TableHeaders.Header4') : t('quote.TableHeaders.Header3') }}  <!-- 显示数字状态 -->
+            {{ s == 2 ? t('quote.TableHeaders.Header4') : t('quote.TableHeaders.Header3') }}
           </button>
         </div>
-      </div>
+      </div> -->
 
       <!-- 外观 -->
       <div v-show="store.activeTab == 1">
@@ -231,24 +231,24 @@ onMounted(() => {
               ? 'bg-blue-600 text-white border-blue-600 shadow-md'
               : 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'"
           >
-            {{ t(ColorEnumNames[c]) }}
+            {{ c }}
           </button>
         </div>
       </div>
     </div>
 
     <!-- 底部按钮 -->
-    <div class="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0">
+    <div class="flex h-12 justify-end gap-3 py-2 border-t border-gray-200 dark:border-gray-700  sticky bottom-0">
       <button
         @click="handleClear"
-        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        class="px-4 rounded-lg text-center border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       >
-        清空
+        {{ t('button.clear') }}
       </button>
     
       <button
         @click="handleConfirm"
-        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-md"
+        class="px-4 h-full rounded-lg border border-gray-300 dark:border-gray-600 text-white dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 transition-colors bg-blue-500"
       >
         确定
       </button>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../../utils/store'
-import { ColorEnumNames } from '../../../utils/menu'
 import { WatermarkTool } from '../../../utils/Tools'
 import { deductPoints, freeGenerate} from '../../../api/http'
 import router from '@/router'
@@ -33,8 +32,14 @@ const quoteColors: string[] = [
 ]
 
 
-const TABLE_HEADERS = ['quote.TableHeaders3.Header1', 'quote.TableHeaders3.Header2', 'quote.TableHeaders3.Header3', 'quote.TableHeaders3.Header4', 'quote.TableHeaders3.Header5', 'quote.TableHeaders3.Header6', 'quote.TableHeaders3.Header7']
-
+const TABLE_HEADERS = [
+  'quote.TableHeaders3.Header1', 
+  'quote.TableHeaders3.Header3', 
+  'quote.TableHeaders3.Header4', 
+  'quote.TableHeaders3.Header9', 
+  'quote.TableHeaders3.Header6',
+  'quote.TableHeaders3.Header8', 
+  'quote.TableHeaders3.Header7']
 // 滚动监听控制按钮显示
 const isScrolling = ref(false)
 let scrollTimer: number | null = null
@@ -184,30 +189,21 @@ onUnmounted(() => {
               <template v-for="model in series.models" :key="model.remark">
                 <template v-for="price of model.memories" :key="price.memory">
                   <!-- 未激活行 -->
-                  <template v-for="(item, idx) in price.inactive" :key="'inactive-' + idx">
+                  <template v-for="(item, idx) in price.colors" :key="'inactive-' + idx">
                     <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                      <td v-if="idx === 0" :rowspan="price.inactive.length + price.active.length" class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">
+                      <td v-if="idx === 0" 
+                        :rowspan="price.colors.length" 
+                        class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">
                         {{ price.memory }}
                       </td>
-                      <td class="border border-gray-200 dark:border-gray-700 py-2" v-if="idx === 0" :rowspan="price.inactive.length">{{ t('quote.TableHeaders.Header4') }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ t(ColorEnumNames[item.color]) }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.prices.primary }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.prices.secondary }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.prices.source }}</td>
-                      <td v-if="idx === 0" :rowspan="price.inactive.length + price.active.length" class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-center align-middle">
+                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.color }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices.Asis }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices['Asis+'] }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
+                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ store.priceIcon }}: {{ item.prices.cpo }}</td>
+                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-center align-middle">
                         {{ model.remark || '/' }}
                       </td>
-                    </tr>
-                  </template>
-
-                  <!-- 已激活行 -->
-                  <template v-for="(item, idx) in price.active" :key="'active-' + idx">
-                    <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                      <td class="border border-gray-200 dark:border-gray-700 py-2" v-if="idx === 0" :rowspan="price.active.length">{{ t('quote.TableHeaders.Header3') }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ t(ColorEnumNames[item.color]) }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.prices.primary }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.prices.secondary }}</td>
-                      <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ item.prices.source }}</td>
                     </tr>
                   </template>
                 </template>
@@ -220,7 +216,9 @@ onUnmounted(() => {
 
     <!-- 按钮 -->
     <transition name="fade-scale">
-      <div v-if="!isScrolling" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50">
+      <div v-if="!isScrolling" 
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }">
         <button
           @click="generateFree()"
           class="relative h-12 w-56 text-lg font-semibold tracking-wide text-white

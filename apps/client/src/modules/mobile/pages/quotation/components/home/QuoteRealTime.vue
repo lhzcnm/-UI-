@@ -21,7 +21,7 @@ function openImage(id: number){
 <template>
   <!-- 实时报价单卡片 -->
   <section
-    class="relative mx-auto my-4 max-w-6xl rounded-3xl 
+    class="relative mx-auto my-4 rounded-3xl 
            bg-gradient-to-br from-white/90 to-gray-100/50 dark:from-black/90 dark:to-black/50
            shadow-md border border-white/30 backdrop-blur-xl overflow-hidden"
   >

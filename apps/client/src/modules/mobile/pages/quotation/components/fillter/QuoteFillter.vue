@@ -1,31 +1,36 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
 import { QUOTE_FILLTER_COLOR, ALL_QUOTATION } from '../../utils/menu'
 import { ref, reactive } from 'vue'
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../utils/store'
 import type { HKNewType } from '../../utils/type'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const store = inject<QUOTE_STORE_TYPE>(QUOTE_STORE)!
+const { settings } = useSettingStore()
 
 const colorsIndex = ref(0)
-const colorBool = ref(false)
-
-const watermark = ref('')
+// const watermark = ref('陆深三和')
 // 创建一个对象来存储每个下拉框的选中值
 const updateSelectMap = reactive<Record<number, number>>({})
+
 ALL_QUOTATION.forEach((_, index) => {
   updateSelectMap[index] = 1; // 默认选择第一个选项，即 "加价"
 })
 
 const updatePrice = reactive<Record<number, string>>({})
 
+// const waterMark = computed(() => {
+//   return locale.value === 'zh' ? settings.title : settings.titleEn ? settings.titleEn : settings.title
+// })
+
+const watermark = ref(locale.value === 'zh' ? settings.title : settings.titleEn ? settings.titleEn : settings.title)
+
 // 点击生成按钮
 function handleGenerate(index: number) {
   const selectedAction = updateSelectMap[index]  
   store.watermark = watermark.value
   store.colorIndex = colorsIndex.value
-  console.log(store.colorIndex)
+  // console.log(store.colorIndex)
   
   store.updateIndex = index
   // 如果没有输入金额，默认为 0
@@ -67,7 +72,7 @@ function updateHuaQiangBeiData(action: 1 | 2, amount: number) {
             let primaryVal = parseFloat(newPrices.primary)
             if (!isNaN(primaryVal)) {
               primaryVal = action === 1 ? primaryVal + amount : primaryVal - amount
-              newPrices.primary = primaryVal.toFixed(2)
+              newPrices.primary = primaryVal.toFixed(0)
             }
           }
 
@@ -75,7 +80,7 @@ function updateHuaQiangBeiData(action: 1 | 2, amount: number) {
             let secondaryVal = parseFloat(newPrices.secondary)
             if (!isNaN(secondaryVal)) {
               secondaryVal = action === 1 ? secondaryVal + amount : secondaryVal - amount
-              newPrices.secondary = secondaryVal.toFixed(2)
+              newPrices.secondary = secondaryVal.toFixed(0)
             }
           }
 
@@ -102,7 +107,7 @@ function updateFeiYangData(action: 1 | 2, amount: number) {
       Object.keys(newPrices).forEach(key => {
         const num = parseFloat(newPrices[key])
         if (!isNaN(num)) {
-          newPrices[key] = (action === 1 ? num + amount : num - amount).toFixed(2)
+          newPrices[key] = (action === 1 ? num + amount : num - amount)
         }
       })
 
@@ -115,78 +120,55 @@ function updateFeiYangData(action: 1 | 2, amount: number) {
   return updatedData
 }
 
-function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
-  // 遍历每个型号（type）
-  const updatedData = data.map(item => {
-    // 遍历每个型号下的所有内存配置（models）
-    const newModels = item.models.map(model => {
-      const newMemories = model.memories.map(memory => {
-        // 遍历内存配置的 inactive 和 active 列表
-        const updateMemory = (memoryList: any[]) => {
-          return memoryList.map(priceItem => {
-            const updatedPrices = { ...priceItem.prices }
+function updatePrices(
+  action: 1 | 2,
+  amount: number,
+  data: HKNewType[]
+): HKNewType[] {
+  return data.map(item => ({
+    ...item,
+    models: item.models.map(model => ({
+      ...model,
+      memories: model.memories.map(memory => ({
+        ...memory,
+        colors: memory.colors.map(colorItem => {
+          const updatedPrices: { [K in keyof typeof colorItem.prices]: string } = { ...colorItem.prices }
 
-            // 调整 primary 价格
-            if (updatedPrices.primary !== null && updatedPrices.primary !== undefined) {
-              let primaryVal = parseFloat(updatedPrices.primary)
-              if (!isNaN(primaryVal)) {
-                primaryVal = action === 1 ? primaryVal + amount : primaryVal - amount
-                updatedPrices.primary = primaryVal.toFixed(2)
-              }
+          const keys = Object.keys(colorItem.prices) as Array<keyof typeof colorItem.prices>
+
+          keys.forEach(key => {
+            const val = parseFloat(colorItem.prices[key])
+            if (!isNaN(val)) {
+              const newVal = action === 1 ? val + amount : val - amount
+              updatedPrices[key] = newVal.toFixed(0)
             }
-
-            // 调整 secondary 价格
-            if (updatedPrices.secondary !== null && updatedPrices.secondary !== undefined) {
-              let secondaryVal = parseFloat(updatedPrices.secondary)
-              if (!isNaN(secondaryVal)) {
-                secondaryVal = action === 1 ? secondaryVal + amount : secondaryVal - amount
-                updatedPrices.secondary = secondaryVal.toFixed(2)
-              }
-            }
-
-            // 调整 source 价格
-            if (updatedPrices.source !== null && updatedPrices.source !== undefined) {
-              let sourceVal = parseFloat(updatedPrices.source)
-              if (!isNaN(sourceVal)) {
-                sourceVal = action === 1 ? sourceVal + amount : sourceVal - amount
-                updatedPrices.source = sourceVal.toFixed(2)
-              }
-            }
-
-            return { ...priceItem, prices: updatedPrices }
           })
-        }
 
-        // 分别更新 inactive 和 active 列表
-        const updatedInactive = updateMemory(memory.inactive)
-        const updatedActive = updateMemory(memory.active)
-
-        return { ...memory, inactive: updatedInactive, active: updatedActive }
-      })
-
-      return { ...model, memories: newMemories }
-    })
-
-    return { ...item, models: newModels }
-  })
-
-  return updatedData
+          return {
+            ...colorItem,
+            prices: updatedPrices
+          }
+        })
+      }))
+    }))
+  }))
 }
+
 
 </script>
 
 <template>
-  <section class="h-screen pb-14 flex flex-col bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-black dark:via-gray-950 dark:to-black transition-all duration-500">
+  <section class="h-screen w-full pb-14 flex flex-col ">
     <!-- 顶部筛选区 -->
-    <div class="px-4 py-4 mb-3 bg-white/80 dark:bg-black backdrop-blur-xl rounded-b-3xl shadow-md border-b border-gray-200 dark:border-border transition-all">
+    <div class="px-4 py-4 mb-3 bg-gradient-to-br from-blue-300/20 from-30% to-white to-60% backdrop-blur-xl rounded-b-3xl shadow-md border-b border-gray-200 dark:border-border transition-all">
       <!-- 水印输入 -->
       <div class="flex items-center space-x-4 mb-3">
-        <div class="w-28 text-gray-800 dark:text-gray-100 font-semibold text-sm">
+        <div class=" text-gray-800 dark:text-gray-100 font-semibold text-sm">
           {{ t('quote.QuoteFilter.QuoteWatermark') }}:
         </div>
         <XInput
           :placeholder="t('quote.QuoteFilter.WatermarkName')"
-          class="flex-1 border-gray-300/70 dark:border-gray-600/70 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 transition-all"
+          class="flex-1 border-gray-500 dark:border-gray-600/70 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600 transition-all"
           v-model="watermark"
         />
       </div>
@@ -194,17 +176,12 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
       <!-- 颜色筛选 -->
       <div>
         <div class="flex items-center mb-3 justify-between">
-          <div class="w-28 text-gray-800 dark:text-gray-100 font-semibold text-sm">
+          <div class=" text-gray-800 dark:text-gray-100 font-semibold text-sm">
             {{ t('quote.QuoteFilter.QuoteColor') }}:
           </div>
-          <Icon
-            @click="colorBool = !colorBool"
-            :icon="!colorBool ? 'iconoir:arrow-down-circle' : 'iconoir:arrow-up-circle'"
-            :class="['size-6 text-gray-500 dark:text-white transition-all duration-200', !colorBool ? 'animate-ping' : '']"
-          />
         </div>
 
-        <div v-show="colorBool" class="grid grid-cols-3 sm:grid-cols-4 gap-3 text-white font-medium text-center w-full pr-2">
+        <div class="grid grid-cols-3 sm:grid-cols-3 gap-3 text-white font-medium text-center w-full pr-2">
           <div
             v-for="(item, index) in QUOTE_FILLTER_COLOR"
             :key="index"
@@ -220,7 +197,7 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
     </div>
 
     <!-- 内容区 -->
-    <section class="flex-1 p-4 space-y-6 overflow-y-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <section class="grid grid-cols-1 gap-4 p-4  overflow-y-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div v-for="(item, index) in ALL_QUOTATION" :key="item" class="relative group bg-gradient-to-br from-white/80 via-gray-50/80 to-white/90 dark:from-black dark:via-gray-950/80 dark:to-gray-900/90 backdrop-blur-xl rounded-2xl p-5 border border-gray-200/50 dark:border-border shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
         <!-- 标题行 -->
         <div class="flex items-center justify-between mb-4">
@@ -239,22 +216,14 @@ function updatePrices(action: 1 | 2, amount: number, data:HKNewType[]) {
 
         <!-- 价格调整行 -->
         <div class="flex flex-wrap items-center gap-3 sm:gap-4 mt-2">
-          <div class="text-gray-700 dark:text-gray-300 font-semibold text-sm w-28 shrink-0">
+          <div class="text-gray-700 dark:text-gray-300 font-semibold text-sm shrink-0">
             {{ t('quote.QuoteFilter.NowQuoteCard.AllQuote') }}:
           </div>
 
-          <select
-            v-model="updateSelectMap[index]" 
-            class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-800 dark:via-purple-900 dark:to-pink-900
-                   text-gray-800 dark:text-gray-200 text-sm font-medium shadow-sm
-                   focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500
-                   hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200"
-            @click.stop
-          >
-            <option value="1">{{ t('quote.QuoteFilter.NowQuoteCard.AddPrice') }}</option>
-            <option value="2">{{ t('quote.QuoteFilter.NowQuoteCard.ReducePrice') }}</option>
-          </select>
+          <XSelect v-model="updateSelectMap[index]" :placeholder="t('quote.text')">
+            <XSelectItem value="1">{{ t('quote.QuoteFilter.NowQuoteCard.AddPrice') }}</XSelectItem>
+            <XSelectItem value="2">{{ t('quote.QuoteFilter.NowQuoteCard.ReducePrice') }}</XSelectItem>
+          </XSelect>
 
           <XInput
             :placeholder="t('quote.EnterAmount')"

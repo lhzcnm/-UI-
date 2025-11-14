@@ -121,7 +121,7 @@ onUnmounted(() => {
     <section
       id="createImage"
       ref="quoteImage"
-      class="border w-full h-full overflow-y-auto relative text-[10px] border-gray-200 dark:border-gray-700
+      class="border w-full h-full overflow-y-auto relative text-xs border-gray-200 dark:border-gray-700
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
@@ -160,7 +160,7 @@ onUnmounted(() => {
         <div class="flex">
           <table
             class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700
-                   text-center text-[10px] transition-colors duration-200"
+                   text-center text-xs transition-colors duration-200"
           >
             <colgroup>
               <col class="w-1/6" />
@@ -187,19 +187,19 @@ onUnmounted(() => {
               <template v-for="model in series.models" :key="model.memory">
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">
-                    {{ model.memory }}
+                    {{ model.memory }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.new }}
+                    ￥: {{ model.prices.new }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.good }}
+                    ￥: {{ model.prices.good }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.smallFlower }}
+                    ￥: {{ model.prices.smallFlower }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.bigFlower }}
+                    ￥: {{ model.prices.bigFlower }} 
                   </td>
 
                   <!-- 备注（只显示一次） -->
@@ -222,7 +222,8 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"
@@ -261,6 +262,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 <style scoped>
 .fade-scale-enter-active,

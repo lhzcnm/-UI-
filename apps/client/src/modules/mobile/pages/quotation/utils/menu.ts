@@ -79,9 +79,9 @@ export const ColorEnumNames = {
 // 对应中文映射
 export const ConditionNames: Record<number, string> = {
   1: "quote.TableHeaders1.Header2",
-  2: "quote.TableHeaders1.Header3",
-  3: "quote.TableHeaders1.Header4",
-  4: "quote.TableHeaders1.Header5"
+  3: "quote.TableHeaders1.Header3",
+  5: "quote.TableHeaders1.Header4",
+  7: "quote.TableHeaders1.Header5"
 }
 
 export {

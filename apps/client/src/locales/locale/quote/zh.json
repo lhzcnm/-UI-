@@ -137,10 +137,11 @@
       "Header1": "容量",
       "Header2": "状态",
       "Header3": "颜色",
-      "Header4": "资源机(单机)",
-      "Header5": "资源机(带包装)",
+      "Header4": "资源机-激活",
       "Header6": "新机",
-      "Header7": "备注"
+      "Header7": "备注",
+      "Header8": "官翻机",
+      "Header9": "资源机-未激活"
     },
     "Tabs": {
       "Tab1": "香港新机",
@@ -156,6 +157,14 @@
     "Appearance":"外观",
     "confirmLeave":"是否离开?",
     "message": "内容丰富，静候您的光临",
-    "text": "请选择(默认: 上调价格)"
+    "text": "请选择(默认: 上调价格)",
+    "HkPriceTypeCard":{
+      "title": "香港价格类型",
+      "description": "可根据需要设置价格的货币单位",
+      "currency1": "港币",
+      "currency2": "美元",
+      "currency3": "人民币"
+    }
+
   }
 }

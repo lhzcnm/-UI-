@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../utils/store'
-import { ColorEnumNames } from '../../utils/menu'
 import { WatermarkTool } from '../../utils/Tools'
 import { deductPoints, freeGenerate} from '../../api/http'
 import router from '@/router'
@@ -208,15 +207,15 @@ onUnmounted(() => {
                       </td>
 
                       <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                        {{ t(ColorEnumNames[item.color]) }}
+                        {{ item.color }}
                       </td>
 
                       <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                        {{ item.prices.primary }}
+                        ￥: {{ item.prices.primary }} 
                       </td>
 
                       <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                        {{ item.prices.secondary }}
+                        ￥: {{ item.prices.secondary }} 
                       </td>
 
                       <td
@@ -240,7 +239,8 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"

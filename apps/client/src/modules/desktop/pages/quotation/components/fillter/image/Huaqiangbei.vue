@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../../utils/store'
 import { WatermarkTool } from '../../../utils/Tools'
-import { ColorEnumNames } from '../../../utils/menu'
 import { deductPoints, freeGenerate} from '../../../api/http'
 import router from '@/router'
 import QuoteFreeDialog from '../../QuoteFreeDialog.vue'
@@ -49,7 +48,6 @@ function handleScroll() {
     isScrolling.value = false
   }, 200)
 }
-
 
 /** 生成图片函数 */ 
 async function createImage () {
@@ -171,9 +169,9 @@ onUnmounted(() => {
               <col class="w-1/5">
               <col class="w-1/5">
             </colgroup>
-            <thead class="font-semibold dark:bg-gray-700 dark:text-gray-100">
+            <thead class="font-semibold bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
               <tr>
-                <th v-for="header in TABLE_HEADERS" :key="header" class="border px-3 py-2 dark:border-gray-600">
+                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-300 px-3 py-2 dark:border-gray-600">
                   {{ t(header) }}
                 </th>
               </tr>
@@ -193,11 +191,11 @@ onUnmounted(() => {
                       </td>
 
                       <!-- 颜色 -->
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
+                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.color }}</td>
 
                       <!-- 各价格列 -->
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
+                      <td class="border px-3 py-2 dark:border-gray-600">￥： {{ item.prices.primary }}</td>
+                      <td class="border px-3 py-2 dark:border-gray-600">￥： {{ item.prices.secondary }}</td>
 
                       <!-- 备注（只显示一次） -->
                       <td
@@ -221,7 +219,8 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"

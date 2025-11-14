@@ -1,6 +1,10 @@
-import type { FeiYangType, HKNewType, HuaQiangBeiType } from "./type"
+import type { FeiYangType, HKNewType, HKSamSungType, HuaQiangBeiType } from "./type"
 
 export interface QUOTE_STORE_TYPE{
+  /**香港价格货币符号 */
+  priceIcon: string
+  /**香港价格货币类型 */
+  priceType: number
   /**水印 */
   watermark: string
   /**修改颜色索引 */
@@ -38,12 +42,12 @@ export interface QUOTE_STORE_TYPE{
     /**香港新机返回值 */
   UpdateHongKongNewData: HKNewType[],
   /**香港三星返回值类型 */
-  UpdateSanSungData: HKNewType[],
+  UpdateSanSungData: HKSamSungType[],
   /**详情页筛选的选中数据 */
   selectedTypes: string[]
   selectedSizes: string[]
   selectedStatuses: number[]
-  selectedColors: number[]
+  selectedColors: string[]
   selectedAppearances: number[]
 }
 

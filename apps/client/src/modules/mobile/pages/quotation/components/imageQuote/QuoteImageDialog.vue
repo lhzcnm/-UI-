@@ -10,7 +10,7 @@ const emit = defineEmits<{ (e: 'update:isDialog', value: boolean): void }>()
       <transition name="popup">
         <div
           v-if="props.isDialog"
-          class="fixed top-0 w-full h-full bg-white placeholder:rounded-xl shadow-lg z-40"
+          class="fixed top-0 right-1/2 translate-x-1/2 w-full h-full bg-white placeholder:rounded-xl shadow-lg z-40"
         >
           <slot></slot>
         </div>

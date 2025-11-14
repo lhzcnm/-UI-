@@ -137,10 +137,11 @@
       "Header1": "Capacity",
       "Header2": "Status",
       "Header3": "Color",
-      "Header4": "Standalone",
-      "Header5": "With Packaging",
-      "Header6": "New",
-      "Header7": "Remark"
+      "Header4": "ASIS",
+      "Header6": "Brand new",
+      "Header7": "Remark",
+      "Header8": "CPO",
+      "Header9": "ASIS+"
     },
     "Tabs": {
       "Tab1": "Hong Kong New Phone",
@@ -156,6 +157,13 @@
     "Appearance":"Appearance",
     "confirmLeave":"Are you leaving?",
     "message": "Rich content, waiting for your visit.",
-    "text": "Please select (default: Increase Price)"
+    "text": "Please select (default: Increase Price)",
+    "HkPriceTypeCard":{
+      "title": "Hong Kong Price Type",
+      "description": "Set the currency unit for pricing as needed",
+      "currency1": "HKD",
+      "currency2": "CNY",
+      "currency3": "USD"
+    }
   }
 }

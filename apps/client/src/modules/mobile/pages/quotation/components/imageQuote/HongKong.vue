@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../utils/store'
-import { ColorEnumNames } from '../../utils/menu'
 import { WatermarkTool } from '../../utils/Tools'
 import { deductPoints, freeGenerate } from '../../api/http'
 import router from '@/router'
@@ -33,7 +32,14 @@ const quoteColors: string[] = [
   'bg-gradient-to-br from-red-500/80 from-30% to-red-500/20 to-80%',
 ]
 
-const TABLE_HEADERS = ['quote.TableHeaders3.Header1', 'quote.TableHeaders3.Header2', 'quote.TableHeaders3.Header3', 'quote.TableHeaders3.Header4', 'quote.TableHeaders3.Header5', 'quote.TableHeaders3.Header6', 'quote.TableHeaders3.Header7']
+const TABLE_HEADERS = [
+  'quote.TableHeaders3.Header1', 
+  'quote.TableHeaders3.Header3', 
+  'quote.TableHeaders3.Header4', 
+  'quote.TableHeaders3.Header9', 
+  'quote.TableHeaders3.Header6',
+  'quote.TableHeaders3.Header8', 
+  'quote.TableHeaders3.Header7']
 
 const isScrolling = ref(false)
 let scrollTimer: number | null = null
@@ -60,7 +66,7 @@ async function createImage() {
 
 const freeShowDialog = ref(false)
 const InsufficientPoints = ref(false)
-
+//免费次数不足扣除积分
 async function generateFree() {
   try {
     const res = await freeGenerate()
@@ -86,7 +92,7 @@ async function deductPoint() {
     console.log(err)
   }
 }
-
+//免费生成报价免费次数不足确定按钮单点击事件
 const handleConfirm = () => deductPoint()
 const handleConfirmPoint = () => router.push('/recharge')
 
@@ -105,7 +111,7 @@ onUnmounted(() => {
     <section
       ref="quoteImage"
       id="createImage1"
-      class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-[10px]
+      class="border w-full h-full bg-white dark:bg-gray-900 dark:text-gray-100 overflow-y-auto relative text-xs
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsImageDialog = false"
     >
@@ -138,7 +144,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border text-center text-[10px] dark:border-gray-600">
+          <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
             <colgroup>
               <col class="w-1/7" />
               <col class="w-1/7" />
@@ -153,65 +159,51 @@ onUnmounted(() => {
                 <th
                   v-for="header in TABLE_HEADERS"
                   :key="header"
-                  class="border py-2  dark:border-gray-600"
+                  class="border py-2 dark:border-gray-600"
                 >
                   {{ t(header) }}
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <template v-for="model in series.models" :key="model.remark">
-                <template v-for="price of model.memories" :key="price.memory">
-                  <!-- 未激活 -->
-                  <template v-for="(item, idx) in price.inactive" :key="'inactive-' + idx">
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                      <td
-                        v-if="idx === 0"
-                        :rowspan="price.inactive.length + price.active.length"
-                        class="border px-3 py-2 font-semibold align-middle dark:border-gray-600"
-                      >
-                        {{ price.memory }}
-                      </td>
-                      <td
-                        v-if="idx === 0"
-                        :rowspan="price.inactive.length"
-                        class="border py-2 dark:border-gray-600"
-                      >
-                        {{ t('quote.TableHeaders.Header4') }}
-                      </td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
-                      <td
-                        v-if="idx === 0"
-                        :rowspan="price.inactive.length + price.active.length"
-                        class="border px-3 py-2 text-center align-middle dark:border-gray-600"
-                      >
-                        {{ model.remark || '/' }}
-                      </td>
-                    </tr>
-                  </template>
-
-                  <!-- 已激活 -->
-                  <template v-for="(item, idx) in price.active" :key="'active-' + idx">
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                      <td
-                        v-if="idx === 0"
-                        :rowspan="price.active.length"
-                        class="border py-2 dark:border-gray-600"
-                      >
-                        {{ t('quote.TableHeaders.Header3') }}
-                      </td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
-                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
-                    </tr>
+              <tbody>
+                <template v-for="model in series.models" :key="model.remark">
+                  <template v-for="price in model.memories" :key="price.memory">
+                    <template v-for="(item, idx) in price.colors" :key="'inactive-' + idx">
+                      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <!-- 内存单元格（仅第一行显示，并合并行） -->
+                        <td
+                          v-if="idx === 0"
+                          :rowspan="price.colors.length"
+                          class="border px-3 py-2 font-semibold align-middle dark:border-gray-600"
+                        >
+                          {{ price.memory }}
+                        </td>
+                      
+                        <!-- 颜色 -->
+                        <td class="border px-3 py-2 dark:border-gray-600">
+                          {{ item.color }}
+                        </td>
+                      
+                        <!-- 价格列 -->
+                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.Asis}} </td>
+                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices['Asis+'] }} </td>
+                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }} </td>
+                        <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.cpo }}</td>
+                      
+                        <!-- 备注列（仅第一行显示） -->
+                        <td
+                          v-if="idx === 0"
+                          :rowspan="price.colors.length"
+                          class="border px-3 py-2 text-center align-middle dark:border-gray-600"
+                        >
+                          {{ model.remark || '/' }}
+                        </td>
+                      </tr>
+                    </template>
                   </template>
                 </template>
-              </template>
-            </tbody>
+              </tbody>
+
           </table>
         </div>
       </div>
@@ -221,7 +213,8 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"
@@ -259,6 +252,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 <style scoped>
 /* 动画 */

@@ -187,19 +187,19 @@ onUnmounted(() => {
               <template v-for="model in series.models" :key="model.memory">
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">
-                    {{ model.memory }}
+                    {{ model.memory }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.new }}
+                    ￥: {{ model.prices.new }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.good }}
+                    ￥: {{ model.prices.good }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.smallFlower }}
+                    ￥: {{ model.prices.smallFlower }} 
                   </td>
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">
-                    {{ model.prices.bigFlower }}
+                    ￥: {{ model.prices.bigFlower }} 
                   </td>
 
                   <!-- 备注（只显示一次） -->
@@ -222,7 +222,8 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"

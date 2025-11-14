@@ -137,7 +137,7 @@ onUnmounted(() => {
     <section
       id="createImage"
       ref="quoteImage"
-      class="border w-full h-full overflow-y-auto relative text-[10px] 
+      class="border w-full h-full overflow-y-auto relative text-xs
              border-gray-200 dark:border-gray-700
              [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       @click="store.IsUpdateImageDialog = false"
@@ -167,7 +167,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex">
-          <table class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700 text-center text-[10px] transition-colors duration-200">
+          <table class="w-full table-fixed border-collapse border border-gray-200 dark:border-gray-700 text-center text-xs transition-colors duration-200">
             <colgroup>
               <col class="w-1/6" />
               <col class="w-1/6" />
@@ -178,7 +178,7 @@ onUnmounted(() => {
             </colgroup>
             <thead class="font-semibold bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
               <tr>
-                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-200 dark:border-gray-700 px-3 py-2">
+                <th v-for="header in TABLE_HEADERS" :key="header" class="border border-gray-300 dark:border-gray-700 px-3 py-2">
                   {{ t(header) }}
                 </th>
               </tr>
@@ -187,10 +187,10 @@ onUnmounted(() => {
               <template v-for="model in series.models" :key="model.big">
                 <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                   <td class="border border-gray-200 dark:border-gray-700 px-3 py-2 font-semibold align-middle">{{ model.memory }}</td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ model.prices.new }}</td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ model.prices.good }}</td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ model.prices.smallFlower }}</td>
-                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">{{ model.prices.bigFlower }}</td>
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">￥： {{ model.prices.new }}</td>
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">￥： {{ model.prices.good }}</td>
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">￥： {{ model.prices.smallFlower }}</td>
+                  <td class="border border-gray-200 dark:border-gray-700 px-3 py-2">￥： {{ model.prices.bigFlower }}</td>
                   <td v-if="model === series.models[0]" :rowspan="series.models.length" class="border border-gray-200 dark:border-gray-700 px-3 py-2 text-center align-middle">
                     {{ series.remark || '/' }}
                   </td>
@@ -204,14 +204,16 @@ onUnmounted(() => {
 
     <!-- 按钮 -->
     <transition name="fade-scale">
-      <div v-if="!isScrolling" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50">
+      <div v-if="!isScrolling" 
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }">
         <button
           @click="generateFree()"
           class="relative h-12 w-56 text-lg font-semibold tracking-wide text-white
                  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
                  dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700
-                 rounded-2xl shadow-lg dark:shadow-purple-800/50
-                 hover:shadow-2xl hover:-translate-y-0.5 active:translate-y-0
+                 rounded-2xl
+                 hover:-translate-y-0.5 active:translate-y-0
                  transition-all duration-300 overflow-hidden group"
         >
           <span class="relative z-10 flex items-center justify-center gap-2">
@@ -229,6 +231,7 @@ onUnmounted(() => {
   <QuoteFreeDialog v-model="freeShowDialog" title="免费次数已用完" message="是否使用积分生成报价单？" @confirm="handleConfirm"/>
   <QuoteFreeDialog v-model="InsufficientPoints" title="积分不足" message="是否去充值积分？" @confirm="handleConfirmPoint"/>
 </template>
+
 
 
 <style scoped>

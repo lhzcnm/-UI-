@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../../utils/store'
-import { ColorEnumNames } from '../../../utils/menu'
 import { deductPoints, freeGenerate} from '../../../api/http'
 import router from '@/router'
 import QuoteFreeDialog from '../../QuoteFreeDialog.vue'
@@ -32,7 +31,7 @@ const quoteColors: string[] = [
   'bg-gradient-to-br from-red-500/80 from-30% to-red-500/20 to-80%',
 ]
 
-const TABLE_HEADERS = ['quote.TableHeaders3.Header1', 'quote.TableHeaders3.Header2', 'quote.TableHeaders3.Header3', 'quote.TableHeaders3.Header4', 'quote.TableHeaders3.Header5','quote.TableHeaders3.Header6','quote.TableHeaders3.Header7']
+const TABLE_HEADERS = ['quote.TableHeaders3.Header1', 'quote.TableHeaders3.Header3', 'quote.TableHeaders3.Header6','quote.TableHeaders3.Header7']
 
 
 // 滚动监听控制按钮显示
@@ -132,97 +131,83 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section
-    ref="quoteImage"
-    id="createImage8"
-    class="border w-full h-full bg-white dark:bg-gray-900 overflow-y-auto relative text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden text-gray-800 dark:text-gray-100"
-    @click="store.IsUpdateImageDialog = false"
-  >
-    <!-- 顶部标题 -->
-    <div
-      :class="quoteColors[store.colorIndex]"
-      class="relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl"
+  <div  class="h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+    <section
+      ref="quoteImage"
+      id="createImage8"
+      class="border w-full h-full bg-white dark:bg-gray-900 overflow-y-auto relative text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden text-gray-800 dark:text-gray-100"
+      @click="store.IsUpdateImageDialog = false"
     >
-      {{ t('quote.ImageTableType.SamSung') }}
-      <div class="absolute bottom-0 right-2 text-xs font-thin italic text-gray-200 dark:text-gray-400">
-        {{ formatted.slice(0, 10) }}
-      </div>
-    </div>
-
-    <!-- 提示语 -->
-    <div
-      class="text-center w-full px-2 py-1 leading-relaxed text-xs dark:text-gray-200"
-      v-html="t('quote.FriendlyReminder.SamSung').replace(/\n/g, '<br />')"
-    ></div>
-
-    <!-- 机型列表 -->
-    <div v-for="(series, si) in store.UpdateSanSungData" :key="si" class="mb-4">
+      <!-- 顶部标题 -->
       <div
         :class="quoteColors[store.colorIndex]"
-        class="relative w-full h-10 px-2 py-1 text-white flex items-center justify-center font-bold text-lg"
+        class="relative w-full h-14 px-2 py-1 text-white flex items-center justify-center font-bold text-2xl"
       >
-        {{ series.type }}
+        {{ t('quote.ImageTableType.SamSung') }}
+        <div class="absolute bottom-0 right-2 text-xs font-thin italic text-gray-200 dark:text-gray-400">
+          {{ formatted.slice(0, 10) }}
+        </div>
       </div>
 
-      <div class="flex">
-        <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
-          <colgroup>
-            <col class="w-1/7">
-            <col class="w-1/7">
-            <col class="w-1/7">
-            <col class="w-1/7">
-            <col class="w-1/7">
-            <col class="w-1/7">
-            <col class="w-1/7">
-          </colgroup>
-          <thead class="font-semibold dark:bg-gray-700 dark:text-gray-100">
-            <tr>
-              <th v-for="header in TABLE_HEADERS" :key="header" class="border py-2 dark:border-gray-600">{{ t(header) }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="model in series.models" :key="model.remark">
-              <template v-for="price of model.memories" :key="price.memory">
-                <!-- 未激活行 -->
-                <template v-for="(item, idx) in price.inactive" :key="'inactive-' + idx">
-                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                    <td v-if="idx === 0" :rowspan="price.inactive.length + price.active.length" class="border px-3 py-2 font-semibold align-middle dark:border-gray-600">
-                      {{ price.memory }}
-                    </td>
-                    <td class="border py-2 dark:border-gray-600" v-if="idx === 0" :rowspan="price.inactive.length">{{ t('quote.TableHeaders.Header4') }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
-                    <td v-if="idx === 0" :rowspan="price.inactive.length + price.active.length" class="border px-3 py-2 text-center align-middle dark:border-gray-600">
-                      {{ model.remark || '/' }}
-                    </td>
-                  </tr>
-                </template>
+      <!-- 提示语 -->
+      <div
+        class="text-center w-full px-2 py-1 leading-relaxed text-xs dark:text-gray-200"
+        v-html="t('quote.FriendlyReminder.SamSung').replace(/\n/g, '<br />')"
+      ></div>
 
-                <!-- 已激活行 -->
-                <template v-for="(item, idx) in price.active" :key="'active-' + idx">
-                  <tr class="dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                    <td class="border py-2" v-if="idx === 0" :rowspan="price.active.length">{{ t('quote.TableHeaders.Header3') }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
-                  </tr>
-                </template>
+      <!-- 机型列表 -->
+      <div v-for="(series, si) in store.UpdateSanSungData" :key="si" class="mb-4">
+        <div
+          :class="quoteColors[store.colorIndex]"
+          class="relative w-full h-10 px-2 py-1 text-white flex items-center justify-center font-bold text-lg"
+        >
+          {{ series.type }}
+        </div>
 
+        <div class="flex">
+          <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
+            <colgroup>
+              <col class="w-1/4">
+              <col class="w-1/4">
+              <col class="w-1/4">
+              <col class="w-1/4">
+            </colgroup>
+            <thead class="font-semibold bg-gray-200 dark:bg-gray-700 dark:text-gray-100">
+              <tr>
+                <th v-for="header in TABLE_HEADERS" :key="header" class="border py-2 border-gray-300 dark:border-gray-600">{{ t(header) }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template v-for="model in series.models" :key="model.remark">
+                <template v-for="price of model.memories" :key="price.memory">
+                  <!-- 未激活行 -->
+                  <template v-for="(item, idx) in price.colors" :key="'inactive-' + idx">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border px-3 py-2 font-semibold align-middle dark:border-gray-600">
+                        {{ price.memory }}
+                      </td>
+
+                      <td class="border px-3 py-2 dark:border-gray-600">{{ item.color }}</td>
+                      <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
+                      <td v-if="idx === 0" :rowspan="price.colors.length" class="border px-3 py-2 text-center align-middle dark:border-gray-600">
+                        {{ model.remark || '/' }}
+                      </td>
+                    </tr>
+                  </template>
+                </template>
               </template>
-            </template>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </section>
 
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
         @click.stop
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"
@@ -237,7 +222,7 @@ onUnmounted(() => {
         </button>
       </div>
     </transition>
-  </section>
+  </div>
 
   <QuoteFreeDialog
     v-model="freeShowDialog"
@@ -253,6 +238,7 @@ onUnmounted(() => {
     @confirm="handleConfirmPoint"
   />
 </template>
+
 
 
 

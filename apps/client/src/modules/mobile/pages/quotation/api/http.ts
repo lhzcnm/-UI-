@@ -1,5 +1,7 @@
 import http from "@/utils/http";
-
+  interface paramsGetHongKongNew {
+    priceType: number
+  }
 export class quoteApi{
   //华强北
   static async getHuaQiangBei() {
@@ -22,8 +24,8 @@ export class quoteApi{
   }
 
   //香港新机
-  static async GetHongKongNew() {
-    const { data } = await http.get('/hk/list/iphone')
+  static async GetHongKongNew(param:paramsGetHongKongNew = { priceType: 3 }) {
+    const { data } = await http.get('/hk/list/iphone', {params: param})
     return data
   }
   static async HongKongNew() {
@@ -33,8 +35,8 @@ export class quoteApi{
 
 
   //三星
-  static async GetSanXin() {
-    const { data } = await http.get('/hk/list/samsung')
+  static async GetSanXin(param:paramsGetHongKongNew = { priceType: 3 }) {
+    const { data } = await http.get('/hk/list/samsung', {params: param})
     return data
   }
   static async SanXin() {

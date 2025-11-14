@@ -4,7 +4,7 @@ const { t } = useI18n()
 const props = defineProps({
   modelValue: { type: Boolean, default: false }, // 控制抽屉是否打开
   title: { type: String, default: 'quote.Filter' },          // 抽屉标题
-  width: { type: String, default: '2/3' }        // 抽屉宽度，Tailwind 格式，例如 '1/2', '2/3'
+  width: { type: String, default: '1/2' }        // 抽屉宽度，Tailwind 格式，例如 '1/2', '2/3'
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -27,7 +27,8 @@ const closeDrawer = () => {
     <transition name="slide-right">
       <div
         v-if="modelValue"
-        :class="`fixed top-0 right-0 h-screen w-${width} bg-white dark:bg-gray-900 shadow-lg z-50 flex flex-col p-4 overflow-auto`"
+        :class="`fixed top-0 right-0 h-screen bg-white dark:bg-black/80 shadow-lg z-50 flex flex-col p-4 `"
+        :style="{ maxWidth: '70%' }"
       >
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-lg font-semibold">{{ t(title) }}</h2>
@@ -43,7 +44,7 @@ const closeDrawer = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .slide-right-enter-active,
 .slide-right-leave-active {
   transition: transform 0.3s ease;

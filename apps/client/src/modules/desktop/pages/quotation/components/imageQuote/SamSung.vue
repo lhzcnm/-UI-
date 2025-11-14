@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../utils/store'
-import { ColorEnumNames } from '../../utils/menu'
 import { deductPoints, freeGenerate } from '../../api/http'
 import router from '@/router'
 import QuoteFreeDialog from '../QuoteFreeDialog.vue'
@@ -33,7 +32,12 @@ const quoteColors: string[] = [
   'bg-gradient-to-br from-red-500/80 to-red-500/20'
 ]
 
-const TABLE_HEADERS = ['quote.TableHeaders3.Header1', 'quote.TableHeaders3.Header2', 'quote.TableHeaders3.Header3', 'quote.TableHeaders3.Header4', 'quote.TableHeaders3.Header5','quote.TableHeaders3.Header6','quote.TableHeaders3.Header7']
+const TABLE_HEADERS = [
+  'quote.TableHeaders3.Header1', 
+  'quote.TableHeaders3.Header3', 
+  'quote.TableHeaders3.Header6',
+  'quote.TableHeaders3.Header7'
+]
 
 const isScrolling = ref(false)
 let scrollTimer: number | null = null
@@ -129,13 +133,11 @@ onUnmounted(() => {
       <div class="flex">
         <table class="w-full table-fixed border-collapse border text-center text-xs dark:border-gray-600">
           <colgroup>
-            <col class="w-1/7" />
-            <col class="w-1/7" />
-            <col class="w-1/7" />
-            <col class="w-1/7" />
-            <col class="w-1/7" />
-            <col class="w-1/7" />
-            <col class="w-1/7" />
+            <col class="w-1/4" />
+            <col class="w-1/4" />
+            <col class="w-1/4" />
+            <col class="w-1/4" />
+       
           </colgroup>
           <thead class="bg-yellow-50 dark:bg-yellow-900/40 font-semibold">
             <tr>
@@ -152,29 +154,28 @@ onUnmounted(() => {
             <template v-for="model in series.models" :key="model.remark">
               <template v-for="price of model.memories" :key="price.memory">
                 <!-- 未激活 -->
-                <template v-for="(item, idx) in price.inactive" :key="'inactive-' + idx">
+                <template v-for="(item, idx) in price.colors" :key="'inactive-' + idx">
                   <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                     <td
                       v-if="idx === 0"
-                      :rowspan="price.inactive.length + price.active.length"
+                      :rowspan="price.colors.length"
                       class="border px-3 py-2 font-semibold align-middle dark:border-gray-600"
                     >
                       {{ price.memory }}
                     </td>
-                    <td
+                    <!-- <td
                       class="border py-2 dark:border-gray-600"
                       v-if="idx === 0"
                       :rowspan="price.inactive.length"
                     >
                       {{ t('quote.TableHeaders.Header4') }}
-                    </td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ t(ColorEnumNames[item.color]) }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.primary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
-                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
+                    </td> -->
+                    <td class="border px-3 py-2 dark:border-gray-600">{{ item.color }}</td>
+                    <td class="border px-3 py-2 dark:border-gray-600">{{ store.priceIcon }}: {{ item.prices.BrandNew }}</td>
+                    
                     <td
                       v-if="idx === 0"
-                      :rowspan="price.inactive.length + price.active.length"
+                      :rowspan="price.colors.length"
                       class="border px-3 py-2 text-center align-middle dark:border-gray-600"
                     >
                       {{ model.remark || '/' }}
@@ -183,7 +184,7 @@ onUnmounted(() => {
                 </template>
 
                 <!-- 已激活 -->
-                <template v-for="(item, idx) in price.active" :key="'active-' + idx">
+                <!-- <template v-for="(item, idx) in price.active" :key="'active-' + idx">
                   <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                     <td
                       class="border py-2 dark:border-gray-600"
@@ -197,7 +198,7 @@ onUnmounted(() => {
                     <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.secondary }}</td>
                     <td class="border px-3 py-2 dark:border-gray-600">{{ item.prices.source }}</td>
                   </tr>
-                </template>
+                </template> -->
               </template>
             </template>
           </tbody>
@@ -209,7 +210,8 @@ onUnmounted(() => {
     <transition name="fade-scale">
       <div
         v-if="!isScrolling"
-        class="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 text-center z-50"
+        class="fixed bottom-8 left-1/2 p-2 text-center z-50"
+        :style="{ transform: 'translateX(-50%)' }"
       >
         <button
           @click="generateFree()"

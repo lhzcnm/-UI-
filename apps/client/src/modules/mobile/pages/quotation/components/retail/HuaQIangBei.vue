@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type QUOTE_STORE_TYPE, QUOTE_STORE } from '../../utils/store'
-import { ColorEnumNames } from '../../utils/menu'
 
 const store = inject<QUOTE_STORE_TYPE>(QUOTE_STORE)!
 const { t } = useI18n()
@@ -46,7 +45,7 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 gap-6 p-2">
     <!-- 无数据提示 -->
     <div
       v-if="!filteredData.length"
@@ -58,7 +57,7 @@ const filteredData = computed(() => {
     <div
       v-for="(series, si) in filteredData"
       :key="si"
-      class="bg-white dark:bg-black border border-gray-200 dark:border-border rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300"
+      class="bg-gradient-to-br from-white/90 to-gray-100/50 dark:from-black/90 dark:to-black/50 border border-gray-200 dark:border-border rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300"
     >
       <!-- 型号标题 -->
       <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 truncate">{{ series.model }}</h2>
@@ -81,15 +80,15 @@ const filteredData = computed(() => {
                 'rounded-lg p-3 transition-colors',
                 'text-gray-900 dark:text-gray-100',
                 'hover:bg-blue-100',
-                'bg-sky-50 dark:bg-sky-600/20' // 这里可以改为 bg-red-50/红色对应未激活
+                'border border-orange-100 dark:border-orange-500/50 bg-orange-50/40 dark:bg-orange-400/20' // 这里可以改为 bg-red-50/红色对应未激活
               ]"
             >
               <div class="flex justify-between items-center mb-1">
-                <span class="font-medium text-sm">{{ t(ColorEnumNames[item.color]) }}</span>
+                <span class="font-medium text-sm">{{ item.color }}</span>
               </div>
               <div class="flex flex-wrap justify-between text-xs text-gray-600 dark:text-gray-300 gap-1">
-                <span>{{ t('quote.TableHeaders.Header3') }}：￥{{ item.prices.primary }}</span>
-                <span>{{ t('quote.TableHeaders.Header4') }}：￥{{ item.prices.secondary }}</span>
+                <span>{{ t('quote.TableHeaders.Header3') }}：￥: {{ item.prices.primary }}</span>
+                <span class="text-red-500">{{ t('quote.TableHeaders.Header4') }}：￥: {{ item.prices.secondary }}</span>
               </div>
             </div>
 

@@ -15,7 +15,7 @@ interface PricesType {
 }
 
 interface ListType {
-  color: number
+  color: string
   prices: {
     primary: string
     secondary: string
@@ -53,16 +53,40 @@ interface ModelsTypeHKNew {
 
 interface MemoriesType {
  memory: string
- active: ActiveType[]
- inactive: ActiveType[]
+ colors: ActiveType[]
 }
 
 interface ActiveType {
-  color: number
+  color: string
   prices: {
-    primary: string
-    secondary: string
-    source: string
+    Asis: string
+    "Asis+": string
+    BrandNew: string
+    cpo: string
+  }
+}
+
+// 香港新机接口返回值类型
+export interface HKSamSungType {
+  id: number
+  type: string
+  models: ModelsTypeHKSamSung[]
+}
+
+interface ModelsTypeHKSamSung {
+  remark: string
+  memories: MemoriesTypeSamSung[]
+}
+
+interface MemoriesTypeSamSung {
+ memory: string
+ colors: ActiveTypeSamSung[]
+}
+
+interface ActiveTypeSamSung {
+  color: string
+  prices: {
+    BrandNew: string
   }
 }
 

@@ -29,11 +29,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col bg-gray-50 dark:bg-black transition-colors duration-300">
+  <div class="w-full h-full flex flex-col transition-colors duration-300">
     <!-- 顶部导航栏 -->
     <div
       class="relative flex items-center border-b border-gray-300 dark:border-border
-             bg-white dark:bg-black backdrop-blur-sm shadow-sm py-2 px-2 transition-all duration-300"
+             bg-gradient-to-br from-white/90 to-gray-100/50 dark:from-black/30 dark:to-black/50 backdrop-blur-sm shadow-sm py-2 px-2 transition-all duration-300"
     >
       <!-- Tabs 滚动区 -->
       <div
@@ -69,7 +69,7 @@ onMounted(() => {
     </div>
 
     <!-- 内容区域 -->
-    <div class="flex-1 overflow-auto pb-14 bg-gray-50 dark:bg-black transition-colors duration-300">
+    <div class="flex-1 overflow-auto pb-14  transition-colors duration-300">
       <HongKong v-if="store.activeTab == 0" />
       <FeiYang v-if="store.activeTab == 1" />
       <HuaQIangBei v-if="store.activeTab == 2" />
