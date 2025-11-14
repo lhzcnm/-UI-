@@ -18,6 +18,8 @@ const form = reactive({
   enableTricket: settings.enableTricket,
   minRechargeAmount: settings.minRechargeAmount,
   maxRechargeAmount: settings.maxRechargeAmount,
+  minVoucherAmount: settings.minVoucherAmount,
+  maxVoucherAmount: settings.maxVoucherAmount,
   invitePonit: +configs['invite:point'],
   inviteForPonit: +configs['invite:for:point'],
   excludedWords: configs['filter:excluded_words']
@@ -38,6 +40,8 @@ function handleSubmit() {
       { name: 'enableTricket', status: form.enableTricket },
       { name: 'minRechargeAmount', content: form.minRechargeAmount.toString() },
       { name: 'maxRechargeAmount', content: form.maxRechargeAmount.toString() },
+      { name: 'minVoucherAmount', content: form.minVoucherAmount.toString() },
+      { name: 'maxVoucherAmount', content: form.maxVoucherAmount.toString() },
       { name: 'invite', content: form.invite }
     ]),
     updateConfig([
@@ -110,6 +114,29 @@ function handleSubmit() {
         <XInputNumber
           v-model="form.maxRechargeAmount"
           placeholder="最大充值金额"
+          :min="0"
+        />
+      </FormField>
+
+      <FormField
+        label="最小积分券金额"
+        desc="生成积分券时，最小充值金额"
+        :content-flex="false"
+      >
+        <XInputNumber
+          v-model="form.minVoucherAmount"
+          placeholder="最小积分券金额"
+          :min="0"
+        />
+      </FormField>
+      <FormField
+        label="最大积分券金额"
+        desc="生成积分券时，最大充值金额"
+        :content-flex="false"
+      >
+        <XInputNumber
+          v-model="form.maxVoucherAmount"
+          placeholder="最大积分券金额"
           :min="0"
         />
       </FormField>

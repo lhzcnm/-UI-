@@ -3,7 +3,7 @@ import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
 import type { DeviceMapItem } from '../types'
-import { STORE, getCopyToken } from '../utils'
+import { STORE, getCopyToken, getCopyTokenEn } from '../utils'
 
 interface DeviceCardProps {
   device: DeviceMapItem
@@ -15,7 +15,7 @@ const { info, memory, product, summary, deviceId } = props.device
 const currentKey = `${deviceId}:${info.UniqueDeviceID}`
 
 const { copy } = useClipboard({ legacy: true })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const store = inject(STORE)!
 const isPrinting = ref(false)
@@ -36,7 +36,7 @@ async function handlePrint() {
 }
 
 function handleCopy() {
-  const tokens = getCopyToken(summary)
+  const tokens = locale.value === 'zh' ? getCopyToken(summary) : getCopyTokenEn(summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
   toast.success(t('submit.success', { action: t('action.copy') }))

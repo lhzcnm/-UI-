@@ -15,6 +15,7 @@ import { createList } from '@/utils'
 import type { RechargeStore } from './utils'
 import { columns } from './utils/column'
 import { RECHARGE_STORE } from './utils'
+import type { XTableExpose } from '@3un/ui'
 
 const store: RechargeStore = reactive({
   recharges: createList(),
@@ -38,6 +39,7 @@ const router = useRouter()
 
 const ids = ref<number[]>([])
 const loading = ref(false)
+const tableRef = ref<XTableExpose | null>(null)
 
 const queryHash = computed(() => hash(route.query))
 const packageStore = usePackageStore()
@@ -58,7 +60,7 @@ watch(
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
-      byAdmin: (!isAdmin.value && store.formSearch.paymentMethod === 7) ? true : store.formSearch.byAdmin
+      byAdmin: (!isAdmin.value && store.formSearch.paymentMethod === 5) ? true : store.formSearch.byAdmin
     })
   },
 )
@@ -90,6 +92,8 @@ function getList(params: RechargeListParams) {
   const response = getRecharges(params)
   response.then((data) => store.recharges = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function resetSearch() {
@@ -157,6 +161,7 @@ async function handleDelete() {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :columns="columns"
         :data="store.recharges.list"
         :loading="loading"

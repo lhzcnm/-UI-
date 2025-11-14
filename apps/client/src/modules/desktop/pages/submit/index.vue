@@ -44,7 +44,7 @@ const imeis = ref<string[]>([])
 const comments = ref<string>('')
 
 const selectedId = ref(+props.id)
-
+const headers = shallowRef<string[]>([])
 
 const sizes = [50, 150, 200, 300, 500]
 
@@ -96,6 +96,8 @@ function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
 async function handleServiceCols(value: number) {
   const { data } = await serviceApi.header(value)
 
+  headers.value = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
+
   if (data.length === 0) {
     columns.value = getDefaultColumns(t)
     return
@@ -104,7 +106,7 @@ async function handleServiceCols(value: number) {
   const serviceCols: XTableColumn[] = []
   for (const item of data) {
     const { name, nameEn, width } = item
-    const field = hash(name)
+    const field = hash(locale.value === 'zh' ? name : nameEn ? nameEn : name)
 
     serviceCols.push({
       key: field,
@@ -178,7 +180,6 @@ function submitQueryOrder(service: Service) {
       }
 
       submitOrder(service)
-      uStore.updateCredit()
     },
     { once: true }
   )
@@ -188,6 +189,7 @@ function submitQueryOrder(service: Service) {
 
     handleOrder(value)
     handleCount()
+    uStore.updateCredit()
   })
 }
 
@@ -197,7 +199,8 @@ function submitOrder(service: Service) {
     serviceId: service.id,
     imeiList: imeis.value,
     remark: comments.value,
-    isBulk: !pushMsg.value
+    isBulk: !pushMsg.value,
+    language: locale.value,
   }
 
   const response = orderApi.submit(params)
@@ -205,7 +208,7 @@ function submitOrder(service: Service) {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('')}`)
+      toast.success(`${t('submit.success', { action: t('action.submit') })}`)
     }
 
     renderSubmitOrderResult(data)
@@ -224,6 +227,12 @@ function submitOrder(service: Service) {
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
   const errMsgCol = columns.value[5].key
   const result = []
+  const service = store.services.get(selectedId.value)
+
+  let text = "提交成功, 请前往<a href='/history' class='underline hover:text-success'>订单历史</a>查看结果"
+  if(locale.value !== 'zh') {
+    text = "Submission successful. Please go to <a href='/history' class='underline hover:text-success'>History</a> to view the result."
+  }
 
   for (let item of data) {
     const index = imeis.value.indexOf(item.imei)
@@ -234,7 +243,8 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 
     result.push({
       ...rawOrders.value[index],
-      ...(isFailed && { [errMsgCol]: item.message }),
+      // ...(isFailed && { [errMsgCol]: item.message ? item.message : "提交成功, 请前往订单历史查看结果" }),
+      ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
       status: item.status,
     })
   }
@@ -298,6 +308,7 @@ function handleExport() {
     serviceId: selectedId.value,
     imeiList: imeis.value,
     orderIdList: ids,
+    excelHead: headers.value,
   })
 
   response.then(({ data }) => downloadURL(data))
@@ -342,8 +353,8 @@ async function handleMustRead() {
 </script>
 
 <template>
-  <div class="p-4 h-full">
-    <section class="flex items-center justify-between mb-3">
+  <div class="p-4 h-full w-full">
+    <section class=" w-full flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
         <SelectService
           v-model="selectedId"
@@ -377,10 +388,10 @@ async function handleMustRead() {
         :sizes
         :layouts="[
           'total',
-          'sizes',
           'prev',
           'pager',
           'next',
+          'sizes',
         ]"
       />
     </section>
@@ -389,7 +400,7 @@ async function handleMustRead() {
       :data="orders"
       :columns="columns"
       row-key="index"
-      class="h-[calc(100%-3rem)] border"
+      class="h-[calc(100%-3rem)] w-full border"
     />
   </div>
 </template>

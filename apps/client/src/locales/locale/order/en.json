@@ -47,7 +47,8 @@
       "copy": "Copied",
       "orderTimeout": "This function is not supported for orders over three days old",
       "vertified": "Submitted for verification",
-      "vertifyConfirm": "Are you sure to verify the order?"
+      "vertifyConfirm": "Are you sure to verify the order?",
+      "info": "Image generated successfully. Click the image to download."
     },
     "form": {
       "status": {

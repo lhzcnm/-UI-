@@ -15,6 +15,7 @@ const loading = ref(false)
 const form = reactive({
   url: configs.url,
   title: settings.title,
+  titleEn: settings.titleEn,
   phone: settings.phone,
   email: settings.email,
   beian: settings.beian,
@@ -29,6 +30,7 @@ function handleSubmit() {
   const response = Promise.all([
     updateSetting([
       { name: 'title', content: form.title },
+      { name: 'titleEn', content: form.titleEn },
       { name: 'phone', content: form.phone },
       { name: 'email', content: form.email },
       { name: 'beian', content: form.beian },
@@ -66,6 +68,13 @@ function handleSubmit() {
         desc="显示在浏览器标题栏的网站名称"
       >
         <XInput v-model="form.title" placeholder="标题" />
+      </FormField>
+
+      <FormField
+        label="标题(英文)"
+        desc="网站英文名称"
+      >
+        <XInput v-model="form.titleEn" placeholder="标题" />
       </FormField>
 
       <FormField

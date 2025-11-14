@@ -7,6 +7,8 @@ export interface SettingApi {
 export interface Setting {
   // 网站标题
   title: string
+  // 网站标题(En)
+  titleEn: string
   // 公司名称
   company: string
   // 联系电话
@@ -59,6 +61,20 @@ export interface Setting {
   enableTricket: boolean
   // 是否启用订单审核
   enableOrderVerify: boolean
+
+  // 报价单
+  beautyMachinePrompt: string
+  flowerMachinePrompt: string
+  stickerForeignPromt: string
+  cardUnlockedPrompt: string
+  beautyMachinePromptEn: string
+  flowerMachinePromptEn: string
+  stickerForeignPromtEn: string
+  cardUnlockedPromptEn: string
+
+  // 商城
+  mallWarmReminderEN: string
+  mallWarmReminderZH: string
 }
 
 // export interface Setting {

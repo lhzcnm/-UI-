@@ -1,5 +1,6 @@
-import { XButton, XInputNumber, XSwitch, type XColDef } from "@3un/ui"
+import { XButtonSplit, XInput, XInputNumber, XSwitch, type XBtnSplitOption, type XColDef } from "@3un/ui"
 import { h, inject } from "vue"
+import { toast } from "vue-sonner"
 
 import type { TicketType } from "@/inters/ticket"
 import { updateTicketType, deleteTicketType } from "@/api/ticket"
@@ -10,6 +11,27 @@ export const column: XColDef<TicketType> = [
     key: 'departmentName',
     title: '常见问题',
     minWidth: 150,
+    render: (_, row) => {
+      return h(XInput, {
+        modelValue: row.departmentName,
+        "onUpdate:modelValue": (val: string | number | null | undefined) => {
+          row.departmentName = val?.toString() ?? ''
+        }
+      })
+    }
+  },
+  {
+    key: 'departmentNameEn',
+    title: '常见问题En',
+    minWidth: 150,
+    render: (_, row) => {
+      return h(XInput, {
+        modelValue: row.departmentNameEn,
+        "onUpdate:modelValue": (val: string | number | null | undefined) => {
+          row.departmentNameEn = val?.toString() ?? ''
+        }
+      })
+    }
   },
   {
     key: 'status',
@@ -66,18 +88,34 @@ export const column: XColDef<TicketType> = [
     width: 78,
     render: (_, row, index) => {
       const store = inject(TICKET_STORE)!
-      const handleDelete = () => {
+
+      function handleDelete() {
         deleteTicketType(row.departmentId).then(() => {
           store.types.splice(index, 1)
         })
       }
 
-      return h(XButton, {
-        icon: 'lucide:trash-2',
-        color: 'danger',
+      function handleUpdate() {
+        // console.log(row)
+        updateTicketType(row).then(() => {
+          toast.success('更新成功')
+        })
+      }
+
+      const options: XBtnSplitOption[] = [
+        {
+          icon: 'lucide:trash-2',
+          label: "删除",
+          command: () => handleDelete(),
+        }
+      ]
+
+      return h(XButtonSplit, {
+        options,
+        label: '更新',
         size: 'sm',
-        label: '删除',
-        onClick: handleDelete,
+        uiTrigger: 'z-50',
+        onClick: () => handleUpdate(),
       })
     }
   },

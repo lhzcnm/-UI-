@@ -55,6 +55,8 @@ function handleCustomAmount(value: any) {
 }
 
 function handleRecharge() {
+  if(!rechargeAmount.value) return toast.warning(t('valid.recharge.amount'))
+
   const minAmount = +iStore.settings.minRechargeAmount
   const maxAmount = +iStore.settings.maxRechargeAmount
 
@@ -94,6 +96,7 @@ function checkRecharge() {
       toast.success(t('submit.success', { action: t('action.recharge') }))
       uStore.updateCredit()
       store.isComplete = true
+      store.refresh = !store.refresh
       window.clearInterval(store.timer)
     })
   }, 1300)
@@ -102,7 +105,6 @@ function checkRecharge() {
 
 <template>
   <div class="bg-card border p-4 rounded-md space-y-6">
-
     <div class="space-y-3">
       <h3 class="text-lg font-medium">{{ t('recharge.balance.title') }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">
@@ -111,19 +113,18 @@ function checkRecharge() {
           :class="twMerge(
             'flex flex-col items-center justify-center space-y-1',
             'h-16 rounded-md bg-card border',
-            selectedAmount === item.value && 'ring-2 ring-primary bg-primary/10',
+            customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
           )"
-          @click="selectedAmount = item.value"
+          @click="selectedAmount = item.value; customAmount = item.value"
         >
           <span>{{ item.label }}</span>
           <span v-if="item.info" class="text-sm text-success">{{ item.info }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
-        <span>￥</span>
-        <XInput
+        <PriceInput
+          :model-value="customAmount ? customAmount : 0"
           :placeholder="t('recharge.amount.placeholder')"
-          :model-value="customAmount ? customAmount : ''"
           @update:model-value="handleCustomAmount"
         />
       </div>
@@ -188,7 +189,6 @@ function checkRecharge() {
     <div class="flex items-center justify-end">
       <XButton
         :label="t('recharge.button.balance')"
-        :disabled="selectedAmount === 0 && customAmount === 0"
         @click="handleRecharge"
       />
     </div>

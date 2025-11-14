@@ -4,36 +4,57 @@ import { HISTORY_STORE, form, formatOrderParams } from '../utils'
 import { orderApi } from '@/api/orders'
 import { downloadURL } from '@3un/utils'
 import { toast } from 'vue-sonner'
+import { serviceApi } from '@/api/services'
 
 const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
+const headers = ref<string[]>([])
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-function handleSubmit() {
+async function handleSubmit() {
   if (!store.exportForm.serviceId) {
     return toast.warning(t('prompt.serviceNull'))
   }
 
   submitLoading.value = true
+  await getServiceHeader(store.exportForm.serviceId)
   const params = formatOrderParams(store.exportForm)
-  const response = orderApi.export({
-    serviceId: store.exportForm.serviceId,
-    ...params,
-  })
+  // const response = orderApi.export({
+  //   serviceId: store.exportForm.serviceId,
+  //   ...params,
+  //   excelHead: headers.value,
+  // })
 
-  response.then((res) => {
-    downloadURL(res.data)
+  // response.then((res) => {
+  //   downloadURL(res.data)
+  //   store.visibleExport = false
+  // })
+
+  // response.finally(() => {
+  //   submitLoading.value = false
+  // })
+
+  try {
+    const { data } = await orderApi.export({
+      serviceId: store.exportForm.serviceId,
+      ...params,
+      excelHead: headers.value,
+    })
+    downloadURL(data)
     store.visibleExport = false
-  })
-
-  response.finally(() => {
+  } finally {
     submitLoading.value = false
-  })
+  }
 }
 
 function handleClose() {
   store.exportForm = { ...form.export }
+}
+
+async function getServiceHeader(id: number) {
+  const { data } = await serviceApi.header(id)
+  headers.value = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
 }
 </script>
 

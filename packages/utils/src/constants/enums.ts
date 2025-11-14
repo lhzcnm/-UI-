@@ -1,4 +1,5 @@
-import type { StatusMap } from '@3un/shared'
+import type { StatusMap, TypeListItem, TypeMap } from '@3un/shared'
+import { IMEI_AND_SN_REG, IMEI_REG, SN_REG } from './regexs'
 
 // User Role
 export enum USER_ROLE {
@@ -14,12 +15,44 @@ export const USER_ROLE_MAP: StatusMap = {
 
 // Imei Type
 export enum IMEI_TYPE {
+  NULL       = 0,
   NONE       = 5,
   IMEI       = 2,
   SN         = 4,
   IMEI_OR_SN = 6,
 }
-
+export const IMEI_TYPE_MAP: TypeMap = {
+  [IMEI_TYPE.NULL]       : {
+    value: IMEI_TYPE.NONE,
+    label: 'IMEI/SN',
+    key: 'type.imei.5',
+    regex: IMEI_AND_SN_REG,
+  },
+  [IMEI_TYPE.NONE]       : {
+    value: IMEI_TYPE.NONE,
+    label: 'IMEI/SN',
+    key: 'type.imei.5',
+    regex: IMEI_AND_SN_REG,
+  },
+  [IMEI_TYPE.IMEI]       : {
+    value: IMEI_TYPE.IMEI,
+    label: 'IMEI',
+    key: 'type.imei.2',
+    regex: IMEI_REG,
+  },
+  [IMEI_TYPE.SN]         : {
+    value: IMEI_TYPE.SN,
+    label: 'SN',
+    key: 'type.imei.4',
+    regex: SN_REG,
+  },
+  [IMEI_TYPE.IMEI_OR_SN] : {
+    value: IMEI_TYPE.IMEI_OR_SN,
+    label: 'IMEI/SN',
+    key: 'type.imei.6',
+    regex: IMEI_AND_SN_REG,
+  },
+}
 // Recharge Type
 export enum RECHARGE_TYPE {
   BALANCE    = 1,
@@ -42,19 +75,25 @@ export const PAYMENT_STATUS_LIST = [
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  ADMIN  = 7,
-  ALIPAY = 8,
-  WECHAT = 9,
+  ADMIN   = 5,
+  ADMINERR   = 7,
+  ALIPAY  = 8,
+  WECHAT  = 9,
+  VOUCHER = 10,
 }
 export const PAYMENT_METHOD_MAP: StatusMap = {
   [PAYMENT_METHOD.ADMIN]  : { color: 'warning', label: '管理员充值' },
+  [PAYMENT_METHOD.ADMINERR]  : { color: 'warning', label: '管理员充值' },
   [PAYMENT_METHOD.ALIPAY] : { color: 'primary', label: '支付宝' },
   [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
+  [PAYMENT_METHOD.VOUCHER] : { color: 'success', label: '积分券' },
 }
 export const PAYMENT_METHOD_LIST = [
   { value: PAYMENT_METHOD.ADMIN, label: '管理员充值' },
+  { value: PAYMENT_METHOD.ADMINERR, label: '管理员充值' },
   { value: PAYMENT_METHOD.ALIPAY, label: '支付宝' },
   { value: PAYMENT_METHOD.WECHAT, label: '微信' },
+  { value: PAYMENT_METHOD.VOUCHER, label: '积分券' },
 ]
 
 // Submit Method
@@ -65,6 +104,7 @@ export enum SUBMIT_METHOD {
   WECHAT  = 3,
   WEB     = 4,
   APP     = 5,
+  STORE   = 6,
 }
 export const SUBMIT_METHOD_MAP: StatusMap = {
   [SUBMIT_METHOD.NONE]    : { color: 'info', label: '未知' },
@@ -73,6 +113,7 @@ export const SUBMIT_METHOD_MAP: StatusMap = {
   [SUBMIT_METHOD.WECHAT]  : { color: 'success', label: '公众号' },
   [SUBMIT_METHOD.WEB]     : { color: 'warning', label: '网页端' },
   [SUBMIT_METHOD.APP]     : { color: 'success', label: 'app端'},
+  [SUBMIT_METHOD.STORE]     : { color: 'success', label: '商城'},
 }
 export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.NONE, label: '未知' },
@@ -81,6 +122,7 @@ export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.WECHAT, label: '公众号' },
   { value: SUBMIT_METHOD.WEB, label: '网页端' },
   { value: SUBMIT_METHOD.APP, label: 'app端' },
+  { value: SUBMIT_METHOD.STORE, label: '商城' },
 ]
 
 // API Type
@@ -111,10 +153,10 @@ export enum ORDER_STATUS {
   PROCESSING  = 4,
 }
 export const ORDER_STATUS_MAP: StatusMap = {
-  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', key: 'status.order.1' },
-  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功', key: 'status.order.2' },
-  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败', key: 'status.order.3' },
-  [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', key: 'status.order.4' },
+  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.order.1' },
+  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功', labelEn: 'Success', key: 'status.order.2' },
+  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败', labelEn: 'Failed', key: 'status.order.3' },
+  [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', labelEn: 'Processing', key: 'status.order.4' },
 }
 export const ORDER_STATUS_LIST = [
   { value: ORDER_STATUS.WAIT, label: '等待提交', key: 'status.order.1' },
@@ -131,10 +173,10 @@ export enum ORDER_VERIFY {
   REFUNDED  = 3,
 }
 export const ORDER_VERIFY_MAP: StatusMap = {
-  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', key: 'status.vertify.0' },
-  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', key: 'status.vertify.1' },
-  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', key: 'status.vertify.2' },
-  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', key: 'status.vertify.3' },
+  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', labelEn: 'Normal', key: 'status.vertify.0' },
+  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', labelEn: 'Feedback', key: 'status.vertify.1' },
+  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', labelEn: 'Solved', key: 'status.vertify.2' },
+  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', labelEn: 'Refund', key: 'status.vertify.3' },
 }
 export const ORDER_VERIFY_LIST = [
   { value: ORDER_VERIFY.NORMAL, label: '正常' },
@@ -189,4 +231,61 @@ export const TICKET_TYPE_MAP: StatusMap = {
 export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.RECHARGE, label: '充值退款问题', key: 'type.ticket.16' },
   { value: TICKET_TYPE.ORDER, label: '订单问题', key: 'type.ticket.17' },
+]
+
+// Quote Type
+export enum QUOTATION_TYPE {
+  HONGKONG = 1,
+  FLYING   = 3,
+}
+
+export const QUOTATION_MAP_LIST: TypeListItem[] = [
+  { value: QUOTATION_TYPE.HONGKONG, label: '香港拿货报价单' },
+  { value: QUOTATION_TYPE.FLYING, label: '飞扬零售报价单' },
+]
+
+// Store Device Type
+export enum CATEGORY_MAP {
+  ALL         = 0,
+  PHONE       = 1,
+  WATCH       = 2,
+  ACCESSORIES = 3,
+}
+
+export const CATEGORY_MAP_LIST = {
+  [CATEGORY_MAP.ALL]: {name: '全部'},
+  [CATEGORY_MAP.PHONE]: { name: 'IPhone' },
+  [CATEGORY_MAP.WATCH]: { name: 'Watch' },
+  [CATEGORY_MAP.ACCESSORIES]: { name: 'Accessories' },
+}
+
+// Refund Status
+export enum REFUND_STATUS {
+  WAIT     = 5,
+  SOLVED   = 6,
+  REJECTED = 7,
+}
+
+export const REFUND_STATUS_MAP: StatusMap = {
+  [REFUND_STATUS.WAIT]     : { color: 'primary', label: '退款待处理' },
+  [REFUND_STATUS.SOLVED]   : { color: 'success', label: '退款处理完成' },
+  [REFUND_STATUS.REJECTED] : { color: 'info', label: '不可退款' },
+}
+
+export enum VOUCHER_STATUS {
+  USEFUL  = 0,
+  USED    = 1,
+  FAILURE = 2,
+}
+
+export const VOUCHER_STATUS_MAP: StatusMap = {
+  [VOUCHER_STATUS.USEFUL] : { color: 'primary', label: '未使用' },
+  [VOUCHER_STATUS.USED] : { color: 'success', label: '已使用' },
+  [VOUCHER_STATUS.FAILURE] : { color: 'danger', label: '已失效' },
+}
+
+export const VOUCHER_STATUS_List: TypeListItem[] = [
+  { value: VOUCHER_STATUS.USEFUL, label: '未使用' },
+  { value: VOUCHER_STATUS.USED, label: '已使用' },
+  { value: VOUCHER_STATUS.FAILURE, label: '已失效' },
 ]

@@ -52,6 +52,11 @@ const mobile: RouteRecordRaw = {
       name: 'Settings',
       component: () => import('@mobile/pages/settings/index.vue'),
     },
+    {
+      path: 'voucher',
+      name: 'Voucher',
+      component: () => import('@mobile/pages/voucher/index.vue'),
+    },
   ],
 }
 

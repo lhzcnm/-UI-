@@ -67,8 +67,10 @@ export interface OrderExportParams {
   serviceId: number
   status?: ORDER_STATUS
   imeiList?: string[]
+  orderIdList?: string[]
   startTime?: string
   endTime?: string
+  excelHead?: string[]
 }
 export interface OrderExportForm {
   serviceId: number
@@ -83,6 +85,7 @@ export interface OrderSubmitParams {
   serviceId: number
   imeiList: string[]
   isBulk: boolean
+  language: string
   remark?: string
 }
 export interface OrderSubmitForm {
@@ -101,6 +104,7 @@ export interface OrderSubmitExportParams {
   orderIdList: number[]
   imeiList: string[]
   serviceId: number
+  excelHead: string[]
 }
 
 export interface GeneratePictureParms {

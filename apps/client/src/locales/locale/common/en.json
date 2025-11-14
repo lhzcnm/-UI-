@@ -3,8 +3,8 @@
   "dataNull": "No records",
   "unknown": "Unknown",
   "submit": {
-    "success": "{action} succeeded",
-    "fail": "{action} failed"
+    "success": "{action} Succeeded",
+    "fail": "{action} Failed"
   },
   "action": {
     "operation": "Operation",
@@ -56,6 +56,10 @@
       "end": "End Time"
     }
   },
+  "keyword": {
+    "title": "Keyword",
+    "placeholder": "Keyword"
+  },
   "imei": {
     "title": "IMEI/SN",
     "placeholder": "Please Input IMEI/SN"
@@ -80,5 +84,9 @@
   },
   "stat": {
     "total": "Total {count} {field}"
+  },
+  "request": {
+    "timeout": "Request timeout, please try again later",
+    "error": "Request failed, please try again later"
   }
 }

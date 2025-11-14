@@ -13,8 +13,11 @@ import * as html2image from 'html-to-image'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { getOrderColumns } from './utils/columns'
-import { orderApi, type Order } from '@/api/orders'
+import { orderApi, type Order, type OrderExportParams } from '@/api/orders'
 import type { ImgOrderItem } from './types'
+import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
+import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
+import { downloadURL, ORDER_STATUS } from '@3un/utils'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -26,7 +29,7 @@ const selectRows = ref<string[]>([])
 const generated = ref<boolean>(false)
 
 const { copy } = useClipboard({ legacy: true })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const baseUrl = import.meta.env.VITE_API_URL
 
@@ -69,6 +72,11 @@ function openSearch() {
 }
 
 function openExport() {
+  if(selectRows.value.length > 0) {
+    handleExport()
+    return
+  }
+
   store.exportForm = { ...form.export }
   store.visibleExport = true
 }
@@ -155,11 +163,15 @@ function handleGenerate() {
   }
 
   for(let order of orders) {
+    if(order.status === ORDER_STATUS.FAILED) {
+      continue
+    }
     const container = document.createElement('div')
     document.body.append(container)
-    container.className = `opacity-0 flex`
+    // container.className = `opacity-0 flex`
+    container.className = `flex`
 
-    const vnode = h(OrderVoucher, { order })
+    const vnode = h(OrderVoucher, { order, component: locale.value === 'zh' ? OrderExportImgZh : OrderExportImgEn })
 
     render(vnode, container)
 
@@ -192,6 +204,25 @@ function handleClose() {
   }
 }
 
+function handleExport() {
+  const orderId = selectRows.value[0]
+  const index = store.orders.list.findIndex(item => item.id === +orderId)
+
+  if(index === -1) {
+    selectRows.value.length = 0
+    openExport()
+  }
+
+  const order = store.orders.list[index]
+  const params: OrderExportParams = {
+    serviceId: order.serviceId,
+    orderIdList: [order.id.toString()],
+  }
+  orderApi.export(params).then(({ data }) => {
+    downloadURL(data)
+  })
+}
+
 onUnmounted(() => {
   handleClose()
 })
@@ -216,10 +247,10 @@ onUnmounted(() => {
         :total="store.orders.total"
         :layouts="[
           'total',
-          'sizes',
           'prev',
           'pager',
           'next',
+          'sizes',
           'jumper',
         ]"
       />

@@ -108,7 +108,7 @@ function handleCopy() {
 
     <XButton
       v-if="status.isProcessing && !focreHide"
-      :label="t('button.refresh')" size="sm"
+      :label="t('button.fresh')" size="sm"
       @click="handleRefresh"
     />
   </div>

@@ -4,13 +4,14 @@ import { Icon } from '@iconify/vue'
 
 import { toast } from 'vue-sonner'
 import { twJoin } from 'tailwind-merge'
+import dayjs from 'dayjs'
 import * as XLSX from 'xlsx'
 
 import type { SubmitStore } from './utils'
-import type { Service } from '@/api/services'
+import { serviceApi, type Service } from '@/api/services'
 import type { Order, OrderSubmitResult } from '@/api/orders'
 
-import { ua, IMEIValidator } from '@3un/utils'
+import { ua, IMEIValidator, xconfirm } from '@3un/utils'
 import { getSubmitImei, base64ToFile } from '@/utils'
 import { IMEI_TYPE, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import type { XNativeSelectValue } from '@3un/ui'
@@ -18,6 +19,7 @@ import type { XNativeSelectValue } from '@3un/ui'
 import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
 import { wxApi } from '@/api/wx'
+import type { AxiosResponse } from 'axios'
 
 interface TheProps {
   id: string
@@ -32,7 +34,7 @@ await serviceStore.getServices()
 const { connect, close } = useWsStore()
 const uStore = useUserStore()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const store: SubmitStore = reactive({
   service: undefined,
@@ -40,6 +42,7 @@ const store: SubmitStore = reactive({
   rawOrders: [],
   visible: false,
   count: 0,
+  serviceHeader: [],
 })
 
 provide(SUBMIT_STORE, store)
@@ -72,7 +75,12 @@ const options = computed(() => {
 const validImeiList = computed(() => handleImei(form.imei))
 const fileInputRef = useTemplateRef('fileInputRef')
 
-onBeforeMount(() => {
+const usefulCount = computed(() => {
+  if(!store.service) return
+  return Math.floor(+uStore.info.credits / store.service.price)
+})
+
+onBeforeMount(async () => {
   if (!props.id) return
   store.serviceId = +props.id
   store.service = serviceStore.services.get(+props.id)
@@ -98,6 +106,12 @@ function handleScan() {
       form.imei = trimed ? `${trimed}\n${imei}` : imei
     },
   })
+}
+
+async function handleServiceCols(value: number) {
+  const { data } = await serviceApi.header(value)
+
+  store.serviceHeader = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
 }
 
 async function handleFileChange(event: Event) {
@@ -164,6 +178,17 @@ function handlePhoto() {
           form.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
           formatLoading.value = false
         })
+
+        response.catch((err) => {
+          if(err.code === "ECONNABORTED") {
+            return toast.error(t('request.timeout'))
+          }
+          return toast.error(t('request.error'))
+        })
+
+        response.finally(() => {
+          formatLoading.value = false
+        })
       })
     },
   })
@@ -186,8 +211,17 @@ function handlePickImage() {
         const formData = new FormData()
         formData.append('file', file)
 
-        const response = await wxApi.ocr(formData)
-        return response.data
+        try {
+          const response = await wxApi.ocr(formData)
+          return response.data
+        } catch (err: AxiosResponse | any) {
+          if(err.code === "ECONNABORTED") {
+            return toast.error(t('request.timeout'))
+          }
+          return toast.error(t('request.error'))
+        } finally {
+          formatLoading.value = false
+        }
       }))
 
       const ocrText = result.toString()
@@ -229,6 +263,7 @@ function handleServiceChange(value: XNativeSelectValue) {
   store.serviceId = +value!
   store.rawOrders = []
   store.count = 0
+  handleServiceCols(+value!)
 
   if (form.imei.trim()) {
     form.imei = handleImei(form.imei).join('\n')
@@ -288,14 +323,24 @@ function submitOrder(service: Service) {
     imeiList: validImeiList.value,
     remark: form.remark,
     isBulk: !form.pushMsg,
+    language: locale.value,
   }
 
   const response = orderApi.submit(params)
   response.then(({ data }) => {
     serviceStore.addRecentService(service.id)
 
+    const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : t('query.title.mobile.success')}`)
+
     if (service.isUnlock) {
-      toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
+      // toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
+      xconfirm({
+        title: t('query.title.mobile.result'),
+        text: errorOrders.join('<br>'),
+      })
+
+      form.imei = ""
+      
       return
     }
 
@@ -322,6 +367,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
     const item = data[i]
 
     const index = validImeiList.value.indexOf(item.imei)
+
     if (index === -1) return console.error('[3un] IMEI 不存在', item)
 
     const isFailed = item.status === ORDER_STATUS.FAILED
@@ -336,7 +382,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
       status: item.status,
       imei: item.imei,
       remark: form.remark,
-      createTime: '刚刚',
+      createTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       recommends: [],
     })
   }
@@ -354,7 +400,7 @@ function handleOrder(order: Order) {
   }
 }
 
-function handleCount() {
+async function handleCount() {
   store.count = store.count - 1
 
   if (store.count === 0) {
@@ -452,11 +498,12 @@ function handlePushMsgChange(value: boolean) {
         </div>
       </div>
 
-      <div class="relative">
+      <div class="relative mb-2">
         <XTextarea
           v-model="form.imei" rows="5"
           :placeholder="t('query.imei.placeholder')"
         />
+        <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
         <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
           <Icon icon="svg-spinners:270-ring" class="text-primary" />
         </div>

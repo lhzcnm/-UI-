@@ -1,10 +1,11 @@
 {
   "recharge": {
     "title": "积分充值",
-    "handleFee": "免手续费",
+    "handleFee": "手续费0",
     "segment": {
       "balance": "余额充值",
-      "member": "开通会员"
+      "member": "开通会员",
+      "voucher": "积分券兑换"
     },
     "balance": {
       "title": "充值金额",
@@ -24,6 +25,16 @@
         "text4": "免费查询",
         "text5": "超过{count}次, 则使用",
         "text6": "优惠价{price}/次"
+      }
+    },
+    "voucher": {
+      "title": "积分券兑换",
+      "input": {
+        "placeholder": "请输入积分券"
+      },
+      "button": "立即兑换",
+      "prompt": {
+        "null": "请输入积分券码"
       }
     },
     "method": {

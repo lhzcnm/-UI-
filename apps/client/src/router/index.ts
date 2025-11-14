@@ -30,10 +30,7 @@ const router = createRouter({
   ],
 })
 
-const storeRoutes = ["store"]
-
-router.beforeEach(async (to, from) => {
-  const iStore = useSystemStore()
+router.beforeEach(async (to) => {
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)
 
@@ -53,30 +50,23 @@ router.beforeEach(async (to, from) => {
   // handle other path
   if (isOtherPath) return true
 
-  // handle auth
   const isAuth = to.path.includes('auth')
-  if (!isAuth && !token && !to.meta.noAuthRequired) return '/auth'
-  if (isAuth && token) return '/'
-
-  const isFromStore = storeRoutes.some(item => {
-    return from.path.includes(item)
-  })
-  if (isAuth && isFromStore) {
-    iStore.setFromRoute(from.path)
-    return true
-  }
-  
   const isMobilePath = to.path.startsWith('/m')
-  
+
   // is mobile and not mobile path and not auth
   if (ua.isMobile && !isMobilePath && !isAuth) {
     return to.path.length > 1 ? `/m${to.path}` : '/m'
   }
 
-  // is pc and is mobile path
-  if (!ua.isMobile && isMobilePath) {
+  if(!ua.isMobile && isMobilePath) {
     return to.path.replace('/m', '')
   }
+
+  // handle auth
+  if (!isAuth && !token && !to.meta.noAuthRequired) {
+    return '/auth'
+  }
+  if (isAuth && token) return '/'
 })
 
 async function handleWxAuthCallback(code: string) {

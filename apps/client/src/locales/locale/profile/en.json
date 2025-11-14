@@ -15,7 +15,7 @@
     },
     "software": {
       "old": "Bulk Query Assistant",
-      "new": "Sanhe Assistant - Tags · Device Info · Bulk Query"
+      "new": "{name} Assistant\nTags · Device Info · Bulk Query"
     },
     "stat": {
       "title": "Statistics",
@@ -98,7 +98,7 @@
       "order": "Total Orders",
       "handle": "Processing",
       "recharge": {
-        "point": "Point Records",
+        "point": "Point Recharge",
         "recharge": "Recharge Records",
         "change": "Point Change Records"
       },
@@ -111,7 +111,8 @@
         "invite": "Generate Invite Code"
       },
       "prompt": {
-        "download": "Click the top right\nOpen in browser\nDownload invite code"
+        "download": "Click the top right\nOpen in browser\nDownload invite code",
+        "inviteCode": "Save Image"
       }
     }
   }

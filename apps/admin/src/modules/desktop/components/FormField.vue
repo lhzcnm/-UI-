@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { twJoin } from 'tailwind-merge'
+import { twJoin, type ClassNameValue } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
 
 interface FormFieldProps {
@@ -8,9 +8,10 @@ interface FormFieldProps {
   required?: boolean
   contentFlex?: boolean
   variant?: 'vertical' | 'horizontal'
+  class?: ClassNameValue
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<FormFieldProps>(),
   {
     desc: '',
@@ -47,7 +48,7 @@ const b = style()
 </script>
 
 <template>
-  <div :class="b.base({ variant })">
+  <div :class="b.base({ variant, class: props.class })">
     <div class="flex-1">
       <p :class="b.title({ required })">{{ label }}</p>
       <span :class="b.desc()">{{ desc }}</span>

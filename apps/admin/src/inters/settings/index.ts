@@ -16,6 +16,8 @@ export interface ConfigItem {
 export interface Settings {
   // 网站标题
   title: string
+  // 网站标题(En)
+  titleEn: string
   // 公司名称
   company: string
   // 联系电话
@@ -49,6 +51,11 @@ export interface Settings {
   maxRechargeAmount: number
   // 最小充值金额
   minRechargeAmount: number
+  
+  // 最大充值金额
+  maxVoucherAmount: number
+  // 最小充值金额
+  minVoucherAmount: number
 
   // 是否启用弹窗公告
   enablePopupAnnc: boolean
@@ -67,6 +74,20 @@ export interface Settings {
   enableOrderVerify: boolean
   // 邀请码生成文本
   invite: string
+
+  // 报价单
+  beautyMachinePrompt: string
+  flowerMachinePrompt: string
+  stickerForeignPromt: string
+  cardUnlockedPrompt: string
+  beautyMachinePromptEn: string
+  flowerMachinePromptEn: string
+  stickerForeignPromtEn: string
+  cardUnlockedPromptEn: string
+
+  // 商城
+  mallWarmReminderEN: string
+  mallWarmReminderZH: string
 }
 
 // Config

@@ -6,14 +6,13 @@ const { item } = defineProps<{ item: CreditLogItem }>()
 const store = useServiceStore()
 const { t } = useI18n()
 
-const isSubmit = /订单提交|查询订单|Code Request/.test(item.description)
-const isReduce = isSubmit || item.description === '管理员扣除积分'
-const amountText = isReduce ? `-${Math.abs(item.credits)}` : `+${item.credits}`
+const isSubmit = /提交订单|order|订单提交|Code Request/.test(item.description)
+const isReduce = +item.credits < 0 || isSubmit
 const service = item.packageId && store.services.get(item.packageId)
 const title = getTitle()
 
 function getTitle() {
-  if (isSubmit) return t('credit.card.out')
+  if (isReduce) return t('credit.card.out')
   if (item.packageId) return t('credit.card.serviceIn')
   return t('credit.card.pointIn')
 }
@@ -44,7 +43,7 @@ function getTitle() {
             isReduce && 'text-danger',
           )"
         >
-          {{ amountText }}
+          {{ `${isReduce ? '-' : '+'}${item.credits}` }}
         </div>
       </div>
       <div class="text-center">

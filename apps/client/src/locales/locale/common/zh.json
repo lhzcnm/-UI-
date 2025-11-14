@@ -64,6 +64,10 @@
     "title": "指令{action}",
     "success": "已发送"
   },
+  "keyword": {
+    "title": "关键词",
+    "placeholder": "请输入关键词"
+  },
   "weekday": {
     "0": "日",
     "1": "一",
@@ -80,5 +84,9 @@
   },
   "stat": {
     "total": "共 {count} 项 {field}"
+  },
+  "request": {
+    "timeout": "请求超时，请稍后重试",
+    "error": "请求失败，请稍后重试"
   }
 }

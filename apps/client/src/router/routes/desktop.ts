@@ -42,16 +42,26 @@ const home: RouteRecordRaw = {
       name: 'Profile',
       component: () => import('@desktop/pages/profile/index.vue'),
     },
-    {
-      path: 'store',
-      name: 'Store',
-      component: () => import('@desktop/pages/store/index.vue'),
-      meta: {
-        hideHeader: true,
-        hideSidebar: true,
-        noAuthRequired: true,
-      },
-    },
+    // {
+    //   path: 'store',
+    //   name: 'Store',
+    //   component: () => import('@desktop/pages/store/index.vue'),
+    //   meta: {
+    //     hideHeader: true,
+    //     hideSidebar: true,
+    //     noAuthRequired: true,
+    //   },
+    // },
+    // {
+    //   path: 'store/device',
+    //   name: 'DeviceStore',
+    //   component: () => import('@desktop/pages/store/Device.vue'),
+    //   meta: {
+    //     hideHeader: true,
+    //     hideSidebar: true,
+    //     noAuthRequired: true,
+    //   },
+    // },
   ]
 }
 
@@ -61,4 +71,5 @@ if (import.meta.env.VITE_APP_DEVICE === 'true') {
     component: () => import('@desktop/pages/device/index.vue'),
   })
 }
+
 export default home

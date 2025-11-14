@@ -13,6 +13,7 @@ import { createList } from '@/utils'
 import type { LogStore } from './utils'
 import { columns } from './utils/column'
 import { LOG_STORE } from './utils'
+import type { XTableExpose } from '@3un/ui'
 
 const store: LogStore = reactive({
   logs: createList(),
@@ -34,6 +35,8 @@ const loading = ref(false)
 const ids = ref<number[]>([])
 
 const queryHash = computed(() => hash(route.query))
+
+const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
@@ -72,6 +75,8 @@ function getList(params: LogListParams) {
   const response = getLogs(params)
   response.then(data => store.logs = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function resetSearch() {
@@ -138,6 +143,7 @@ async function handleDelete() {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :columns="columns"
         :data="store.logs.list"
         :loading="loading"

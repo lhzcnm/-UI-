@@ -1,1 +1,1 @@
-export type TabMode = 'recharge' | 'membership'
+export type TabMode = 'recharge' | 'membership' | 'voucher'

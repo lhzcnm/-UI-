@@ -30,7 +30,6 @@ const props = defineProps<OrderCardProps>()
 const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
 const { t } = useI18n()
-const route = useRoute()
 
 const order = ref(props.order)
 const serviceStore = useServiceStore()
@@ -54,7 +53,7 @@ const verify = computed(() => ({
   isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
 }))
 
-const isHistory = computed(() => route.path.includes('history'))
+// const isHistory = computed(() => route.path.includes('history'))
 
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
@@ -132,7 +131,7 @@ function handleCopy() {
     <div class="text-sm whitespace-pre">
       <div class="flex items-start">
         <span class="text-muted-foreground shrink-0">{{ t('order.listCol.service' )}}: </span>
-        <span class="font-medium break-all">{{ serviceName }}</span>
+        <span class="font-medium break-all whitespace-pre-line">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">
@@ -202,7 +201,7 @@ function handleCopy() {
           </button>
 
           <button
-            v-if="status.isSuccess && isHistory"
+            v-if="status.isSuccess"
             class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="emits('generate', order)"
           >

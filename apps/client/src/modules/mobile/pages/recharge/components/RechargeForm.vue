@@ -52,6 +52,8 @@ function handleCustomAmount(value: any) {
 }
 
 function handleRecharge() {
+  if(!rechargeAmount.value) return toast.warning(t('valid.recharge.amount'))
+
   const minAccount = +iStore.settings.minRechargeAmount
   const maxAccount = +iStore.settings.maxRechargeAmount
 
@@ -120,19 +122,18 @@ function onBridgeReady(config: WXInvokeConfig) {
           :class="twMerge(
             'flex flex-col items-center justify-center space-y-1',
             'h-16 rounded-md bg-card border',
-            selectedAmount === item.value && 'ring-2 ring-primary bg-primary/10',
+            customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
           )"
-          @click="selectedAmount = item.value"
+          @click="selectedAmount = item.value; customAmount = item.value"
         >
           <span>{{ item.label }}</span>
           <span v-if="item.info" class="text-sm text-success">{{ item.info }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
-        <span>￥</span>
-        <XInput
+        <PriceInput
+          :model-value="customAmount ? customAmount : 0"
           :placeholder="t('recharge.amount.placeholder')"
-          :model-value="customAmount ? customAmount : ''"
           @update:model-value="handleCustomAmount"
         />
       </div>
@@ -197,7 +198,6 @@ function onBridgeReady(config: WXInvokeConfig) {
     <div class="flex items-center justify-end">
       <XButton
         :label="t('recharge.button.balance')"
-        :disabled="selectedAmount === 0 && customAmount === 0"
         @click="handleRecharge"
       />
     </div>

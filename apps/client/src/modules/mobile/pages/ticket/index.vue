@@ -35,6 +35,7 @@ async function getTypes() {
   const { data } = await ticketApi.issueList()
 
   store.types = data
+  store.createForm.type = data[0].departmentId
   // store.types = data.map(item =>({
   //   id: item.departmentId,
   //   label: t(TICKET_TYPE_MAP[item.departmentId].key!),

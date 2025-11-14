@@ -2,11 +2,11 @@
 import { useSystemStore } from '@/stores/system'
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
-import router from '@/router'
+// import router from '@/router'
 
 const uStore = useUserStore()
 const systemStore = useSystemStore()
-const { t } = useI18n()
+// const { t } = useI18n()
 const foldIcon = computed(() => {
   if(systemStore.showSidebar) return 'lucide:panel-left-close'
   return 'lucide:panel-left-open'
@@ -32,7 +32,7 @@ const foldIcon = computed(() => {
                  hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer
                  text-center select-none">
           {{ t('quote.QuoteButton.FreeQuote') }}
-        </div>
+        </div> -->
 
         <RouterLink
           to="/recharge"

@@ -12,6 +12,7 @@ interface ImportPlaneEmits {
   (e: 'submit', imeiList: string[], remark: string): void
 }
 
+const uStore = useUserStore()
 const props = defineProps<ImportPlaneProps>()
 const emits = defineEmits<ImportPlaneEmits>()
 
@@ -28,6 +29,19 @@ const validImeiList = computed(() => {
   const imeiType = service?.imeiType || IMEI_TYPE.NONE
 
   return getSubmitImei(imei.value, imeiType)
+})
+
+const servicePrice = computed(() => {
+  if(!props.selectedId) return
+
+  const service = store.services.get(props.selectedId)
+
+  return service!.price
+})
+
+const usefulCount = computed(() => {
+  if(!props.selectedId) return
+  return Math.floor(+uStore.info.credits / servicePrice.value!)
 })
 
 function handleSubmit() {
@@ -94,6 +108,8 @@ async function handleFile(file: File) {
       />
       <XTextarea v-model="remark" :placeholder="t('remark.placeholder')" />
 
+      <span v-if="props.selectedId" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+      <!-- <span v-if="props.selectedId" class="text-sm text-muted-foreground">{{ t('query.submitCount', { count: usefulCount }) }}</span> -->
       <div class="flex items-center justify-between space-x-2">
         <a
           href="javascript:void(0)" :title="t('query.imei.view')"

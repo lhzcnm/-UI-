@@ -1,6 +1,16 @@
 {
   "service": {
     "point": "Points",
-    "new": "New"
+    "new": "New",
+    "info": {
+      "null": "Service Info Not Found",
+      "price": "Service Price",
+      "taken": "Service Duration",
+      "desc": "Service Description",
+      "descNull": "No Service Description Available"
+    },
+    "mobile": {
+      "button": "Submit Order"
+    }
   }
 }

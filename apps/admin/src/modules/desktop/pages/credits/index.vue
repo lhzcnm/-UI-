@@ -10,6 +10,7 @@ import type { CreditStore } from './utils'
 import { CREDIT_STORE, columns } from './utils'
 import { createList } from '@/utils'
 import { hash } from 'ohash'
+import type { XTableExpose } from '@3un/ui'
 
 const store: CreditStore = reactive({
   credits: createList(),
@@ -32,6 +33,8 @@ const router = useRouter()
 
 const loading = ref(false)
 const queryHash = computed(() => hash(route.query))
+
+const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
@@ -77,6 +80,8 @@ function getList(params: CreditListParams) {
   const response = getCreditList(params)
   response.then(data => store.credits = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function handleCleanOrder() {
@@ -137,6 +142,7 @@ function resetSearch() {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :columns="columns"
         :loading="loading"
         :data="store.credits.list"

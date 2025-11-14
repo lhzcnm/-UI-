@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TicketCreateForm, TicketType } from '@/api/tickets'
-import { TICKET_PRIORITY_LIST, TICKET_TYPE_MAP } from '@3un/utils'
+import { TICKET_PRIORITY_LIST } from '@3un/utils'
 
 interface BaseFormProps {
   typeList: TicketType[]
@@ -9,7 +9,17 @@ interface BaseFormProps {
 const props = defineProps<BaseFormProps>()
 const form = defineModel<TicketCreateForm>({ required: true })
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+function handleDepartName(item: TicketType) {
+  let res = item.departmentName
+
+  if(locale.value === 'en' && item.departmentNameEn) {
+    res = item.departmentNameEn
+  }
+
+  return res
+}
 </script>
 
 <template>
@@ -19,7 +29,7 @@ const { t } = useI18n()
       <XSelect v-model="form.type">
         <XSelectItem
           v-for="item in props.typeList" :key="item.departmentId"
-          :value="item.departmentId" :label="t(TICKET_TYPE_MAP[item.departmentId].key!)"
+          :value="item.departmentId" :label="handleDepartName(item)"
         />
       </XSelect>
     </div>

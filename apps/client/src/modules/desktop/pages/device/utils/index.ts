@@ -33,6 +33,24 @@ export const getCopyToken = (info: DeviceSummary) => ([
   ['CPU类型', info.CPU],
 ])
 
+export const getCopyTokenEn = (info: DeviceSummary) => ([
+  ['Serial Number', info.SerialNumber],
+  ['IMEl Number', info.Imei],
+  ['Model Number', `${info.ModelNumber} ${info.RegionInfo}`],
+  ['OS Ver', `${info.ProductVersion} (${info.BuildVersion})`],
+  ['Product Type', `${info.ProductType}`],
+  ['Board No', info.MLBSerialNumber],
+  ['ECID', info.Ecid],
+  ['UDID', info.UniqueDeviceID],
+  ['Activated Status', info.ActivationState],
+  ['Sim Lock', stripHtml(info.NetworkLock)],
+  ['Find My', stripHtml(info.ActivationLock)],
+  ['Warranty End', info.Warranty],
+  ['Region', info.SalesRegion.english],
+  ['icloud', info.iCloud],
+  ['CPU', info.CPU],
+])
+
 export function getPrintPayload(device: DeviceMapItem) {
   const { info, memory, product, battery, summary } = device
   return {

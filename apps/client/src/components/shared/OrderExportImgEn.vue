@@ -4,7 +4,6 @@ import { twMerge, twJoin } from 'tailwind-merge'
 import type { Order } from '@/api/orders'
 import {
   ORDER_STATUS_MAP,
-  ORDER_VERIFY_MAP,
   ORDER_STATUS,
 } from '@3un/utils'
 
@@ -20,7 +19,7 @@ const { isSubmit } = props
 
 const order = ref(props.order)
 
-const appName = import.meta.env.VITE_APP_NAME
+const appName = import.meta.env.VITE_APP_NAME_EN
 
 const serviceStore = useServiceStore()
 const serviceName = computed(() => {
@@ -35,19 +34,23 @@ const status = computed(() => ({
   isProcessing: order.value.status === ORDER_STATUS.PROCESSING,
   isWait: order.value.status === ORDER_STATUS.WAIT,
 }))
+
+const cleanResult = computed(() => {
+  return order.value.result.replace(/<img[^>]*>/,'') || ''
+})
 </script>
 
 <template>
   <div
     :class="twMerge(
-      'flex flex-col bg-card w-80 min-w-80 max-w-96',
+      'flex flex-col bg-card',
     )"
   >
     <div class="w-full text-center bg-zinc-100 dark:bg-zinc-800 p-2 text-lg">
-      <span>公众号: </span>
+      <span>Official: </span>
       <span>{{ appName }}</span>
     </div>
-    <div class="w-full p-4 flex flex-col">
+    <div class="w-full flex flex-col py-2">
       <div class="flex items-center justify-between space-x-3">
         <span
           v-if="isSubmit"
@@ -65,32 +68,36 @@ const status = computed(() => ({
           <span class="transform -rotate-3">{{ index }}</span>
         </span>
         <span v-else class="text-base font-medium">{{ order.id }}</span>
-        <div class="flex space-x-2">
-          <XTag size="sm" v-bind="ORDER_STATUS_MAP[order.status]" />
-          <XTag size="sm" v-if="!isSubmit" v-bind="ORDER_VERIFY_MAP[order.verify]" />
+        <div class="flex">
+          <!-- <XTag size="sm" label="Success" :color="ORDER_STATUS_MAP[order.status].color" /> -->
+          <XTag
+            size="sm"
+            label="Success"
+            :color="ORDER_STATUS_MAP[order.status].color"
+          />
         </div>
       </div>
       
       <div class="w-full text-sm flex flex-col">
-        <div class="flex-1 flex items-center">
-          <span class="text-muted-foreground shrink-0">处理服务：</span>
-          <span class="font-medium break-all whitespace-nowrap">{{ serviceName }}</span>
+        <div class="flex-1 flex items-center whitespace-pre">
+          <span class="text-muted-foreground shrink-0">Service: </span>
+          <span class="font-medium whitespace-nowrap">{{ serviceName }}</span>
         </div>
   
         <div class="flex items-center group">
-          <div class="flex items-center">
-            <span class="text-muted-foreground shrink-0">数据来源：</span>
+          <div class="flex items-center whitespace-pre">
+            <span class="text-muted-foreground shrink-0">Source: </span>
             <span class="font-medium font-mono">{{ order.imei }}</span>
           </div>
         </div>
   
-        <div v-if="order.createTime" class="flex items-center">
-          <span class="text-muted-foreground shrink-0">提交时间：</span>
+        <div v-if="order.createTime" class="flex items-center whitespace-pre">
+          <span class="text-muted-foreground shrink-0">Submit Time: </span>
           <span class="font-medium whitespace-nowrap">{{ order.createTime }}</span>
         </div>
   
-        <div class="flex items-center">
-          <span class="text-muted-foreground shrink-0">消耗积分：</span>
+        <div class="flex items-center whitespace-pre">
+          <span class="text-muted-foreground shrink-0">Points: </span>
           <span
             :class="twJoin(
               'font-medium text-danger',
@@ -99,32 +106,25 @@ const status = computed(() => ({
           >
             {{ order.credits }}
           </span>
-          <span v-if="status.isFailed" class="text-xs">(已退回)</span>
+          <span v-if="status.isFailed" class="text-xs">(Returned)</span>
         </div>
       </div>
 
       <div class="text-sm">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-muted-foreground">订单结果：</span>
+          <span class="text-muted-foreground whitespace-nowrap">Order Result: </span>
         </div>
   
         <div
           :class="twMerge(
             'whitespace-nowrap p-3 bg-muted rounded overflow-x-auto w-full'
           )"
-          v-html="order.result.trim() || '订单处理中...'"
+          v-html="cleanResult || '订单处理中...'"
         />
       </div>
 
-      <!-- <div class="text-sm" v-if="order.remark">
-        <div class="text-muted-foreground mb-1.5">订单备注：</div>
-        <div class="w-full inline-block bg-muted rounded p-3 whitespace-pre-line">
-          {{ order.remark }}
-        </div>
-      </div> -->
-
       <div class="text-sm" v-if="order.recommends && order.recommends.length">
-        <div class="text-muted-foreground mb-1.5">推荐解锁服务：</div>
+        <div class="text-muted-foreground mb-1.5">Recommended unlock service: </div>
         <ol class="bg-muted rounded p-3 list-decimal list-inside">
           <li v-for="recommend in order.recommends" :key="recommend.packageId">
             <a

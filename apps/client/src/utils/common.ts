@@ -1,6 +1,6 @@
 import type { Service } from '@/api/services'
 
-import { IMEI_AND_SN_REG, IMEIValidator, SNValidator } from '@3un/utils'
+import { IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator, useCopyFn } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
 
 export function findAllIMEIAndSNs(str: string) {
@@ -108,3 +108,17 @@ export function getCommonList(buckets: Map<number, Service>) {
 
   return [...hotList, ...commonList]
 }
+
+export function validateImei(imei: string, type: IMEI_TYPE) {
+  if(IMEI_TYPE_MAP[type].regex.test(imei)) return true
+  return false
+}
+
+export const createList = useCopyFn(
+  (limit: number = 20) => ({
+    list    : [] as any[],
+    total   : 0,
+    page    : 1,
+    pageSize: limit,
+  })
+)

@@ -29,7 +29,7 @@
       "creaTime": "提交时间",
       "remark": "备注",
       "point": {
-        "title": "下好几份",
+        "title": "消耗积分",
         "fail": "(已退回)"
       },
       "recommend": "推荐解锁服务"
@@ -47,7 +47,8 @@
       "copy": "已复制",
       "orderTimeout": "订单超过三天, 不支持该功能",
       "vertified": "已提交验证",
-      "vertifyConfirm": "是否确认验证订单?"
+      "vertifyConfirm": "是否确认验证订单?",
+      "info": "图片生成成功, 点击图片即可下载"
     },
     "form": {
       "status": {

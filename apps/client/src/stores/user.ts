@@ -26,6 +26,7 @@ interface Quote{
 
   
 }
+import i18n from '@/locales'
 
 export const useUserStore = defineStore('userStore', () => {
   const quote = ref<Quote>({
@@ -91,7 +92,7 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   function saveInfo() {
-    const locale = useI18n().locale.value
+    const locale = i18n.global.locale.value
     const userInfo = JSON.stringify(info.value)
     sessionStorage.setItem(`${import.meta.env.VITE_USER_INFO}_${locale}`, userInfo)
   }

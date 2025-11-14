@@ -39,7 +39,10 @@ async function getMemberList() {
   }
 
   selectedPlan.value = data[1]
-  getMemberPkg(data[1].planId)
+
+  if(data.length > 1) {
+    getMemberPkg(data[1].planId)
+  }
 }
 
 async function getMemberMiniList() {
@@ -93,6 +96,7 @@ function checkRecharge() {
       toast.success(t('submit.success', { action: t('action.recharge') }))
       uStore.updateCredit()
       store.isComplete = true
+      store.refresh = !store.refresh
       window.clearInterval(timer.value)
     })
   }, 1300)
@@ -159,7 +163,7 @@ function isSamePrice(item: MemberPackage) {
       <div class="flex items-center justify-between">
         <h3 class="text-lg text-warning">{{ t('recharge.member.rights.title') }}</h3>
         <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-          {{ t('recharge.member.rights.text1') }}: <b class="text-danger">{{ pkgTotalAmount }}元</b>
+          {{ t('recharge.member.rights.text1') }}: <b class="text-danger">￥{{ pkgTotalAmount }}</b>
         </span>
       </div>
 

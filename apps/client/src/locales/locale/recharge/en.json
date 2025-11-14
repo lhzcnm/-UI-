@@ -1,10 +1,11 @@
 {
   "recharge": {
     "title": "Points Recharge",
-    "handleFee": "No handling fee",
+    "handleFee": "Cost Free",
     "segment": {
       "balance": "Balance",
-      "member": "Membership"
+      "member": "Membership",
+      "voucher": "Voucher"
     },
     "balance": {
       "title": "Recharge Amount",
@@ -24,6 +25,16 @@
         "text4": "Free queries",
         "text5": "Exceeding {count} times, charged at",
         "text6": "Discount price {price}/time"
+      }
+    },
+    "voucher": {
+      "title": "Voucher Exchange",
+      "input": {
+        "placeholder": "Place input Voucher No."
+      },
+      "button": "Exchange Now",
+      "prompt": {
+        "null": "Please input voucher No."
       }
     },
     "method": {

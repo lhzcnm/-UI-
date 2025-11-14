@@ -9,6 +9,7 @@ import { createList } from '@/utils'
 import type { PaidStore } from './utils'
 import { columns } from './utils/columnPaid'
 import { PAID_STORE } from './utils'
+import type { XTableExpose } from '@3un/ui'
 
 const store: PaidStore = reactive({
   users        : createList(),
@@ -22,6 +23,7 @@ const store: PaidStore = reactive({
 provide(PAID_STORE, store)
 
 const loading = ref(false)
+const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
@@ -45,6 +47,8 @@ function getList(params: UserPaidListParams) {
   const response = getUserPaidList(params)
   response.then((data) => store.users = data)
   response.finally(() => loading.value = false)
+
+  tableRef.value?.scrollToTop()
 }
 
 function resetSearch() {
@@ -89,6 +93,7 @@ function resetSearch() {
 
     <div class="p-3 pb-0">
       <XTable
+        ref="tableRef"
         :columns="columns"
         :data="store.users.list"
         :loading="loading"

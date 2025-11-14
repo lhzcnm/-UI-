@@ -31,8 +31,24 @@ export interface IList<T> {
 export type FormMode = 'create' | 'update'
 
 // Status Map
-type StatusMapItem = { color: XTagColor, label: string, key?: string }
+type StatusMapItem = { color: XTagColor, label: string, labelEn?: string, key?: string }
 export type StatusMap = Record<number, StatusMapItem>
+
+// Type Map
+type TypeMapItem = {
+  label: string,
+  value: string | number,
+  regex: RegExp,
+  key?: string,
+}
+export type TypeMap = Record<number, TypeMapItem>
+
+// Type list item
+export type TypeListItem = {
+  value: number,
+  label: string,
+  key?: string,
+}
 
 // Utils
 export type WithId<T, ID extends string> = Partial<T> & { [key in ID]: number }

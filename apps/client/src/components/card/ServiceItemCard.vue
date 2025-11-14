@@ -28,6 +28,6 @@ const { t } = useI18n()
         <XTag color="success" class="ml-1">{{ data.taken }}</XTag>
       </div>
     </div>
-    <div class="text-sm text-muted-foreground mt-1" v-html="data.title" />
+    <div class="text-sm text-muted-foreground mt-1 text-ellipsis overflow-hidden" v-html="data.title" />
   </a>
 </template>
