@@ -145,7 +145,7 @@ onMounted(() => {
 
 <template>
   <div class="h-full flex flex-col justify-between">
-    <div class="h-[calc(100%-3rem)] space-y-3 overflow-y-auto pb-10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div class="h-[calc(100%-3rem)] space-y-3 overflow-y-auto pb-10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`">
       <!-- 型号 -->
       <div>
         <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('quote.ImageTableType.Models') }}</div>

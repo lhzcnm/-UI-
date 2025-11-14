@@ -53,7 +53,7 @@ function handleScroll() {
 
 /** 生成图片函数 */ 
 async function createImage () {
-  await WatermarkTool.generateImage('createImage', '陆深三和', {
+  await WatermarkTool.generateImage('createImage', store.watermark, {
     fontSize: 48,
     opacity: 0.2,
     rotate: -15,
