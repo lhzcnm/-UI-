@@ -17,11 +17,6 @@ const other: RouteRecordRaw[] = [
     name: 'OrderInfo',
     component: () => import('@/modules/other/OrderInfo.vue'),
   },
-  {
-    path: '/quotation',
-    name: 'quotation',
-    component: () => import('@desktop/pages/quotation/index.vue'),
-  }
 ]
 
 export default other

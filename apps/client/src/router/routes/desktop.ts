@@ -43,6 +43,11 @@ const home: RouteRecordRaw = {
       component: () => import('@desktop/pages/profile/index.vue'),
     },
     // {
+    //   path: '/quotation',
+    //   name: 'quotation',
+    //   component: () => import('@desktop/pages/quotation/index.vue'),
+    // },
+    // {
     //   path: 'store',
     //   name: 'Store',
     //   component: () => import('@desktop/pages/store/index.vue'),
