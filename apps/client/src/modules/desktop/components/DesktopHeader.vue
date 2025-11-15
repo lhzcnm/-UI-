@@ -2,11 +2,11 @@
 import { useSystemStore } from '@/stores/system'
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
-import router from '@/router'
+// import router from '@/router'
 
 const uStore = useUserStore()
 const systemStore = useSystemStore()
-const { t } = useI18n()
+// const { t } = useI18n()
 const foldIcon = computed(() => {
   if(systemStore.showSidebar) return 'lucide:panel-left-close'
   return 'lucide:panel-left-open'
@@ -25,14 +25,14 @@ const foldIcon = computed(() => {
 
       <nav class="flex items-center space-x-4">
         <!-- 报价单按钮点击进入报价单 -->
-        <div 
+        <!-- <div 
           @click="router.push('/quotation')"
           class="inline-block px-3 py-2  bg-gradient-to-r from-sky-400 via-purple-500 to-pink-500
                  text-white text-sm rounded-full shadow-lg 
                  hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer
                  text-center select-none">
           {{ t('quote.QuoteButton.FreeQuote') }}
-        </div>
+        </div> -->
 
         <RouterLink
           to="/recharge"
