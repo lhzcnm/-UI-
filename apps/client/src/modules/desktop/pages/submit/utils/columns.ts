@@ -10,7 +10,10 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
       key: 'index',
       title: t('query.listCol.index'),
       align: 'center',
-      width: 64
+      width: 64,
+      render: (_, __, index) => {
+        return index + 1
+      }
     },
     {
       key: 'service',
@@ -45,6 +48,6 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
         return h('span', { innerHTML: value })
       }
     },
-    { key: 'remark', title: t('query.listCol.remark'), minWidth: 180 }
+    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160 }
   ]
 }

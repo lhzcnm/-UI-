@@ -4,7 +4,13 @@
       "1": "Pending",
       "2": "Success",
       "3": "Failed",
-      "4": "Processing"
+      "4": "Processing",
+      "5": "Submited Success"
+    },
+    "unlock": {
+      "0": "Submited Success",
+      "1": "Submited Failed",
+      "2": "Submited Pending"
     },
     "vertify": {
       "0": "Normal",

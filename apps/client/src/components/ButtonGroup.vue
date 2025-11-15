@@ -24,6 +24,7 @@ interface ButtonConfigItem {
 interface ButtonGroupProps {
   layouts: ButtonLayout[],
   size?: XBtnSize,
+  disabled?: boolean,
 }
 
 interface ButtonGroupEmits {
@@ -94,6 +95,7 @@ function handleClick(layout: ButtonLayout) {
       :variant="buttonConfigs[layout].variant"
       :label="buttonLabels[layout]"
       :size="size"
+      :disabled="disabled"
       @click="handleClick(layout)"
     />
   </template>

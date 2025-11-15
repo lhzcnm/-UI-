@@ -1,4 +1,4 @@
-import type { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
+import type { ASYNC_ORDER_STATUS, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import type { IList, IPage, R } from '@3un/shared'
 
 export interface OrderApi {
@@ -8,6 +8,7 @@ export interface OrderApi {
 
   submit(data: OrderSubmitParams): R<OrderSubmitResult[]>
   submitExport(data: OrderSubmitExportParams): R<string>
+  submitOrders(data: SubmitOrderListParams): R<OrderTableView[]>
 
   verify(id: number): R<void>
 }
@@ -32,12 +33,13 @@ export interface OrderRecommend {
 
 /** Table */
 export interface OrderTableView {
-  id: number
+  id: number | null
   index: number
   serviceId: number | null
   serviceName: string | null
   status: ORDER_STATUS
   verify: ORDER_VERIFY
+  submitedStatus?: ASYNC_ORDER_STATUS
   imei: string
   credits: number
   remark: string
@@ -99,14 +101,20 @@ export interface OrderSubmitResult {
   status: ORDER_STATUS
   message: string
   imei: string
+  codeId: number | null
 }
 export interface OrderSubmitExportParams {
   orderIdList: number[]
-  imeiList: string[]
+  imeiList?: string[]
   serviceId: number
   excelHead: string[]
 }
+export interface SubmitOrderListParams {
+  serviceId: number
+  codeIdList: number[]
+}
 
+/** generate image */
 export interface GeneratePictureParms {
   code: string,
   codeStatusId: number,
@@ -116,4 +124,9 @@ export interface GeneratePictureParms {
   comments: string,
   dataTime: string,
   packageTitle: string,
+}
+
+export interface ServiceColumnItem {
+  name: string,
+  nameEn: string | null,
 }

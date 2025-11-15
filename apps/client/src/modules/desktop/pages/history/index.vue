@@ -72,7 +72,7 @@ function openSearch() {
 }
 
 function openExport() {
-  if(selectRows.value.length > 0) {
+  if(selectRows.value.length === 1) {
     handleExport()
     return
   }

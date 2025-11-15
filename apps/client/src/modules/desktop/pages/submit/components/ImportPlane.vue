@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx'
 
 interface ImportPlaneProps {
   selectedId: number
+  disabled?: boolean
 }
 
 interface ImportPlaneEmits {
@@ -93,9 +94,9 @@ async function handleFile(file: File) {
 </script>
 
 <template>
-  <XPopover v-model="open" @closed="handleClosed">
+  <XPopover v-model="open" close-on-click-outside @closed="handleClosed">
     <template #trigger>
-      <XButton :label="t('button.import')" :disabled="!selectedId" />
+      <XButton :label="t('button.import')" :disabled="!selectedId || disabled" />
     </template>
 
     <div class="space-y-3 w-80 p-4">

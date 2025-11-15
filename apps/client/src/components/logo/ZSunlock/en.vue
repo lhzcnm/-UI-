@@ -1,5 +1,5 @@
 <template>
-  <svg width="103.02251mm" height="20.272522mm" viewBox="0 0 103.02251 20.272522" version="1.1" id="svg1"
+  <svg viewBox="0 0 103.02251 20.272522" version="1.1" id="svg1"
     xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
     <defs id="defs1" />
     <g id="layer1" transform="translate(0.77784858,210.43423)">

@@ -12,4 +12,5 @@ export const orderApi: OrderApi = {
 
   submit: (params) => http.post(`order/submit`, params),
   submitExport: (params) => http.post(`order/submit/export`, params),
+  submitOrders: (data) => http.post('order/listOrder', data),
 }

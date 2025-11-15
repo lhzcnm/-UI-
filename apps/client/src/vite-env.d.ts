@@ -19,6 +19,7 @@ interface ImportMetaEnv {
   readonly VITE_USER_INFO: string
   readonly VITE_SERVICES: string
   readonly VITE_SETTINGS: string
+  readonly VITE_SUBMIT_STORGE: string
 }
 
 interface ImportMeta {

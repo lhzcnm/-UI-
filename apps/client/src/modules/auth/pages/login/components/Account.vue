@@ -23,13 +23,13 @@ const { t } = useI18n()
 function rules(data: typeof form) {
   const { username, password } = data
   return [
-    { rule: !!username.trim(), message: VERIFY_MSG.USERNAME },
-    { rule: username.length >=6 && username.length <= 16, message: VERIFY_MSG.USERNAME_LENGTH },
-    { rule: USERNAME_REG.test(username), message: VERIFY_MSG.USERNAME_FORMAT },
+    { rule: !!username.trim(), message: t(VERIFY_MSG.USERNAME) },
+    { rule: username.length >=6 && username.length <= 16, message: t(VERIFY_MSG.USERNAME_LENGTH) },
+    { rule: USERNAME_REG.test(username), message: t(VERIFY_MSG.USERNAME_FORMAT) },
     
-    { rule: !!password.trim(), message: VERIFY_MSG.PASSWORD },
-    { rule: password.length >= 8 && password.length <= 18, message: VERIFY_MSG.PASSWORD_LENGTH },
-    { rule: PASSWORD_REG.test(password), message: VERIFY_MSG.PASSWORD_FORMAT },
+    { rule: !!password.trim(), message: t(VERIFY_MSG.PASSWORD) },
+    { rule: password.length >= 8 && password.length <= 18, message: t(VERIFY_MSG.PASSWORD_LENGTH) },
+    { rule: PASSWORD_REG.test(password), message: t(VERIFY_MSG.PASSWORD_FORMAT) },
   ]
 }
 

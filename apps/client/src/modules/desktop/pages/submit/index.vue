@@ -2,19 +2,18 @@
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 
-import type { XTableColumn } from '@3un/ui'
-import { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
-import { downloadURL } from '@3un/utils'
+import { XTag, type XTableColumn } from '@3un/ui'
+import { ASYNC_ORDER_STATUS, ASYNC_ORDER_STATUS_MAP, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
+import { downloadURL, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
-import { hash } from 'ohash'
 import { h } from 'vue'
 
 import type { Service } from '@/api/services'
-import type { Order, OrderTableView, OrderSubmitResult } from '@/api/orders'
+import type { Order, OrderTableView, OrderSubmitResult, SubmitOrderListParams } from '@/api/orders'
 import { getDefaultColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
-import { orderApi } from '@/api/orders'
-import { xconfirm } from '@3un/utils'
+import { orderApi, type ServiceColumnItem } from '@/api/orders'
+import type { FieldMap } from './utils/types'
 
 interface TheProps {
   id: string
@@ -33,10 +32,13 @@ const limit = ref(50)
 
 const rawOrders = ref<OrderTableView[]>([])
 const columns = shallowRef<XTableColumn[]>(getDefaultColumns(t))
+const pendingOrders = shallowRef<number[]>([])
 
 const submitLoading = ref(false)
 const exportLoading = ref(false)
 const pushMsg = ref(true)
+const disabled = ref(false)
+const showAll = ref(false)
 
 let count = 0
 const submited = ref(false)
@@ -45,6 +47,8 @@ const comments = ref<string>('')
 
 const selectedId = ref(+props.id)
 const headers = shallowRef<string[]>([])
+const selService = ref<Service>()
+const serviceColumns = ref<ServiceColumnItem[]>([])
 
 const sizes = [50, 150, 200, 300, 500]
 
@@ -68,6 +72,15 @@ if (props.imei) {
   handleImport([props.imei], '')
 }
 
+watch(
+  () => showAll.value,
+  async() => {
+    if(selectedId.value) {
+      await handleSubmitOrder(selectedId.value)
+    } 
+  }
+)
+
 async function handleSelected(value: number) {
   if (!value) return
 
@@ -77,7 +90,13 @@ async function handleSelected(value: number) {
     submited.value = false
   }
 
+  count = 0
+  disabled.value = false
+
+  selService.value = store.services.get(value)!
+
   await handleServiceCols(value)
+  handleSubmitOrder(value)
 }
 
 function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
@@ -93,25 +112,70 @@ function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   ]
 }
 
-async function handleServiceCols(value: number) {
+function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
+  const defaultCols = getDefaultColumns(t)
+  const len = defaultCols.length
+  const frontCols = defaultCols.slice(0, serviceCols.length > 0 ? len - 2 : len - 1)
+  const endCols = defaultCols.slice(-1)
+
+  const asyncCols: XTableColumn[] = [
+    {
+      key: 'submitedStatus',
+      title: t('query.listCol.submited'),
+      width: 158,
+      render: (value, row) => {
+        let status
+        if(!value) {
+          status = ASYNC_ORDER_STATUS_MAP[ASYNC_ORDER_STATUS.ASYNC_SUBMITED]
+  
+          if(row.status === ORDER_STATUS.WAIT) {
+            status = ASYNC_ORDER_STATUS_MAP[ASYNC_ORDER_STATUS.WAIT]
+          }
+        } else {
+          status = ASYNC_ORDER_STATUS_MAP[value]
+        }
+
+        return h(XTag, {
+          color: status.color,
+          label: t(status.key!),
+        })
+      }
+    }
+  ]
+
+  frontCols.splice(4, 0, ...asyncCols)
+
+  return [
+    ...frontCols,
+    ...serviceCols,
+    ...endCols,
+  ]
+}
+
+async function handleServiceCols(value: number) {  
   const { data } = await serviceApi.header(value)
 
   headers.value = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
+  serviceColumns.value = data.map(item => ({ name: item.name, nameEn: item.nameEn }))
+  
+  const serviceCols: XTableColumn[] = []
 
   if (data.length === 0) {
-    columns.value = getDefaultColumns(t)
+    if(selService.value?.isUnlock) {
+      columns.value = asyncServiceMergeColumns(serviceCols)
+    } else {
+      columns.value = getDefaultColumns(t)
+    }
     return
   }
 
-  const serviceCols: XTableColumn[] = []
   for (const item of data) {
     const { name, nameEn, width } = item
-    const field = hash(locale.value === 'zh' ? name : nameEn ? nameEn : name)
-
+    const field = locale.value === 'zh' ? name : nameEn ? nameEn : name 
     serviceCols.push({
       key: field,
       title: locale.value === 'zh' ? name : nameEn ? nameEn : name,
-      width: width,
+      minWidth: width,
       tdClassName: 'leading-6 py-1',
       render: (_: any, row: any) => {
         return h('span', { innerHTML: row[field] })
@@ -119,11 +183,19 @@ async function handleServiceCols(value: number) {
     })
   }
 
-  columns.value = mergeColumns(serviceCols)
+  if(selService.value?.isUnlock) {
+    columns.value = asyncServiceMergeColumns(serviceCols)
+  }
+  else {
+    columns.value = mergeColumns(serviceCols)
+  }
 }
 
 function handleImport(imeiList: string[], remark: string) {
-  rawOrders.value = processWaitList(selectedId.value, imeiList, remark)
+  if(count > 0 && !selService.value?.isUnlock) return
+  close()
+  const submitedOrders = processWaitList(selectedId.value, imeiList, remark)
+  rawOrders.value.splice(0, 0, ...submitedOrders)
   submited.value = false
   imeis.value = imeiList
   comments.value = remark
@@ -141,6 +213,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       serviceName: service ? service.title : null,
       credits: service ? service.price : 0,
       status: ORDER_STATUS.WAIT,
+      submitedStatus: ASYNC_ORDER_STATUS.WAIT,
       verify: ORDER_VERIFY.NORMAL,
       imei: imeiList[i],
       remark: remark,
@@ -154,12 +227,26 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
 
 function handleSubmit() {
   if(submitLoading.value) return
-  if (submited.value) return toast.warning(t('query.prompt.repeat'))
+
+  const submitOrders = rawOrders.value.map(item => {
+    if(item.status === ORDER_STATUS.WAIT) {
+      return item
+    }
+    return null
+  }).filter(Boolean)
+
+  if (submited.value  || submitOrders.length === 0) return toast.warning(t('query.prompt.repeat'))
   const service = store.services.get(selectedId.value)
 
   if (!service) return toast.warning(t('query.prompt.serviveNull'))
   if (orders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
   submitLoading.value = true
+
+  if(count === 0) {
+    count = imeis.value.length
+  }
+
+  disabled.value = true
 
   if (service.isUnlock) return submitOrder(service)
   submitQueryOrder(service)
@@ -204,18 +291,25 @@ function submitOrder(service: Service) {
   }
 
   const response = orderApi.submit(params)
+  submited.value = true
   response.then(({ data }) => {
     store.addRecentService(service.id)
 
     if (service.isUnlock) {
       toast.success(`${t('submit.success', { action: t('action.submit') })}`)
+      disabled.value = false
     }
+
+    pendingOrders.value = data
+      .map(item => item.status === ORDER_STATUS.PROCESSING ? item.codeId : null)
+      .filter((x): x is number => x !== null)
 
     renderSubmitOrderResult(data)
   })
 
   response.catch((err) => {
     console.error(`[3un] ${t('submit.fail', { action: t('query.submit') })}`, err)
+    submited.value = false
     close()
   })
 
@@ -225,14 +319,13 @@ function submitOrder(service: Service) {
 }
 
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
-  const errMsgCol = columns.value[5].key
-  const result = []
-  const service = store.services.get(selectedId.value)
+  const errMsgCol = headers.value[0]
+  // const result: OrderTableView[] = []
 
-  let text = "提交成功, 请前往<a href='/history' class='underline hover:text-success'>订单历史</a>查看结果"
-  if(locale.value !== 'zh') {
-    text = "Submission successful. Please go to <a href='/history' class='underline hover:text-success'>History</a> to view the result."
-  }
+  // let text = "提交成功, 请前往<a href='/history' class='underline hover:text-success'>订单历史</a>查看结果"
+  // if(locale.value !== 'zh') {
+  //   text = "Submission successful. Please go to <a href='/history' class='underline hover:text-success'>History</a> to view the result."
+  // }
 
   for (let item of data) {
     const index = imeis.value.indexOf(item.imei)
@@ -241,15 +334,34 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
     const isFailed = item.status === ORDER_STATUS.FAILED
     if (isFailed) handleCount()
 
-    result.push({
+    rawOrders.value[index] = {
       ...rawOrders.value[index],
-      // ...(isFailed && { [errMsgCol]: item.message ? item.message : "提交成功, 请前往订单历史查看结果" }),
-      ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
+      // ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
+      ...({ [errMsgCol]: item.message }),
+      result: item.message,
       status: item.status,
-    })
+      submitedStatus: item.status === ORDER_STATUS.FAILED ? ASYNC_ORDER_STATUS.ASYNC_FAILED : undefined,
+      id: item.codeId,
+    }
+
+    // result.push({
+    //   ...rawOrders.value[index],
+    //   ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
+    //   ...({ [errMsgCol]: item.message }),
+    //   result: item.message,
+    //   status: item.status,
+    //   id: item.codeId,
+    // })
   }
 
-  rawOrders.value = result
+  if(imeis.value) {
+    const service = store.services.get(selectedId.value)
+    const idList = data.map(item => item.codeId).filter((x): x is number => x !== null)
+    const key = import.meta.env.VITE_SUBMIT_STORGE
+    localStorage.setItem(`${key}_${service?.id}`, JSON.stringify(idList))
+  }
+
+  // rawOrders.value = result
 }
 
 function handleOrder(rawData: string) {
@@ -257,6 +369,10 @@ function handleOrder(rawData: string) {
 
   const index = imeis.value.indexOf(data.imei)
   if (index === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, data)
+  const codeId = data.id
+  const codeIndex = pendingOrders.value.indexOf(codeId)
+  if(codeIndex === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, data)
+  pendingOrders.value.splice(codeIndex, 1)
 
   const resultCol = columns.value[5].key
   const hasResult = resultCol === 'result'
@@ -273,10 +389,52 @@ function handleOrder(rawData: string) {
 function processOrderResult(content: string) {
   const result: Record<string, string> = {}
   const items = content.split('<br>')
+  
+  const keyMap = getFieldsMap(serviceColumns.value)
+  
+  const lang = locale.value
+  const isEn = lang.startsWith("en")
+  
+  if(items.length === 1 && serviceColumns.value.length === 1) {
+    const key = isEn ? (serviceColumns.value[0].nameEn ?? serviceColumns.value[0].name) : serviceColumns.value[0].name
+    result[key] = content
+  } else {
+    for(const item of items) {
+      const [key, ...valueParts] = item.split(/[:：]/)
+      const rawKey = key.trim()
+      const value = valueParts.join(":").trim()
+      
+      const mapped = keyMap[rawKey]
+      if(!mapped) continue
+      
+      const finalKey = isEn ? (mapped.en ?? mapped.cn ) : mapped.cn
+      result[finalKey] = value
+    }
+  }
+  
+  const isSuccess = items.every(item => headers.value.includes(item))
 
-  for (const item of items) {
-    const [key, ...value] = item.split(/[:：]/)
-    result[hash(key.trim())] = value.join(':').trim()
+  if(!isSuccess) {
+    result[headers.value[0]] = content
+  }
+
+  return result
+}
+
+function getFieldsMap(fields: ServiceColumnItem[]) {
+  const fieldsCN = fields.map(item => item.name)
+  const fieldsEN = fields.map(item => item.nameEn)
+  const result: Record<string, FieldMap> = {}
+
+  for(let i = 0; i < fieldsCN.length; i++) {
+    const cn = fieldsCN[i]
+    const en = fieldsEN[i]
+
+    result[cn] = { cn, en }
+
+    if(en !== null && en !== "") {
+      result[en] = { cn, en }
+    }
   }
 
   return result
@@ -286,19 +444,20 @@ function handleCount() {
   count = count - 1
 
   if (count === 0) {
-    submited.value = true
+    disabled.value = false
     return close()
   }
 }
 
 function handleExport() {
-  const ids = rawOrders.value.map((item) => item.id)
+  const ids = rawOrders.value.map((item) => item.id).filter(item => item !== null && item !== undefined)
   if (!selectedId.value || !ids?.length) {
     toast.warning(t('query.prompt.importNull'))
     return
   }
 
-  if (!submited.value) {
+  const service = store.services.get(selectedId.value)
+  if (!submited.value && !service?.isUnlock) {
     toast.warning(t('query.prompt.exportNotSub'))
     return
   }
@@ -306,7 +465,7 @@ function handleExport() {
   exportLoading.value = true
   const response = orderApi.submitExport({
     serviceId: selectedId.value,
-    imeiList: imeis.value,
+    // imeiList: imeis.value,
     orderIdList: ids,
     excelHead: headers.value,
   })
@@ -323,6 +482,12 @@ function reset() {
   submited.value = false
   comments.value = ''
   count = 0
+
+  if(selService.value) {
+    const key = import.meta.env.VITE_SUBMIT_STORGE
+    const id = selService.value.id
+    localStorage.removeItem(`${key}_${id}`)
+  }
   close()
 }
 
@@ -350,25 +515,105 @@ async function handleMustRead() {
 
   if (!result) pushMsg.value = true
 }
+
+async function handleSubmitOrder(id: number) {
+  const key = import.meta.env.VITE_SUBMIT_STORGE
+  const jsonStr = localStorage.getItem(`${key}_${id}`)
+
+  const idList = (jsonStr && !showAll.value) ? JSON.parse(jsonStr) as number[] : []
+
+  if(idList.length === 0) showAll.value = true
+
+  const data = await getSubmitOrderList(idList)
+
+  submited.value = true
+
+  rawOrders.value = data.map((item, i) => ({
+    ...item,
+    ...(processOrderResult(item.result)),
+    index: i + 1,
+  }))
+
+  pendingOrders.value = data.map(item => {
+    if(item.status === ORDER_STATUS.PROCESSING) {
+      return item.id
+    }
+    return null
+  }).filter((item): item is number => item !== null)
+}
+
+async function getSubmitOrderList(orderIds: number[]) {
+  disabled.value = true
+  const params: SubmitOrderListParams = {
+    serviceId: selService.value!.id,
+    codeIdList: orderIds,
+  }
+  const { data } = await orderApi.submitOrders(params)
+
+  setTimeout(() => {
+    disabled.value = false
+  }, 1500)
+
+  return data
+}
+
+async function handleFresh() {
+  if(rawOrders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
+  if(pendingOrders.value.length === 0) return toast.info(t('query.prompt.refreshNone'))
+
+  pendingOrders.value = rawOrders.value.map(item => {
+    if(item.status === ORDER_STATUS.PROCESSING) {
+      return item.id
+    }
+    return null
+  }).filter((item): item is number => item !== null)
+
+  const data = await getSubmitOrderList(pendingOrders.value)
+  toast.success(t('submit.success', { action: t('button.fresh') }))
+
+  for(let item of data) {
+    const index = rawOrders.value.findIndex(order => order.id === item.id)
+
+    if(index === -1) continue
+
+    rawOrders.value[index] = {
+      ...rawOrders.value[index],
+      ...(processOrderResult(item.result)),
+      status: item.status,
+    }
+  }
+}
 </script>
 
 <template>
   <div class="p-4 h-full w-full">
-    <section class=" w-full flex items-center justify-between mb-3">
+    <section class="w-full flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
         <SelectService
           v-model="selectedId"
           ui-trigger="w-52"
           @selected="handleSelected"
         />
+
         <ImportPlane
+          :disabled="disabled"
           :selected-id="selectedId"
           @submit="handleImport"
         />
+
         <ButtonGroup
-          :layouts="['submit', 'export', 'clear']"
+          :layouts="['submit', 'export', 'clear']" :disabled="disabled"
           @submit="handleSubmit" @export="handleExport" @clear="reset"
         />
+
+        <XButton
+          variant="outline"
+          :label="t('query.result')" color="success"
+          :disabled="disabled"
+          :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''"
+          @click="handleFresh"
+        />
+
         <XButton
           v-show="mustRead" variant="outline"
           :label="t('query.service')" color="warning"
@@ -378,6 +623,11 @@ async function handleMustRead() {
         <XSwitch
           v-model="pushMsg" :label="t('query.pushRes')"
           @change="handlePushMsgChange"
+        />
+
+        <XSwitch
+          v-model="showAll" label="显示全部"
+          v-if="selectedId"
         />
       </div>
 
@@ -396,11 +646,13 @@ async function handleMustRead() {
       />
     </section>
   
-    <XTable
-      :data="orders"
-      :columns="columns"
-      row-key="index"
-      class="h-[calc(100%-3rem)] w-full border"
-    />
+    <section class="w-full h-[calc(100%-3rem)]">
+      <XTable
+        :data="orders"
+        :columns="columns"
+        row-key="index"
+        class="h-full max-w-full border"
+      />
+    </section>
   </div>
 </template>

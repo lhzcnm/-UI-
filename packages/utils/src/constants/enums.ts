@@ -147,10 +147,10 @@ export const API_TYPE_LIST = [
 
 // Order
 export enum ORDER_STATUS {
-  WAIT        = 1,
-  SUCCESS     = 2,
-  FAILED      = 3,
-  PROCESSING  = 4,
+  WAIT           = 1,
+  SUCCESS        = 2,
+  FAILED         = 3,
+  PROCESSING     = 4,
 }
 export const ORDER_STATUS_MAP: StatusMap = {
   [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.order.1' },
@@ -164,6 +164,18 @@ export const ORDER_STATUS_LIST = [
   { value: ORDER_STATUS.FAILED, label: '处理失败', key: 'status.order.3' },
   { value: ORDER_STATUS.PROCESSING, label: '正在处理', key: 'status.order.4' },
 ]
+
+// async order
+export enum ASYNC_ORDER_STATUS {
+  ASYNC_SUBMITED = 0,
+  ASYNC_FAILED   = 1,
+  WAIT           = 2,
+}
+export const ASYNC_ORDER_STATUS_MAP: StatusMap = {
+  [ASYNC_ORDER_STATUS.ASYNC_SUBMITED] : { color: 'success', label: '提交成功', labelEn: 'Success', key: 'status.unlock.0' },
+  [ASYNC_ORDER_STATUS.ASYNC_FAILED] : { color: 'danger', label: '提交失败', labelEn: 'Success', key: 'status.unlock.1' },
+  [ASYNC_ORDER_STATUS.WAIT] : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.unlock.2' },
+}
 
 // Order Verify
 export enum ORDER_VERIFY {

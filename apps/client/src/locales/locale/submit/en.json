@@ -10,8 +10,10 @@
       "pushRes": "Are you sure you don't want to receive results via WeChat official account push?",
       "scan": "IMEI/SN not recognized",
       "file": "Failed to parse the file",
-      "balance": "Balance"
+      "balance": "Balance",
+      "refreshNone": "All orders have been processed or submission failed"
     },
+    "result": "Query Result",
     "submit": "Submit Order",
     "viewRes": "Please go to 'My Orders' page to view results",
     "service": "Service Description",
@@ -21,6 +23,7 @@
       "service": "Service",
       "status": "Status",
       "result": "Result",
+      "submited": "Submited Status",
       "remark": "Remarks"
     },
     "imei": {
