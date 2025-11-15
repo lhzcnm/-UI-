@@ -354,12 +354,13 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
     // })
   }
 
-  if(imeis.value) {
-    const service = store.services.get(selectedId.value)
-    const idList = data.map(item => item.codeId).filter((x): x is number => x !== null)
-    const key = import.meta.env.VITE_SUBMIT_STORGE
-    localStorage.setItem(`${key}_${service?.id}`, JSON.stringify(idList))
+  const key = import.meta.env.VITE_SUBMIT_STORGE
+  const service = store.services.get(selectedId.value)
+  let idList = data.map(item => item.codeId).filter((x): x is number => x !== null)
+  if(imeis.value && !showAll.value) {
+    idList = rawOrders.value.map(item => item.id).filter((x): x is number => x !== null)
   }
+  localStorage.setItem(`${key}_${service?.id}`, JSON.stringify(idList))
 
   // rawOrders.value = result
 }
@@ -412,13 +413,26 @@ function processOrderResult(content: string) {
     }
   }
   
-  const isSuccess = items.every(item => headers.value.includes(item))
+  const isSuccess = judgeOrderStatus(serviceColumns.value, items)
 
   if(!isSuccess) {
     result[headers.value[0]] = content
   }
 
   return result
+}
+
+function judgeOrderStatus(fields: ServiceColumnItem[], items: string[]) {
+  const fieldsCN = fields.map(item => item.name)
+  const fieldsEN = fields.map(item => item.nameEn)
+
+  return items.some(item => {
+    let texts = item.split(":")
+
+    return texts.some(text => {
+      return fieldsCN.includes(text) || fieldsEN.includes(text)
+    })
+  })
 }
 
 function getFieldsMap(fields: ServiceColumnItem[]) {
@@ -543,7 +557,6 @@ async function handleSubmitOrder(id: number) {
 }
 
 async function getSubmitOrderList(orderIds: number[]) {
-  disabled.value = true
   const params: SubmitOrderListParams = {
     serviceId: selService.value!.id,
     codeIdList: orderIds,
@@ -559,15 +572,16 @@ async function getSubmitOrderList(orderIds: number[]) {
 
 async function handleFresh() {
   if(rawOrders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
-  if(pendingOrders.value.length === 0) return toast.info(t('query.prompt.refreshNone'))
-
+  
   pendingOrders.value = rawOrders.value.map(item => {
     if(item.status === ORDER_STATUS.PROCESSING) {
       return item.id
     }
     return null
   }).filter((item): item is number => item !== null)
-
+  
+  if(pendingOrders.value.length === 0) return toast.info(t('query.prompt.refreshNone'))
+  disabled.value = false
   const data = await getSubmitOrderList(pendingOrders.value)
   toast.success(t('submit.success', { action: t('button.fresh') }))
 
@@ -582,6 +596,7 @@ async function handleFresh() {
       status: item.status,
     }
   }
+  disabled.value = true
 }
 </script>
 
@@ -596,17 +611,17 @@ async function handleFresh() {
         />
 
         <ImportPlane
-          :disabled="disabled"
           :selected-id="selectedId"
           @submit="handleImport"
         />
 
         <ButtonGroup
-          :layouts="['submit', 'export', 'clear']" :disabled="disabled"
+          :layouts="['submit', 'export', 'clear']"
           @submit="handleSubmit" @export="handleExport" @clear="reset"
         />
 
         <XButton
+          v-if="selService?.isUnlock"
           variant="outline"
           :label="t('query.result')" color="success"
           :disabled="disabled"

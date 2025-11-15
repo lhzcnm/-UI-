@@ -63,17 +63,17 @@ const mobile: RouteRecordRaw = {
     //   meta: { hideHeader: true, hideFooter: true },
     //   component: () => import('@/modules/mobile/pages/quote/index.vue')
     // },
-    // {
-    //   path: 'store',
-    //   name: 'Store',
-    //   component: () => import('@mobile/pages/store/index.vue'),
-    //   meta: {
-    //     hideHeader: true,
-    //     hideFooter: true,
-    //     hideSidebar: true,
-    //     noAuthRequired: true,
-    //   },
-    // },
+    {
+      path: 'store',
+      name: 'Store',
+      component: () => import('@mobile/pages/store/index.vue'),
+      meta: {
+        hideHeader: true,
+        hideFooter: true,
+        hideSidebar: true,
+        noAuthRequired: true,
+      },
+    },
   ],
 }
 

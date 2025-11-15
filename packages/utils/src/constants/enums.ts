@@ -245,17 +245,6 @@ export const TICKET_TYPE_LIST = [
   { value: TICKET_TYPE.ORDER, label: '订单问题', key: 'type.ticket.17' },
 ]
 
-// Quote Type
-export enum QUOTATION_TYPE {
-  HONGKONG = 1,
-  FLYING   = 3,
-}
-
-export const QUOTATION_MAP_LIST: TypeListItem[] = [
-  { value: QUOTATION_TYPE.HONGKONG, label: '香港拿货报价单' },
-  { value: QUOTATION_TYPE.FLYING, label: '飞扬零售报价单' },
-]
-
 // Store Device Type
 export enum CATEGORY_MAP {
   ALL         = 0,
@@ -301,3 +290,13 @@ export const VOUCHER_STATUS_List: TypeListItem[] = [
   { value: VOUCHER_STATUS.USED, label: '已使用' },
   { value: VOUCHER_STATUS.FAILURE, label: '已失效' },
 ]
+
+export enum BRAND_STATUS {
+  IPHONE  = 1,
+  SAMSUNG = 2,
+}
+
+export const BRAND_STATUS_MAP: StatusMap = {
+  [BRAND_STATUS.IPHONE]: { color: 'primary', label: '苹果' },
+  [BRAND_STATUS.SAMSUNG]: { color: 'success', label: '三星' }
+}

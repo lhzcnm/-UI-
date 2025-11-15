@@ -137,6 +137,8 @@ function handleSubmit() {
   }).catch(() => {
     return toast.warning(t('store.prompt.qrcodeError'))
   })
+  // store.rawOrder.length = 0
+  // handleOrderSubmit()
 }
 
 function validQrcode() {

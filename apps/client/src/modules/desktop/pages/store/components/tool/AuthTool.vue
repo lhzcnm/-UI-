@@ -12,9 +12,9 @@ const props = defineProps<AuthToolProps>()
 // const router = useRouter()
 
 function handleClick() {
-  localStorage.clear()
-  sessionStorage.clear()
-  location.href = "/auth"
+  const authKey = import.meta.env.VITE_ACCESS_TOKEN
+  localStorage.removeItem(authKey)
+  location.href = "/"
 }
 </script>
 
