@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 const { t } = useI18n()
-const props = defineProps({
+defineProps({
   modelValue: { type: Boolean, default: false }, // 控制抽屉是否打开
   title: { type: String, default: 'quote.Filter' },          // 抽屉标题
   width: { type: String, default: '1/2' }        // 抽屉宽度，Tailwind 格式，例如 '1/2', '2/3'

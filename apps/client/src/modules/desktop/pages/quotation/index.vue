@@ -24,6 +24,9 @@ import SamSungUpdate from './components/fillter/image/SamSung.vue'
 
 import  { type QUOTE_STORE_TYPE,QUOTE_STORE } from './utils/store'
 import router from '@/router'
+
+const mode = import.meta.env.VITE_APP_MODE
+
 const { t } = useI18n()
 // store 反应式数据
 const store = reactive<QUOTE_STORE_TYPE>({
@@ -200,7 +203,7 @@ provide(QUOTE_STORE, store)
     
       <!-- 热门客服二维码弹窗 -->
       <XDialog v-model="store.IsCustomer">
-        <img src="/SanHe/customer_service_qrcode.jpg" alt="" class="rounded-xl">
+        <img :src="`/${mode}/customer_service_qrcode.jpg`" alt="" class="rounded-xl">
       </XDialog>
     
       <!-- 报价单图片弹窗 -->

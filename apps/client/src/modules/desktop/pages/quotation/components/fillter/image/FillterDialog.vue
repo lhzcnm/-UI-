@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const props = defineProps<{ isDialog: boolean }>()
-const emit = defineEmits<{ (e: 'update:isDialog', value: boolean): void }>()
+// const emit = defineEmits<{ (e: 'update:isDialog', value: boolean): void }>()
 
 </script>
 
