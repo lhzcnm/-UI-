@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { QUOTATION_TYPE, QUOTATION_MAP_LIST } from '@3un/utils'
+import { QuotationMap, QUOTATION_MAP_LIST } from '../utils'
 
-const category = defineModel<QUOTATION_TYPE>({ required: true })
+const category = defineModel<QuotationMap>({ required: true })
 </script>
 
 <template>
   <XSelect
+    ui-trigger="min-w-52"
     v-model="category">
     <XSelectItem
       v-for="category in QUOTATION_MAP_LIST"

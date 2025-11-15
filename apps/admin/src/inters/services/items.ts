@@ -14,6 +14,7 @@ export const zService = z.object({
     (val) => val === null ? 0 : Number(val),
     z.number(),
   ).default(0),
+  // storePrice: z.string().nullable().default('0'),
 
   tmpTitle: z.string().default(''),
   packageTitle: z.string().default(''),

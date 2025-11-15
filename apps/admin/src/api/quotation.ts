@@ -1,21 +1,50 @@
-import type { QUOTATION_TYPE } from '@3un/utils'
+import type { IPage } from "@3un/shared"
 
-import { zQuotation, type QuotationCreateParams, type QuotationList, type QuotationListParams, type QuotationUpdateParams } from '@/inters/quotation'
-import http from '@/utils/http'
+import { zFeiyangList, type FeiyangCreateForm, type FeiyangList, type FeiyangUpdateForm } from "@/inters/quotation/feiyang"
+import http from "@/utils/http"
+import type { QuotationSearchForm } from "@/inters/quotation"
+import { zHqbList, type HqbCreateForm, type HqbList, type HqbUpdateForm } from "@/inters/quotation/hqb"
 
-export async function getOldQuotations(category: QUOTATION_TYPE, params: QuotationListParams): Promise<QuotationList> {
-  const { data } = await http.get<QuotationList>(`quotation/list/${category}`, { params })
-  return { ...data, list: data.list.map((item) => zQuotation.parse(item)) }
+// feiyang quotation
+type GetFeiyangFn = (params: IPage & QuotationSearchForm) => Promise<FeiyangList>
+export const getFeiyang: GetFeiyangFn = async (params) => {
+  const { data } = await http.get<FeiyangList>('/quotation/feiyang', { params })
+  return zFeiyangList.parse(data)
+}
+type CreateFeiyangFn = (body: FeiyangCreateForm) => Promise<string>
+export const createFeiyang: CreateFeiyangFn = async (body) => {
+  const { data } = await http.post<string>('/quotation/feiyang', body)
+  return data
+}
+type UpdateFeiyangFn = (body: FeiyangUpdateForm) => Promise<string>
+export const updateFeiyang: UpdateFeiyangFn = async (body) => {
+  const { data } = await http.put<string>('/quotation/feiyang', body)
+  return data
+}
+type DeleteFeiyangFn = (body: number[]) => Promise<string>
+export const deleteFeiyang: DeleteFeiyangFn = async (body) => {
+  const { data } = await http.delete<string>('/quotation/feiyang', { data: body })
+  return data
 }
 
-export async function createOldQuotations(body: QuotationCreateParams): Promise<void> {
-  await http.post<void>('/quotation/add', body)
+// hqb quotation
+type GetHqbFn = (params: IPage & QuotationSearchForm) => Promise<HqbList>
+export const getHqb: GetHqbFn = async (params) => {
+  const { data } = await http.get<HqbList>('/quotation/hqb', { params })
+  return zHqbList.parse(data)
 }
-
-export async function updateOldQuotations(body: QuotationUpdateParams): Promise<void> {
-  await http.put<void>('/quotation/update', body)
+type CreateHqbFn = (body: HqbCreateForm) => Promise<string>
+export const createHqb: CreateHqbFn = async (body) => {
+  const { data } = await http.post<string>('/quotation/hqb', body)
+  return data
 }
-
-export async function deleteOldQuotations(data: number[]): Promise<void> {
-  await http.delete('/quotation/delete', { data })
+type UpdateHqbFn = (body: HqbUpdateForm) => Promise<string>
+export const updateHqb: UpdateHqbFn = async (body) => {
+  const { data } = await http.put<string>('/quotation/hqb', body)
+  return data
+}
+type DeleteHqbFn = (body: number[]) => Promise<string>
+export const deleteHqb: DeleteHqbFn = async (body) => {
+  const { data } = await http.delete('/quotation/hqb', { data: body })
+  return data
 }

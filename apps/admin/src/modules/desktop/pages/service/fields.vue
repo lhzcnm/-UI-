@@ -43,6 +43,9 @@ watch(
     () => store.refresh,
   ],
   ([serviceId, page, limit]) => {
+    if(serviceId) {
+      store.formBase.serviceId = serviceId
+    }
     getList({ page, pageSize: limit, serviceId })
   },
   { immediate: true },
@@ -59,7 +62,9 @@ function getList(params: ServiceFieldListParams) {
 }
 
 function openCreate() {
-  store.formBase = zServiceFieldForm.parse({})
+  if(!serviceId.value) {
+    store.formBase = zServiceFieldForm.parse({})
+  }
   store.index = undefined
   store.visibleBase = true
 }

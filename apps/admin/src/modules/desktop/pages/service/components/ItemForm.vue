@@ -43,19 +43,19 @@ const store = useServiceStore()
       />
     </FormField>
 
-    <FormField label="商城服务价格" desc="最低 0.01" required>
+    <FormField label="处理时间" desc="服务预计处理时间" required>
+      <XInput v-model="form.timeTaken" placeholder="处理时间" />
+    </FormField>
+    
+    <FormField label="处理时间(EN)" desc="服务预计处理时间" required>
+      <XInput v-model="form.timeTakenLocal" placeholder="处理时间EN" />
+    </FormField>
+
+    <FormField label="商城服务价格" desc="商城服务价格">
       <XInputNumber
         v-model.number="form.storePrice"
         :step="0.01" :min="0.01" :precision="2"
       />
-    </FormField>
-
-    <FormField label="处理时间" desc="服务预计处理时间" required>
-      <XInput v-model="form.timeTaken" placeholder="处理时间" />
-    </FormField>
-
-    <FormField label="处理时间(EN)" desc="服务预计处理时间" required>
-      <XInput v-model="form.timeTakenLocal" placeholder="处理时间EN" />
     </FormField>
 
     <FormField label="排序" desc="值越大越靠前">

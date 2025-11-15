@@ -91,16 +91,14 @@ export const menus: SidebarMenu[] = [
       },
     ],
   },
-  // {
-  //   label: '报价单管理',
-  //   path: '/quotations',
-  //   icon: 'lucide:clipboard-list',
-  //   children: [
-  //     { label: '飞扬批发价', match: 'jiuji', path: '/quotations/feiyang' },
-  //     { label: '华强北新机价', match: 'xinji', path: '/quotations/hqb' },
-  //     { label: '香港新机价', match: 'leixing', path: '/quotations/hk' },
-  //   ]
-  // },
+  {
+    label: '报价单管理',
+    path: '/quotations',
+    icon: 'lucide:clipboard-list',
+    children: [
+      { label: '数据基表', match: 'basePrice', path: '/quotations' },
+    ]
+  },
   {
     label: '充值管理',
     path: '/recharge',
