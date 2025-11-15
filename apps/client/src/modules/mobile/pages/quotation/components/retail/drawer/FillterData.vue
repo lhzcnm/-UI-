@@ -250,7 +250,7 @@ onMounted(() => {
         @click="handleConfirm"
         class="px-4 h-full rounded-lg border border-gray-300 dark:border-gray-600 text-white dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 transition-colors bg-blue-500"
       >
-        确定
+        {{ t('button.confirm') }}
       </button>
     </div>
   </div>
