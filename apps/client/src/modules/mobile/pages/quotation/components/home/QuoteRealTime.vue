@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import router from '@/router'
-import { Icon } from '@iconify/vue'
 const { t } = useI18n()
+import  {type QUOTE_STORE_TYPE,QUOTE_STORE } from '../../utils/store'
 const realTime = ref(
   [
   { id: 1, label: t('quote.RealQuote.FarVision'), color: 'bg-gradient-to-br from-green-500/80 from-30% to-green-500/40 to-80%' },  
@@ -10,26 +9,30 @@ const realTime = ref(
   { id: 4, label: t('quote.RealQuote.Other'), color: 'bg-gradient-to-br from-yellow-500/80 from-30% to-yellow-500/40 to-80%' },  
   ]
 )
+const store = inject<QUOTE_STORE_TYPE>(QUOTE_STORE)!
 
-
-async function refreshPrice() {
-  setTimeout(() => {
-    router.push('quotation')
-  }, 300);
-    
+/** 生成价格弹窗 */
+function openImage(id: number){
+  store.ImageDialogID = id
+  store.IsImageDialog = true
 }
-
 </script>
 
 <template>
-  <section class="mb-3 bg-card rounded-lg text-sm"  @click="refreshPrice()">
-
-    <div class="flex flex-row justify-between px-4 pt-4">
-      <span class="text-lg">{{ t('quote.Title')  }}</span>
-      
-      <div class="flex flex-rows items-center text-muted-foreground">
-        {{ t('profile.mobile.text.detail') }} <Icon icon="lucide:chevron-right" class="size-4" />
-      </div>
+  <!-- 实时报价单卡片 -->
+  <section
+    class="relative mx-auto my-4 rounded-3xl 
+           bg-gradient-to-br from-white/90 to-gray-100/50 dark:from-black/90 dark:to-black/50
+           shadow-md border border-white/30 backdrop-blur-xl overflow-hidden"
+  >
+    <div class="relative text-center py-3">
+      <h2
+        class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text 
+               bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 cursor-pointer drop-shadow-md"
+      >
+        ··· {{ t('quote.RealQuote.Real') }} ···
+      </h2>
+      <div class="mx-auto mt-2 w-24 h-[2px] bg-gradient-to-r from-transparent via-gray-300/70 to-transparent rounded-full"></div>
     </div>
 
     <div
@@ -39,7 +42,7 @@ async function refreshPrice() {
       <div
         v-for="item in realTime"
         :key="item.id"
-        @click="refreshPrice()"
+        @click="openImage(item.id)"
         class="group cursor-pointer select-none flex flex-col items-center shrink-0 
                w-[calc(25%-1rem)] sm:w-[calc(25%-2rem)]
                transition-all duration-300 ease-out"

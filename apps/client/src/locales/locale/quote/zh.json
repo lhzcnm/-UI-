@@ -11,21 +11,23 @@
       "Return": "返回"
     },
     "FriendlyReminder": {
-      "Content": "温馨提示:\n所有机型要求原装（可更换电芯），爱思/沙漏检测全绿，不弹窗\n主板维修机、炸弹机不收，请提前确认机器状态\n报价以签收当日为准，超过期限需重新确认价格\n\n充新：整体外观优秀，外壳及屏幕未经过更换，功能正常\n靓机：原装成色好，边框无磕碰、屏幕无划痕、无明显使用痕迹\n小花：轻微使用痕迹，边框小磕碰或屏幕细微划痕\n大花：明显使用痕迹，边框多处磕碰或屏幕存在硬伤\n内爆可测：屏幕内爆、显示异常等问题，可接受检测报价",
-      "NewContent": "温馨提示:\n原封：全新未拆封，配件齐全，外包装无破损，无激活记录\n报价仅供参考，最终价格以实际验机为准，签收当日报价有效\n爱思/沙漏检测全绿，无弹窗"
+      "HongKong": "温馨提示:\n原封：全新未拆封，配件齐全，外包装无破损，无激活记录\n报价仅供参考，最终价格以实际验机为准，签收当日报价有效\n爱思/沙漏检测全绿，无弹窗",
+      "SamSung": "温馨提示:\n原封：全新未拆封，配件齐全，外包装无破损，无激活记录\n报价仅供参考，最终价格以实际验机为准，签收当日报价有效\n爱思/沙漏检测全绿，无弹窗",
+      "Flying": "温馨提示:\n所有机型要求原装（可更换电芯），爱思/沙漏检测全绿，不弹窗\n主板维修机、炸弹机不收，请提前确认机器状态\n报价以签收当日为准，超过期限需重新确认价格\n\n充新：整体外观优秀，外壳及屏幕未经过更换，功能正常\n靓机：原装成色好，边框无磕碰、屏幕无划痕、无明显使用痕迹\n小花：轻微使用痕迹，边框小磕碰或屏幕细微划痕\n大花：明显使用痕迹，边框多处磕碰或屏幕存在硬伤",
+      "HuaQiangBei": "温馨提示:\n原封：全新未拆封，配件齐全，外包装无破损，无激活记录\n报价仅供参考，最终价格以实际验机为准，签收当日报价有效\n爱思/沙漏检测全绿，无弹窗"
     },
     "RealQuote": {
-      "Real": "实时报价单",
-      "HongKong": "香港拿货价",
-      "FarVision": "远望新机价",
-      "Flying": "飞扬零售价",
-      "Other": "其他报价"
+      "Real": "实时价格走势",
+      "HongKong": "香港新机",
+      "FarVision": "华强北新机",
+      "Flying": "飞扬零售",
+      "Other": "香港三星"
     },
     "AdvancedFunctions": {
       "Advanced": "高级功能区",
       "Search": "搜索功能",
       "SearchContent": "支持按内存、功能、外观等条件精准搜索，快速定位目标机型。",
-      "Personalized": "个性化报价单",
+      "Personalized": "高级定制",
       "PersonalizedContent": "根据选择的机型与参数，一键生成专属报价单，展示更专业。",
       "Customer": "专属客服",
       "CustomerContent": "一对一专属客服支持，提供实时沟通与个性化服务体验。"
@@ -35,9 +37,9 @@
     },
     "QuoteFilter": {
       "Customized": "个性化报价单",
-      "QuoteWatermark": "报价单水印",
+      "QuoteWatermark": "趋势表水印",
       "WatermarkName": "请输入您的水印名称",
-      "QuoteColor": "报价单颜色",
+      "QuoteColor": "趋势表颜色",
       "Color": {
         "black": "星空黑",
         "yellow": "土豪金",
@@ -47,8 +49,8 @@
         "red": "玫瑰红"
       },
       "NowQuoteCard": {
-        "NowQuote": "当前报价单",
-        "AllQuote": "整单修改",
+        "NowQuote": "当前趋势表",
+        "AllQuote": "整表修改",
         "AddPrice": "按金额上调",
         "ReducePrice": "按金额下调",
         "statu": "已选"
@@ -67,9 +69,10 @@
         "Capacity": "容量",
         "Remark": "备注",
         "Models": "型号",
-        "HongKong": "香港拿货报价单",
-        "FarVision": "远望新机价报价单",
-        "Flying": "飞扬零售报价单"
+        "HongKong": "香港实时价格走势",
+        "SamSung": "三星实时价格走势",
+        "Flying": "飞扬实时价格走势",
+        "HuaQiangBei": "华强北实时价格走势"
       },
     "PopularModel":{
       "PopularModel":"热门型号",
@@ -92,6 +95,76 @@
       "TopUpPoints": "是否去充值积分？",
       "FreeDialog": "免费次数已用完",
       "UsePoint": "是否使用积分生成报价单？"
+    },
+    "Tab":{
+      "Home": "首页",
+      "Retail": "详情",
+      "Fillter": "个性化",
+      "Return":"返回"
+    },
+    "Colors":{
+      "Color1": "黑",
+      "Color2": "白",
+      "Color3": "蓝",
+      "Color4": "紫",
+      "Color5": "绿",
+      "Color6": "银",
+      "Color7": "橙",
+      "Color8": "粉",
+      "Color9": "群青",
+      "Color10": "深青",
+      "Color11": "沙漠色",
+      "Color12": "原色",
+      "Color13": "黄",
+      "Color14": "红"
+    },
+    "TableHeaders": {
+      "Header1": "容量",
+      "Header2": "颜色",
+      "Header3": "激活",
+      "Header4": "未激活",
+      "Header5": "备注"
+    },
+    "TableHeaders1": {
+      "Header1": "容量",
+      "Header2": "充新",
+      "Header3": "靓机",
+      "Header4": "小花",
+      "Header5": "大花",
+      "Header6": "备注"
+    },
+    "TableHeaders3": {
+      "Header1": "容量",
+      "Header2": "状态",
+      "Header3": "颜色",
+      "Header4": "资源机-激活",
+      "Header6": "新机",
+      "Header7": "备注",
+      "Header8": "官翻机",
+      "Header9": "资源机-未激活"
+    },
+    "Tabs": {
+      "Tab1": "香港新机",
+      "Tab2": "飞扬零售",
+      "Tab3": "华强北新机",
+      "Tab4": "香港三星"
+    },
+    "NoData": "暂无匹配数据",
+    "Generate": "生成",
+    "EnterAmount":"请输入金额",
+    "Filter": "筛选",
+    "ActivationStatus":"激活状态",
+    "Appearance":"外观",
+    "confirmLeave":"是否离开?",
+    "message": "内容丰富，静候您的光临",
+    "text": "请选择(默认: 上调价格)",
+    "HkPriceTypeCard":{
+      "title": "香港价格类型",
+      "description": "可根据需要设置价格的货币单位",
+      "currency1": "港币",
+      "currency2": "美元",
+      "currency3": "人民币"
     }
+
   }
 }
