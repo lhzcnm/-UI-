@@ -1,0 +1,17 @@
+{
+  "button": {
+    "filter": "筛选",
+    "import": "导入",
+    "export": "导出",
+    "submit": "提交",
+    "confirm": "确认",
+    "clear": "清空",
+    "copy": "复制",
+    "add": "新增",
+    "cancel": "取消",
+    "reset": "重置",
+    "download": "下载",
+    "fresh": "刷新",
+    "exchange": "兑换"
+  }
+}

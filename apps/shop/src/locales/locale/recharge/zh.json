@@ -1,0 +1,72 @@
+{
+  "recharge": {
+    "title": "积分充值",
+    "handleFee": "手续费0",
+    "segment": {
+      "balance": "余额充值",
+      "member": "开通会员",
+      "voucher": "积分券兑换"
+    },
+    "balance": {
+      "title": "充值金额",
+      "compAmount": {
+        "title": "充值金额",
+        "handle": "手续费",
+        "real": "应付金额"
+      }
+    },
+    "member": {
+      "title": "会员套餐",
+      "rights": {
+        "title": "会员权益",
+        "text1": "每月为您节省",
+        "text2": "原价{price}元/次. 现在",
+        "text3": "每天{count}次",
+        "text4": "免费查询",
+        "text5": "超过{count}次, 则使用",
+        "text6": "优惠价{price}/次"
+      }
+    },
+    "voucher": {
+      "title": "积分券兑换",
+      "input": {
+        "placeholder": "请输入积分券"
+      },
+      "button": "立即兑换",
+      "prompt": {
+        "null": "请输入积分券码"
+      }
+    },
+    "method": {
+      "title": "支付方式",
+      "wechat": "微信",
+      "ali": "支付宝"
+    },
+    "button": {
+      "balance": "立即充值",
+      "member": "立即开通",
+      "export": "导出记录"
+    },
+    "amount": {
+      "min": "充值金额不能小于{amount}",
+      "max": "充值金额不能大于{amount}",
+      "placeholder": "自定义充值金额"
+    },
+    "history": {
+      "title": "充值记录",
+      "amount": "账单金额",
+      "real": "实际到账",
+      "total": "总共 {count} 条记录"
+    },
+    "qrcode": {
+      "title": "微信支付",
+      "expired": "二维码已过期",
+      "validity": "二维码有效期",
+      "text": "请使用微信扫码完成支付",
+      "success": "支付成功"
+    },
+    "info": {
+      "title": "充值说明"
+    }
+  }
+}

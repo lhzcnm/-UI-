@@ -1,0 +1,17 @@
+{
+  "button": {
+    "filter": "Filter",
+    "import": "Import",
+    "export": "Export",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "clear": "Clear",
+    "copy": "Copy",
+    "add": "Add",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "download": "Download",
+    "fresh": "Refresh",
+    "exchange": "Exchange"
+  }
+}

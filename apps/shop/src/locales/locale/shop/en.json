@@ -1,0 +1,73 @@
+{
+  "shop": {
+    "back": "Back",
+    "order": {
+      "search": "Search Order"
+    },
+    "service": {
+      "view": "Service Details",
+      "type": "Supported Type",
+      "taken": "Processing Time",
+      "price": "Service Price",
+      "hot": "Hot Services",
+      "new": "New Arrivals",
+      "amount": "Processing Amount per Order"
+    },
+    "form": {
+      "title": "Submit Form",
+      "phone": "Phone Number",
+      "mail": "Email",
+      "push": "Push Result (Recommended)",
+      "support": "Supported Type",
+      "taken": "Processing Time",
+      "cancel": "Cancel",
+      "confirm": "Confirm Order",
+      "example": "Example"
+    },
+    "result": "Order results will be displayed here",
+    "valid": {
+      "pushType": "Please enter your phone number or email"
+    },
+    "prompt": {
+      "imei": "You can separate multiple items with commas or line breaks",
+      "searchOrder": "Please enter order number and IMEI/SN",
+      "submit": "Order reminder",
+      "unlock": "Push result must be enabled for unlock-type services",
+      "push": "Please enter your phone number or email",
+      "pushSource": "Please enter your phone or email",
+      "qrcodeError": "Failed to generate payment QR code, please try again",
+      "submitUnlock": "Unlock order submitted successfully. The result will be sent to your phone number or email once processing is complete."
+    },
+    "search": {
+      "service": {
+        "name": "Enter service name"
+      },
+      "order": {
+        "no": "Order Number"
+      },
+      "group": "Service Filter",
+      "button": "Search",
+      "null": "No Data"
+    },
+    "tool": {
+      "title": {
+        "lang": "Switch Language",
+        "group": "Switch Service Group",
+        "order": "Order Query"
+      },
+      "name": {
+        "home": "Home",
+        "auth": "Login",
+        "theme": "Theme",
+        "lang": "Language",
+        "group": "Group",
+        "order": "Query"
+      }
+    },
+    "pay": {
+      "title": "Payment Method",
+      "wx": "WeChat Pay",
+      "ali": "Alipay"
+    }
+  }
+}

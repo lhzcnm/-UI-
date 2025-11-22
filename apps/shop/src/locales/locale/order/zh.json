@@ -1,0 +1,24 @@
+{
+  "order": {
+    "copy": {
+      "result": "复制订单结果",
+      "imei": "复制imei/sn"
+    },
+    "submit": {
+      "title": "下单确认",
+      "count": "您提交的有效IMEI数量为 {count} , 是否确认提交?",
+      "amount": "预计金额"
+    },
+    "history": {
+      "title": "订单历史",
+      "none": "暂无订单记录",
+      "placeholder": {
+        "imei": "请输入imei",
+        "codeId": "请输入订单号"
+      }
+    },
+    "prompt": {
+      "imei": "未检测到有效imei"
+    }
+  }
+}

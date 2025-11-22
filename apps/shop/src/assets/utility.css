@@ -1,0 +1,46 @@
+.x-highlight {
+  color: theme('colors.orange.600');
+  background: transparent;
+  font-weight: bold;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.x-overflow-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tooltip */
+.x-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.x-tooltip:hover .x-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.x-tooltip-text {
+  position: absolute;
+  left: 50%;
+  z-index: 100;
+
+  padding: 4px 8px;
+
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  background-color: hsl(var(--foreground));
+  color: hsl(var(--background));
+  border-radius: 4px;
+  font-size: 12px;
+
+  transition: opacity 0.2s;
+  transition-delay: 0.3s;
+  transform: translateX(-50%);
+}
+.x-tooltip-text.bottom120 {
+  bottom: 120%;
+}
+.x-tooltip-text.top120 {
+  top: 120%;
+}

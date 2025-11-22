@@ -1,0 +1,92 @@
+{
+  "all": "All",
+  "dataNull": "No records",
+  "unknown": "Unknown",
+  "submit": {
+    "success": "{action} Succeeded",
+    "fail": "{action} Failed"
+  },
+  "action": {
+    "operation": "Operation",
+    "reset": "Reset",
+    "submit": "Submit",
+    "delete": "Delete",
+    "export": "Export",
+    "connect": "Connect",
+    "copy": "Copy",
+    "refresh": "Refresh",
+    "print": "Print",
+    "recharge": "Recharge",
+    "activate": "Activate",
+    "bind": "Bind",
+    "modify": "Modify"
+  },
+  "prompt": {
+    "title": "Prompt",
+    "confirm": "Are you sure to {action}?",
+    "serviceNull": "Please Select Service"
+  },
+  "announcement": {
+    "title": "Announcement"
+  },
+  "serviceGroup": {
+    "title": "Service Group",
+    "placeholder": "select group"
+  },
+  "service": {
+    "title": "Service",
+    "select": "Service Selection",
+    "placeholder": "select a service",
+    "notFound": "Service not found"
+  },
+  "valid": {
+    "null": "{field} is empty",
+    "fileError": "File parsing error"
+  },
+  "remark": {
+    "title": "Remarks",
+    "placeholder": "Your remarks(Optional)"
+  },
+  "date": {
+    "title": "Date",
+    "placeholder": "Please Select Date Range",
+    "mobile": {
+      "title": "Submitted At",
+      "start": "Start Time",
+      "end": "End Time"
+    }
+  },
+  "keyword": {
+    "title": "Keyword",
+    "placeholder": "Keyword"
+  },
+  "imei": {
+    "title": "IMEI/SN",
+    "placeholder": "Please Input IMEI/SN"
+  },
+  "command": {
+    "title": "Command {action}",
+    "success": "Sent"
+  },
+  "weekday": {
+    "0": "SunDay",
+    "1": "MonDay",
+    "2": "TuesDay",
+    "3": "WednesDay",
+    "4": "ThursDay",
+    "5": "FriDay",
+    "6": "SaturDay"
+  },
+  "footer": {
+    "msg1": "SanHe Query",
+    "msg2": "LuShenSanHe",
+    "msg3": "Copyright"
+  },
+  "stat": {
+    "total": "Total {count} {field}"
+  },
+  "request": {
+    "timeout": "Request timeout, please try again later",
+    "error": "Request failed, please try again later"
+  }
+}

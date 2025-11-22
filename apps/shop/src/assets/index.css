@@ -1,0 +1,76 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import '@3un/ui/index.css';
+
+@import './tiptap.css';
+@import './utility.css';
+@import './animation.css';
+@import './shop.css';
+
+@layer base {
+  :root {
+    --siderbar-w: 12rem;
+    --header-h: 3.2rem;
+
+    --store-header-h: 3.5rem;
+
+    --mobile-header-h: 3.75rem;
+    --mobile-footer-h: 3.5rem;
+  }
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+/* Scrollbar */
+* {
+  scrollbar-width: none;
+  scrollbar-color: hsl(var(--border)) transparent
+}
+
+/* Font */
+.noto-sans-sc {
+  font-family: "Noto Sans SC", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.font-mono {
+  font-family: 'ubuntu mono', 'Noto Sans SC' , monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* svg logo */
+.logo {
+  @apply inline-block text-foreground;
+}
+
+/* Date input */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  @apply absolute left-0 top-0 w-full h-full m-0 p-0 opacity-0 cursor-pointer;
+}
+
+.hr-fade-content {
+  position: relative;
+  padding: 1em 0;
+  font-size: .85rem; border: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent, black, transparent);
+  mask-image: linear-gradient(to right, transparent, black, transparent);
+
+  &::before {
+    content: attr(data-content);
+    position: absolute;
+    padding: 0 1ch;
+    line-height: 1px;
+    border: solid hsl(var(--border));
+    border-width: 0 99vw;
+    width: fit-content;
+    white-space: nowrap; left: 50%;
+    transform: translateX(-50%);
+  }
+}

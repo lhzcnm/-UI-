@@ -1,0 +1,48 @@
+{
+  "status": {
+    "order": {
+      "1": "Pending",
+      "2": "Success",
+      "3": "Failed",
+      "4": "Processing",
+      "5": "Submited Success"
+    },
+    "unlock": {
+      "0": "Submited Success",
+      "1": "Submited Failed",
+      "2": "Submited Pending"
+    },
+    "vertify": {
+      "0": "Normal",
+      "1": "Feedback",
+      "2": "Solved",
+      "3": "Refund"
+    },
+    "ticket": {
+      "0": "Urgent",
+      "1": "Normal",
+      "2": "Can Wait"
+    },
+    "payment": {
+      "1": "Unpaid",
+      "2": "Paid"
+    },
+    "workFold": {
+      "0": "pending",
+      "1": "processing",
+      "2": "resolved"
+    }
+  },
+  "type": {
+    "ticket": {
+      "16": "Recharge refund issue",
+      "17": "Order issue"
+    },
+    "imei": {
+      "2": "IMEI",
+      "4": "Serial number",
+      "5": "IMEI/SN",
+      "6": "IMEI/SN"
+    }
+  }
+}

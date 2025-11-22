@@ -1,0 +1,10 @@
+{
+  "name": "@3un/shop",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.15.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 3002",
+    "build": "vue-tsc -b && node ./build/index.js"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "valid": {
+    "profile": {
+      "phone": "Phone number cannot be empty",
+      "phone_format": "Invalid phone number format",
+
+      "target": "Email/Phone cannot be empty",
+      "target_format": "Invalid Email/Phone format",
+
+      "email": "Email cannot be empty",
+      "email_format": "Invalid email format",
+
+      "code": "Verification code cannot be empty",
+      "code_format": "Invalid verification code format",
+
+      "username": "Username cannot be empty",
+      "username_length": "Username length must be 6-16 characters",
+      "username_format": "Invalid username format",
+
+      "password": "Password cannot be empty",
+      "password_less": "Password must contain at least one number and one letter",
+      "password_length": "Password length must be 8-18 characters",
+      "password_format": "Invalid password format",
+      "password_confirm": "Passwords do not match"
+    },
+    "shop": {
+      "imeiNull": "IMEI cannot be empty"
+    },
+    "recharge": {
+      "amount": "Amount cannot be zero"
+    },
+    "invalid": "{field} Invalid"
+  }
+}

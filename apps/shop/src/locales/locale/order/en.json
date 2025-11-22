@@ -1,0 +1,24 @@
+{
+  "order": {
+    "copy": {
+      "result": "Copy order result",
+      "imei": "Copy IMEI/SN"
+    },
+    "submit": {
+      "title": "Order Confirmation",
+      "count": "You have submitted {count} valid IMEI numbers. Do you want to proceed?",
+      "amount": "Estimated Amount"
+    },
+    "history": {
+      "title": "Order History",
+      "none": "No order records",
+      "placeholder": {
+        "imei": "Enter IMEI",
+        "codeId": "Enter Order ID"
+      }
+    },
+    "prompt": {
+      "imei": "No valid IMEI detected"
+    }
+  }
+}

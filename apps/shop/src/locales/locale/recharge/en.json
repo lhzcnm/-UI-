@@ -1,0 +1,72 @@
+{
+  "recharge": {
+    "title": "Points Recharge",
+    "handleFee": "Cost Free",
+    "segment": {
+      "balance": "Balance",
+      "member": "Membership",
+      "voucher": "Voucher"
+    },
+    "balance": {
+      "title": "Recharge Amount",
+      "compAmount": {
+        "title": "Recharge Amount",
+        "handle": "Handling Fee",
+        "real": "Payable Amount"
+      }
+    },
+    "member": {
+      "title": "Membership Plan",
+      "rights": {
+        "title": "Benefits",
+        "text1": "Save every month",
+        "text2": "Original price {price}/time. Now",
+        "text3": "{count} times per day",
+        "text4": "Free queries",
+        "text5": "Exceeding {count} times, charged at",
+        "text6": "Discount price {price}/time"
+      }
+    },
+    "voucher": {
+      "title": "Voucher Exchange",
+      "input": {
+        "placeholder": "Place input Voucher No."
+      },
+      "button": "Exchange Now",
+      "prompt": {
+        "null": "Please input voucher No."
+      }
+    },
+    "method": {
+      "title": "Payment Method",
+      "wechat": "WeChat Pay",
+      "ali": "Alipay"
+    },
+    "button": {
+      "balance": "Recharge Now",
+      "member": "Activate Now",
+      "export": "Export Records"
+    },
+    "amount": {
+      "min": "Recharge amount cannot be less than {amount}",
+      "max": "Recharge amount cannot exceed {amount}",
+      "placeholder": "Custom recharge amount"
+    },
+    "history": {
+      "title": "Recharge History",
+      "amount": "Bill Amount",
+      "real": "Actual Received",
+      "total": "Total {count} records"
+    },
+    "qrcode": {
+      "title": "WeChat Payment",
+      "expired": "QR Code has been Expired",
+      "validity": "QR Code Validity",
+      "text": "Please scan with WeChat to complete payment",
+      "success": "Payment Successful"
+    },
+    "info": {
+      "title": "Recharge Info"
+    }
+  }
+}

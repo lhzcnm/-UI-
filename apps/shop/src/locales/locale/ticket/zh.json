@@ -1,0 +1,21 @@
+{
+  "ticket": {
+    "form": {
+      "type": "工单类型",
+      "level": "工单紧急程度",
+      "topic": "工单主题",
+      "msg": "反馈内容",
+      "codeId": "订单号: {id}\n{message}"
+    },
+    "title": {
+      "create": "申请工单"
+    },
+    "prompt": {
+      "type": "请输入工单类型",
+      "subject": "请输入工单主题",
+      "msg": "请输入工单内容",
+      "success": "工单提交成功",
+      "fail": "工单提交失败"
+    }
+  }
+}
