@@ -3,6 +3,7 @@ import ServiceConfirm from './components/ServiceConfirm.vue'
 import ServiceDetail from './components/ServiceDetail.vue'
 import ServicePrompt from './components/ServicePrompt.vue'
 import ServiceForm from './components/ServiceForm.vue'
+import TheBack from '@desktop/components/TheBack.vue'
 
 // import { tv } from 'tailwind-variants'
 

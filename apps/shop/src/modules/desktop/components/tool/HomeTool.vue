@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import type { ToolGlobalProps } from '@desktop/pages/services/utils/types'
+import type { ToolGlobalProps } from "@/inters/tool"
 
 interface HomeToolProps extends ToolGlobalProps {}
 

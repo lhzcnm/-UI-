@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MainContainer from './components/MainContainer.vue'
 import ServiceGroupSel from './components/ServiceGroupSel.vue'
-import TheGlobalTool from './components/TheGlobalTool.vue'
+import TheGlobalTool from '@desktop/components/TheGlobalTool.vue'
 
 import { watchOnce } from '@vueuse/core'
 
@@ -54,7 +54,6 @@ onMounted(() => {
   watchOnce(
     () => store.services,
     () => {
-      console.log(store.services)
       for(let item of store.services) {
         store.groupMap.set(item.id, item.title)
         store.groupServiceMap.set(item.id, item.children)

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
+
 import { formatTime } from '@3un/utils'
 import { DETAIL_STORE } from '../utils'
 

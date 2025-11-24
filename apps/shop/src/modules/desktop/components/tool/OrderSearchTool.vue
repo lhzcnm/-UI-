@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import type { ToolGlobalProps } from '@desktop/pages/services/utils/types'
-import { TOOL_STORE, ToolStatus } from '../utils';
+import { TOOL_STORE, ToolStatus } from '@desktop/utils'
+import type { ToolGlobalProps } from '@/inters/tool'
 
 interface OrderSearchToolProps extends ToolGlobalProps {}
 

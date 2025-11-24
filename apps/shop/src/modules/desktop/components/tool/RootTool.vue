@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import ThemeTool from './ThemeTool.vue'
 import LanuageTool from './LanuageTool.vue'
+import ServiceGroupTool from './ServiceGroupTool.vue'
+import HomeTool from './HomeTool.vue'
+import OrderSearchTool from './OrderSearchTool.vue'
+import AuthTool from './AuthTool.vue'
 
 import { tv } from 'tailwind-variants'
-import ServiceGroupTool from './ServiceGroupTool.vue'
-import OrderSearchTool from './OrderSearchTool.vue'
-import HomeTool from './HomeTool.vue'
-import AuthTool from './AuthTool.vue'
 
 const style = tv({
   base: [

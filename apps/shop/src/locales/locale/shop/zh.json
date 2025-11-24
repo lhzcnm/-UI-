@@ -61,13 +61,19 @@
         "theme": "切换主题",
         "lang": "切换语言",
         "group": "服务组",
-        "order": "订单查询"
+        "order": "订单查询",
+        "history": "订单历史"
       }
     },
     "pay": {
       "title": "下单信息",
       "wx": "微信支付",
       "ali": "支付宝"
+    },
+    "footer": {
+      "shop": "商城",
+      "profile": "个人中心",
+      "history": "订单历史"
     }
   }
 }

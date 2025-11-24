@@ -12,6 +12,7 @@
     "reset": "Reset",
     "download": "Download",
     "fresh": "Refresh",
-    "exchange": "Exchange"
+    "exchange": "Exchange",
+    "query": "Query"
   }
 }

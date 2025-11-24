@@ -4,7 +4,7 @@ import TheGlobalBack from './TheGlobalBack.vue'
 import { tv } from 'tailwind-variants'
 
 import { debounce } from '@3un/utils'
-import { SERVICE_STORE } from '../utils'
+import { SERVICE_STORE } from '@desktop/pages/services/utils'
 
 const serviceStore = inject(SERVICE_STORE)!
 

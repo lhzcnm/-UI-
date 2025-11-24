@@ -65,7 +65,7 @@ function highlightText(text: string, keyword: string) {
   >
     <XSelectGroup
       v-for="group in filteredServices" :key="group.id"
-      :title="group.title"
+      :title="group.title" ui-title="text-danger"
     >
       <XSelectItem
         v-for="service in group.children" :key="service.id"

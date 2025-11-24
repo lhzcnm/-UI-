@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import TheHeader from '@desktop/components/TheHeader.vue'
+import TheMainContain from '@desktop/components/TheMainContain.vue'
+import TheFooter from '@desktop/components/TheFooter.vue'
+
 const sysStore = useSystemStore()
 const settingStore = useSettingStore()
 

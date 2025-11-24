@@ -25,8 +25,6 @@ export default defineConfig({
       globs: [
         'src/components/**/*.vue',
         '!src/components/logo/**/*.vue',
-        'src/modules/mobile/components/*.vue',
-        'src/modules/desktop/components/*.vue',
       ],
     }),
     I18nPlugin({
@@ -39,6 +37,7 @@ export default defineConfig({
     alias: {
       '@': resolve('src'),
       '@desktop': resolve('src/modules/desktop'),
+      "@mobile": resolve("src/modules/mobile"),
     }
   }
 })

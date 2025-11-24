@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import TheGlobalBack from './TheGlobalBack.vue'
-import SelectService from '../components/SelService.vue'
+import SelectService from '@mobile/components/SelectService.vue'
 
 import { tv } from 'tailwind-variants'
 
 import { useShopStore } from '@/stores/shop'
-import { orderSearch } from '@/api/shop'
-import { SERVICE_STORE } from '../utils'
+// import { orderSearch } from '@/api/shop'
 
 const { t } = useI18n()
 
-const store = inject(SERVICE_STORE)!
 const shopStore = useShopStore()
 const router = useRouter()
 const route = useRoute()
 
 const orderNo = ref<string>()
 const imei = ref<string>()
-const serviceId = ref<number>(0)
 
 const style = tv({
   slots: {
@@ -35,16 +31,26 @@ const style = tv({
 
 const b = style()
 
+watch(
+  () => shopStore.historySearch,
+  () => {
+    console.log(shopStore.historySearch)
+  },
+  {
+    deep: true
+  }
+)
+
 async function handleClick() {
   shopStore.historySearch = {
     ...shopStore.historySearch,
-    serviceId: serviceId.value === 0 ? undefined : serviceId.value,
     imeiList: imei.value?.split('\n') || undefined,
     codeIdList: orderNo.value?.split('\n') || undefined,
   }
 
-  const data = await orderSearch(shopStore.historySearch)
-  shopStore.historys = data
+  // console.log(shopStore.historySearch)
+  // const data = await orderSearch(shopStore.historySearch)
+  // shopStore.historys = data
 
   if(route.path !== "/shop/history") {
     router.push("/shop/history")
@@ -54,10 +60,9 @@ async function handleClick() {
 
 <template>
   <div class="w-full flex flex-col">
-    <TheGlobalBack :name="t('shop.tool.title.order')" />
     <div class="px-4 flex flex-col mt-8">
       <div class="flex flex-col space-y-5">
-        <SelectService :class="[b.input(), 'h-12 sm:h-16']" v-model="serviceId" :services="store.services" />
+        <SelectService class="flex flex-col space-y-3" v-model:group="shopStore.historySearch.groupId" v-model="shopStore.historySearch.serviceId" />
         <textarea
           :class="b.input()"
           :placeholder="t('shop.search.order.no')"
@@ -75,17 +80,6 @@ async function handleClick() {
           />
         </div>
       </div>
-
-      <!-- <div class="flex items-center text-sm text-zinc-400 dark:text-zinc-500 gap-3 mt-10">
-        <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
-        <span>查询结果将在这里展示</span>
-        <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-700"></div>
-      </div> -->
-
-      <!-- <div class="mt-6 bg-white/60 dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-700 p-6 text-center text-zinc-500 dark:text-zinc-400 shadow-sm">
-        <span v-if="result" v-html="result"></span>
-        <span v-else>{{ t('store.search.null') }}</span>
-      </div> -->
     </div>
   </div>
 </template>

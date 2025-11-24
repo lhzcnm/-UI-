@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import type { ToolGlobalProps } from '@/inters/tool'
 import { Icon } from '@iconify/vue'
-
-import type { ToolGlobalProps } from '@desktop/pages/services/utils/types'
 
 const { t } = useI18n()
 

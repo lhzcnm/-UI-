@@ -100,6 +100,16 @@
   transform: scale(1);
 }
 
+/* toolbar spread */
+.toolbar-spread-enter-active,
+.toolbar-spread-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.toolbar-spread-enter-from,
+.toolbar-spread-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
 
 /* 流光 */
 .flow-light-effect {

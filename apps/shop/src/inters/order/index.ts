@@ -15,6 +15,7 @@ export const zOrder = z.object({
 
 export const zOrderSearch = z.object({
   serviceId: z.number().optional(),
+  groupId: z.number().optional(),
   imeiList: z.array(z.string()).optional(),
   codeIdList: z.array(z.string()).optional(),
 })

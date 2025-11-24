@@ -12,16 +12,4 @@ export interface ServiceStore {
   searchForm: ServiceParams,
 }
 
-export enum ToolStatus {
-  ROOT     = 0,
-  LANGUAGE = 1,
-  GROUP    = 2,
-  ORDER    = 3,
-}
-
-export interface ToolGlobalStore {
-  toolStatus: ToolStatus
-}
-
 export const SERVICE_STORE: IK<ServiceStore> = Symbol('service-store')
-export const TOOL_STORE: IK<ToolGlobalStore> = Symbol('tool-store')

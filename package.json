@@ -7,9 +7,11 @@
     "build:utils": "pnpm -F @3un/utils build",
     "build:ui": "pnpm -F @3un/ui build",
     "build:client": "pnpm -F @3un/client build",
+    "build:shop": "pnpm -F @3un/shop build",
     "build:admin": "pnpm -F @3un/admin build",
     "dev:ui": "pnpm -F @3un/ui dev",
     "dev:client": "pnpm -F @3un/client dev",
+    "dev:shop": "pnpm -F @3un/shop dev",
     "dev:admin": "pnpm -F @3un/admin dev"
   },
   "devDependencies": {

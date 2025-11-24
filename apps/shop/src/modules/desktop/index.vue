@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeAuth } from '@/api/shop'
 
+const shopStore = useShopStore()
 async function doAuth() {
   const key = import.meta.env.VITE_GUEST_TOKEN
   if(localStorage.getItem(key)) return
@@ -9,7 +10,10 @@ async function doAuth() {
   localStorage.setItem(key, data)
 }
 
-await doAuth()
+await Promise.all([
+  doAuth(),
+  shopStore.getServiceList(),
+])
 </script>
 
 <template>

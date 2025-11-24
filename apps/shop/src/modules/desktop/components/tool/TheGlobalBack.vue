@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
-import { TOOL_STORE, ToolStatus } from '../utils';
+import { TOOL_STORE, ToolStatus } from '@desktop/utils'
 
 interface TheGlobalBackProps {
   name: string

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import LanuageSwitchView from '../tool/LanuageSwitchView.vue'
-import ServiceGroupView from '../tool/ServiceGroupView.vue'
-import TimeDisplay from '../tool/TimeDisplay.vue'
-import RootTool from '../tool/RootTool.vue'
-import OrderSearchView from '../tool/OrderSearchView.vue'
+import LanuageSwitchView from './tool/LanuageSwitchView.vue'
+import ServiceGroupView from './tool/ServiceGroupView.vue'
+import TimeDisplay from './tool/TimeDisplay.vue'
+import RootTool from './tool/RootTool.vue'
+import OrderSearchView from './tool/OrderSearchView.vue'
 
-import { TOOL_STORE, ToolStatus, type ToolGlobalStore } from '../utils'
+import { type ToolGlobalStore, ToolStatus, TOOL_STORE } from "@desktop/utils"
 
 const store = reactive<ToolGlobalStore>({
   toolStatus: ToolStatus.ROOT,

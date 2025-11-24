@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import TheBack from '@desktop/components/TheBack.vue'
+import RefundDialog from './components/RefundDialog.vue'
+import SelectServices from '@desktop/components/SelectServices.vue'
 
 import { HISTORY_STORE, type HistoryStore } from './utils'
 import type { OrderSearchForm } from '@/inters/order'
 import { getServices, getTickets, orderSearch } from '@/api/shop'
 import { XPagination } from '@3un/ui'
-import RefundDialog from './components/RefundDialog.vue'
 import { debounce } from '@3un/utils'
 
 const store: HistoryStore = reactive({
@@ -71,7 +72,6 @@ async function getTicketList() {
 }
 
 function openTicket(id: number) {
-
   store.orderId = id
   store.visibleTicket = true
 }

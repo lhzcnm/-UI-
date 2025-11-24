@@ -17,7 +17,7 @@
       "@/*": ["src/*"],
       // "@auth/*": ["src/modules/auth/*"],
       "@desktop/*": ["src/modules/desktop/*"],
-      // "@mobile/*": ["src/modules/mobile/*"],
+      "@mobile/*": ["src/modules/mobile/*"],
       // "@other/*": ["src/modules/other/*"],
       // "@jweixin/*": ["src/assets/jweixin/*"],
     }
