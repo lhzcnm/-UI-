@@ -7,7 +7,7 @@ import TheBack from '@desktop/components/TheBack.vue'
 
 // import { tv } from 'tailwind-variants'
 
-import { checkQrcode, getServices, orderPay, orderSubmit } from '@/api/shop'
+import { checkQrcode, getServices, getTickets, orderPay, orderSubmit } from '@/api/shop'
 import type { Service, ServiceParams } from '@/inters/services'
 import { DETAIL_STORE, type DetailStore } from './utils'
 import { zOrderForm, zSubmitParams, type OrderPayParams, type OrderView, type SubmitParams, type SubmitResp } from '@/inters/order'
@@ -15,16 +15,20 @@ import PayQrcode from './components/PayQrcode.vue'
 import { ORDER_STATUS } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import ServicePanel from './components/ServicePanel.vue'
+import { useUserStore } from '@/stores/user'
 
 const store: DetailStore = reactive({
   visibleConfirm: false,
   visibleQrcode: false,
+  visibleTicket: false,
 
   orderForm: zOrderForm.parse({}),
   submitForm: zSubmitParams.parse({}),
   rawOrders: [],
   payType: 'wxpay',
   url: '',
+  tickets: [],
+  orderId: undefined,
 })
 
 provide(DETAIL_STORE, store)
@@ -33,6 +37,7 @@ const route = useRoute()
 const shopStore = useShopStore()
 const { t } = useI18n()
 const { connect, close } = useWsStore()
+const userStore = useUserStore()
 
 let timer: ReturnType<typeof setInterval> | null = null
 let count = 0
@@ -56,13 +61,17 @@ function handleConfirm() {
   store.visibleConfirm = true
 }
 
-async function handleTicket() {}
+function handleTicket(id: number) {
+  store.orderId = id
+  store.visibleTicket = true
+}
 
 function handleSubmit() {
   const params: OrderPayParams = {
     id: "3",
     amount: store.submitForm.imeiList.length * +shopStore.selService!.storePrice,
-    type: store.payType
+    type: store.payType,
+    openId: userStore.userInfo.openId ?? undefined,
   }
 
   orderPay(params).then((data) => {
@@ -240,6 +249,17 @@ function handleCount() {
   }
 }
 
+async function getTicketList() {
+  const data = await getTickets()
+  store.tickets = data
+}
+
+onBeforeUnmount(() => {
+  handleClearInterval()
+})
+
+await getTicketList()
+
 // const style = tv({
 //   slots: {
 //     root: [
@@ -265,7 +285,10 @@ function handleCount() {
       class="w-full max-w-6xl bg-white dark:bg-black rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 grid grid-cols-[1fr_350px] gap-6"
     >
       <section class="p-6 flex flex-col overflow-y-auto space-y-6">
-        <TheBack />
+        <div class="flex space-x-2">
+          <TheBack />
+          <XButton class="highlight-btn" label="查询结果" />
+        </div>
 
         <ServiceDetail :service="shopStore.selService" />
 

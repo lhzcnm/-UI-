@@ -6,6 +6,7 @@ import OrderSearch from './components/OrderSearch.vue'
 
 import type { ClassNameValue } from 'tailwind-merge'
 import { type Action } from './utils/types'
+import { ua } from '@3un/utils'
 
 interface ToolItem {
   name: string,
@@ -15,11 +16,14 @@ interface ToolItem {
   iconClass?: ClassNameValue,
 }
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const iStore = useSystemStore()
+const { userInfo } = useUserStore()
 
 const activeTab = ref<Action | null>(null)
 const visible = ref<boolean>(false)
+
+const mode = import.meta.env.VITE_APP_MODE
 
 const webTools = computed<ToolItem[]>(() => {
   return [
@@ -46,6 +50,20 @@ const webTools = computed<ToolItem[]>(() => {
       command: () => handleClick("languages"),
     }
   ]
+})
+
+const avatar = computed(() => {
+  return userInfo.avatar ? userInfo.avatar : `/${mode}/default_avatar.jpg`
+})
+
+const displayName = computed(() => {
+  return userInfo.role === 3 ? userInfo.username : userInfo.nickname
+})
+
+const displayWelcome = computed(() => {
+  const name = locale.value === "zh" ? import.meta.env.VITE_APP_NAME : import.meta.env.VITE_APP_NAME_EN
+
+  return t("shop.profile.welcome", { name: name })
 })
 
 const shopTools = computed<ToolItem[]>(() => {
@@ -84,19 +102,39 @@ function onClose() {
   activeTab.value = null
   visible.value = false
 }
+
+function logout() {
+  const authKey = import.meta.env.VITE_ACCESS_TOKEN
+  const guestKey = import.meta.env.VITE_GUEST_TOKEN
+
+  localStorage.removeItem(authKey)
+  localStorage.removeItem(guestKey)
+
+  location.reload()
+}
 </script>
 
 <template>
-  <div class="p-4 space-y-6">
-    <!-- <section class="bg-card rounded-xl p-4 flex items-center gap-4 shadow-sm">
-      <div class="w-14 h-14 bg-muted rounded-full"></div>
-      <div>
-        <h2 class="text-lg font-semibold">用户名</h2>
-        <p class="text-sm text-muted-foreground">欢迎回来</p>
+  <div class="w-full h-full flex flex-col p-4 space-y-6">
+    <section class="w-full bg-card rounded-xl p-4 flex items-center gap-4 shadow-sm justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 bg-muted rounded-full flex items-center">
+          <img class="rounded-full" :src="avatar" alt="">
+        </div>
+        <div class="w-full flex flex-col flex-wrap">
+          <h2 class="text-lg font-semibold whitespace-normal break-all">{{ displayName }}</h2>
+          <p class="text-sm text-muted-foreground">{{ displayWelcome }}</p>
+        </div>
       </div>
-    </section> -->
+      
+      <XButton
+        v-if="!ua.isWechat && userInfo.role !== 3"
+        color="danger" :label="t('button.logout')"
+        @click="logout"
+      />
+    </section>
     <section>
-      <h3 class="text-sm font-medium text-muted-foreground mb-2">网站工具</h3>
+      <h3 class="text-sm font-medium text-muted-foreground mb-2">{{ t("shop.tool.title.web") }}</h3>
 
       <div class="p-2 grid grid-cols-4 gap-3 border rounded">
         <button
@@ -109,7 +147,7 @@ function onClose() {
       </div>
     </section>
     <section>
-      <h3 class="text-sm font-medium text-muted-foreground mb-2">商城服务</h3>
+      <h3 class="text-sm font-medium text-muted-foreground mb-2">{{ t("shop.tool.title.shop") }}</h3>
 
       <div class="p-2 grid grid-cols-4 gap-3 border rounded">
         <button

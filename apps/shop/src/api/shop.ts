@@ -1,6 +1,7 @@
-import { zOrder, zSubmitResp, type Order, type OrderPayParams, type OrderSearchForm, type SubmitParams, type SubmitResp } from "@/inters/order"
+import { zOrder, zSubmitResp, type Order, type OrderPayParams, type OrderSearchForm, type RefreshParams, type SubmitParams, type SubmitResp } from "@/inters/order"
 import { zServiceDetail, type ServiceDetail, type ServiceParams } from "@/inters/services"
 import { zTicket, type Ticket, type TicketForm } from "@/inters/ticket"
+import { zUserInfo, type UserInfo } from "@/inters/user"
 import http from "@/utils/http"
 import type { IList } from "@3un/shared"
 import type { AxiosResponse } from "axios"
@@ -41,5 +42,20 @@ export async function getTickets(): Promise<Ticket[]> {
 
 export async function createTicket(body: TicketForm): Promise<string> {
   const { data } = await http.post('/mall/ticket/create', body)
+  return data
+}
+
+export async function getUserInfo(): Promise<UserInfo> {
+  const { data } = await http.get<UserInfo>("/mall/User/info")
+  return zUserInfo.parse(data)
+}
+
+export async function refreshOrders(body: RefreshParams): Promise<Order[]> {
+  const { data } = await http.post<Order[]>("/mall/order/listOrder", body)
+  return data.map(item => zOrder.parse(item))
+}
+
+export async function getPaymentStatus(id: string): Promise<boolean> {
+  const { data } = await http.get<boolean>(`/mall/order/PayStatus/${id}`)
   return data
 }

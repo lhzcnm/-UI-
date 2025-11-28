@@ -1,13 +1,25 @@
 <script setup lang="ts">
 import { storeAuth } from '@/api/shop'
 import TheShopFooter from './components/TheShopFooter.vue'
+import { useUserStore } from '@/stores/user'
 
 const shopStore = useShopStore()
+const userStore = useUserStore()
 const route = useRoute()
 
 async function doAuth() {
   const key = import.meta.env.VITE_GUEST_TOKEN
-  if(localStorage.getItem(key)) return
+  const authKey = import.meta.env.VITE_ACCESS_TOKEN
+
+  const authToken = localStorage.getItem(authKey)
+  
+  if(authToken) {
+    localStorage.removeItem(key)
+  }
+
+  const guestToken = localStorage.getItem(key)
+
+  if(guestToken) return
 
   const data = await storeAuth()
   localStorage.setItem(key, data)
@@ -19,8 +31,9 @@ function setVh() {
 window.addEventListener('resize', setVh)
 setVh()
 
+await doAuth()
 await Promise.all([
-  doAuth(),
+  userStore.getUser(),
   shopStore.getServiceList(),
 ])
 </script>

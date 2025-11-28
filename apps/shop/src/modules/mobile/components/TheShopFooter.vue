@@ -13,8 +13,8 @@ const menus = [
 </script>
 
 <template>
-  <footer class="bg-card border-t">
-    <nav class="flex items-center h-mobile-footer px-3">
+  <footer class="h-mobile-footer bg-card border-t">
+    <nav class="flex items-center px-3">
       <template v-for="item in menus" :key="item.path">
         <RouterLink
           :to="item.path"

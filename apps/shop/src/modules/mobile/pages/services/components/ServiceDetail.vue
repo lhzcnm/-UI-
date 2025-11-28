@@ -18,10 +18,12 @@ const component = defineComponentMap<Record<DetailStatus, Component>>({
   pay: DetailPay,
 })
 
+const { t } = useI18n()
+
 const steps: DetailStep[] = [
-  { key: 'view', name: '查看详情' },
-  { key: 'order', name: '填写信息' },
-  { key: 'pay', name: '确认支付' },
+  { key: 'view', name: t("shop.step.first") },
+  { key: 'order', name: t("shop.step.second") },
+  { key: 'pay', name: t("shop.step.last") },
 ]
 
 function defineComponentMap<T extends Record<string, Component>>(map: T) {

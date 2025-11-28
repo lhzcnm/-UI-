@@ -5,7 +5,6 @@ import type { DetailStepEmits } from '../utils/types'
 const shopStore = useShopStore()
 const emits = defineEmits<DetailStepEmits>()
 
-
 const { t } = useI18n()
 </script>
 
@@ -22,17 +21,17 @@ const { t } = useI18n()
 
     <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800 text-sm text-zinc-700 dark:text-zinc-300">
       <div class="flex justify-between py-2">
-        <span class="text-zinc-500 dark:text-zinc-400">支持类型</span>
+        <span class="text-zinc-500 dark:text-zinc-400">{{ t("shop.form.support") }}</span>
         <span class="font-medium">{{ t(IMEI_TYPE_MAP[shopStore.selService!.imeiType].key!) }}</span>
       </div>
       <div class="flex justify-between py-2">
-        <span class="text-zinc-500 dark:text-zinc-400">服务处理用时</span>
+        <span class="text-zinc-500 dark:text-zinc-400">{{ t("shop.form.taken") }}</span>
         <span class="font-medium">{{ shopStore.selService!.taken }}</span>
       </div>
     </div>
 
     <div class="flex flex-col space-y-2" v-if="shopStore.selService!.mustRead">
-      <span class="text-base font-medium text-zinc-800 dark:text-zinc-100">下单前必读</span>
+      <span class="text-base font-medium text-zinc-800 dark:text-zinc-100">{{ t("shop.form.mustRead") }}</span>
       <div
         class="p-4 bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"
         v-html="shopStore.selService!.mustRead"
@@ -41,7 +40,7 @@ const { t } = useI18n()
 
     <div class="flex justify-end pt-2">
       <XButton
-        label="下一步"
+        :label="t('shop.step.next')"
         class="px-6 py-2 rounded-lg text-sm font-semibold shadow-sm"
         @click="emits('next', 'order')"
       />

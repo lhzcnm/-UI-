@@ -13,6 +13,8 @@
     "download": "下载",
     "fresh": "刷新",
     "exchange": "兑换",
-    "query": "查询"
+    "query": "查询",
+    "logout": "退出登录",
+    "clearFilter": "清空筛选"
   }
 }

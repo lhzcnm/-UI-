@@ -7,7 +7,7 @@ interface ServicePanelProps {
 
 defineProps<ServicePanelProps>()
 
-defineEmits(['ticket'])
+const emits = defineEmits(['ticket'])
 </script>
 
 <template>
@@ -23,7 +23,7 @@ defineEmits(['ticket'])
       <OrderCard
         v-for="(order, index) in orders" :key="order.id" 
         :order="order" :index="index"
-        @ticket="$emit('ticket', order)"
+        @ticket="emits('ticket', order.id)"
       />
     </div>
   </aside>

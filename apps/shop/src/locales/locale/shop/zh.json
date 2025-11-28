@@ -22,7 +22,8 @@
       "taken": "服务处理用时",
       "cancel": "取消",
       "confirm": "确认下单",
-      "example": "示例"
+      "example": "示例",
+      "mustRead": "必读"
     },
     "result": "订单结果将在这里展示",
     "valid": {
@@ -47,13 +48,25 @@
       },
       "group": "服务组筛选",
       "button": "查询",
-      "null": "暂无数据"
+      "null": "暂无数据",
+      "codeId": {
+        "title": "订单号",
+        "placeholder": "请输入订单号(一行一个)"
+      },
+      "imei": {
+        "placeholder": "请输入imei/sn(一行一个)"
+      }
+    },
+    "refresh": {
+      "null": "无处理中订单"
     },
     "tool": {
       "title": {
         "lang": "切换语言",
         "group": "切换服务组",
-        "order": "订单查询"
+        "order": "订单查询",
+        "web": "网站工具",
+        "shop": "商城服务"
       },
       "name": {
         "home": "网站首页",
@@ -68,12 +81,28 @@
     "pay": {
       "title": "下单信息",
       "wx": "微信支付",
-      "ali": "支付宝"
+      "ali": "支付宝",
+      "qrcode": "支付二维码"
     },
     "footer": {
       "shop": "商城",
       "profile": "个人中心",
       "history": "订单历史"
+    },
+    "type": {
+      "all": "全部",
+      "hot": "热门服务",
+      "new": "新服务"
+    },
+    "step": {
+      "prev": "上一步",
+      "next": "下一步",
+      "first": "服务详情",
+      "second": "填写信息",
+      "last": "确认支付"
+    },
+    "profile": {
+      "welcome": "欢迎访问 {name} 商城"
     }
   }
 }

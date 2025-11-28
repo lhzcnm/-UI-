@@ -32,6 +32,10 @@ const logo = computed(() => {
 const appName = computed(() => {
   return locale.value === 'zh' ? setting.title : setting.titleEn ? setting.titleEn : setting.title
 })
+
+function handleClick(path: string) {
+  location.href = path
+}
 </script>
 
 <template>
@@ -50,7 +54,8 @@ const appName = computed(() => {
         v-if="show"
         class="absolute top-[4rem] right-0 bg-white shadow-lg rounded-xl w-40 py-3 space-y-2 flex flex-col border">
         <button v-for="menu in menus" :key="menu.path"
-          class="text-sm py-2 active:bg-zinc-100 border-b last:border-b-0">
+          class="text-sm py-2 active:bg-zinc-100 border-b last:border-b-0"
+          @click="handleClick(menu.path)">
           {{ menu.title }}
         </button>
       </div>

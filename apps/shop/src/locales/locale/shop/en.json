@@ -22,7 +22,8 @@
       "taken": "Processing Time",
       "cancel": "Cancel",
       "confirm": "Confirm Order",
-      "example": "Example"
+      "example": "Example",
+      "mustRead": "MustRead"
     },
     "result": "Order results will be displayed here",
     "valid": {
@@ -47,13 +48,25 @@
       },
       "group": "Service Filter",
       "button": "Search",
-      "null": "No Data"
+      "null": "No Data",
+      "codeId": {
+        "title": "Order Number",
+        "placeholder": "Enter order numbers (one per line)"
+      },
+      "imei": {
+        "placeholder": "Enter IMEI/SN (one per line)"
+      }
+    },
+    "refresh": {
+      "null": "No Order Processing"
     },
     "tool": {
       "title": {
         "lang": "Switch Language",
         "group": "Switch Service Group",
-        "order": "Order Query"
+        "order": "Order Query",
+        "web": "Web Tools",
+        "shop": "Shop Services"
       },
       "name": {
         "home": "Home",
@@ -68,12 +81,28 @@
     "pay": {
       "title": "Payment Method",
       "wx": "WeChat Pay",
-      "ali": "Alipay"
+      "ali": "Alipay",
+      "qrcode": "Qrcode"
     },
     "footer": {
       "shop": "Shop",
       "profile": "Profile",
       "history": "History"
+    },
+    "type": {
+      "all": "All",
+      "hot": "Popular Services",
+      "new": "New Services"
+    },
+    "step": {
+      "prev": "Previous",
+      "next": "Next",
+      "first": "Details",
+      "second": "Information",
+      "last": "Payment"
+    },
+    "profile": {
+      "welcome": "Welcome to {name} Shop"
     }
   }
 }

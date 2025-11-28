@@ -24,6 +24,7 @@ export const zOrderPay = z.object({
   id: z.string().default(''),
   amount: z.number().default(0),
   type: z.string().default(''),
+  openId: z.string().optional(),
 })
 
 export const zOrderForm = z.object({
@@ -49,14 +50,26 @@ export const zSubmitParams = z.object({
   isPushNotification: z.boolean().default(true),
   phoneNumber: z.string().default(''),
   email: z.string().default(''),
+  isBulk: z.boolean().default(false),
 })
 
 export const zSubmitResp = z.object({
-  codeId: z.number(),
+  codeId: z.number().nullable(),
   imei: z.string(),
   status: z.enum(ORDER_STATUS),
   message: z.string().nullable(),
 })
+
+export const zRefreshParams = z.object({
+  serviceId: z.number(),
+  codeIdList: z.array(z.number()).optional(),
+  showAll: z.boolean().default(false),
+})
+
+// export const zSubmitStorage = z.object({
+//   serviceId: z.number(),
+//   imeis: z.array(z.string()),
+// })
 
 export type Order = z.infer<typeof zOrder>
 export type OrderSearch = z.infer<typeof zOrderSearch>
@@ -65,5 +78,7 @@ export type OrderForm = z.infer<typeof zOrderForm>
 export type OrderView = z.infer<typeof zOrderView>
 export type SubmitParams = z.infer<typeof zSubmitParams>
 export type SubmitResp = z.infer<typeof zSubmitResp>
+export type RefreshParams = z.infer<typeof zRefreshParams>
+// export type SubmitStorage = z.infer<typeof zSubmitStorage>
 
 export type OrderSearchForm = IPage & OrderSearch

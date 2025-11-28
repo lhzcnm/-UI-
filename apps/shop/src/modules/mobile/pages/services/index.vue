@@ -8,7 +8,8 @@ import { tv } from 'tailwind-variants'
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import type { Service } from '@/inters/services'
 import type { ShopType, DisplayMode } from '@mobile/utils/types'
-import { zSubmitParams } from '@/inters/order'
+import { zSubmitParams, type SubmitParams } from '@/inters/order'
+import { getPaymentStatus } from '@/api/shop'
 
 const store: ServiceStore = reactive({
   visibleFilter: false,
@@ -23,10 +24,14 @@ const store: ServiceStore = reactive({
 provide(SERVICE_STORE, store)
 
 const shopStore = useShopStore()
+const { t } = useI18n()
 
 const displayMode = ref<DisplayMode>("flex")
 const shopType = ref<ShopType>("all")
 const keyword = ref<string>("")
+
+const paymentKey = import.meta.env.VITE_PAYMENT_STORAGE
+const submitedKey = import.meta.env.VITE_SUBMIT_STORAGE
 
 const services = computed(() => {
   let res: Service[] = shopStore.services.flatMap(group => group.children)
@@ -51,6 +56,39 @@ function handleClick(id: number) {
   shopStore.selService = shopStore.servicesMap.get(id)
   store.visibleDetail = true
 }
+
+async function getPayment(id: string) {
+  const data = await getPaymentStatus(id)
+  return data
+}
+
+function handleSubmit() {
+  const submitedParams = localStorage.getItem(submitedKey) as SubmitParams | null
+
+  if(!submitedParams) {
+    localStorage.removeItem(submitedKey)
+    localStorage.removeItem(paymentKey)
+  }
+
+  shopStore.createOrder = submitedParams!
+  location.href = "/shop/history"
+}
+
+onMounted(async () => {
+  const paymentId = localStorage.getItem(paymentKey)
+
+  if(paymentId !== null) {
+    const res = await getPayment(paymentId)
+    if(res) {
+      handleSubmit()
+    } else {
+      localStorage.removeItem(paymentKey)
+      localStorage.removeItem(submitedKey)
+    }
+  } else {
+    localStorage.removeItem(paymentKey)
+  }
+})
 
 const style = tv({
   slots: {
@@ -106,7 +144,7 @@ const b = style()
 
     <SlideRight
       v-model="store.visibleDetail"
-      title="服务详情"
+      :title="t('service.detail')"
     >
       <ServiceDetail />
     </SlideRight>

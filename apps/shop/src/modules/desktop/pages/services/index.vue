@@ -62,7 +62,7 @@ onMounted(() => {
           store.serviceMap.set(service.id, service)
         }
       }
-    },
+    }
   )
 })
 </script>

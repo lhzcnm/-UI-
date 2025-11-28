@@ -37,7 +37,8 @@
     "title": "服务",
     "select": "服务选择",
     "placeholder": "请选择服务",
-    "notFound": "服务不存在"
+    "notFound": "服务不存在",
+    "detail": "服务详情"
   },
   "valid": {
     "null": "{field}为空"
@@ -51,8 +52,8 @@
     "success": "已发送"
   },
   "keyword": {
-    "title": "关键词",
-    "placeholder": "请输入关键词"
+    "title": "服务名",
+    "placeholder": "请输入服务名"
   },
   "stat": {
     "total": "共 {count} 项 {field}"

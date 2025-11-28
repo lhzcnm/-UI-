@@ -4,7 +4,7 @@ import { z } from "zod/v4"
 export const zTicket = z.object({
   departmentId: z.number(),
   departmentName: z.string(),
-  departmentNameEn: z.string(),
+  departmentNameEn: z.string().nullable(),
   departmentDes: z.string(),
   status: z.number(),
   deptOrder: z.number(),

@@ -19,10 +19,10 @@ watch(
   () => serviceId.value = -1
 )
 
-watch(
-  () => serviceId.value,
-  () => console.log(serviceId)
-)
+// watch(
+//   () => serviceId.value,
+//   () => console.log(serviceId)
+// )
 
 const groups = computed(() => {
   let res = shopStore.services

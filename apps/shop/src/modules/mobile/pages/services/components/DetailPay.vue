@@ -7,16 +7,13 @@ import { SERVICE_STORE } from '../utils'
 import type { DetailStepEmits, PayType } from '../utils/types'
 import { orderPay } from '@/api/shop'
 import { toast } from 'vue-sonner'
-// import { ua } from '@3un/utils'
-// import PayQrcode from '../../components/PayQrcode.vue'
-
-// import { toast } from 'vue-sonner'
-
-// import type { StorePayParams } from '@/api/store/types'
-// import { storePay } from '@/api/store'
+import { useUserStore } from '@/stores/user'
+import { ua } from '@3un/utils'
 
 const store = inject(SERVICE_STORE)!
 const shopStore = useShopStore()
+const userStore = useUserStore()
+const router = useRouter()
 
 const payType = ref<PayType>('wxpay')
 
@@ -24,49 +21,54 @@ const emits = defineEmits<DetailStepEmits>()
 
 const service = shopStore.selService!
 
+const paymentKey = import.meta.env.VITE_PAYMENT_STORAGE
+const submitedKey = import.meta.env.VITE_SUBMIT_STORAGE
+
 const validImeis = computed(() => {
   let res = ''
 
-  if(store.createOrder.imeiList.length >= 0) {
-    res = store.createOrder.imeiList.join('\n')
+  if(shopStore.createOrder.imeiList.length >= 0) {
+    res = shopStore.createOrder.imeiList.join('\n')
   }
 
   return res
 })
 
 const amount = computed(() => {
-  return +service.storePrice * store.createOrder.imeiList.length
+  return +service.storePrice * shopStore.createOrder.imeiList.length
 })
 
 function handleConfirm() {
   handlePay()
 }
 
-function isJSON(str: string) {
-  try {
-    const obj = JSON.parse(str)
-    return typeof obj === 'object' && obj !== null
-  } catch {
-    return false
-  }
-}
+// function isJSON(str: string) {
+//   try {
+//     const obj = JSON.parse(str)
+//     return typeof obj === 'object' && obj !== null
+//   } catch {
+//     return false
+//   }
+// }
 
 function handlePay() {
   const params: OrderPayParams = {
     id: '3',
     amount: amount.value,
     type: payType.value,
+    openId: userStore.userInfo.openId ?? undefined,
   }
   
   orderPay(params).then((data) => {
-    console.log(data)
-    // location.href = data
     if(payType.value === 'wxpay') {
-      if(isJSON(data)) {
+      if(ua.isMobile && ua.isWechat) {
         const config = JSON.parse(data)
-        handleWecharPay(config)
+        handleWechatPay(config)
       } else {
-        store.url = data
+        const json = JSON.parse(data)
+        localStorage.setItem(paymentKey, json.paymentId)
+        localStorage.setItem(submitedKey, JSON.stringify(shopStore.createOrder))
+        store.url = json.pay_url
         store.visiblePay = true
       }
     } else if(payType.value === 'alipay') {
@@ -79,8 +81,6 @@ function handlePay() {
   }).catch((err) => {
     console.error(err)
     toast.error('生成支付二维码失败')
-  }).finally(() => {
-    store.visiblePay = true
   })
 }
 
@@ -91,13 +91,18 @@ function onBridgeReady(config: WXInvokeConfig) {
     'getBrandWCPayRequest', config,
     (res) => {
       if(res.err_msg == 'get_brand_wcpay_request:ok') {
-        window.WeixinJSBridge?.call('closeWindow')
+        // window.WeixinJSBridge?.call('closeWindow')
+        // shopStore.createOrder = store.createOrder
+        // location.href = "/shop/history"
+        // alert(shopStore.createOrder.imeiList.join("\n"))
+
+        router.push("/shop/history")
       }
     }
   )
 }
 
-function handleWecharPay(config: WXInvokeConfig) {
+function handleWechatPay(config: WXInvokeConfig) {
   if(typeof window.WeixinJSBridge === 'undefined') {
     if(document.addEventListener) {
       document.addEventListener(
@@ -119,7 +124,7 @@ function handleWecharPay(config: WXInvokeConfig) {
     <div class="flex flex-col space-y-2">
       <span class="text-base font-medium text-zinc-800 dark:text-zinc-200">
         有效 IMEI 数量: 
-        <span class="font-semibold text-primary">{{ store.createOrder.imeiList.length }}</span>
+        <span class="font-semibold text-primary">{{ shopStore.createOrder.imeiList.length }}</span>
       </span>
       <div
         class="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-sm font-mono text-zinc-700 dark:text-zinc-300 whitespace-pre-line"

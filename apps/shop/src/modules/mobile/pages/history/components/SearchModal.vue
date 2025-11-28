@@ -4,6 +4,7 @@ import SelectService from '@mobile/components/SelectService.vue'
 import FormField from '@mobile/components/FormField.vue'
 
 import { HISTORY_STORE } from '../utils'
+import type { OrderSearchForm } from '@/inters/order'
 
 // const visible = re
 const store = inject(HISTORY_STORE)!
@@ -48,6 +49,18 @@ function handleConfirm() {
   }
   store.visibleSearch = false
 }
+
+function handleClear() {
+  const init: OrderSearchForm = {
+    page: 1,
+    pageSize: 20,
+    serviceId: undefined,
+    codeIdList: [],
+    imeiList: [],
+  }
+
+  Object.assign(shopStore.historySearch, init)
+}
 </script>
 
 <template>
@@ -60,19 +73,24 @@ function handleConfirm() {
         <FormField variant="vertical" :label="t('service.select')">
           <SelectService class="flex-1 flex flex-col space-y-3" v-model="serviceId" v-model:group="groupId" />
         </FormField>
-        <FormField variant="vertical" label="订单号">
-          <XTextarea rows="6" placeholder="请输入订单号(一行一个)" v-model="codeIds" />
+        <FormField variant="vertical" :label="t('shop.search.codeId.title')">
+          <XTextarea rows="6" :placeholder="t('shop.search.codeId.placeholder')" v-model="codeIds" />
         </FormField>
         <FormField variant="vertical" label="imei/sn">
-          <XTextarea rows="6" placeholder="请输入imei/sn(一行一个)" v-model="imeis" />
+          <XTextarea rows="6" :placeholder="t('shop.search.imei.placeholder')" v-model="imeis" />
         </FormField>
-
       </form>
-      <div class="p-4 flex justify-end space-x-2">
-        <ButtonGroup
-          :layouts="['cancel', 'confirm']"
-          @cancel="handleCancel" @confirm="handleConfirm"
+      <div class="flex justify-between space-x-2 py-2 px-4">
+        <XButton
+          :label="t('button.clearFilter')" color="success" variant="outline"
+          @click="handleClear"
         />
+        <div class="flex space-x-2">
+          <ButtonGroup
+            :layouts="['cancel', 'confirm']"
+            @cancel="handleCancel" @confirm="handleConfirm"
+          />
+        </div>
       </div>
     </template>
   </TheModal>

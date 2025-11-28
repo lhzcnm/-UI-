@@ -42,7 +42,7 @@ const isWechat = computed(() => {
 
 <template>
   <TheModal
-    title="支付二维码"
+    :title="t('shop.pay.qrcode')"
     class="z-[50] h-[50%]"
     v-model="store.visiblePay">
     <div class="flex-1 overflow-y-auto flex flex-col justify-center items-center space-y-6">

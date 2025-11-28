@@ -9,10 +9,12 @@ const displayMode = defineModel<DisplayMode>()
 const filterType = defineModel<ShopType>("type")
 const input = defineModel<string>("input")
 
+const { t } = useI18n()
+
 const storeTypes: ShopTypeItem[] = [
-  { id: 'all', name: '全部' },
-  { id: 'hot', name: '热门服务' },
-  { id: 'new', name: '新服务' },
+  { id: 'all', name: t("shop.type.all") },
+  { id: 'hot', name: t("shop.type.hot") },
+  { id: 'new', name: t("shop.type.new") },
 ]
 
 const style = tv({
@@ -52,7 +54,7 @@ function handleSelect(id: ShopType) {
 <template>
   <div :class="b.root()">
     <div class="w-full flex items-center space-x-4">
-      <input :class="b.input()" placeholder="关键词" v-model="input" />
+      <input :class="b.input()" :placeholder="t('keyword.placeholder')" v-model="input" />
       <Icon :class="b.icon()" icon="lucide:layout-list" v-show="displayMode === 'flex'" @click="displayMode = 'grid'" />
       <Icon :class="b.icon()" icon="lucide:layout-grid" v-show="displayMode === 'grid'" @click="displayMode = 'flex'" />
     </div>
