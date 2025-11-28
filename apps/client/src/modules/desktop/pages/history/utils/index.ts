@@ -6,9 +6,14 @@ export interface HistoryStore {
   orders: OrderListResponse
   searchForm: OrderSearchForm
   exportForm: OrderExportForm
+  paperSize: {
+    labelWidth: string,
+    labelHeight: string,
+  },
   visibleSearch: boolean
   visibleExport: boolean
   visibleOrderImg: boolean
+  visiblePrint: boolean
 }
 
 type HistoryStoreKey = InjectionKey<HistoryStore>

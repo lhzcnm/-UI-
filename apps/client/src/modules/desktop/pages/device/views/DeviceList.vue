@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DeviceCard from '../components/DeviceCard.vue'
 import PluginDownload from '../components/PluginDowload.vue'
+
 import { STORE } from '../utils'
 
 const store = inject(STORE)!

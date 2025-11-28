@@ -3,6 +3,7 @@ import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
 import ImgOrder from './components/ImgOrder.vue'
 import OrderVoucher from '@/components/shared/OrderVoucher.vue'
+import PrintDialog from './components/PrintDialog.vue'
 
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
@@ -40,6 +41,11 @@ const store: HistoryStore = reactive({
   visibleSearch: false,
   visibleExport: false,
   visibleOrderImg: false,
+  visiblePrint: false,
+  paperSize: {
+    labelWidth: '',
+    labelHeight: '',
+  }
 })
 
 const imgOrders = reactive<ImgOrderItem[]>([])
@@ -99,17 +105,27 @@ function handleCopy() {
 }
 
 async function handlePrint() {
-  const params: string[] = []
-  params.length = 0
-  
   if(selectRows.value.length === 0) {
     toast.warning(t('order.prompt.order'))
     return
   }
+  store.visiblePrint = true
+}
+
+async function submitPrint() {
+  const params: {
+    result: string[],
+    labelWidth: string,
+    labelHeight: string,
+  } = {
+    result: [],
+    labelWidth: store.paperSize.labelWidth,
+    labelHeight: store.paperSize.labelHeight,
+  }
 
   for(const id of selectRows.value) {
     const filters = store.orders.list.filter(item => item.id === +id).map(item => item.result)
-    params.push(...filters)
+    params.result.push(...filters)
   }
 
   try {
@@ -269,5 +285,6 @@ onUnmounted(() => {
     <SearchOrder />
     <ExportOrder />
     <ImgOrder :imgOrders="imgOrders" @close="handleClose" />
+    <PrintDialog @confirm="submitPrint" />
   </div>
 </template>

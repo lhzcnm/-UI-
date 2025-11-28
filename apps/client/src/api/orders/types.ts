@@ -112,6 +112,7 @@ export interface OrderSubmitExportParams {
 export interface SubmitOrderListParams {
   serviceId: number
   codeIdList: number[]
+  showAll: boolean
 }
 
 /** generate image */

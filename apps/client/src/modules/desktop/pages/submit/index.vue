@@ -235,7 +235,7 @@ function handleSubmit() {
     return null
   }).filter(Boolean)
 
-  if (submited.value  || submitOrders.length === 0) return toast.warning(t('query.prompt.repeat'))
+  if (submited.value || submitOrders.length === 0) return toast.warning(t('query.prompt.repeat'))
   const service = store.services.get(selectedId.value)
 
   if (!service) return toast.warning(t('query.prompt.serviveNull'))
@@ -369,11 +369,7 @@ function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
   const index = imeis.value.indexOf(data.imei)
-  if (index === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, data)
-  const codeId = data.id
-  const codeIndex = pendingOrders.value.indexOf(codeId)
-  if(codeIndex === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, data)
-  pendingOrders.value.splice(codeIndex, 1)
+  if (index === -1) return console.error('[3un] IMEI 不存在', data)
 
   const resultCol = columns.value[5].key
   const hasResult = resultCol === 'result'
@@ -536,7 +532,7 @@ async function handleSubmitOrder(id: number) {
 
   const idList = (jsonStr && !showAll.value) ? JSON.parse(jsonStr) as number[] : []
 
-  if(idList.length === 0) showAll.value = true
+  // if(idList.length === 0 && !showAll.value) return
 
   const data = await getSubmitOrderList(idList)
 
@@ -560,6 +556,7 @@ async function getSubmitOrderList(orderIds: number[]) {
   const params: SubmitOrderListParams = {
     serviceId: selService.value!.id,
     codeIdList: orderIds,
+    showAll: showAll.value,
   }
   const { data } = await orderApi.submitOrders(params)
 
