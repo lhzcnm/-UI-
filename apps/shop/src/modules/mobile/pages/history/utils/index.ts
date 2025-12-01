@@ -1,9 +1,10 @@
-import type { Ticket } from "@/inters/ticket";
-import type { IK } from "@3un/shared";
+import type { Ticket } from "@/inters/ticket"
+import type { IK } from "@3un/shared"
 
 export interface HistoryStore {
   visibleSearch: boolean,
   visibleTicket: boolean,
+  visibleTool: boolean,
 
   tickets: Ticket[],
   orderId: number | undefined,

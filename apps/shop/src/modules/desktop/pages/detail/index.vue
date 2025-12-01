@@ -4,17 +4,18 @@ import ServiceDetail from './components/ServiceDetail.vue'
 import ServicePrompt from './components/ServicePrompt.vue'
 import ServiceForm from './components/ServiceForm.vue'
 import TheBack from '@desktop/components/TheBack.vue'
+import ServicePanel from './components/ServicePanel.vue'
+import RefundDialog from './components/RefundDialog.vue'
+import PayQrcode from './components/PayQrcode.vue'
 
 // import { tv } from 'tailwind-variants'
 
-import { checkQrcode, getServices, getTickets, orderPay, orderSubmit } from '@/api/shop'
+import { checkQrcode, getServices, getTickets, orderPay, orderSubmit, refreshOrders } from '@/api/shop'
 import type { Service, ServiceParams } from '@/inters/services'
 import { DETAIL_STORE, type DetailStore } from './utils'
-import { zOrderForm, zSubmitParams, type OrderPayParams, type OrderView, type SubmitParams, type SubmitResp } from '@/inters/order'
-import PayQrcode from './components/PayQrcode.vue'
-import { ORDER_STATUS } from '@3un/utils'
+import { zOrderForm, zSubmitParams, type Order, type OrderPayParams, type OrderView, type RefreshParams, type SubmitParams, type SubmitResp } from '@/inters/order'
+import { ORDER_STATUS, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
-import ServicePanel from './components/ServicePanel.vue'
 import { useUserStore } from '@/stores/user'
 
 const store: DetailStore = reactive({
@@ -38,6 +39,10 @@ const shopStore = useShopStore()
 const { t } = useI18n()
 const { connect, close } = useWsStore()
 const userStore = useUserStore()
+
+const pendingOrders = ref<number[]>([])
+const showAll = ref<boolean>(false)
+const disabled = ref<boolean>(false)
 
 let timer: ReturnType<typeof setInterval> | null = null
 let count = 0
@@ -182,7 +187,11 @@ function submitOrder(service: Service) {
 
   orderSubmit(params).then((data) => {
     if(service.isUnlock) {
-      toast.success(t('store.prompt.submitUnlock'))
+      const res = data
+        .map(item => `${item.imei}: ${item.status === ORDER_STATUS.FAILED ? t('message.order.failed') : t('message.order.success')}`)
+        .join("<br>")
+
+      xconfirm(res)
     }
 
     renderSubmitOrder(data)    
@@ -236,6 +245,7 @@ function renderSubmitOrder(data: SubmitResp[]) {
       ...store.rawOrders[index],
       ...(isFailed && { result: item.message ?? "" }),
       status: item.status,
+      id: item.codeId ? item.codeId : 0,
     }
   }
 
@@ -254,29 +264,59 @@ async function getTicketList() {
   store.tickets = data
 }
 
+async function refreshOrder() {
+  pendingOrders.value = store.rawOrders
+    .filter(item => item.status === ORDER_STATUS.PROCESSING)
+    .map(item => item.id)
+    .filter(item => item !== 0)
+  
+  if(pendingOrders.value.length === 0) return toast.success(t('shop.prompt.refreshNull'))
+
+  const params: RefreshParams = {
+    codeIdList: pendingOrders.value,
+    showAll: showAll.value,
+  }
+
+  disabled.value = true
+
+  try {
+    const data = await refreshOrders(params)
+    toast.success(t("submit.success", { action: t("button.query") }))
+    renderOrders(data)
+  } finally {
+    setTimeout(() => {
+      disabled.value = false
+    }, 3000)
+  }
+}
+
+function renderOrders(data: Order[]) {
+  for(let item of data) {
+    const index = store.rawOrders.findIndex(order => order.id === item.id)
+
+    if(index === -1) {
+      return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, item)
+    }
+
+    // shopStore.historys.list[index] = {
+    //   ...shopStore.historys.list[index],
+    //   result: item.result,
+    //   status: item.status,
+    // }
+
+    store.rawOrders[index] = {
+      ...store.rawOrders[index],
+      result: item.result,
+      status: item.status,
+    }
+  }
+}
+
 onBeforeUnmount(() => {
   handleClearInterval()
 })
 
 await getTicketList()
-
-// const style = tv({
-//   slots: {
-//     root: [
-//       'flex h-full w-full sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] xl:max-w-[60vw] gap-8 bg-canvas-light dark:bg-canvas-dark p-6 transition-colors duration-500',
-//     ],
-//     section: [
-//       'rounded-2xl shadow-[0_0_40px_-20px_rgba(0,0,0,0.2)] border border-border p-6 transition-all duration-300',
-//       'bg-layer-light dark:bg-layer-dark backdrop-blur-lg hover:shadow-[0_0_50px_-15px_rgba(0,0,0,0.25)]',
-//       'flex flex-col space-y-4 bg-white dark:bg-black',
-//     ],
-//     order: [
-//       'min-w-96 flex flex-col space-y-4',
-//     ],
-//   }
-// })
-
-// const b = style()
 </script>
 
 <template>
@@ -287,7 +327,7 @@ await getTicketList()
       <section class="p-6 flex flex-col overflow-y-auto space-y-6">
         <div class="flex space-x-2">
           <TheBack />
-          <XButton class="highlight-btn" label="查询结果" />
+          <XButton v-if="shopStore.selService.isUnlock" :disabled class="highlight-btn w-20 items-center px-2 rounded-md" :label="t('button.query')" @click="refreshOrder" />
         </div>
 
         <ServiceDetail :service="shopStore.selService" />
@@ -309,5 +349,6 @@ await getTicketList()
 
     <ServiceConfirm @submit="handleSubmit" />
     <PayQrcode />
+    <RefundDialog />
   </div>
 </template>

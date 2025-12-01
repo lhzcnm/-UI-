@@ -103,11 +103,13 @@ function handleClick(str: string) {
       <div
         :class="b.toolBox()">
         <button
+          v-if="order.status === ORDER_STATUS.SUCCESS"
           :class="b.toolBtn()"
           @click.stop="handleClick(order.imei)">
           {{ t('order.copy.imei') }}
         </button>
         <button
+          v-if="order.status === ORDER_STATUS.SUCCESS"
           :class="b.toolBtn()"
           @click.stop="handleClick(orderResult)">
           {{ t('order.copy.result') }}

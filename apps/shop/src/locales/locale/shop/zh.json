@@ -37,7 +37,8 @@
       "push": "请输入手机号或邮箱",
       "pushSource": "请输入正确的手机号或邮箱",
       "qrcodeError": "生成支付二维码失败, 请重试",
-      "submitUnlock": "解锁订单提交成功，处理完成后结果将通过您提供的手机号或邮箱通知"
+      "submitUnlock": "解锁订单提交成功，处理完成后结果将通过您提供的手机号或邮箱通知",
+      "refreshNull": "无处理中订单"
     },
     "search": {
       "service": {

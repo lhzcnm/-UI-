@@ -5,7 +5,7 @@ import PayMethod from './PayMethod.vue'
 import type { OrderPayParams } from '@/inters/order'
 import { SERVICE_STORE } from '../utils'
 import type { DetailStepEmits, PayType } from '../utils/types'
-import { orderPay } from '@/api/shop'
+import { checkQrcode, orderPay } from '@/api/shop'
 import { toast } from 'vue-sonner'
 import { useUserStore } from '@/stores/user'
 import { ua } from '@3un/utils'
@@ -23,6 +23,8 @@ const service = shopStore.selService!
 
 const paymentKey = import.meta.env.VITE_PAYMENT_STORAGE
 const submitedKey = import.meta.env.VITE_SUBMIT_STORAGE
+
+let timer: ReturnType<typeof setInterval> | null = null
 
 const validImeis = computed(() => {
   let res = ''
@@ -70,6 +72,7 @@ function handlePay() {
         localStorage.setItem(submitedKey, JSON.stringify(shopStore.createOrder))
         store.url = json.pay_url
         store.visiblePay = true
+        validQrcode()
       }
     } else if(payType.value === 'alipay') {
       const a = document.createElement('a')
@@ -82,6 +85,27 @@ function handlePay() {
     console.error(err)
     toast.error('生成支付二维码失败')
   })
+}
+
+function validQrcode() {
+  timer = setInterval(() => {
+    checkQrcode().then(({ data }) => {
+      if(data) {
+        store.visiblePay = false
+        if(timer) {
+          handleClearInterval()
+        }
+        // handleOrderSubmit()
+        location.href = "/shop/history"
+      }
+    })
+  }, 1300)
+}
+
+function handleClearInterval() {
+  if(timer) {
+    clearInterval(timer)
+  }
 }
 
 function onBridgeReady(config: WXInvokeConfig) {

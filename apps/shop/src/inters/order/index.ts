@@ -61,7 +61,7 @@ export const zSubmitResp = z.object({
 })
 
 export const zRefreshParams = z.object({
-  serviceId: z.number(),
+  serviceId: z.number().optional(),
   codeIdList: z.array(z.number()).optional(),
   showAll: z.boolean().default(false),
 })

@@ -31,15 +31,14 @@ const style = tv({
 
 const b = style()
 
-watch(
-  () => shopStore.historySearch,
-  () => {
-    console.log(shopStore.historySearch)
-  },
-  {
-    deep: true
-  }
-)
+// watch(
+//   () => shopStore.historySearch,
+//   () => {
+//   },
+//   {
+//     deep: true
+//   }
+// )
 
 async function handleClick() {
   shopStore.historySearch = {

@@ -11,10 +11,7 @@ declare module "vue-router" {
   }
 }
 
-const routes: RouteRecordRaw[] = [
-  ...desktop,
-  ...mobile,
-]
+const routes: RouteRecordRaw[] = ua.isMobile ? mobile : desktop
 
 const router = createRouter({
   routes: routes,

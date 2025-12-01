@@ -34,12 +34,12 @@ const style = tv({
 
 const b = style()
 
-function stripHtml(html: string | null) {
-  if (!html) return ''
+const plainDesc = computed(() => {
+  if (!props.desc) return ''
   const div = document.createElement('div')
-  div.innerHTML = html
+  div.innerHTML = props.desc
   return div.innerText || div.textContent || ''
-}
+})
 </script>
 
 <template>
@@ -53,7 +53,7 @@ function stripHtml(html: string | null) {
     </div>
 
     <div class="flex-1 overflow-hidden text-sm line-clamp-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-      {{ stripHtml(desc) }}
+      {{ plainDesc }}
     </div>
 
     <div class="flex mt-auto justify-between items-center pt-3">

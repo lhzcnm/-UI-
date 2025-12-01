@@ -47,6 +47,7 @@ watch(visible, (value) => !value && emit('close'))
           </button>
         </div>
         <slot />
+        <slot name="footer" />
       </div>
     </Transition>
   </Teleport>

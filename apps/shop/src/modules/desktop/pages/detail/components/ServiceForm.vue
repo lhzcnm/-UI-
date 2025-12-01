@@ -60,7 +60,6 @@ function getRules() {
   }
 
   if(form.value.phone) {
-    console.log(form.value.phone)
     rules.push({
       rule: PHONE_REG.test(form.value.phone),
       message: t('valid.profile.phone_format'),

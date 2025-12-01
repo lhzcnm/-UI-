@@ -4,10 +4,11 @@ import RefundDialog from './components/RefundDialog.vue'
 import SelectServices from '@desktop/components/SelectServices.vue'
 
 import { HISTORY_STORE, type HistoryStore } from './utils'
-import type { OrderSearchForm } from '@/inters/order'
-import { getServices, getTickets, orderSearch } from '@/api/shop'
+import type { Order, OrderSearchForm, RefreshParams } from '@/inters/order'
+import { getServices, getTickets, orderSearch, refreshOrders } from '@/api/shop'
 import { XPagination } from '@3un/ui'
-import { debounce } from '@3un/utils'
+import { debounce, ORDER_STATUS } from '@3un/utils'
+import { toast } from 'vue-sonner'
 
 const store: HistoryStore = reactive({
   visibleRefund: false,
@@ -28,6 +29,8 @@ const route = useRoute()
 
 const imei = ref<string>("")
 const codeId = ref<string>("")
+const disabled = ref<boolean>(false)
+const pendingOrders = ref<number[]>([])
 
 watch(
   () => route.params.codeId,
@@ -84,6 +87,54 @@ const handleCodeId = debounce(() => {
   shopStore.historySearch.codeIdList = [codeId.value]
 })
 
+async function refreshOrder() {
+  pendingOrders.value = shopStore.historys.list
+    .filter(item => item.status === ORDER_STATUS.PROCESSING)
+    .map(item => item.id)
+    .filter(item => item !== 0)
+  
+  if(pendingOrders.value.length === 0) return toast.success(t('shop.prompt.refreshNull'))
+
+  const params: RefreshParams = {
+    codeIdList: pendingOrders.value,
+    showAll: false,
+  }
+
+  disabled.value = true
+
+  try {
+    const data = await refreshOrders(params)
+    toast.success(t("submit.success", { action: t("button.query") }))
+    renderOrders(data)
+  } finally {
+    setTimeout(() => {
+      disabled.value = false
+    }, 3000)
+  }
+}
+
+function renderOrders(data: Order[]) {
+  for(let item of data) {
+    const index = shopStore.historys.list.findIndex(order => order.id === item.id)
+
+    if(index === -1) {
+      return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, item)
+    }
+
+    // shopStore.historys.list[index] = {
+    //   ...shopStore.historys.list[index],
+    //   result: item.result,
+    //   status: item.status,
+    // }
+
+    shopStore.historys.list[index] = {
+      ...shopStore.historys.list[index],
+      result: item.result,
+      status: item.status,
+    }
+  }
+}
+
 await Promise.all([
   getServiceList(),
   getTicketList(),
@@ -94,7 +145,13 @@ await Promise.all([
   <div class="min-h-full w-full flex flex-col p-4 sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] xl:max-w-[60vw] mx-auto mb-2">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold">{{ t('order.history.title') }}</h2>
-      <TheBack />
+      <div class="flex space-x-2">        
+        <TheBack />
+        <XButton
+          :disabled
+          class="highlight-btn w-20 items-center px-2 rounded-md" :label="t('button.query')"
+          @click="refreshOrder" />
+      </div>
     </div>
 
     <div class="flex justify-between mb-4">

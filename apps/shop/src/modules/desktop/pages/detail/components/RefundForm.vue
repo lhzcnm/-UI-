@@ -47,12 +47,12 @@ function handleDepartName(item: Ticket) {
 
     <div class="space-y-1">
       <label class="text-label text-sm">{{ t('ticket.form.topic') }}</label>
-      <XInput v-model="form.subject" :placeholder="t('ticket.placeholder.topic')" />
+      <XInput v-model="form.subject" :placeholder="t('ticket.prompt.subject')" />
     </div>
 
     <div class="space-y-1">
       <label class="text-label text-sm">{{ t('ticket.form.msg') }}</label>
-      <XTextarea v-model="form.msg" rows="5" :placeholder="t('ticket.placeholder.msg')" />
+      <XTextarea v-model="form.msg" rows="5" :placeholder="t('ticket.prompt.msg')" />
     </div>
   </form>
 </template>

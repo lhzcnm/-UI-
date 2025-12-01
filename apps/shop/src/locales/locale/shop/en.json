@@ -37,7 +37,8 @@
       "push": "Please enter your phone number or email",
       "pushSource": "Please enter your phone or email",
       "qrcodeError": "Failed to generate payment QR code, please try again",
-      "submitUnlock": "Unlock order submitted successfully. The result will be sent to your phone number or email once processing is complete."
+      "submitUnlock": "Unlock order submitted successfully. The result will be sent to your phone number or email once processing is complete.",
+      "refreshNull": "No orders in progress"
     },
     "search": {
       "service": {

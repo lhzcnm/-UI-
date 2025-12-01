@@ -54,6 +54,7 @@ function handleSubmit() {
     toast.error(t('ticket.prompt.fail'))
   }).finally(() => {
     loading.value = false
+    store.visibleTicket = false
   })
 }
 
@@ -82,7 +83,7 @@ function handleClose() {
     </template>
 
     <template #footer>
-      <div class="flex justify-end space-x-2 py-2">
+      <div class="flex justify-end space-x-2 py-2 px-4">
         <ButtonGroup
           :layouts="['cancel', 'confirm']"
           @cancel="handleClose" @confirm="handleSubmit"

@@ -89,11 +89,13 @@ const b = style()
       :class="b.toolLayer()"
       @click.stop
     >
-      <button :class="b.toolBtn()" @click="handleClick(order.imei)">
+      <button
+        v-if="order.status === ORDER_STATUS.SUCCESS" :class="b.toolBtn()" @click="handleClick(order.imei)">
         {{ t('order.copy.imei') }}
       </button>
 
-      <button :class="b.toolBtn()" @click="handleClick(orderResult)">
+      <button
+        v-if="order.status === ORDER_STATUS.SUCCESS" :class="b.toolBtn()" @click="handleClick(orderResult)">
         {{ t('order.copy.result') }}
       </button>
 
@@ -106,11 +108,12 @@ const b = style()
       </button>
     </div>
 
-    <XTag
-      class="absolute bottom-3 right-3"
-      :color="ORDER_STATUS_MAP[order.status].color"
-      :label="t(ORDER_STATUS_MAP[order.status].key!)"
-    />
+    <div class="flex justify-end">
+      <XTag
+        :color="ORDER_STATUS_MAP[order.status].color"
+        :label="t(ORDER_STATUS_MAP[order.status].key!)"
+      />
+    </div>
   </div>
 </template>
 

@@ -13,8 +13,9 @@
     "download": "Download",
     "fresh": "Refresh",
     "exchange": "Exchange",
-    "query": "Query",
+    "query": "Query Order",
     "logout": "Logout",
-    "clearFilter": "Clear"
+    "clearFilter": "Clear",
+    "action": "Action"
   }
 }

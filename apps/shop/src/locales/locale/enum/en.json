@@ -44,5 +44,11 @@
       "5": "IMEI/SN",
       "6": "IMEI/SN"
     }
+  },
+  "message": {
+    "order": {
+      "success": "Submission successful",
+      "failed": "Submission failed, automatically refunded"
+    }
   }
 }

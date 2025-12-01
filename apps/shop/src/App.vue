@@ -13,6 +13,8 @@ const store = useSystemStore()
     </template>
   </RouterView>
 
+  <TheConfirm />
+  
   <Toaster
     richColors
     position="top-center"

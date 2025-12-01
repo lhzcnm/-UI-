@@ -54,6 +54,7 @@ function handleSubmit() {
     toast.error(t('ticket.prompt.fail'))
   }).finally(() => {
     loading.value = false
+    store.visibleTicket = false
   })
 }
 

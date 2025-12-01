@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import TheMobileTool from '@mobile/components/TheMobileTool.vue'
 import SearchModal from './components/SearchModal.vue'
+import RefundModal from './components/RefundModal.vue'
 
 import { toast } from 'vue-sonner'
 
@@ -11,6 +13,7 @@ import { ORDER_STATUS } from '@3un/utils'
 const store: HistoryStore = reactive({
   visibleSearch: false,
   visibleTicket: false,
+  visibleTool: false,
 
   tickets: [],
   orderId: undefined,
@@ -63,14 +66,22 @@ function handleSubmit() {
 }
 
 function submitOrder() {
+  const service = shopStore.servicesMap.get(+shopStore.createOrder.serviceId)
   orderSubmit(shopStore.createOrder).then((data) => {
-    alert(JSON.stringify(data))
     const codeIds = data.map(item => item.codeId ? item.codeId.toString() : "0")
     shopStore.historySearch.codeIdList = codeIds
     shopStore.createOrder = zSubmitParams.parse({})
 
     localStorage.removeItem(paymentKey)
     localStorage.removeItem(submitedKey)
+
+    if(service?.isUnlock) {
+      const res = data
+        .map(item => `${item.imei}: ${item.status === ORDER_STATUS.FAILED ? t('message.order.failed') : t('message.order.success')}`)
+        .join("\n")
+      
+      alert(res)
+    }
   })
 }
 
@@ -91,18 +102,19 @@ function renderOrders(data: Order[]) {
 }
 
 function openFilter() {
+  store.visibleTool = false
   store.visibleSearch = true
 }
 
 async function refreshOrder() {
+  store.visibleTool = false
   pendingOrders.value = shopStore.historys.list
     .filter(item => item.status === ORDER_STATUS.PROCESSING)
     .map(item => item.id)
   
-  if(pendingOrders.value.length === 0) return toast.success("订单全部处理完成")
+  if(pendingOrders.value.length === 0) return toast.success(t('shop.prompt.refreshNull'))
 
   const params: RefreshParams = {
-    serviceId: +shopStore.createOrder!.serviceId.toString,
     codeIdList: pendingOrders.value,
     showAll: showAll.value,
   }
@@ -217,30 +229,37 @@ onUnmounted(() => {
 
 <template>
   <div class="space-y-6 h-full flex flex-col">
-    <section class="flex justify-between p-3 border-b">
+    <section class="flex justify-between border-b">
       <!-- <XButton
         :label="t('button.filter')"
         color="success" icon="lucide:circle-question-mark"
         @click="store.visibleSearch = true"
       /> -->
-      <div class="flex space-x-2">
-        <ButtonGroup
-          :layouts="['filter']"
-          @filter="openFilter"
-        />
-  
-        <XButton
-          :label="t('button.query')"
-          color="success" icon="lucide:circle-question-mark"
-          @click="refreshOrder"
-        />
-      </div>
 
-      <XSimplePagination
-        v-model="shopStore.historySearch.page"
-        :limit="shopStore.historySearch.pageSize"
-        :total="shopStore.historys.total"
-      />
+      <TheMobileTool v-model="store.visibleTool">
+        <template #default>
+          <XSimplePagination
+            v-model="shopStore.historySearch.page"
+            :limit="shopStore.historySearch.pageSize"
+            :total="shopStore.historys.total"
+          />
+        </template>
+        <template #extra>
+          <div class="flex space-x-2">
+            <ButtonGroup
+              :layouts="['filter']"
+              @filter="openFilter"
+            />
+      
+            <XButton
+              :label="t('button.query')"
+              color="success" icon="lucide:circle-question-mark"
+              @click="refreshOrder"
+            />
+          </div>
+        </template>
+      </TheMobileTool>
+
     </section>
 
     <section class="flex-1 overflow-y-auto p-2 flex flex-col space-y-6">
@@ -252,5 +271,6 @@ onUnmounted(() => {
     </section>
 
     <SearchModal />
+    <RefundModal />
   </div>
 </template>

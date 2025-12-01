@@ -30,8 +30,6 @@ watch(
     }
 
     text.value = store.url
-    console.log(text.value)
-    console.log(qrcode)
   }
 )
 

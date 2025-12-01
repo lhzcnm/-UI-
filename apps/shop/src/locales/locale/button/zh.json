@@ -13,8 +13,9 @@
     "download": "下载",
     "fresh": "刷新",
     "exchange": "兑换",
-    "query": "查询",
+    "query": "查询订单",
     "logout": "退出登录",
-    "clearFilter": "清空筛选"
+    "clearFilter": "清空筛选",
+    "action": "操作"
   }
 }

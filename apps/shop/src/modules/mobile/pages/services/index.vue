@@ -82,10 +82,12 @@ onMounted(async () => {
     if(res) {
       handleSubmit()
     } else {
+      shopStore.createOrder = zSubmitParams.parse({})
       localStorage.removeItem(paymentKey)
       localStorage.removeItem(submitedKey)
     }
   } else {
+    shopStore.createOrder = zSubmitParams.parse({})
     localStorage.removeItem(paymentKey)
   }
 })
