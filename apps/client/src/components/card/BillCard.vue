@@ -33,7 +33,7 @@ const { t } = useI18n()
           ￥{{ item.amount }}
         </p>
       </div>
-      <div>      
+      <div>
         <div class="flex space-x-1 text-muted-foreground">
           <Icon icon="lucide:coins" class="size-4" />
           <span class="text-xs">{{ t('recharge.history.real') }}</span>
