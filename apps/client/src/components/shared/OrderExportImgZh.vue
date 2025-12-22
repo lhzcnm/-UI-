@@ -49,7 +49,7 @@ const cleanResult = computed(() => {
       <span>公众号: </span>
       <span>{{ appName }}</span>
     </div>
-    <div class="w-full flex flex-col py-2">
+    <div class="w-full flex flex-col py-2 pl-2">
       <div class="flex items-center justify-between space-x-3">
         <span
           v-if="isSubmit"
