@@ -59,8 +59,8 @@ function handleOtherClick(item: SidebarMenuChild) {
       props.class
     )"
   >
-    <div class="flex items-center px-4 h-header">
-      <TheLogo height="1.75rem" />
+    <div class="flex items-center justify-center px-4 h-header">
+      <TheLogo width="auto" height="1.75rem" />
     </div>
 
     <nav class="flex-1 overflow-y-auto p-2 text-muted-foreground">
