@@ -55,6 +55,11 @@
         "title": "Order Status",
         "placeholder": "Please Select Status"
       }
+    },
+    "print": {
+      "title": "Print Settings",
+      "paper": "Paper Size",
+      "unit": "Unit"
     }
   }
 }

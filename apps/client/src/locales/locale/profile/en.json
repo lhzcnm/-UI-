@@ -108,7 +108,8 @@
         "pwd": "Change Password",
         "account": "Change Login Account",
         "wechat": "Bind WeChat",
-        "invite": "Generate Invite Code"
+        "invite": "Generate Invite Code",
+        "shop": "Service Shop"
       },
       "prompt": {
         "download": "Click the top right\nOpen in browser\nDownload invite code",
