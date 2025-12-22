@@ -97,7 +97,7 @@ export const columns: XColDef<MallOrder> = [
     title: '退款状态',
     width: 128,
     render(value, row) {
-      let status = REFUND_STATUS_MAP[value]
+      let status = REFUND_STATUS_MAP[value] ?? REFUND_STATUS_MAP[REFUND_STATUS.WAIT]
 
       if(row.codeStatusId === ORDER_STATUS.SUCCESS) {
         status = REFUND_STATUS_MAP[REFUND_STATUS.REJECTED]
