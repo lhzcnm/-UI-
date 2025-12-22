@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import KeyForm from './components/KeyForm.vue'
-import { twJoin } from 'tailwind-merge'
 
-const mode = import.meta.env.VITE_APP_MODE
+import { twJoin } from 'tailwind-merge'
 </script>
 
 <template>
@@ -15,7 +14,9 @@ const mode = import.meta.env.VITE_APP_MODE
   >
     <div class="flex mb-8">
       <div class="flex justify-center">
-        <img class="w-40" :src="`/${mode}/logo.svg`"alt="">
+        <!-- <img class="w-40" :src="`/${mode}/logo.svg`"alt=""> -->
+        
+        <TheLogo :show-logo="false" />
       </div>
     </div>
 
