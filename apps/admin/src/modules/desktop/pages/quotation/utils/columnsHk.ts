@@ -1,10 +1,10 @@
-import type { Feiyang } from "@/inters/quotation/feiyang"
 import type { XColDef } from "@3un/ui"
 import { h } from "vue"
-import { QUOTATION_STORE } from "."
 import QuotationTableAction from "../components/QuotationTableAction.vue"
+import type { Hk } from "@/inters/quotation/hk"
+import { QUOTATION_STORE } from "."
 
-export const columnsFeiyang: XColDef<Feiyang> = [
+export const columnsHk: XColDef<Hk> = [
   {
     key: 'id',
     title: 'ID',
@@ -31,7 +31,12 @@ export const columnsFeiyang: XColDef<Feiyang> = [
     width: 128,
   },
   {
-    key: 'appearanceDesc',
+    key: 'deviceTypeDesc',
+    title: '设备类型',
+    width: 128,
+  },
+  {
+    key: 'statusDesc',
     title: '设备状态',
     width: 128,
   },
@@ -58,7 +63,7 @@ export const columnsFeiyang: XColDef<Feiyang> = [
     fixed: 'right',
     render: (_, row) => {
       return h(QuotationTableAction, {
-        row: row
+        row: row,
       })
     }
   }

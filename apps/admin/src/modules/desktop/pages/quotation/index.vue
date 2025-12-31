@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import FeiyangDialog from './components/FeiyangDialog.vue'
 import SelectCategory from './components/SelectCategory.vue'
 
-import { debounce } from '@3un/utils'
+import { debounce, xconfirm } from '@3un/utils'
 import type { XTableExpose } from '@3un/ui'
 
-import { QUOTATION_MAP_ITEM, QUOTATION_STORE, QuotationMap, type QuotationListResult, type QuotationSearchParams, type QuotationStore } from './utils'
-import { getQuotationList } from './utils/fn'
+import { toast } from 'vue-sonner'
+import { getAppearances, getColors, getDeviceBrand, GetDeviceTypes, getStatues } from '@/api/quotation'
+import { QUOTATION_STORE, type QuotationStore } from './utils'
+import { QUOTATION_MAP, QUOTATION_MAP_ITEM, QUOTATION_SCHEMA_MAP, type QuotationListResult, type QuotationSearchParams } from '@/utils/quotation'
+import { deleteQuotation, getQuotationList } from '@/utils/quotation/fn'
 
-const store: QuotationStore<QuotationMap> = reactive({
+const store: QuotationStore<QUOTATION_MAP> = reactive({
   visibleBase: false,
   visibleEdit: false,
   visibleSearch: false,
@@ -19,7 +21,15 @@ const store: QuotationStore<QuotationMap> = reactive({
   keyword: '',
   id: undefined,
 
-  category: QuotationMap.FEIYANG,
+  category: QUOTATION_MAP.FEIYANG,
+  formBase: {},
+
+  appearances: [],
+  colors: [],
+  deviceStatuses: [],
+  deviceTypes: [],
+  brands: [],
+  brandsMap: new Map<number, string>(),
 })
 
 provide(QUOTATION_STORE, store)
@@ -29,6 +39,8 @@ const keyword = ref<string>('')
 const loading = ref<boolean>(false)
 
 const tableRef = ref<XTableExpose | null>(null)
+
+const selectedIds = ref<number[]>([])
 
 watch(
   [
@@ -50,6 +62,10 @@ watch(
   }
 )
 
+const columns = computed(() => {
+  return QUOTATION_MAP_ITEM[store.category].columns
+})
+
 async function getQuotationData(params: QuotationSearchParams<typeof store.category>) {
   loading.value = true
   quotations.value = await getQuotationList(store.category, params)
@@ -57,9 +73,57 @@ async function getQuotationData(params: QuotationSearchParams<typeof store.categ
   loading.value = false
 }
 
-const columns = computed(() => {
-  return QUOTATION_MAP_ITEM[store.category].columns
-})
+function openCreate() {
+  store.formBase = QUOTATION_SCHEMA_MAP[store.category].form.parse({})
+  store.visibleBase = true
+}
+
+async function handleDelete() {
+  if(!await xconfirm('确定删除选中的报价单数据?')) return
+  deleteQuotation(store.category, selectedIds.value).then(() => {
+    toast.success('删除成功')
+    store.refresh = !store.refresh
+  }).catch(() => {
+    toast.error('删除失败, 请重试')
+  })
+}
+
+async function getAppearanceList() {
+  const data = await getAppearances()
+  store.appearances = data
+}
+
+async function getColorList() {
+  const data = await getColors()
+  store.colors = data
+}
+
+async function getStatusList() {
+  const data = await getStatues()
+  store.deviceStatuses = data
+}
+
+async function getDeviceTypeList() {
+  const data = await GetDeviceTypes()
+  store.deviceTypes = data
+}
+
+async function getBrandList() {
+  const data = await getDeviceBrand()
+  
+  store.brands = data
+  for(const item of data) {
+    store.brandsMap.set(item.code, item.descCn)
+  }
+}
+
+await Promise.all([
+  getAppearanceList(),
+  getColorList(),
+  getStatusList(),
+  getDeviceTypeList(),
+  getBrandList(),
+])
 
 const handleInput = debounce(() => {
   store.keyword = keyword.value
@@ -78,7 +142,8 @@ const handleInput = debounce(() => {
         /> -->
 
         <XInput
-          ui-root="min-w-80" placeholder="请输入手机型号"
+          ui-root="min-w-80" placeholder="请输入设备型号"
+          clearable
           v-model="keyword" @input="handleInput"
         />
 
@@ -86,6 +151,7 @@ const handleInput = debounce(() => {
           label="新增报价单"
           color="success"
           icon="lucide:plus"
+          @click="openCreate"
         />
 
         <XButton
@@ -93,6 +159,7 @@ const handleInput = debounce(() => {
           icon="lucide:trash-2"
           variant="outline"
           color="danger"
+          @click="handleDelete"
         />
       </div>
 
@@ -119,10 +186,12 @@ const handleInput = debounce(() => {
         :columns="columns"
         selected-key="id"
         selection
+        @select-change="selectedIds = $event"
         class="border h-[calc(100vh-8.75rem)]"
       />
     </div>
 
-    <FeiyangDialog />
+    <!-- <FeiyangDialog /> -->
+    <component :is="QUOTATION_SCHEMA_MAP[store.category].dialog" />
   </div>
 </template>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import FeiyangForm from './FeiyangForm.vue'
-
 import { type FormMode } from '@3un/shared'
 import { toast } from 'vue-sonner'
 
@@ -8,6 +6,7 @@ import { QUOTATION_STORE } from '../utils'
 import { options } from '../utils/dialog'
 import { validate, type ValidRule } from '@/utils'
 import { createQuotation, updateQuotation } from '@/utils/quotation/fn'
+import HqbForm from './HqbForm.vue'
 
 const store = inject(QUOTATION_STORE)!
 
@@ -19,14 +18,15 @@ const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 const loading = ref<boolean>(false)
 
 function getRules() {
-  const { model, memory, price, appearanceDesc } = store.formBase
+  const { model, memory, price, statusDesc, colorDesc } = store.formBase
 
   const rules: ValidRule[] = [
     { rule: !!model, message: '设备型号不能为空' },
     { rule: !!memory, message: '设备容量不能为空' },
     { rule: !!price, message: '基本价格不能为空' },
     { rule: price !== 0, message: '价格不能为0' },
-    { rule: !!appearanceDesc, message: '设备状态不能为空' }
+    { rule: !!statusDesc, message: '设备状态不能为空' },
+    { rule: !!colorDesc, message: '设备颜色不能为空' },
   ]
 
   return rules
@@ -76,7 +76,7 @@ function handleUpdate() {
     ui-header="p-4 mb-0 border-b"
   >
     <template #default>
-      <FeiyangForm v-model="store.formBase" :appearances="store.appearances" />
+      <HqbForm v-model="store.formBase" :colors="store.colors" :statuses="store.deviceStatuses"  />
     </template>
 
     <template #footer>

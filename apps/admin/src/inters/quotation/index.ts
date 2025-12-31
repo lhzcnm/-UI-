@@ -16,4 +16,11 @@ export const zQuotationSearch = zPage.extend({
   model: z.string().optional(),
 })
 
+export const zApiEnum = z.object({
+  code: z.number(),
+  descEn: z.string(),
+  descCn: z.string(),
+})
+
 export type QuotationSearchForm = z.infer<typeof zQuotationSearch>
+export type ApiEnum = z.infer<typeof zApiEnum>

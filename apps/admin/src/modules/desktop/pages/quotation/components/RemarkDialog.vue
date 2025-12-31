@@ -1,32 +1,29 @@
 <script setup lang="ts">
-import FeiyangForm from './FeiyangForm.vue'
-
-import { type FormMode } from '@3un/shared'
-import { toast } from 'vue-sonner'
-
-import { QUOTATION_STORE } from '../utils'
+import type { FormMode } from '@3un/shared'
+import { REMARK_STORE } from '../utils'
 import { options } from '../utils/dialog'
 import { validate, type ValidRule } from '@/utils'
-import { createQuotation, updateQuotation } from '@/utils/quotation/fn'
+import { createRemark, updateRemark } from '@/api/quotation'
+import { toast } from 'vue-sonner'
+import RemarkForm from './RemarkForm.vue'
 
-const store = inject(QUOTATION_STORE)!
+const store = inject(REMARK_STORE)!
 
 const isCreate = computed(() => store.id == undefined)
 const mode = computed<FormMode>(() => isCreate.value ? 'create' : 'update')
 
-// const form = reactive<FeiyangCreateForm>(zFeiyangForm.parse({}))
-
 const loading = ref<boolean>(false)
 
 function getRules() {
-  const { model, memory, price, appearanceDesc } = store.formBase
+  const { remark, remarkLocal } = store.formBase
 
   const rules: ValidRule[] = [
-    { rule: !!model, message: '设备型号不能为空' },
-    { rule: !!memory, message: '设备容量不能为空' },
-    { rule: !!price, message: '基本价格不能为空' },
-    { rule: price !== 0, message: '价格不能为0' },
-    { rule: !!appearanceDesc, message: '设备状态不能为空' }
+    {
+      rule: !!remark, message: '请输入正确的备注信息',
+    },
+    {
+      rule: !!remarkLocal, message: '请输入正确的英文备注信息',
+    },
   ]
 
   return rules
@@ -34,6 +31,7 @@ function getRules() {
 
 function handleSubmit() {
   const rules = getRules()
+
   if(!validate(rules)) return
 
   loading.value = true
@@ -42,24 +40,26 @@ function handleSubmit() {
 }
 
 function handleCreate() {
-  createQuotation(store.category, store.formBase).then(() => {
-    toast.success('新增成功')
-    store.refresh = !store.refresh
+  loading.value = true
+  createRemark(store.formBase).then(() => {
+    toast.success('创建成功')
     store.visibleBase = false
+    store.refresh = !store.refresh
   }).catch(() => {
     toast.warning("添加失败, 请重试")
   }).finally(() => {
     loading.value = false
   })
-}
 
+}
 function handleUpdate() {
-  updateQuotation(store.category, { id: store.id, ...store.formBase }).then(() => {
-    toast.success('保存成功')
-    store.refresh = !store.refresh
+  loading.value = true
+  updateRemark({ ...store.formBase, id: store.id! }).then(() => {
+    toast.success('创建成功')
     store.visibleBase = false
+    store.refresh = !store.refresh
   }).catch(() => {
-    toast.warning('添加失败, 请重试')
+    toast.warning("添加失败, 请重试")
   }).finally(() => {
     loading.value = false
   })
@@ -76,7 +76,7 @@ function handleUpdate() {
     ui-header="p-4 mb-0 border-b"
   >
     <template #default>
-      <FeiyangForm v-model="store.formBase" :appearances="store.appearances" />
+      <RemarkForm :brands="store.brands" v-model="store.formBase" />
     </template>
 
     <template #footer>

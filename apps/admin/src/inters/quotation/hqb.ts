@@ -3,24 +3,25 @@ import { zBaseQuotation } from "."
 import { zList } from "../common"
 
 export const zHqb = zBaseQuotation.extend({
-  statusDesc: z.string(),
-  colorDesc: z.string(),
+  statusDesc: z.string().default(''),
+  colorDesc: z.string().default(''),
 })
 
-export const zHqbCreate = zHqb.pick({
+export const zHqbForm = zHqb.pick({
   model: true,
   memory: true,
   statusDesc: true,
   colorDesc: true,
+  price: true,
 })
 
-export const zHqbUpdate = zHqbCreate.extend({
+export const zHqbUpdate = zHqbForm.extend({
   id: z.number(),
 })
 
 export const zHqbList = zList(zHqb)
 
 export type Hqb = z.infer<typeof zHqb>
-export type HqbCreateForm = z.infer<typeof zHqbCreate>
+export type HqbCreateForm = z.infer<typeof zHqbForm>
 export type HqbUpdateForm = z.infer<typeof zHqbUpdate>
 export type HqbList = z.infer<typeof zHqbList>

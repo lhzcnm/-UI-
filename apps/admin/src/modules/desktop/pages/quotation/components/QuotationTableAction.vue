@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { XBtnSplitOptions } from '@3un/ui'
-import { QUOTATION_STORE, type QuotationItem } from '../utils'
 import { xconfirm } from '@3un/utils'
+import { toast } from 'vue-sonner'
+import { QUOTATION_SCHEMA_MAP, type QuotationItem } from '@/utils/quotation'
+import { QUOTATION_STORE } from '../utils'
+import { deleteQuotation } from '@/utils/quotation/fn'
 
 interface TableActionProps {
   row: QuotationItem<typeof store.category>
@@ -9,7 +12,7 @@ interface TableActionProps {
 
 const store = inject(QUOTATION_STORE)!
 
-defineProps<TableActionProps>()
+const { row } = defineProps<TableActionProps>()
 
 const options: XBtnSplitOptions = [
   {
@@ -20,11 +23,19 @@ const options: XBtnSplitOptions = [
 ]
 
 function handleEdit() {
+  store.formBase = QUOTATION_SCHEMA_MAP[store.category].form.parse(row)
+  store.id = row.id
   store.visibleBase = true
 }
 
 async function handleDelete() {
   if(!await xconfirm('是否确认删除该数据')) return
+  deleteQuotation(store.category, [row.id]).then(() => {
+    toast.success('删除成功')
+    store.refresh = !store.refresh
+  }).catch(() => {
+    toast.warning('删除失败')
+  })
 }
 </script>
 
