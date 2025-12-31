@@ -18,6 +18,7 @@ export interface UsersStore {
   visiblePoint: boolean
   visibleService: boolean
   visibleDetail: boolean
+  visibleVoucherPoint: boolean
 
   refresh: boolean
   index: number | undefined

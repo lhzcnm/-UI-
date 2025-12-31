@@ -4,10 +4,13 @@ import type { IList } from '@3un/shared'
 import { REFUND_STATUS } from '@3un/utils'
 
 export const zMallOrder = zOrder.extend({
-  paymentId: z.string(),
+  // paymentId: z.string(),
+  paymentId: z.string().nullable(),
   storePrice: z.number(),
-  refundStatus: z.union([z.literal(0), z.enum(REFUND_STATUS)])
-    .transform((val) => (val === 0 ? REFUND_STATUS.WAIT : val)),
+  refundStatus: z.enum(REFUND_STATUS).nullable(),
+  isBulk: z.boolean().nullable(),
+  // refundStatus: z.union([z.literal(0), z.enum(REFUND_STATUS)])
+  //   .transform((val) => (val === 0 ? REFUND_STATUS.WAIT : val)).nullable(),
 })
 
 // export const zMallSearchForm = 

@@ -54,10 +54,6 @@ export const menus: SidebarMenu[] = [
       //   match: '商城订单',
       //   path: '/orders/mall',
       //   icon: 'lucide:handbag',
-      //   badge: () => {
-      //     const iStore = useSystemStore()
-      //     return iStore.todoCount.processing
-      //   },
       // },
       {
         label: '订单验证',
@@ -91,14 +87,15 @@ export const menus: SidebarMenu[] = [
       },
     ],
   },
-  {
-    label: '报价单管理',
-    path: '/quotations',
-    icon: 'lucide:clipboard-list',
-    children: [
-      { label: '数据基表', match: 'basePrice', path: '/quotations' },
-    ]
-  },
+  // {
+  //   label: '报价单管理',
+  //   path: '/quotations',
+  //   icon: 'lucide:clipboard-list',
+  //   children: [
+  //     { label: '基础数据', match: 'basePrice', path: '/quotations' },
+  //     { label: '设备备注', match: 'deviceRemark', path: '/quotations/remarks' },
+  //   ]
+  // },
   {
     label: '充值管理',
     path: '/recharge',
@@ -126,6 +123,15 @@ export const menus: SidebarMenu[] = [
     children: [
       { label: '菜单栏', match: 'caidanlan', path: '/wechat/menu' },
       { label: '客服消息', match: 'kefuxiaoxi', icon: 'lucide:message-circle-more', path: '/wechat/message' },
+    ],
+  },
+  {
+    label: '活动管理',
+    path: '/activity',
+    icon: 'solar:balloon-outline',
+    children: [
+      { label: '活动列表', match: 'caidanlan', path: '/activity' },
+      { label: '活动充值', match: 'huodongchongzhi', path: '/activity/recharge' },
     ],
   },
   {

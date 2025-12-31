@@ -17,13 +17,12 @@ interface VoucherCardProps {
   userId: number | null
 }
 
-// interface VoucherCardEmits {
-//   toggle: [id: number],
-//   statusChange: [status: VOUCHER_STATUS],
-// }
+interface VoucherCardEmits {
+  delete: [id: number],
+}
 
 const props = defineProps<VoucherCardProps>()
-// const emits = defineEmits<VoucherCardEmits>()
+const emits = defineEmits<VoucherCardEmits>()
 
 const store = inject(VOUCHER_STORE)!
 
@@ -54,7 +53,7 @@ function handleClick(status: VOUCHER_STATUS) {
 
 <template>
   <div
-    class="voucher w-full rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors duration-200"
+    class="voucher relative w-full rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors duration-200"
   >
     <div class="flex justify-between items-center mb-3">
       <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
@@ -122,6 +121,15 @@ function handleClick(status: VOUCHER_STATUS) {
         <span class="text-zinc-500 dark:text-zinc-400">有效期(天): </span>
         {{ formatValue(expireTs) }}
       </div>
+    </div>
+
+    <div class="absolute right-4 bottom-2">
+      <XButton
+        icon="lucide:trash-2"
+        label="删除"
+        size="sm"
+        color="danger"
+        @click="emits('delete', id)" />
     </div>
   </div>
 </template>

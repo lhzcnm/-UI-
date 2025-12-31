@@ -11,6 +11,7 @@ export const zCredit = z.object({
   description: z.string().default(''),
   credits: z.number().default(0),
   creditsLeft: z.string().default(''),
+  voucherCreditsLeft: z.string().default(''),
   comments: z.string().nullable(),
   ip: z.string().nullable(),
 })

@@ -1,11 +1,12 @@
 import type { Voucher, VoucherUpdateForm } from '@/inters/voucher'
-import { type XColDef } from '@3un/ui'
+import { XButton, XTag, type XColDef } from '@3un/ui'
 import dayjs from 'dayjs'
 import { h } from 'vue'
 import VoucherUpdate from '../components/VoucherUpdate.vue'
-import type { VOUCHER_STATUS } from '@3un/utils'
-import { invalidCode } from '@/api/voucher'
+import { VOUCHER_TYPE_MAP, xconfirm, type VOUCHER_STATUS } from '@3un/utils'
+import { deleteVoucher, invalidCode } from '@/api/voucher'
 import { toast } from 'vue-sonner'
+import { VOUCHER_STORE } from '.'
 
 export const columns: XColDef<Voucher> = [
   {
@@ -21,6 +22,19 @@ export const columns: XColDef<Voucher> = [
     minWidth: 128,
     thClassName: 'text-center',
     tdClassName: 'text-center'
+  },
+  {
+    key: 'type',
+    title: '类型',
+    minWidth: 88,
+    render: (value) => {
+      // return VOUCHER_TYPE_MAP[value as VOUCHER_TYPE].label
+      const status = VOUCHER_TYPE_MAP[value]
+      return h(XTag, {
+        color: status.color,
+        label: status.label,
+      })
+    }
   },
   {
     key: 'userId',
@@ -102,24 +116,38 @@ export const columns: XColDef<Voucher> = [
       })
     }
   },
-  // {
-  //   key: 'action',
-  //   title: '操作',
-  //   width: 88,
-  //   fixed: 'right',
-  //   render: (_, row) => {
-  //     function handleInvalid() {
-  //       invalidCode(row.code).then((res) => {
-  //         console.log(res)
-  //       })
-  //     }
+  {
+    key: 'action',
+    title: '操作',
+    width: 88,
+    fixed: 'right',
+    render: (_, row) => {
+      const store = inject(VOUCHER_STORE)!
+      async function handleClick() {
+        if (!await xconfirm("是否确认删除改代金券")) return
 
-  //     return h(XButton, {
-  //       color: 'danger',
-  //       label: '停用',
-  //       size: 'sm',
-  //       onclick: handleInvalid,
-  //     })
-  //   }
-  // }
+        try {
+          await deleteVoucher(row.id)
+
+          const index = store.vouchers.list.findIndex(v => v.id === row.id)
+
+          if (index !== -1) {
+            store.vouchers.list.splice(index, 1)
+            toast.success("删除成功")
+            store.refresh = !store.refresh
+          }
+        } catch {
+          toast.success("删除失败, 请重试")
+        }
+      }
+
+      return h(XButton, {
+        color: 'danger',
+        label: '删除',
+        icon: 'lucide:trash-2',
+        size: 'sm',
+        onclick: handleClick,
+      })
+    }
+  }
 ]

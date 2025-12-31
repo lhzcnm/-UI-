@@ -76,21 +76,21 @@ export const PAYMENT_STATUS_LIST = [
 // Payment Method
 export enum PAYMENT_METHOD {
   ADMIN   = 5,
-  ADMINERR   = 7,
+  // ADMINERR   = 7,
   ALIPAY  = 8,
   WECHAT  = 9,
   VOUCHER = 10,
 }
 export const PAYMENT_METHOD_MAP: StatusMap = {
   [PAYMENT_METHOD.ADMIN]  : { color: 'warning', label: '管理员充值' },
-  [PAYMENT_METHOD.ADMINERR]  : { color: 'warning', label: '管理员充值' },
+  // [PAYMENT_METHOD.ADMINERR]  : { color: 'warning', label: '管理员充值' },
   [PAYMENT_METHOD.ALIPAY] : { color: 'primary', label: '支付宝' },
   [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
   [PAYMENT_METHOD.VOUCHER] : { color: 'success', label: '积分券' },
 }
 export const PAYMENT_METHOD_LIST = [
   { value: PAYMENT_METHOD.ADMIN, label: '管理员充值' },
-  { value: PAYMENT_METHOD.ADMINERR, label: '管理员充值' },
+  // { value: PAYMENT_METHOD.ADMINERR, label: '管理员充值' },
   { value: PAYMENT_METHOD.ALIPAY, label: '支付宝' },
   { value: PAYMENT_METHOD.WECHAT, label: '微信' },
   { value: PAYMENT_METHOD.VOUCHER, label: '积分券' },
@@ -273,6 +273,9 @@ export const REFUND_STATUS_MAP: StatusMap = {
   [REFUND_STATUS.REJECTED] : { color: 'info', label: '不可退款' },
 }
 
+/**
+ * voucher
+ */
 export enum VOUCHER_STATUS {
   USEFUL  = 0,
   USED    = 1,
@@ -291,6 +294,19 @@ export const VOUCHER_STATUS_List: TypeListItem[] = [
   { value: VOUCHER_STATUS.FAILURE, label: '已失效' },
 ]
 
+export enum VOUCHER_TYPE {
+  COMMON = 1,
+  ACTIVY = 2,
+}
+
+export const VOUCHER_TYPE_MAP: StatusMap = {
+  [VOUCHER_TYPE.COMMON]: { color: 'primary', label: "充值积分券" },
+  [VOUCHER_TYPE.ACTIVY]: { color: 'success', label: "活动积分券" }
+}
+
+/**
+ * quotation
+ */
 export enum BRAND_STATUS {
   IPHONE  = 1,
   SAMSUNG = 2,
@@ -300,3 +316,58 @@ export const BRAND_STATUS_MAP: StatusMap = {
   [BRAND_STATUS.IPHONE]: { color: 'primary', label: '苹果' },
   [BRAND_STATUS.SAMSUNG]: { color: 'success', label: '三星' }
 }
+
+/**
+ * activity
+ */
+export enum ACTIVITY_STATUS {
+  DISABLE = 0,
+  ENABLE  = 1,
+}
+
+export const ACTIVITY_STATUS_LIST = [
+  { value: ACTIVITY_STATUS.DISABLE, label: "禁用" },
+  { value: ACTIVITY_STATUS.ENABLE, label: "启用" },
+]
+
+export const ACTIVITY_STATUS_MAP = {
+  [ACTIVITY_STATUS.DISABLE]: { value: ACTIVITY_STATUS.DISABLE, label: "禁用", class: "text-danger" },
+  [ACTIVITY_STATUS.ENABLE]: { value: ACTIVITY_STATUS.ENABLE, label: "启用", class: "text-success" }
+}
+
+export enum ACTIVITY_TRIGGER_TYPE {
+  RECHARGE = 1,
+  SIGN     = 2,
+  SHARE    = 3,
+}
+
+export const ACTIVITY_TRIGGER_TYPE_LIST = [
+  { value: ACTIVITY_TRIGGER_TYPE.RECHARGE, label: "充值" },
+  { value: ACTIVITY_TRIGGER_TYPE.SIGN, label: "签到" },
+  { value: ACTIVITY_TRIGGER_TYPE.SHARE, label: "分享" },
+]
+
+export const ACTIVITY_TRIGGER_TYPE_MAP = {
+  [ACTIVITY_TRIGGER_TYPE.RECHARGE]: { value: ACTIVITY_TRIGGER_TYPE.RECHARGE, label: "充值", class: "text-danger" },
+  [ACTIVITY_TRIGGER_TYPE.SIGN]: { value: ACTIVITY_TRIGGER_TYPE.SIGN, label: "签到", class: "text-success" },
+  [ACTIVITY_TRIGGER_TYPE.SHARE]: { value: ACTIVITY_TRIGGER_TYPE.SHARE, label: "分享", class: "text-primary" },
+}
+
+export enum ACTIVITY_BONUS {
+  BALANCE    = 1,
+  GIFT_QUERY = 2,
+}
+
+export const ACTIVITY_BONUS_LIST = [
+  { value: ACTIVITY_BONUS.BALANCE, label: "赠送余额" },
+  { value: ACTIVITY_BONUS.GIFT_QUERY, label: "赠送查询积分" },
+]
+
+// export enum ACTIVATE_STATUS {
+//   OFF = 0,
+//   ON  = 1,
+// }
+
+// export const ACTIVATE_STATUS_MAP = {
+//   []
+// }

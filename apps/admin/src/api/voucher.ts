@@ -1,5 +1,7 @@
 import { zVoucher, type VoucherList, type VoucherListForm, type VoucherCreateForm, type VoucherUpdateForm } from '@/inters/voucher'
+import type { ActivityVoucherCreate } from '@/inters/voucher/activity'
 import http from '@/utils/http'
+import type { CR } from '@3un/shared'
 
 type VoucherListFn = (params: VoucherListForm) => Promise<VoucherList>
 export const getVouchers: VoucherListFn = async (params) => {
@@ -15,4 +17,14 @@ export const createVoucher: VoucherCreateFn = async (body) => {
 type VoucherInvalidFn = (body: VoucherUpdateForm) => Promise<void>
 export const invalidCode: VoucherInvalidFn = async (body) => {
   await http.post<void>('/voucher/invalid', body)
+}
+
+type VoucherDeleteFn = (id: number) => Promise<void>
+export const deleteVoucher: VoucherDeleteFn = async (id) => {
+  await http.delete(`/voucher/delete/voucher/${id}`)
+}
+
+type ActivyVoucherCreateFn = (body: ActivityVoucherCreate) => Promise<CR<null>>
+export const createActivityVoucher: ActivyVoucherCreateFn = async (body) => {
+  return await http.post('/voucher/generate/activities', body)
 }

@@ -53,8 +53,6 @@ const verify = computed(() => ({
   isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
 }))
 
-// const isHistory = computed(() => route.path.includes('history'))
-
 const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
 
@@ -73,6 +71,23 @@ const handleRefresh = useThrottleFn(() => {
   })
 }, 500)
 
+const orderImei = computed(() => {
+  const result = props.order.result
+  if (!result) return ""
+
+  const splitStr = result.split("<br>")
+
+  for (let item of splitStr) {
+    if (/^(串号|串号2|IMEI|IMEI2)/.test(item.trim())) {
+      const parts = item.split(/[:：]/)
+      if (parts.length > 1) {
+        return parts[1].trim()
+      }
+    }
+  }
+
+  return ""
+})
 function handleVerify() {
   const { id, createTime } = order.value
   const createUnix = new Date(createTime).getTime()
@@ -229,7 +244,7 @@ function handleCopy() {
       <ol class="bg-muted rounded p-3 list-decimal list-inside">
         <li v-for="recommend in order.recommends" :key="recommend.packageId">
           <a
-            :href="`/m/submit/${recommend.packageId}`"
+            :href="`/m/submit/${recommend.packageId}/${orderImei}`"
             class="underline active:text-success"
           >
             {{ recommend.packageId }} - {{ recommend.name }}

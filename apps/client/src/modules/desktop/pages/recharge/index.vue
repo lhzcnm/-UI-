@@ -9,6 +9,8 @@ import type { XSegmentedOption } from '@3un/ui'
 import type { RechargeStore, TabMode } from './utils'
 import { RECHARGE_STORE } from './utils'
 import { createList } from '@/utils'
+import { rechargeApi, type ActivityItem } from '@/api/recharge'
+import { xconfirm } from '@3un/utils'
 
 interface RechargeIndexProps {
   tab?: TabMode
@@ -25,6 +27,7 @@ const store: RechargeStore = reactive({
   refresh: false,
   timer: 0,
   bills: createList(),
+  activity: null,
 })
 
 watch(
@@ -64,6 +67,92 @@ const titleOptions = {
 const displayTitle = computed(() => {
   const option = titleOptions[activeTab.value]
   return locale.value === 'zh' ? option.name : option.nameEn
+})
+
+async function getCurActivity() {
+  try {
+    const { data } = await rechargeApi.activity()
+
+    if (data.length > 0) {
+      store.activity = data[0]
+    }
+  } catch {}
+}
+
+function activityToHtml(activity: ActivityItem) {
+  const description = `
+    <p class="mb-4 text-[18px] leading-relaxed text-slate-800 dark:text-slate-200 bg-slate-200 dark:bg-slate-700 rounded-md p-2">
+      ${activity.description}
+    </p>
+  `
+
+  const rules = activity.rules.map((item, index) => {
+    return `
+      <div
+        class="mb-2 rounded px-3 py-2
+               bg-slate-50/40 dark:bg-slate-900/40
+               border border-slate-800/60">
+        <div class="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+          <span class="text-slate-500 select-none">
+            ${index + 1}.
+          </span>
+
+          <span>
+            充值满
+            <span class="mx-1 font-medium text-danger">
+              ${item.minAmount}
+            </span>
+            ，赠送
+            <span class="mx-1 font-medium text-success">
+              ${item.bonusAmount}%
+            </span>
+          </span>
+        </div>
+      </div>
+    `
+  }).join("")
+
+  const rulesBlock = `
+    <div class="mb-4">
+      <h4 class="mb-2 text-xs tracking-wide text-slate-600 dark:text-slate-400">
+        活动规则
+      </h4>
+      ${rules}
+    </div>
+  `
+
+  const duration = `
+    <div
+      class="mt-4 pt-3
+             border-t border-slate-800
+             text-slate-600 dark:text-slate-400
+             font-medium
+             whitespace-pre-line">
+      活动时间：
+      <span class="text-slate-700 dark:text-slate-400">
+        ${activity.startTime} - ${activity.endTime}
+      </span>
+    </div>
+  `
+
+  return `
+    <div class="activity-content">
+      ${description}
+      ${rulesBlock}
+      ${duration}
+    </div>
+  `
+}
+
+await getCurActivity()
+
+onMounted(() => {
+  if (store.activity !== null) {
+    xconfirm({
+      title: store.activity.name,
+      text: activityToHtml(store.activity),
+    })
+  }
 })
 </script>
 

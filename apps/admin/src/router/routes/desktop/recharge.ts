@@ -11,6 +11,11 @@ const recharge: RouteRecordRaw[] = [
     name: 'RechargePackages',
     component: () => import('@desktop/pages/recharge/packages.vue'),
   },
+  // {
+  //   path: 'recharge/activity',
+  //   name: 'Rechargeactivity',
+  //   component: () => import('@desktop/pages/recharge/activity.vue'),
+  // },
 ]
 
 export default recharge

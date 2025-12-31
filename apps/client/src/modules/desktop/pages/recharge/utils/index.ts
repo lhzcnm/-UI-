@@ -1,3 +1,4 @@
+import type { ActivityItem } from "@/api/recharge"
 import type { InvoicesResponse } from "@/api/user"
 
 export interface RechargeStore {
@@ -7,6 +8,7 @@ export interface RechargeStore {
   refresh: boolean
   timer: number
   bills: InvoicesResponse
+  activity: ActivityItem | null,
 }
 
 type RechargeStoreKey = InjectionKey<RechargeStore>

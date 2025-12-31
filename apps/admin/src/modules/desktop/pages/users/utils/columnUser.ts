@@ -61,6 +61,11 @@ export const columns: XColDef<User> = [
     width: 88,
   },
   {
+    key: 'voucherCredits',
+    title: '赠送积分',
+    width: 88,
+  },
+  {
     key: 'weiXinOpenid',
     title: '微信ID',
     minWidth: 320,

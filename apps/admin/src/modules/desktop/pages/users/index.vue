@@ -23,6 +23,7 @@ import type { UsersStore } from './utils'
 import { columns } from './utils/columnUser'
 import { USER_STORE } from './utils'
 import type { XTableExpose } from '@3un/ui'
+import UserVoucherPoint from './components/UserVoucherPoint.vue'
 
 const store: UsersStore = reactive({
   extraInfo: zUserExtraInfo.parse({}),
@@ -39,6 +40,7 @@ const store: UsersStore = reactive({
   visiblePoint: false,
   visibleService: false,
   visibleDetail: false,
+  visibleVoucherPoint: false,
 
   refresh: false,
   index: undefined,
@@ -177,5 +179,6 @@ function resetSearch() {
     <UserPoint />
     <UserDetail />
     <UserService />
+    <UserVoucherPoint />
   </div>
 </template>

@@ -47,7 +47,7 @@ export const zOrder = z.object({
   // payout: z.number().default(0),
   supplierId: z.string().default(''),
   updateTime: z.string().default(''),
-  isBulk: z.boolean().default(false),
+  isBulk: z.boolean().nullable().default(false),
   submitMethod: z.enum(SUBMIT_METHOD).default(SUBMIT_METHOD.WECHAT),
   // mtype: z.string().default(''),
 })

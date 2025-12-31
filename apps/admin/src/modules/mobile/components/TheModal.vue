@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge'
 interface TheModalProps {
   title: string
   class?: string
+  headerClass?: string,
 }
 
 interface TheModalEmits {
@@ -38,7 +39,7 @@ watch(visible, (value) => !value && emit('close'))
         )"
       >
         <div class="w-16 h-1 my-2 bg-muted rounded mx-auto" />
-        <div class="flex items-center justify-between px-4 pb-3">
+        <div :class="twMerge('flex items-center justify-between px-4 pb-3', props.headerClass)">
           <h2 class="flex-1 mr-3 truncate text-xl font-semibold">{{ props.title }}</h2>
           <button
             class="bg-muted rounded p-1 text-muted-foreground"

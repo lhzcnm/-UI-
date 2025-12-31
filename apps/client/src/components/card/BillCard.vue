@@ -4,9 +4,11 @@ import type { InvoiceItem } from '@/api/user'
 import { PAYMENT_STATUS_MAP } from '@3un/utils'
 import { twMerge } from 'tailwind-merge'
 
-defineProps<{ item: InvoiceItem }>()
+const { item } = defineProps<{ item: InvoiceItem }>()
 
 const { t } = useI18n()
+
+const isReduce = item.credits.toString().startsWith("-")
 
 // console.log(isNaN(+props.item.credits))
 </script>
@@ -41,10 +43,10 @@ const { t } = useI18n()
         <p
           :class="twMerge(
             'text-lg font-semibold text-success',
-            isNaN(Number(item.credits)) && 'text-sm'
+            isReduce && 'text-danger'
           )"
         >
-          +{{ item.credits }}
+          {{ item.credits }}
         </p>
       </div>
     </div>

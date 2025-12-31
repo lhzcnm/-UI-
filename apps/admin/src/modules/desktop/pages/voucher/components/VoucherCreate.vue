@@ -37,14 +37,16 @@ function handleClose() {
     v-model="store.visibleCreate"
     draggable
     title="生成券码"
+    ui-root="sm:max-w-lg sm:p-0"
+    ui-header="p-4 mb-0 border-b"
     @close="handleClose"
   >
     <template #default>
-      <CreateForm v-model="store.createForm" />
+      <CreateForm class="p-4" v-model="store.createForm" />
     </template>
 
     <template #footer>
-      <div class="mt-2 flex justify-end space-x-2">
+      <div class="mt-2 flex justify-end space-x-2 p-4">
         <XButton label="取消" variant="soft" @click="handleClose" />
         <XButton label="确认" @click="handleCreate" />
       </div>

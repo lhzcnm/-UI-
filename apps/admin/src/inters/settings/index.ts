@@ -76,14 +76,14 @@ export interface Settings {
   invite: string
 
   // 报价单
-  beautyMachinePrompt: string
-  flowerMachinePrompt: string
-  stickerForeignPromt: string
-  cardUnlockedPrompt: string
-  beautyMachinePromptEn: string
-  flowerMachinePromptEn: string
-  stickerForeignPromtEn: string
-  cardUnlockedPromptEn: string
+  // beautyMachinePrompt: string
+  // flowerMachinePrompt: string
+  // stickerForeignPromt: string
+  // cardUnlockedPrompt: string
+  // beautyMachinePromptEn: string
+  // flowerMachinePromptEn: string
+  // stickerForeignPromtEn: string
+  // cardUnlockedPromptEn: string
 
   // 商城
   mallWarmReminderEN: string

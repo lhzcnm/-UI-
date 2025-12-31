@@ -5,6 +5,7 @@ import service from './mobile/service'
 import orders from './mobile/orders'
 import recharge from './mobile/recharge'
 import wechat from './mobile/wechat'
+import { activities } from './mobile/activity'
 
 const mobile: RouteRecordRaw = {
   path: '/m',
@@ -17,6 +18,7 @@ const mobile: RouteRecordRaw = {
     ...orders,
     ...recharge,
     ...wechat,
+    ...activities,
     {
       path: 'dashboard',
       name: 'Dashboard',

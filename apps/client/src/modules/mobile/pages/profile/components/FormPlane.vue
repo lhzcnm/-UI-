@@ -43,16 +43,21 @@ const settingOptions = [
     icon: 'lucide:qr-code',
     action: 'qrcode',
   },
+  // {
+  //   label: t('profile.mobile.setting.shop'),
+  //   icon: "lucide:building",
+  //   action: "shop",
+  // }
 ].filter(item => !!item)
 
-// watch(
-//   () => activeForm.value,
-//   (newVal) => {
-//     if(newVal === 'qrcode') {
-//       inviteCodeVisible.value = true
-//     }
-//   }
-// )
+watch(
+  () => activeForm.value,
+  (newVal) => {
+    if(newVal === 'qrcode') {
+      inviteCodeVisible.value = true
+    }
+  }
+)
 
 const activeTitle = computed(() => {
   const options = {
@@ -62,9 +67,14 @@ const activeTitle = computed(() => {
     email: t('profile.mobile.setting.mail'),
     wechat: t('profile.mobile.setting.wechat'),
     qrcode: t('profile.mobile.setting.invite'),
+    shop: t('profile.mobile.setting.shop'),
   }
 
   return options[activeForm.value as Action]
+})
+
+const visible = computed(() => {
+  return activeForm.value !== 'qrcode' && activeForm.value !== 'shop'
 })
 
 function showForm(type: Action) {
@@ -72,9 +82,11 @@ function showForm(type: Action) {
     inviteCodeVisible.value = true
     return
   }
+  if(type === 'shop') {
+    location.href = "/shop/services"
+  }
   activeForm.value = type
   visibleForm.value = true
-
 }
 
 function closeForm() {
@@ -97,7 +109,7 @@ function closeForm() {
   </section>
 
   <SlideRight
-    v-if="activeForm !== 'qrcode'"
+    v-if="visible"
     v-model="visibleForm"
     :title="activeTitle"
     header-class="border-b"

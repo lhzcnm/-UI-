@@ -18,6 +18,7 @@ const props = defineProps<UserActionProps>()
 const options: XBtnSplitOptions = [
   { label: '查看详情', icon: 'lucide:eye', command: openDetail },
   { label: '积分设置', icon: 'lucide:dollar-sign', command: openPoint },
+  { label: '免费积分设置', icon: 'lucide:dollar-sign', command: openVoucher },
   { label: '服务设置', icon: 'lucide:server', command: openService },,
   { label: '订单历史', icon: 'lucide:shopping-cart', command: toOrderHistory },
   { label: '积分记录', icon: 'lucide:coins', command: toCredits },
@@ -116,6 +117,16 @@ async function handleDelete() {
   await deleteUser(props.row.userId)
   store.users.list.splice(props.index, 1)
   store.users.total--
+}
+
+function openVoucher() {
+  store.formPoint = zUserPointForm.parse({
+    userId: props.row.userId,
+    type: 1,
+  })
+
+  store.index = props.index
+  store.visibleVoucherPoint = true
 }
 </script>
 

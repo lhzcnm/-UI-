@@ -38,27 +38,32 @@ export const columns: XColDef<Credit> = [
     title: '变动金额',
     width: 88,
     render: (value: number, row) => {
-      const isSubmit = /订单提交|Code Request|提交订单/.test(row.description)
-      const isReduce = isSubmit || row.description === '管理员扣除积分'
+      const isSubmit = /提交订单|order|订单提交|Code Request/.test(row.description)
+      const isReduce = value < 0 || isSubmit
       let label = Math.abs(value).toString()
-      let color
+      let color, text
 
       if (isReduce) {
-        if (value > 0) label = `-${label}`
-        color = 'text-danger' 
+        color = 'text-danger'
+        text = `-${label}`
       }
       else {
         color = 'text-success'
-        label = `+${label}`
+        text = `+${label}`
       }
 
-      return h('span', { class: color }, label)
+      return h('span', { class: color }, text)
     }
   },
   {
     key: 'creditsLeft',
     title: '剩余积分',
     width: 88,
+  },
+  {
+    key: 'voucherCreditsLeft',
+    title: '剩余赠送积分',
+    width: 128,
   },
   {
     key: 'description',

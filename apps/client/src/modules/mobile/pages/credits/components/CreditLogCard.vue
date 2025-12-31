@@ -6,8 +6,8 @@ const { item } = defineProps<{ item: CreditLogItem }>()
 const store = useServiceStore()
 const { t } = useI18n()
 
-const isSubmit = /提交订单|order|订单提交|Code Request/.test(item.description)
-const isReduce = +item.credits < 0 || isSubmit
+// const isSubmit = /提交订单|order|订单提交|Code Request/.test(item.description)
+const isReduce = item.credits.toString().startsWith("-")
 const service = item.packageId && store.services.get(item.packageId)
 const title = getTitle()
 
@@ -43,7 +43,7 @@ function getTitle() {
             isReduce && 'text-danger',
           )"
         >
-          {{ `${isReduce ? '-' : '+'}${item.credits}` }}
+          {{ item.credits }}
         </div>
       </div>
       <div class="text-center">

@@ -4,8 +4,10 @@ import VoucherCreate from './components/VoucherCreate.vue'
 
 import { createList } from '@/utils'
 import { VOUCHER_STORE, type VoucherStore } from './utils'
-import { getVouchers } from '@/api/voucher'
+import { deleteVoucher, getVouchers } from '@/api/voucher'
 import { zVoucherCreate, type VoucherListForm } from '@/inters/voucher'
+import { toast } from 'vue-sonner'
+import { xconfirm } from '@3un/utils'
 
 const store: VoucherStore = reactive({
   visibleCreate: false,
@@ -47,11 +49,33 @@ async function getVoucherList(body: VoucherListForm) {
   try {
     loading.value = true
     const data = await getVouchers(body)
+    containerRef.value?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
     store.vouchers = data
   } finally {
     loading.value = false
     store.refresh = false
     store.createForm = zVoucherCreate.parse({})
+  }
+}
+
+async function handleDelete(id: number) {
+  if (!id) return
+
+  if (!await xconfirm("是否确认删除")) return
+
+  try {
+    await deleteVoucher(id)
+    const index = store.vouchers.list.findIndex(v => v.id === id)
+
+    if (index !== -1) {
+      store.vouchers.list.splice(index, 1)
+      toast.success("删除成功")
+    }
+  } catch {
+    toast.warning("删除失败, 请重试")
   }
 }
 </script>
@@ -103,6 +127,7 @@ async function getVoucherList(body: VoucherListForm) {
           :id="voucher.id" :code="voucher.code" :amount="voucher.amount"
           :expire-ts="voucher.expireTs" :create-time="voucher.createTime"
           :status="voucher.status" :user-id="voucher.userId" :use-time="voucher.useTime"
+          @delete="handleDelete"
         />
       </template>
     </section>
