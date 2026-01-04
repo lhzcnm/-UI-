@@ -8,6 +8,7 @@ import tools from './desktop/tools'
 import recharge from './desktop/recharge'
 import quotations from './desktop/quotation'
 import { activities } from './desktop/activity'
+import { monitors } from './desktop/monitor'
 
 const desktop: RouteRecordRaw = {
   path: '/',
@@ -23,6 +24,7 @@ const desktop: RouteRecordRaw = {
     ...recharge,
     ...quotations,
     ...activities,
+    ...monitors,
     {
       path: 'dashboard',
       name: 'Dashboard',

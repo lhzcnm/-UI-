@@ -14,6 +14,8 @@ export interface SidebarMenuChild {
   badge     ?: (() => number)
 }
 
+const mode = import.meta.env.VITE_APP_MODE
+
 export const menus: SidebarMenu[] = [
   {
     label: '仪表盘',
@@ -134,6 +136,15 @@ export const menus: SidebarMenu[] = [
       { label: '活动充值', match: 'huodongchongzhi', path: '/activity/recharge' },
     ],
   },
+  mode === "SanHe" && {
+    label: "监控平台",
+    path: "/on-monitor",
+    icon: "lucide:server",
+    children: [
+      { label: "监控平台用户", match: "monitorUsers", path: "/on-monitor/users" },
+      { label: "监控服务器", match: "monitorServers", path: "/on-monitor/servers" },
+    ]
+  },
   {
     label: '积分券管理',
     path: '/voucher',
@@ -168,7 +179,7 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:pocket',
     match: 'lanjieguanli',
   },
-]
+].filter(item => !!item)
 
 export const tools: SidebarMenu[] = [
   {
