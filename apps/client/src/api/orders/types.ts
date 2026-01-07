@@ -108,6 +108,7 @@ export interface OrderSubmitExportParams {
   imeiList?: string[]
   serviceId: number
   excelHead: string[]
+  deleteExcelHead: string[]
 }
 export interface SubmitOrderListParams {
   serviceId: number

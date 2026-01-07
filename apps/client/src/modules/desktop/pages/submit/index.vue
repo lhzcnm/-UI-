@@ -8,12 +8,13 @@ import { downloadURL, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { h } from 'vue'
 
-import type { Service } from '@/api/services'
+import type { Service, ServiceHeader } from '@/api/services'
 import type { Order, OrderTableView, OrderSubmitResult, SubmitOrderListParams } from '@/api/orders'
 import { getDefaultColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
 import type { FieldMap } from './utils/types'
+import XTableHeaderFillter from './components/XTableHeaderFillter.vue'
 
 interface TheProps {
   id: string
@@ -50,6 +51,10 @@ const headers = shallowRef<string[]>([])
 const selService = ref<Service>()
 const serviceColumns = ref<ServiceColumnItem[]>([])
 
+const tableHeaderData = ref<ServiceHeader[]>([]) // 表头原始数据
+const selectHeader = ref<ServiceHeader[]>([]) // 选中的数据
+const headerFillter = ref(false) //表头筛选的弹窗
+
 const sizes = [50, 150, 200, 300, 500]
 
 const orders = computed(() => {
@@ -74,10 +79,10 @@ if (props.imei) {
 
 watch(
   () => showAll.value,
-  async() => {
-    if(selectedId.value) {
+  async () => {
+    if (selectedId.value) {
       await handleSubmitOrder(selectedId.value)
-    } 
+    }
   }
 )
 
@@ -125,10 +130,10 @@ function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
       width: 158,
       render: (value, row) => {
         let status
-        if(!value) {
+        if (!value) {
           status = ASYNC_ORDER_STATUS_MAP[ASYNC_ORDER_STATUS.ASYNC_SUBMITED]
-  
-          if(row.status === ORDER_STATUS.WAIT) {
+
+          if (row.status === ORDER_STATUS.WAIT) {
             status = ASYNC_ORDER_STATUS_MAP[ASYNC_ORDER_STATUS.WAIT]
           }
         } else {
@@ -152,16 +157,28 @@ function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   ]
 }
 
-async function handleServiceCols(value: number) {  
+async function handleServiceCols(value: number) {
   const { data } = await serviceApi.header(value)
 
   headers.value = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
   serviceColumns.value = data.map(item => ({ name: item.name, nameEn: item.nameEn }))
-  
+
+  tableHeaderData.value = data
+  selectHeader.value = data
+  generateColumns()
+}
+
+watch(() => selectHeader.value, () => {
+  generateColumns()
+}, { deep: true })
+
+
+/** 生成列 */
+function generateColumns() {
   const serviceCols: XTableColumn[] = []
 
-  if (data.length === 0) {
-    if(selService.value?.isUnlock) {
+  if (selectHeader.value.length === 0) {
+    if (selService.value?.isUnlock) {
       columns.value = asyncServiceMergeColumns(serviceCols)
     } else {
       columns.value = getDefaultColumns(t)
@@ -169,9 +186,9 @@ async function handleServiceCols(value: number) {
     return
   }
 
-  for (const item of data) {
+  for (const item of selectHeader.value) {
     const { name, nameEn, width } = item
-    const field = locale.value === 'zh' ? name : nameEn ? nameEn : name 
+    const field = locale.value === 'zh' ? name : nameEn ? nameEn : name
     serviceCols.push({
       key: field,
       title: locale.value === 'zh' ? name : nameEn ? nameEn : name,
@@ -183,7 +200,7 @@ async function handleServiceCols(value: number) {
     })
   }
 
-  if(selService.value?.isUnlock) {
+  if (selService.value?.isUnlock) {
     columns.value = asyncServiceMergeColumns(serviceCols)
   }
   else {
@@ -191,8 +208,9 @@ async function handleServiceCols(value: number) {
   }
 }
 
+
 function handleImport(imeiList: string[], remark: string) {
-  if(count > 0 && !selService.value?.isUnlock) return
+  if (count > 0 && !selService.value?.isUnlock) return
   close()
   const submitedOrders = processWaitList(selectedId.value, imeiList, remark)
   rawOrders.value.splice(0, 0, ...submitedOrders)
@@ -226,10 +244,11 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
 }
 
 function handleSubmit() {
-  if(submitLoading.value) return
+  if (submitLoading.value) return
 
   const submitOrders = rawOrders.value.map(item => {
-    if(item.status === ORDER_STATUS.WAIT) {
+    if (item.status === ORDER_STATUS.WAIT) {
+
       return item
     }
     return null
@@ -242,7 +261,7 @@ function handleSubmit() {
   if (orders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
   submitLoading.value = true
 
-  if(count === 0) {
+  if (count === 0) {
     count = imeis.value.length
   }
 
@@ -357,7 +376,7 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
   const key = import.meta.env.VITE_SUBMIT_STORGE
   const service = store.services.get(selectedId.value)
   let idList = data.map(item => item.codeId).filter((x): x is number => x !== null)
-  if(imeis.value && !showAll.value) {
+  if (imeis.value && !showAll.value) {
     idList = rawOrders.value.map(item => item.id).filter((x): x is number => x !== null)
   }
   localStorage.setItem(`${key}_${service?.id}`, JSON.stringify(idList))
@@ -386,32 +405,32 @@ function handleOrder(rawData: string) {
 function processOrderResult(content: string) {
   const result: Record<string, string> = {}
   const items = content.split('<br>')
-  
+
   const keyMap = getFieldsMap(serviceColumns.value)
-  
+
   const lang = locale.value
   const isEn = lang.startsWith("en")
-  
-  if(items.length === 1 && serviceColumns.value.length === 1) {
+
+  if (items.length === 1 && serviceColumns.value.length === 1) {
     const key = isEn ? (serviceColumns.value[0].nameEn ?? serviceColumns.value[0].name) : serviceColumns.value[0].name
     result[key] = content
   } else {
-    for(const item of items) {
+    for (const item of items) {
       const [key, ...valueParts] = item.split(/[:：]/)
       const rawKey = key.trim()
       const value = valueParts.join(":").trim()
-      
+
       const mapped = keyMap[rawKey]
-      if(!mapped) continue
-      
-      const finalKey = isEn ? (mapped.en ?? mapped.cn ) : mapped.cn
+      if (!mapped) continue
+
+      const finalKey = isEn ? (mapped.en ?? mapped.cn) : mapped.cn
       result[finalKey] = value
     }
   }
-  
+
   const isSuccess = judgeOrderStatus(serviceColumns.value, items)
 
-  if(!isSuccess) {
+  if (!isSuccess) {
     result[headers.value[0]] = content
   }
 
@@ -436,13 +455,13 @@ function getFieldsMap(fields: ServiceColumnItem[]) {
   const fieldsEN = fields.map(item => item.nameEn)
   const result: Record<string, FieldMap> = {}
 
-  for(let i = 0; i < fieldsCN.length; i++) {
+  for (let i = 0; i < fieldsCN.length; i++) {
     const cn = fieldsCN[i]
     const en = fieldsEN[i]
 
     result[cn] = { cn, en }
 
-    if(en !== null && en !== "") {
+    if (en !== null && en !== "") {
       result[en] = { cn, en }
     }
   }
@@ -472,8 +491,15 @@ function handleExport() {
     return
   }
 
+  const unselectedHeader = computed(() => {
+    return tableHeaderData.value
+      .filter(item => !selectHeader.value.some(selected => selected.name === item.name))
+      .map(item => item.name) // 只保留 name
+  })
+
   exportLoading.value = true
   const response = orderApi.submitExport({
+    deleteExcelHead: unselectedHeader.value,
     serviceId: selectedId.value,
     // imeiList: imeis.value,
     orderIdList: ids,
@@ -485,7 +511,7 @@ function handleExport() {
 }
 
 function reset() {
-  router.replace({query: {}})
+  router.replace({ query: {} })
 
   imeis.value = []
   rawOrders.value = []
@@ -493,7 +519,7 @@ function reset() {
   comments.value = ''
   count = 0
 
-  if(selService.value) {
+  if (selService.value) {
     const key = import.meta.env.VITE_SUBMIT_STORGE
     const id = selService.value.id
     localStorage.removeItem(`${key}_${id}`)
@@ -526,6 +552,69 @@ async function handleMustRead() {
   if (!result) pushMsg.value = true
 }
 
+/** 重置 */
+function resetOrder(status: number) {
+  const allowedKeys: (keyof OrderTableView)[] = [
+    'id',
+    'index',
+    'serviceId',
+    'serviceName',
+    'status',
+    'verify',
+    'submitedStatus',
+    'imei',
+    'credits',
+    'remark',
+    'result',
+    'createTime'
+  ]
+
+  const imeiList: string[] = []
+  const processedImei = new Set<string>()
+  const duplicateImei: string[] = []
+
+  rawOrders.value = rawOrders.value.map(order => {
+    if (order.status === status) {
+      if (!processedImei.has(order.imei)) {
+        // 第一次出现的 imei，重置
+        const newOrder: OrderTableView = {} as OrderTableView
+        allowedKeys.forEach(key => {
+          (newOrder[key] as any) = order[key as keyof typeof order]
+        })
+        newOrder.status = 1
+        newOrder.result = ''
+
+        imeiList.push(newOrder.imei)
+        processedImei.add(newOrder.imei)
+
+        return newOrder
+      } else {
+        // 重复的 imei，不重置，收集重复提示
+        duplicateImei.push(order.imei)
+        return order
+      }
+    }
+
+    return order
+  })
+
+  imeis.value = imeiList
+  submited.value = false
+
+  if (duplicateImei.length > 0) {
+    toast.warning(
+      `以下 IMEI 重复，只重置了第一条: ${[...new Set(duplicateImei)].join(', ')}`
+    )
+  }
+}
+
+
+/** 弹框确定函数 */
+function handleConfim(data: ServiceHeader[]) {
+  selectHeader.value = data
+  headerFillter.value = false
+}
+
 async function handleSubmitOrder(id: number) {
   const key = import.meta.env.VITE_SUBMIT_STORGE
   const jsonStr = localStorage.getItem(`${key}_${id}`)
@@ -545,7 +634,7 @@ async function handleSubmitOrder(id: number) {
   }))
 
   pendingOrders.value = data.map(item => {
-    if(item.status === ORDER_STATUS.PROCESSING) {
+    if (item.status === ORDER_STATUS.PROCESSING) {
       return item.id
     }
     return null
@@ -568,24 +657,24 @@ async function getSubmitOrderList(orderIds: number[]) {
 }
 
 async function handleFresh() {
-  if(rawOrders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
-  
+  if (rawOrders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
+
   pendingOrders.value = rawOrders.value.map(item => {
-    if(item.status === ORDER_STATUS.PROCESSING) {
+    if (item.status === ORDER_STATUS.PROCESSING) {
       return item.id
     }
     return null
   }).filter((item): item is number => item !== null)
-  
-  if(pendingOrders.value.length === 0) return toast.info(t('query.prompt.refreshNone'))
+
+  if (pendingOrders.value.length === 0) return toast.info(t('query.prompt.refreshNone'))
   disabled.value = false
   const data = await getSubmitOrderList(pendingOrders.value)
   toast.success(t('submit.success', { action: t('button.fresh') }))
 
-  for(let item of data) {
+  for (let item of data) {
     const index = rawOrders.value.findIndex(order => order.id === item.id)
 
-    if(index === -1) continue
+    if (index === -1) continue
 
     rawOrders.value[index] = {
       ...rawOrders.value[index],
@@ -601,70 +690,49 @@ async function handleFresh() {
   <div class="p-4 h-full w-full">
     <section class="w-full flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
-        <SelectService
-          v-model="selectedId"
-          ui-trigger="w-52"
-          @selected="handleSelected"
-        />
+        <SelectService v-model="selectedId" ui-trigger="w-52" @selected="handleSelected" />
 
-        <ImportPlane
-          :selected-id="selectedId"
-          @submit="handleImport"
-        />
+        <ImportPlane :selected-id="selectedId" @submit="handleImport" />
 
-        <ButtonGroup
-          :layouts="['submit', 'export', 'clear']"
-          @submit="handleSubmit" @export="handleExport" @clear="reset"
-        />
+        <ButtonGroup :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport"
+          @clear="reset" />
 
-        <XButton
-          v-if="selService?.isUnlock"
-          variant="outline"
-          :label="t('query.result')" color="success"
-          :disabled="disabled"
-          :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''"
-          @click="handleFresh"
-        />
+        <XButton v-if="selService?.isUnlock" variant="outline" :label="t('query.result')" color="success"
+          :disabled="disabled" :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''" @click="handleFresh" />
 
-        <XButton
-          v-show="mustRead" variant="outline"
-          :label="t('query.service')" color="warning"
-          @click="handleMustRead"
-        />
+        <XButton v-show="tableHeaderData.length !== 0" variant="outline" label="字段筛选" color="primary"
+          @click="headerFillter = true" />
 
-        <XSwitch
-          v-model="pushMsg" :label="t('query.pushRes')"
-          @change="handlePushMsgChange"
-        />
+        <XButton v-show="tableHeaderData.length !== 0" variant="outline" label="重置成功" color="success"
+          @click="resetOrder(2)" />
 
-        <XSwitch
-          v-model="showAll" label="显示全部"
-          v-if="selectedId"
-        />
+        <XButton v-show="tableHeaderData.length !== 0" variant="outline" label="重置失败" color="danger"
+          @click="resetOrder(3)" />
+
+        <XButton v-show="mustRead" variant="outline" :label="t('query.service')" color="warning"
+          @click="handleMustRead" />
+
+        <XSwitch v-model="pushMsg" :label="t('query.pushRes')" @change="handlePushMsgChange" />
+
+        <XSwitch v-model="showAll" label="显示全部" v-if="selectedId" />
       </div>
 
-      <XPagination
-        v-model="page"
-        v-model:limit="limit"
-        :total="rawOrders.length"
-        :sizes
-        :layouts="[
-          'total',
-          'prev',
-          'pager',
-          'next',
-          'sizes',
-        ]"
-      />
+      <XPagination v-model="page" v-model:limit="limit" :total="rawOrders.length" :sizes :layouts="[
+        'total',
+        'prev',
+        'pager',
+        'next',
+        'sizes',
+      ]" />
     </section>
-  
+
     <section class="w-full h-[calc(100%-3rem)]">
-      <XTable
-        :data="orders"
-        :columns="columns"
-        row-key="index"
-        class="h-full max-w-full border"
-      />
+      <XTable :data="orders" :columns="columns" row-key="index" class="h-full max-w-full border" />
     </section>
+
+    <!-- 字段筛选的弹窗 -->
+    <XDialog v-model="headerFillter">
+      <XTableHeaderFillter :headers="tableHeaderData" @confirm="handleConfim"></XTableHeaderFillter>
+    </XDialog>
   </div>
 </template>
