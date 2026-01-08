@@ -75,15 +75,16 @@ export const PAYMENT_STATUS_LIST = [
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  ADMIN   = 5,
+  ADMIN    = 5,
+  ACTIVITY = 6,
   // ADMINERR   = 7,
-  ALIPAY  = 8,
-  WECHAT  = 9,
-  VOUCHER = 10,
+  ALIPAY   = 8,
+  WECHAT   = 9,
+  VOUCHER  = 10,
 }
 export const PAYMENT_METHOD_MAP: StatusMap = {
   [PAYMENT_METHOD.ADMIN]  : { color: 'warning', label: '管理员充值' },
-  // [PAYMENT_METHOD.ADMINERR]  : { color: 'warning', label: '管理员充值' },
+  [PAYMENT_METHOD.ACTIVITY]  : { color: 'warning', label: '活动赠送' },
   [PAYMENT_METHOD.ALIPAY] : { color: 'primary', label: '支付宝' },
   [PAYMENT_METHOD.WECHAT] : { color: 'success', label: '微信' },
   [PAYMENT_METHOD.VOUCHER] : { color: 'success', label: '积分券' },
@@ -294,15 +295,33 @@ export const VOUCHER_STATUS_List: TypeListItem[] = [
   { value: VOUCHER_STATUS.FAILURE, label: '已失效' },
 ]
 
+export enum VOUCHER_ENUM {
+  COMMON   = 1,
+  ACTIVITY = 2,
+}
+
+export const VOUCHER_ENUM_MAP: StatusMap = {
+  [VOUCHER_ENUM.COMMON]: { color: 'primary', label: "积分充值" },
+  [VOUCHER_ENUM.ACTIVITY]: { color: 'success', label: "活动赠送" },
+}
+
 export enum VOUCHER_TYPE {
   COMMON = 1,
-  ACTIVY = 2,
+  QUERY  = 2,
+  UNLOCK = 3,
 }
 
 export const VOUCHER_TYPE_MAP: StatusMap = {
   [VOUCHER_TYPE.COMMON]: { color: 'primary', label: "充值积分券" },
-  [VOUCHER_TYPE.ACTIVY]: { color: 'success', label: "活动积分券" }
+  [VOUCHER_TYPE.QUERY]: { color: 'success', label: "查询类积分券" },
+  [VOUCHER_TYPE.UNLOCK]: { color: 'warning', label: "解锁类积分券" },
 }
+
+export const VOUCHER_TYPE_LIST = [
+  { value: VOUCHER_TYPE.COMMON, label: "用户积分" },
+  { value: VOUCHER_TYPE.QUERY, label: "查询类服务" },
+  { value: VOUCHER_TYPE.UNLOCK, label: "解锁类服务" },
+]
 
 /**
  * quotation
@@ -355,12 +374,14 @@ export const ACTIVITY_TRIGGER_TYPE_MAP = {
 
 export enum ACTIVITY_BONUS {
   BALANCE    = 1,
-  GIFT_QUERY = 2,
+  QUERY      = 2,
+  UNLOCK     = 3
 }
 
 export const ACTIVITY_BONUS_LIST = [
   { value: ACTIVITY_BONUS.BALANCE, label: "赠送余额" },
-  { value: ACTIVITY_BONUS.GIFT_QUERY, label: "赠送查询积分" },
+  { value: ACTIVITY_BONUS.QUERY, label: "赠送查询积分" },
+  { value: ACTIVITY_BONUS.UNLOCK, label: "赠送解锁积分" },
 ]
 
 // export enum ACTIVATE_STATUS {
