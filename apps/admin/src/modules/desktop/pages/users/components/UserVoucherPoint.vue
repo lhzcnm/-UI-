@@ -35,7 +35,7 @@ async function hadleSubmit() {
   >
     <template #default>
       <UserVoucherPointForm
-        :current-point="store.users.list[store.index!].voucherCredits"
+        :current-point="store.currentCredits"
         v-model="store.formPoint" />
     </template>
 

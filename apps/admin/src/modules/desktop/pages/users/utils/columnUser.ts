@@ -63,7 +63,17 @@ export const columns: XColDef<User> = [
   {
     key: 'voucherCredits',
     title: '赠送积分',
-    width: 88,
+    width: 158,
+    render: (_, row) => {
+      return h(
+        "div",
+        { class: "flex flex-col" },
+        [
+          h("span", `查询类: ${row.voucherCredits}`),
+          h("span", `解锁类: ${row.unlockCredits}`)
+        ]
+      )
+    }
   },
   {
     key: 'weiXinOpenid',

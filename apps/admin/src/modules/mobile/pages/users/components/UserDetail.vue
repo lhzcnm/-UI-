@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { XTagProps } from '@3un/ui'
-import { PAYMENT_METHOD, xconfirm, USER_ROLE_MAP, USER_ROLE } from '@3un/utils'
+import { PAYMENT_METHOD, xconfirm, USER_ROLE_MAP, USER_ROLE, VOUCHER_TYPE } from '@3un/utils'
 import { Icon } from '@iconify/vue'
 
 import { zUserForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
@@ -45,6 +45,41 @@ function openPoint() {
     comments: '',
   })
 
+  store.currentPoints = user.value.credits
+  store.index = store.index
+  store.visiblePoint = true
+}
+
+function openQuery() {
+  store.formPoint = zUserPointForm.parse({
+    paymentMethod: PAYMENT_METHOD.ADMIN,
+    userId: user.value.userId,
+    isAdd: true,
+    isPay: false,
+    credits: 0,
+    transactionId: '',
+    comments: '',
+    type: VOUCHER_TYPE.QUERY
+  })
+
+  store.currentPoints = user.value.voucherCredits
+  store.index = store.index
+  store.visiblePoint = true
+}
+
+function openUnlock() {
+  store.formPoint = zUserPointForm.parse({
+    paymentMethod: PAYMENT_METHOD.ADMIN,
+    userId: user.value.userId,
+    isAdd: true,
+    isPay: false,
+    credits: 0,
+    transactionId: '',
+    comments: '',
+    type: VOUCHER_TYPE.UNLOCK
+  })
+
+  store.currentPoints = user.value.unlockCredits
   store.index = store.index
   store.visiblePoint = true
 }
@@ -125,6 +160,27 @@ async function handleDelete() {
     </div>
 
     <div class="p-4 border-b">
+      <div class="flex items-center mb-2">
+        <Icon icon="lucide:badge-japanese-yen" class="size-5 mr-2 text-primary" />
+        <h3 class="font-semibold text-foreground">账户余额</h3>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-muted rounded-lg p-2 text-center">
+          <div class="text-xs text-muted-foreground mb-1">用户余额</div>
+          <div class="text-lg font-bold text-primary">{{ user.credits }}</div>
+        </div>
+        <div class="bg-muted rounded-lg p-2 text-center">
+          <div class="text-xs text-muted-foreground mb-1">查询类余额</div>
+          <div class="text-lg font-bold text-success">{{ user.voucherCredits }}</div>
+        </div>
+        <div class="bg-muted rounded-lg p-2 text-center">
+          <div class="text-xs text-muted-foreground mb-1">解锁类余额</div>
+          <div class="text-lg font-bold text-warning">{{ user.unlockCredits }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4 border-b">
       <div class="flex items-center mb-3">
         <Icon icon="lucide:bar-chart-3" class="size-5 mr-2 text-primary" />
         <h3 class="font-semibold text-foreground">账户统计</h3>
@@ -179,6 +235,8 @@ async function handleDelete() {
       </div>
       <div class="grid grid-cols-3 gap-2">
         <XButton class="rounded-full" size="md" color="success" icon="lucide:credit-card" label="积分设置" @click="openPoint" />
+        <XButton class="rounded-full" size="md" color="success" icon="lucide:credit-card" label="查询类积分设置" @click="openQuery" />
+        <XButton class="rounded-full" size="md" color="success" icon="lucide:credit-card" label="解锁类积分设置" @click="openUnlock" />
         <XButton class="rounded-full" icon="lucide:server" label="服务设置" @click="openService" />
       </div>
     </div>

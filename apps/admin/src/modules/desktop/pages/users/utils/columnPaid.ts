@@ -45,6 +45,21 @@ export const columns: XColDef<UserPaid> = [
     width: 88,
   },
   {
+    key: 'voucherCredits',
+    title: '赠送积分',
+    width: 158,
+    render: (_, row) => {
+      return h(
+        "div",
+        { class: "flex flex-col" },
+        [
+          h("span", `查询类: ${row.voucherCredits}`),
+          h("span", `解锁类: ${row.unlockCredits}`)
+        ]
+      )
+    }
+  },
+  {
     key: 'weixinOpenId',
     title: '微信ID',
     minWidth: 320,

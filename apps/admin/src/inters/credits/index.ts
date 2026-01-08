@@ -11,7 +11,13 @@ export const zCredit = z.object({
   description: z.string().default(''),
   credits: z.number().default(0),
   creditsLeft: z.string().default(''),
+  /**
+   * 赠送积分
+   * 1. 查询类
+   * 2. 解锁类
+   */
   voucherCreditsLeft: z.string().default(''),
+  unlockedCreditsLeft: z.string().default(""),
   comments: z.string().nullable(),
   ip: z.string().nullable(),
 })

@@ -6,17 +6,20 @@ import { getSettings } from '@/api/settings'
 
 import type { EditorStore } from './utils'
 import { EDITOR_STORE } from './utils'
+import { getActivitys } from '@/api/activity'
+import type { Activity } from '@/inters/activity'
 
 const store: EditorStore = reactive({
   settings: {},
 
   selectedService: 0,
   selectedType: '',
+  selectActivity: -1,
+  activityMap: new Map<number, Activity>(),
 })
 
 provide(EDITOR_STORE, store)
 
-await getSetting()
 async function getSetting() {
   const data = await getSettings()
   store.settings = {}
@@ -31,6 +34,20 @@ async function getSetting() {
     }
   }
 }
+
+async function getActivities() {
+  store.activityMap.clear()
+  const data = await getActivitys({})
+
+  for (const item of data) {
+    store.activityMap.set(item.id, item)
+  }
+}
+
+await Promise.all([
+  getSetting(),
+  getActivities(),
+])
 
 const editor = useTemplateRef('editor')
 </script>

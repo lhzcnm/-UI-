@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { type ActivityVoucherCreate } from '@/inters/voucher/activity'
 import type { ClassNameValue } from 'tailwind-merge'
+import { VOUCHER_TYPE_LIST } from "@3un/utils"
+
+import { type ActivityVoucherCreate } from '@/inters/voucher/activity'
 
 interface ActivityVoucherFormProps {
   amount: string,
@@ -13,7 +15,7 @@ const form = defineModel<ActivityVoucherCreate>({ required: true })
 </script>
 
 <template>
-  <form class="divide-y" :class="props.class">
+  <form class="divide-y" :class="props.class" @submit.prevent>
     <FormField class="py-2" label="充值id" desc="" required>
       <XInput disabled v-model="form.paymentId" placeholder="充值ID" />
     </FormField>
@@ -22,6 +24,16 @@ const form = defineModel<ActivityVoucherCreate>({ required: true })
     </FormField>
     <FormField class="py-2" label="金额" desc="" required>
       <XInput v-model="form.amount" placeholder="请输入金额" />
+    </FormField>
+    <FormField class="py-2" label="积分券类型" desc="只允许该积分处理的服务" required>
+      <XSelect
+        v-model="form.creditsUsageType"
+      >
+        <XSelectItem
+          v-for="item in VOUCHER_TYPE_LIST" :key="item.value"
+          :value="item.value" :label="item.label"
+        />
+      </XSelect>
     </FormField>
     <FormField class="py-2" label="过期时间" desc="" required variant="vertical">
       <div class="flex flex-wrap space-x-2">

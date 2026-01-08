@@ -1,5 +1,5 @@
 import type { IList, IPage } from '@3un/shared'
-import { VOUCHER_STATUS, VOUCHER_TYPE } from '@3un/utils'
+import { VOUCHER_STATUS, VOUCHER_ENUM, VOUCHER_TYPE } from '@3un/utils'
 import z from 'zod/v4'
 
 export const zVoucher = z.object({
@@ -11,7 +11,8 @@ export const zVoucher = z.object({
   status: z.enum(VOUCHER_STATUS).default(VOUCHER_STATUS.USEFUL),
   useTime: z.string().nullable(),
   createTime: z.string(),
-  type: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON),
+  type: z.enum(VOUCHER_ENUM).default(VOUCHER_ENUM.COMMON),
+  creditsUsageType: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON),
 })
 
 export const zVoucherSearchForm = z.object({
@@ -22,7 +23,8 @@ export const zVoucherCreate = z.object({
   amount: z.number().default(0),
   // userId: z.number().optional(),
   day: z.string().default('7'),
-  type: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON),
+  type: z.enum(VOUCHER_ENUM).default(VOUCHER_ENUM.COMMON),
+  creditsUsageType: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON),
 })
 
 export const zVoucherUpdate = zVoucher.pick({

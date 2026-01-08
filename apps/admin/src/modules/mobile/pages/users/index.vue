@@ -25,6 +25,7 @@ const store: UsersStore = reactive({
   formSearch: zUserSearchForm.parse({}),
   formPoint: zUserPointForm.parse({}),
   formService: zUserServiceForm.parse({}),
+  currentPoints: "0.00",
 
   visibleBase: false,
   visibleSearch: false,

@@ -62,7 +62,12 @@ export const columns: XColDef<Credit> = [
   },
   {
     key: 'voucherCreditsLeft',
-    title: '剩余赠送积分',
+    title: '剩余查询积分',
+    width: 128,
+  },
+  {
+    key: 'unlockedCreditsLeft',
+    title: '剩余解锁积分',
     width: 128,
   },
   {

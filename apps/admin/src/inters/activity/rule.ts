@@ -8,6 +8,7 @@ export const zActivityRule = z.object({
   minAmount: z.string(),
   bonusAmount: z.string(),
   bonusType: z.enum(ACTIVITY_BONUS),
+  creditsUsageType: z.enum(ACTIVITY_BONUS),
   createdAt: z.string(),
   updatedAt: z.string(),
   sortOrder: z.number(),
@@ -17,7 +18,8 @@ export const zActivityRuleForm = z.object({
   activityId: z.number(),
   minAmount: z.string().default("100"),
   bonusAmount: z.string().default("10"),
-  bonusType: z.enum(ACTIVITY_BONUS).default(ACTIVITY_BONUS.GIFT_QUERY),
+  creditsUsageType: z.enum(ACTIVITY_BONUS).default(ACTIVITY_BONUS.QUERY),
+  bonusType: z.enum(ACTIVITY_BONUS).default(ACTIVITY_BONUS.QUERY),
   sortOrder: z.number().default(1),
 })
 

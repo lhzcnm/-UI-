@@ -33,7 +33,7 @@ function handleSubmit() {
   <XDialog v-model="store.visiblePoint" draggable title="积分设置">
     <UserPointForm
       v-model="store.formPoint"
-      :current-point="store.users.list[store.index!].credits"
+      :current-point="store.currentCredits"
     />
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

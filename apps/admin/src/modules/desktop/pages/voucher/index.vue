@@ -2,9 +2,10 @@
 import { createList } from '@/utils'
 import { VOUCHER_STORE, type VoucherStore } from './utils'
 import { zVoucherCreate, type VoucherListForm } from '@/inters/voucher'
-import { getVouchers } from '@/api/voucher'
+import { deleteVoucher, getVouchers } from '@/api/voucher'
 import { columns } from './utils/column'
 import VoucherCreate from './components/VoucherCreate.vue'
+import { toast } from 'vue-sonner'
 
 const store: VoucherStore = reactive({
   visibleCreate: false,
@@ -22,6 +23,7 @@ const store: VoucherStore = reactive({
 provide(VOUCHER_STORE, store)
 
 const loading = ref<boolean>(false)
+const ids = ref<number[]>([])
 
 watch(
   (
@@ -53,6 +55,14 @@ async function getVoucherList(params: VoucherListForm) {
     store.createForm = zVoucherCreate.parse({})
   }
 }
+
+async function batchDelete() {
+  try {
+    await deleteVoucher(ids.value)
+    toast.success("删除成功")
+    store.refresh = !store.refresh
+  } catch {}
+}
 </script>
 
 <template>
@@ -63,6 +73,13 @@ async function getVoucherList(params: VoucherListForm) {
           icon="lucide:ticket-plus"
           label="生成券码"
           @click="store.visibleCreate = true"
+        />
+
+        <XButton
+          color="danger"
+          icon="lucide:trash-2"
+          label="批量删除"
+          @click="batchDelete"
         />
       </div>
 
@@ -87,7 +104,10 @@ async function getVoucherList(params: VoucherListForm) {
         :data="store.vouchers.list"
         :loading
         row-key="id"
+        selection
+        selected-key="id"
         class="border h-[calc(100vh-8.75rem)]"
+        @select-change="ids = $event"
       />
     </section>
 

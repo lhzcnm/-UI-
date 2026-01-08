@@ -27,7 +27,6 @@ const mode = computed<FormMode>(() => isCreate.value ? "create" : "update")
 function getRules() {
   const { name, startTime, endTime } = store.formBase
 
-  console.log(startTime)
   const rules: ValidRule[] = [
     {
       rule: !!name,

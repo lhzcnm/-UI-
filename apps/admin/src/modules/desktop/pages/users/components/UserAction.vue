@@ -4,7 +4,7 @@ import { zUserForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
 import { deleteUser, getUserServices, getExtraInfo } from '@/api/users'
 
 import type { XBtnSplitOptions } from '@3un/ui'
-import { PAYMENT_METHOD, USER_ROLE, xconfirm } from '@3un/utils'
+import { PAYMENT_METHOD, USER_ROLE, VOUCHER_TYPE, xconfirm } from '@3un/utils'
 
 import { USER_STORE } from '../utils'
 
@@ -18,7 +18,8 @@ const props = defineProps<UserActionProps>()
 const options: XBtnSplitOptions = [
   { label: '查看详情', icon: 'lucide:eye', command: openDetail },
   { label: '积分设置', icon: 'lucide:dollar-sign', command: openPoint },
-  { label: '免费积分设置', icon: 'lucide:dollar-sign', command: openVoucher },
+  { label: '查询类积分设置', icon: 'lucide:dollar-sign', command: openVoucher },
+  { label: '解锁类积分设置', icon: 'lucide:dollar-sign', command: openUnlock },
   { label: '服务设置', icon: 'lucide:server', command: openService },,
   { label: '订单历史', icon: 'lucide:shopping-cart', command: toOrderHistory },
   { label: '积分记录', icon: 'lucide:coins', command: toCredits },
@@ -56,6 +57,7 @@ function openPoint() {
     comments: '',
   })
 
+  store.currentCredits = props.row.credits
   store.index = props.index
   store.visiblePoint = true
 }
@@ -122,9 +124,23 @@ async function handleDelete() {
 function openVoucher() {
   store.formPoint = zUserPointForm.parse({
     userId: props.row.userId,
-    type: 1,
+    // query service
+    type: VOUCHER_TYPE.QUERY,
   })
 
+  store.currentCredits = props.row.voucherCredits
+  store.index = props.index
+  store.visibleVoucherPoint = true
+}
+
+function openUnlock() {
+  store.formPoint = zUserPointForm.parse({
+    userId: props.row.userId,
+    // unlock service
+    type: VOUCHER_TYPE.UNLOCK,
+  })
+
+  store.currentCredits = props.row.unlockCredits
   store.index = props.index
   store.visibleVoucherPoint = true
 }

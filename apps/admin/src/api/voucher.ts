@@ -19,9 +19,9 @@ export const invalidCode: VoucherInvalidFn = async (body) => {
   await http.post<void>('/voucher/invalid', body)
 }
 
-type VoucherDeleteFn = (id: number) => Promise<void>
-export const deleteVoucher: VoucherDeleteFn = async (id) => {
-  await http.delete(`/voucher/delete/voucher/${id}`)
+type VoucherDeleteFn = (ids: number[]) => Promise<void>
+export const deleteVoucher: VoucherDeleteFn = async (ids) => {
+  await http.delete(`/voucher/delete/voucher`, { params: { ids } })
 }
 
 type ActivyVoucherCreateFn = (body: ActivityVoucherCreate) => Promise<CR<null>>

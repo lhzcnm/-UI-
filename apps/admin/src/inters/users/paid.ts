@@ -7,6 +7,13 @@ export const zUserPaid = z.object({
   userName: z.string().default(''),
   nickName: z.string().default(''),
   credits: z.string().default(''),
+  /**
+   * 赠送积分
+   * 1. 查询类
+   * 2. 解锁类
+   */
+  voucherCredits: z.string().default(''),
+  unlockCredits: z.string().default(""),
   weixinOpenId: z.string().default(''),
   memberExp: z.string().default(''),
   remark: z.string().nullable().default(null),

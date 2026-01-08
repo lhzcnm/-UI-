@@ -3,7 +3,7 @@ import { XButton, XTag, type XColDef } from '@3un/ui'
 import dayjs from 'dayjs'
 import { h } from 'vue'
 import VoucherUpdate from '../components/VoucherUpdate.vue'
-import { VOUCHER_TYPE_MAP, xconfirm, type VOUCHER_STATUS } from '@3un/utils'
+import { VOUCHER_ENUM_MAP, VOUCHER_STATUS, VOUCHER_TYPE, VOUCHER_TYPE_MAP, xconfirm } from '@3un/utils'
 import { deleteVoucher, invalidCode } from '@/api/voucher'
 import { toast } from 'vue-sonner'
 import { VOUCHER_STORE } from '.'
@@ -29,7 +29,20 @@ export const columns: XColDef<Voucher> = [
     minWidth: 88,
     render: (value) => {
       // return VOUCHER_TYPE_MAP[value as VOUCHER_TYPE].label
-      const status = VOUCHER_TYPE_MAP[value]
+      const status = VOUCHER_ENUM_MAP[value]
+      return h(XTag, {
+        color: status.color,
+        label: status.label,
+      })
+    }
+  },
+  {
+    key: 'creditsUsageType',
+    title: '类型',
+    minWidth: 88,
+    render: (value) => {
+      // return VOUCHER_TYPE_MAP[value as VOUCHER_TYPE].label
+      const status = VOUCHER_TYPE_MAP[value ?? VOUCHER_TYPE.COMMON]
       return h(XTag, {
         color: status.color,
         label: status.label,
@@ -127,7 +140,7 @@ export const columns: XColDef<Voucher> = [
         if (!await xconfirm("是否确认删除改代金券")) return
 
         try {
-          await deleteVoucher(row.id)
+          await deleteVoucher([row.id])
 
           const index = store.vouchers.list.findIndex(v => v.id === row.id)
 

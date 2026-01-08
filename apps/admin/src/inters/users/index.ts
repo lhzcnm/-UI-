@@ -1,5 +1,5 @@
 import type { IList, WithId, IPage } from '@3un/shared'
-import { PAYMENT_METHOD, USER_ROLE } from '@3un/utils'
+import { PAYMENT_METHOD, USER_ROLE, VOUCHER_TYPE } from '@3un/utils'
 import { z } from 'zod/v4'
 
 export * from './extra'
@@ -30,7 +30,14 @@ export const zUser = z.object({
   // fax: z.string().nullable().default(null),
   // company: z.string().nullable().default(null),
   credits: z.string().default(''),
+  /**
+   * 赠送积分
+   * 1. 查询类
+   * 2. 解锁类
+   */
   voucherCredits: z.string().default(''),
+  unlockCredits: z.string().default(""),
+  
   autoFillCredits: z.boolean().default(false),
   // currencyId: z.number().default(0),
   pricePlanId: z.number().default(0),
@@ -112,7 +119,7 @@ export const zUserPointForm = z.object({
   transactionId: z.string().default(''),
   comments: z.string().default(''),
   invoices: z.boolean().default(true),
-  type: z.number().default(0),
+  type: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON),
 })
 
 export type UserPointForm = z.infer<typeof zUserPointForm>

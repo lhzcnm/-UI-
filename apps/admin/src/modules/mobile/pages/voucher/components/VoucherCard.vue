@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { invalidCode } from '@/api/voucher'
-import type { VoucherUpdateForm } from '@/inters/voucher'
-import { VOUCHER_STATUS, VOUCHER_STATUS_List, VOUCHER_STATUS_MAP } from '@3un/utils'
 import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
+
+import {
+  VOUCHER_ENUM,
+  VOUCHER_ENUM_MAP,
+  VOUCHER_STATUS,
+  VOUCHER_STATUS_List,
+  VOUCHER_STATUS_MAP,
+  VOUCHER_TYPE,
+  VOUCHER_TYPE_MAP
+} from '@3un/utils'
+
+import { invalidCode } from '@/api/voucher'
+import type { VoucherUpdateForm } from '@/inters/voucher'
 import { VOUCHER_STORE } from '../utils'
 
 interface VoucherCardProps {
@@ -15,6 +25,8 @@ interface VoucherCardProps {
   useTime: string | null
   status: number
   userId: number | null
+  type: VOUCHER_ENUM
+  creditType: VOUCHER_TYPE
 }
 
 interface VoucherCardEmits {
@@ -60,32 +72,37 @@ function handleClick(status: VOUCHER_STATUS) {
         积分券
       </h3>
 
-      <XPopover
-        v-model="visible"
-        placement="bottom-end"
-        close-on-click-outside>
-        <template #trigger>
-          <button
-            class="bg-transparent" @click.stop>
-            <Icon icon="lucide:ellipsis-vertical" />
-          </button>
-        </template>
-        <template #default>
-          <div class="flex flex-col">
+      <div class="flex items-center space-x-2">
+        <XTag :color="VOUCHER_ENUM_MAP[type].color" :label="VOUCHER_ENUM_MAP[type].label" />
+        <XTag :color="VOUCHER_TYPE_MAP[creditType].color" :label="VOUCHER_TYPE_MAP[creditType].label" />
+  
+        <XPopover
+          v-model="visible"
+          placement="bottom-end"
+          close-on-click-outside>
+          <template #trigger>
             <button
-              v-for="status in VOUCHER_STATUS_List" :key="status.value"
-              class="bg-transparent flex items-center px-2 py-2 text-sm border-b last:border-b-none"
-              @click="handleClick(status.value)"
-            >
-              <Icon
-                v-if="props.status === status.value" icon="lucide:check"
-                class="inline-block size-4 mr-2"
-              />
-              {{ status.label }}
+              class="bg-transparent" @click.stop>
+              <Icon icon="lucide:ellipsis-vertical" />
             </button>
-          </div>
-        </template>
-      </XPopover>
+          </template>
+          <template #default>
+            <div class="flex flex-col">
+              <button
+                v-for="status in VOUCHER_STATUS_List" :key="status.value"
+                class="bg-transparent flex items-center px-2 py-2 text-sm border-b last:border-b-none"
+                @click="handleClick(status.value)"
+              >
+                <Icon
+                  v-if="props.status === status.value" icon="lucide:check"
+                  class="inline-block size-4 mr-2"
+                />
+                {{ status.label }}
+              </button>
+            </div>
+          </template>
+        </XPopover>
+      </div>
     </div>
 
     <div class="space-y-1 text-sm text-muted-foreground">
@@ -97,6 +114,10 @@ function handleClick(status: VOUCHER_STATUS) {
         <span class="text-zinc-500 dark:text-zinc-400">券码: </span>
         <span class="break-all">{{ code }}</span>
       </div>
+      <!-- <div>
+        <span class="text-zinc-500 dark:text-zinc-400">积分券类型: </span>
+        <XTag :color="VOUCHER_TYPE_MAP[creditType].color" :label="VOUCHER_TYPE_MAP[creditType].label" />
+      </div> -->
       <div>
         <span class="text-zinc-500 dark:text-zinc-400">状态: </span>
         <span class="break-all" :class="[`text-${VOUCHER_STATUS_MAP[status].color}`]">{{ VOUCHER_STATUS_MAP[status].label }}</span>

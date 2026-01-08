@@ -10,8 +10,6 @@ const store = inject(USER_STORE)!
 
 const loading = ref(false)
 
-const user = computed(() => store.users.list[store.index!])
-
 function handleSubmit() {
   if (store.formPoint.credits === 0) {
     return toast.warning('请先输入点数')
@@ -38,7 +36,7 @@ function handleSubmit() {
   >
     <UserPointForm
       v-model="store.formPoint"
-      :current-point="user.credits"
+      :current-point="store.currentPoints"
       class="px-4"
     />
 

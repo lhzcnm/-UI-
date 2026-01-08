@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue"
+import ActivityRuleForm from "./ActivityRuleForm.vue"
+
+import { toast } from "vue-sonner"
+
 import { zActivityRuleForm, type ActivityRuleCreate, type ActivityRuleUpdate } from "@/inters/activity/rule"
 import { ACTIVITY_STORE } from "../utils"
-import ActivityRuleForm from "./ActivityRuleForm.vue"
-import { Icon } from "@iconify/vue"
 import { createActivityRule, deleteActivityRule, updateActivityRule } from "@/api/activity"
-import { toast } from "vue-sonner"
 
 const store = inject(ACTIVITY_STORE)!
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
+import type { Directive } from 'vue'
 import { VOUCHER_STATUS, VOUCHER_STATUS_List, VOUCHER_STATUS_MAP, xconfirm } from '@3un/utils'
 
 import type { Voucher } from '@/inters/voucher'
@@ -52,6 +53,20 @@ async function handleSelect(value: VOUCHER_STATUS) {
     return toast.warning("已使用的券码不能更改状态")
   }
   emits('change', value)
+}
+
+const vClickOutside: Directive = {
+  beforeMount(el, binding) {
+    el.__clickOutside__ = (e: MouseEvent) => {
+      if (!el.contains(e.target as Node)) {
+        binding.value(e)
+      }
+    }
+    document.addEventListener("click", el.__clickOutside__)
+  },
+  unmounted(el) {
+    document.removeEventListener("click", el.__clickOutside__)
+  },
 }
 </script>
 

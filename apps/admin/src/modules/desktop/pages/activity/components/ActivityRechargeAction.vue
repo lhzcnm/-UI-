@@ -22,7 +22,7 @@ async function openCreate() {
   store.formCreate = zActivyVoucherForm.parse({
     userId: row.userId,
     paymentId: row.paymentId,
-    type: VOUCHER_TYPE.ACTIVY
+    type: VOUCHER_TYPE.QUERY,
   })
 
   store.payment = zActivyRecharge.parse(row)

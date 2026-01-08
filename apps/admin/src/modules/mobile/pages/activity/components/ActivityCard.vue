@@ -38,6 +38,8 @@ async function openRule() {
       minAmount: item.minAmount,
       bonusAmount: item.bonusAmount,
       bonusType: item.bonusType,
+      creditsUsageType: item.creditsUsageType,
+      sortOrder: item.sortOrder,
     }))
     store.index = index
     store.visibleRule = true

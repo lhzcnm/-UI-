@@ -6,6 +6,7 @@ import { updateService } from '@/api/services'
 import { updateSetting } from '@/api/settings'
 
 import { EDITOR_STORE } from '../utils'
+import { updateActivity } from '@/api/activity'
 
 interface TheProps {
   getHtml?: () => string
@@ -22,6 +23,7 @@ const previewHtml = ref('')
 const options = [
   { label: '中文服务说明', value: 'service', icon: 'lucide:file-text' },
   { label: '英文服务说明', value: 'service-en', icon: 'lucide:globe' },
+  { label: '中文活动说明', value: 'activity', icon: 'lucide:balloon' },
   { label: '滑动公告', value: 'scrollingAnnc', icon: 'lucide:scroll-text' },
   { label: '滑动公告EN', value: 'scrollingAnncEn', icon: 'lucide:scroll-text' },
   { label: '弹窗公告', value: 'popupAnnc', icon: 'lucide:message-square' },
@@ -30,14 +32,6 @@ const options = [
   { label: '充值说明EN', value: 'paymentInfoEn', icon: 'lucide:credit-card' },
   { label: 'API使用说明', value: 'apiUsageInfo', icon: 'lucide:key-round' },
   { label: 'API使用说明EN', value: 'apiUsageInfoEn', icon: 'lucide:key-round' },
-  // { label: '靓机/小花报价单温馨提示', value: 'beautyMachinePrompt', icon: 'lucide:file-signature' },
-  // { label: '靓机/小花报价单温馨提示EN', value: 'beautyMachinePromptEn', icon: 'lucide:file-signature' },
-  // { label: '花机/内爆报价单温馨提示', value: 'flowerMachinePrompt', icon: 'lucide:file-signature' },
-  // { label: '花机/内爆报价单温馨提示EN', value: 'flowerMachinePromptEn', icon: 'lucide:file-signature' },
-  // { label: '卡贴外版报价单温馨提示', value: 'stickerForeignPromt', icon: 'lucide:file-signature' },
-  // { label: '卡贴外版报价单温馨提示EN', value: 'stickerForeignPromtEn', icon: 'lucide:file-signature' },
-  // { label: '外版无锁报价单温馨提示', value: 'cardUnlockedPrompt', icon: 'lucide:file-signature' },
-  // { label: '外版无锁报价单温馨提示EN', value: 'cardUnlockedPromptEn', icon: 'lucide:file-signature' },
   { label: '商城下单提示', value: 'mallWarmReminderZH', icon: 'lucide:credit-card' },
   { label: '商城下单提示EN', value: 'mallWarmReminderEN', icon: 'lucide:credit-card' },
 ]
@@ -57,7 +51,7 @@ function handleSelectService(value: number) {
 }
 
 function handleSelectType(value: string) {
-  if (value.startsWith('service')) return
+  if (value.startsWith('service') || value.startsWith('activity')) return
 
   const content = store.settings[value] as string
 
@@ -82,7 +76,14 @@ async function handleSave() {
       mustReadLocal: isEn ? html : undefined,
     })
   }
-  else {
+  else if (store.selectedType.startsWith('activity')) {
+    const activity = store.activityMap.get(store.selectActivity)!
+    await updateActivity({
+      ...activity,
+      id: store.selectActivity,
+      description: html,
+    })
+  } else {
     try {
       await updateSetting([
         { name: store.selectedType, content: html },
@@ -95,6 +96,15 @@ async function handleSave() {
   }
 
   toast.success('保存成功')
+}
+
+function handleSelectActivity(value: number) {
+  store.selectActivity = value
+
+  const activity = store.activityMap.get(value)
+  const content = activity?.description
+  props.setHtml!(content ?? '')
+  previewHtml.value = content ?? ''
 }
 
 function handleRefresh() {
@@ -134,6 +144,17 @@ function handleRefresh() {
           ui-trigger="w-full"
           sync-width="force"
           @selected="handleSelectService"
+        />
+      </div>
+
+      <div v-show="store.selectedType.startsWith('activity')">
+        <label class="mb-2 block text-sm text-label">
+          选择活动
+        </label>
+        <SelectActivity
+          :activitys="store.activityMap"
+          v-model="store.selectActivity"
+          @selected="handleSelectActivity"
         />
       </div>
     </div>

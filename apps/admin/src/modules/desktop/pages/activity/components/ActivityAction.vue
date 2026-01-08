@@ -56,11 +56,12 @@ async function openRule() {
       bonusAmount: item.bonusAmount,
       bonusType: item.bonusType,
       sortOrder: item.sortOrder,
+      creditsUsageType: item.creditsUsageType,
     }))
     store.index = props.index
     store.visibleRule = true
   } catch(err) {
-    console.error(err)  
+    console.error(err)
   }
 }
 </script>

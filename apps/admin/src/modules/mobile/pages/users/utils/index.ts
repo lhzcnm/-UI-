@@ -12,6 +12,7 @@ export interface UsersStore {
   formSearch: UserSearchForm
   formPoint: UserPointForm
   formService: UserServiceCreateParams
+  currentPoints: string
 
   visibleBase: boolean
   visibleSearch: boolean

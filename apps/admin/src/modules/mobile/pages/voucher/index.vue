@@ -67,7 +67,7 @@ async function handleDelete(id: number) {
   if (!await xconfirm("是否确认删除")) return
 
   try {
-    await deleteVoucher(id)
+    await deleteVoucher([id])
     const index = store.vouchers.list.findIndex(v => v.id === id)
 
     if (index !== -1) {
@@ -127,6 +127,7 @@ async function handleDelete(id: number) {
           :id="voucher.id" :code="voucher.code" :amount="voucher.amount"
           :expire-ts="voucher.expireTs" :create-time="voucher.createTime"
           :status="voucher.status" :user-id="voucher.userId" :use-time="voucher.useTime"
+          :credit-type="voucher.creditsUsageType" :type="voucher.type"
           @delete="handleDelete"
         />
       </template>
