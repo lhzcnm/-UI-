@@ -83,6 +83,7 @@ watch(
     if (selectedId.value) {
       await handleSubmitOrder(selectedId.value)
     }
+    imeis.value = []
   }
 )
 
@@ -334,6 +335,7 @@ function submitOrder(service: Service) {
 
   response.finally(() => {
     submitLoading.value = false
+    imeis.value = []  
   })
 }
 
@@ -347,7 +349,7 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
   // }
 
   for (let item of data) {
-    const index = imeis.value.indexOf(item.imei)
+    const index = rawOrders.value.findIndex(order => order.imei === item.imei)
     if (index === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, item)
 
     const isFailed = item.status === ORDER_STATUS.FAILED
@@ -387,7 +389,7 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
-  const index = imeis.value.indexOf(data.imei)
+  const index = rawOrders.value.findIndex(order => order.imei === data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
 
   const resultCol = columns.value[5].key
@@ -572,9 +574,16 @@ function resetOrder(status: number) {
   const imeiList: string[] = []
   const processedImei = new Set<string>()
   const duplicateImei: string[] = []
+  const preparedSet = new Set<string>(imeis.value)
+  const overlapImeis = rawOrders.value
+    .filter(order => order.status === status && preparedSet.has(order.imei))
+    .map(order => order.imei)
 
   rawOrders.value = rawOrders.value.map(order => {
     if (order.status === status) {
+      if (preparedSet.has(order.imei)) {
+        return order
+      }
       if (!processedImei.has(order.imei)) {
         // 第一次出现的 imei，重置
         const newOrder: OrderTableView = {} as OrderTableView
@@ -583,6 +592,7 @@ function resetOrder(status: number) {
         })
         newOrder.status = 1
         newOrder.result = ''
+        newOrder.submitedStatus = ASYNC_ORDER_STATUS.WAIT
 
         imeiList.push(newOrder.imei)
         processedImei.add(newOrder.imei)
@@ -598,12 +608,17 @@ function resetOrder(status: number) {
     return order
   })
 
-  imeis.value = imeiList
+  imeis.value.push(...imeiList)
   submited.value = false
 
   if (duplicateImei.length > 0) {
     toast.warning(
       `以下 IMEI 重复，只重置了第一条: ${[...new Set(duplicateImei)].join(', ')}`
+    )
+  }
+  if (overlapImeis.length > 0) {
+    toast.warning(
+      `以下 IMEI 已在待提交列表，不能再次重置: ${[...new Set(overlapImeis)].join(', ')}`
     )
   }
 }
@@ -727,7 +742,8 @@ async function handleFresh() {
     </section>
 
     <section class="w-full h-[calc(100%-3rem)]">
-      <XTable :data="orders" :columns="columns" row-key="index" class="h-full max-w-full border" />
+      <!-- selection selected-key="id" -->
+      <XTable :data="orders" :columns="columns" row-key="id"  class="h-full max-w-full border" />
     </section>
 
     <!-- 字段筛选的弹窗 -->
