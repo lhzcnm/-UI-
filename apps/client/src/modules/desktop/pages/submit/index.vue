@@ -83,6 +83,7 @@ watch(
 
 async function handleSelected(value: number) {
   if (!value) return
+  close()
 
   // handle reselect service
   if (rawOrders.value.length > 0 && imeis.value.length > 0) {
@@ -177,6 +178,9 @@ async function handleServiceCols(value: number) {
       title: locale.value === 'zh' ? name : nameEn ? nameEn : name,
       minWidth: width,
       tdClassName: 'leading-6 py-1',
+      isColDel: true,
+      isFilter: true,
+      isDrag: true,
       render: (_: any, row: any) => {
         return h('span', { innerHTML: row[field] })
       }
@@ -205,9 +209,10 @@ function handleImport(imeiList: string[], remark: string) {
 function processWaitList(id: number, imeiList: string[], remark: string) {
   const service = store.services.get(id)
   const buckets: OrderTableView[] = []
+  const isEn = locale.value === "en"
 
   for (let i = 0; i < imeiList.length; i++) {
-    buckets.push({
+    const initData: any = {
       id: 0, index: i + 1,
       serviceId: service ? service.id : null,
       serviceName: service ? service.title : null,
@@ -219,7 +224,17 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       remark: remark,
       result: '',
       createTime: '',
+    }
+
+    serviceColumns.value.forEach(item => {
+      const name = isEn ? item.nameEn : item.name
+      initData[name!] = ""
     })
+
+    buckets.push(initData)
+    // buckets.push({
+    //   ...serviceColumns.value.map(item => { (isEn ? item.nameEn : item.name): "" })
+    // })
   }
 
   return buckets
@@ -276,7 +291,6 @@ function submitQueryOrder(service: Service) {
 
     handleOrder(value)
     handleCount()
-    uStore.updateCredit()
   })
 }
 
@@ -304,6 +318,7 @@ function submitOrder(service: Service) {
       .map(item => item.status === ORDER_STATUS.PROCESSING ? item.codeId : null)
       .filter((x): x is number => x !== null)
 
+    uStore.updateCredit()
     renderSubmitOrderResult(data)
   })
 
@@ -619,8 +634,7 @@ async function handleFresh() {
 
         <XButton
           v-if="selService?.isUnlock"
-          variant="outline"
-          :label="t('query.result')" color="success"
+          :label="t('query.result')" color="warning"
           :disabled="disabled"
           :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''"
           @click="handleFresh"
@@ -639,7 +653,7 @@ async function handleFresh() {
 
         <XSwitch
           v-model="showAll" label="显示全部"
-          v-if="selectedId"
+          v-if="selectedId" @change="count = 0"
         />
       </div>
 
@@ -664,6 +678,7 @@ async function handleFresh() {
         :columns="columns"
         row-key="index"
         class="h-full max-w-full border"
+        @column-delete="console.log($event)"
       />
     </section>
   </div>
