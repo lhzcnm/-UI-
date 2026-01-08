@@ -1,4 +1,4 @@
-import type { RECHARGE_TYPE } from '@3un/utils'
+import type { RECHARGE_TYPE, VOUCHER_TYPE } from '@3un/utils'
 import type { R } from '@3un/shared'
 
 export interface RechargeApi {
@@ -28,4 +28,5 @@ export interface ActivityItem {
 export interface ActivityRuleItem {
   minAmount: string,
   bonusAmount: string,
+  creditsUsageType: VOUCHER_TYPE,
 }

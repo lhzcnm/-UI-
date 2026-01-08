@@ -5,11 +5,25 @@ import BulkApiCard from './components/BulkApiCard.vue'
 import ApiKeyCard from './components/ApiKeyCard.vue'
 import AppCard from './components/AppCard.vue'
 import AppCardNew from './components/AppCardNew.vue'
+import UnBindDialog from './components/UnBindDialog.vue'
 
-import axios from 'axios'
+import { wxApi } from '@/api/wx'
+import { PROFILE_STORE, type ProfileStore } from './utils'
+import { VALID_TYPE } from './types'
 
-const store = useUserStore()
-await store.getInfo(true)
+const store: ProfileStore = reactive({
+  visibleUnBind: false,
+
+  unBindType: undefined,
+  validType: VALID_TYPE.PHONE,
+  code: "",
+  isGetCode: false,
+  loading: false,
+})
+
+provide(PROFILE_STORE, store)
+
+const ustore = useUserStore()
 
 const chatVisible = ref(false)
 const inviteVisible = ref(false)
@@ -18,21 +32,13 @@ const inviteImg = ref('')
 const { t } = useI18n()
 
 const mode = import.meta.env.VITE_APP_MODE
-const baseUrl = import.meta.env.VITE_API_URL
 
 const qrcode = computed(() => {
   return `/${mode}/customer_service_qrcode.jpg`
 })
 
 async function generInviteCode() {
-  const { data } = await axios.get(
-    `${baseUrl}/wx/invite/${store.info.openId}`,
-    {
-      responseType: 'blob',
-      headers: {
-        Authorization: localStorage.getItem('access_token')
-      }
-    })
+  const { data } = await wxApi.invite(ustore.info.openId)
 
   inviteImg.value = URL.createObjectURL(data)
 }
@@ -42,7 +48,7 @@ onBeforeUnmount(() => {
 })
 
 await Promise.all([
-  store.getInfo(true),
+  ustore.getInfo(true),
 ])
 </script>
 
@@ -77,7 +83,7 @@ await Promise.all([
         </XPopover>
         <XButton
           :label="t('profile.button.quit')" color="danger"
-          @click="store.logout"
+          @click="ustore.logout"
         />
       </div>
     </div>
@@ -98,5 +104,7 @@ await Promise.all([
         </div>
       </section>
     </div>
+
+    <UnBindDialog />
   </div>
 </template>

@@ -12,6 +12,7 @@ export const userApi: UserApi = {
   apiKey: () => http.get('user/api-key'),
 
   bindWechat: () => http.get('wx/bind/qrcode'),
+  checkWechat: (userId) => http.post(`wx/bind/${userId}`),
 
   updateInfo: (params) => http.put('user/info', params),
   updatePassword: (params) => http.put('user/forgot-psw', params),
@@ -25,4 +26,7 @@ export const userApi: UserApi = {
   loginLogs: () => http.get('user/login-logs'),
 
   logout: () => http.post('user/logout'),
+
+  unbindApply: (params) => http.post("/user/unbind/apply", params),
+  unbindConfirm: (params) => http.post("/user/unbind/confirm", params),
 }

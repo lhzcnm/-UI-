@@ -58,7 +58,7 @@ export const useUserStore = defineStore('userStore', () => {
   async function updateName(name: string) {
     await userApi.updateInfo({ name })
     info.value.username = name
-    saveInfo()
+    logout()
   }
 
   async function openBulkApi() {

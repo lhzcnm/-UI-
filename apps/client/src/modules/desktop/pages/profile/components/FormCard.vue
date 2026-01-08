@@ -6,8 +6,12 @@ import UserCard from './UserCard.vue'
 
 import type { Action } from '../types'
 import { twJoin } from 'tailwind-merge'
+import { PROFILE_TYPE, VALID_TYPE } from '../types'
+import { toast } from 'vue-sonner'
+import { PROFILE_STORE } from '../utils'
 
-const store = useUserStore()
+const store = inject(PROFILE_STORE)!
+const ustore = useUserStore()
 const { t } = useI18n()
 
 const activeForm = ref<Action | null>(null)
@@ -30,6 +34,20 @@ function showForm(type: Action) {
 function closeForm() {
   activeForm.value = null
 }
+
+function openUnbind(type: PROFILE_TYPE) {
+  const { phone, email } = ustore.info
+  if (type === PROFILE_TYPE.WECHAT && !phone && !email) {
+    return toast.warning("请先绑定手机号或者邮箱")
+  }
+
+  store.code = ""
+  store.unBindType = type
+  store.isGetCode = false
+  store.validType = VALID_TYPE.PHONE
+  store.loading = false
+  store.visibleUnBind = true
+}
 </script>
 
 <template>
@@ -40,30 +58,107 @@ function closeForm() {
       <FormField
         :label="t('profile.form.label.account')" class="mb-4"
         :action-text="t('profile.edit')"
-        :value="store.info.username"
+        :value="ustore.info.username"
         @action="showForm('account')"
       />
 
-      <FormField
+      <!-- <FormField
         :label="t('profile.form.label.wechat')" class="mb-4"
-        :value="store.info.openId ? t('profile.params.bind.binding') : t('profile.params.bind.unbound')"
+        :value="store.info.openId ? t('profile.params.bind.change') : t('profile.params.bind.title')"
         :action-text="store.info.openId ? t('profile.params.bind.change') : t('profile.params.bind.title')"
         @action="showForm('wechat')"
-      />
+      /> -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-sm text-muted-foreground">{{ t('profile.form.label.wechat') }}</span>
+          <div class="flex space-x-2">
+            <a
+              v-if="ustore.info.openId"
+              href="javascript:void(0)"
+              class="text-sm text-primary hover:underline"
+              @click="openUnbind(1)">
+              {{ t("profile.form.bind.un") }}
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-sm text-primary hover:underline"
+              @click="showForm('wechat')"
+            >
+              {{ ustore.info.openId ? t('profile.params.bind.change') : t('profile.params.bind.title') }}
+            </a>
+          </div>
+        </div>
+        <input
+          :value="ustore.info.openId ? t('profile.params.bind.binding') : t('profile.params.bind.unbound')" type="text" readonly
+          class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted/80"
+        />
+      </div>
 
-      <FormField
+      <!-- <FormField
         :label="t('profile.form.label.phone')" class="mb-4"
         :value="store.info.phone || t('profile.params.bind.unbound')"
         :action-text="store.info.phone ? t('profile.edit') : t('profile.params.bind.title')"
         @action="showForm('phone')"
-      />
+      /> -->
 
-      <FormField
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-sm text-muted-foreground">{{ t('profile.form.label.phone') }}</span>
+          <div class="flex space-x-2">
+            <a
+              v-if="ustore.info.phone"
+              href="javascript:void(0)"
+              class="text-sm text-primary hover:underline"
+              @click="openUnbind(2)">
+              {{ t("profile.form.bind.un") }}
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-sm text-primary hover:underline"
+              @click="showForm('phone')"
+            >
+              {{ ustore.info.phone ? t('profile.edit') : t('profile.params.bind.title') }}
+            </a>
+          </div>
+        </div>
+        <input
+          :value="ustore.info.phone || t('profile.params.bind.unbound')" type="text" readonly
+          class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted/80"
+        />
+      </div>
+
+      <!-- <FormField
         :label="t('profile.form.label.email')" class="mb-4"
         :value="store.info.email || t('profile.params.bind.unbound')"
         :action-text="store.info.email ? t('profile.edit') : t('profile.params.bind.title')"
         @action="showForm('email')"
-      />
+      /> -->
+
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-sm text-muted-foreground">{{ t('profile.form.label.email') }}</span>
+          <div class="flex space-x-2">
+            <a
+              v-if="ustore.info.email"
+              href="javascript:void(0)"
+              class="text-sm text-primary hover:underline"
+              @click="openUnbind(3)">
+              {{ t("profile.form.bind.un") }}
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-sm text-primary hover:underline"
+              @click="showForm('email')"
+            >
+              {{ ustore.info.email ? t('profile.edit') : t('profile.params.bind.title') }}
+            </a>
+          </div>
+        </div>
+        <input
+          :value="ustore.info.email || t('profile.params.bind.unbound')" type="text" readonly
+          class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted/80"
+        />
+      </div>
 
       <FormField
         class="mb-4"

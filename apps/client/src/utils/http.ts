@@ -42,6 +42,7 @@ http.interceptors.response.use(
 function handleResponse(response: AxiosResponse) {
   const data = response.data
 
+  if (data instanceof Blob) return response
   if (data.code === 200) return data
   return Promise.reject(data)
 }

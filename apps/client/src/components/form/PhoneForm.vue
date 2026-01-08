@@ -13,6 +13,7 @@ const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'phone_countdown'
 })
 const { t } = useI18n()
+const uStore = useUserStore()
 
 const phoneForm = reactive({
   phone: '',
@@ -41,12 +42,17 @@ async function submitForm() {
 
   if (!validate(rules)) return
 
-  await userApi.updatePhone({
-    phone: phoneForm.phone,
-    code: phoneForm.code
-  })
-
-  toast.success(t('submit.success', { action: t("action.bind") }))
+  try {
+    await userApi.updatePhone({
+      phone: phoneForm.phone,
+      code: phoneForm.code
+    })
+  
+    toast.success(t('submit.success', { action: t("action.bind") }))
+    setTimeout(() => {
+      uStore.logout()
+    }, 1500)
+  } catch {}
   props.onClose()
 }
 </script>

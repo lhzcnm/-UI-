@@ -1,3 +1,4 @@
+import type { PROFILE_TYPE } from '@/modules/desktop/pages/profile/types'
 import type { R, IList, IPage } from '@3un/shared'
 
 export interface UserApi {
@@ -7,7 +8,9 @@ export interface UserApi {
 
   apiKey(): R<string>
   apiBulkKey(): R<string>
+
   bindWechat(): R<string>
+  checkWechat(userId: number): R<string>
 
   updateInfo(params: UserUpdateNameParams): R<void>
   updatePassword(params: UserUpdatePassParams): R<void>
@@ -21,6 +24,9 @@ export interface UserApi {
   loginLogs(): R<LoginLogItem[]>
 
   logout(): R<void>
+
+  unbindApply(params: UnBindApplyParams): R<void>
+  unbindConfirm(params: UnBindConfirmParams): R<void>
 }
 
 export interface UserInfo {
@@ -115,4 +121,15 @@ export interface CreditLogItem {
   description: string
   ip: string | null
   comments: string
+}
+
+export interface UnBindApplyParams {
+  target: string,
+  type: PROFILE_TYPE,
+}
+
+export interface UnBindConfirmParams {
+  target: string,
+  type: PROFILE_TYPE,
+  code: string,
 }

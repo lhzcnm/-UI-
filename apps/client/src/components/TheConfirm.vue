@@ -45,6 +45,7 @@ registerConfirm(confirm)
     :text="confirmOptions.text"
     :maskClosable="false"
     :closeBtn="false"
+    ui-root="sm:max-w-md"
     ui-text="tiptap"
     ui-mask="z-50"
   >

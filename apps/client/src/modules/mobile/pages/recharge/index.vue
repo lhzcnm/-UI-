@@ -59,12 +59,14 @@ async function getCurActivity() {
 
 function activityToHtml(activity: ActivityItem) {
   const description = `
-    <p class="mb-4 text-[18px] leading-relaxed text-slate-800 dark:text-slate-200 bg-slate-200 dark:bg-slate-700 rounded-md p-2">
+    <div class="mb-4 text-[18px] leading-relaxed text-slate-800 dark:text-slate-200 bg-slate-200 dark:bg-slate-800 rounded-md p-2">
       ${activity.description}
-    </p>
+    </div>
   `
 
   const rules = activity.rules.map((item, index) => {
+    // const isQuery = item.creditsUsageType === VOUCHER_TYPE.QUERY
+    // const isUnlock = item.creditsUsageType === VOUCHER_TYPE.UNLOCK
     return `
       <div
         class="mb-2 rounded px-3 py-2
@@ -84,6 +86,7 @@ function activityToHtml(activity: ActivityItem) {
             <span class="mx-1 font-medium text-success">
               ${item.bonusAmount}%
             </span>
+            <span>积分</span>
           </span>
         </div>
       </div>
@@ -113,11 +116,16 @@ function activityToHtml(activity: ActivityItem) {
     </div>
   `
 
+  const end = `
+    <div class="text-center text-base text-danger">最终解释权归 ${iStore.settings.title} 所有</div>
+  `
+
   return `
     <div class="activity-content">
       ${description}
       ${rulesBlock}
       ${duration}
+      ${end}
     </div>
   `
 }

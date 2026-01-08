@@ -13,6 +13,7 @@ const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'password_countdown'
 })
 const { t } = useI18n()
+const uStore = useUserStore()
 
 const form = reactive({
   target         : '',
@@ -57,13 +58,18 @@ async function submitForm() {
   const password = encrypt(form.password)
   if (!password) return
 
-  await userApi.updatePassword({
-    target: form.target,
-    code: form.code,
-    password: password
-  })
-
-  toast.success(t('submit.success', { action: t('action.modify') }))
+  try {
+    await userApi.updatePassword({
+      target: form.target,
+      code: form.code,
+      password: password
+    })
+  
+    toast.success(t('submit.success', { action: t('action.modify') }))
+    setTimeout(() => {
+      uStore.logout()
+    }, 1500)
+  } catch {}
   props.onClose()
 }
 </script>

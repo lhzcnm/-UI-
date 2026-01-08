@@ -80,4 +80,5 @@ export interface WX {
   uploadImage(options: UploadImageOption): void
   scanQRCode(options: ScanQRCodeOption): void
   getLocalImgData(options: GetLocalImgDataOption): void
+  closeWindow(): void
 }

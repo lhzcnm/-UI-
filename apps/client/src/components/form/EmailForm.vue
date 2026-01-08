@@ -19,6 +19,7 @@ const emailForm = reactive({
 })
 
 const { t } = useI18n()
+const uStore = useUserStore()
 
 async function sendCode() {
   const rules = [
@@ -43,12 +44,18 @@ async function submitForm() {
 
   if (!validate(rules)) return
 
-  await userApi.updateEmail({
-    email: emailForm.email,
-    code: emailForm.code,
-  })
+  try {
+    await userApi.updateEmail({
+      email: emailForm.email,
+      code: emailForm.code,
+    })
+  
+    toast.success(t('submit.success', { action: t('action.bind') }))
+    setTimeout(() => {
+      uStore.logout()
+    }, 1500)
+  } catch {}
 
-  toast.success(t('submit.success', { action: t('action.bind') }))
   props.onClose()
 }
 </script>
