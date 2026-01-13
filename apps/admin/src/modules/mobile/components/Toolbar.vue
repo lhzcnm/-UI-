@@ -6,7 +6,7 @@ interface ToolbarProps {
 }
 
 defineProps<ToolbarProps>()
-const toggle = ref(false)
+const toggle = defineModel<boolean>({  })
 </script>
 
 <template>

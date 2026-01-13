@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { VOUCHER_TYPE_LIST } from "@3un/utils"
+import { VOUCHER_TYPE_LIST, VOUCHER_TYPE } from "@3un/utils"
 
 import { type ActivityRuleUpdate } from '@/inters/activity/rule'
 
 const form = defineModel<ActivityRuleUpdate>({ required: true })
+
+const displayVouchers = computed(() => VOUCHER_TYPE_LIST.filter(item => item.value !== VOUCHER_TYPE.COMMON))
 </script>
 
 <template>
@@ -19,7 +21,7 @@ const form = defineModel<ActivityRuleUpdate>({ required: true })
         v-model="form.creditsUsageType"
       >
         <XSelectItem
-          v-for="item in VOUCHER_TYPE_LIST" :key="item.value"
+          v-for="item in displayVouchers" :key="item.value"
           :value="item.value" :label="item.label"
         />
       </XSelect>

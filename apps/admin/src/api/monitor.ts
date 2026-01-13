@@ -15,7 +15,7 @@ export const createMonitorUser: MonitorUserCreateFn = async (body) => {
 
 type MonitorUserUpdateFn = (body: MonitorUserUpdate) => Promise<void>
 export const updateMonitorUser: MonitorUserUpdateFn = async (body) => {
-  await http.put("/monitorUser/add", body)
+  await http.put("/monitorUser", body)
 }
 
 type MonitorUserDeleteFn = (ids: number[]) => Promise<void>

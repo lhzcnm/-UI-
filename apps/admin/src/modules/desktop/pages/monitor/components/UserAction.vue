@@ -36,10 +36,7 @@ async function handleDelete() {
 
 function openUpdate() {
   store.id = row.id
-  store.formBase = zMonitorUserForm.parse({
-    username: row.username,
-    password: "",
-  })
+  store.formBase = zMonitorUserForm.parse(row)
   store.visibleBase = true
 }
 </script>

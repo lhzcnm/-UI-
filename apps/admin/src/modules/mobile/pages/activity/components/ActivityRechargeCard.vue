@@ -79,10 +79,11 @@ async function handleDelete() {
       </div>
     </div>
 
-    <div class="flex items-center justify-end px-3 py-2 border-t border-dashed">
-      <XButton
+    <div class="flex items-center justify-end space-x-2 px-3 py-2 border-t border-dashed">
+      <!-- <XButton
         label="生成积分券"
-      />
+        size="sm"
+      /> -->
       <XButton
         label="删除"
         icon="lucide:trash-2"
