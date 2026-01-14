@@ -34,7 +34,7 @@ router.beforeEach(async (to) => {
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)
 
-  const otherPaths = ['scan', 'service', 'orderDetail']
+  const otherPaths = ['scan', 'service', 'orderDetail', 'qrcode-result']
   const isOtherPath = otherPaths.some(p => to.path.includes(p))
 
   // handle wx auth

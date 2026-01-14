@@ -72,6 +72,13 @@ const options = computed(() => {
   return serviceStore.details[findIndex].children
 })
 
+const unitPrice = computed(() => {
+  const service = serviceStore.services.get(store.serviceId)
+
+  if (!service) return "0.00"
+  return service.price
+})
+
 const validImeiList = computed(() => handleImei(form.imei))
 const fileInputRef = useTemplateRef('fileInputRef')
 
@@ -503,7 +510,12 @@ function handlePushMsgChange(value: boolean) {
           v-model="form.imei" rows="5"
           :placeholder="t('query.imei.placeholder')"
         />
-        <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+
+        <div class="flex flex-col">
+          <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', { price: unitPrice }) }}</span>
+          <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+        </div>
+        <!-- <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
         <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
           <Icon icon="svg-spinners:270-ring" class="text-primary" />
         </div>

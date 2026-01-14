@@ -10,7 +10,7 @@ export interface UserApi {
   apiBulkKey(): R<string>
 
   bindWechat(): R<string>
-  checkWechat(userId: number): R<string>
+  checkWechat(userId: number, signal?: AbortSignal): R<string>
 
   updateInfo(params: UserUpdateNameParams): R<void>
   updatePassword(params: UserUpdatePassParams): R<void>

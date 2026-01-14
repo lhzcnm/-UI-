@@ -38,6 +38,7 @@ function handleExport() {
     serviceId: store.serviceId,
     orderIdList: ids,
     excelHead: store.serviceHeader,
+    deleteExcelHead: [],
   })
 
   response.then(({ data }) => downloadURL(data))

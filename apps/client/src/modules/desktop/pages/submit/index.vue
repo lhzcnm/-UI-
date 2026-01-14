@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
-import XTableHeaderFillter from './components/XTableHeaderFillter.vue'
+import TableColumnDialog from './components/TableColumnDialog.vue'
 
-import { XTag, type XTableColumn } from '@3un/ui'
+import { XTag, type XBtnSplitOptions, type XTableColumn } from '@3un/ui'
 import { ASYNC_ORDER_STATUS, ASYNC_ORDER_STATUS_MAP, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import { downloadURL, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
@@ -15,16 +15,26 @@ import { getDefaultColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
 import type { FieldMap } from './utils/types'
+import { SUBMIT_STORE, type SubmitStore } from './utils'
 
 interface TheProps {
   id: string
   imei: string
 }
 
+const store = reactive<SubmitStore>({
+  visibleHeaderFilter: false,
+  selectHeaders: [],
+  serviceCols: [],
+  selectId: 0,
+})
+
+provide(SUBMIT_STORE, store)
+
 const props = defineProps<TheProps>()
 
 const uStore = useUserStore()
-const store = useServiceStore()
+const serviceStore = useServiceStore()
 const { connect, close } = useWsStore()
 const { t, locale } = useI18n()
 
@@ -46,16 +56,49 @@ const submited = ref(false)
 const imeis = ref<string[]>([])
 const comments = ref<string>('')
 
-const selectedId = ref(+props.id)
-const headers = shallowRef<string[]>([])
+// const selectedId = ref(+props.id)
 const selService = ref<Service>()
 const serviceColumns = ref<ServiceColumnItem[]>([])
 
-const tableHeaderData = ref<ServiceHeader[]>([]) // 表头原始数据
-const selectHeader = ref<ServiceHeader[]>([]) // 选中的数据
-const headerFillter = ref(false) //表头筛选的弹窗
+const orderImeis = ref<Record<string, number>>({})
+const reseted = ref<boolean>(false)
+const indexes = shallowRef<number[]>([])
+// const orders = shallowRef<OrderTableView[]>([])
 
 const sizes = [50, 150, 200, 300, 500]
+
+const btnSplitOpts: XBtnSplitOptions = [
+  {
+    label: t("query.fields.title.reset.cover.success"),
+    icon: "",
+    command: () => resetOrder(ORDER_STATUS.SUCCESS),
+  },
+  {
+    label: t("query.fields.title.reset.cover.failed"),
+    icon: "",
+    command: () => resetOrder(ORDER_STATUS.FAILED),
+  },
+  {
+    label: t("query.fields.title.reset.noCover.success"),
+    icon: "",
+    command: () => resetNotCoverOrder(ORDER_STATUS.SUCCESS),
+  },
+  {
+    label: t("query.fields.title.reset.noCover.failed"),
+    icon: "",
+    command: () => resetNotCoverOrder(ORDER_STATUS.FAILED),
+  },
+]
+
+let headers: string[] = []
+
+watch(
+  () => props.id,
+  () => store.selectId = +props.id,
+  {
+    immediate: true,
+  }
+)
 
 const orders = computed(() => {
   return rawOrders.value.slice(
@@ -64,11 +107,21 @@ const orders = computed(() => {
   )
 })
 
+// watch(
+//   () => rawOrders.value,
+//   () => {
+//     orders.value = rawOrders.value.slice(
+//       (page.value - 1) * limit.value,
+//       page.value * limit.value
+//     )
+//   }
+// )
+
 // Initialize
 await Promise.all([
-  store.getServices(),
+  serviceStore.getServices(),
   // Initialize service fields
-  handleSelected(selectedId.value),
+  handleSelected(store.selectId),
 ])
 
 const router = useRouter()
@@ -80,8 +133,8 @@ if (props.imei) {
 watch(
   () => showAll.value,
   async () => {
-    if (selectedId.value) {
-      await handleSubmitOrder(selectedId.value)
+    if (store.selectId) {
+      await handleSubmitOrder(store.selectId)
     }
     imeis.value = []
   }
@@ -89,6 +142,7 @@ watch(
 
 async function handleSelected(value: number) {
   if (!value) return
+  page.value = 1
   close()
 
   // handle reselect service
@@ -100,7 +154,7 @@ async function handleSelected(value: number) {
   count = 0
   disabled.value = false
 
-  selService.value = store.services.get(value)!
+  selService.value = serviceStore.services.get(value)!
 
   await handleServiceCols(value)
   handleSubmitOrder(value)
@@ -109,7 +163,13 @@ async function handleSelected(value: number) {
 function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   const defaultCols = getDefaultColumns(t)
   const len = defaultCols.length
-  const frontCols = defaultCols.slice(0, len - 2)
+  let frontCols = defaultCols
+  let end = len - 1
+  if (serviceCols.length > 0) {
+    end = len - 2
+  }
+  frontCols = defaultCols.slice(0, end)
+
   const endCols = defaultCols.slice(-1)
 
   return [
@@ -162,62 +222,49 @@ function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
 async function handleServiceCols(value: number) {
   const { data } = await serviceApi.header(value)
 
-  headers.value = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
+  headers = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
   serviceColumns.value = data.map(item => ({ name: item.name, nameEn: item.nameEn }))
+  store.serviceCols = data
 
-  tableHeaderData.value = data
-  selectHeader.value = data
-  generateColumns()
+  store.selectHeaders = headers.map(item => item)
+
+  if (selService.value?.isUnlock) {
+    columns.value = asyncServiceMergeColumns(generateColumns(data))
+  } else {
+    columns.value = mergeColumns(generateColumns(data))
+  }
 }
 
-watch(() => selectHeader.value, () => {
-  generateColumns()
-}, { deep: true })
+function generateColumns(headers: ServiceHeader[]) {
+  const columns: XTableColumn[] = []
 
+  const isEn = locale.value === "en"
 
-/** 生成列 */
-function generateColumns() {
-  const serviceCols: XTableColumn[] = []
-
-  if (selectHeader.value.length === 0) {
-    if (selService.value?.isUnlock) {
-      columns.value = asyncServiceMergeColumns(serviceCols)
-    } else {
-      columns.value = getDefaultColumns(t)
-    }
-    return
-  }
-
-  for (const item of selectHeader.value) {
-    const { name, nameEn, width } = item
-    const field = locale.value === 'zh' ? name : nameEn ? nameEn : name
-    serviceCols.push({
-      key: field,
-      title: locale.value === 'zh' ? name : nameEn ? nameEn : name,
-      minWidth: width,
-      tdClassName: 'leading-6 py-1',
+  for (let item of headers) {
+    const label = isEn ? item.nameEn : item.name
+    columns.push({
+      key: label,
+      title: label,
+      minWidth: item.width,
       isColDel: true,
       isFilter: true,
       isDrag: true,
-      render: (_: any, row: any) => {
-        return h('span', { innerHTML: row[field] })
+      render: (value) => {
+        return h("div", {
+          innerHTML: value
+        })
       }
     })
   }
 
-  if (selService.value?.isUnlock) {
-    columns.value = asyncServiceMergeColumns(serviceCols)
-  }
-  else {
-    columns.value = mergeColumns(serviceCols)
-  }
+  return columns
 }
-
 
 function handleImport(imeiList: string[], remark: string) {
   if (count > 0 && !selService.value?.isUnlock) return
+  page.value = 1
   close()
-  const submitedOrders = processWaitList(selectedId.value, imeiList, remark)
+  const submitedOrders = processWaitList(store.selectId, imeiList, remark)
   rawOrders.value.splice(0, 0, ...submitedOrders)
   submited.value = false
   imeis.value = imeiList
@@ -226,7 +273,7 @@ function handleImport(imeiList: string[], remark: string) {
 }
 
 function processWaitList(id: number, imeiList: string[], remark: string) {
-  const service = store.services.get(id)
+  const service = serviceStore.services.get(id)
   const buckets: OrderTableView[] = []
   const isEn = locale.value === "en"
 
@@ -271,7 +318,7 @@ function handleSubmit() {
   }).filter(Boolean)
 
   if (submited.value || submitOrders.length === 0) return toast.warning(t('query.prompt.repeat'))
-  const service = store.services.get(selectedId.value)
+  const service = serviceStore.services.get(store.selectId)
 
   if (!service) return toast.warning(t('query.prompt.serviveNull'))
   if (orders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
@@ -327,7 +374,7 @@ function submitOrder(service: Service) {
   const response = orderApi.submit(params)
   submited.value = true
   response.then(({ data }) => {
-    store.addRecentService(service.id)
+    serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
       toast.success(`${t('submit.success', { action: t('action.submit') })}`)
@@ -351,20 +398,20 @@ function submitOrder(service: Service) {
   response.finally(() => {
     submitLoading.value = false
     imeis.value = []  
+    reseted.value = false
   })
 }
 
 function renderSubmitOrderResult(data: OrderSubmitResult[]) {
-  const errMsgCol = headers.value[0]
-  // const result: OrderTableView[] = []
-
-  // let text = "提交成功, 请前往<a href='/history' class='underline hover:text-success'>订单历史</a>查看结果"
-  // if(locale.value !== 'zh') {
-  //   text = "Submission successful. Please go to <a href='/history' class='underline hover:text-success'>History</a> to view the result."
-  // }
+  const errMsgCol = headers[0]
 
   for (let item of data) {
-    const index = rawOrders.value.findIndex(order => order.imei === item.imei)
+    let index = rawOrders.value.findIndex(order => order.imei === item.imei)
+    const keys = Object.keys(orderImeis.value)
+    if (keys.includes(item.imei)) {
+      index = orderImeis.value[item.imei]
+    }
+
     if (index === -1) return console.error(`[3un] ${t('query.prompt.imeiNotExist')}`, item)
 
     const isFailed = item.status === ORDER_STATUS.FAILED
@@ -372,40 +419,32 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 
     rawOrders.value[index] = {
       ...rawOrders.value[index],
-      // ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
       ...({ [errMsgCol]: item.message }),
       result: item.message,
       status: item.status,
       submitedStatus: item.status === ORDER_STATUS.FAILED ? ASYNC_ORDER_STATUS.ASYNC_FAILED : undefined,
       id: item.codeId,
     }
-
-    // result.push({
-    //   ...rawOrders.value[index],
-    //   ...({ [errMsgCol]: item.message ? item.message : service?.isUnlock ? text : item.message }),
-    //   ...({ [errMsgCol]: item.message }),
-    //   result: item.message,
-    //   status: item.status,
-    //   id: item.codeId,
-    // })
   }
 
   const key = import.meta.env.VITE_SUBMIT_STORGE
-  const service = store.services.get(selectedId.value)
+  const service = serviceStore.services.get(store.selectId)
   let idList = data.map(item => item.codeId).filter((x): x is number => x !== null)
   if (imeis.value && !showAll.value) {
     idList = rawOrders.value.map(item => item.id).filter((x): x is number => x !== null)
   }
   localStorage.setItem(`${key}_${service?.id}`, JSON.stringify(idList))
-
-  // rawOrders.value = result
 }
 
 function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
-  const index = rawOrders.value.findIndex(order => order.imei === data.imei)
+  let index = rawOrders.value.findIndex(order => order.imei === data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
+
+  if (orderImeis.value[data.imei]) {
+    index = orderImeis.value[data.imei]
+  }
 
   const resultCol = columns.value[5].key
   const hasResult = resultCol === 'result'
@@ -413,9 +452,10 @@ function handleOrder(rawData: string) {
   rawOrders.value[index] = {
     ...rawOrders.value[index],
     ...(hasResult && { result: data.result }),
-    ...(!hasResult && processOrderResult(data.result)),
+    ...processOrderResult(data.result),
     status: data.status,
-    id: data.id
+    id: data.id,
+    result: data.result,
   }
 }
 
@@ -440,7 +480,7 @@ function processOrderResult(content: string) {
       const mapped = keyMap[rawKey]
       if (!mapped) continue
 
-      const finalKey = isEn ? (mapped.en ?? mapped.cn) : mapped.cn
+      const finalKey = isEn ? mapped.en ? mapped.en : mapped.cn : mapped.cn
       result[finalKey] = value
     }
   }
@@ -448,9 +488,9 @@ function processOrderResult(content: string) {
   const isSuccess = judgeOrderStatus(serviceColumns.value, items)
 
   if (!isSuccess) {
-    result[headers.value[0]] = content
+    result[headers[0]] = content
   }
-
+  
   return result
 }
 
@@ -497,30 +537,31 @@ function handleCount() {
 
 function handleExport() {
   const ids = rawOrders.value.map((item) => item.id).filter(item => item !== null && item !== undefined)
-  if (!selectedId.value || !ids?.length) {
+  if (!store.selectId || !ids?.length) {
     toast.warning(t('query.prompt.importNull'))
     return
   }
 
-  const service = store.services.get(selectedId.value)
+  const service = serviceStore.services.get(store.selectId)
   if (!submited.value && !service?.isUnlock) {
     toast.warning(t('query.prompt.exportNotSub'))
     return
   }
 
-  const unselectedHeader = computed(() => {
-    return tableHeaderData.value
-      .filter(item => !selectHeader.value.some(selected => selected.name === item.name))
-      .map(item => item.name) // 只保留 name
-  })
+  const isEn = locale.value === "en"
+
+  const deleteHeaders = store.serviceCols.filter(item => {
+    const name = isEn ? item.nameEn : item.name
+    return !store.selectHeaders.includes(name)
+  }).map(item => isEn ? item.nameEn : item.name)
 
   exportLoading.value = true
   const response = orderApi.submitExport({
-    deleteExcelHead: unselectedHeader.value,
-    serviceId: selectedId.value,
+    serviceId: store.selectId,
     // imeiList: imeis.value,
     orderIdList: ids,
-    excelHead: headers.value,
+    excelHead: headers,
+    deleteExcelHead: deleteHeaders,
   })
 
   response.then(({ data }) => downloadURL(data))
@@ -545,7 +586,7 @@ function reset() {
 }
 
 const mustRead = computed(() => {
-  const service = store.services.get(selectedId.value)
+  const service = serviceStore.services.get(store.selectId)
   return service ? service.mustRead : null
 })
 
@@ -569,79 +610,61 @@ async function handleMustRead() {
   if (!result) pushMsg.value = true
 }
 
-/** 重置 */
-function resetOrder(status: number) {
-  const allowedKeys: (keyof OrderTableView)[] = [
-    'id',
-    'index',
-    'serviceId',
-    'serviceName',
-    'status',
-    'verify',
-    'submitedStatus',
-    'imei',
-    'credits',
-    'remark',
-    'result',
-    'createTime'
-  ]
-
-  const imeiList: string[] = []
-  const processedImei = new Set<string>()
-  const duplicateImei: string[] = []
-  const preparedSet = new Set<string>(imeis.value)
-  const overlapImeis = rawOrders.value
-    .filter(order => order.status === status && preparedSet.has(order.imei))
-    .map(order => order.imei)
-
-  rawOrders.value = rawOrders.value.map(order => {
-    if (order.status === status) {
-      if (preparedSet.has(order.imei)) {
-        return order
-      }
-      if (!processedImei.has(order.imei)) {
-        // 第一次出现的 imei，重置
-        const newOrder: OrderTableView = {} as OrderTableView
-        allowedKeys.forEach(key => {
-          (newOrder[key] as any) = order[key as keyof typeof order]
-        })
-        newOrder.status = 1
-        newOrder.result = ''
-        newOrder.submitedStatus = ASYNC_ORDER_STATUS.WAIT
-
-        imeiList.push(newOrder.imei)
-        processedImei.add(newOrder.imei)
-
-        return newOrder
-      } else {
-        // 重复的 imei，不重置，收集重复提示
-        duplicateImei.push(order.imei)
-        return order
-      }
-    }
-
-    return order
-  })
-
-  imeis.value.push(...imeiList)
+function resetOrder(status: ORDER_STATUS) {
+  if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
+  if (reseted.value) return toast.warning(t('query.prompt.reseted'))
+  
   submited.value = false
+  const data = rawOrders.value.filter(item => item.status === status)
+  const dataImeis = [...new Set(data.map(item => item.imei))]
+  const isEn = locale.value === "en"
 
-  if (duplicateImei.length > 0) {
-    toast.warning(
-      `以下 IMEI 重复，只重置了第一条: ${[...new Set(duplicateImei)].join(', ')}`
-    )
+  if (dataImeis.length > 0) {
+    reseted.value = true
   }
-  if (overlapImeis.length > 0) {
-    toast.warning(
-      `以下 IMEI 已在待提交列表，不能再次重置: ${[...new Set(overlapImeis)].join(', ')}`
-    )
+  reseted.value = true
+
+  for (let imei of dataImeis) {
+    const indexes = rawOrders.value
+      .map((item, idx) => ({item, idx}))
+      .filter(({ item }) => item.imei === imei)
+      .map(({ idx }) => idx)
+
+    for (let index of indexes) {
+      const order = rawOrders.value[index]
+
+      if (order.status !== status) continue
+
+      rawOrders.value[index] = {
+        ...rawOrders.value[index],
+        status: ORDER_STATUS.WAIT,
+        submitedStatus: ASYNC_ORDER_STATUS.WAIT,
+        result: "",
+      }
+
+      for (let column of serviceColumns.value) {
+        const label = isEn ? column.nameEn : column.name
+        if (label === null) continue
+
+        (rawOrders.value[index] as any)[label] = ""
+      }
+      
+      orderImeis.value[imei] = index
+
+      break
+    }
   }
+
+  imeis.value = Object.keys(orderImeis.value)
 }
 
-/** 弹框确定函数 */
-function handleConfim(data: ServiceHeader[]) {
-  selectHeader.value = data
-  headerFillter.value = false
+function resetNotCoverOrder(status: ORDER_STATUS) {
+  if (reseted.value) return toast.warning(t('query.prompt.reseted'))
+  submited.value = false
+  const data = rawOrders.value.filter(item => item.status === status)
+  imeis.value = [...new Set(data.map(item => item.imei))]
+  reseted.value = true
+  handleImport(imeis.value, "")
 }
 
 async function handleSubmitOrder(id: number) {
@@ -649,8 +672,6 @@ async function handleSubmitOrder(id: number) {
   const jsonStr = localStorage.getItem(`${key}_${id}`)
 
   const idList = (jsonStr && !showAll.value) ? JSON.parse(jsonStr) as number[] : []
-
-  // if(idList.length === 0 && !showAll.value) return
 
   const data = await getSubmitOrderList(idList)
 
@@ -672,7 +693,7 @@ async function handleSubmitOrder(id: number) {
 
 async function getSubmitOrderList(orderIds: number[]) {
   const params: SubmitOrderListParams = {
-    serviceId: selService.value!.id,
+    serviceId: store.selectId,
     codeIdList: orderIds,
     showAll: showAll.value,
   }
@@ -713,15 +734,71 @@ async function handleFresh() {
   }
   disabled.value = true
 }
+
+function processHeaderConfirm(data: ServiceHeader[]) {
+  if (selService.value?.isUnlock) {
+    columns.value = asyncServiceMergeColumns(generateColumns(data))
+  } else {
+    columns.value = mergeColumns(generateColumns(data))
+  }
+}
+
+function handleDeleteHeader(column: string | number | Symbol | (string & {})) {
+  const isEn = locale.value === "en"
+  const index = store.selectHeaders.findIndex(item => item === column.toString())
+  if (index !== -1) {
+    store.selectHeaders.splice(index, 1)
+  }
+
+  const headers = store.serviceCols.filter(item => {
+    const name = isEn ? item.nameEn : item.name
+    return store.selectHeaders.includes(name)
+  })
+
+  processHeaderConfirm(headers)
+}
+
+function resetSelectRow() {
+  if (count > 0) return toast.warning(t("query.prompt.orderHandle"))
+  if (submitLoading.value) return toast.warning(t("query.prompt.orderHandle"))
+  if (indexes.value.length === 0) {
+    return toast.warning(t("query.fields.prompt.noSelectRow"))
+  }
+
+  const isEn = locale.value === "en"
+  orderImeis.value = {}
+  submited.value = false
+  for (let index of indexes.value) {
+    const arrIndex = index - 1
+    const order = rawOrders.value[arrIndex]
+    orderImeis.value[order.imei] = arrIndex
+
+    console.log(orderImeis)
+    rawOrders.value[arrIndex] = {
+      ...rawOrders.value[arrIndex],
+      status: ORDER_STATUS.WAIT,
+      submitedStatus: ASYNC_ORDER_STATUS.WAIT,
+      result: "",
+    }
+
+    for (let column of serviceColumns.value) {
+      const label = isEn ? column.nameEn : column.name
+      if (label === null) continue
+      (rawOrders.value[arrIndex] as any)[label] = ""
+    }
+  }
+
+  imeis.value = Object.keys(orderImeis.value)
+}
 </script>
 
 <template>
   <div class="p-4 h-full w-full">
     <section class="w-full flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
-        <SelectService v-model="selectedId" ui-trigger="w-52" @selected="handleSelected" />
+        <SelectService v-model="store.selectId" ui-trigger="w-52" @selected="handleSelected" />
 
-        <ImportPlane :selected-id="selectedId" @submit="handleImport" />
+        <ImportPlane :selected-id="store.selectId" @submit="handleImport" />
 
         <ButtonGroup :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport"
           @clear="reset" />
@@ -729,21 +806,26 @@ async function handleFresh() {
         <XButton v-if="selService?.isUnlock" :label="t('query.result')" color="warning"
           :disabled="disabled" :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''" @click="handleFresh" />
 
-        <XButton v-show="tableHeaderData.length !== 0" variant="outline" label="字段筛选" color="primary"
-          @click="headerFillter = true" />
+        <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')" color="primary"
+          @click="store.visibleHeaderFilter = true" />
 
-        <XButton v-show="tableHeaderData.length !== 0" variant="outline" label="重置成功" color="success"
-          @click="resetOrder(2)" />
+        <!-- <XButton v-show="serviceColumns.length !== 0" variant="outline" label="重置成功" color="success"
+          @click="resetOrder(ORDER_STATUS.SUCCESS)" />
 
-        <XButton v-show="tableHeaderData.length !== 0" variant="outline" label="重置失败" color="danger"
-          @click="resetOrder(3)" />
+        <XButton v-show="serviceColumns.length !== 0" variant="outline" label="重置失败" color="danger"
+          @click="resetOrder(ORDER_STATUS.FAILED)" /> -->
+        <XButtonSplit
+          :label="t('button.reset')"
+          :options="btnSplitOpts"
+          @click="resetSelectRow"
+        />
 
         <XButton v-show="mustRead" variant="outline" :label="t('query.service')" color="warning"
           @click="handleMustRead" />
 
         <XSwitch v-model="pushMsg" :label="t('query.pushRes')" @change="handlePushMsgChange" />
 
-        <XSwitch v-model="showAll" label="显示全部" v-if="selectedId" />
+        <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" />
       </div>
 
       <XPagination v-model="page" v-model:limit="limit" :total="rawOrders.length" :sizes :layouts="[
@@ -757,12 +839,18 @@ async function handleFresh() {
 
     <section class="w-full h-[calc(100%-3rem)]">
       <!-- selection selected-key="id" -->
-      <XTable :data="orders" :columns="columns" row-key="id"  class="h-full max-w-full border" />
+      <XTable
+        :data="orders"
+        :columns="columns"
+        row-key="id"
+        class="h-full max-w-full border"
+        selection
+        selected-key="index"
+        @select-change="indexes = $event"
+        @column-delete="handleDeleteHeader"
+      />
     </section>
 
-    <!-- 字段筛选的弹窗 -->
-    <XDialog v-model="headerFillter">
-      <XTableHeaderFillter :headers="tableHeaderData" @confirm="handleConfim"></XTableHeaderFillter>
-    </XDialog>
+    <TableColumnDialog @confirm="processHeaderConfirm" />
   </div>
 </template>

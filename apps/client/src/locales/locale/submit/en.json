@@ -11,7 +11,9 @@
       "scan": "IMEI/SN not recognized",
       "file": "Failed to parse the file",
       "balance": "Balance",
-      "refreshNone": "All orders have been processed or submission failed"
+      "refreshNone": "All orders have been processed or submission failed",
+      "unit": "UnitPrice: {price}",
+      "reseted": "Please Submit Order"
     },
     "result": "Query Result",
     "submit": "Submit Order",
@@ -48,6 +50,24 @@
     "info": {
       "additional": "Additional Information"
     },
-    "submitCount": "Can submit {count} orders"
+    "submitCount": "Can submit {count} orders",
+    "fields": {
+      "title": {
+        "filter": "Field Filter",
+        "reset": {
+          "cover": {
+            "success": "Reset successful",
+            "failed": "Reset failed"
+          },
+          "noCover": {
+            "success": "Reset successful - new order generated",
+            "failed": "Reset failed - new order generation failed"
+          }
+        }
+      },
+      "prompt": {
+        "noSelectRow": "Please Select Row"
+      }
+    }
   }
 }

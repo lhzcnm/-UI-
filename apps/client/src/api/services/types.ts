@@ -2,7 +2,7 @@ import type { IMEI_TYPE } from '@3un/utils'
 import type { R } from '@3un/shared'
 
 export interface ServiceApi {
-  list: () => R<ServiceDetail[]>
+  list: (params?: ServiceListParams) => R<ServiceDetail[]>
   item: (id: number) => R<Service>
   header: (id: number) => R<ServiceHeader[]>
 }
@@ -46,4 +46,13 @@ export interface ServiceHeader {
   nameEn: string
   width: number
   sortNum: number
+}
+
+export interface ServiceListParams {
+  isUnlock: boolean
+}
+
+export interface FieldMap {
+  cn: string,
+  en: string | null,
 }

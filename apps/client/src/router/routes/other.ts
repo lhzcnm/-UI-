@@ -17,6 +17,11 @@ const other: RouteRecordRaw[] = [
     name: 'OrderInfo',
     component: () => import('@/modules/other/OrderInfo.vue'),
   },
+  {
+    path: '/qrcode-result',
+    name: 'qrcode-result',
+    component: () => import('@/modules/other/QrcodeResult.vue'),
+  },
 ]
 
 export default other

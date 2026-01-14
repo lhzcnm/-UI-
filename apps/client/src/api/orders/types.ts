@@ -45,6 +45,18 @@ export interface OrderTableView {
   remark: string
   result: string
   createTime: string
+  [key: string]: any
+}
+
+export interface CustomSubmitOrder {
+  id: number | null,
+  serviceId: number,
+  status: ORDER_STATUS,
+  imei: string,
+  result: string,
+  fields: {
+    [key: string]: string
+  }
 }
 
 /** List */

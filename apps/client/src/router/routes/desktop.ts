@@ -17,6 +17,12 @@ const home: RouteRecordRaw = {
       props: true,
     },
     {
+      name: 'Custom-Submit',
+      path: 'custom-submit',
+      component: () => import('@desktop/pages/custom-submit/index.vue'),
+      props: true,
+    },
+    {
       path: 'history',
       name: 'History',
       component: () => import('@desktop/pages/history/index.vue'),

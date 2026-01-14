@@ -10,6 +10,8 @@ const { t } = useI18n()
 const uStore = useUserStore()
 const expiredMask = ref(false)
 
+let qrcodeAbortController: AbortController | null = null
+
 onMounted(async () => getQRCode())
 
 async function getQRCode() {
@@ -23,7 +25,10 @@ async function getQRCode() {
 
 async function checkQRCode() {
   try {
-    await userApi.checkWechat(uStore.info.userId)
+    qrcodeAbortController?.abort()
+    qrcodeAbortController = new AbortController()
+
+    await userApi.checkWechat(uStore.info.userId, qrcodeAbortController.signal)
     toast.success("绑定成功, 请重新登录")
     setTimeout(() => {
       uStore.logout()
@@ -32,6 +37,10 @@ async function checkQRCode() {
     expiredMask.value = true
   }
 }
+
+onUnmounted(() => {
+  qrcodeAbortController?.abort()
+})
 </script>
 
 <template>

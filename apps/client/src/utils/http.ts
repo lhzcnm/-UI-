@@ -59,9 +59,9 @@ function handleHttpError(error: AxiosError<CR<null>>) {
 
     options[status as keyof typeof options]()
   }
-  else {
-    toast.error('网络异常，请稍后再试')
-  }
+  // else {
+  //   toast.error('网络异常，请稍后再试')
+  // }
 
   return Promise.reject(error)
 }
