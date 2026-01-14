@@ -16,4 +16,5 @@
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "svg.preview.background": "custom",
+  "editor.tabSize": 2
 }
