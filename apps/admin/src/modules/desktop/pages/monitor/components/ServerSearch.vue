@@ -37,7 +37,7 @@ function handleCancel() {
     @close="handleCancel"
   >
     <template #default>
-      <ServerSearchForm class="p-4" v-model="store.formSearch" />
+      <ServerSearchForm class="p-4" v-model="copied" />
     </template>
 
     <template #footer>

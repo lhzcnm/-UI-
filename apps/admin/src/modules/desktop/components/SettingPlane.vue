@@ -6,8 +6,8 @@ import SettingAnno from './settings/SettingAnno.vue'
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
-import type { Configs } from '@/inters/settings'
-import { getConfigs, getSettings } from '@/api/settings'
+import type { Configs, Settings } from '@/inters/settings'
+import { getConfigs } from '@/api/settings'
 
 const iStore = useSystemStore()
 
@@ -24,7 +24,7 @@ const components = {
 }
 
 const tab = ref('routine')
-const settings = ref()
+const settings = ref(iStore.settings as Settings)
 const configs = ref()
 
 watch(
@@ -36,25 +36,25 @@ await init()
 
 async function init() {
   await Promise.all([
-    getSetting(),
+    // getSetting(),
     getConfig(),
   ])
 }
 
-async function getSetting() {
-  const data = await getSettings()
-  settings.value = {}
+// async function getSetting() {
+//   const data = await getSettings()
+//   settings.value = {}
 
-  for (const item of data) {
-    if (item.content) {
-      settings.value[item.name] = item.content
-      continue
-    }
-    if (item.status) {
-      settings.value[item.name] = item.status
-    }
-  }
-}
+//   for (const item of data) {
+//     if (item.content) {
+//       settings.value[item.name] = item.content
+//       continue
+//     }
+//     if (item.status) {
+//       settings.value[item.name] = item.status
+//     }
+//   }
+// }
 
 async function getConfig() {
   const data = await getConfigs()

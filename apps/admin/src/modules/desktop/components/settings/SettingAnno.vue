@@ -17,7 +17,10 @@ const form = ref({
   enablePopupAnnc: settings.enablePopupAnnc,
   enablePaymentInfo: settings.enablePaymentInfo,
   enableScrollingAnnc: settings.enableScrollingAnnc,
+  enableAdminRemainder: settings.enableAdminRemainder,
 })
+
+const mode = import.meta.env.VITE_APP_MODE
 
 const popupOptions: XBtnSplitOptions = [
   {
@@ -124,6 +127,16 @@ function handleEdit(type: keyof typeof settings) {
         label="编辑" size="sm"
         :options="paymentOptions"
       />
+    </FormField>
+
+    <FormField
+      v-if="mode === 'SanHe'"
+      label="更新说明"
+      desc="所偶公众号后台更新说明"
+      :content-flex="false">
+      <XSwitch v-model="form.enableAdminRemainder"
+        @change="handleUpdate($event, 'enableAdminRemainder')" />
+      <XButton label="编辑" size="sm" @click="handleEdit('adminRemainder')" />
     </FormField>
 
     <FormField

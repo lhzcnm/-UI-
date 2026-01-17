@@ -29,7 +29,7 @@ function handleSubmit() {
 <template>
   <XDialog v-model="store.visibleSearch" draggable title="充值筛选">
     <template #default>
-      <ActivityRechargeSearchForm v-model="store.formSearch" />
+      <ActivityRechargeSearchForm v-model="copied" />
     </template>
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">

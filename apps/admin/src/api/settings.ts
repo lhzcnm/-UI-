@@ -22,3 +22,9 @@ type ConfigUpdateFn = (configs: Partial<ConfigItem>[]) => Promise<void>
 export const updateConfig: ConfigUpdateFn = async (configs) => {
   return (await http.put('/config', configs)).data
 }
+
+// update note
+type GetUpdateNote = () => Promise<SettingItem>
+export const getUpdateNote: GetUpdateNote = async () => {
+  return (await http.get<SettingItem>('/getAdminRemain')).data
+}

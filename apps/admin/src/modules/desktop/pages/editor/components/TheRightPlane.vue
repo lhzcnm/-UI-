@@ -13,14 +13,22 @@ interface TheProps {
   setHtml?: (html: string) => void
 }
 
+interface OptionItem {
+  label: string
+  value: string
+  icon: string
+}
+
 const props = defineProps<TheProps>()
 
 const serviceStore = useServiceStore()
+const mode = import.meta.env.VITE_APP_MODE
 
 const store = inject(EDITOR_STORE)!
 const previewHtml = ref('')
 
-const options = [
+const options: OptionItem[] = [
+  mode === "SanHe" && { label: '更新公告', value: 'adminRemainder', icon: 'solar:diploma-verified-outline' },
   { label: '中文服务说明', value: 'service', icon: 'lucide:file-text' },
   { label: '英文服务说明', value: 'service-en', icon: 'lucide:globe' },
   { label: '中文活动说明', value: 'activity', icon: 'lucide:balloon' },
@@ -34,7 +42,7 @@ const options = [
   { label: 'API使用说明EN', value: 'apiUsageInfoEn', icon: 'lucide:key-round' },
   { label: '商城下单提示', value: 'mallWarmReminderZH', icon: 'lucide:credit-card' },
   { label: '商城下单提示EN', value: 'mallWarmReminderEN', icon: 'lucide:credit-card' },
-]
+].filter((o): o is OptionItem => Boolean(o))
 
 const selectedOption = computed(() => 
   options.find(opt => opt.value === store.selectedType)

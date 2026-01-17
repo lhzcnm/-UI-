@@ -1,4 +1,4 @@
-<script setup lang="ts">
+getSettings<script setup lang="ts">
 import CardSection from './components/CardSection.vue'
 import IncomeSection from './components/IncomeSection.vue'
 import OrderSection from './components/OrderSection.vue'

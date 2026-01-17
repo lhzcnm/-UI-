@@ -4,6 +4,7 @@ import { ua } from '@3un/utils'
 
 import type { OrderBatchEditItem } from '@/inters/orders'
 import { getTodoCount } from '@/api/dashboard'
+import { getSettings } from '@/api/settings'
 
 export const useSystemStore = defineStore('system', () => {
   let todoTimer: ReturnType<typeof setInterval> | null = null
@@ -13,6 +14,7 @@ export const useSystemStore = defineStore('system', () => {
 
   const breadcrumbItems = ref<string[]>([])
   const selectedOrders = ref<OrderBatchEditItem[]>([])
+  const settings = ref<Record<string, any>>({})
 
   const todoCount = reactive({
     ticket    : 0,
@@ -47,15 +49,31 @@ export const useSystemStore = defineStore('system', () => {
     }
   }
 
+  async function getSetting() {
+    const data = await getSettings()
+
+    for (const item of data) {
+      if (item.content) {
+        settings.value[item.name] = item.content
+        continue
+      }
+      if (item.status) {
+        settings.value[item.name] = item.status
+      }
+    }
+  }
+
   return {
     showSidebar,
     showSetting,
     todoCount,
     breadcrumbItems,
     selectedOrders,
+    settings,
     toggleSidebar,
     getTodoMsg,
     startTodoTimer,
     stopTodoTimer,
+    getSetting,
   }
 })

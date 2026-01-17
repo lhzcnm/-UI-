@@ -3,11 +3,12 @@ import type { ConfirmOptions } from '@3un/utils'
 import { registerConfirm } from '@3un/utils'
 import { isString } from '@3un/ui'
 
-const defaultOptions = {
+const defaultOptions: ConfirmOptions = {
   title: '提示',
   cancelText: '取消',
   confirmText: '确定',
   text: '',
+  uiRoot: 'sm:max-w-sm'
 }
 
 const confirmVisible = ref(false)
@@ -45,6 +46,7 @@ registerConfirm(confirm)
     :closeBtn="false"
     ui-text="tiptap"
     ui-mask="z-50"
+    :ui-root="confirmOptions.uiRoot"
   >
     <template #footer>
       <div class="flex justify-end space-x-2">

@@ -1,21 +1,56 @@
 <script setup lang="ts">
+import { getUpdateNote } from '@/api/settings'
+import { xconfirm } from '@3un/utils'
 import { useFullscreen } from '@vueuse/core'
 import { twJoin } from 'tailwind-merge'
 
 const route = useRoute()
 const iStore = useSystemStore()
 const { isFullscreen, toggle } = useFullscreen(document.documentElement)
+const remindKey = "annc-remind"
 
 const serviceStore = useServiceStore()
 const levelStore = useLevelStore()
+const remindVisible = ref<boolean>(true)
 
 await Promise.all([
   serviceStore.getItems(),
   serviceStore.getGroups(),
   levelStore.getList(),
+  iStore.getSetting(),
 ])
 
 iStore.startTodoTimer()
+
+async function getRemind() {
+  try {
+    const data = await getUpdateNote()
+    return data
+  } catch {}
+}
+
+onMounted(async () => {
+  const remindStorage = sessionStorage.getItem(remindKey)
+
+  if (remindStorage === 'false') return
+
+  const data = await getRemind()
+  if (!data) return
+  remindVisible.value = data.status
+
+  if (!remindVisible.value) return
+  
+  const confirmed = await xconfirm({
+    title: "更新公告",
+    text: data.content,
+    uiRoot: 'sm:max-w-xl'
+  })
+
+  if (confirmed) {
+    remindVisible.value = false
+    sessionStorage.setItem(remindKey, `${remindVisible.value}`)
+  }
+})
 
 onUnmounted(() => iStore.stopTodoTimer())
 </script>

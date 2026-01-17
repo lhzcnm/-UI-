@@ -65,6 +65,8 @@ export interface Settings {
   enablePaymentInfo: boolean
   // 是否启用会员信息
   enableMemberInfo: boolean
+  // 是否启用更新公告
+  enableAdminRemainder: boolean
 
   // 是否启用注册
   enableRegister: boolean
@@ -88,6 +90,9 @@ export interface Settings {
   // 商城
   mallWarmReminderEN: string
   mallWarmReminderZH: string
+
+  // 更新公告
+  adminRemainder: string
 }
 
 // Config
