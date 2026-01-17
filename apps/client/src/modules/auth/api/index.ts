@@ -11,9 +11,14 @@ const authApi: AuthApi = {
   getQrcode: () => http.get('auth/qrcode'),
 	accountLogin: params => http.post('auth/login/account', params),
 	phoneLogin: params => http.post('auth/login/phone', params),
+  mailLogin: params => http.post('auth/login/email', params),
 	checkQrcode: (nonce) => http.post(`auth/qrcode/${nonce}`),
   
   forgotPsw: (params) => http.put('auth/forgot-psw', params),
+
+  register: (params) => http.post('auth/register', params),
+  register_sms: (phone) => http.get(`auth/register/sms/${phone}`),
+  register_mail: (email) => http.get(`auth/register/email/${email}`),
 }
 
 export default authApi

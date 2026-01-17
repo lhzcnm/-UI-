@@ -3,6 +3,7 @@ export type ConfirmOptions = {
   text?: string
   cancelText?: string
   confirmText?: string
+  uiRoot?: string
 }
 
 let confirmFn: ((options: string | ConfirmOptions) => Promise<boolean>) | null = null

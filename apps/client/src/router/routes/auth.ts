@@ -15,6 +15,11 @@ const auth: RouteRecordRaw = {
       name: 'Forgot',
       component: () => import('@auth/pages/forgot/index.vue'),
     },
+    {
+      path: 'register',
+      name: 'Register',
+      component: () => import('@auth/pages/register/index.vue'),
+    },
   ],
 }
 

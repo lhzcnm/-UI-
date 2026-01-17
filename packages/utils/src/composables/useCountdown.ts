@@ -21,6 +21,11 @@ export function useCountdown({
     sessionStorage.setItem(storageKey, String(startTime))
   }
 
+  const stopCountdown = () => {
+    count.value = 0
+    sessionStorage.removeItem(storageKey)
+  }
+
   onMounted(() => {
     const savedStore = sessionStorage.getItem(storageKey)
     if (!savedStore) return
@@ -53,5 +58,6 @@ export function useCountdown({
     count,
     isRunning,
     startCountdown,
+    stopCountdown,
   }
 }

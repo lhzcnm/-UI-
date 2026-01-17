@@ -1,8 +1,17 @@
 <script setup lang="ts">
 import { twJoin } from 'tailwind-merge'
 
-const store = useSettingStore()
-await store.getSettings()
+import { AUTH_STORE, type AuthStore } from '@auth/utils'
+
+const store: AuthStore = reactive({
+  mode: 'account',
+  data: '',
+})
+
+provide(AUTH_STORE, store)
+
+const iStore = useSettingStore()
+await iStore.getSettings()
 
 onMounted(() => {
   const guestKey = import.meta.env.VITE_GUEST_TOKEN

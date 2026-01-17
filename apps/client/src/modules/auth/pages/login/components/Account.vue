@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { toast } from 'vue-sonner'
 
 import { encrypt, USERNAME_REG, PASSWORD_REG } from '@3un/utils'
 import { validate, VERIFY_MSG } from '@/utils'
 
 import type { LoginMode } from '@auth/types'
 import authApi from '@auth/api'
+import { toast } from 'vue-sonner'
 
 const mode = defineModel<LoginMode>({ required: true })
 const visible = defineModel<boolean>('visible', { required: true })
 
 const router = useRouter()
+const { settings } = useSettingStore()
 
 const form = reactive({
   username: '',
@@ -19,6 +20,7 @@ const form = reactive({
 })
 
 const { t } = useI18n()
+const store = useSettingStore()
 
 function rules(data: typeof form) {
   const { username, password } = data
@@ -36,6 +38,14 @@ function rules(data: typeof form) {
 function onSubmit() {
   if (!validate(rules(form))) return
   visible.value = true
+}
+
+function naviToRegister() {
+  if (settings.enableRegister) {
+    router.push('/auth/register')
+  } else {
+    toast.warning('暂不支持注册功能')
+  }
 }
 
 defineExpose({
@@ -57,9 +67,9 @@ defineExpose({
 })
 
 function toRegister() {
-  // const flag = store.settings.enableRegister
-  // if (flag) router.push('/auth/register')
-  toast.info(t('auth.prompt.register'))
+  const flag = store.settings.enableRegister
+  if (flag) router.push('/auth/register')
+  else  toast.info(t('auth.prompt.register'))
 }
 </script>
 
@@ -73,7 +83,7 @@ function toRegister() {
     </form>
     <div class="flex items-center justify-between mt-3 text-muted-foreground text-sm">
       <span>{{ t('auth.noAccount') }}?<a href="javascript:void(0)" class="hover:underline text-primary" @click="toRegister">{{ t('auth.register') }}</a></span>
-      <RouterLink class="hover:underline" to="/auth/forgot">{{ t('auth.forget.label') }}?</RouterLink>
+      <button class="hover:underline" @click="naviToRegister">{{ t('auth.forget.label') }}?</button>
     </div>
     <div class="mt-6">
       <hr class="hr-fade-content text-muted-foreground mb-2" :data-content="t('auth.method.third')">
@@ -83,6 +93,9 @@ function toRegister() {
         </a>
         <a href="javascript:void(0)" @click="mode = 'phone'" class="rounded-full bg-blue-500 p-1">
           <Icon icon="mage:mobile-phone" class="size-7 sm:size-6 text-white" />
+        </a>
+        <a href="javascript:void(0)" @click="mode = 'mail'" class="rounded-full bg-warning p-1">
+          <Icon icon="lucide:mail" class="size-7 sm:size-6 text-white" />
         </a>
       </div>
     </div>

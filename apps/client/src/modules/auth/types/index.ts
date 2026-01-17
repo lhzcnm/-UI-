@@ -11,12 +11,17 @@ export interface AuthApi {
   getQrcode: () => R<QrcodeResponse>
   accountLogin: (params: AccountLoginParams) => R<string>
   phoneLogin: (params: PhoneLoginParams) => R<string>
+  mailLogin: (params: MailLoginParams) => R<string>
   checkQrcode: (nonce: string) => R<string>
 
   forgotPsw: (params: ForgotPswParams) => R<string>
+
+  register: (params: RegisterRequest) => R<string>
+  register_sms: (phone: string) => R<string>
+  register_mail: (email: string) => R<string>
 }
 
-export type LoginMode = 'account' | 'phone' | 'wechat'
+export type LoginMode = 'account' | 'phone' | 'wechat' | 'mail'
 
 // Account
 export interface AccountLoginParams {
@@ -40,6 +45,17 @@ export interface PhoneLoginForm {
   code: string
 }
 
+// mail
+export interface MailLoginParams {
+  id: string,
+  email: string,
+  code: string,
+}
+export interface MailLoginForm {
+  email: string,
+  code: string,
+}
+
 // Qrcode
 export interface QrcodeResponse {
   qrcodeUrl: string
@@ -57,4 +73,15 @@ export type ForgotPswForm = {
   code: string
   password: string
   confirmPassword: string
+}
+
+// register
+export interface RegisterForm {
+  code: string,
+  email: string | undefined,
+  phone: string | undefined,
+}
+
+export interface RegisterRequest extends RegisterForm {
+  id: string,
 }

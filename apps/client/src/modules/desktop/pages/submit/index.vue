@@ -3,7 +3,7 @@ import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from './components/ImportPlane.vue'
 import TableColumnDialog from './components/TableColumnDialog.vue'
 
-import { XTag, type XBtnSplitOptions, type XTableColumn } from '@3un/ui'
+import { type XTableExpose, XTag, type XBtnSplitOptions, type XTableColumn } from '@3un/ui'
 import { ASYNC_ORDER_STATUS, ASYNC_ORDER_STATUS_MAP, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import { downloadURL, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
@@ -50,6 +50,7 @@ const exportLoading = ref(false)
 const pushMsg = ref(true)
 const disabled = ref(false)
 const showAll = ref(false)
+const tableRef = ref<XTableExpose | null>(null)
 
 let count = 0
 const submited = ref(false)
@@ -249,6 +250,7 @@ function generateColumns(headers: ServiceHeader[]) {
       isColDel: true,
       isFilter: true,
       isDrag: true,
+      showNullOrWhitespace: true,
       render: (value) => {
         return h("div", {
           innerHTML: value
@@ -374,6 +376,7 @@ function submitOrder(service: Service) {
   const response = orderApi.submit(params)
   submited.value = true
   response.then(({ data }) => {
+    tableRef.value?.initFilter()
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
@@ -840,6 +843,7 @@ function resetSelectRow() {
     <section class="w-full h-[calc(100%-3rem)]">
       <!-- selection selected-key="id" -->
       <XTable
+        ref="tableRef"
         :data="orders"
         :columns="columns"
         row-key="id"
