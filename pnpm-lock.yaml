@@ -59,9 +59,6 @@ importers:
       html-to-image:
         specifier: ^1.11.13
         version: 1.11.13
-      html2canvas:
-        specifier: ^1.4.1
-        version: 1.4.1
       jsencrypt:
         specifier: ^3.3.2
         version: 3.3.2
@@ -117,9 +114,6 @@ importers:
       '@intlify/unplugin-vue-i18n':
         specifier: ^6.0.8
         version: 6.0.8(@vue/compiler-dom@3.5.14)(eslint@9.35.0(jiti@1.21.7))(rollup@4.41.0)(typescript@5.7.3)(vue-i18n@11.1.12(vue@3.5.14(typescript@5.7.3)))(vue@3.5.14(typescript@5.7.3))
-      '@types/dom-to-image':
-        specifier: ^2.6.7
-        version: 2.6.7
       '@types/node':
         specifier: '22'
         version: 22.15.21
@@ -981,9 +975,6 @@ packages:
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
-
-  '@types/dom-to-image@2.6.7':
-    resolution: {integrity: sha512-me5VbCv+fcXozblWwG13krNBvuEOm6kA5xoa4RrjDJCNFOZSWR3/QLtOXimBHk1Fisq69Gx3JtOoXtg1N1tijg==}
 
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
@@ -4097,8 +4088,6 @@ snapshots:
     dependencies:
       '@types/ms': 2.1.0
 
-  '@types/dom-to-image@2.6.7': {}
-
   '@types/estree-jsx@1.0.5':
     dependencies:
       '@types/estree': 1.0.7
@@ -4482,7 +4471,8 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  base64-arraybuffer@1.0.2: {}
+  base64-arraybuffer@1.0.2:
+    optional: true
 
   binary-extensions@2.3.0: {}
 
@@ -4666,6 +4656,7 @@ snapshots:
   css-line-break@2.1.0:
     dependencies:
       utrie: 1.0.2
+    optional: true
 
   cssesc@3.0.0: {}
 
@@ -5163,6 +5154,7 @@ snapshots:
     dependencies:
       css-line-break: 2.1.0
       text-segmentation: 1.0.3
+    optional: true
 
   ignore@5.3.2: {}
 
@@ -6466,6 +6458,7 @@ snapshots:
   text-segmentation@1.0.3:
     dependencies:
       utrie: 1.0.2
+    optional: true
 
   thenify-all@1.6.0:
     dependencies:
@@ -6692,6 +6685,7 @@ snapshots:
   utrie@1.0.2:
     dependencies:
       base64-arraybuffer: 1.0.2
+    optional: true
 
   validator@13.15.0: {}
 
