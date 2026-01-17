@@ -40,11 +40,11 @@ let captchaId = ""
 const options: XSegmentedOption[] = [
   {
     value: 'phone',
-    label: '手机号',
+    label: t('auth.placeholder.phone'),
   },
   {
     value: 'email',
-    label: '邮箱',
+    label: t('auth.placeholder.Email'),
   },
 ]
 
@@ -84,7 +84,7 @@ function vertifyCaptcha(id: string) {
 async function doRegister() {
   try {
     await authApi.register({ ...form, id: captchaId })
-    toast.success("注册成功")
+    toast.success(t('auth.toast.registerSuccess'))
     stopCountdown()
     store.data = store.mode === 'phone' ? form.phone! : form.email!
     router.push("/auth")
@@ -112,7 +112,8 @@ function onSubmit() {
   visible.value = true
 }
 
-function initData() {
+function initData(data: string | number) {
+  visibleMode.value = data as 'phone' | 'email'
   Object.assign(form, initForm)
 }
 </script>
@@ -120,7 +121,7 @@ function initData() {
 <template>
   <div class="flex-1 py-4 sm:py-0 space-y-2">
     <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-bold mb-4">账号注册</h2>
+      <h2 class="text-2xl font-bold mb-4">{{ t('auth.loginRegister') }}</h2>
       <XSegmented v-model="store.mode"
         :options @change="initData" size="sm" />
     </div>
@@ -139,7 +140,7 @@ function initData() {
         
       <div class="flex items-center space-x-2 mt-4">
         <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="naviToAccount"></XButton>
-        <XButton class="w-full" label="注册" @click="onSubmit" />
+        <XButton class="w-full" :label="t('auth.btnRegister')" @click="onSubmit" />
       </div>
     </div>
 

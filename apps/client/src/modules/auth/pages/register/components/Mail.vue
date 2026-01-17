@@ -16,7 +16,7 @@ const { t } = useI18n()
 
 <template>
   <form class="space-y-4" @submit.prevent>
-    <XInput v-model="form.email" placeholder="邮箱" />
+    <XInput v-model="form.email" :placeholder="t('auth.placeholder.email')" />
     <div class="flex items-center space-x-2">
       <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
       <XButton type="button" @click="sendCaptcha" :disabled="isRunning">

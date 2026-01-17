@@ -1,34 +1,43 @@
 {
   "auth": {
     "method": {
-      "third": "Third-party login methods",
+      "third": "Third-party login",
       "account": "Account login",
-      "phone": "Phone number login",
-      "wechat": "WeChat scan login"
+      "phone": "Phone login",
+      "wechat": "WeChat QR login"
     },
     "placeholder": {
       "userName": "Username",
       "pwd": "Password",
-      "phone": "Phone number",
+      "phone": "Phone",
+      "Email": "Email",
       "vertify": "Verification code",
-      "countdown": "{action} seconds to resend",
-      "sendVerty": "Send verification code"
+      "countdown": "Resend in {action} seconds",
+      "sendVerty": "Send verification code",
+      "email": "Please enter your email"
     },
     "login": "Login",
-    "noAccount": "No account",
+    "emailLogin": "Email login",
+    "loginRegister": "Register account",
+    "noAccount": "No account yet",
     "register": "Register now",
+    "btnRegister": "Register",
     "forget": {
-      "title": "Reset Password",
-      "label": "Forgot Password",
-      "auth": "Email/Phone Number",
+      "title": "Reset password",
+      "label": "Forgot password",
+      "auth": "Email / Phone",
       "pwd": "Password",
-      "confirmPwd": "Confirm Password",
+      "confirmPwd": "Confirm password",
       "button": "Reset"
     },
     "refresh": "Click to refresh",
     "backTo": "Back to {action}",
     "prompt": {
-      "register": "Registration function, not yet available"
+      "register": "Registration is currently unavailable"
+    },
+    "toast": {
+      "noFeature": "Registration is not supported yet",
+      "registerSuccess": "Registration successful"
     }
   }
 }

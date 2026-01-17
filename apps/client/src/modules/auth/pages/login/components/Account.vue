@@ -44,7 +44,7 @@ function naviToRegister() {
   if (settings.enableRegister) {
     router.push('/auth/register')
   } else {
-    toast.warning('暂不支持注册功能')
+    toast.warning(t('auth.toast.noFeature'))
   }
 }
 

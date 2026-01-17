@@ -18,7 +18,7 @@ const { count, isRunning, startCountdown } = useCountdown()
 const { t } = useI18n()
 
 async function sendCaptcha() {
-  const validRule = [{ rule: !!form.phone, message: VERIFY_MSG.PHONE }]
+  const validRule = [{ rule: !!form.phone, message: t(VERIFY_MSG.PHONE) }]
   if (!validate(validRule) || isRunning.value) return
 
   await authApi.sms(form.phone)
@@ -28,8 +28,8 @@ async function sendCaptcha() {
 function rules(data: typeof form) {
   const { phone, code } = data
   return [
-    { rule: !!phone.trim(), message: VERIFY_MSG.PHONE },
-    { rule: CAPTCHA_REG.test(code.trim()), message: VERIFY_MSG.CODE },
+    { rule: !!phone.trim(), message: t(VERIFY_MSG.PHONE) },
+    { rule: CAPTCHA_REG.test(code.trim()), message: t(VERIFY_MSG.CODE) },
   ]
 }
 
