@@ -265,6 +265,7 @@ function generateColumns(headers: ServiceHeader[]) {
 function handleImport(imeiList: string[], remark: string) {
   if (count > 0 && !selService.value?.isUnlock) return
   page.value = 1
+  tableRef.value?.initFilter()
   close()
   const submitedOrders = processWaitList(store.selectId, imeiList, remark)
   rawOrders.value.splice(0, 0, ...submitedOrders)
@@ -376,7 +377,6 @@ function submitOrder(service: Service) {
   const response = orderApi.submit(params)
   submited.value = true
   response.then(({ data }) => {
-    tableRef.value?.initFilter()
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
@@ -828,7 +828,7 @@ function resetSelectRow() {
 
         <XSwitch v-model="pushMsg" :label="t('query.pushRes')" @change="handlePushMsgChange" />
 
-        <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" />
+        <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" @change="count = 0" />
       </div>
 
       <XPagination v-model="page" v-model:limit="limit" :total="rawOrders.length" :sizes :layouts="[
