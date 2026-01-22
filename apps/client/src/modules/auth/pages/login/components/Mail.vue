@@ -36,7 +36,7 @@ function onSubmit() {
 }
 
 async function sendCaptcha() {
-  const validRule = [{ rule: !!form.email, message: VERIFY_MSG.EMAIL }]
+  const validRule = [{ rule: !!form.email, message: t(VERIFY_MSG.EMAIL) }]
   if (!validate(validRule) || isRunning.value) return
 
   await authApi.email(form.email)
@@ -65,9 +65,9 @@ defineExpose({
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-4">邮箱登录</h2>
+    <h2 class="text-2xl font-bold mb-4">{{ t('auth.emailLogin') }}</h2>
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <XInput v-model="form.email" placeholder="请输入邮箱" />
+      <XInput v-model="form.email" :placeholder="t('auth.placeholder.email')" />
       <div class="flex items-center space-x-2">
         <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
         <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">

@@ -10,13 +10,18 @@
       "userName": "用户名",
       "pwd": "密码",
       "phone": "手机号",
+      "Email": "邮箱",
       "vertify": "验证码",
       "countdown": "{action}秒后重发",
-      "sendVerty": "发送验证码"
+      "sendVerty": "发送验证码",
+      "email": "请输入邮箱"
     },
     "login": "登录",
+    "emailLogin": "邮箱登录",
+    "loginRegister": "账号注册",
     "noAccount": "没有账号",
     "register": "立即注册",
+    "btnRegister": "注册",
     "forget": {
       "title": "重置密码",
       "label": "忘记密码",
@@ -29,6 +34,10 @@
     "backTo": "返回{action}",
     "prompt": {
       "register": "注册功能, 暂未开放"
+    },
+    "toast": {
+      "noFeature": "暂不支持注册功能",
+      "registerSuccess": "注册成功"
     }
   }
 }
