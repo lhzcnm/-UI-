@@ -132,7 +132,7 @@ function handleEdit(type: keyof typeof settings) {
     <FormField
       v-if="mode === 'SanHe'"
       label="更新说明"
-      desc="所偶公众号后台更新说明"
+      desc="所有公众号后台更新说明"
       :content-flex="false">
       <XSwitch v-model="form.enableAdminRemainder"
         @change="handleUpdate($event, 'enableAdminRemainder')" />
