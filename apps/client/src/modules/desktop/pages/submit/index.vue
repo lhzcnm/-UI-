@@ -16,6 +16,7 @@ import { serviceApi } from '@/api/services'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
 import type { FieldMap } from './utils/types'
 import { SUBMIT_STORE, type SubmitStore } from './utils'
+import { userApi } from '@/api/user'
 
 interface TheProps {
   id: string
@@ -67,6 +68,9 @@ const indexes = shallowRef<number[]>([])
 // const orders = shallowRef<OrderTableView[]>([])
 
 const sizes = [50, 150, 200, 300, 500]
+
+const threadNum = ref(5) // 线程数
+const userId = ref(0) // 用户id
 
 const btnSplitOpts: XBtnSplitOptions = [
   {
@@ -400,7 +404,7 @@ function submitOrder(service: Service) {
 
   response.finally(() => {
     submitLoading.value = false
-    imeis.value = []  
+    imeis.value = []
     reseted.value = false
   })
 }
@@ -493,7 +497,7 @@ function processOrderResult(content: string) {
   if (!isSuccess) {
     result[headers[0]] = content
   }
-  
+
   return result
 }
 
@@ -616,7 +620,7 @@ async function handleMustRead() {
 function resetOrder(status: ORDER_STATUS) {
   if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
   if (reseted.value) return toast.warning(t('query.prompt.reseted'))
-  
+
   submited.value = false
   const data = rawOrders.value.filter(item => item.status === status)
   const dataImeis = [...new Set(data.map(item => item.imei))]
@@ -629,7 +633,7 @@ function resetOrder(status: ORDER_STATUS) {
 
   for (let imei of dataImeis) {
     const indexes = rawOrders.value
-      .map((item, idx) => ({item, idx}))
+      .map((item, idx) => ({ item, idx }))
       .filter(({ item }) => item.imei === imei)
       .map(({ idx }) => idx)
 
@@ -651,7 +655,7 @@ function resetOrder(status: ORDER_STATUS) {
 
         (rawOrders.value[index] as any)[label] = ""
       }
-      
+
       orderImeis.value[imei] = index
 
       break
@@ -793,6 +797,40 @@ function resetSelectRow() {
 
   imeis.value = Object.keys(orderImeis.value)
 }
+
+/** 获取用户信息 */
+async function getUserInfo() {
+  try {
+    const res = await userApi.info()
+    userId.value = res.data.userId
+  } catch (e) {
+
+  }
+}
+/** 切换线程 */
+let timer: number | null = null
+
+watch(() => threadNum.value, (newVal) => {
+  if (timer) clearTimeout(timer)
+  timer = window.setTimeout(async () => {
+    await serviceApi.getThread(newVal)
+    getUserInfo()
+    localStorage.setItem(`USER_ID_THREADNUM_${userId.value}`, `${newVal}`)
+  }, 300)
+})
+
+const isThreadNum = computed(() => orders.value.some(item => item.status === 4))
+
+
+onMounted(() => {
+  getUserInfo()
+
+  setTimeout(() => {
+    const userID = localStorage.getItem(`USER_ID_THREADNUM_${userId.value}`)
+    threadNum.value = Number(userID) ? Number(userID) : 5
+  }, 200)
+})
+
 </script>
 
 <template>
@@ -806,22 +844,13 @@ function resetSelectRow() {
         <ButtonGroup :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport"
           @clear="reset" />
 
-        <XButton v-if="selService?.isUnlock" :label="t('query.result')" color="warning"
-          :disabled="disabled" :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''" @click="handleFresh" />
+        <XButton v-if="selService?.isUnlock" :label="t('query.result')" color="warning" :disabled="disabled"
+          :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''" @click="handleFresh" />
 
-        <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')" color="primary"
-          @click="store.visibleHeaderFilter = true" />
-
-        <!-- <XButton v-show="serviceColumns.length !== 0" variant="outline" label="重置成功" color="success"
-          @click="resetOrder(ORDER_STATUS.SUCCESS)" />
-
-        <XButton v-show="serviceColumns.length !== 0" variant="outline" label="重置失败" color="danger"
-          @click="resetOrder(ORDER_STATUS.FAILED)" /> -->
-        <XButtonSplit
-          :label="t('button.reset')"
-          :options="btnSplitOpts"
-          @click="resetSelectRow"
-        />
+        <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')"
+          color="primary" @click="store.visibleHeaderFilter = true" />
+        
+        <XButtonSplit :label="t('button.reset')" :options="btnSplitOpts" @click="resetSelectRow" />
 
         <XButton v-show="mustRead" variant="outline" :label="t('query.service')" color="warning"
           @click="handleMustRead" />
@@ -829,6 +858,12 @@ function resetSelectRow() {
         <XSwitch v-model="pushMsg" :label="t('query.pushRes')" @change="handlePushMsgChange" />
 
         <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" @change="count = 0" />
+
+        <section class="flex justify-center items-center space-x-2">
+          <input v-model.number="threadNum" type="number" :disabled="isThreadNum" class="w-14 h-7 rounded border pl-2 border-border select-none"
+            min="1" max="10" @keydown.prevent @wheel.prevent>
+          <div class="text-sm text-gray-500">线程</div>
+        </section>
       </div>
 
       <XPagination v-model="page" v-model:limit="limit" :total="rawOrders.length" :sizes :layouts="[
@@ -842,17 +877,8 @@ function resetSelectRow() {
 
     <section class="w-full h-[calc(100%-3rem)]">
       <!-- selection selected-key="id" -->
-      <XTable
-        ref="tableRef"
-        :data="orders"
-        :columns="columns"
-        row-key="id"
-        class="h-full max-w-full border"
-        selection
-        selected-key="index"
-        @select-change="indexes = $event"
-        @column-delete="handleDeleteHeader"
-      />
+      <XTable ref="tableRef" :data="orders" :columns="columns" row-key="id" class="h-full max-w-full border" selection
+        selected-key="index" @select-change="indexes = $event" @column-delete="handleDeleteHeader" />
     </section>
 
     <TableColumnDialog @confirm="processHeaderConfirm" />
