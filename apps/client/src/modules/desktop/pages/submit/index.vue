@@ -16,7 +16,6 @@ import { serviceApi } from '@/api/services'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
 import type { FieldMap } from './utils/types'
 import { SUBMIT_STORE, type SubmitStore } from './utils'
-import { userApi } from '@/api/user'
 
 interface TheProps {
   id: string
@@ -70,7 +69,6 @@ const indexes = shallowRef<number[]>([])
 const sizes = [50, 150, 200, 300, 500]
 
 const threadNum = ref(5) // 线程数
-const userId = ref(0) // 用户id
 
 const btnSplitOpts: XBtnSplitOptions = [
   {
@@ -798,15 +796,7 @@ function resetSelectRow() {
   imeis.value = Object.keys(orderImeis.value)
 }
 
-/** 获取用户信息 */
-async function getUserInfo() {
-  try {
-    const res = await userApi.info()
-    userId.value = res.data.userId
-  } catch (e) {
 
-  }
-}
 /** 切换线程 */
 let timer: number | null = null
 
@@ -814,8 +804,8 @@ watch(() => threadNum.value, (newVal) => {
   if (timer) clearTimeout(timer)
   timer = window.setTimeout(async () => {
     await serviceApi.getThread(newVal)
-    getUserInfo()
-    localStorage.setItem(`USER_ID_THREADNUM_${userId.value}`, `${newVal}`)
+
+    localStorage.setItem(`USER_ID_THREADNUM_${uStore.info.userId}`, `${newVal}`)
   }, 300)
 })
 
@@ -823,12 +813,8 @@ const isThreadNum = computed(() => orders.value.some(item => item.status === 4))
 
 
 onMounted(() => {
-  getUserInfo()
-
-  setTimeout(() => {
-    const userID = localStorage.getItem(`USER_ID_THREADNUM_${userId.value}`)
-    threadNum.value = Number(userID) ? Number(userID) : 5
-  }, 200)
+  const userID = localStorage.getItem(`USER_ID_THREADNUM_${uStore.info.userId}`)
+  threadNum.value = Number(userID) ? Number(userID) : 5
 })
 
 </script>
@@ -849,7 +835,7 @@ onMounted(() => {
 
         <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')"
           color="primary" @click="store.visibleHeaderFilter = true" />
-        
+
         <XButtonSplit :label="t('button.reset')" :options="btnSplitOpts" @click="resetSelectRow" />
 
         <XButton v-show="mustRead" variant="outline" :label="t('query.service')" color="warning"
@@ -860,8 +846,9 @@ onMounted(() => {
         <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" @change="count = 0" />
 
         <section class="flex justify-center items-center space-x-2">
-          <input v-model.number="threadNum" type="number" :disabled="isThreadNum" class="w-14 h-7 rounded border pl-2 border-border select-none"
-            min="1" max="10" @keydown.prevent @wheel.prevent>
+          <input v-model.number="threadNum" type="number" :disabled="isThreadNum"
+            class="w-14 h-7 rounded border pl-2 border-border select-none" min="1" max="10" @keydown.prevent
+            @wheel.prevent>
           <div class="text-sm text-gray-500">线程</div>
         </section>
       </div>
