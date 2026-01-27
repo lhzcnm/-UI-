@@ -67,7 +67,7 @@ async function run(item) {
       rollupOptions: {
         output: {
           dir: `./dist/${item.mode}`,
-          manualChunks
+          manualChunks,
         },
       },
     },

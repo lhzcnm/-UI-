@@ -778,7 +778,6 @@ function resetSelectRow() {
     const order = rawOrders.value[arrIndex]
     orderImeis.value[order.imei] = arrIndex
 
-    console.log(orderImeis)
     rawOrders.value[arrIndex] = {
       ...rawOrders.value[arrIndex],
       status: ORDER_STATUS.WAIT,
@@ -796,14 +795,13 @@ function resetSelectRow() {
   imeis.value = Object.keys(orderImeis.value)
 }
 
-
 /** 切换线程 */
 let timer: number | null = null
 
 watch(() => threadNum.value, (newVal) => {
   if (timer) clearTimeout(timer)
   timer = window.setTimeout(async () => {
-    await serviceApi.getThread(newVal)
+    await serviceApi.setThread(newVal)
 
     localStorage.setItem(`USER_ID_THREADNUM_${uStore.info.userId}`, `${newVal}`)
   }, 300)
@@ -811,12 +809,10 @@ watch(() => threadNum.value, (newVal) => {
 
 const isThreadNum = computed(() => orders.value.some(item => item.status === 4))
 
-
 onMounted(() => {
-  const userID = localStorage.getItem(`USER_ID_THREADNUM_${uStore.info.userId}`)
-  threadNum.value = Number(userID) ? Number(userID) : 5
+  const threads = localStorage.getItem(`USER_ID_THREADNUM_${uStore.info.userId}`)
+  threadNum.value = Number(threads) ? Number(threads) : 5
 })
-
 </script>
 
 <template>
@@ -863,7 +859,6 @@ onMounted(() => {
     </section>
 
     <section class="w-full h-[calc(100%-3rem)]">
-      <!-- selection selected-key="id" -->
       <XTable ref="tableRef" :data="orders" :columns="columns" row-key="id" class="h-full max-w-full border" selection
         selected-key="index" @select-change="indexes = $event" @column-delete="handleDeleteHeader" />
     </section>

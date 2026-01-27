@@ -5,7 +5,7 @@ export interface ServiceApi {
   list: (params?: ServiceListParams) => R<ServiceDetail[]>
   item: (id: number) => R<Service>
   header: (id: number) => R<ServiceHeader[]>
-  getThread: (threadNumber: number) => R<any>
+  setThread: (threadNumber: number) => R<any>
 }
 
 export interface ServiceDetail {
