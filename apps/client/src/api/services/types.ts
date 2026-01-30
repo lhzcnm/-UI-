@@ -6,6 +6,7 @@ export interface ServiceApi {
   item: (id: number) => R<Service>
   header: (id: number) => R<ServiceHeader[]>
   setThread: (threadNumber: number) => R<any>
+  favorite: (serviceId: number | null) => R<number[]>
 }
 
 export interface ServiceDetail {
