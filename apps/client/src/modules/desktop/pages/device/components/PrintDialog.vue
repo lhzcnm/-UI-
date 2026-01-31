@@ -65,6 +65,7 @@ async function handleSubmit() {
   })
 
   const binaryString = atob(response)
+  // console.log(binaryString)
   const bytes = new Uint8Array(binaryString.length)
 
   for (let i = 0; i < binaryString.length; i++) {

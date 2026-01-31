@@ -9,7 +9,7 @@ import { downloadURL, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import { h } from 'vue'
 
-import type { Service, ServiceHeader } from '@/api/services'
+import type { Service, ServiceCols } from '@/api/services'
 import type { Order, OrderTableView, OrderSubmitResult, SubmitOrderListParams } from '@/api/orders'
 import { getDefaultColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
@@ -69,6 +69,8 @@ const indexes = shallowRef<number[]>([])
 const sizes = [50, 150, 200, 300, 500]
 
 const threadNum = ref(5) // 线程数
+
+let deletedColumns: XTableColumn[] = []
 
 const btnSplitOpts: XBtnSplitOptions = [
   {
@@ -165,6 +167,7 @@ async function handleSelected(value: number) {
 
 function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   const defaultCols = getDefaultColumns(t)
+
   const len = defaultCols.length
   let frontCols = defaultCols
   let end = len - 1
@@ -172,8 +175,17 @@ function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
     end = len - 2
   }
   frontCols = defaultCols.slice(0, end)
-
   const endCols = defaultCols.slice(-1)
+
+  store.serviceCols = [
+    ...store.serviceCols,
+    ...endCols.filter(c => c.isColDel).map(c => ({
+      key: c.key.toString(),
+      title: c.title!,
+      minWidth: c.minWidth,
+      isDynamic: false,
+    }))
+  ]
 
   return [
     ...frontCols,
@@ -227,31 +239,38 @@ async function handleServiceCols(value: number) {
 
   headers = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
   serviceColumns.value = data.map(item => ({ name: item.name, nameEn: item.nameEn }))
-  store.serviceCols = data
+  store.serviceCols = data.map(item => ({
+    key: locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name,
+    title: locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name,
+    width: item.width,
+    minWidth: item.width,
+    isDynamic: true,
+  }))
 
-  store.selectHeaders = headers.map(item => item)
+  // store.selectHeaders = headers.map(item => item)
 
   if (selService.value?.isUnlock) {
-    columns.value = asyncServiceMergeColumns(generateColumns(data))
+    columns.value = asyncServiceMergeColumns(generateColumns(store.serviceCols))
   } else {
-    columns.value = mergeColumns(generateColumns(data))
+    columns.value = mergeColumns(generateColumns(store.serviceCols))
   }
+
+  store.selectHeaders = columns.value.filter(c => c.isColDel).map(c => c.key.toString())
 }
 
-function generateColumns(headers: ServiceHeader[]) {
+function generateColumns(headers: ServiceCols[]) {
   const columns: XTableColumn[] = []
 
-  const isEn = locale.value === "en"
+  // const isEn = locale.value === "en"
 
   for (let item of headers) {
-    const label = isEn ? item.nameEn : item.name
     columns.push({
-      key: label,
-      title: label,
+      key: item.key,
+      title: item.title,
       minWidth: item.width,
       isColDel: true,
       isFilter: true,
-      isDrag: true,
+      isDrag: item.isDynamic ? true : false,
       showNullOrWhitespace: true,
       render: (value) => {
         return h("div", {
@@ -553,12 +572,12 @@ function handleExport() {
     return
   }
 
-  const isEn = locale.value === "en"
+  // const isEn = locale.value === "en"
 
   const deleteHeaders = store.serviceCols.filter(item => {
-    const name = isEn ? item.nameEn : item.name
+    const name = item.key
     return !store.selectHeaders.includes(name)
-  }).map(item => isEn ? item.nameEn : item.name)
+  }).map(item => item.key)
 
   exportLoading.value = true
   const response = orderApi.submitExport({
@@ -740,27 +759,61 @@ async function handleFresh() {
   disabled.value = true
 }
 
-function processHeaderConfirm(data: ServiceHeader[]) {
-  if (selService.value?.isUnlock) {
-    columns.value = asyncServiceMergeColumns(generateColumns(data))
-  } else {
-    columns.value = mergeColumns(generateColumns(data))
+function processHeaderConfirm(headers: ServiceCols[]) {
+  const selectableKeys = store.serviceCols.map(c => c.key.toString())
+  const selectedKeys = headers.map(h => h.key.toString())
+
+  const nextColumns: XTableColumn[] = []
+  const nextDeleted: XTableColumn[] = []
+
+  for (const col of columns.value) {
+    const key = col.key.toString()
+    const isSelectable = selectableKeys.includes(key)
+    const isSelected = selectedKeys.includes(key)
+
+    if (!isSelectable) {
+      nextColumns.push(col)
+    } else if (isSelected) {
+      nextColumns.push(col)
+    } else {
+      nextDeleted.push(col)
+    }
   }
+
+  for (const col of deletedColumns) {
+    const key = col.key.toString()
+    if (selectedKeys.includes(key)) {
+      nextColumns.push(col)
+    } else {
+      nextDeleted.push(col)
+    }
+  }
+
+  columns.value = nextColumns
+  deletedColumns.splice(0, deletedColumns.length, ...nextDeleted)
 }
 
-function handleDeleteHeader(column: string | number | Symbol | (string & {})) {
-  const isEn = locale.value === "en"
-  const index = store.selectHeaders.findIndex(item => item === column.toString())
-  if (index !== -1) {
-    store.selectHeaders.splice(index, 1)
+function handleDeleteHeader(column: XTableColumn) {
+  // const isEn = locale.value === "en"
+  const headerIndex = store.selectHeaders.findIndex(item => item === column.key.toString())
+  const columnIndex = columns.value.findIndex(c => c.key === column.key)
+  if (headerIndex !== -1) {
+    store.selectHeaders.splice(headerIndex, 1)
+  }
+  
+  if (columnIndex !== -1) {
+    columns.value = columns.value.filter(c => c.key !== column.key)
+    deletedColumns.push(column)
+  } else {
+    deletedColumns = deletedColumns.filter(c => c.key !== column.key)
   }
 
-  const headers = store.serviceCols.filter(item => {
-    const name = isEn ? item.nameEn : item.name
-    return store.selectHeaders.includes(name)
-  })
+  // const headers = store.serviceCols.filter(item => {
+  //   const name = item.key
+  //   return store.selectHeaders.includes(name)
+  // })
 
-  processHeaderConfirm(headers)
+  // processHeaderConfirm(headers)
 }
 
 function resetSelectRow() {

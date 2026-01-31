@@ -1,4 +1,4 @@
-import type { OrderExportForm, OrderSearchForm, OrderListResponse } from '@/api/orders'
+import type { OrderExportForm, OrderSearchForm, OrderListResponse, Order } from '@/api/orders'
 import type { InjectionKey } from 'vue'
 import { formatImeiType5 } from '@/utils'
 
@@ -14,6 +14,9 @@ export interface HistoryStore {
   visibleExport: boolean
   visibleOrderImg: boolean
   visiblePrint: boolean
+
+  views: 'history' | 'print'
+  selectOrders: Order[]
 }
 
 type HistoryStoreKey = InjectionKey<HistoryStore>

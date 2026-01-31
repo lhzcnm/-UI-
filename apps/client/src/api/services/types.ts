@@ -42,11 +42,19 @@ export interface ServiceView {
 }
 
 export interface ServiceHeader {
-  serviceId: number
+  serviceId?: number
   name: string
   nameEn: string
-  width: number
-  sortNum: number
+  width?: number
+  sortNum?: number
+}
+
+export interface ServiceCols {
+  key: string,
+  title: string,
+  width?: number,
+  minWidth?: number,
+  isDynamic: boolean,
 }
 
 export interface ServiceListParams {

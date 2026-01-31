@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import type { ServiceHeader } from '@/api/services'
+import type { ServiceCols } from '@/api/services'
 import { SUBMIT_STORE } from '../utils'
 
 interface TableColumnDialogEmits {
-  (e: 'confirm', headers: ServiceHeader[]): void
+  (e: 'confirm', headers: ServiceCols[]): void
 }
 
 const store = inject(SUBMIT_STORE)!
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 const emit = defineEmits<TableColumnDialogEmits>()
 
 const filteredHeaders = ref<string[]>([])
 
-const isEn = computed(() => locale.value === "en")
-
 const serviceHeaders = computed(() => {
-  return store.serviceCols.map(item => isEn.value ? item.nameEn : item.name)
+  return store.serviceCols.map(item => item.key)
 })
 
 const allSelected = computed(() => {
@@ -61,7 +59,7 @@ function handleConfirm() {
   store.selectHeaders = [...filteredHeaders.value]
 
   const headers = store.serviceCols.filter(item => {
-    const name = isEn.value ? item.nameEn : item.name
+    const name = item.key
     return filteredHeaders.value.includes(name)
   })
 
@@ -92,19 +90,21 @@ function handleClose() {
               @change="toggleAll" />
               <span>{{ t("all") }}</span>
           </label>
-          <label
-            v-for="item in serviceHeaders"
-            :key="item"
-            class="flex items-center gap-2"
-          >
-            <input
-              type="checkbox"
-              :value="item"
-              :checked="filteredHeaders.includes(item)"
-              @change="toggleVal(item)"
-            />
-            <span>{{ item }}</span>
-          </label>
+          <div class="grid grid-cols-3 space-y-2">
+            <label
+              v-for="item in store.serviceCols"
+              :key="item.key"
+              class="flex items-center gap-2"
+            >
+              <input
+                type="checkbox"
+                :value="item"
+                :checked="filteredHeaders.includes(item.key)"
+                @change="toggleVal(item.key)"
+              />
+              <span>{{ item.title }}</span>
+            </label>
+          </div>
         </div>
       </div>
     </template>

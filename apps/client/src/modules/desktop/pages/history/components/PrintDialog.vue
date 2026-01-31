@@ -30,6 +30,7 @@ function handleCancel() {
 }
 
 function handleConfirm() {
+  if (!paperSize.value) return
   const sizeArr = paperSize.value.split('x')
 
   store.paperSize.labelWidth = sizeArr[0]

@@ -44,10 +44,11 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
       title: t('query.listCol.result'),
       minWidth: 320,
       tdClassName: 'leading-6 py-1',
+      isColDel: true,
       render: (value: string) => {
         return h('span', { innerHTML: value })
-      }
+      },
     },
-    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160 }
+    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160, isColDel: true, isFilter: true }
   ]
 }
