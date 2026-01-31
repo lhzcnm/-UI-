@@ -4,7 +4,7 @@ import { ua } from '@3un/utils'
 
 import type { OrderBatchEditItem } from '@/inters/orders'
 import { getTodoCount } from '@/api/dashboard'
-import { getSettings } from '@/api/settings'
+import { getSettings, getThread } from '@/api/settings'
 
 export const useSystemStore = defineStore('system', () => {
   let todoTimer: ReturnType<typeof setInterval> | null = null
@@ -63,6 +63,11 @@ export const useSystemStore = defineStore('system', () => {
     }
   }
 
+  async function getThreads() {
+    const data = await getThread()
+    settings.value['threads'] = data
+  }
+
   return {
     showSidebar,
     showSetting,
@@ -75,5 +80,6 @@ export const useSystemStore = defineStore('system', () => {
     startTodoTimer,
     stopTodoTimer,
     getSetting,
+    getThreads,
   }
 })
