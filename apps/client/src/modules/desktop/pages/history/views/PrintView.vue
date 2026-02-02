@@ -728,6 +728,7 @@ onMounted(() => {
           v-for="item in templateItems"
           :key="item.key"
           class="absolute cursor-move select-none template-item text-black"
+          :class="{ 'overflow-warning': isOverflowMap[item.key] }"
           :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }"
           @mousedown.prevent
           @mousedown="startDrag($event, item)"

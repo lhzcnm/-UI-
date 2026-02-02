@@ -164,18 +164,25 @@ async function handleSelected(value: number) {
   
   await handleServiceCols(value)
   
-  const { data } = await orderApi.cacheImei({ serviceId: value })
-
   const key = import.meta.env.VITE_SUBMIT_STORGE
   const isStoraged = localStorage.getItem(`${key}_${value}`)
   if (isStoraged) {
-    handleSubmitOrder(value)
-  } else {
-    if (data.length > 0) {
-      cacheImei = true
-      await handleImport(data, '')
-    }
+    await handleSubmitOrder(value)
   }
+
+  const { data } = await orderApi.cacheImei({ serviceId: value })
+  if (data.length > 0) {
+    cacheImei = true
+    await handleImport(data, '')
+  }
+  
+  // } else {
+  //   const { data } = await orderApi.cacheImei({ serviceId: value })
+  //   if (data.length > 0) {
+  //     cacheImei = true
+  //     await handleImport(data, '')
+  //   }
+  // }
 
   // handle reselect service
   // if (rawOrders.value.length > 0 && imeis.value.length > 0) {
