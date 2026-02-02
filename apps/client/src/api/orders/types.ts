@@ -12,6 +12,9 @@ export interface OrderApi {
 
   verify(id: number): R<void>
   orderPrint(body: OrderPrintParams): R<Blob>
+
+  cacheImei(body: CacheImeiParams): R<string[]>
+  deleteCacheImei(params: DeleteImeiPrams): R<void>
 }
 
 export interface Order {
@@ -150,4 +153,13 @@ export interface OrderPrintParams {
   result: string[],
   labelWidth: string,
   labelHeight: string,
+}
+
+export interface CacheImeiParams {
+  imeiList?: string[],
+  serviceId: number,
+}
+
+export interface DeleteImeiPrams {
+  serviceId: number,
 }

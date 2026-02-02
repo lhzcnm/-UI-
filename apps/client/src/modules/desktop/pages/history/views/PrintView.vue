@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ORDER_STATUS, xconfirm } from '@3un/utils'
+import { Icon } from '@iconify/vue'
+import QrPreview from '@/components/QrPreview.vue'
 
+import { ORDER_STATUS, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
+import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
 
 import { mmToPx } from '@/utils'
 import { type TemplateItem, type ContainerItem, type PrintTemplateJson } from '../types'
 import { HISTORY_STORE } from '../utils'
 import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
 import { type CustomSubmitOrder, type Order, type ServiceColumnItem } from '@/api/orders'
-import { Icon } from '@iconify/vue'
 
 const store = inject(HISTORY_STORE)!
 
@@ -46,7 +48,11 @@ const defaultItems = [
   {
     name: "IMEI",
     nameEn: "IMEI"
-  }
+  },
+  {
+    name: "二维码",
+    nameEn: "Qrcode",
+  },
 ]
 
 watch(
@@ -102,7 +108,13 @@ const previewValue = computed(() => {
 
   for (let item of processedColumns.value) {
     const value = order.fields[item]
-    res[item] = value && value !== "" ? value : "{value}"
+
+    if ((/^(处理结果|Result)$/i).test(item)) {
+      res["处理结果"] = order.result
+      res["Result"] = order.result
+    } else {
+      res[item] = value && value !== "" ? value : "{value}"
+    }
   }
   res["IMEI"] = order.imei || "{value}"
   res['订单结果'] = order.result || "{value}"
@@ -215,7 +227,7 @@ function handleSelectColumn(label: string) {
       y: pos.y,
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
-      size: 4,
+      ...(isQrcode && {size: 20}),
     }
 
     selectCols.value.push(label)
@@ -476,16 +488,55 @@ async function generatePDF() {
     document.body.appendChild(page)
 
     // 填充数据
-    page.querySelectorAll<HTMLElement>('.template-item').forEach(itemEl => {
+    page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
       const key = itemEl.dataset.key!
-      const value = key === 'IMEI'
-        ? order.imei || ''
-        : order.fields[key] ?? ''
 
-      const valueEl = itemEl.querySelector('.template-value')
-      if (valueEl) {
-        valueEl.textContent = stripHtmlTags(value)
+      if ((/^(处理结果|Result)$/i).test(key)) {
+        order.fields["处理结果"] = order.result
+        order.fields["Result"] = order.result
+
+        return
       }
+
+      if (!isQrcodeField(key)) {
+        const value = key === 'IMEI'
+          ? order.imei || ''
+          : order.fields[key] ?? ''
+  
+        const valueEl = itemEl.querySelector('.template-value')
+        if (valueEl) {
+          valueEl.textContent = stripHtmlTags(value)
+        }
+        return
+      }
+
+      const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
+      if (!qrcodeItem) return
+
+      const qrContainer = itemEl.querySelector('[data-qrcode]')
+      if (!qrContainer) return
+
+      const qrData = qrcodeStr({
+        ...order.fields,
+        IMEI: order.imei || '',
+      })
+
+      const qrcode = useQRCode(qrData)
+
+      qrContainer.innerHTML = ''
+      const img = document.createElement('img')
+
+      img.style.width = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
+      img.style.height = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
+      watch(
+        () => qrcode.value,
+        () => {
+          img.src = qrcode.value    
+        },
+        { immediate: true }
+      )
+
+      qrContainer.appendChild(img)
     })
 
     const imgData = await html2image.toPng(page, {
@@ -506,6 +557,28 @@ async function generatePDF() {
   paperRef.value.classList.remove("printing")
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
+}
+
+function isQrcodeField(key: string) {
+  return (/^(二维码|qrcode)$/i).test(key)
+}
+
+function qrcodeStr(object: Record<string, string> | string) {
+  const data = objectToString(object)
+
+  return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
+}
+
+function objectToString(object: Record<string, string> | string) {
+  return Object.entries(object)
+    .map(([key, value]) => {
+      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
+      if (isQrcode) return
+      if (!selectCols.value.includes(key)) return
+      return `${key}: ${stripHtmlTags(value)}`
+    })
+    .filter(Boolean)
+    .join('\n')
 }
 
 await getServiceColumns(store.selectOrders[0].serviceId)
@@ -589,38 +662,46 @@ onMounted(() => {
         </div>
 
         <div class="space-y-2">
-          <div v-for="field in templateItems" :key="field.key"
-            class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition">
+          <div
+            v-for="field in templateItems"
+            :key="field.key"
+            class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition"
+          >
+            <!-- 字段名 -->
             <div class="flex items-center gap-2 min-w-0">
               <span class="w-32 truncate font-medium text-foreground">
                 {{ field.label }}
               </span>
-            
-              <span
-                v-if="isOverflowMap[field.key]"
-                class="text-xs text-red-500 whitespace-nowrap"
-              >
-                超出打印范围
-              </span>
-            
-              <span
-                v-else
-                class="text-xs text-muted-foreground"
-              >
-                {{ field.wrap ? '标签与内容分行显示' : '标签与内容同行显示' }}
+              <span class="text-xs text-muted-foreground">
+                {{ isQrcodeField(field.key)
+                  ? '二维码尺寸(mm)'
+                  : (field.wrap ? '标签与内容分行显示' : '标签与内容同行显示') }}
               </span>
             </div>
 
-            <label class="flex items-center gap-3 cursor-pointer select-none">
-                <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
-                <div
-                  class="relative w-9 h-5 rounded-full bg-border
-                         peer-checked:bg-primary
-                         transition-colors flex"
-                >
-                  <XSwitch v-model="field.wrap" />
-                </div>
-              </label>
+            <!-- 控制开关 -->
+            <div class="flex items-center">
+              <div v-if="!isQrcodeField(field.key)" class="mr-4">
+                <label class="flex items-center gap-3 cursor-pointer select-none">
+                  <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
+                  <div
+                    class="relative w-9 h-5 rounded-full bg-border
+                           peer-checked:bg-primary
+                           transition-colors flex"
+                  >
+                    <XSwitch v-model="field.wrap" />
+                  </div>
+                </label>
+              </div>
+  
+              <div v-else class="flex items-center gap-2 mr-2">
+                <XInputNumber v-model="field.size!" size="sm" class="w-20" />
+              </div>
+  
+              <button class="hover:text-success" @click="handleSelectColumn(field.key)">
+                <Icon icon="lucide:trash-2" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -632,30 +713,48 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="flex-1 flex flex-col items-center">
-      <div ref="paperRef" class="relative bg-white shadow paper-preview overflow-hidden" :style="paperStyle">
-        <div class="absolute safe-area-border" :style="safeAreaStyle" />
+    <section class="flex-1 flex justify-center">
+      <div
+        ref="paperRef"
+        class="relative bg-white shadow paper-preview overflow-hidden"
+        :style="paperStyle"
+      >
+        <div
+          class="absolute safe-area-border"
+          :style="safeAreaStyle"
+        />
 
-        <div v-for="item in templateItems" :key="item.key"
-          class="absolute cursor-move select-none template-item text-black py-1"
-          :class="{ 'overflow-warning': isOverflowMap[item.key] }"
-          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }" @mousedown.prevent
-          @mousedown="startDrag($event, item)" :data-key="item.key">
+        <div
+          v-for="item in templateItems"
+          :key="item.key"
+          class="absolute cursor-move select-none template-item text-black"
+          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }"
+          @mousedown.prevent
+          @mousedown="startDrag($event, item)"
+          :data-key="item.key"
+        >
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
               <div class="font-medium leading-tight">
                 {{ item.label }}:
               </div>
-              <div class="leading-tight template-value">
+              <div class="leading-tight break-all template-value">
                 {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
               </div>
             </template>
-
+        
             <template v-else>
               <span class="font-medium">{{ item.label }}:</span>
-              <span class="ml-1 template-value">
-                {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
+              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
+          </template>
+
+          <template v-else>
+            <div data-qrcode>
+              <QrPreview
+                :data="qrcodeStr(previewValue)"
+                :size="item.size ?? 20" />
+            </div>
           </template>
         </div>
       </div>

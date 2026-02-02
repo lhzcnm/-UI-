@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { serviceApi, type Service, type ServiceDetail } from '@/api/services'
 import type { XSelectEmits } from '@3un/ui'
-import { Icon } from '@iconify/vue';
+import { Icon } from '@iconify/vue'
 
 const store = useServiceStore()
 
@@ -73,8 +73,7 @@ async function favoriteClick(serviceId: number | null) {
   try {
     const res = await serviceApi.favorite(serviceId)
     favoriteIds.value = res.data
-    console.log(res)
-  } catch (e) {
+  } catch {
   }
 }
 

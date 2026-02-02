@@ -12,6 +12,7 @@ const visibility = useDocumentVisibility()
 const iStore = useSettingStore()
 const uStore = useUserStore()
 const systemStore = useSystemStore()
+const serviceStore = useServiceStore()
 
 const isLogout = ref(false)
 
@@ -20,6 +21,7 @@ await iStore.getSettings()
 if(!route.meta.noAuthRequired) {
   await Promise.all([
     uStore.getInfo(),
+    serviceStore.getServices(),
   ])
 }
 

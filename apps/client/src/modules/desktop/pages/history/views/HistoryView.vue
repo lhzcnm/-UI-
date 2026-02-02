@@ -22,7 +22,7 @@ const store = inject(HISTORY_STORE)!
 
 const { copy } = useClipboard({ legacy: true })
 const { t, locale } = useI18n()
-const serviceStore = useServiceStore()
+// const serviceStore = useServiceStore()
 
 const page = ref(1)
 const limit = ref(20)
@@ -122,13 +122,13 @@ function openPrint() {
   if (store.selectOrders.length === 0) {
     return toast.warning('请勿选择处理中或处理失败订单')
   }
-  const service = serviceStore.services.get(store.selectOrders[0].id)
+  // const service = serviceStore.services.get(store.selectOrders[0].id)
 
-  if (service?.isUnlock) {
-    store.visiblePrint = true
-  } else {
+  // if (service?.isUnlock) {
+  //   store.visiblePrint = true
+  // } else {
     store.views = 'print'
-  }
+  // }
 }
 
 function validServiceUnique(ids: number[]) {

@@ -11,7 +11,7 @@ import { h } from 'vue'
 
 import type { Service, ServiceCols } from '@/api/services'
 import type { Order, OrderTableView, OrderSubmitResult, SubmitOrderListParams } from '@/api/orders'
-import { getDefaultColumns } from './utils/columns'
+import { getDefaultColumns, getDefaultResultColumns } from './utils/columns'
 import { serviceApi } from '@/api/services'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
 import type { FieldMap } from './utils/types'
@@ -49,11 +49,12 @@ const submitLoading = ref(false)
 const exportLoading = ref(false)
 const pushMsg = ref(true)
 const disabled = ref(false)
+const loading = ref(false)
 const showAll = ref(false)
 const tableRef = ref<XTableExpose | null>(null)
 
 let count = 0
-const submited = ref(false)
+const submited = ref<boolean>(false)
 const imeis = ref<string[]>([])
 const comments = ref<string>('')
 
@@ -96,10 +97,15 @@ const btnSplitOpts: XBtnSplitOptions = [
 ]
 
 let headers: string[] = []
+let cacheImei: boolean = false
+
+selService.value = serviceStore.services.get(+props.id)
 
 watch(
   () => props.id,
-  () => store.selectId = +props.id,
+  () => {
+    store.selectId = +props.id
+  },
   {
     immediate: true,
   }
@@ -150,19 +156,33 @@ async function handleSelected(value: number) {
   page.value = 1
   close()
 
-  // handle reselect service
-  if (rawOrders.value.length > 0 && imeis.value.length > 0) {
-    rawOrders.value = processWaitList(value, imeis.value, comments.value)
-    submited.value = false
-  }
-
+  rawOrders.value.length = 0
   count = 0
   disabled.value = false
-
+  
   selService.value = serviceStore.services.get(value)!
-
+  
   await handleServiceCols(value)
-  handleSubmitOrder(value)
+  
+  const { data } = await orderApi.cacheImei({ serviceId: value })
+
+  const key = import.meta.env.VITE_SUBMIT_STORGE
+  const isStoraged = localStorage.getItem(`${key}_${value}`)
+  if (isStoraged) {
+    handleSubmitOrder(value)
+  } else {
+    if (data.length > 0) {
+      cacheImei = true
+      await handleImport(data, '')
+    }
+  }
+
+  // handle reselect service
+  // if (rawOrders.value.length > 0 && imeis.value.length > 0) {
+  //   rawOrders.value = processWaitList(value, imeis.value, comments.value)
+  //   submited.value = false
+  // } else {
+  // }
 }
 
 function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
@@ -283,17 +303,26 @@ function generateColumns(headers: ServiceCols[]) {
   return columns
 }
 
-function handleImport(imeiList: string[], remark: string) {
+async function handleImport(imeiList: string[], remark: string) {
+  if (!selService.value) return
   if (count > 0 && !selService.value?.isUnlock) return
+
   page.value = 1
   tableRef.value?.initFilter()
   close()
+
+  if (!cacheImei) {
+    await orderApi.cacheImei({ imeiList, serviceId: selService.value.id })
+  }
+
   const submitedOrders = processWaitList(store.selectId, imeiList, remark)
+
   rawOrders.value.splice(0, 0, ...submitedOrders)
   submited.value = false
   imeis.value = imeiList
   comments.value = remark
   count = imeiList.length
+  cacheImei = false
 }
 
 function processWaitList(id: number, imeiList: string[], remark: string) {
@@ -330,7 +359,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
   return buckets
 }
 
-function handleSubmit() {
+async function handleSubmit() {
   if (submitLoading.value) return
 
   const submitOrders = rawOrders.value.map(item => {
@@ -353,6 +382,8 @@ function handleSubmit() {
   }
 
   disabled.value = true
+
+  await serviceApi.setThread(threadNum.value)
 
   if (service.isUnlock) return submitOrder(service)
   submitQueryOrder(service)
@@ -592,7 +623,7 @@ function handleExport() {
   response.finally(() => exportLoading.value = false)
 }
 
-function reset() {
+async function reset() {
   router.replace({ query: {} })
 
   imeis.value = []
@@ -605,7 +636,9 @@ function reset() {
     const key = import.meta.env.VITE_SUBMIT_STORGE
     const id = selService.value.id
     localStorage.removeItem(`${key}_${id}`)
+    await orderApi.deleteCacheImei({serviceId: selService.value.id})
   }
+
   close()
 }
 
@@ -716,12 +749,14 @@ async function handleSubmitOrder(id: number) {
 }
 
 async function getSubmitOrderList(orderIds: number[]) {
+  loading.value = true
   const params: SubmitOrderListParams = {
     serviceId: store.selectId,
     codeIdList: orderIds,
     showAll: showAll.value,
   }
   const { data } = await orderApi.submitOrders(params)
+  loading.value = false
 
   setTimeout(() => {
     disabled.value = false
@@ -791,6 +826,8 @@ function processHeaderConfirm(headers: ServiceCols[]) {
 
   columns.value = nextColumns
   deletedColumns.splice(0, deletedColumns.length, ...nextDeleted)
+
+  processResultColumns()
 }
 
 function handleDeleteHeader(column: XTableColumn) {
@@ -808,12 +845,30 @@ function handleDeleteHeader(column: XTableColumn) {
     deletedColumns = deletedColumns.filter(c => c.key !== column.key)
   }
 
+  processResultColumns()
   // const headers = store.serviceCols.filter(item => {
   //   const name = item.key
   //   return store.selectHeaders.includes(name)
   // })
 
   // processHeaderConfirm(headers)
+}
+
+function processResultColumns() {
+  const deleteKeys = deletedColumns.map(c => c.key)
+  const isAllServiceColsDel = headers.every(c => deleteKeys.includes(c))
+  const resultCol = getDefaultResultColumns(t)
+  
+  const index = columns.value.findIndex(c => c.key === resultCol.key)
+  if (isAllServiceColsDel) {
+    if (index === -1) {
+      columns.value.push(resultCol)
+    }
+  } else {
+    if (index !== -1) {
+      columns.value.splice(index, 1)
+    }
+  }
 }
 
 function resetSelectRow() {
@@ -879,8 +934,8 @@ onMounted(() => {
         <ButtonGroup :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport"
           @clear="reset" />
 
-        <XButton v-if="selService?.isUnlock" :label="t('query.result')" color="warning" :disabled="disabled"
-          :icon="disabled ? 'svg-spinners:bars-rotate-fade' : ''" @click="handleFresh" />
+        <XButton v-if="selService" :label="t('query.result')" color="warning" :disabled="disabled"
+          :loading="loading" @click="handleFresh" />
 
         <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')"
           color="primary" @click="store.visibleHeaderFilter = true" />

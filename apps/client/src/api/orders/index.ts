@@ -13,5 +13,8 @@ export const orderApi: OrderApi = {
   submit: (params) => http.post(`order/submit`, params),
   submitExport: (params) => http.post(`order/submit/export`, params),
   submitOrders: (data) => http.post('order/listOrder', data),
-  orderPrint: (body) => http.post('order/print', body, { responseType: 'blob' })
+  orderPrint: (body) => http.post('order/print', body, { responseType: 'blob' }),
+
+  cacheImei: (body) => http.post('order/cacheImei', body),
+  deleteCacheImei: (body) => http.delete('order/deleteCacheImei', { params: body })
 }
