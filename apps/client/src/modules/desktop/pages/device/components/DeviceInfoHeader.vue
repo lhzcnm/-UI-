@@ -31,8 +31,10 @@ async function handleExitRecoveryMode(uniqueId: string) {
 }
 
 async function handlePrint() {
-  store.visiblePrint = true
+  // store.visiblePrint = true
   store.printIndex = store.selected
+  store.prevStatus = store.deviceStatus
+  store.deviceStatus = 'printView'
 }
 
 function handleCopy() {

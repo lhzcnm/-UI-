@@ -9,10 +9,10 @@ import jsPDF from 'jspdf'
 import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
 
 import { mmToPx } from '@/utils'
-import { type TemplateItem, type ContainerItem, type PrintTemplateJson } from '../types'
 import { HISTORY_STORE } from '../utils'
 import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
 import { type CustomSubmitOrder, type Order, type ServiceColumnItem } from '@/api/orders'
+import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
 
 const store = inject(HISTORY_STORE)!
 
@@ -611,6 +611,7 @@ onMounted(() => {
           </template>
         </div>
       </div>
+      
       <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
         <!-- 字体大小 -->
         <div class="flex flex-col space-y-1">
@@ -765,7 +766,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .safe-area-border {
   border: 1px dashed #94a3b8;
   box-sizing: border-box;

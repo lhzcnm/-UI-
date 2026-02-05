@@ -125,7 +125,7 @@ function openPrint() {
   // const service = serviceStore.services.get(store.selectOrders[0].id)
 
   // if (service?.isUnlock) {
-  //   store.visiblePrint = true
+    // store.visiblePrint = true
   // } else {
     store.views = 'print'
   // }

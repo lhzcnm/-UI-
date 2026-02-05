@@ -956,7 +956,7 @@ onMounted(() => {
 
         <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" @change="count = 0" />
 
-        <section class="flex justify-center items-center space-x-2">
+        <section v-if="selService && !selService.isUnlock" class="flex justify-center items-center space-x-2">
           <input v-model.number="threadNum" type="number" :disabled="isThreadNum"
             class="w-14 h-7 rounded border pl-2 border-border select-none" min="1" max="10" @keydown.prevent
             @wheel.prevent>

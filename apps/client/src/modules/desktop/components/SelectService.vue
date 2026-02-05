@@ -96,7 +96,6 @@ onMounted(async () => {
             <span class="text-primary">￥{{ service.price }}</span>
             <Icon :icon="favoriteIds?.some(id => id === service.id) ? 'tabler:star-filled' : 'tabler:star'" 
               :class="favoriteIds?.some(id => id === service.id) ? 'text-yellow-500' : 'text-gray-400'"/>
-            <!-- <Icon icon="tabler:star-filled" /> -->
           </div>
         </div>
       </XSelectItem>

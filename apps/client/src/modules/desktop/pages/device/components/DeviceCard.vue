@@ -31,8 +31,11 @@ function toDevice() {
 }
 
 async function handlePrint() {
+  store.selected = currentKey
   store.printIndex = currentKey
-  store.visiblePrint = true
+  store.prevStatus = store.deviceStatus
+  store.deviceStatus = 'printView'
+  // store.visiblePrint = true
 }
 
 function handleCopy() {

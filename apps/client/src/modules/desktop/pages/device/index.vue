@@ -5,6 +5,7 @@ import WaitConnect    from './views/WaitConnect.vue'
 import PluginMissing  from './views/PluginMissing.vue'
 import PluginVersion  from './views/PluginVersion.vue'
 import PrintDialog    from './components/PrintDialog.vue'
+import Preview        from './views/Preview.vue'
 
 import http from '@/utils/http'
 import { maskText } from '@/utils'
@@ -19,16 +20,19 @@ import type {
 } from './types'
 
 import { ws, wsFetch, STORE } from './utils'
+import { serviceApi } from '@/api/services'
 
 const store: DeviceStore = reactive({
   deviceMap        : new Map(),
   visiblePrint     : false,
   hasNewVersion    : false,
   deviceStatus     : 'wait',
+  prevStatus       : 'wait',
   screenshotStatus : 'wait',
   printIndex       : '',
   screenshot       : '',
   selected         : '',
+  queryServices    : [],
 })
 
 provide(STORE, store)
@@ -41,6 +45,7 @@ const [datasets, countriesMap] = await Promise.all([
 const version = ref('')
 
 const { t } = useI18n()
+const { getServices } = useServiceStore()
 
 watch(
   ws.data,
@@ -111,6 +116,8 @@ async function checkPlugin() {
     )
 
     const { data } = await response.json()
+
+    console.log(data)
 
     await handleInfo(data)
   }
@@ -313,12 +320,23 @@ async function checkScreenshot(id: string) {
   store.screenshotStatus = status
 }
 
+async function getQueryService() {
+  const { data } = await serviceApi.list({ isUnlock: false })
+  store.queryServices = data
+}
+
+await Promise.all([
+  getServices(),
+  getQueryService(),
+])
+
 const components = {
   list: DeviceList,
   wait: WaitConnect,
   detail: DeviceDetail,
   plugin: PluginMissing,
   version: PluginVersion,
+  printView: Preview,
 }
 </script>
 

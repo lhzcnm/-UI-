@@ -1,16 +1,20 @@
+import type { ServiceDetail } from "@/api/services"
+
 // Store
-export type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version'
+export type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version' | 'printView'
 export type ScreenshotStatus = 'wait' | 'success' | 'fail'
 
 export interface DeviceStore {
   deviceMap        : Map<string, DeviceMapItem>
   deviceStatus     : DeviceStatus
+  prevStatus       : DeviceStatus
   screenshotStatus : ScreenshotStatus
   visiblePrint     : boolean
   printIndex       : string
   screenshot       : string
   selected         : string
   hasNewVersion    : boolean
+  queryServices    : ServiceDetail[]
 }
 
 // Datasets
@@ -212,4 +216,10 @@ export interface DeviceCache {
   networkLockCode: string
   activationLockCode: string
   warrantyCode: string
+}
+
+export interface PrintHeader {
+  key: string,
+  name: string,
+  nameEn: string,
 }
