@@ -8,10 +8,9 @@ import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
 import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
 
-import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
+import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/types'
 import { formatSize, getPrintPayload, STORE, wsFetch } from '../utils'
 import { mmToPx } from '@/utils'
-import type { PrintHeader } from '../types'
 
 const store = inject(STORE)!
 
@@ -81,7 +80,6 @@ const safeAreaStyle = computed(() => {
 })
 
 const previewValue = computed(() => {
-  console.log(device)
   let res: Record<string, string> = {}
 
   const deviceItem = device.value
@@ -112,7 +110,7 @@ function handleSelectColumn(id: string, label: string) {
     selectCols.value.splice(index, 1)
     templateItems.value = templateItems.value.filter(i => i.key !== id)
   } else {
-    const isQrcode = (/^(二维码|qrcode)$/i).test(label)
+    const isQrcode = id === 'qrcode'
     const pos = getNextItemPosition()
 
     const newItem: TemplateItem = {
@@ -159,7 +157,7 @@ function getNextItemPosition() {
 }
 
 function isQrcodeField(key: string) {
-  return (/^(二维码|qrcode)$/i).test(key)
+  return key === 'qrcode'
 }
 
 function openImport() {

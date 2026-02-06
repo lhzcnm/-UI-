@@ -47,3 +47,9 @@ export interface PrintTemplateJson {
     size?: number,
   }[],
 }
+
+export interface PrintHeader {
+  key: string,
+  name: string,
+  nameEn: string,
+}

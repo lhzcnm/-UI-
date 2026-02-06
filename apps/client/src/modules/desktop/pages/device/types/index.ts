@@ -217,9 +217,3 @@ export interface DeviceCache {
   activationLockCode: string
   warrantyCode: string
 }
-
-export interface PrintHeader {
-  key: string,
-  name: string,
-  nameEn: string,
-}

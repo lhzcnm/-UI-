@@ -117,8 +117,6 @@ async function checkPlugin() {
 
     const { data } = await response.json()
 
-    console.log(data)
-
     await handleInfo(data)
   }
   catch (error) {
