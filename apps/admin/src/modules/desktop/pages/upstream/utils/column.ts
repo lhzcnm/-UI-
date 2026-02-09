@@ -6,14 +6,36 @@ import { h } from 'vue'
 
 import type { Upstream } from '@/inters/upstream'
 import { updateUpstream } from '@/api/upstream'
+import { toast } from 'vue-sonner'
 
 export const columns: XColDef<Upstream> = [
   { key: 'apiId', title: 'APIID', width: 68 },
-  { key: 'apiTitle', title: 'API名称', width: 225 },
+  {
+    key: 'apiTitle',
+    title: 'API名称',
+    width: 225,
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, apiTitle: val }
+      await updateUpstream(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      return h('div', value)
+    }
+  },
   {
     key: 'serverUrl',
     title: 'API地址',
     minWidth: 350,
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, serverUrl: val }
+      await updateUpstream(body)
+      toast.success('更新成功')
+    },
     render(value) {
       const [url, query] = value.split('?')
       if (query) {
@@ -34,13 +56,33 @@ export const columns: XColDef<Upstream> = [
     key: 'accountId',
     title: '用户名',
     width: 108,
-    cellEmpty: '--'
+    cellEmpty: '--',
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, accountId: val }
+      await updateUpstream(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      return h('div', value)
+    }
   },
   {
     key: 'apiKey',
     title: 'API密钥',
     width: 300,
-    cellEmpty: '--'
+    cellEmpty: '--',
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, apiKey: val }
+      await updateUpstream(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      return h('div', value)
+    }
   },
   {
     key: 'apiType',
