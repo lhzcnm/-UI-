@@ -5,6 +5,7 @@ import { zService, type Service } from '@/inters/services'
 
 import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { h } from 'vue'
+import { toast } from 'vue-sonner'
 
 export const columns: XColDef<Service> = [
   {
@@ -26,11 +27,31 @@ export const columns: XColDef<Service> = [
     key: 'tmpTitle',
     title: '服务简称',
     minWidth: 220,
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, tmpTitle: val }
+      await updateService(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      return h('div', value)
+    }
   },
   {
     key: 'packageTitle',
     title: '服务名称',
     minWidth: 220,
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, packageTitle: val }
+      await updateService(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      return h('div', value)
+    }
   },
   {
     key: 'packageTitleLocal',
@@ -38,11 +59,51 @@ export const columns: XColDef<Service> = [
     minWidth: 220,
     tdClassName: 'break-words',
     cellEmpty: '-',
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      const body = { ...row, packageTitleLocal: val }
+      await updateService(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      return h('div', value)
+    }
   },
   {
     key: 'packagePrice',
     title: '服务价格',
     width: 88,
+    isTwoClick: true,
+    isTwoClickType: 'input',
+    async onSave(val, row) {
+      let price = Number(val)
+
+      if (isNaN(price) || price < 0.1) {
+        price = 0.1
+      }
+
+      // 保留两位小数
+      price = Number(price.toFixed(2))
+
+      const body = {
+        ...row,
+        packagePrice: price
+      }
+
+      await updateService(body)
+      toast.success('更新成功')
+    },
+    render(value) {
+      let price = Number(value)
+
+      // 非数字 / NaN / 小于 0.1 → 统一显示 0.1
+      if (isNaN(price) || price < 0.1) {
+        price = 0.1
+      }
+
+      return h('div', price.toString())
+    }
   },
   {
     key: 'apiId',
@@ -62,7 +123,7 @@ export const columns: XColDef<Service> = [
           externalNetworkId: row.externalNetworkId,
         }
       }
-      
+
       return h(
         'a',
         {
@@ -133,7 +194,7 @@ export const columns: XColDef<Service> = [
           .findIndex(item => item.packageId === row.packageId)
         store.visibleBase = true
       }
-      
+
       return h(XButton, { size: 'sm', label: '编辑', onClick })
     }
   }
