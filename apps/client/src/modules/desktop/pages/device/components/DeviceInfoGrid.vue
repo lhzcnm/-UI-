@@ -2,10 +2,10 @@
 import { tv } from 'tailwind-variants'
 import { useClipboard } from '@vueuse/core'
 import { toast } from 'vue-sonner'
-import { Icon } from '@iconify/vue'
-import { xconfirm } from '@3un/utils'
+// import { Icon } from '@iconify/vue'
+// import { xconfirm } from '@3un/utils'
 
-import http from '@/utils/http'
+// import http from '@/utils/http'
 import { wsFetch, STORE } from '../utils'
 
 const style = tv({
@@ -16,7 +16,7 @@ const style = tv({
 })
 
 const store = inject(STORE)!
-const uStore = useUserStore()
+// const uStore = useUserStore()
 const { t, locale } = useI18n()
 
 const { copy } = useClipboard({ legacy: true })
@@ -26,19 +26,19 @@ const form = computed({
   set: (value) => store.deviceMap.get(store.selected)!.summary = value,
 })
 
-const cache = computed({
-  get: () => store.deviceMap.get(store.selected)!.cache,
-  set: (value) => store.deviceMap.get(store.selected)!.cache = value,
-})
+// const cache = computed({
+//   get: () => store.deviceMap.get(store.selected)!.cache,
+//   set: (value) => store.deviceMap.get(store.selected)!.cache = value,
+// })
 
 const defaultState = form.value.ActivationState
 const isActivated = ref(defaultState === t('device.info.grid.actived.already'))
 
-const loadings = reactive({
-  networkLock: false,
-  activationLock: false,
-  warranty: false,
-})
+// const loadings = reactive({
+//   networkLock: false,
+//   activationLock: false,
+//   warranty: false,
+// })
 
 async function handleActivation() {
   const suffix = isActivated.value ? 'deactivate' : 'activation'
@@ -51,84 +51,84 @@ async function handleActivation() {
     : t('device.info.grid.status.not')
 }
 
-async function handleNetworkLock() {
-  if (!await checkFreecount('NetworkLock')) return
+// async function handleNetworkLock() {
+//   if (!await checkFreecount('NetworkLock')) return
 
-  loadings.networkLock = true
-  const { info } = store.deviceMap.get(store.selected)!
-  const response = http.post('/device/query', {
-    imei: info.InternationalMobileEquipmentIdentity,
-    imei2: info.InternationalMobileEquipmentIdentity2,
-    sn: info.SerialNumber,
-    type: 'NetworkLock',
-  })
+//   loadings.networkLock = true
+//   const { info } = store.deviceMap.get(store.selected)!
+//   const response = http.post('/device/query', {
+//     imei: info.InternationalMobileEquipmentIdentity,
+//     imei2: info.InternationalMobileEquipmentIdentity2,
+//     sn: info.SerialNumber,
+//     type: 'NetworkLock',
+//   })
 
-  response.then(({ data }) => {
-    form.value.NetworkLock = data
-    cache.value.hasNetworkLock = true
-    cache.value.showNetworkLock = true
-    uStore.updateCredit()
-  })
+//   response.then(({ data }) => {
+//     form.value.NetworkLock = data
+//     cache.value.hasNetworkLock = true
+//     cache.value.showNetworkLock = true
+//     uStore.updateCredit()
+//   })
 
-  response.finally(() => {
-    loadings.networkLock = false
-  })
-}
+//   response.finally(() => {
+//     loadings.networkLock = false
+//   })
+// }
 
-async function handleActivationLock() {
-  if (! await checkFreecount('ActivationLock')) return
+// async function handleActivationLock() {
+//   if (! await checkFreecount('ActivationLock')) return
 
-  loadings.activationLock = true
-  const { info } = store.deviceMap.get(store.selected)!
-  const response = http.post('/device/query', {
-    imei: info.InternationalMobileEquipmentIdentity,
-    imei2: info.InternationalMobileEquipmentIdentity2,
-    sn: info.SerialNumber,
-    type: 'ActivationLock',
-  })
+//   loadings.activationLock = true
+//   const { info } = store.deviceMap.get(store.selected)!
+//   const response = http.post('/device/query', {
+//     imei: info.InternationalMobileEquipmentIdentity,
+//     imei2: info.InternationalMobileEquipmentIdentity2,
+//     sn: info.SerialNumber,
+//     type: 'ActivationLock',
+//   })
 
-  response.then(({ data }) => {
-    form.value.ActivationLock = data
-    cache.value.hasActivationLock = true
-    cache.value.showActivationLock = true
-    uStore.updateCredit()
-  })
+//   response.then(({ data }) => {
+//     form.value.ActivationLock = data
+//     cache.value.hasActivationLock = true
+//     cache.value.showActivationLock = true
+//     uStore.updateCredit()
+//   })
 
-  response.finally(() => {
-    loadings.activationLock = false
-  })
-}
+//   response.finally(() => {
+//     loadings.activationLock = false
+//   })
+// }
 
-async function handleWarranty() {
-  if (!await checkFreecount('Warranty')) return
+// async function handleWarranty() {
+//   if (!await checkFreecount('Warranty')) return
 
-  loadings.warranty = true
-  const { info } = store.deviceMap.get(store.selected)!
-  const response = http.post('/device/query', {
-    imei: info.InternationalMobileEquipmentIdentity,
-    sn: info.SerialNumber,
-    type: 'Warranty',
-  })
+//   loadings.warranty = true
+//   const { info } = store.deviceMap.get(store.selected)!
+//   const response = http.post('/device/query', {
+//     imei: info.InternationalMobileEquipmentIdentity,
+//     sn: info.SerialNumber,
+//     type: 'Warranty',
+//   })
 
-  response.then(({ data }) => {
-    cache.value.hasWarranty = true
-    cache.value.showWarranty = true
-    form.value.Warranty = data
-    uStore.updateCredit()
-  })
+//   response.then(({ data }) => {
+//     cache.value.hasWarranty = true
+//     cache.value.showWarranty = true
+//     form.value.Warranty = data
+//     uStore.updateCredit()
+//   })
 
-  response.finally(() => {
-    loadings.warranty = false
-  })
-}
+//   response.finally(() => {
+//     loadings.warranty = false
+//   })
+// }
 
-async function checkFreecount(type: string) {
-  const { data } = await http.get(`/device/query/${type}`)
-  if (data.freeCount > 0) return true
-  return await xconfirm`
-    ${t('device.info.grid.query.confirm', { point: data.point })}
-  `
-}
+// async function checkFreecount(type: string) {
+//   const { data } = await http.get(`/device/query/${type}`)
+//   if (data.freeCount > 0) return true
+//   return await xconfirm`
+//     ${t('device.info.grid.query.confirm', { point: data.point })}
+//   `
+// }
 
 async function cp(event: MouseEvent) {
   const target = event.target as HTMLElement
@@ -140,10 +140,10 @@ async function cp(event: MouseEvent) {
   }
 }
 
-type CacheKey = keyof (typeof cache.value)
-function showPrevCache(type: CacheKey) {
-  cache.value[type] = true
-}
+// type CacheKey = keyof (typeof cache.value)
+// function showPrevCache(type: CacheKey) {
+//   cache.value[type] = true
+// }
 
 const b = style()
 </script>
@@ -213,7 +213,9 @@ const b = style()
           </button>
         </div>
       </div>
-      <div class="flex items-center"> 
+
+      <!-- 网络锁 -->
+      <!-- <div class="flex items-center"> 
         <span :class="b.label()">{{ t('device.info.grid.netLock') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <button
@@ -236,8 +238,10 @@ const b = style()
             <span v-else>{{ cache.hasNetworkLock ? t('device.info.grid.query.re') : t('device.info.grid.query.now') }}</span>
           </button>
         </div>
-      </div>
-      <div class="flex items-center">
+      </div> -->
+
+      <!-- 激活锁 -->
+      <!-- <div class="flex items-center">
         <span :class="b.label()">{{ t('device.info.grid.activeLock') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <button
@@ -260,8 +264,10 @@ const b = style()
             <span v-else>{{ cache.hasActivationLock ? t('device.info.grid.query.re') : t('device.info.grid.query.now') }}</span>
           </button>
         </div>
-      </div>
-      <div class="flex items-start">
+      </div> -->
+
+      <!-- 保修期限 -->
+      <!-- <div class="flex items-start">
         <span :class="b.label()">{{ t('device.info.grid.deadLine') }}</span>
         <div class="flex-1 flex items-start justify-between">
           <button
@@ -284,7 +290,8 @@ const b = style()
             <span v-else>{{ cache.hasWarranty ? t('device.info.grid.query.re') : t('device.info.grid.query.now') }}</span>
           </button>
         </div>
-      </div>
+      </div> -->
+
       <div class="flex items-center">
         <span :class="b.label()">{{ t('device.info.grid.wifiAddr') }}</span>
         <div class="flex-1 flex items-center justify-between">

@@ -11,6 +11,7 @@ export interface OrderApi {
   submitOrders(data: SubmitOrderListParams): R<OrderTableView[]>
 
   verify(id: number): R<void>
+  orderPrint(body: OrderPrintParams): R<Blob>
 }
 
 export interface Order {
@@ -143,4 +144,10 @@ export interface GeneratePictureParms {
 export interface ServiceColumnItem {
   name: string,
   nameEn: string | null,
+}
+
+export interface OrderPrintParams {
+  result: string[],
+  labelWidth: string,
+  labelHeight: string,
 }
