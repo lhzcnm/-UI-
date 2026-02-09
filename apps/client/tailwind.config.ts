@@ -45,22 +45,18 @@ export default withTV({
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        'arrow': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(6px)' },
+        },
       },
       animation: {
         'scale-check': 'scale-check 0.5s ease-out forwards',
         'circle-expand': 'circle-expand 0.8s ease-out forwards',
         'fade-up': 'fade-up 0.5s ease-out 0.3s forwards',
         'fadeIn': 'fadeIn 0.4s ease-in-out',
-      },
-      keyframes: {
-        arrow: {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '50%': { transform: 'translateX(6px)' },
-        },
-      },
-      animation: {
         'arrow-move': 'arrow 0.8s ease-in-out infinite'
-      }
+      },
     },
   },
 })

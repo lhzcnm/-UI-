@@ -16,12 +16,6 @@ const paperSizes = [
   { label: '30 x 15 mm', value: '30x15' },
   { label: '30 x 20 mm', value: '30x20' },
   { label: '50 x 30 mm', value: '50x30' },
-  // { label: 'A3 (297 × 420 mm)', value: '297x420' },
-  // { label: 'A4 (210 × 297 mm)', value: '210x297' },
-  // { label: 'A5 (148 × 210 mm)', value: '148x210' },
-  // { label: 'B5 (176 × 250 mm)', value: '176x250' },
-  // { label: 'Letter (216 × 279 mm)', value: '216x279' },
-  // { label: 'Legal (216 × 356 mm)', value: '216x356' }
 ]
 
 function handleCancel() {
@@ -52,19 +46,6 @@ function handleConfirm() {
         <label class="text-sm font-medium">
           {{ t('order.print.paper') }}
         </label>
-      
-        <!-- <select
-          v-model="paperSize"
-          class="w-full border rounded-lg p-2 bg-white dark:bg-gray-800 dark:border-gray-700"
-        >
-          <option
-            v-for="item in paperSizes"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </option>
-        </select> -->
         <XSelect
           v-model="paperSize"
         >
@@ -78,7 +59,6 @@ function handleConfirm() {
     
     <template #footer>
       <div class="mt-2 flex justify-end space-x-2">
-        <!-- <XButton variant="soft" :label="t('button.cancel')" /> -->
         <ButtonGroup
           :layouts="['cancel', 'confirm']"
           @cancel="handleCancel" @confirm="handleConfirm"

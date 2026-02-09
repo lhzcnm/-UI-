@@ -22,7 +22,6 @@ const store = inject(HISTORY_STORE)!
 
 const { copy } = useClipboard({ legacy: true })
 const { t, locale } = useI18n()
-// const serviceStore = useServiceStore()
 
 const page = ref(1)
 const limit = ref(20)

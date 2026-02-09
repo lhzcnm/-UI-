@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
-import HeaderTag from '../components/HeaderTag.vue'
-
+import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
+import { SUBMIT_STORE } from '../utils'
+import { mmToPx } from '@/utils'
+import { ORDER_STATUS, xconfirm } from '@3un/utils'
+import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
 import { toast } from 'vue-sonner'
-import { xconfirm } from '@3un/utils'
-import * as html2image from 'html-to-image'
+import type { CustomSubmitOrder, OrderTableView } from '@/api/orders'
 import jsPDF from 'jspdf'
 import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
+import * as html2image from 'html-to-image'
+import { Icon } from '@iconify/vue'
 
-import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/types'
-import { formatSize, STORE } from '../utils'
-import { mmToPx } from '@/utils'
+const store = inject(SUBMIT_STORE)!
 
-const store = inject(STORE)!
-
+const { services } = useServiceStore()
 const { locale } = useI18n()
 
 const container = reactive<ContainerItem>({
@@ -30,21 +30,33 @@ const container = reactive<ContainerItem>({
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
-const device = computed(() => store.deviceMap.get(store.printIndex))
-
-// const device = ref(store.deviceMap.get(store.selected))
-const templateItems = ref<TemplateItem[]>([])
-const serviceCols = ref<PrintHeader[]>(getDefaultHeaders())
 const selectCols = ref<string[]>([])
+const templateItems = ref<TemplateItem[]>([])
+const serviceCols = ref<ServiceHeader[]>([])
 const generating = ref<boolean>(false)
-const loading = ref<boolean>(false)
 
 const paperRef = ref<HTMLElement | null>(null)
 const uploadRef = ref<HTMLInputElement | null>(null)
+const customOrders = ref<CustomSubmitOrder[]>([])
+
+const defaultItems = [
+  {
+    name: "IMEI",
+    nameEn: "IMEI"
+  },
+  {
+    name: "二维码",
+    nameEn: "Qrcode",
+  },
+]
+
+let serviceHeaders: ServiceHeader[] = []
+
+const currentService = computed(() => services.get(store.selectId!)!)
 
 const isEn = computed(() => locale.value === "en")
 
-const processedColumns = computed(() => serviceCols.value.map(item => ({ key: item.key, label: isEn.value ? item.nameEn : item.name })))
+const processedColumns = computed(() => serviceCols.value.map(item => isEn.value ? item.nameEn : item.name))
 
 const paperStyle = computed(() => ({
   width: `${mmToPx(container.width)}px`,
@@ -79,49 +91,49 @@ const safeAreaStyle = computed(() => {
 })
 
 const previewValue = computed(() => {
+  let order = customOrders.value.find(o => o.status === ORDER_STATUS.SUCCESS)
+  if (!order) return "{value}"
+
   let res: Record<string, string> = {}
 
-  const deviceItem = device.value
+  for (let item of processedColumns.value) {
+    const value = order.fields[item]
 
-  res["name"] = deviceItem?.product.Name || "{value}"
-  res["model"] = `${deviceItem?.info.ModelNumber} ${deviceItem?.info.RegionInfo}` || "{value}"
-  res["color"] = deviceItem?.product.Color || "{value}"
-  res["imei"] = deviceItem?.info.InternationalMobileEquipmentIdentity ?? "{value}"
-  res["imei2"] = deviceItem?.info.InternationalMobileEquipmentIdentity2 ?? "{value}"
-  res["sn"] = deviceItem?.info.SerialNumber ?? "{value}"
-  res["border"] = deviceItem?.info.MLBSerialNumber || "{value}"
-  res["version"] = `${deviceItem?.info.ProductVersion} (${deviceItem?.info.BuildVersion})`
-  res["batteryCycle"] = deviceItem?.battery.CycleCount.toString() ?? "{value}"
-  res["disk"] = `${deviceItem?.memory.TotalSystemCapacity ? formatSize(deviceItem.memory.TotalDiskCapacity) : "{value}"}`
-  res["blueBooth"] = deviceItem?.info.BluetoothAddress ?? "{value}"
-  res["ethernet"] = deviceItem?.info.EthernetAddress ?? "{value}"
-  res["ECID"] = deviceItem?.info.Ecid ?? "{value}"
-  res["UDID"] = deviceItem?.info.UniqueDeviceID ?? "{value}"
+    if ((/^(处理结果|Result)$/i).test(item)) {
+      res["处理结果"] = order.result
+      res["Result"] = order.result
+    } else {
+      res[item] = value && value !== "" ? value : "{value}"
+    }
+  }
+  res["IMEI"] = order.imei || "{value}"
+  res['订单结果'] = order.result || "{value}"
+  res['result'] = order.result || "{value}"
 
   return res
 })
 
-function handleSelectColumn(id: string, label: string) {
-  const index = selectCols.value.indexOf(id)
+function handleSelectColumn(label: string) {
+  const index = selectCols.value.indexOf(label)
 
   if (index !== -1) {
     selectCols.value.splice(index, 1)
-    templateItems.value = templateItems.value.filter(i => i.key !== id)
+    templateItems.value = templateItems.value.filter(i => i.key !== label)
   } else {
-    const isQrcode = id === 'qrcode'
+    const isQrcode = (/^(二维码|qrcode)$/i).test(label)
     const pos = getNextItemPosition()
 
     const newItem: TemplateItem = {
-      key: id,
+      key: label,
       label: label,
       x: pos.x,
       y: pos.y,
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
-      ...(isQrcode && { size: 20 }),
+      ...(isQrcode && {size: 20}),
     }
 
-    selectCols.value.push(id)
+    selectCols.value.push(label)
     templateItems.value.push(newItem)
   }
 }
@@ -155,11 +167,7 @@ function getNextItemPosition() {
 }
 
 function isQrcodeField(key: string) {
-  return key === 'qrcode'
-}
-
-function openImport() {
-  uploadRef.value?.click()
+  return (/^(二维码|qrcode)$/i).test(key)
 }
 
 async function exportTemplate() {
@@ -171,6 +179,8 @@ async function exportTemplate() {
   }
 
   const template: PrintTemplateJson = {
+    serviceId: store.rawOrders[0].serviceId!,
+
     paper: {
       width: container.width,
       height: container.height,
@@ -201,6 +211,10 @@ async function exportTemplate() {
   URL.revokeObjectURL(url)
 }
 
+function openImport() {
+  uploadRef.value?.click()
+}
+
 async function handleChange(e: Event) {
   if (!uploadRef.value) return
   const target = e.target as HTMLInputElement
@@ -221,6 +235,11 @@ async function handleChange(e: Event) {
 
 async function importTemplate(file: File) {
   const template = await readTemplateFile(file)
+
+  const currentServiceId = store.rawOrders[0].serviceId
+  if (template.serviceId !== currentServiceId) {
+    return toast.warning("该模板与当前服务不一致")
+  }
 
   container.width = template.paper.width
   container.height = template.paper.height
@@ -249,35 +268,6 @@ function readTemplateFile(file: File): Promise<PrintTemplateJson> {
     reader.onerror = reject
     reader.readAsText(file)
   })
-}
-
-function qrcodeStr(object: Record<string, string> | string) {
-  const data = objectToString(object)
-
-  return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
-}
-
-function objectToString(object: Record<string, string> | string) {
-  const labelMap = Object.fromEntries(
-    processedColumns.value.map(item => [item.key, item.label])
-  )
-
-  return Object.entries(object)
-    .map(([key, value]) => {
-      const isQrcode = /^(二维码|qrcode)$/i.test(key)
-      if (isQrcode) return
-      if (!selectCols.value.includes(key)) return
-
-      // 用 label 代替 key
-      const label = labelMap[key] ?? key
-      return `${label}: ${stripHtmlTags(value)}`
-    })
-    .filter(Boolean)
-    .join('\n')
-}
-
-function stripHtmlTags(html: string) {
-  return html.replace(/<[^>]+>/g, '')
 }
 
 function startDrag(e: MouseEvent, item: TemplateItem) {
@@ -373,83 +363,105 @@ function isItemOverflow(el: HTMLElement) {
   )
 }
 
-function getDefaultHeaders(): PrintHeader[] {
-  return [
-    { key: "name",
-      name: "设备名称",
-      nameEn: "DeviceName",
-    },
-    {
-      key: "model",
-      name: "设备型号",
-      nameEn: "Device Model",
-    },
-    {
-      key: "color",
-      name: "颜色",
-      nameEn: "Color",
-    },
-    {
-      key: "imei",
-      name: "imei",
-      nameEn: "imei",
-    },
-    device.value?.info.InternationalMobileEquipmentIdentity2 && {
-      key: "imei2",
-      name: "imei2",
-      nameEn: "imei2",
-    },
-    {
-      key: "sn",
-      name: "序列号",
-      nameEn: "Serial Number",
-    },
-    {
-      key: "border",
-      name: "主板序号",
-      nameEn: "Board No",
-    },
-    {
-      key: "version",
-      name: "版本",
-      nameEn: "OS Ver",
-    },
-    {
-      key: "batteryCycle",
-      name: "充电循环次数",
-      nameEn: "Charge Count",
-    },
-    {
-      key: "disk",
-      name: "存储容量",
-      nameEn: "Disk Total",
-    },
-    {
-      key: "blueBooth",
-      name: "蓝牙地址",
-      nameEn: "Blue Bootn Address",
-    },
-    {
-      key: "ethernet",
-      name: "以太网地址",
-      nameEn: "Ethernet Address",
-    },
-    {
-      key: "ECID",
-      name: "ECID",
-      nameEn: "ECID",
-    },
-    {
-      key: "UDID",
-      name: "UDID",
-      nameEn: "UDID",
-    },
-    {
-      key: "qrcode",
-      name: "二维码",
-      nameEn: "Qrcode",
-    },
-  ].filter(Boolean) as PrintHeader[]
+function stripHtmlTags(html: string) {
+  return html.replace(/<[^>]+>/g, '')
+}
+
+function qrcodeStr(object: Record<string, string> | string) {
+  const data = objectToString(object)
+
+  return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
+}
+
+function objectToString(object: Record<string, string> | string) {
+  return Object.entries(object)
+    .map(([key, value]) => {
+      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
+      if (isQrcode) return
+      if (!selectCols.value.includes(key)) return
+      return `${key}: ${stripHtmlTags(value)}`
+    })
+    .filter(Boolean)
+    .join('\n')
+}
+
+async function getServiceColumns(value: number) {
+  const { data } = await serviceApi.header(value)
+
+  serviceHeaders = data
+
+  let serviceHeader: ServiceHeader[] = []
+  if (!data || data.length === 0) {
+    serviceHeader.push({
+      name: '订单结果',
+      nameEn: 'result',
+    })
+  } else {
+    serviceHeader = data
+  }
+
+  serviceCols.value = [...defaultItems, ...serviceHeader]
+}
+
+function getFieldsMap(fields: ServiceHeader[]) {
+  const fieldsCN = fields.map(item => item.name)
+  const fieldsEN = fields.map(item => item.nameEn)
+  const result: Record<string, FieldMap> = {}
+
+  for (let i = 0; i < fieldsCN.length; i++) {
+    const cn = fieldsCN[i]
+    const en = fieldsEN[i]
+
+    result[cn] = { cn, en }
+
+    if (en !== null && en !== "") {
+      result[en] = { cn, en }
+    }
+  }
+
+  return result
+}
+
+function processOrderResult(content: string) {
+  const result: Record<string, string> = {}
+  const items = content.split('<br>')
+
+  const keyMap = getFieldsMap(serviceHeaders)
+
+  if (items.length === 1 && serviceHeaders.length === 1) {
+    const key = isEn.value ? (serviceHeaders[0].nameEn ?? serviceHeaders[0].nameEn) : serviceHeaders[0].name
+    result[key] = content
+  } else {
+    for (const item of items) {
+      const [key, ...valueParts] = item.split(/[:：]/)
+      const rawKey = key.trim()
+      const value = valueParts.join(":").trim()
+
+      const mapped = keyMap[rawKey]
+      if (!mapped) continue
+
+      const finalKey = isEn.value ? mapped.en ? mapped.en : mapped.cn : mapped.cn
+      result[finalKey] = value
+    }
+  }
+
+  return result
+}
+
+function convertSubmitOrder(orders: OrderTableView[]) {
+  let processedOrders: CustomSubmitOrder[] = []
+  for (let order of orders) {
+    processedOrders.push({
+      id: order.id,
+      serviceId: currentService.value.id,
+      status: ORDER_STATUS.SUCCESS,
+      imei: order.imei,
+      result: order.result,
+      fields: {...processOrderResult(order.result)}
+    })
+  }
+
+  customOrders.value = processedOrders
 }
 
 async function generatePDF() {
@@ -458,7 +470,6 @@ async function generatePDF() {
   if (templateItems.value.length === 0) {
     if (!await xconfirm("当前没有选择字段, 是否确认打印? ")) return
   }
-  updateOverflowMap()
   if (Object.values(isOverflowMap).some(Boolean)) {
     if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
   }
@@ -471,91 +482,114 @@ async function generatePDF() {
     format: [mmToPx(container.width), mmToPx(container.height)],
   })
 
-  const page = paperRef.value.cloneNode(true) as HTMLElement
-  document.body.appendChild(page)
+  for (let i = 0; i < customOrders.value.length; i++) {
+    const order = customOrders.value[i]
 
-  const deviceItem = previewValue.value
+    const page = paperRef.value.cloneNode(true) as HTMLElement
+    document.body.appendChild(page)
 
-  // 填充数据
-  page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
-    const key = itemEl.dataset.key!
+    page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
+      const key = itemEl.dataset.key!
 
-    if (!isQrcodeField(key)) {
-      const value = deviceItem[key]
+      if ((/^(处理结果|Result)$/i).test(key)) {
+        order.fields["处理结果"] = order.result
+        order.fields["Result"] = order.result
 
-      const valueEl = itemEl.querySelector('.template-value')
-      if (valueEl) {
-        valueEl.textContent = stripHtmlTags(value)
+        return
       }
-      return
-    }
 
-    const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
-    if (!qrcodeItem) return
+      if (!isQrcodeField(key)) {
+        const value = key === 'IMEI'
+          ? order.imei || ''
+          : order.fields[key] ?? ''
+  
+        const valueEl = itemEl.querySelector('.template-value')
+        if (valueEl) {
+          valueEl.textContent = stripHtmlTags(value)
+        }
+        return
+      }
 
-    const qrContainer = itemEl.querySelector('[data-qrcode]')
-    if (!qrContainer) return
+      const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
+      if (!qrcodeItem) return
 
-    const qrData = qrcodeStr(deviceItem)
+      const qrContainer = itemEl.querySelector('[data-qrcode]')
+      if (!qrContainer) return
 
-    const qrcode = useQRCode(qrData)
+      const qrData = qrcodeStr({
+        ...order.fields,
+        IMEI: order.imei || '',
+      })
 
-    qrContainer.innerHTML = ''
-    const img = document.createElement('img')
+      const qrcode = useQRCode(qrData)
 
-    img.style.width = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
-    img.style.height = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
-    watch(
-      () => qrcode.value,
-      () => {
-        img.src = qrcode.value
-      },
-      { immediate: true }
-    )
+      qrContainer.innerHTML = ''
+      const img = document.createElement('img')
 
-    qrContainer.appendChild(img)
-  })
+      img.style.width = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
+      img.style.height = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
+      watch(
+        () => qrcode.value,
+        () => {
+          img.src = qrcode.value    
+        },
+        { immediate: true }
+      )
 
-  const imgData = await html2image.toPng(page, {
-    pixelRatio: 2,
-    backgroundColor: "#ffffff",
-    cacheBust: true,
-    skipFonts: true,
-  })
+      qrContainer.appendChild(img)
+    })
 
-  document.body.removeChild(page)
+    const imgData = await html2image.toPng(page, {
+      pixelRatio: 2,
+      backgroundColor: "#ffffff",
+      cacheBust: true,
+      skipFonts: true,
+    })
 
-  pdf.addImage(imgData, "PNG", 0, 0, mmToPx(container.width), mmToPx(container.height))
+    document.body.removeChild(page)
+
+    pdf.addImage(imgData, "PNG", 0, 0, mmToPx(container.width), mmToPx(container.height))
+
+    if (i < selectCols.value.length - 1) pdf.addPage()
+  }
 
   generating.value = false
   paperRef.value.classList.remove("printing")
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
 }
+
+await getServiceColumns(store.rawOrders[0].serviceId!)
+
+onMounted(() => {
+  convertSubmitOrder(store.rawOrders)
+  updateOverflowMap()
+})
 </script>
 
 <template>
-  <div class="p-4 h-full w-full flex gap-4 overflow-y-auto">
+  <div class="p-4 h-full w-full flex gap-4 overflow-auto">
     <section class="w-[40%] space-y-4 flex flex-col">
       <div class="flex items-center space-x-2">
-        <button
-          class="p-2 flex items-center border border-border rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all"
-          @click="store.deviceStatus = store.prevStatus">
+        <button class="p-2 flex items-center border border-border rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all"
+          @click="store.view = 'submit'">
           <Icon icon="lucide:step-back" />
-          <span>返回</span>
+          <span>返回历史记录</span>
         </button>
-      </div>
 
+        <span>当前服务: {{ currentService!.id }} - {{ currentService!.title }}</span>
+      </div>
       <div class="border p-2 space-y-1">
-        <div class="font-bold text-sm">设备信息</div>
+        <div class="font-bold text-sm">服务字段</div>
         <div class="flex flex-wrap gap-2">
-          <template v-for="item in processedColumns" :key="item.key">
-            <HeaderTag :label="item.label" :id="item.key" :checked="selectCols.includes(item.key)"
+          <template v-for="column in processedColumns" :key="column">
+            <ColumnTags :label="column"
+              :checked="selectCols.includes(column)"
               @click="handleSelectColumn" />
           </template>
         </div>
       </div>
-
+      
       <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
         <!-- 字体大小 -->
         <div class="flex flex-col space-y-1">
@@ -607,8 +641,11 @@ async function generatePDF() {
         </div>
 
         <div class="space-y-2">
-          <div v-for="field in templateItems" :key="field.key"
-            class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition">
+          <div
+            v-for="field in templateItems"
+            :key="field.key"
+            class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition"
+          >
             <!-- 字段名 -->
             <div class="flex items-center gap-2 min-w-0">
               <span class="w-32 truncate font-medium text-foreground">
@@ -626,19 +663,21 @@ async function generatePDF() {
               <div v-if="!isQrcodeField(field.key)" class="mr-4">
                 <label class="flex items-center gap-3 cursor-pointer select-none">
                   <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
-                  <div class="relative w-9 h-5 rounded-full bg-border
+                  <div
+                    class="relative w-9 h-5 rounded-full bg-border
                            peer-checked:bg-primary
-                           transition-colors flex">
+                           transition-colors flex"
+                  >
                     <XSwitch v-model="field.wrap" />
                   </div>
                 </label>
               </div>
-
+  
               <div v-else class="flex items-center gap-2 mr-2">
                 <XInputNumber v-model="field.size!" size="sm" class="w-20" />
               </div>
-
-              <button class="hover:text-success" @click="handleSelectColumn(field.key, field.label)">
+  
+              <button class="hover:text-success" @click="handleSelectColumn(field.key)">
                 <Icon icon="lucide:trash-2" />
               </button>
             </div>
@@ -649,19 +688,31 @@ async function generatePDF() {
       <div class="flex justify-between space-x-2">
         <XButton class="flex-1" label="导出模板" color="success" @click="exportTemplate" />
         <XButton class="flex-1" label="导入模板" @click="openImport" />
-        <XButton class="flex-1" label="打印结果" color="warning" :loading="loading" @click="generatePDF" />
+        <XButton class="flex-1" label="打印结果" color="warning" @click="generatePDF" />
       </div>
     </section>
 
     <section class="flex-1 flex justify-center">
-      <div ref="paperRef" class="relative bg-white shadow paper-preview overflow-hidden" :style="paperStyle">
-        <div class="absolute safe-area-border" :style="safeAreaStyle" />
+      <div
+        ref="paperRef"
+        class="relative bg-white shadow paper-preview overflow-hidden"
+        :style="paperStyle"
+      >
+        <div
+          class="absolute safe-area-border"
+          :style="safeAreaStyle"
+        />
 
-        <div v-for="item in templateItems" :key="item.key"
+        <div
+          v-for="item in templateItems"
+          :key="item.key"
           class="absolute cursor-move select-none template-item text-black"
           :class="{ 'overflow-warning': isOverflowMap[item.key] }"
-          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }" @mousedown.prevent
-          @mousedown="startDrag($event, item)" :data-key="item.key">
+          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }"
+          @mousedown.prevent
+          @mousedown="startDrag($event, item)"
+          :data-key="item.key"
+        >
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
               <div class="font-medium leading-tight">
@@ -671,17 +722,18 @@ async function generatePDF() {
                 {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
               </div>
             </template>
-
+        
             <template v-else>
               <span class="font-medium">{{ item.label }}:</span>
-              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue :
-                stripHtmlTags(previewValue[item.key]) }}</span>
+              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
           </template>
 
           <template v-else>
             <div data-qrcode>
-              <QrPreview :data="qrcodeStr(previewValue)" :size="item.size ?? 20" />
+              <QrPreview
+                :data="qrcodeStr(previewValue)"
+                :size="item.size ?? 20" />
             </div>
           </template>
         </div>

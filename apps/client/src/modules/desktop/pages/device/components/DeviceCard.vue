@@ -2,8 +2,8 @@
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import type { DeviceMapItem } from '../types'
 import { STORE, getCopyToken, getCopyTokenEn } from '../utils'
+import type { DeviceMapItem } from "@/types/device"
 
 interface DeviceCardProps {
   device: DeviceMapItem

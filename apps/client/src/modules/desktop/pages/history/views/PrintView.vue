@@ -13,6 +13,7 @@ import { HISTORY_STORE } from '../utils'
 import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
 import { type CustomSubmitOrder, type Order, type ServiceColumnItem } from '@/api/orders'
 import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
+import { until } from '@vueuse/core'
 
 const store = inject(HISTORY_STORE)!
 
@@ -429,7 +430,7 @@ async function importTemplate(file: File) {
 
   const currentServiceId = store.selectOrders[0]?.serviceId
   if (template.serviceId !== currentServiceId) {
-    toast.warning("该模板与当前服务不一致")
+    return toast.warning("该模板与当前服务不一致")
   }
 
   container.width = template.paper.width
@@ -487,8 +488,7 @@ async function generatePDF() {
     const page = paperRef.value.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
 
-    // 填充数据
-    page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
+    for (const itemEl of page.querySelectorAll<HTMLElement>('.template-item')) {
       const key = itemEl.dataset.key!
 
       if ((/^(处理结果|Result)$/i).test(key)) {
@@ -523,6 +523,7 @@ async function generatePDF() {
 
       const qrcode = useQRCode(qrData)
 
+      await until(qrcode).toMatch
       qrContainer.innerHTML = ''
       const img = document.createElement('img')
 
@@ -537,7 +538,7 @@ async function generatePDF() {
       )
 
       qrContainer.appendChild(img)
-    })
+    }
 
     const imgData = await html2image.toPng(page, {
       pixelRatio: 2,
@@ -740,14 +741,14 @@ onMounted(() => {
               <div class="font-medium leading-tight">
                 {{ item.label }}:
               </div>
-              <div class="leading-tight break-all template-value">
+              <div class="leading-tight break-word template-value">
                 {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
               </div>
             </template>
         
             <template v-else>
               <span class="font-medium">{{ item.label }}:</span>
-              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
+              <span class="ml-1 break-word template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
           </template>
 

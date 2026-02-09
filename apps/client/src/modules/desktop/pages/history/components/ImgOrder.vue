@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImgOrderItem } from '../types';
+import type { ImgOrderItem } from '../types'
 import { HISTORY_STORE } from '../utils'
 
 interface ImgOrderProps {

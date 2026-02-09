@@ -5,7 +5,7 @@ import { toast } from 'vue-sonner'
 import * as XLSX from 'xlsx'
 
 interface ImportPlaneProps {
-  selectedId: number
+  selectedId: number | undefined
   disabled?: boolean
 }
 
@@ -27,14 +27,14 @@ const remark = ref('')
 const { t } = useI18n()
 
 const validImeiList = computed(() => {
-  const service = store.services.get(props.selectedId)
+  const service = store.services.get(props.selectedId!)
   const imeiType = service?.imeiType || IMEI_TYPE.NONE
 
   return getSubmitImei(imei.value, imeiType)
 })
 
 const unitPrice = computed(() => {
-  const service = serviceStore.services.get(props.selectedId)
+  const service = serviceStore.services.get(props.selectedId!)
 
   if (!service) return "0.00"
   return service.price

@@ -17,12 +17,7 @@ async function handleSubmit() {
   submitLoading.value = true
 
   const params = formatOrderParams(store.exportForm)
-  // const response = orderApi.export({
-  //   serviceId: store.exportForm.serviceId,
-  //   ...params,
-  //   excelHead: headers.value,
-  // })
-
+  
   try {
     const { data } = await orderApi.export({
       serviceId: store.exportForm.serviceId,
@@ -34,14 +29,6 @@ async function handleSubmit() {
   } finally {
     submitLoading.value = false
   }
-  // response.then((res) => {
-  //   downloadURL(res.data)
-  //   store.visibleExport = false
-  // })
-
-  // response.finally(() => {
-  //   submitLoading.value = false
-  // })
 }
 
 async function getServiceHeader(id: number) {

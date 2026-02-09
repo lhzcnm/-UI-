@@ -12,15 +12,19 @@ import { maskText } from '@/utils'
 
 import type {
   DeviceStore,
-  DeviceBaseInfo,
-  DeviceResponse, BatteryResponse,
-  ProductDataset, SaleRegionDataset,
-  SaleRegion, ProductItem,
-  DeviceCache, DeviceProduct,
 } from './types'
 
 import { ws, wsFetch, STORE } from './utils'
-import { serviceApi } from '@/api/services'
+import type {
+  BatteryResponse,
+  DeviceBaseInfo,
+  DeviceProduct,
+  DeviceResponse,
+  ProductDataset,
+  ProductItem,
+  SaleRegion,
+  SaleRegionDataset
+} from '@/types/device'
 
 const store: DeviceStore = reactive({
   deviceMap        : new Map(),
@@ -152,14 +156,14 @@ async function checkVersion(version: string = '1.0.0') {
 async function handleDevice(data: DeviceResponse) {
   const { DeviceInfo, Memory, ICloud, DeviceID } = data
   const key = `${DeviceID}:${DeviceInfo.UniqueDeviceID}`
-  const imei = DeviceInfo.InternationalMobileEquipmentIdentity
+  // const imei = DeviceInfo.InternationalMobileEquipmentIdentity
 
   const product = getProduct(DeviceInfo)
   const battery = await getBatteryInfo(DeviceInfo)
-  const cache   = await getPrevCache(imei)
+  // const cache   = await getPrevCache(imei)
 
-  const summary = handleSummary(data, product, cache)
-  const cacheStatus = getDeviceCacheStatus(cache)
+  const summary = handleSummary(data, product)
+  // const cacheStatus = getDeviceCacheStatus(cache)
 
   http.post('/device/save', data)
 
@@ -170,7 +174,7 @@ async function handleDevice(data: DeviceResponse) {
     memory   : Memory,
     icloud   : ICloud,
     info     : DeviceInfo,
-    cache    : cacheStatus,
+    // cache    : cacheStatus,
     summary  : summary,
   })
 }
@@ -230,7 +234,6 @@ function getSalesRegion(regionInfo: string): SaleRegion {
 function handleSummary(
   device: DeviceResponse,
   product: DeviceProduct,
-  cache: DeviceCache,
 ) {
   const { DeviceInfo: info, ICloud } = device
   const salesRegion = getSalesRegion(info.RegionInfo)
@@ -252,41 +255,41 @@ function handleSummary(
     CPU             : product.Chip || '--',
     SalesRegion     : salesRegion,
 
-    Warranty        : cache.warrantyCode || '--',
-    NetworkLock     : cache.networkLockCode || '--',
-    ActivationLock  : cache.activationLockCode || '--',
+    // Warranty        : cache.warrantyCode || '--',
+    // NetworkLock     : cache.networkLockCode || '--',
+    // ActivationLock  : cache.activationLockCode || '--',
   }
 }
 
-async function getPrevCache(imei: string) {
-  const { data } = await http.post<DeviceCache>(
-    '/device/prev-query',
-    {
-      networkLockId: 1160,
-      activationLockId: 1161,
-      warrantyId: 1162,
-      imei: imei,
-    },
-  )
+// async function getPrevCache(imei: string) {
+//   const { data } = await http.post<DeviceCache>(
+//     '/device/prev-query',
+//     {
+//       networkLockId: 1160,
+//       activationLockId: 1161,
+//       warrantyId: 1162,
+//       imei: imei,
+//     },
+//   )
 
-  return data
-}
+//   return data
+// }
 
-function getDeviceCacheStatus(cache: DeviceCache) {
-  const hasNetworkLock = cache.networkLockCode !== '--'
-  const hasActivationLock = cache.activationLockCode !== '--'
-  const hasWarranty = cache.warrantyCode !== '--'
+// function getDeviceCacheStatus(cache: DeviceCache) {
+//   const hasNetworkLock = cache.networkLockCode !== '--'
+//   const hasActivationLock = cache.activationLockCode !== '--'
+//   const hasWarranty = cache.warrantyCode !== '--'
 
-  return {
-    hasNetworkLock: hasNetworkLock,
-    hasActivationLock: hasActivationLock,
-    hasWarranty: hasWarranty,
+//   return {
+//     hasNetworkLock: hasNetworkLock,
+//     hasActivationLock: hasActivationLock,
+//     hasWarranty: hasWarranty,
 
-    showNetworkLock: !hasNetworkLock,
-    showActivationLock: !hasActivationLock,
-    showWarranty: !hasWarranty,
-  }
-}
+//     showNetworkLock: !hasNetworkLock,
+//     showActivationLock: !hasActivationLock,
+//     showWarranty: !hasWarranty,
+//   }
+// }
 
 async function getBatteryInfo(device: DeviceBaseInfo) {
   return await wsFetch<BatteryResponse>({
@@ -318,14 +321,8 @@ async function checkScreenshot(id: string) {
   store.screenshotStatus = status
 }
 
-async function getQueryService() {
-  const { data } = await serviceApi.list({ isUnlock: false })
-  store.queryServices = data
-}
-
 await Promise.all([
   getServices(),
-  getQueryService(),
 ])
 
 const components = {

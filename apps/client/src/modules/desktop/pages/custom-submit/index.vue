@@ -1,111 +1,101 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
 import SelectService from './components/SelectService.vue'
-import ColumnTags from './components/ColumnTags.vue'
-import QrPreview from './components/QrPreview.vue'
-// import OrderCard from './components/OrderCard.vue'
 
-import { watchOnce } from '@vueuse/core'
-import { ORDER_STATUS } from '@3un/utils'
-import jsPDF from "jspdf"
+import { ORDER_STATUS, xconfirm } from '@3un/utils'
+import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
 import * as html2image from 'html-to-image'
-import { h } from 'vue'
+import jsPDF from 'jspdf'
 import { toast } from 'vue-sonner'
-import { type XTableColumn } from '@3un/ui'
 
-import { serviceApi, type FieldMap, type Service, type ServiceHeader } from '@/api/services'
-import { CUSTOM_SUBMIT_STORE, getDefaultHeaders, type CustomSubmitStore, type TemplateItem } from './utils'
-import { orderApi, type CustomSubmitOrder, type Order, type OrderSubmitResult, type ServiceColumnItem } from '@/api/orders'
+import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
 import { getSubmitImei, mmToPx } from '@/utils'
-import { getDefaultColumns } from './utils/columnOrder'
+import { serviceApi, type ServiceDetail, type ServiceHeader } from '@/api/services'
+import { orderApi, type CustomSubmitOrder, type OrderSubmitParams } from '@/api/orders'
+import { checkPlugin, deviceMap, handleDevice, handleDisconnect, ws } from "./utils/useDevice"
+import type { DeviceResponse } from '@/types/device'
+import { watchOnce } from '@vueuse/core'
 
-const store: CustomSubmitStore = reactive({
-  services: [],
-  serviceCols: getDefaultHeaders(),
-  selectCols: [],
-
-  container: {
-    width: 80,
-    height: 120,
-    padding: {
-      top: 5,
-      right: 5,
-      bottom: 5,
-      left: 5,
-    },
-    styles: {},
-    fontSize: 4,
-  },
-  templateItems: [],
-
-  serviceId: 0,
-})
-
-provide(CUSTOM_SUBMIT_STORE, store)
-
+const { services, getServices } = useServiceStore()
 const { t, locale } = useI18n()
 const { connect, close } = useWsStore()
-const serviceStore = useServiceStore()
-const uStore = useUserStore()
+const { updateCredit } = useUserStore()
 
-const strImeis = ref<string>("")
-const count = ref<number>(0)
-const rawOrders = ref<CustomSubmitOrder[]>([])
-const paperRef = ref<HTMLElement | null>(null)
-const columns = ref<XTableColumn[]>(getDefaultColumns(t))
-const submited = ref<boolean>(false)
-const submiting = ref<boolean>(false)
+const container = reactive<ContainerItem>({
+  width: 80,
+  height: 120,
+  padding: {
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5,
+  },
+  styles: {},
+  fontSize: 4,
+})
+const isOverflowMap = reactive<Record<string, boolean>>({})
+
+const selectCols = ref<string[]>([])
+const templateItems = ref<TemplateItem[]>([])
+const serviceCols = ref<ServiceHeader[]>([])
 const generating = ref<boolean>(false)
+const serviceId = ref<number>(0)
+const queryServices = ref<ServiceDetail[]>([])
+const strImeis = ref<string>('')
+const customOrders = ref<CustomSubmitOrder[]>([])
+const autoPrint = ref<boolean>(false)
 
-const selectService = shallowRef<Service>()
-const validImeis = shallowRef<string[] | undefined>([])
+const paperRef = ref<HTMLElement | null>(null)
+const uploadRef = ref<HTMLInputElement | null>(null)
 
-const origin = window.location.origin
+const defaultItems = [
+  {
+    name: "IMEI",
+    nameEn: "IMEI"
+  },
+  {
+    name: "二维码",
+    nameEn: "Qrcode",
+  },
+]
+
+let serviceHeaders: ServiceHeader[] = []
+let headerKey: string[] = []
+let submited: boolean = false
 
 watch(
-  () => [
-    store.container.width,
-    store.container.height,
-    store.container.padding.top,
-    store.container.padding.right,
-    store.container.padding.bottom,
-    store.container.padding.left,
-  ],
-  () => {
-    clampTemplateItems()
-  },
-  { deep: false }
+  ws.data,
+  async (val: string) => {
+    if (val.startsWith('disconnected')) {
+      return handleDisconnect(val)
+    }
+    if (val.startsWith('{"id"')) return
+    if (val.includes('DeviceID')) {
+      const data = JSON.parse(val) as DeviceResponse
+
+      await handleDevice(data, t)
+    }
+  }
 )
 
 const isEn = computed(() => locale.value === "en")
 
-const processedColumns = computed(() => store.serviceCols.map(item => isEn.value ? item.nameEn : item.name))
+const processedColumns = computed(() => serviceCols.value.map(item => isEn.value ? item.nameEn : item.name))
+
+const currentService = computed(() => services.get(serviceId.value))
 
 const paperStyle = computed(() => ({
-  width: `${mmToPx(store.container.width)}px`,
-  height: `${mmToPx(store.container.height)}px`,
-  padding: `${mmToPx(store.container.padding.top)}px
-    ${mmToPx(store.container.padding.right)}px
-    ${mmToPx(store.container.padding.bottom)}px
-    ${mmToPx(store.container.padding.left)}px`,
-  fontSize: `${mmToPx(store.container.fontSize)}px`
+  width: `${mmToPx(container.width)}px`,
+  height: `${mmToPx(container.height)}px`,
+  padding: `${mmToPx(container.padding.top)}px
+    ${mmToPx(container.padding.right)}px
+    ${mmToPx(container.padding.bottom)}px
+    ${mmToPx(container.padding.left)}px`,
+  fontSize: `${mmToPx(container.fontSize)}px`
 }))
 
-const previewValue = computed(() => {
-  let order = rawOrders.value.find(o => o.status === ORDER_STATUS.SUCCESS)
-  if (!order) return "{value}"
-
-  let res: Record<string, string> = {}
-
-  for(let item of processedColumns.value) {
-    res[item] = order.fields[item]
-  }
-  res["imei"] = order.imei
-
-  return res
-})
-
 const safeAreaStyle = computed(() => {
-  const { padding, width, height } = store.container
+  const { padding, width, height } = container
 
   const left = mmToPx(padding.left)
   const top = mmToPx(padding.top)
@@ -126,105 +116,184 @@ const safeAreaStyle = computed(() => {
   }
 })
 
-async function getServices() {
-  const { data } = await serviceApi.list({ isUnlock: false })
-  store.services = data
-}
+const previewValue = computed(() => {
+  let order = customOrders.value.find(o => o.status === ORDER_STATUS.SUCCESS)
+  if (!order) return "{value}"
 
-async function handleSelected(value: number) {
-  close()
-  selectService.value = serviceStore.services.get(value)
-  await getServiceColumns(value)
-}
+  let res: Record<string, string> = {}
 
-async function getServiceColumns(value: number) {
-  const { data } = await serviceApi.header(value)
-  store.serviceCols = mergeHeaders(data)
-  columns.value = mergeTableColumns(generateColumns(data))
-}
+  for (let item of processedColumns.value) {
+    const value = order.fields[item]
 
-function mergeHeaders(serviceCols: ServiceHeader[]) {
-  const defaultCols = getDefaultHeaders()
-
-  return [
-    ...defaultCols,
-    ...serviceCols,
-  ]
-}
-
-function mergeTableColumns(serviceCols: XTableColumn[]) {
-  const defaultCols = getDefaultColumns(t)
-
-  return [
-    ...defaultCols,
-    ...serviceCols,
-  ]
-}
-
-function generateColumns(headers: ServiceHeader[]) {
-  const columns: XTableColumn[] = []
-
-  const isEn = locale.value === "en"
-
-  for (let item of headers) {
-    const label = isEn ? item.nameEn : item.name
-    columns.push({
-      key: label,
-      title: label,
-      width: item.width,
-      render: (_, row: CustomSubmitOrder) => {
-        return h("div", {
-          innerHTML: row.fields?.[label] ?? ""
-        })
-      }
-    })
+    if ((/^(处理结果|Result)$/i).test(item)) {
+      res["处理结果"] = order.result
+      res["Result"] = order.result
+    } else {
+      res[item] = value && value !== "" ? value : "{value}"
+    }
   }
+  res["IMEI"] = order.imei || "{value}"
+  res['订单结果'] = order.result || "{value}"
+  res['result'] = order.result || "{value}"
 
-  return columns
-}
+  return res
+})
 
 function handleSelectColumn(label: string) {
-  const index = store.selectCols.indexOf(label)
+  const index = selectCols.value.indexOf(label)
 
   if (index !== -1) {
-    store.selectCols.splice(index, 1)
-    store.templateItems = store.templateItems.filter(i => i.key !== label)
+    selectCols.value.splice(index, 1)
+    templateItems.value = templateItems.value.filter(i => i.key !== label)
   } else {
     const isQrcode = (/^(二维码|qrcode)$/i).test(label)
-    store.selectCols.push(label)
-    store.templateItems.push({
+    const pos = getNextItemPosition()
+
+    const newItem: TemplateItem = {
       key: label,
       label: label,
-      x: mmToPx(store.container.padding.left),
-      y: mmToPx(store.container.padding.top),
+      x: pos.x,
+      y: pos.y,
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
       ...(isQrcode && {size: 20}),
-    })
+    }
+
+    selectCols.value.push(label)
+    templateItems.value.push(newItem)
   }
 }
 
-function clampPosition(item: TemplateItem, target: HTMLElement) {
-  const padding = store.container.padding
-  const containerW = mmToPx(store.container.width)
-  const containerH = mmToPx(store.container.height)
+function getNextItemPosition() {
+  const baseX = mmToPx(container.padding.left)
+  const baseY = mmToPx(container.padding.top)
+  const gap = 6
 
-  // 元素实际宽高
-  const elRect = target.getBoundingClientRect()
-  const width = elRect.width
-  const height = elRect.height
+  if (!paperRef.value || templateItems.value.length === 0) {
+    return { x: baseX, y: baseY }
+  }
 
-  // 左上角最小位置
-  const minX = mmToPx(padding.left)
-  const minY = mmToPx(padding.top)
+  const nodes = paperRef.value.querySelectorAll<HTMLElement>('.template-item')
+  if (!nodes.length) {
+    return { x: baseX, y: baseY }
+  }
 
-  // 右下角最大位置
-  const maxX = containerW - mmToPx(padding.right) - width
-  const maxY = containerH - mmToPx(padding.bottom) - height
+  let maxBottom = baseY
 
-  // clamp
-  item.x = Math.min(Math.max(item.x, minX), maxX)
-  item.y = Math.min(Math.max(item.y, minY), maxY)
+  nodes.forEach(el => {
+    const top = el.offsetTop
+    const height = el.offsetHeight
+    maxBottom = Math.max(maxBottom, top + height)
+  })
+
+  return {
+    x: baseX,
+    y: maxBottom + gap,
+  }
+}
+
+function isQrcodeField(key: string) {
+  return (/^(二维码|qrcode)$/i).test(key)
+}
+
+async function exportTemplate() {
+  if (templateItems.value.length === 0) {
+    if (!await xconfirm('当前没有选择字段, 是否确认导出模板? ')) return
+  }
+  if (Object.values(isOverflowMap).some(Boolean)) {
+    if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
+  }
+
+  const template: PrintTemplateJson = {
+    serviceId: serviceId.value,
+
+    paper: {
+      width: container.width,
+      height: container.height,
+      padding: { ...container.padding },
+      fontSize: container.fontSize,
+    },
+    items: templateItems.value.map(item => ({
+      key: item.key,
+      label: item.label,
+      x: item.x,
+      y: item.y,
+      wrap: item.wrap,
+      type: item.type,
+      size: item.size,
+    }))
+  }
+
+  const json = JSON.stringify(template, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `print-template-${template.serviceId}.json`
+  a.click()
+  a.remove()
+
+  URL.revokeObjectURL(url)
+}
+
+function openImport() {
+  uploadRef.value?.click()
+}
+
+async function handleChange(e: Event) {
+  if (!uploadRef.value) return
+  const target = e.target as HTMLInputElement
+
+  let file: File = new File([], '')
+  if (target.files) {
+    file = target.files[0]
+  }
+  const extensions = file.name.split('.')[1]
+  if (extensions !== 'json') {
+    toast.warning('不支持的文件类型')
+    uploadRef.value.value = ''
+  }
+
+  await importTemplate(file)
+  uploadRef.value.value = ''
+}
+
+async function importTemplate(file: File) {
+  const template = await readTemplateFile(file)
+
+  const currentServiceId = serviceId.value
+  if (template.serviceId !== currentServiceId) {
+    return toast.warning("该模板与当前服务不一致")
+  }
+
+  container.width = template.paper.width
+  container.height = template.paper.height
+  container.fontSize = template.paper.fontSize
+  container.padding.top = template.paper.padding.top
+  container.padding.right = template.paper.padding.right
+  container.padding.bottom = template.paper.padding.bottom
+  container.padding.left = template.paper.padding.left
+
+  templateItems.value = template.items.map(item => ({ ...item }))
+
+  selectCols.value = template.items.map(item => item.key)
+}
+
+function readTemplateFile(file: File): Promise<PrintTemplateJson> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const json = JSON.parse(reader.result as string)
+        resolve(json)
+      } catch (e) {
+        reject(e)
+      }
+    }
+    reader.onerror = reject
+    reader.readAsText(file)
+  })
 }
 
 function startDrag(e: MouseEvent, item: TemplateItem) {
@@ -244,242 +313,84 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
     item.y = initY + dy
 
     clampPosition(item, target)
+    updateOverflowMap()
   }
 
   function up() {
     document.removeEventListener("mousemove", move)
     document.removeEventListener("mouseup", up)
+
+    updateItemStyle(item)
+  }
+
+  function updateItemStyle(item: TemplateItem) {
+    const el = paperRef.value?.querySelector<HTMLElement>(`.template-item[data-key="${item.key}"]`)
+    if (!el) return
+
+    if (item.wrap) {
+      // 让它的内容最大宽度受父元素安全区控制
+      const safeWidth = paperRef.value!.querySelector('.safe-area-border')!.clientWidth
+      el.style.maxWidth = safeWidth + 'px'
+    } else {
+      el.style.maxWidth = 'none'
+    }
   }
 
   document.addEventListener("mousemove", move)
   document.addEventListener("mouseup", up)
 }
 
-function handleImport() {
-  if (!selectService.value) return
-  validImeis.value = processImeis(strImeis.value)
-  
-  if (!validImeis.value) return
-  close()
-  rawOrders.value.length = 0
-  submited.value = false
+function clampPosition(item: TemplateItem, target: HTMLElement) {
+  const padding = container.padding
+  const containerW = mmToPx(container.width)
+  const containerH = mmToPx(container.height)
 
-  processWaitOrder(validImeis.value)
-  strImeis.value = ""
+  // 元素实际宽高
+  const elRect = target.getBoundingClientRect()
+  const width = elRect.width
+  const height = elRect.height
+
+  // 左上角最小位置
+  const minX = mmToPx(padding.left)
+  const minY = mmToPx(padding.top)
+
+  // 右下角最大位置
+  const maxX = containerW - mmToPx(padding.right) - width
+  const maxY = containerH - mmToPx(padding.bottom) - height
+
+  // clamp
+  item.x = Math.min(Math.max(item.x, minX), maxX)
+  item.y = Math.min(Math.max(item.y, minY), maxY)
 }
 
-function processImeis(imeis: string) {
-  if (!selectService.value) return
+function updateOverflowMap() {
+  if (!paperRef.value) return
 
-  const type = selectService.value.imeiType
-  return getSubmitImei(imeis, type)
-}
+  const nodes = paperRef.value.querySelectorAll<HTMLElement>('.template-item')
 
-function processWaitOrder(imeis: string[]) {
-  for (let imei of imeis) {
-    const initData: CustomSubmitOrder = {
-      id: null,
-      serviceId: store.serviceId,
-      status: ORDER_STATUS.WAIT,
-      imei: imei,
-      result: "",
-      fields: {},
-    }
+  nodes.forEach(el => {
+    const key = el.dataset.key
+    if (!key) return
 
-    for (let column of processedColumns.value) {
-      initData["fields"][column] = ""
-    }
-
-    rawOrders.value.push(initData)
-  }
-}
-
-async function handleSubmitOrder() {
-  if (submiting.value) return toast.warning("请等待订单处理")
-  if (submited.value) return toast.warning("请勿重复提交")
-  if (!selectService.value) return toast.warning("请选择服务")
-  if (!validImeis.value) return toast.warning("请输入有效imei")
-  if (!rawOrders.value.length) return toast.warning("请导入订单")
-
-  connectWebSocket()
-  await submitOrder()
-}
-
-function connectWebSocket() {
-  if (!selectService.value) return
-  const { data, status } = connect({ serviceId: selectService.value.id, type: "order" })
-
-  watchOnce(
-    () => status.value,
-    (value) => {
-      if (value !== "OPEN") return
-    }
-  )
-
-  watch(
-    () => data.value,
-    (message) => {
-      if (!message) return
-
-      dispatchWsMessage(message)
-      handleCount()
-    }
-  )
-}
-
-async function submitOrder() {
-  if (!selectService.value) return
-  if (!validImeis.value) return
-
-  submiting.value = true
-  try {
-    const params = {
-      groupId: selectService.value.parentId,
-      serviceId: selectService.value.id,
-      imeiList: validImeis.value,
-      remark: "",
-      isBulk: false,
-      language: locale.value,
-    }
-    const { data } = await orderApi.submit(params)
-    uStore.updateCredit()
-    count.value = validImeis.value.length
-    submited.value = true
-    processData(data)
-  } catch {} finally {
-  }
-}
-
-function dispatchWsMessage(message: string) {
-  const data = JSON.parse(message) as Order
-
-  const index = rawOrders.value.findIndex(order => order.imei === data.imei)
-  const isError = data.status === ORDER_STATUS.FAILED
-  const errorCol = processedColumns.value[1]
-
-  if (index === -1) return
-
-  rawOrders.value[index] = {
-    ...rawOrders.value[index],
-    fields: {
-      ...(isError && {[errorCol]: data.result}),
-      ...(!isError && processResult(data.result)),
-    },
-    status: data.status,
-    id: data.id,
-    result: data.result,
-  }
-}
-
-function processResult(content: string) {
-  const result: Record<string, string> = {}
-  const items = content.split("<br>")
-
-  const keyMap = getFieldsMap(store.serviceCols)
-
-  if (items.length === 1 && store.serviceCols.length === 1) {
-    const key = isEn.value ? (store.serviceCols[0].nameEn ?? store.serviceCols[0].name) : store.serviceCols[0].name
-    result[key] = content
-  } else {
-    for (const item of items) {
-      const [key, ...valueParts] = item.split(/[:：]/)
-      const rawKey = key.trim()
-      const value = valueParts.join(":").trim()
-
-      const mapped = keyMap[rawKey]
-      if (!mapped) continue
-
-      const finalKey = isEn.value ? mapped.en ? mapped.en : mapped.cn : mapped.cn
-      result[finalKey] = value
-    }
-  }
-
-  const isSuccess = judgeOrderStatus(store.serviceCols, items)
-
-  if (!isSuccess) {
-    result[processedColumns.value[0]] = content
-  }
-  
-  return result
-}
-
-function processData(data: OrderSubmitResult[]) {
-  const errorCol = processedColumns.value[1]
-  for (let item of data) {
-    let index = rawOrders.value.findIndex(order => order.imei === item.imei)
-
-    if (index === -1) return
-
-    const isFailed = item.status === ORDER_STATUS.FAILED
-    if (isFailed) handleCount()
-
-    rawOrders.value[index] = {
-      ...rawOrders.value[index],
-      id: item.codeId,
-      status: item.status,
-      result: item.message,
-      fields: {
-        [errorCol]: item.message,
-      }
-    }
-  }
-}
-
-function getFieldsMap(fields: ServiceHeader[]) {
-  const fieldsCN = fields.map(item => item.name)
-  const fieldsEN = fields.map(item => item.nameEn)
-  const result: Record<string, FieldMap> = {}
-
-  for (let i = 0; i < fieldsCN.length; i++) {
-    const cn = fieldsCN[i]
-    const en = fieldsEN[i]
-
-    result[cn] = { cn, en }
-
-    if (en !== null && en !== "") {
-      result[en] = { cn, en }
-    }
-  }
-
-  return result
-}
-
-function judgeOrderStatus(fields: ServiceColumnItem[], items: string[]) {
-  const fieldsCN = fields.map(item => item.name)
-  const fieldsEN = fields.map(item => item.nameEn)
-
-  return items.some(item => {
-    let texts = item.split(":")
-
-    return texts.some(text => {
-      return fieldsCN.includes(text) || fieldsEN.includes(text)
-    })
+    isOverflowMap[key] = isItemOverflow(el)
   })
 }
 
-function handleCount() {
-  count.value--
+function isItemOverflow(el: HTMLElement) {
+  const safe = paperRef.value!.querySelector('.safe-area-border')!
+  const elRect = el.getBoundingClientRect()
+  const safeRect = safe.getBoundingClientRect()
 
-  if (count.value === 0) {
-    submiting.value = false
-    close()
-  }
+  return (
+    elRect.right > safeRect.right ||
+    elRect.bottom > safeRect.bottom ||
+    elRect.left < safeRect.left ||
+    elRect.top < safeRect.top
+  )
 }
 
 function stripHtmlTags(html: string) {
   return html.replace(/<[^>]+>/g, '')
-}
-
-function objectToString(object: Record<string, string> | string) {
-  return Object.entries(object)
-    .map(([key, value]) => {
-      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
-      if (isQrcode) return
-      if (!store.selectCols.includes(key)) return
-      return `${key}: ${stripHtmlTags(value)}`
-    })
-    .filter(Boolean)
-    .join('\n')
 }
 
 function qrcodeStr(object: Record<string, string> | string) {
@@ -488,62 +399,194 @@ function qrcodeStr(object: Record<string, string> | string) {
   return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
 }
 
-function isQrcodeField(key: string) {
-  return (/^(二维码|qrcode)$/i).test(key)
+function objectToString(object: Record<string, string> | string) {
+  return Object.entries(object)
+    .map(([key, value]) => {
+      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
+      if (isQrcode) return
+      if (!selectCols.value.includes(key)) return
+      return `${key}: ${stripHtmlTags(value)}`
+    })
+    .filter(Boolean)
+    .join('\n')
 }
 
-function clampTemplateItems() {
-  const minX = mmToPx(store.container.padding.left)
-  const minY = mmToPx(store.container.padding.top)
+async function getServiceColumns(value: number) {
+  const { data } = await serviceApi.header(value)
 
-  const maxX =
-    mmToPx(store.container.width) -
-    mmToPx(store.container.padding.right) -
-    80
+  serviceHeaders = data
 
-  const maxY =
-    mmToPx(store.container.height) -
-    mmToPx(store.container.padding.bottom) -
-    24
+  let serviceHeader: ServiceHeader[] = []
+  if (!data || data.length === 0) {
+    serviceHeader.push({
+      name: '订单结果',
+      nameEn: 'result',
+    })
+  } else {
+    serviceHeader = data
+    headerKey = data.map(h => isEn.value ? h.nameEn : h.name)
+  }
 
-  store.templateItems.forEach(item => {
-    item.x = Math.min(Math.max(item.x, minX), maxX)
-    item.y = Math.min(Math.max(item.y, minY), maxY)
+  serviceCols.value = [...defaultItems, ...serviceHeader]
+}
+
+async function getQueryService() {
+  const { data } = await serviceApi.list({ isUnlock: false })
+  queryServices.value = data
+}
+
+async function handleSelected(value: number) {
+  if (value) {
+    submited = false
+    close()
+    await getServiceColumns(value)
+  }
+}
+
+function handleClickPhone(imei: string) {
+  if (!strImeis.value.trim()) {
+    strImeis.value = imei
+    return
+  }
+
+  const imeis = strImeis.value.split('\n')
+
+  if (imeis.length === 0) {
+    strImeis.value = ''
+    imeis.push(imei)
+  } else if (!imeis.includes(imei)) {
+    imeis.push(imei)
+  }
+
+  strImeis.value = imeis.join('\n')
+}
+
+async function handleSubmit() {
+  if (!currentService.value) return
+  if (submited) return
+
+  const imeis = getSubmitImei(strImeis.value, currentService.value.imeiType)
+
+  if (imeis.length === 0) return
+
+  dispatchWebsocket()
+  await submitOrder(imeis)
+}
+
+function dispatchWebsocket() {
+  const { data, status } = connect({
+    serviceId: serviceId.value,
+    type: 'order',
   })
+
+  watchOnce(
+    status,
+    (value) => {
+      if (value !== 'OPEN') {
+        console.warn(`[3un] WebSocket ${t('action.submit.fail', { action: t('action.connect') })}`, value)
+        return close()
+      }
+    }
+  )
+
+  watch(
+    data,
+    (val) => {
+      console.log(val)
+    }
+  )
+}
+
+async function submitOrder(imeiList: string[]) {
+  if (!currentService.value) return
+
+  try {
+    const params: OrderSubmitParams = {
+      serviceId: currentService.value.id,
+      imeiList: imeiList,
+      isBulk: false,
+      language: locale.value,
+      remark: '',
+    }
+    const { data } = await orderApi.submit(params)
+    submited = true
+    await updateCredit()
+  } catch {}
 }
 
 async function generatePDF() {
   if (!paperRef.value) return
-  if (!rawOrders.value.length) return toast.warning("请导入订单")
-  if (submiting.value) return toast.warning("请等待订单处理")
   if (generating.value) return toast.warning("请等待pdf生成")
+  if (templateItems.value.length === 0) {
+    if (!await xconfirm("当前没有选择字段, 是否确认打印? ")) return
+  }
+  if (Object.values(isOverflowMap).some(Boolean)) {
+    if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
+  }
 
   generating.value = true
   paperRef.value.classList.add("printing")
 
   const pdf = new jsPDF({
     unit: "px",
-    format: [mmToPx(store.container.width), mmToPx(store.container.height)],
+    format: [mmToPx(container.width), mmToPx(container.height)],
   })
 
-  for (let i = 0; i < rawOrders.value.length; i++) {
-    const order = rawOrders.value[i]
+  for (let i = 0; i < customOrders.value.length; i++) {
+    const order = customOrders.value[i]
 
     const page = paperRef.value.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
 
-    // 填充数据
-    page.querySelectorAll<HTMLElement>('.template-item').forEach(itemEl => {
+    page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
       const key = itemEl.dataset.key!
-      const value = key === 'imei'
-        ? order.imei
-        : order.fields[key] ?? ''
-    
-      const valueEl = itemEl.querySelector('.template-value')
-    
-      if (valueEl) {
-        valueEl.textContent = stripHtmlTags(value)
+
+      if ((/^(处理结果|Result)$/i).test(key)) {
+        order.fields["处理结果"] = order.result
+        order.fields["Result"] = order.result
+
+        return
       }
+
+      if (!isQrcodeField(key)) {
+        const value = key === 'IMEI'
+          ? order.imei || ''
+          : order.fields[key] ?? ''
+  
+        const valueEl = itemEl.querySelector('.template-value')
+        if (valueEl) {
+          valueEl.textContent = stripHtmlTags(value)
+        }
+        return
+      }
+
+      const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
+      if (!qrcodeItem) return
+
+      const qrContainer = itemEl.querySelector('[data-qrcode]')
+      if (!qrContainer) return
+
+      const qrData = qrcodeStr({
+        ...order.fields,
+        IMEI: order.imei || '',
+      })
+
+      const qrcode = useQRCode(qrData)
+
+      qrContainer.innerHTML = ''
+      const img = document.createElement('img')
+
+      img.style.width = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
+      img.style.height = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
+      watch(
+        () => qrcode.value,
+        () => {
+          img.src = qrcode.value    
+        },
+        { immediate: true }
+      )
+
+      qrContainer.appendChild(img)
     })
 
     const imgData = await html2image.toPng(page, {
@@ -555,9 +598,9 @@ async function generatePDF() {
 
     document.body.removeChild(page)
 
-    pdf.addImage(imgData, "PNG", 0, 0, mmToPx(store.container.width), mmToPx(store.container.height))
+    pdf.addImage(imgData, "PNG", 0, 0, mmToPx(container.width), mmToPx(container.height))
 
-    if (i < rawOrders.value.length - 1) pdf.addPage()
+    if (i < selectCols.value.length - 1) pdf.addPage()
   }
 
   generating.value = false
@@ -566,58 +609,39 @@ async function generatePDF() {
   window.open(pdf.output("bloburi"), "_blank")
 }
 
-await getServices()
-await serviceStore.getServices()
+await Promise.all([
+  getServices(),
+  getQueryService(),
+  checkPlugin(t),
+])
 </script>
 
 <template>
   <div class="p-4 h-full w-full flex gap-4 overflow-auto">
     <section class="w-[40%] space-y-4 flex flex-col">
-      <SelectService ui-trigger="w-full"
-        :services="store.services"
-        v-model="store.serviceId"
+      <SelectService
+        :services="queryServices"
+        v-model="serviceId"
         @selected="handleSelected" />
 
-      <XTextarea v-model="strImeis"
-        rows="6"
-        class="w-full h-32 border p-2 text-sm"
-        placeholder="每行一个 IMEI" />
+      <XTextarea v-model="strImeis" placeholder="请输入imei/sn(一行一个)" rows="8" @change="submited = false" />
 
       <div class="border p-2 space-y-1">
         <div class="font-bold text-sm">服务字段</div>
         <div class="flex flex-wrap gap-2">
           <template v-for="column in processedColumns" :key="column">
             <ColumnTags :label="column"
-              :checked="store.selectCols.includes(column)"
+              :checked="selectCols.includes(column)"
               @click="handleSelectColumn" />
           </template>
         </div>
       </div>
-
-      <div class="flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-          <div class="flex items-center space-x-2">
-            <span>处理中订单:</span>
-            <span class="text-primary">{{ count }}</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <span>订单总数:</span>
-            <span class="text-success">{{ rawOrders.length }}</span>
-          </div>
-        </div>
-        <div class="flex items-center justify-end gap-2">
-          <XButton label="导入imei" variant="soft" @click="handleImport" />
-          <XButton label="提交订单" @click="handleSubmitOrder" />
-          <XButton color="success" label="打印结果" @click="generatePDF" />
-        </div>
-      </div>
-
+      
       <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
-        <!-- 字体大小 -->
         <div class="flex flex-col space-y-1">
           <div class="font-semibold text-sm">字体大小(mm):</div>
           <div class="flex items-center gap-2 w-40">
-            <XInputNumber v-model="store.container.fontSize" :step="1" size="sm" />
+            <XInputNumber v-model="container.fontSize" :step="1" size="sm" />
           </div>
         </div>
         <!-- 纸张大小 -->
@@ -625,11 +649,11 @@ await serviceStore.getServices()
           <div class="font-semibold text-sm">纸张大小 (mm)</div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">长(mm):</span>
-            <XInputNumber v-model="store.container.height" :step="1" size="sm" />
+            <XInputNumber v-model="container.height" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">宽(mm):</span>
-            <XInputNumber v-model="store.container.width" :step="1" size="sm" />
+            <XInputNumber v-model="container.width" :step="1" size="sm" />
           </div>
         </div>
         <!-- 内边距设置 -->
@@ -637,19 +661,19 @@ await serviceStore.getServices()
           <div class="font-semibold text-sm">页边距 (mm)</div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">上(mm):</span>
-            <XInputNumber v-model="store.container.padding.top" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">下(mm):</span>
-            <XInputNumber v-model="store.container.padding.bottom" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">左(mm):</span>
-            <XInputNumber v-model="store.container.padding.left" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">右(mm):</span>
-            <XInputNumber v-model="store.container.padding.right" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
           </div>
         </div>
       </div>
@@ -664,7 +688,7 @@ await serviceStore.getServices()
 
         <div class="space-y-2">
           <div
-            v-for="field in store.templateItems"
+            v-for="field in templateItems"
             :key="field.key"
             class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition"
           >
@@ -681,36 +705,68 @@ await serviceStore.getServices()
             </div>
 
             <!-- 控制开关 -->
-            <div v-if="!isQrcodeField(field.key)">
-              <label class="flex items-center gap-3 cursor-pointer select-none">
-                <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
-                <div
-                  class="relative w-9 h-5 rounded-full bg-border
-                         peer-checked:bg-primary
-                         transition-colors flex"
-                >
-                  <XSwitch v-model="field.wrap" />
-                </div>
-              </label>
-            </div>
-
-            <div v-else class="flex items-center gap-2">
-              <XInputNumber v-model="field.size!" size="sm" class="w-20" />
+            <div class="flex items-center">
+              <div v-if="!isQrcodeField(field.key)" class="mr-4">
+                <label class="flex items-center gap-3 cursor-pointer select-none">
+                  <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
+                  <div
+                    class="relative w-9 h-5 rounded-full bg-border
+                           peer-checked:bg-primary
+                           transition-colors flex"
+                  >
+                    <XSwitch v-model="field.wrap" />
+                  </div>
+                </label>
+              </div>
+  
+              <div v-else class="flex items-center gap-2 mr-2">
+                <XInputNumber v-model="field.size!" size="sm" class="w-20" />
+              </div>
+  
+              <button class="hover:text-success" @click="handleSelectColumn(field.key)">
+                <Icon icon="lucide:trash-2" />
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div
-        class="flex-1 border rounded-md overflow-y-auto"
-      >
-        <XTable
-          :columns="columns"
-          :data="rawOrders"
-          class="h-full max-w-full border"
-        />
+      <div class="flex flex-col gap-2">
+        <div class="flex justify-between space-x-2">
+          <XButton class="flex-1" label="导出模板" color="success" @click="exportTemplate" />
+          <XButton class="flex-1" label="导入模板" @click="openImport" />
+          <XButton class="flex-1" label="提交订单" @click="handleSubmit" />
+        </div>
+
+        <div class="flex items-center justify-end space-x-2">
+          <label class="group relative">
+            <XSwitch label="自动打印" v-model="autoPrint" />
+            <span class="absolute opacity-0 group-hover:opacity-100 w-96 bg-card rounded top-8 left-1 text-sm p-2">订单处理完成后自动跳转导出页面</span>
+          </label>
+          <XButton label="查看订单结果" />
+          <XButton label="打印结果" color="warning" @click="generatePDF" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <template v-for="[key, phone] in deviceMap" :key="key">
+          <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
+            @click="handleClickPhone(phone.info.InternationalMobileEquipmentIdentity)">
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3>{{ phone.product.Name }}</h3>
+              </div>
+              <div class="text-sm text-muted-foreground">
+                <p>{{ t('device.card.serial') }}: {{ phone.info.SerialNumber }}</p>
+                <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
+                <p>{{ t('device.card.type') }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </section>
+
     <section class="flex-1 flex justify-center">
       <div
         ref="paperRef"
@@ -723,9 +779,10 @@ await serviceStore.getServices()
         />
 
         <div
-          v-for="item in store.templateItems"
+          v-for="item in templateItems"
           :key="item.key"
-          class="absolute cursor-move select-none template-item text-black py-1"
+          class="absolute cursor-move select-none template-item text-black"
+          :class="{ 'overflow-warning': isOverflowMap[item.key] }"
           :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }"
           @mousedown.prevent
           @mousedown="startDrag($event, item)"
@@ -748,15 +805,17 @@ await serviceStore.getServices()
           </template>
 
           <template v-else>
-            <QrPreview
-              :data="qrcodeStr(previewValue)"
-              :size="item.size ?? 20" />
+            <div data-qrcode>
+              <QrPreview
+                :data="qrcodeStr(previewValue)"
+                :size="item.size ?? 20" />
+            </div>
           </template>
         </div>
       </div>
     </section>
 
-    <input ref="importRef" type="file" name="" id="">
+    <input class="hidden" ref="uploadRef" type="file" @change="handleChange">
   </div>
 </template>
 
@@ -769,5 +828,15 @@ await serviceStore.getServices()
 
 .paper-preview.printing .safe-area-border {
   display: none;
+}
+
+.overflow-warning {
+  outline: 1px dashed #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.template-item .template-value {
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 </style>
