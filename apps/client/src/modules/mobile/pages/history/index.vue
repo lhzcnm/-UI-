@@ -8,12 +8,13 @@ import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 import { twJoin } from 'tailwind-merge'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { orderApi, type Order } from '@/api/orders'
+import { orderApi, type Order, type OrderExportParams } from '@/api/orders'
 import ImgOrder from './components/ImgOrder.vue'
 import type { ImgOrderItem } from './types'
 import * as html2Image from 'html-to-image'
 import { h, render } from 'vue'
 import { toast } from 'vue-sonner'
+import { downloadURL } from '@3un/utils'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -42,6 +43,15 @@ const imgOrder = reactive<ImgOrderItem>({
 })
 
 provide(HISTORY_STORE, store)
+
+const route = useRoute()
+
+const val = route.query.codeId
+const codeIds: string[] = (Array.isArray(val) ? val : val ? [val] : []).filter((v): v is string => v !== null)
+
+if (codeIds.length > 0) {
+  store.searchForm.codeIds = codeIds.join('\n')
+}
 
 watch(
   page,
@@ -100,6 +110,30 @@ function handleClose() {
   URL.revokeObjectURL(imgOrder.img)
 }
 
+function openExport() {
+  const firstOrder = store.orders.list[0]
+  if (isSameService(firstOrder)) {
+    handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
+    return
+  }
+  store.visibleExport = true
+}
+
+function handleExport(serviceId: number, orderIds: string[]) {
+  const params: OrderExportParams = {
+    serviceId: serviceId,
+    orderIdList: orderIds,
+  }
+  orderApi.export(params).then(({ data }) => {
+    downloadURL(data)
+  })
+}
+
+function isSameService(firstOrder: Order) {
+  if (store.orders.total === 0) return false
+  return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
+}
+
 onUnmounted(() => {
   handleClose()
 })
@@ -117,7 +151,7 @@ onUnmounted(() => {
       <div class="space-x-2">
         <ButtonGroup
           :layouts="['filter', 'export']"
-          @filter="store.visibleSearch = true" @export="store.visibleExport = true"
+          @filter="store.visibleSearch = true" @export="openExport"
         />
       </div>
 

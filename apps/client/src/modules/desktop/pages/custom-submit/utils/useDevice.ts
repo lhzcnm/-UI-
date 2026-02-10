@@ -40,10 +40,22 @@ interface WebSocketHandler {
   reject: (data: any) => void
 }
 
-const [datasets, countriesMap] = await Promise.all([
-  fetch('/data/devices-ios.json').then(res => res.json()),
-  fetch('/data/sales-region.json').then(res => res.json()),
-]) as [ProductDataset, SaleRegionDataset]
+let datasets = {} as ProductDataset
+let countriesMap = {} as SaleRegionDataset
+// let [datasets, countriesMap] = [[], []] as [ProductDataset, SaleRegionDataset]
+
+async function getDevices() {
+  const [data, region] = await Promise.all([
+    fetch('/data/devices-ios.json').then(res => res.json()),
+    fetch('/data/sales-region.json').then(res => res.json()),
+  ]) as [ProductDataset, SaleRegionDataset]
+  datasets = data
+  countriesMap = region
+}
+
+getDevices()
+
+// const [datasets, countriesMap] = getDevices() as [ProductDataset, SaleRegionDataset]
 
 export const deviceMap = reactive<Map<string, DeviceMapItem>>(new Map<string, DeviceMapItem>)
 

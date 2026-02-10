@@ -15,6 +15,8 @@ export interface OrderApi {
 
   cacheImei(body: CacheImeiParams): R<string[]>
   deleteCacheImei(params: DeleteImeiPrams): R<void>
+
+  generateQrcode(params: QrcodeImageParams): R<Blob>
 }
 
 export interface Order {
@@ -69,6 +71,7 @@ export type OrderListParams = IPage & {
   serviceId?: number
   status?: ORDER_STATUS
   imeiList?: string[]
+  codeIdList?: string[]
   startTime?: string
   endTime?: string
 }
@@ -78,6 +81,7 @@ export interface OrderSearchForm {
   imei: string
   startTime: string
   endTime: string
+  codeIds?: string
 }
 
 /** Export */
@@ -162,4 +166,8 @@ export interface CacheImeiParams {
 
 export interface DeleteImeiPrams {
   serviceId: number,
+}
+
+export interface QrcodeImageParams {
+  content: string,
 }

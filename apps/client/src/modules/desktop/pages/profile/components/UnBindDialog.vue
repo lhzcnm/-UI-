@@ -24,7 +24,7 @@ const displayValidType = computed(() => {
 })
 
 function startCountdown() {
-  timer = setInterval(() => {
+  timer = window.setInterval(() => {
     count.value--
 
     if (count.value <= 0) {

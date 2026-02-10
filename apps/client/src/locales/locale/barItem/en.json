@@ -6,6 +6,7 @@
     "recharge": "Add Funds",
     "workOrder": "Tickets",
     "profile": "Profile",
+    "custom": "Print Query",
     "history": {
       "order": "Orders",
       "point": "Consumes"

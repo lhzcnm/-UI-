@@ -1,0 +1,77 @@
+{
+  "print": {
+    "fields": {
+      "title": "Print Fields",
+      "config": {
+        "title": "Field Display Configuration",
+        "tip": "Controls how fields are displayed in the print preview area",
+        "wrap": "Label and content displayed on separate lines",
+        "nowrap": "Label and content displayed on the same line"
+      }
+    },
+    "size": {
+      "font": "Font Size",
+      "paper": {
+        "title": "Paper Size",
+        "long": "Length",
+        "width": "Width"
+      },
+      "padding": {
+        "title": "Page Margin",
+        "top": "Top",
+        "bottom": "Bottom",
+        "left": "Left",
+        "right": "Right"
+      },
+      "qrcode": {
+        "title": "QR Code Size",
+        "limitHit": "QR code size too small may result in unreadable codes"
+      }
+    },
+    "button": {
+      "template": {
+        "import": "Import Template",
+        "export": "Export Template"
+      },
+      "autoprint": {
+        "label": "Auto Print",
+        "tip": "Automatically redirect to print page after order is processed"
+      },
+      "showres": "View Order Results",
+      "print": "Print Results",
+      "submit": "Submit Order",
+      "back": {
+        "label": "Back To {action}"
+      }
+    },
+    "prompt": {
+      "filterFailed": "Automatically filter failed orders in print results",
+      "export": {
+        "noField": "No fields selected. Are you sure you want to export the current template?",
+        "overflow": "Some fields exceed the paper area. Are you sure you want to export?"
+      },
+      "upload": {
+        "extError": "Unsupported file type"
+      },
+      "import": {
+        "serviceNotMatch": "This template does not match the current service"
+      },
+      "pdf": {
+        "gerenting": "Please wait while PDF is being generated",
+        "notOrder": "Please submit the order first",
+        "processing": "Please wait until order processing is complete",
+        "noField": "No fields selected. Are you sure you want to print?",
+        "overflow": "Some fields exceed the paper area. Are you sure you want to print?",
+        "imgError": "Image failed to load"
+      },
+      "service": {
+        "label": "Current Service"
+      }
+    },
+    "dialog": {
+      "order": {
+        "title": "Order Results"
+      }
+    }
+  }
+}

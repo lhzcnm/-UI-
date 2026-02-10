@@ -56,7 +56,16 @@ function openSearch() {
 
 function openExport() {
   if(selectRows.value.length === 1) {
-    handleExport()
+    const index = store.orders.list.findIndex(o => o.id === selectRows.value[0])
+    if (index !== -1) {
+      const order = store.orders.list[index]
+      handleExport(order.serviceId, [order.id.toString()])
+      return
+    }
+  }
+  const firstOrder = store.orders.list[0]
+  if (isSameService(firstOrder)) {
+    handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
     return
   }
 
@@ -64,19 +73,15 @@ function openExport() {
   store.visibleExport = true
 }
 
-function handleExport() {
-  const orderId = selectRows.value[0]
-  const index = store.orders.list.findIndex(item => item.id === +orderId)
+function isSameService(firstOrder: Order) {
+  if (store.orders.total === 0) return false
+  return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
+}
 
-  if(index === -1) {
-    selectRows.value.length = 0
-    openExport()
-  }
-
-  const order = store.orders.list[index]
+function handleExport(serviceId: number, orderIds: string[]) {
   const params: OrderExportParams = {
-    serviceId: order.serviceId,
-    orderIdList: [order.id.toString()],
+    serviceId: serviceId,
+    orderIdList: orderIds,
   }
   orderApi.export(params).then(({ data }) => {
     downloadURL(data)
@@ -126,7 +131,7 @@ function openPrint() {
   // if (service?.isUnlock) {
     // store.visiblePrint = true
   // } else {
-    store.views = 'print'
+  store.views = 'print'
   // }
 }
 
@@ -134,7 +139,7 @@ function validServiceUnique(ids: number[]) {
   const selectedOrders = store.orders.list.filter(o => ids.includes(o.id))
   const lastServiceId = selectedOrders[selectedOrders.length - 1].serviceId
 
-  return selectedOrders.every( o => o.serviceId === lastServiceId)
+  return selectedOrders.every(o => o.serviceId === lastServiceId)
 }
 
 function getOrdersyId(ids: number[]) {

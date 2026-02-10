@@ -16,5 +16,7 @@ export const orderApi: OrderApi = {
   orderPrint: (body) => http.post('order/print', body, { responseType: 'blob' }),
 
   cacheImei: (body) => http.post('order/cacheImei', body),
-  deleteCacheImei: (body) => http.delete('order/deleteCacheImei', { params: body })
+  deleteCacheImei: (body) => http.delete('order/deleteCacheImei', { params: body }),
+
+  generateQrcode: (params) => http.get('order/qrcode/image', { params, responseType: 'blob' })
 }

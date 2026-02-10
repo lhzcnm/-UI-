@@ -32,7 +32,10 @@
       "title": "IMEI/SN",
       "placeholder": "One IMEI/SN per line\n\nYou can drag files here to import\nSupports txt, csv, xlsx, xls, etc.",
       "view": "View correct IMEI",
-      "valid": "Valid quantity"
+      "valid": "Valid quantity",
+      "processing": "Processing",
+      "processed": "Success",
+      "failed": "Failed"
     },
     "button": {
       "mobile": {

@@ -16,7 +16,7 @@ async function handleSubmit() {
   await getServiceHeader(store.exportForm.serviceId)
   submitLoading.value = true
 
-  const params = formatOrderParams(store.exportForm)
+  const params = formatOrderParams({...store.exportForm})
   
   try {
     const { data } = await orderApi.export({

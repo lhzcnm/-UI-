@@ -25,7 +25,7 @@ const displayStatusBg = computed(() => {
 
 <template>
   <div
-    class="w-72 flex flex-col
+    class="flex flex-col
            rounded-lg
            bg-slate-100 dark:bg-slate-800
            border border-slate-200 dark:border-slate-700
@@ -57,7 +57,7 @@ const displayStatusBg = computed(() => {
         class="flex items-start text-xs leading-relaxed"
       >
         <span
-          class="w-20 shrink-0
+          class="shrink-0
                  text-zinc-500
                  text-right pr-2"
         >

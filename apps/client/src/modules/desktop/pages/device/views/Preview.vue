@@ -6,15 +6,15 @@ import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
-import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
 
 import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/types'
 import { formatSize, STORE } from '../utils'
 import { mmToPx } from '@/utils'
+import { orderApi } from '@/api/orders'
 
 const store = inject(STORE)!
 
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 
 const container = reactive<ContainerItem>({
   width: 80,
@@ -41,6 +41,8 @@ const loading = ref<boolean>(false)
 
 const paperRef = ref<HTMLElement | null>(null)
 const uploadRef = ref<HTMLInputElement | null>(null)
+
+let storageUrl: string[] = []
 
 const isEn = computed(() => locale.value === "en")
 
@@ -164,10 +166,10 @@ function openImport() {
 
 async function exportTemplate() {
   if (templateItems.value.length === 0) {
-    if (!await xconfirm('当前没有选择字段, 是否确认导出模板? ')) return
+    if (!await xconfirm(t('print.export.noField'))) return
   }
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
+    if (!await xconfirm(t('print.export.overflow'))) return
   }
 
   const template: PrintTemplateJson = {
@@ -211,7 +213,7 @@ async function handleChange(e: Event) {
   }
   const extensions = file.name.split('.')[1]
   if (extensions !== 'json') {
-    toast.warning('不支持的文件类型')
+    toast.warning(t('print.prompt.import.serviceNotMatch'))
     uploadRef.value.value = ''
   }
 
@@ -253,8 +255,8 @@ function readTemplateFile(file: File): Promise<PrintTemplateJson> {
 
 function qrcodeStr(object: Record<string, string> | string) {
   const data = objectToString(object)
-
-  return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
+  return data
+  // return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
 }
 
 function objectToString(object: Record<string, string> | string) {
@@ -454,13 +456,13 @@ function getDefaultHeaders(): PrintHeader[] {
 
 async function generatePDF() {
   if (!paperRef.value) return
-  if (generating.value) return toast.warning("请等待pdf生成")
+  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
   if (templateItems.value.length === 0) {
-    if (!await xconfirm("当前没有选择字段, 是否确认打印? ")) return
+    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
   }
   updateOverflowMap()
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
+    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
   generating.value = true
@@ -477,49 +479,53 @@ async function generatePDF() {
   const deviceItem = previewValue.value
 
   // 填充数据
-  page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
+  const items = Array.from(page.querySelectorAll<HTMLElement>('.template-item'))
+
+  for (let itemEl of items) {
     const key = itemEl.dataset.key!
 
-    if (!isQrcodeField(key)) {
-      const value = deviceItem[key]
+    if (isQrcodeField(key)) {
+      const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
+      if (!qrcodeItem) continue
+      // const qrData = qrcodeStr(deviceItem)
+      const { data } = await orderApi.generateQrcode({
+        content: qrcodeStr(deviceItem)
+      })
 
+      const blob = new Blob([data], { type: 'image/png' })
+      const url = URL.createObjectURL(blob)
+      storageUrl.push(url)
+
+      const img = document.createElement('img')
+
+      const imageLoadPromise = new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = () => reject(new Error(t('print.prompt.pdf.imgError')))
+        img.src = url
+      })
+
+      img.width = mmToPx(qrcodeItem.size ?? 25)
+      img.height = mmToPx(qrcodeItem.size ?? 25)
+
+      itemEl.querySelector('[data-qrcode]')!.innerHTML = ''
+      itemEl.querySelector('[data-qrcode]')!.appendChild(img)
+
+      await imageLoadPromise
+    } else {
+      const value = deviceItem[key]
       const valueEl = itemEl.querySelector('.template-value')
       if (valueEl) {
         valueEl.textContent = stripHtmlTags(value)
       }
-      return
     }
+  }
 
-    const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
-    if (!qrcodeItem) return
-
-    const qrContainer = itemEl.querySelector('[data-qrcode]')
-    if (!qrContainer) return
-
-    const qrData = qrcodeStr(deviceItem)
-
-    const qrcode = useQRCode(qrData)
-
-    qrContainer.innerHTML = ''
-    const img = document.createElement('img')
-
-    img.style.width = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
-    img.style.height = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
-    watch(
-      () => qrcode.value,
-      () => {
-        img.src = qrcode.value
-      },
-      { immediate: true }
-    )
-
-    qrContainer.appendChild(img)
-  })
+  await document.fonts.ready
 
   const imgData = await html2image.toPng(page, {
     pixelRatio: 2,
     backgroundColor: "#ffffff",
-    cacheBust: true,
+    cacheBust: false,
     skipFonts: true,
   })
 
@@ -532,6 +538,10 @@ async function generatePDF() {
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
 }
+
+onBeforeUnmount(() => {
+  storageUrl.map(URL.revokeObjectURL)
+})
 </script>
 
 <template>
@@ -542,12 +552,12 @@ async function generatePDF() {
           class="p-2 flex items-center border border-border rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all"
           @click="store.deviceStatus = store.prevStatus">
           <Icon icon="lucide:step-back" />
-          <span>返回</span>
+          <span>{{ t('print.button.back.label') }}</span>
         </button>
       </div>
 
       <div class="border p-2 space-y-1">
-        <div class="font-bold text-sm">设备信息</div>
+        <div class="font-bold text-sm">{{ t('print.device.title') }}</div>
         <div class="flex flex-wrap gap-2">
           <template v-for="item in processedColumns" :key="item.key">
             <HeaderTag :label="item.label" :id="item.key" :checked="selectCols.includes(item.key)"
@@ -559,40 +569,40 @@ async function generatePDF() {
       <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
         <!-- 字体大小 -->
         <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">字体大小(mm):</div>
+          <div class="font-semibold text-sm">{{ t('print.size.font') }} (mm):</div>
           <div class="flex items-center gap-2 w-40">
             <XInputNumber v-model="container.fontSize" :step="1" size="sm" />
           </div>
         </div>
         <!-- 纸张大小 -->
         <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">纸张大小 (mm)</div>
+          <div class="font-semibold text-sm">{{ t('print.size.paper.title') }} (mm)</div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">长(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.paper.long') }}(mm):</span>
             <XInputNumber v-model="container.height" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">宽(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.paper.width') }}(mm):</span>
             <XInputNumber v-model="container.width" :step="1" size="sm" />
           </div>
         </div>
         <!-- 内边距设置 -->
         <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">页边距 (mm)</div>
+          <div class="font-semibold text-sm">{{ t('print.size.padding.title') }} (mm)</div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">上(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.top') }}(mm):</span>
             <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">下(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.bottom') }}(mm):</span>
             <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">左(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.left') }}(mm):</span>
             <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">右(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.right') }}(mm):</span>
             <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
           </div>
         </div>
@@ -600,9 +610,9 @@ async function generatePDF() {
 
       <div class="border rounded-md p-3 space-y-3 bg-muted/30">
         <div class="font-semibold text-sm flex items-center gap-2">
-          字段显示配置
+          {{ t('print.fields.config.title') }}
           <span class="text-xs text-muted-foreground">
-            （控制打印预览中字段的展示方式）
+            ({{ t('print.fields.config.tip') }})
           </span>
         </div>
 
@@ -616,8 +626,8 @@ async function generatePDF() {
               </span>
               <span class="text-xs text-muted-foreground">
                 {{ isQrcodeField(field.key)
-                  ? '二维码尺寸(mm)'
-                  : (field.wrap ? '标签与内容分行显示' : '标签与内容同行显示') }}
+                  ? `${t('print.size.qrcode.title')}(mm)${t('print.size.qrcode.limitHit')}`
+                  : (field.wrap ? t('print.fields.config.wrap') : t('print.fields.config.nowrap')) }}
               </span>
             </div>
 
@@ -647,9 +657,9 @@ async function generatePDF() {
       </div>
 
       <div class="flex justify-between space-x-2">
-        <XButton class="flex-1" label="导出模板" color="success" @click="exportTemplate" />
-        <XButton class="flex-1" label="导入模板" @click="openImport" />
-        <XButton class="flex-1" label="打印结果" color="warning" :loading="loading" @click="generatePDF" />
+        <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
+        <XButton class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
+        <XButton class="flex-1" :label="t('print.button.print')" color="warning" :loading="loading" @click="generatePDF" />
       </div>
     </section>
 

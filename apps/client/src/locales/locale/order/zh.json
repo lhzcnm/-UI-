@@ -54,6 +54,10 @@
       "status": {
         "title": "订单状态",
         "placeholder": "请选择订单状态"
+      },
+      "orderId": {
+        "title": "订单ID",
+        "placeholder": "请输入订单id(一行一个)"
       }
     },
     "print": {

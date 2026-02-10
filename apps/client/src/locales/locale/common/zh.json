@@ -58,7 +58,7 @@
   },
   "imei": {
     "title": "IMEI/SN",
-    "placeholder": "请输入IMEI/SN"
+    "placeholder": "请输入IMEI/SN(一行一个)"
   },
   "command": {
     "title": "指令{action}",

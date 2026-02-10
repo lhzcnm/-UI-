@@ -29,6 +29,15 @@ const imgOrders = reactive<ImgOrderItem[]>([])
 
 provide(HISTORY_STORE, store)
 
+const route = useRoute()
+
+const val = route.query.codeId
+const codeIds: string[] = (Array.isArray(val) ? val : val ? [val] : []).filter((v): v is string => v !== null)
+
+if (codeIds.length > 0) {
+  store.searchForm.codeIds = codeIds.join('\n')
+}
+
 function handleClose() {
   store.visibleOrderImg = false
 

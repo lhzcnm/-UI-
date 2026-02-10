@@ -7,7 +7,7 @@ import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
 import { toast } from 'vue-sonner'
 import type { CustomSubmitOrder, OrderTableView } from '@/api/orders'
 import jsPDF from 'jspdf'
-import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
+import QRCode from 'qrcode'
 import * as html2image from 'html-to-image'
 import { Icon } from '@iconify/vue'
 
@@ -488,56 +488,36 @@ async function generatePDF() {
     const page = paperRef.value.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
 
-    page.querySelectorAll<HTMLElement>('.template-item').forEach(async itemEl => {
+    const items = Array.from(page.querySelectorAll<HTMLElement>('.template-item'))
+
+    for (let itemEl of items) {
       const key = itemEl.dataset.key!
 
-      if ((/^(处理结果|Result)$/i).test(key)) {
-        order.fields["处理结果"] = order.result
-        order.fields["Result"] = order.result
+      if (isQrcodeField(key)) {
+        const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
+        if (!qrcodeItem) continue
+        const qrData = qrcodeStr({ ...order.fields, IMEI: order.imei })
+        const img = document.createElement("img")
 
-        return
-      }
+        img.src = await QRCode.toDataURL(qrData, {
+          margin: 0,
+          width: (mmToPx(qrcodeItem.size ?? 20) * 2)
+        })
 
-      if (!isQrcodeField(key)) {
+        itemEl.querySelector('[data-qrcode]')!.innerHTML = ''
+        itemEl.querySelector('[data-qrcode]')!.appendChild(img)
+      } else {
         const value = key === 'IMEI'
           ? order.imei || ''
           : order.fields[key] ?? ''
-  
         const valueEl = itemEl.querySelector('.template-value')
         if (valueEl) {
           valueEl.textContent = stripHtmlTags(value)
         }
-        return
       }
+    }
 
-      const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
-      if (!qrcodeItem) return
-
-      const qrContainer = itemEl.querySelector('[data-qrcode]')
-      if (!qrContainer) return
-
-      const qrData = qrcodeStr({
-        ...order.fields,
-        IMEI: order.imei || '',
-      })
-
-      const qrcode = useQRCode(qrData)
-
-      qrContainer.innerHTML = ''
-      const img = document.createElement('img')
-
-      img.style.width = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
-      img.style.height = `${mmToPx(qrcodeItem.size ?? 20).toFixed(2)}px`
-      watch(
-        () => qrcode.value,
-        () => {
-          img.src = qrcode.value    
-        },
-        { immediate: true }
-      )
-
-      qrContainer.appendChild(img)
-    })
+    await document.fonts.ready
 
     const imgData = await html2image.toPng(page, {
       pixelRatio: 2,

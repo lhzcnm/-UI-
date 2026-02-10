@@ -810,10 +810,10 @@ function processHeaderConfirm(headers: ServiceCols[]) {
   processResultColumns()
 }
 
-function handleChange() {
-  if (store.rawOrders.length === 0) return
-  store.view = 'preview'
-}
+// function handleChange() {
+//   if (store.rawOrders.length === 0) return
+//   store.view = 'preview'
+// }
 
 const handleThreadChange = debounce(() => {
   sessionStorage.setItem(`USER_ID_THREADNUM_${uStore.info.userId}`, threads.value.toString())
@@ -850,7 +850,7 @@ onMounted(() => {
         <XButton v-if="selService" :label="t('query.result')" color="warning" :disabled="disabled"
           :loading="loading" @click="handleFresh" />
         
-        <XButton label="打印标签" @click="handleChange" />
+        <!-- <XButton label="打印标签" @click="handleChange" /> -->
 
         <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')"
           color="primary" @click="store.visibleHeaderFilter = true" />

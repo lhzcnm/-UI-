@@ -68,6 +68,14 @@ const statusOptions = [
     </div>
 
     <div class="space-y-1">
+      <label class="inline-block mb-1 text-sm text-label">{{ t('order.form.orderId.title') }}:</label>
+      <XTextarea
+        v-model="form.codeIds" rows="4"
+        :placeholder="t('order.form.orderId.placeholder')"
+      />
+    </div>
+
+    <div class="space-y-1">
       <label class="inline-block mb-1 text-sm text-label">IMEI/SN:</label>
       <XTextarea
         v-model="form.imei" rows="4"

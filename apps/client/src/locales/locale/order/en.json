@@ -54,6 +54,10 @@
       "status": {
         "title": "Order Status",
         "placeholder": "Please Select Status"
+      },
+      "orderId": {
+        "title": "Order ID",
+        "placeholder": "Please Input Order Id(One Per line)"
       }
     },
     "print": {
