@@ -816,7 +816,7 @@ function processHeaderConfirm(headers: ServiceCols[]) {
 // }
 
 const handleThreadChange = debounce(async () => {
-  sessionStorage.setItem(`USER_ID_THREADNUM_${uStore.info.userId}`, threads.value.toString())
+  sessionStorage.setItem(`${threadKey}_${uStore.info.userId}`, threads.value.toString())
   await serviceApi.setThread(threads.value)
 })
 
