@@ -66,6 +66,10 @@
       },
       "service": {
         "label": "Current Service"
+      },
+      "history": {
+        "moreService": "Printing does not allow selecting multiple services",
+        "hasFailed": "Please do not select orders that are processing or have failed"
       }
     },
     "dialog": {

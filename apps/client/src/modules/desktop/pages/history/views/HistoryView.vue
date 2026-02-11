@@ -118,21 +118,15 @@ function openPrint() {
     return toast.warning(t('order.prompt.order'))
   }
   if (!validServiceUnique(selectRows.value)) {
-    return toast.warning('打印结果不允许选择多个服务')
+    return toast.warning(t('print.prompt.history.moreService'))
   }
 
   store.selectOrders = getOrdersyId(selectRows.value)
 
   if (store.selectOrders.length === 0) {
-    return toast.warning('请勿选择处理中或处理失败订单')
+    return toast.warning(t('print.prompt.history.hasFailed'))
   }
-  // const service = serviceStore.services.get(store.selectOrders[0].id)
-
-  // if (service?.isUnlock) {
-    // store.visiblePrint = true
-  // } else {
   store.views = 'print'
-  // }
 }
 
 function validServiceUnique(ids: number[]) {

@@ -44,6 +44,16 @@ let datasets = {} as ProductDataset
 let countriesMap = {} as SaleRegionDataset
 // let [datasets, countriesMap] = [[], []] as [ProductDataset, SaleRegionDataset]
 
+export const hasNewVersion = ref<boolean>(false)
+export const hasNotPlugin = ref<boolean>(false)
+
+watch(
+  () => hasNewVersion.value,
+  () => {
+    console.log(hasNewVersion)
+  }
+)
+
 async function getDevices() {
   const [data, region] = await Promise.all([
     fetch('/data/devices-ios.json').then(res => res.json()),
@@ -93,6 +103,13 @@ export const ws = useWebSocket(
   }
 )
 
+export async function checkVersion(version: string = '1.0.0') {
+  const response = await fetch('/data/version.json')
+  const { latest, lowest } = await response.json()
+  hasNewVersion.value = version < latest
+  return version < lowest
+}
+
 export async function checkPlugin(t: (str: string) => string) {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), 3000)
@@ -107,6 +124,7 @@ export async function checkPlugin(t: (str: string) => string) {
     )
 
     const { data } = await response.json()
+    console.log(data)
 
     await handleInfo(data, t)
   }
@@ -116,6 +134,7 @@ export async function checkPlugin(t: (str: string) => string) {
       await handleInfo(data as DeviceResponse[], t)
     }
     catch (error) {
+      hasNotPlugin.value = true
       console.warn(error)
     }
   }
@@ -135,6 +154,8 @@ export function handleDisconnect(value: string) {
 async function handleInfo(data: DeviceResponse[], t: (str: string) => string) {
   if (!data || data.length === 0) return
 
+  await checkVersion(data[0].Version)
+  console.log(data[0].Version)
   for (let item of data) {
     await handleDevice(item, t)
   }

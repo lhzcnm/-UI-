@@ -36,6 +36,7 @@ export const zService = z.object({
   isUnlock: z.boolean().default(false),
   testimonials: z.boolean().default(false),
   packageOrderBy: z.number().default(0),
+  template: z.string().default('').nullable(),
 
   // ⬇️ 废弃字段
   // cronNo: z.number(),
@@ -55,7 +56,12 @@ export const zService = z.object({
   // toolForUnlockBase: z.string(),
 })
 
+export const zServiceSearch = z.object({
+  isUnlock: z.boolean(),
+})
+
 export type Service = z.infer<typeof zService>
+export type ServiceSearch = z.infer<typeof zServiceSearch>
 
 // Form
 export const zServiceForm = zService.omit({ packageId: true })

@@ -3,17 +3,17 @@ import { Icon } from '@iconify/vue'
 import SelectService from './components/SelectService.vue'
 import OrderCard from './components/OrderCard.vue'
 
-import { ORDER_STATUS, xconfirm } from '@3un/utils'
+import { ORDER_STATUS, ua, xconfirm } from '@3un/utils'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
 import { toast } from 'vue-sonner'
-import { watchOnce } from '@vueuse/core'
+import { useThrottleFn, watchOnce } from '@vueuse/core'
 
 import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
 import { getSubmitImei, mmToPx } from '@/utils'
 import { serviceApi, type FieldMap, type ServiceDetail, type ServiceHeader } from '@/api/services'
 import { orderApi, type CustomSubmitOrder, type Order, type OrderSubmitParams, type OrderSubmitResult, type ServiceColumnItem } from '@/api/orders'
-import { checkPlugin, deviceMap, handleDevice, handleDisconnect, ws } from "./utils/useDevice"
+import { checkPlugin, deviceMap, handleDevice, handleDisconnect, ws, hasNewVersion, hasNotPlugin } from "./utils/useDevice"
 import type { DeviceResponse } from '@/types/device'
 
 const { services, getServices } = useServiceStore()
@@ -45,6 +45,7 @@ const strImeis = ref<string>('')
 const customOrders = ref<CustomSubmitOrder[]>([])
 const autoPrint = ref<boolean>(false)
 const count = ref<number>(0)
+const selectOrder = ref<CustomSubmitOrder>()
 
 const paperRef = ref<HTMLElement | null>(null)
 const uploadRef = ref<HTMLInputElement | null>(null)
@@ -58,6 +59,11 @@ const defaultItems = [
     name: "二维码",
     nameEn: "Qrcode",
   },
+]
+const splitOptions = [
+  { label: 'Windows', command: () => handleDownload(43) },,
+  { label: 'MacOS Arm', command: () => handleDownload(44) },
+  { label: 'MacOS Intel', command: () => handleDownload(45) },
 ]
 
 let serviceHeaders: ServiceHeader[] = []
@@ -130,23 +136,26 @@ const safeAreaStyle = computed(() => {
 
 const previewValue = computed(() => {
   let order = customOrders.value.find(o => o.status === ORDER_STATUS.SUCCESS)
-  if (!order) return "{value}"
+
+  if (selectOrder.value) {
+    order = selectOrder.value
+  }
 
   let res: Record<string, string> = {}
 
   for (let item of processedColumns.value) {
-    const value = order.fields[item]
+    const value = order?.fields[item]
 
     if ((/^(处理结果|Result)$/i).test(item)) {
-      res["处理结果"] = order.result
-      res["Result"] = order.result
+      res["处理结果"] = order?.result || "{value}"
+      res["Result"] = order?.result || "{value}"
     } else {
       res[item] = value && value !== "" ? value : "{value}"
     }
   }
-  res["IMEI"] = order.imei || "{value}"
-  res['订单结果'] = order.result || "{value}"
-  res['result'] = order.result || "{value}"
+  res["IMEI"] = order?.imei || "{value}"
+  res['订单结果'] = order?.result || "{value}"
+  res['result'] = order?.result || "{value}"
 
   return res
 })
@@ -455,7 +464,31 @@ async function handleSelected(value: number) {
     selectCols.value.length = 0
     customOrders.value.length = 0
     await getServiceColumns(value)
+    processDefaultTemplate(await getServiceDefaultTemplate(value))
   }
+}
+
+async function getServiceDefaultTemplate(id: number) {
+  const { data } = await serviceApi.getTemplate(id)
+  return data
+}
+
+function processDefaultTemplate(jsonStr: string) {
+  if (jsonStr === '') return
+
+  const template = JSON.parse(jsonStr) as PrintTemplateJson
+
+  container.width = template.paper.width
+  container.height = template.paper.height
+  container.fontSize = template.paper.fontSize
+  container.padding.top = template.paper.padding.top
+  container.padding.right = template.paper.padding.right
+  container.padding.bottom = template.paper.padding.bottom
+  container.padding.left = template.paper.padding.left
+
+  templateItems.value = template.items.map(item => ({ ...item }))
+
+  selectCols.value = template.items.map(item => item.key)
 }
 
 function handleClickPhone(imei: string) {
@@ -478,7 +511,7 @@ function handleClickPhone(imei: string) {
 }
 
 async function handleSubmit() {
-  if (!currentService.value) return toast.warning('query.prompt.serviveNull')
+  if (!currentService.value) return toast.warning(t('query.prompt.serviveNull'))
   if (submited) return toast.warning(t('query.prompt.repeat'))
 
   const imeis = getSubmitImei(strImeis.value, currentService.value.imeiType)
@@ -798,11 +831,27 @@ async function generatePDF() {
   window.open(pdf.output("bloburi"), "_blank")
 }
 
+const handleDownload = useThrottleFn(
+  (id?: number) => {
+    const baseUrl = import.meta.env.VITE_API_URL
+    let platform = id
+
+    if (id === undefined) {
+      const options = { Windows: 43, MacOS: 44 }
+      platform = options[ua.os as keyof typeof options]
+    }
+
+    location.href = `${baseUrl}/oss/download/${platform}`
+  },
+  2000
+)
+
 await Promise.all([
   getServices(),
   getQueryService(),
-  checkPlugin(t),
+  await checkPlugin(t),
 ])
+
 
 onBeforeUnmount(() => {
   storageUrl.map(URL.revokeObjectURL)
@@ -968,47 +1017,79 @@ onBeforeUnmount(() => {
         <div class="flex justify-between space-x-2">
           <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
           <XButton color="warning" class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
-          <!-- <XButton class="flex-1" :label="t('print.button.submit')" @click="handleSubmit" /> -->
         </div>
-
-        <div class="flex items-center justify-end space-x-2">
-          <div class="flex items-center gap-2">
-            <!-- <label class="flex items-center group relative">
-              <XSwitch :label="t('print.button.autoprint.label')" v-model="autoPrint" />
-              <span class="absolute opacity-0 group-hover:opacity-100 bg-card rounded top-8 left-1 text-sm p-2">{{ t('print.button.autoprint.tip') }}</span>
-            </label> -->
-            <!-- <XButton :label="t('print.button.showres')" @click="readOrderResult" /> -->
-            <!-- <XButton :label="t('print.button.print')" color="warning" @click="generatePDF" /> -->
-          </div>
-        </div>
-
-        <!-- <div class="flex items-center gap-2 text-sm text-muted-foreground">
-          <span class="flex-1 h-px bg-zinc-500"></span>
-          <span>{{ t('print.prompt.filterFailed') }}</span>
-          <span class="flex-1 h-px bg-zinc-500"></span>
-        </div> -->
       </div>
 
-      <div class="grid grid-cols-3 gap-2">
-        <template v-for="[_, phone] in deviceMap">
-          <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
-            @click="handleClickPhone(phone.info.InternationalMobileEquipmentIdentity)">
-            <div class="mb-4">
-              <div class="flex items-center justify-between mb-1">
-                <h3>{{ phone.product.Name }}</h3>
-              </div>
-              <div class="text-sm text-muted-foreground">
-                <p>{{ t('device.card.serial') }}: {{ phone.info.SerialNumber }}</p>
-                <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
-                <p>{{ t('device.card.type') }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+      <div class="flex items-center gap-2 text-sm text-muted-foreground">
+        <span class="flex-1 h-px bg-zinc-500"></span>
+        <span>设备读取模块</span>
+        <span class="flex-1 h-px bg-zinc-500"></span>
+      </div>
+
+      <template v-if="hasNotPlugin">
+        <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
+          <div class="flex items-center gap-2 text-sm text-muted-foreground">
+          <span class="flex-1 h-px bg-zinc-500"></span>
+          <div class="flex items-center gap-2">
+            <span>请下载插件后刷新页面</span>
+            <XButtonSplit
+              :label="t('device.button.download')" :options="splitOptions"
+              size="sm" :openClick="true"
+            />
+            <XButton size="sm" :label="t('button.fresh')" @click="$router.go(0)" />
+          </div>
+          <span class="flex-1 h-px bg-zinc-500"></span>
+        </div>
+          
+        </div>
+      </template>
+      <template v-else-if="deviceMap.size === 0">
+        <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
+          USB连接设备后可显示设备列表
+        </div>
+      </template>
+      <template v-else>
+        <div class="grid grid-cols-3 gap-2">
+          <template v-for="[_, phone] in deviceMap">
+            <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
+              @click="handleClickPhone(phone.info.InternationalMobileEquipmentIdentity)">
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <h3>{{ phone.product.Name }}</h3>
+                </div>
+                <div class="text-sm text-muted-foreground">
+                  <p>{{ t('device.card.serial') }}: {{ phone.info.SerialNumber }}</p>
+                  <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
+                  <p>{{ t('device.card.type') }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+                </div>
               </div>
             </div>
+          </template>
+        </div>
+      </template>
+
+      <template v-if="!hasNotPlugin && hasNewVersion">
+        <div class="flex items-center gap-2 text-sm text-muted-foreground">
+          <span class="flex-1 h-px bg-zinc-500"></span>
+          <div class="flex items-center gap-2">
+            <span>检测到插件版本更新, 请尽快更新</span>
+            <XButtonSplit
+              :label="t('device.button.download')" :options="splitOptions"
+              size="sm" :openClick="true"
+            />
+            <XButton size="sm" :label="t('button.fresh')" @click="$router.go(0)" />
           </div>
-        </template>
-      </div>
+          <span class="flex-1 h-px bg-zinc-500"></span>
+        </div>
+      </template>
     </section>
 
     <section class="flex-1 flex flex-col items-center gap-y-4">
+      <div class="flex items-center gap-2 text-sm text-muted-foreground">
+        <span class="flex-1 h-px bg-zinc-500"></span>
+        <span>标签预览区</span>
+        <span class="flex-1 h-px bg-zinc-500"></span>
+      </div>
       <div
         ref="paperRef"
         class="relative bg-white shadow paper-preview"
@@ -1055,10 +1136,18 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <div class="max-h-full overflow-y-auto flex flex-wrap gap-2">
-        <template v-for="order in customOrders" :key="`${order.id}-${order.imei}`">
-          <OrderCard :order="order" />
-        </template>
+      <div class="w-full flex items-center gap-4 text-sm">
+        <span class="flex-1 h-px bg-border"></span>
+        <span class="">可选择订单查看不同的预览结果</span>
+        <span class="flex-1 h-px bg-border"></span>
+      </div>
+
+      <div class="flex-1 overflow-y-auto flex">
+        <div class="flex gap-2 flex-wrap">
+          <template v-for="order in customOrders" :key="`${order.id}-${order.imei}`">
+            <OrderCard :order="order" @click="selectOrder = $event" />
+          </template>
+        </div>
       </div>
     </section>
 
@@ -1085,5 +1174,11 @@ onBeforeUnmount(() => {
 .template-item .template-value {
   word-break: break-word;
   white-space: pre-wrap;
+}
+
+@media print {
+  body {
+    zoom: 1 !important;
+  }
 }
 </style>

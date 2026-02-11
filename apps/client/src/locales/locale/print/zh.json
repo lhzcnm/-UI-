@@ -66,6 +66,10 @@
       },
       "service": {
         "label": "当前服务"
+      },
+      "history": {
+        "moreService": "打印不允许选择多个服务",
+        "hasFailed": "请勿选择处理中或处理失败的订单"
       }
     },
     "dialog": {

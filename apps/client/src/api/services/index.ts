@@ -7,5 +7,6 @@ export const serviceApi: ServiceApi = {
   item: (id) => http.get(`service/item/${id}`),
   header: (id) => http.get(`service/field/${id}`),
   setThread: (threadNumber) => http.post(`order/updateThreadNumber/${threadNumber}`),
-  favorite: (serviceId) => http.get(`service/collection`,{ params: { serviceId } }),
+  favorite: (id?) => http.get(`service/collection`,{ params: { serviceId: id } }),
+  getTemplate: (id) => http.get(`service/get/${id}`)
 }

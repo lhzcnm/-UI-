@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { serviceApi, type Service, type ServiceDetail } from '@/api/services'
-import type { XSelectEmits } from '@3un/ui'
 import { Icon } from '@iconify/vue'
+import type { XSelectEmits } from '@3un/ui'
+
+import { serviceApi, type Service, type ServiceDetail } from '@/api/services'
 
 const store = useServiceStore()
+const { t } = useI18n()
 
 const modal = defineModel<number>()
 const emits = defineEmits<XSelectEmits>()
-const favoriteIds = ref<number[]>()
-const input = ref('')
 
-const { t } = useI18n()
+const input = ref('')
+const favoriteIds = ref<number[]>()
 
 const filteredServices = computed(() => {
   const inputValue = input.value.trim().toLowerCase()
@@ -69,7 +70,7 @@ function highlightText(text: string, keyword: string) {
 }
 
 /** 收藏按钮的处理逻辑 */
-async function favoriteClick(serviceId: number | null) {
+async function favoriteClick(serviceId: number | undefined) {
   try {
     const res = await serviceApi.favorite(serviceId)
     favoriteIds.value = res.data
@@ -78,17 +79,29 @@ async function favoriteClick(serviceId: number | null) {
 }
 
 onMounted(async () => {
-  favoriteClick(null)
+  favoriteClick(undefined)
 })
-
 </script>
 
 <template>
-  <XSelect v-model="modal" v-model:input="input" v-bind="$attrs" filterable :placeholder="t('service.placeholder')"
-    placement="bottom-start" @selected="emits('selected', $event)">
-    <XSelectGroup v-for="detail in filteredServices" uiTitle="text-danger" :key="detail.id" :title="detail.title">
-      <XSelectItem v-for="service in detail.children" :key="service.id" :value="service.id" :label="service.title"
-        ui-root="py-1">
+  <XSelect
+    v-model="modal"
+    v-model:input="input"
+    v-bind="$attrs"
+    filterable :placeholder="t('service.placeholder')"
+    placement="bottom-start" @selected="emits('selected', $event)"
+  >
+    <XSelectGroup
+      v-for="detail in filteredServices"
+      uiTitle="text-danger"
+      :key="detail.id"
+      :title="detail.title"
+    >
+      <XSelectItem
+        v-for="service in detail.children" :key="service.id"
+        :value="service.id" :label="service.title"
+        ui-root="py-1"
+      >
         <div class="flex-1 flex items-center justify-between space-x-3">
           <span class="text-left" v-html="getDisplayText(service)"></span>
 

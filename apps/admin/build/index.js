@@ -85,40 +85,56 @@ async function clean(mode) {
   }
 }
 
+// function manualChunks(id) {
+//   if (id.includes('jsencrypt')) return 'jsencrypt'
+//   if (
+//     id.includes('tiptap') ||
+//     id.includes('prosemirror') ||
+//     id.includes('w3c-keyname') || 
+//     id.includes('orderedmap') || 
+//     id.includes('rope-sequence')
+//   ) return 'tiptap'
+
+//   if (
+//     id.includes('echarts') ||
+//     id.includes('zrender') ||
+//     id.includes('tslib')
+//   ) return 'echarts'
+
+//   if (
+//     id.includes('@vueuse') ||
+//     id.includes('@floating-ui') ||
+//     id.includes('@iconify/vue') ||
+//     id.includes('tailwind') ||
+//     id.includes('vue-sonner') ||
+//     id.includes('axios') ||
+//     id.includes('dayjs') ||
+//     id.includes('ohash') || 
+//     id.includes('klona')
+//   ) return 'vendor-utils'
+
+//   if (id.includes('node_modules')) return 'vendor'
+
+//   if (id.includes('modules/other')) return 'other'
+//   if (id.includes('modules/desktop')) return 'desktop'
+//   if (id.includes('modules/mobile')) return 'mobile'
+//   if (id.includes('modules/auth')) return 'auth'
+
+//   return 'common'
+// }
+
 function manualChunks(id) {
-  if (id.includes('jsencrypt')) return 'jsencrypt'
-  if (
-    id.includes('tiptap') ||
-    id.includes('prosemirror') ||
-    id.includes('w3c-keyname') || 
-    id.includes('orderedmap') || 
-    id.includes('rope-sequence')
-  ) return 'tiptap'
-
-  if (
-    id.includes('echarts') ||
-    id.includes('zrender') ||
-    id.includes('tslib')
-  ) return 'echarts'
-
-  if (
-    id.includes('@vueuse') ||
-    id.includes('@floating-ui') ||
-    id.includes('@iconify/vue') ||
-    id.includes('tailwind') ||
-    id.includes('vue-sonner') ||
-    id.includes('axios') ||
-    id.includes('dayjs') ||
-    id.includes('ohash') || 
-    id.includes('klona')
-  ) return 'vendor-utils'
-
   if (id.includes('node_modules')) return 'vendor'
 
-  if (id.includes('modules/other')) return 'other'
-  if (id.includes('modules/desktop')) return 'desktop'
-  if (id.includes('modules/mobile')) return 'mobile'
-  if (id.includes('modules/auth')) return 'auth'
+  // if (
+  //   id.includes('modules/desktop') ||
+  //   id.includes('modules/mobile') ||
+  //   id.includes('modules/auth') ||
+  //   id.includes('modules/other') ||
+  //   id.includes('store') ||
+  //   id.includes('utils') ||
+  //   id.includes('router')
+  // ) return 'app-core'
 
   return 'common'
 }

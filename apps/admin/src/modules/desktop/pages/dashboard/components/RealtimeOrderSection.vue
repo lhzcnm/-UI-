@@ -59,18 +59,18 @@ function startTimers() {
 
   const fetchInterval = 60000
   if (processData.length === 0) {
-    return fetchTimer = setTimeout(getStatData, fetchInterval)
+    return fetchTimer = window.setTimeout(getStatData, fetchInterval)
   }
 
   const interval = Math.floor(fetchInterval / processData.length)
 
   updateDisplayData(processData)
-  displayTimer = setInterval(
+  displayTimer = window.setInterval(
     () => updateDisplayData(processData),
     interval,
   )
 
-  fetchTimer = setTimeout(getStatData, fetchInterval)
+  fetchTimer = window.setTimeout(getStatData, fetchInterval)
 }
 
 function updateDisplayData(data: OrderStatItem[]) {

@@ -52,6 +52,13 @@ const { t } = useI18n()
 const { getServices } = useServiceStore()
 
 watch(
+  () => store.hasNewVersion,
+  () => {
+    console.log(store.hasNewVersion)
+  }
+)
+
+watch(
   ws.data,
   async (value: string) => {
     if (value.startsWith('disconnected')) {
@@ -99,7 +106,7 @@ function handleDisconnect(value: string) {
       store.deviceMap.delete(key)
     }
   }
-
+``
   if (store.deviceMap.size === 0) {
     store.deviceStatus = 'wait'
   }

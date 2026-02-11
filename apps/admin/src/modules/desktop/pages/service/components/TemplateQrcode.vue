@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mmToPx } from '@/utils'
-import { useQRCode } from '@vueuse/integrations/useQRCode.mjs'
+import { useQRCode } from '@vueuse/integrations/useQRCode'
 
 interface QrPreviewProps {
   data: string,
@@ -9,7 +9,7 @@ interface QrPreviewProps {
 
 const props = defineProps<QrPreviewProps>()
 
-const qrCode = useQRCode(computed(() => props.data || "{value}"))
+const qrCode = useQRCode(computed(() => props.data || ""))
 
 const pxSize = computed(() => mmToPx(props.size))
 </script>

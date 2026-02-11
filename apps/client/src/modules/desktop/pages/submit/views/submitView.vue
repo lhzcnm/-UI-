@@ -815,10 +815,10 @@ function processHeaderConfirm(headers: ServiceCols[]) {
 //   store.view = 'preview'
 // }
 
-const handleThreadChange = debounce(() => {
+const handleThreadChange = debounce(async () => {
   sessionStorage.setItem(`USER_ID_THREADNUM_${uStore.info.userId}`, threads.value.toString())
+  await serviceApi.setThread(threads.value)
 })
-
 
 onMounted(() => {
   const raw = sessionStorage.getItem(`${threadKey}_${uStore.info.userId}`)

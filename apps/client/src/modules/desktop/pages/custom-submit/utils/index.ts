@@ -26,7 +26,7 @@ export interface TemplateItem {
   size?: number,
 }
 
-export interface CustomSubmitStore {
+export interface CustomSubmitStore {  
   services: ServiceDetail[],
   serviceCols: ServiceHeader[],
   selectCols: string[],
