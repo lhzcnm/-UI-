@@ -10,11 +10,13 @@ import { toast } from 'vue-sonner'
 import { useThrottleFn, watchOnce } from '@vueuse/core'
 
 import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
-import { getSubmitImei, mmToPx } from '@/utils'
+import { getSubmitImei, mmToPt, mmToPx, pxTomm } from '@/utils'
 import { serviceApi, type FieldMap, type ServiceDetail, type ServiceHeader } from '@/api/services'
 import { orderApi, type CustomSubmitOrder, type Order, type OrderSubmitParams, type OrderSubmitResult, type ServiceColumnItem } from '@/api/orders'
 import { checkPlugin, deviceMap, handleDevice, handleDisconnect, ws, hasNewVersion, hasNotPlugin } from "./utils/useDevice"
 import type { DeviceResponse } from '@/types/device'
+import type { PageItem, PluginPdfRequest } from '@/types/print'
+import axios from 'axios'
 
 const { services, getServices } = useServiceStore()
 const { t, locale } = useI18n()
@@ -177,6 +179,7 @@ function handleSelectColumn(label: string) {
       y: pos.y,
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
+      showField: true,
       ...(isQrcode && {size: 25}),
     }
 
@@ -464,7 +467,12 @@ async function handleSelected(value: number) {
     selectCols.value.length = 0
     customOrders.value.length = 0
     await getServiceColumns(value)
-    processDefaultTemplate(await getServiceDefaultTemplate(value))
+
+    const defaultTemplates = await getServiceDefaultTemplate(value)
+
+    if (defaultTemplates) {
+      processDefaultTemplate(defaultTemplates)
+    }
   }
 }
 
@@ -738,7 +746,8 @@ function convertResultToHtml(orders: CustomSubmitOrder[]) {
   `).join('')
 }
 
-async function generatePDF() {
+
+async function handleGenerate() {
   if (!paperRef.value) return
   if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
   if (customOrders.value.length === 0) return toast.warning(t('print.prompt.pdf.notOrder'))
@@ -751,8 +760,90 @@ async function generatePDF() {
     if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
+  try {
+    await pluginGeneratePdf()
+  } catch {
+    await generatePDF()
+  }
+}
+
+function processRequestParams(): PluginPdfRequest {
+  const submitedOrders = customOrders.value
+  const selTemplates = templateItems.value
+
+  const res: PluginPdfRequest = {
+    serviceId: currentService.value!.id,
+    paper: {
+      ...container,
+      fontSize: mmToPt(container.fontSize),
+    },
+    pages: []
+  }
+
+  for (let i = 0; i < submitedOrders.length; i++) {
+    const order = submitedOrders[i]
+    if (order.status === ORDER_STATUS.FAILED) continue
+
+    const pageItems: PageItem[] = []
+
+    const page = paperRef.value!.cloneNode(true) as HTMLElement
+    const items = Array.from(page.querySelectorAll<HTMLElement>(".template-item"))
+
+    for (const itemEl of items) {
+      const key = itemEl.dataset.key!
+      const template = selTemplates.find(t => t.key === key)
+      if (!template) continue
+
+      if (isQrcodeField(key)) {
+        pageItems.push({
+          ...template,
+          showField: true,
+          x: pxTomm(template.x),
+          y: pxTomm(template.y),
+          value: qrcodeStr({ ...order.fields, IMEI: order.imei }),
+        })
+        continue
+      }
+      pageItems.push({
+        ...template,
+        showField: template.showField ?? true,
+        x: pxTomm(template.x),
+        y: pxTomm(template.y),
+        value: key === "IMEI"
+          ? stripHtmlTags(order.imei) || ""
+          : stripHtmlTags(order.fields[key]) ?? "",
+      })
+    }
+
+    res.pages.push({ items: pageItems })
+  }
+
+  return res
+}
+
+async function pluginGeneratePdf() {
+  try {
+    const body = processRequestParams()
+
+    const { data } = await axios.post(
+      "http://localhost:5000/generate-pdf",
+      body,
+      { responseType: "blob" }
+    )
+
+    const url = URL.createObjectURL(data)
+
+    window.open(url)
+
+    URL.revokeObjectURL(url)
+  } catch {
+    throw Error("request Failed")
+  }
+}
+
+async function generatePDF() {
   generating.value = true
-  paperRef.value.classList.add("printing")
+  paperRef.value!.classList.add("printing")
 
   const pdf = new jsPDF({
     unit: "px",
@@ -764,7 +855,7 @@ async function generatePDF() {
 
     if (order.status === ORDER_STATUS.FAILED) continue
 
-    const page = paperRef.value.cloneNode(true) as HTMLElement
+    const page = paperRef.value!.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
 
     const items = Array.from(page.querySelectorAll<HTMLElement>('.template-item'))
@@ -826,7 +917,7 @@ async function generatePDF() {
   }
 
   generating.value = false
-  paperRef.value.classList.remove("printing")
+  paperRef.value!.classList.remove("printing")
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
 }
@@ -901,7 +992,7 @@ onBeforeUnmount(() => {
         </label>
         <XButton color="success" :label="t('print.button.submit')" @click="handleSubmit" />
         <XButton :label="t('print.button.showres')" @click="readOrderResult" />
-        <XButton :label="t('print.button.print')" color="warning" @click="generatePDF" />
+        <XButton :label="t('print.button.print')" color="warning" @click="handleGenerate" />
       </div>
 
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
@@ -988,7 +1079,12 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="flex items-center">
-              <div v-if="!isQrcodeField(field.key)" class="mr-4">
+              <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
+                <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+                  <Icon icon="lucide:eye" v-if="field.showField" />
+                  <Icon icon="lucide:eye-closed" v-else />
+                  <span>显示标签</span>
+                </button>
                 <label class="flex items-center gap-3 cursor-pointer select-none">
                   <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
                   <div
@@ -1112,7 +1208,7 @@ onBeforeUnmount(() => {
         >
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
-              <div class="font-medium leading-tight">
+              <div v-if="item.showField" class="font-medium leading-tight">
                 {{ item.label }}:
               </div>
               <div class="leading-tight break-all template-value">
@@ -1121,7 +1217,7 @@ onBeforeUnmount(() => {
             </template>
         
             <template v-else>
-              <span class="font-medium">{{ item.label }}:</span>
+              <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
               <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
           </template>

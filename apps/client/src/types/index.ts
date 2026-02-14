@@ -20,6 +20,7 @@ export interface TemplateItem {
   width?: number,
   height?: number,
   type?: "text" | "qrcode" | "barcode",
+  showField?: boolean,
   size?: number,
 }
 
