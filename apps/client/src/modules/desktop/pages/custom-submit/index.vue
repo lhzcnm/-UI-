@@ -618,12 +618,12 @@ function processSubmitedOrder(data: OrderSubmitResult[]) {
   }
 }
 
-function handleCount() {
+async function handleCount() {
   count.value--
 
   if (count.value === 0) {
     if (autoPrint.value) {
-      generatePDF()
+      await handleGenerate()
     }
     return close()
   }
