@@ -19,6 +19,7 @@ await Promise.all([
   levelStore.getList(),
   iStore.getSetting(),
   iStore.getThreads(),
+  iStore.getConfig(),
 ])
 
 iStore.startTodoTimer()

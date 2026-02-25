@@ -16,8 +16,7 @@ import type { RechargeStore } from './utils'
 import { columns } from './utils/column'
 import { RECHARGE_STORE } from './utils'
 import type { XTableExpose } from '@3un/ui'
-import { getConfigs, updateConfig } from '@/api/settings'
-import type { ConfigItem } from '@/inters/settings'
+import { updateConfig } from '@/api/settings'
 
 const store: RechargeStore = reactive({
   recharges: createList(),
@@ -38,10 +37,15 @@ provide(RECHARGE_STORE, store)
 
 const route = useRoute()
 const router = useRouter()
+const { configs } = useSystemStore()
 
 const ids = ref<number[]>([])
 const loading = ref(false)
 const tableRef = ref<XTableExpose | null>(null)
+
+const feeDialog = ref(false)
+const freeFeeThreshold = ref<string>(configs['recharge:threshold'] || '0.00')
+const handleFee = ref<string>(configs['recharge:fee'] || '0.00')
 
 const queryHash = computed(() => hash(route.query))
 const packageStore = usePackageStore()
@@ -118,44 +122,20 @@ async function handleDelete() {
   })
 }
 
-const feeDialog = ref(false)
-const threshold = ref(0)
-const fee = ref(0)
-
-const getConfigsData = ref<ConfigItem[]>([])
-
 async function handFeeUpdate() {
-  const res = getConfigsData.value.map(item => {
-    if (item.id == 8) {
-      item.value = `${fee.value / 100}`
+  updateConfig([
+    {
+      key: 'recharge:threshold',
+      value: freeFeeThreshold.value,
+    },
+    {
+      key: 'recharge:fee',
+      value: handleFee.value,
     }
-    if (item.id == 9) {
-      item.value = `${threshold.value}`
-    }
-    return item
-  })
-  updateConfig(res)
+  ])
 
   feeDialog.value = false
 }
-
-async function getFee() {
-  const res = await getConfigs()
-
-  getConfigsData.value = res
-
-  getConfigsData.value.map(item => {
-    if (item.id == 8) {
-      fee.value = +item.value * 100
-    }
-    if (item.id == 9) {
-      threshold.value = +item.value
-    }
-    return item
-  })
-}
-
-getFee()
 </script>
 
 <template>
@@ -174,14 +154,19 @@ getFee()
         <XButton color="danger" label="批量删除" icon="lucide:trash-2" @click="handleDelete" />
       </div>
 
-      <XPagination v-model="store.page" v-model:limit="store.limit" :total="store.recharges.total" :layouts="[
-        'total',
-        'prev',
-        'pager',
-        'next',
-        'sizes',
-        'jumper',
-      ]" />
+      <XPagination
+        v-model="store.page"
+        v-model:limit="store.limit"
+        :total="store.recharges.total"
+        :layouts="[
+          'total',
+          'prev',
+          'pager',
+          'next',
+          'sizes',
+          'jumper',
+        ]"
+      />
     </section>
 
     <div class="p-3 pb-0">
@@ -198,15 +183,23 @@ getFee()
         <!-- 手续费界限 -->
         <div class="flex justify-between items-center">
           <div class="mb-1 text-muted-foreground">手续费界限:</div>
-          <input v-model="threshold" type="number" placeholder="请输入界限金额" class="w-2/3 rounded-lg border border-gray-300 px-3 py-2
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input
+            v-model="freeFeeThreshold"
+            type="number"
+            placeholder="请输入界限金额"
+            class="bg-transparent w-2/3 rounded-lg border border-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+          />
         </div>
 
         <!-- 手续费率 -->
         <div class="flex justify-between items-center">
           <div class="mb-1 text-muted-foreground">手续费率 (%):</div>
-          <input v-model="fee" type="number" placeholder="请输入手续费率" class="w-2/3 rounded-lg border border-gray-300 px-3 py-2
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input
+            v-model="handleFee"
+            type="number"
+            placeholder="请输入手续费率"
+            class="bg-transparent w-2/3 rounded-lg border border-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+          />
         </div>
 
         <div class="w-full flex justify-end space-x-2">

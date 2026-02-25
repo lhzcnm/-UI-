@@ -18,6 +18,7 @@ await Promise.all([
   serviceStore.getGroups(),
   levelStore.getList(),
   iStore.getSetting(),
+  iStore.getConfig(),
 ])
 
 iStore.startTodoTimer()

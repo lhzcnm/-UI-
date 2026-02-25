@@ -6,8 +6,7 @@ import SettingAnno from './settings/SettingAnno.vue'
 import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
-import type { Configs, Settings } from '@/inters/settings'
-import { getConfigs } from '@/api/settings'
+import type { Settings } from '@/inters/settings'
 
 const iStore = useSystemStore()
 
@@ -25,7 +24,7 @@ const components = {
 
 const tab = ref('routine')
 const settings = ref(iStore.settings as Settings)
-const configs = ref()
+// const configs = ref()
 
 watch(
   () => iStore.showSetting,
@@ -37,7 +36,7 @@ await init()
 async function init() {
   await Promise.all([
     // getSetting(),
-    getConfig(),
+    iStore.getConfig(),
   ])
 }
 
@@ -56,13 +55,13 @@ async function init() {
 //   }
 // }
 
-async function getConfig() {
-  const data = await getConfigs()
-  configs.value = data.reduce((acc, cur) => {
-    acc[cur.key as keyof Configs] = cur.value
-    return acc
-  }, {} as Configs)
-}
+// async function getConfig() {
+//   const data = await getConfigs()
+//   configs.value = data.reduce((acc, cur) => {
+//     acc[cur.key as keyof Configs] = cur.value
+//     return acc
+//   }, {} as Configs)
+// }
 </script>
 
 <template>
@@ -91,7 +90,7 @@ async function getConfig() {
       <component
         :is="components[tab as keyof typeof components]"
         :settings="settings"
-        :configs="configs"
+        :configs="iStore.configs"
       />
     </div>
   </XDialog>

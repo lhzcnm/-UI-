@@ -13,8 +13,7 @@ import { createList } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { RECHARGE_STORE } from './utils'
-import type { ConfigItem } from '@/inters/settings'
-import { getConfigs, updateConfig } from '@/api/settings'
+import { updateConfig } from '@/api/settings'
 
 const store: RechargeStore = reactive({
   recharges: createList(),
@@ -26,16 +25,21 @@ const store: RechargeStore = reactive({
   visibleUpdate: false,
 
   refresh: false,
-  index  : undefined,
-  page   : 1,
-  limit  : 20,
+  index: undefined,
+  page: 1,
+  limit: 20,
 })
 
 provide(RECHARGE_STORE, store)
 
+const { configs } = useSystemStore()
 const route = useRoute()
 const router = useRouter()
+
 const loading = ref(false)
+const feeDialog = ref(false)
+const freeFeeThreshold = ref<string>(configs['recharge:threshold'] || '0.00')
+const handleFee = ref<string>(configs['recharge:fee'] || '0.00')
 
 const queryHash = computed(() => hash(route.query))
 const packageStore = usePackageStore()
@@ -93,85 +97,40 @@ function resetSearch() {
   })
 }
 
-const feeDialog = ref(false)
-const threshold = ref(0)
-const fee = ref(0)
-
-const getConfigsData = ref<ConfigItem[]>([])
-
 async function handFeeUpdate() {
-  const res = getConfigsData.value.map(item => {
-    if (item.id == 8) {
-      item.value = `${fee.value / 100}`
+  updateConfig([
+    {
+      key: 'recharge:threshold',
+      value: freeFeeThreshold.value,
+    },
+    {
+      key: 'recharge:fee',
+      value: handleFee.value,
     }
-    if (item.id == 9) {
-      item.value = `${threshold.value}`
-    }
-    return item
-  })
-  updateConfig(res)
+  ])
 
   feeDialog.value = false
 }
-
-async function getFee() {
-  const res = await getConfigs()
-
-  getConfigsData.value = res
-
-  getConfigsData.value.map(item => {
-    if (item.id == 8) {
-      fee.value = +item.value * 100
-    }
-    if (item.id == 9) {
-      threshold.value = +item.value
-    }
-    return item
-  })
-}
-
-getFee()
 </script>
 
 <template>
   <div>
     <Toolbar :loading="loading">
-      <XSimplePagination
-        v-model="store.page"
-        :limit="store.limit"
-        :total="store.recharges.total"
-      />
+      <XSimplePagination v-model="store.page" :limit="store.limit" :total="store.recharges.total" />
 
       <template #extra>
-        <XButton
-          label="筛选"
-          class="mr-2"
-          icon="lucide:filter"
-          @click="store.visibleSearch = true"
-        />
-        <XButton
-          label="清空筛选"
-          variant="outline"
-          class="mr-2"
-          icon="lucide:x"
-          @click="resetSearch"
-        />
+        <XButton label="筛选" class="mr-2" icon="lucide:filter" @click="store.visibleSearch = true" />
+        <XButton label="清空筛选" variant="outline" class="mr-2" icon="lucide:x" @click="resetSearch" />
 
-        <XButton color="success"  variant="outline" label="手续费设置" icon="iconoir:settings" @click="feeDialog = true" />
+        <XButton color="success" variant="outline" label="手续费设置" icon="iconoir:settings" @click="feeDialog = true" />
       </template>
     </Toolbar>
 
     <section class="overflow-y-auto h-[calc(100vh-6.85rem)] space-y-2 p-3">
-      <NoMessage
-        v-if="!loading && store.recharges.list.length === 0"
-        class="h-auto bg-card border rounded-lg p-3"
-      />
+      <NoMessage v-if="!loading && store.recharges.list.length === 0" class="h-auto bg-card border rounded-lg p-3" />
 
       <template v-else>
-        <RechargeCard
-          v-for="(item, index) in store.recharges.list"
-          :key="item.paymentId" :item="item" :index="index"
-        />
+        <RechargeCard v-for="(item, index) in store.recharges.list" :key="item.paymentId" :item="item" :index="index" />
       </template>
     </section>
 
@@ -183,15 +142,22 @@ getFee()
         <!-- 手续费界限 -->
         <div class="flex justify-between items-center">
           <div class="mb-1 text-muted-foreground">手续费界限:</div>
-          <input v-model="threshold" type="number" placeholder="请输入界限金额" class="w-2/3 rounded-lg border border-gray-300 px-3 py-2
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input
+            v-model="freeFeeThreshold"
+            type="number"
+            placeholder="请输入界限金额"
+            class="bg-transparent w-2/3 rounded-lg border border-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+          />
         </div>
 
         <!-- 手续费率 -->
         <div class="flex justify-between items-center">
           <div class="mb-1 text-muted-foreground">手续费率 (%):</div>
-          <input v-model="fee" type="number" placeholder="请输入手续费率" class="w-2/3 rounded-lg border border-gray-300 px-3 py-2
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input
+            v-model="handleFee"
+            type="number"
+            placeholder="请输入手续费率"
+            class="bg-transparent w-2/3 rounded-lg border border-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
         </div>
 
         <div class="w-full flex justify-end space-x-2">

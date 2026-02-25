@@ -110,4 +110,6 @@ export interface Configs {
   'wx:follow:info': string
   'wx:error:info': string
   'filter:excluded_words': string
+  'recharge:fee': string
+  'recharge:threshold': string
 }
