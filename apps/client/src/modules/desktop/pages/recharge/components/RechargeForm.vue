@@ -13,6 +13,7 @@ const uStore = useUserStore()
 
 const customAmount = ref(0)
 const selectedAmount = ref(0)
+const payFee = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
 const store = inject(RECHARGE_STORE)!
 
@@ -20,7 +21,7 @@ const { t, locale } = useI18n()
 
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
-  return amount < 200 ? Number((amount * 0.01).toFixed(2)) : 0
+  return amount < 200 ? Number((amount * payFee.value).toFixed(2)) : 0
 })
 
 const rechargeAmount = computed(() => {
@@ -101,6 +102,14 @@ function checkRecharge() {
     })
   }, 1300)
 }
+
+//获取手续费率
+async function getFee() {
+  const res = await rechargeApi.payFee()
+  payFee.value = res.data 
+}
+
+onMounted(() =>{getFee()})
 </script>
 
 <template>
@@ -174,7 +183,7 @@ function checkRecharge() {
       </div>
       
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.handle') }}(1%)</span>
+        <span>{{ t('recharge.balance.compAmount.handle') }}({{ payFee }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
       

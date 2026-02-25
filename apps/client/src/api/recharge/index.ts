@@ -7,4 +7,5 @@ export const rechargeApi: RechargeApi = {
   create: (params) => http.post('pay', params),
   check: () => http.get('pay/check'),
   activity: () => http.get('activity/current'),
+  payFee: () => http.get('pay/fee')
 }
