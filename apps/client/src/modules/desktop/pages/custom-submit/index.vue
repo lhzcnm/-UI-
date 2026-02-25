@@ -3,6 +3,7 @@ import { Icon } from '@iconify/vue'
 import SelectService from './components/SelectService.vue'
 import OrderCard from './components/OrderCard.vue'
 
+import axios from 'axios'
 import { ORDER_STATUS, ua, xconfirm } from '@3un/utils'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
@@ -16,7 +17,6 @@ import { orderApi, type CustomSubmitOrder, type Order, type OrderSubmitParams, t
 import { checkPlugin, deviceMap, handleDevice, handleDisconnect, ws, hasNewVersion, hasNotPlugin } from "./utils/useDevice"
 import type { DeviceResponse } from '@/types/device'
 import type { PageItem, PluginPdfRequest } from '@/types/print'
-import axios from 'axios'
 
 const { services, getServices } = useServiceStore()
 const { t, locale } = useI18n()
@@ -245,6 +245,7 @@ async function exportTemplate() {
       wrap: item.wrap,
       type: item.type,
       size: item.size,
+      showField: item.showField,
     }))
   }
 
@@ -299,7 +300,7 @@ async function importTemplate(file: File) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item }))
+  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -494,7 +495,7 @@ function processDefaultTemplate(jsonStr: string) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item }))
+  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -746,7 +747,6 @@ function convertResultToHtml(orders: CustomSubmitOrder[]) {
   `).join('')
 }
 
-
 async function handleGenerate() {
   if (!paperRef.value) return
   if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
@@ -761,9 +761,12 @@ async function handleGenerate() {
   }
 
   try {
+    generating.value = true
     await pluginGeneratePdf()
   } catch {
     await generatePDF()
+  } finally {
+    generating.value = false
   }
 }
 
@@ -842,7 +845,6 @@ async function pluginGeneratePdf() {
 }
 
 async function generatePDF() {
-  generating.value = true
   paperRef.value!.classList.add("printing")
 
   const pdf = new jsPDF({
@@ -916,10 +918,15 @@ async function generatePDF() {
     }
   }
 
-  generating.value = false
   paperRef.value!.classList.remove("printing")
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
+}
+
+function handleSelectedOrder(order: CustomSubmitOrder) {
+  if (order.status !== ORDER_STATUS.SUCCESS) return
+
+  selectOrder.value = order
 }
 
 const handleDownload = useThrottleFn(
@@ -1083,7 +1090,7 @@ onBeforeUnmount(() => {
                 <button class="flex items-center gap-2" @click="field.showField = !field.showField">
                   <Icon icon="lucide:eye" v-if="field.showField" />
                   <Icon icon="lucide:eye-closed" v-else />
-                  <span>显示标签</span>
+                  <span>{{ field.showField ? t('print.fields.config.showLabel') : t('print.fields.config.showContent') }}</span>
                 </button>
                 <label class="flex items-center gap-3 cursor-pointer select-none">
                   <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
@@ -1118,7 +1125,7 @@ onBeforeUnmount(() => {
 
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
         <span class="flex-1 h-px bg-zinc-500"></span>
-        <span>设备读取模块</span>
+        <span>{{ t('print.device.module') }}</span>
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
@@ -1127,7 +1134,7 @@ onBeforeUnmount(() => {
           <div class="flex items-center gap-2 text-sm text-muted-foreground">
           <span class="flex-1 h-px bg-zinc-500"></span>
           <div class="flex items-center gap-2">
-            <span>请下载插件后刷新页面</span>
+            <span>{{ t('print.device.download') }}</span>
             <XButtonSplit
               :label="t('device.button.download')" :options="splitOptions"
               size="sm" :openClick="true"
@@ -1141,7 +1148,7 @@ onBeforeUnmount(() => {
       </template>
       <template v-else-if="deviceMap.size === 0">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
-          USB连接设备后可显示设备列表
+          {{ t('print.device.noDevice') }}
         </div>
       </template>
       <template v-else>
@@ -1168,7 +1175,7 @@ onBeforeUnmount(() => {
         <div class="flex items-center gap-2 text-sm text-muted-foreground">
           <span class="flex-1 h-px bg-zinc-500"></span>
           <div class="flex items-center gap-2">
-            <span>检测到插件版本更新, 请尽快更新</span>
+            <span>{{ t('print.device.hasUpdate') }}</span>
             <XButtonSplit
               :label="t('device.button.download')" :options="splitOptions"
               size="sm" :openClick="true"
@@ -1183,9 +1190,10 @@ onBeforeUnmount(() => {
     <section class="flex-1 flex flex-col items-center gap-y-4">
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
         <span class="flex-1 h-px bg-zinc-500"></span>
-        <span>标签预览区</span>
+        <span>{{ t('print.paper.title') }}</span>
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
+
       <div
         ref="paperRef"
         class="relative bg-white shadow paper-preview"
@@ -1234,14 +1242,14 @@ onBeforeUnmount(() => {
 
       <div class="w-full flex items-center gap-4 text-sm">
         <span class="flex-1 h-px bg-border"></span>
-        <span class="">可选择订单查看不同的预览结果</span>
+        <span class="">{{ t('print.paper.preview') }}</span>
         <span class="flex-1 h-px bg-border"></span>
       </div>
 
       <div class="flex-1 overflow-y-auto flex">
         <div class="flex gap-2 flex-wrap">
           <template v-for="order in customOrders" :key="`${order.id}-${order.imei}`">
-            <OrderCard :order="order" @click="selectOrder = $event" />
+            <OrderCard :order="order" @click="handleSelectedOrder" />
           </template>
         </div>
       </div>
@@ -1270,11 +1278,5 @@ onBeforeUnmount(() => {
 .template-item .template-value {
   word-break: break-word;
   white-space: pre-wrap;
-}
-
-@media print {
-  body {
-    zoom: 1 !important;
-  }
 }
 </style>

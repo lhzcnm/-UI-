@@ -46,6 +46,7 @@ export interface PrintTemplateJson {
     wrap?: boolean,
     type?: "text" | "qrcode" | "barcode",
     size?: number,
+    showField?: boolean,
   }[],
 }
 

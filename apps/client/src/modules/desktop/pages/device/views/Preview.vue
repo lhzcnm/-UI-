@@ -6,11 +6,13 @@ import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
+import axios from 'axios'
 
 import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/types'
 import { formatSize, STORE } from '../utils'
-import { mmToPx } from '@/utils'
+import { mmToPt, mmToPx, pxTomm } from '@/utils'
 import { orderApi } from '@/api/orders'
+import type { PageItem, PluginPdfRequest } from '@/types/print'
 
 const store = inject(STORE)!
 
@@ -121,6 +123,7 @@ function handleSelectColumn(id: string, label: string) {
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
       ...(isQrcode && { size: 20 }),
+      showField: true,
     }
 
     selectCols.value.push(id)
@@ -187,6 +190,7 @@ async function exportTemplate() {
       wrap: item.wrap,
       type: item.type,
       size: item.size,
+      showField: item.showField,
     }))
   }
 
@@ -232,7 +236,7 @@ async function importTemplate(file: File) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item }))
+  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -454,7 +458,7 @@ function getDefaultHeaders(): PrintHeader[] {
   ].filter(Boolean) as PrintHeader[]
 }
 
-async function generatePDF() {
+async function handleGenerate() {
   if (!paperRef.value) return
   if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
   if (templateItems.value.length === 0) {
@@ -465,15 +469,94 @@ async function generatePDF() {
     if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
+  try {
+    generating.value = true
+    await pluginGeneratePdf()
+  } catch {
+    await generatePDF()
+  } finally {
+    generating.value = false
+  }
+}
+
+function processRequestParams(): PluginPdfRequest {
+  const selTemplates = templateItems.value
+
+  const res: PluginPdfRequest = {
+    serviceId: 0,
+    paper: {
+      ...container,
+      fontSize: mmToPt(container.fontSize),
+    },
+    pages: []
+  }
+
+  const pageItems: PageItem[] = []
+  const page = paperRef.value!.cloneNode(true) as HTMLElement
+  const items = Array.from(page.querySelectorAll<HTMLElement>(".template-item"))
+
+  for (const itemEl of items) {
+    const key = itemEl.dataset.key!
+    const template = selTemplates.find(t => t.key === key)
+
+    if (!template) continue
+
+    if (isQrcodeField(key)) {
+      pageItems.push({
+        ...template,
+        showField: true,
+        x: pxTomm(template.x),
+        y: pxTomm(template.y),
+        value: qrcodeStr(previewValue.value),
+      })
+      continue
+    }
+    pageItems.push({
+      ...template,
+      showField: template.showField ?? true,
+      x: pxTomm(template.x),
+      y: pxTomm(template.y),
+      value: previewValue.value[key] ?? '',
+    })
+  }
+
+  res.pages.push({
+    items: pageItems,
+  })
+
+  return res
+}
+
+async function pluginGeneratePdf() {
+  try {
+    const body = processRequestParams()
+
+    const { data } = await axios.post(
+      "http://localhost:5000/generate-pdf",
+      body,
+      { responseType: "blob" }
+    )
+
+    const url = URL.createObjectURL(data)
+
+    window.open(url)
+
+    URL.revokeObjectURL(url)
+  } catch {
+    throw Error("request Failed")
+  }
+}
+
+async function generatePDF() {
   generating.value = true
-  paperRef.value.classList.add("printing")
+  paperRef.value!.classList.add("printing")
 
   const pdf = new jsPDF({
     unit: "px",
     format: [mmToPx(container.width), mmToPx(container.height)],
   })
 
-  const page = paperRef.value.cloneNode(true) as HTMLElement
+  const page = paperRef.value!.cloneNode(true) as HTMLElement
   document.body.appendChild(page)
 
   const deviceItem = previewValue.value
@@ -533,8 +616,7 @@ async function generatePDF() {
 
   pdf.addImage(imgData, "PNG", 0, 0, mmToPx(container.width), mmToPx(container.height))
 
-  generating.value = false
-  paperRef.value.classList.remove("printing")
+  paperRef.value!.classList.remove("printing")
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
 }
@@ -633,7 +715,12 @@ onBeforeUnmount(() => {
 
             <!-- 控制开关 -->
             <div class="flex items-center">
-              <div v-if="!isQrcodeField(field.key)" class="mr-4">
+              <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
+                <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+                  <Icon icon="lucide:eye" v-if="field.showField" />
+                  <Icon icon="lucide:eye-closed" v-else />
+                  <span>{{ field.showField ? t('print.fields.config.showLabel') : t('print.fields.config.showContent') }}</span>
+                </button>
                 <label class="flex items-center gap-3 cursor-pointer select-none">
                   <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
                   <div class="relative w-9 h-5 rounded-full bg-border
@@ -659,39 +746,52 @@ onBeforeUnmount(() => {
       <div class="flex justify-between space-x-2">
         <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
         <XButton class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
-        <XButton class="flex-1" :label="t('print.button.print')" color="warning" :loading="loading" @click="generatePDF" />
+        <XButton class="flex-1" :label="t('print.button.print')" color="warning" :loading="loading" @click="handleGenerate" />
       </div>
     </section>
 
     <section class="flex-1 flex justify-center">
-      <div ref="paperRef" class="relative bg-white shadow paper-preview overflow-hidden" :style="paperStyle">
-        <div class="absolute safe-area-border" :style="safeAreaStyle" />
+      <div
+        ref="paperRef"
+        class="relative bg-white shadow paper-preview"
+        :style="paperStyle"
+      >
+        <div
+          class="absolute safe-area-border"
+          :style="safeAreaStyle"
+        />
 
-        <div v-for="item in templateItems" :key="item.key"
+        <div
+          v-for="item in templateItems"
+          :key="item.key"
           class="absolute cursor-move select-none template-item text-black"
           :class="{ 'overflow-warning': isOverflowMap[item.key] }"
-          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }" @mousedown.prevent
-          @mousedown="startDrag($event, item)" :data-key="item.key">
+          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }"
+          @mousedown.prevent
+          @mousedown="startDrag($event, item)"
+          :data-key="item.key"
+        >
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
-              <div class="font-medium leading-tight">
+              <div v-if="item.showField" class="font-medium leading-tight">
                 {{ item.label }}:
               </div>
               <div class="leading-tight break-all template-value">
                 {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
               </div>
             </template>
-
+        
             <template v-else>
-              <span class="font-medium">{{ item.label }}:</span>
-              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue :
-                stripHtmlTags(previewValue[item.key]) }}</span>
+              <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
+              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
           </template>
 
           <template v-else>
             <div data-qrcode>
-              <QrPreview :data="qrcodeStr(previewValue)" :size="item.size ?? 20" />
+              <QrPreview
+                :data="qrcodeStr(previewValue)"
+                :size="item.size ?? 25" />
             </div>
           </template>
         </div>

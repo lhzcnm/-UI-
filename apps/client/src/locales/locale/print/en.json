@@ -3,10 +3,12 @@
     "fields": {
       "title": "Print Fields",
       "config": {
-        "title": "Field Display Configuration",
-        "tip": "Controls how fields are displayed in the print preview area",
-        "wrap": "Label and content displayed on separate lines",
-        "nowrap": "Label and content displayed on the same line"
+        "title": "Field Display Settings",
+        "tip": "Control how fields are displayed in the print preview area",
+        "wrap": "Label and content on separate lines",
+        "nowrap": "Label and content on the same line",
+        "showLabel": "Show label and content",
+        "showContent": "Show content only"
       }
     },
     "size": {
@@ -25,7 +27,7 @@
       },
       "qrcode": {
         "title": "QR Code Size",
-        "limitHit": "QR code size too small may result in unreadable codes"
+        "limitHit": "QR code size is too small and may not be scannable"
       }
     },
     "button": {
@@ -35,20 +37,20 @@
       },
       "autoprint": {
         "label": "Auto Print",
-        "tip": "Automatically redirect to print page after order is processed"
+        "tip": "Automatically navigate to the print page after order processing is completed"
       },
-      "showres": "View Order Results",
-      "print": "Print Results",
+      "showres": "View Order Result",
+      "print": "Print Result",
       "submit": "Submit Order",
       "back": {
-        "label": "Back To {action}"
+        "label": "Back to {action}"
       }
     },
     "prompt": {
-      "filterFailed": "Automatically filter failed orders in print results",
+      "filterFailed": "Failed orders are automatically excluded from printing",
       "export": {
-        "noField": "No fields selected. Are you sure you want to export the current template?",
-        "overflow": "Some fields exceed the paper area. Are you sure you want to export?"
+        "noField": "No fields are currently selected. Do you want to export this template?",
+        "overflow": "Some fields exceed the paper size. Do you still want to export?"
       },
       "upload": {
         "extError": "Unsupported file type"
@@ -57,25 +59,36 @@
         "serviceNotMatch": "This template does not match the current service"
       },
       "pdf": {
-        "gerenting": "Please wait while PDF is being generated",
+        "gerenting": "Generating PDF, please wait",
         "notOrder": "Please submit the order first",
-        "processing": "Please wait until order processing is complete",
-        "noField": "No fields selected. Are you sure you want to print?",
-        "overflow": "Some fields exceed the paper area. Are you sure you want to print?",
-        "imgError": "Image failed to load"
+        "processing": "Please wait for order processing to complete",
+        "noField": "No fields are currently selected. Do you want to continue printing?",
+        "overflow": "Some fields exceed the defined area. Do you still want to print?",
+        "imgError": "Failed to load image"
       },
       "service": {
         "label": "Current Service"
       },
       "history": {
-        "moreService": "Printing does not allow selecting multiple services",
-        "hasFailed": "Please do not select orders that are processing or have failed"
+        "moreService": "Multiple services cannot be selected for printing",
+        "hasFailed": "Please do not select orders that are processing or failed"
       }
     },
     "dialog": {
       "order": {
-        "title": "Order Results"
+        "title": "Order Result"
       }
+    },
+    "device": {
+      "module": "Device Reader Module",
+      "title": "Device Information",
+      "download": "Please download the plugin and refresh the page",
+      "noDevice": "Connect a USB device to display the device list",
+      "hasUpdate": "Plugin update detected. Please update as soon as possible"
+    },
+    "paper": {
+      "title": "Preview Area",
+      "preview": "Select an order to view different preview results"
     }
   }
 }
