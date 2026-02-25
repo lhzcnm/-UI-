@@ -13,6 +13,8 @@ import { createList } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { RECHARGE_STORE } from './utils'
+import type { ConfigItem } from '@/inters/settings'
+import { getConfigs, updateConfig } from '@/api/settings'
 
 const store: RechargeStore = reactive({
   recharges: createList(),
@@ -90,6 +92,45 @@ function resetSearch() {
     query: { q: route.query.q },
   })
 }
+
+const feeDialog = ref(false)
+const threshold = ref(0)
+const fee = ref(0)
+
+const getConfigsData = ref<ConfigItem[]>([])
+
+async function handFeeUpdate() {
+  const res = getConfigsData.value.map(item => {
+    if (item.id == 8) {
+      item.value = `${fee.value / 100}`
+    }
+    if (item.id == 9) {
+      item.value = `${threshold.value}`
+    }
+    return item
+  })
+  updateConfig(res)
+
+  feeDialog.value = false
+}
+
+async function getFee() {
+  const res = await getConfigs()
+
+  getConfigsData.value = res
+
+  getConfigsData.value.map(item => {
+    if (item.id == 8) {
+      fee.value = +item.value * 100
+    }
+    if (item.id == 9) {
+      threshold.value = +item.value
+    }
+    return item
+  })
+}
+
+getFee()
 </script>
 
 <template>
@@ -111,9 +152,12 @@ function resetSearch() {
         <XButton
           label="清空筛选"
           variant="outline"
+          class="mr-2"
           icon="lucide:x"
           @click="resetSearch"
         />
+
+        <XButton color="success"  variant="outline" label="手续费设置" icon="iconoir:settings" @click="feeDialog = true" />
       </template>
     </Toolbar>
 
@@ -133,5 +177,28 @@ function resetSearch() {
 
     <RechargeSearch :key="queryHash" />
     <RechargeModal />
+
+    <XDialog v-model="feeDialog" title="手续费设置">
+      <div class="space-y-3 text-sm">
+        <!-- 手续费界限 -->
+        <div class="flex justify-between items-center">
+          <div class="mb-1 text-muted-foreground">手续费界限:</div>
+          <input v-model="threshold" type="number" placeholder="请输入界限金额" class="w-2/3 rounded-lg border border-gray-300 px-3 py-2
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <!-- 手续费率 -->
+        <div class="flex justify-between items-center">
+          <div class="mb-1 text-muted-foreground">手续费率 (%):</div>
+          <input v-model="fee" type="number" placeholder="请输入手续费率" class="w-2/3 rounded-lg border border-gray-300 px-3 py-2
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <div class="w-full flex justify-end space-x-2">
+          <XButton @click="feeDialog = false" label="取消" variant="outline" color="primary" />
+          <XButton @click="handFeeUpdate" label="修改" color="primary" />
+        </div>
+      </div>
+    </XDialog>
   </div>
 </template>

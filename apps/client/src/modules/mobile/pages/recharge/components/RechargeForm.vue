@@ -13,24 +13,28 @@ const uStore = useUserStore()
 const customAmount = ref(0)
 const selectedAmount = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
+
+const payFee = ref(0) /* 手续费 */
+const amountLimit = ref(0) // 后端给的手续费界限值
+const amountList = ref<{ label: string; value: number; info?: string }[]>([])
 const { t, locale } = useI18n()
 
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
-  return amount < 200 ? Number((amount * 0.01).toFixed(2)) : 0
+  return amount < amountLimit.value ? Number((amount * payFee.value).toFixed(2)) : 0
 })
 
 const rechargeAmount = computed(() => {
   return selectedAmount.value || customAmount.value
 })
 
-const amountList = [
+const rawAmountList = [
   { label: '￥10', value: 10 },
   { label: '￥50', value: 50 },
   { label: '￥100', value: 100 },
-  { label: '￥200', info: t('recharge.handleFee'), value: 200 },
-  { label: '￥500', info: t('recharge.handleFee'), value: 500 },
-  { label: '￥1000', info: t('recharge.handleFee'), value: 1000 },
+  { label: '￥200', value: 200 },
+  { label: '￥500', value: 500 },
+  { label: '￥1000', value: 1000 },
 ]
 
 const rechargeInfo = computed(() => {
@@ -109,6 +113,24 @@ function onBridgeReady(config: WXInvokeConfig) {
     }
   )
 }
+
+//获取手续费率
+async function getFee() {
+  const res = await rechargeApi.payFee()
+  payFee.value = res.data.fee
+  amountLimit.value = res.data.threshold
+
+  amountList.value = rawAmountList.map(item => {
+    return {
+      ...item,
+      ...(item.value >= amountLimit.value
+        ? { info: t('recharge.handleFee') }
+        : {})
+    }
+  })
+}
+
+onMounted(() => { getFee() })
 </script>
 
 <template>
@@ -183,7 +205,7 @@ function onBridgeReady(config: WXInvokeConfig) {
       </div>
       
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.handle') }}(1%)</span>
+        <span>{{ t('recharge.balance.compAmount.handle') }}({{ (payFee * 100).toFixed(2) }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
       
