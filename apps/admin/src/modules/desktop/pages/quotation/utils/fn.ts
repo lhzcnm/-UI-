@@ -1,4 +1,5 @@
-import { QUOTATION_MAP_ITEM, type QuotationListResult, type QUOTATION_MAP } from "."
+import { type QUOTATION_MAP } from "@/utils/quotation"
+import { QUOTATION_MAP_ITEM, type QuotationListResult } from "."
 
 export async function getQuotationList<T extends QUOTATION_MAP> (
   type: T,
@@ -39,4 +40,3 @@ export async function deleteQuotation<T extends QUOTATION_MAP> (
   const res = await api(params)
   return res
 }
-

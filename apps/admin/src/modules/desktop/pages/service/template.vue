@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import TemplateTag from './components/TemplateTag.vue'
+import TemplateQrcode from './components/TemplateQrcode.vue'
+
+import { Icon } from '@iconify/vue'
+import { toast } from 'vue-sonner'
+
 import { getServiceFields, getServices, updateService } from '@/api/services'
 import { type Service } from '@/inters/services'
-// import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/inters/services'
 import { mmToPx } from '@/utils'
-import TemplateTag from './components/TemplateTag.vue'
-import { Icon } from '@iconify/vue'
-import TemplateQrcode from './components/TemplateQrcode.vue'
-import { toast } from 'vue-sonner'
+// import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/inters/services'
 
 interface ContainerItem {
   width: number,
@@ -31,6 +33,7 @@ interface TemplateItem {
   height?: number,
   type?: "text" | "qrcode" | "barcode",
   size?: number,
+  showField: boolean,
 }
 
 interface PrintTemplateJson {
@@ -55,6 +58,7 @@ interface PrintTemplateJson {
     wrap?: boolean,
     type?: "text" | "qrcode" | "barcode",
     size?: number,
+    showField: boolean,
   }[],
 }
 
@@ -204,6 +208,7 @@ function handleSelectColumn(label: string) {
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
       ...(isQrcode && {size: 25}),
+      showField: true,
     }
 
     selectCols.value.push(label)
@@ -401,6 +406,7 @@ async function handleSave() {
         wrap: item.wrap,
         type: item.type,
         size: item.size,
+        showField: item.showField,
       }))
     }
   
@@ -430,7 +436,7 @@ function processServiceTemplate(jsonStr: string) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item }))
+  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -544,7 +550,12 @@ onMounted(async () => {
               </div>
 
               <div class="flex items-center">
-                <div v-if="!isQrcodeField(field.key)" class="mr-4">
+                <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
+                  <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+                    <Icon icon="lucide:eye" v-if="field.showField" />
+                    <Icon icon="lucide:eye-closed" v-else />
+                    <span>显示标签</span>
+                  </button>
                   <label class="flex items-center gap-3 cursor-pointer select-none">
                     <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
                     <div
@@ -596,7 +607,7 @@ onMounted(async () => {
         >
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
-              <div class="font-medium leading-tight">
+              <div v-if="item.showField" class="font-medium leading-tight">
                 {{ item.label }}:
               </div>
               <div class="leading-tight break-all template-value">
@@ -605,7 +616,7 @@ onMounted(async () => {
             </template>
         
             <template v-else>
-              <span class="font-medium">{{ item.label }}:</span>
+              <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
               <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
           </template>

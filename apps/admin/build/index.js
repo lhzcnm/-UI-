@@ -1,59 +1,53 @@
-import { fileURLToPath, URL } from 'node:url'
-import { build } from 'vite'
+import { fileURLToPath, URL } from "node:url";
+import { build } from "vite";
 
-import obfuscator from 'vite-plugin-bundle-obfuscator'
-import fs from 'node:fs/promises'
+import obfuscator from "vite-plugin-bundle-obfuscator";
+import fs from "node:fs/promises";
 
 const list = [
-  { mode: 'SanHe', obfuscator: false },
-  { mode: 'HaoXuan', obfuscator: false },
-  { mode: 'AiSuCha', obfuscator: false },
-  { mode: 'LuShen', obfuscator: false },
-  { mode: 'IFunlock', obfuscator: true },
-  { mode: 'JiuXing', obfuscator: true },
-  { mode: 'U4GSM', obfuscator: true },
-  { mode: 'Usimlte', obfuscator: true },
-  { mode: 'ZSunlock', obfuscator: true },
-]
+  { mode: "SanHe", obfuscator: false },
+  { mode: "HaoXuan", obfuscator: false },
+  { mode: "AiSuCha", obfuscator: false },
+  { mode: "LuShen", obfuscator: false },
+  { mode: "IFunlock", obfuscator: true },
+  { mode: "JiuXing", obfuscator: true },
+  { mode: "U4GSM", obfuscator: true },
+  { mode: "Usimlte", obfuscator: true },
+  { mode: "ZSunlock", obfuscator: true },
+];
 
-await Promise.all(list.map(run))
+await Promise.all(list.map(run));
 
 for (const item of list) {
-  await clean(item.mode)
+  await clean(item.mode);
 }
 
 function resolve(path) {
-  return fileURLToPath(new URL(path, import.meta.url))
+  return fileURLToPath(new URL(path, import.meta.url));
 }
 
 async function run(item) {
-  const plugins = []
+  const plugins = [];
 
   if (item.obfuscator) {
     plugins.push(
       obfuscator({
         log: false,
         threadPool: true,
-        excludes: [
-          'vendor',
-          'vendor-utils',
-          'jsencrypt',
-          'echarts',
-          'tiptap',
-        ],
+        excludes: ["vendor", "vendor-utils", "jsencrypt", "echarts", "tiptap"],
         options: {
           controlFlowFlattening: false,
           transformObjectKeys: false,
           deadCodeInjection: false,
           stringArray: false,
-        }
-      })
-    )
+        },
+      }),
+    );
   }
 
   await build({
     plugins,
-    envDir: './config',
+    envDir: "./config",
     mode: item.mode,
     build: {
       chunkSizeWarningLimit: 1024,
@@ -67,74 +61,65 @@ async function run(item) {
       rollupOptions: {
         output: {
           dir: `./dist/${item.mode}`,
-          manualChunks
+          manualChunks,
         },
+        // onwarn(warning, warn) {
+        //   if (warning.code === "CIRCULAR_DEPENDENCY") {
+        //     console.log("循环依赖:");
+        //     console.dir(warning)
+        //   }
+        //   warn(warning);
+        // },
       },
     },
-  })
+  });
 }
 
 async function clean(mode) {
   for (const item of list) {
     if (item.mode !== mode) {
-      await fs.rm(
-        resolve(`../dist/${mode}/${item.mode}`),
-        { recursive: true, force: true }
-      )
+      await fs.rm(resolve(`../dist/${mode}/${item.mode}`), {
+        recursive: true,
+        force: true,
+      });
     }
   }
 }
 
-// function manualChunks(id) {
-//   if (id.includes('jsencrypt')) return 'jsencrypt'
-//   if (
-//     id.includes('tiptap') ||
-//     id.includes('prosemirror') ||
-//     id.includes('w3c-keyname') || 
-//     id.includes('orderedmap') || 
-//     id.includes('rope-sequence')
-//   ) return 'tiptap'
-
-//   if (
-//     id.includes('echarts') ||
-//     id.includes('zrender') ||
-//     id.includes('tslib')
-//   ) return 'echarts'
-
-//   if (
-//     id.includes('@vueuse') ||
-//     id.includes('@floating-ui') ||
-//     id.includes('@iconify/vue') ||
-//     id.includes('tailwind') ||
-//     id.includes('vue-sonner') ||
-//     id.includes('axios') ||
-//     id.includes('dayjs') ||
-//     id.includes('ohash') || 
-//     id.includes('klona')
-//   ) return 'vendor-utils'
-
-//   if (id.includes('node_modules')) return 'vendor'
-
-//   if (id.includes('modules/other')) return 'other'
-//   if (id.includes('modules/desktop')) return 'desktop'
-//   if (id.includes('modules/mobile')) return 'mobile'
-//   if (id.includes('modules/auth')) return 'auth'
-
-//   return 'common'
-// }
-
 function manualChunks(id) {
-  if (id.includes('node_modules')) return 'vendor'
+  // console.log(id)
+  if (id.includes("jsencrypt")) return "jsencrypt";
+  if (
+    id.includes("tiptap") ||
+    id.includes("prosemirror") ||
+    id.includes("w3c-keyname") ||
+    id.includes("orderedmap") ||
+    id.includes("rope-sequence")
+  )
+    return "tiptap";
 
-  // if (
-  //   id.includes('modules/desktop') ||
-  //   id.includes('modules/mobile') ||
-  //   id.includes('modules/auth') ||
-  //   id.includes('modules/other') ||
-  //   id.includes('store') ||
-  //   id.includes('utils') ||
-  //   id.includes('router')
-  // ) return 'app-core'
+  if (id.includes("echarts") || id.includes("zrender") || id.includes("tslib"))
+    return "echarts";
 
-  return 'common'
+  if (
+    id.includes("@vueuse") ||
+    id.includes("@floating-ui") ||
+    id.includes("@iconify/vue") ||
+    id.includes("tailwind") ||
+    id.includes("vue-sonner") ||
+    id.includes("axios") ||
+    id.includes("dayjs") ||
+    id.includes("ohash") ||
+    id.includes("klona")
+  )
+    return "vendor-utils";
+
+  if (id.includes("node_modules")) return "vendor"
+
+  if (id.includes('modules/other')) return 'other'
+  if (id.includes('modules/desktop')) return 'desktop'
+  if (id.includes('modules/mobile')) return 'mobile'
+  if (id.includes('modules/auth')) return 'auth'
+
+  return "common";
 }
