@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-import type { BatteryResponse } from '../types'
+import type { BatteryResponse } from '@/types/device'
 import { STORE } from '../utils'
 
 const store = inject(STORE)!

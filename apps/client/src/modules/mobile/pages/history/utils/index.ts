@@ -27,6 +27,7 @@ const searchForm: OrderSearchForm = {
   imei: '',
   startTime: '',
   endTime: '',
+  codeIds: '',
 }
 
 export const form: Form = {
@@ -41,15 +42,17 @@ export const form: Form = {
  * @returns 搜索参数
  */
 export function formatOrderParams(form: OrderSearchForm) {
-  const { status, startTime, endTime, imei } = form
+  const { status, startTime, endTime, imei, codeIds } = form
   const imeiList = formatImeiType5(imei)
+  const codeIdList = codeIds && codeIds.trim() !== '' ? codeIds.trim().split('\n') : []
   const isAll = status === -1
 
   return {
     status: isAll ? undefined : status,
     imeiList: imeiList.length ? imeiList : undefined,
-    startTime: startTime ? getStartTime(startTime) : undefined,
-    endTime: endTime ? getEndTime(endTime) : undefined,
+    startTime: startTime,
+    endTime: endTime,
+    codeIdList: codeIdList,
   }
 }
 

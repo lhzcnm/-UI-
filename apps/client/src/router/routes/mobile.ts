@@ -19,6 +19,7 @@ const mobile: RouteRecordRaw = {
     {
       path: 'history',
       name: 'History',
+      props: true,
       component: () => import('@mobile/pages/history/index.vue'),
     },
     {

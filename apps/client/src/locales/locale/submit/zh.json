@@ -32,7 +32,10 @@
       "title": "IMEI/SN",
       "placeholder": "每行一个 IMEI/SN\n\n可以拖动文件到此导入\n支持 txt、csv、xlsx、xls 等",
       "view": "查看正确的IMEI",
-      "valid": "有效数量"
+      "valid": "有效数量",
+      "processing": "处理中订单",
+      "processed": "成功订单",
+      "failed": "失败订单"
     },
     "button": {
       "mobile": {

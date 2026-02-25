@@ -1,7 +1,8 @@
-import type { DeviceStore, DeviceMapItem, DeviceSummary } from "../types"
+import type { DeviceMapItem, DeviceSummary } from "@/types/device"
+import type { DeviceStore } from "../types"
 import type { IK } from "@3un/shared"
 
-import { stripHtml } from '@3un/utils'
+// import { stripHtml } from '@3un/utils'
 
 export * from './websocket'
 
@@ -25,9 +26,9 @@ export const getCopyToken = (info: DeviceSummary) => ([
   ['ECID', info.Ecid],
   ['UDID', info.UniqueDeviceID],
   ['激活状态', info.ActivationState],
-  ['网络锁', stripHtml(info.NetworkLock)],
-  ['激活锁', stripHtml(info.ActivationLock)],
-  ['保修期限', info.Warranty],
+  // ['网络锁', stripHtml(info.NetworkLock)],
+  // ['激活锁', stripHtml(info.ActivationLock)],
+  // ['保修期限', info.Warranty],
   ['销售地区', info.SalesRegion.chinese],
   ['iCloud备份', info.iCloud],
   ['CPU类型', info.CPU],
@@ -43,9 +44,9 @@ export const getCopyTokenEn = (info: DeviceSummary) => ([
   ['ECID', info.Ecid],
   ['UDID', info.UniqueDeviceID],
   ['Activated Status', info.ActivationState],
-  ['Sim Lock', stripHtml(info.NetworkLock)],
-  ['Find My', stripHtml(info.ActivationLock)],
-  ['Warranty End', info.Warranty],
+  // ['Sim Lock', stripHtml(info.NetworkLock)],
+  // ['Find My', stripHtml(info.ActivationLock)],
+  // ['Warranty End', info.Warranty],
   ['Region', info.SalesRegion.english],
   ['icloud', info.iCloud],
   ['CPU', info.CPU],
@@ -66,8 +67,8 @@ export function getPrintPayload(device: DeviceMapItem) {
     DesignCapacity       : battery.DesignCapacity,
     TotalDiskCapacity    : memory.TotalDiskCapacity,
     NominalChargeCapacity: battery.NominalChargeCapacity,
-    NetworkLock          : stripHtml(summary.NetworkLock),
-    ActivationLock       : stripHtml(summary.ActivationLock),
-    Warranty             : summary.Warranty,
+    // NetworkLock          : stripHtml(summary.NetworkLock),
+    // ActivationLock       : stripHtml(summary.ActivationLock),
+    // Warranty             : summary.Warranty,
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ApiEnum } from '@/inters/quotation'
-import type { ClassNameValue } from 'tailwind-merge';
+import type { ClassNameValue } from 'tailwind-merge'
 
 interface SelectBrandProps {
   apiEnums: ApiEnum[],

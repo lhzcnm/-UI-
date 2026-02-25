@@ -25,6 +25,7 @@ const home: RouteRecordRaw = {
     {
       path: 'history',
       name: 'History',
+      props: true,
       component: () => import('@desktop/pages/history/index.vue'),
     },
     {

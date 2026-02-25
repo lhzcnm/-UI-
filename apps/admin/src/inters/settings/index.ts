@@ -93,6 +93,9 @@ export interface Settings {
 
   // 更新公告
   adminRemainder: string
+
+  // 线程数
+  threads: number
 }
 
 // Config

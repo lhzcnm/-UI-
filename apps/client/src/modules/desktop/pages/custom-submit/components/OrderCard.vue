@@ -6,7 +6,12 @@ interface OrderCardProps {
   order: CustomSubmitOrder,
 }
 
+interface OrderCardEmits {
+  click: [order: CustomSubmitOrder]
+}
+
 const props = defineProps<OrderCardProps>()
+const emits = defineEmits<OrderCardEmits>()
 
 const displayStatusBg = computed(() => {
   let classes = `bg-success`
@@ -25,11 +30,12 @@ const displayStatusBg = computed(() => {
 
 <template>
   <div
-    class="w-72 flex flex-col
+    class="h-72 flex flex-col
            rounded-lg
            bg-slate-100 dark:bg-slate-800
            border border-slate-200 dark:border-slate-700
            shadow-sm"
+    @click="emits('click', order)"
   >
     <!-- header -->
     <section
@@ -57,7 +63,7 @@ const displayStatusBg = computed(() => {
         class="flex items-start text-xs leading-relaxed"
       >
         <span
-          class="w-20 shrink-0
+          class="shrink-0
                  text-zinc-500
                  text-right pr-2"
         >

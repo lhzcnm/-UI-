@@ -22,7 +22,6 @@ const store = inject(HISTORY_STORE)!
 
 const { copy } = useClipboard({ legacy: true })
 const { t, locale } = useI18n()
-const serviceStore = useServiceStore()
 
 const page = ref(1)
 const limit = ref(20)
@@ -57,7 +56,16 @@ function openSearch() {
 
 function openExport() {
   if(selectRows.value.length === 1) {
-    handleExport()
+    const index = store.orders.list.findIndex(o => o.id === selectRows.value[0])
+    if (index !== -1) {
+      const order = store.orders.list[index]
+      handleExport(order.serviceId, [order.id.toString()])
+      return
+    }
+  }
+  const firstOrder = store.orders.list[0]
+  if (isSameService(firstOrder)) {
+    handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
     return
   }
 
@@ -65,19 +73,15 @@ function openExport() {
   store.visibleExport = true
 }
 
-function handleExport() {
-  const orderId = selectRows.value[0]
-  const index = store.orders.list.findIndex(item => item.id === +orderId)
+function isSameService(firstOrder: Order) {
+  if (store.orders.total === 0) return false
+  return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
+}
 
-  if(index === -1) {
-    selectRows.value.length = 0
-    openExport()
-  }
-
-  const order = store.orders.list[index]
+function handleExport(serviceId: number, orderIds: string[]) {
   const params: OrderExportParams = {
-    serviceId: order.serviceId,
-    orderIdList: [order.id.toString()],
+    serviceId: serviceId,
+    orderIdList: orderIds,
   }
   orderApi.export(params).then(({ data }) => {
     downloadURL(data)
@@ -114,28 +118,22 @@ function openPrint() {
     return toast.warning(t('order.prompt.order'))
   }
   if (!validServiceUnique(selectRows.value)) {
-    return toast.warning('打印结果不允许选择多个服务')
+    return toast.warning(t('print.prompt.history.moreService'))
   }
 
   store.selectOrders = getOrdersyId(selectRows.value)
 
   if (store.selectOrders.length === 0) {
-    return toast.warning('请勿选择处理中或处理失败订单')
+    return toast.warning(t('print.prompt.history.hasFailed'))
   }
-  const service = serviceStore.services.get(store.selectOrders[0].id)
-
-  if (service?.isUnlock) {
-    store.visiblePrint = true
-  } else {
-    store.views = 'print'
-  }
+  store.views = 'print'
 }
 
 function validServiceUnique(ids: number[]) {
   const selectedOrders = store.orders.list.filter(o => ids.includes(o.id))
   const lastServiceId = selectedOrders[selectedOrders.length - 1].serviceId
 
-  return selectedOrders.every( o => o.serviceId === lastServiceId)
+  return selectedOrders.every(o => o.serviceId === lastServiceId)
 }
 
 function getOrdersyId(ids: number[]) {

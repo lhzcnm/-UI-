@@ -5,7 +5,8 @@
       "2": "Success",
       "3": "Failed",
       "4": "Processing",
-      "5": "Submited Success"
+      "5": "Submited Success",
+      "6": "Wait Process"
     },
     "unlock": {
       "0": "Submited Success",

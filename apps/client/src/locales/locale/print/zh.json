@@ -1,0 +1,94 @@
+{
+  "print": {
+    "fields": {
+      "title": "打印字段",
+      "config": {
+        "title": "字段显示配置",
+        "tip": "控制打印预览区域中的显示方式",
+        "wrap": "标签与内容分行显示",
+        "nowrap": "标签与内容同行显示",
+        "showLabel": "显示标签与内容",
+        "showContent": "仅显示内容"
+      }
+    },
+    "size": {
+      "font": "字体大小",
+      "paper": {
+        "title": "纸张大小",
+        "long": "长",
+        "width": "宽"
+      },
+      "padding": {
+        "title": "页边距",
+        "top": "上",
+        "bottom": "下",
+        "left": "左",
+        "right": "右"
+      },
+      "qrcode": {
+        "title": "二维码尺寸",
+        "limitHit": "二维码尺寸过小可能会导致无法识别"
+      }
+    },
+    "button": {
+      "template": {
+        "import": "导入模板",
+        "export": "导出模板"
+      },
+      "autoprint": {
+        "label": "自动打印",
+        "tip": "订单处理完成后自动跳转打印页面"
+      },
+      "showres": "查看订单结果",
+      "print": "打印结果",
+      "submit": "提交订单",
+      "back": {
+        "label": "返回{action}"
+      }
+    },
+    "prompt": {
+      "filterFailed": "打印结果自动过滤失败订单",
+      "export": {
+        "noField": "当前没有选择字段, 是否确认导出当前模板? ",
+        "overflow": "当前存在字段超出纸张范围, 是否确认导出? "
+      },
+      "upload": {
+        "extError": "不支持的文件类型"
+      },
+      "import": {
+        "serviceNotMatch": "该模板与当前服务不一致"
+      },
+      "pdf": {
+        "gerenting": "请等待pdf生成",
+        "notOrder": "请先提交订单",
+        "processing": "请等待订单处理完成",
+        "noField": "当前没有选择字段, 是否确认打印? ",
+        "overflow": "当前存在字段超出所设范围, 是否确认打印? ",
+        "imgError": "图片加载失败"
+      },
+      "service": {
+        "label": "当前服务"
+      },
+      "history": {
+        "moreService": "打印不允许选择多个服务",
+        "hasFailed": "请勿选择处理中或处理失败的订单"
+      }
+    },
+    "dialog": {
+      "order": {
+        "title": "订单结果"
+      }
+    },
+    "device": {
+      "module": "设备读取模块",
+      "title": "设备信息",
+      "download": "请下载插件后刷新页面",
+      "noDevice": "USB连接设备后可显示设备列表",
+      "hasUpdate": "检测到插件更新, 请尽快更新"
+    },
+    "paper": {
+      "title": "结果预览区",
+      "preview": "可选择订单查看不同的预览结果"
+    }
+  }
+}

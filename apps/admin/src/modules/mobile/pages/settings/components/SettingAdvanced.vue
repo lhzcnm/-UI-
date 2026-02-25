@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Configs, Settings } from '@/inters/settings'
-import { updateSetting, updateConfig } from '@/api/settings'
+import { updateSetting, updateConfig, updateThread } from '@/api/settings'
 import { toast } from 'vue-sonner'
 
 interface TheProps {
@@ -17,13 +17,15 @@ const form = reactive({
   enableTricket: settings.enableTricket,
   minRechargeAmount: settings.minRechargeAmount,
   maxRechargeAmount: settings.maxRechargeAmount,
-  minVoucherAmount: settings.minVoucherAmount,
-  maxVoucherAmount: settings.maxVoucherAmount,
+  minVoucherAmount: settings.minVoucherAmount ?? 0,
+  maxVoucherAmount: settings.maxVoucherAmount ?? 0,
   invitePonit: +configs['invite:point'],
   inviteForPonit: +configs['invite:for:point'],
   excludedWords: configs['filter:excluded_words']
     ? JSON.parse(configs['filter:excluded_words']).join('|')
     : '',
+  invite: settings.invite,
+  threads: settings.threads ?? 5,
 })
 
 const iStore = useSystemStore()
@@ -53,6 +55,7 @@ function handleSubmit() {
         ),
       },
     ]),
+    updateThread(form.threads),
   ])
 
   response.then(() => {
@@ -82,6 +85,14 @@ function handleSubmit() {
         :content-flex="false"
       >
         <XInputNumber :precision="2" :step="0.01" v-model="form.invitePonit" />
+      </FormField>
+
+      <FormField
+        label="公众号提交线程数"
+        desc="设置公众号提交订单的线程数"
+        :content-flex="false"
+      >
+        <XInputNumber :precision="0" :step="1" :min="1" :max="20" v-model="form.threads" />
       </FormField>
   
       <FormField

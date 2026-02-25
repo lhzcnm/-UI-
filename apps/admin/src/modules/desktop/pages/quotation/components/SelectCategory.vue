@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { QUOTATION_MAP, QUOTATION_MAP_LIST } from '@/utils/quotation'
+import { QUOTATION_MAP } from '@/utils/quotation'
+import { QUOTATION_MAP_LIST } from '../utils'
 
 const category = defineModel<QUOTATION_MAP>()
 </script>

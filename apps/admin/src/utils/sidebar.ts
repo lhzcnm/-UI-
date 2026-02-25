@@ -1,3 +1,5 @@
+import { ua } from "@3un/utils"
+
 export interface SidebarMenu {
   label      : string
   icon       : string
@@ -43,7 +45,8 @@ export const menus: SidebarMenu[] = [
       { label: '解锁推荐', match: 'jiesuojianyi', icon: 'lucide:flame', path: '/service/unlock' },
       { label: '服务组', match: 'fuwuzu', icon: 'lucide:users', path: '/service/groups' },
       { label: '服务', match: 'fuwu', icon: 'lucide:package', path: '/service/items' },
-    ],
+      ua.isDesktop && { label: '打印模板', match: 'fuwu', icon: 'lucide:package', path: '/service/template' },
+    ].filter(item => !!item),
   },
   {
     label: '订单管理',

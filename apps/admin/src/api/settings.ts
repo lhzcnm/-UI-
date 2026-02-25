@@ -28,3 +28,14 @@ type GetUpdateNote = () => Promise<SettingItem>
 export const getUpdateNote: GetUpdateNote = async () => {
   return (await http.get<SettingItem>('/getAdminRemain')).data
 }
+
+type GetThreadFn = () => Promise<number>
+export const getThread: GetThreadFn = async () => {
+  const { data } = await http.get('user/userThreadNumber')
+  return data
+}
+
+type UpdateThreadFn = (threads: number) => Promise<void>
+export const updateThread: UpdateThreadFn = async (threads) => {
+  await http.get(`user/userThreadNumber`, { params: { threadNumber: threads } })
+}

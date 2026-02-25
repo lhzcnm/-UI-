@@ -6,7 +6,8 @@ import { zCustomMsgForm, zBuiltInMsg } from '@/inters/wechat'
 import { getCustomMsgList, getBuiltInMsgList } from '@/api/wechat'
 
 import type { MsgStore } from './utils'
-import { MSG_STORE, columns } from './utils'
+import { MSG_STORE } from './utils'
+import { columns } from './utils/columnMsg'
 
 const store: MsgStore = reactive({
   builtInList: [],

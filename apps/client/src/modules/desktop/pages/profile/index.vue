@@ -70,7 +70,7 @@ await Promise.all([
           </div>
         </XPopover>
         <XPopover
-          v-model="chatVisible" trigger="hover"
+          v-model="chatVisible" trigger="click"
           ui-content="p-4"
         >
           <template #trigger>

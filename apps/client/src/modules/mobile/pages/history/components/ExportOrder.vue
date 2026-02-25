@@ -19,21 +19,7 @@ async function handleSubmit() {
 
   submitLoading.value = true
   await getServiceHeader(store.exportForm.serviceId)
-  const params = formatOrderParams(store.exportForm)
-  // const response = orderApi.export({
-  //   serviceId: store.exportForm.serviceId,
-  //   ...params,
-  //   excelHead: headers.value,
-  // })
-
-  // response.then((res) => {
-  //   downloadURL(res.data)
-  //   store.visibleExport = false
-  // })
-
-  // response.finally(() => {
-  //   submitLoading.value = false
-  // })
+  const params = formatOrderParams({...store.exportForm})
 
   try {
     const { data } = await orderApi.export({

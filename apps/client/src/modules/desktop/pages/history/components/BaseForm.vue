@@ -41,6 +41,11 @@ const { t } = useI18n()
     </div>
 
     <div class="space-y-1">
+      <label class="text-label text-sm">{{ t('order.form.orderId.title') }}</label>
+      <XTextarea v-model="form.codeIds" :placeholder="t('order.form.orderId.placeholder')" rows="6" />
+    </div>
+
+    <div class="space-y-1">
       <label class="text-label text-sm">IMEI/SN</label>
       <XTextarea
         v-model="form.imei"

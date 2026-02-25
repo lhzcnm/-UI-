@@ -124,7 +124,16 @@ export const createList = useCopyFn(
 )
 
 const MM_TO_PX = 96 / 25.4
+const MM_TO_PT = 72 / 25.4
 
 export function mmToPx(mm: number) {
   return mm * MM_TO_PX
+}
+
+export function pxTomm(px: number) {
+  return px / MM_TO_PX
+}
+
+export function mmToPt(mm: number) {
+  return mm * MM_TO_PT
 }

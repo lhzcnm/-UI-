@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import HistoryView from './views/HistoryView.vue'
+import PrintView from './views/PrintView.vue'
 
 import { type Component } from 'vue'
 
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form } from './utils'
 import type { ImgOrderItem } from './types'
-import PrintView from './views/PrintView.vue'
 
 const store: HistoryStore = reactive({
   orders: form.orders,
@@ -28,6 +28,15 @@ const store: HistoryStore = reactive({
 const imgOrders = reactive<ImgOrderItem[]>([])
 
 provide(HISTORY_STORE, store)
+
+const route = useRoute()
+
+const val = route.query.codeId
+const codeIds: string[] = (Array.isArray(val) ? val : val ? [val] : []).filter((v): v is string => v !== null)
+
+if (codeIds.length > 0) {
+  store.searchForm.codeIds = codeIds.join('\n')
+}
 
 function handleClose() {
   store.visibleOrderImg = false

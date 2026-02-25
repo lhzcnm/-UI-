@@ -1,13 +1,13 @@
-import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams, UpstreamServiceSyncParams } from '@/inters/services'
+import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams, UpstreamServiceSyncParams, ServiceSearch } from '@/inters/services'
 import type { AxiosResponse } from 'axios'
 
 import { zService, zServiceField, zServiceGroup, zUnlock } from '@/inters/services'
 import http from '@/utils/http'
 
 // service
-type ServicesFn = () => Promise<Service[]>
-export const getServices: ServicesFn = async () => {
-  const { data } = await http.get<any[]>('/service')
+type ServicesFn = (params?: ServiceSearch) => Promise<Service[]>
+export const getServices: ServicesFn = async (params) => {
+  const { data } = await http.get<any[]>('/service', { params })
   return data.map((item) => zService.parse(item))
 }
 

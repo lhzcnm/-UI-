@@ -1,10 +1,9 @@
 import type { XColDef } from '@3un/ui'
 
 import type { Remark } from '@/inters/quotation/remark'
-import { REMARK_STORE } from '.'
+import { QUOTATION_MAP_LIST, REMARK_STORE } from '.'
 import RemarkTableAction from '../components/RemarkTableAction.vue'
 import { h } from 'vue'
-import { QUOTATION_MAP_LIST } from '@/utils/quotation'
 
 export const columnsRemark: XColDef<Remark> = [
   {

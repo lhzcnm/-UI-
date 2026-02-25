@@ -21,6 +21,7 @@ interface ImportMetaEnv {
   readonly VITE_SERVICES: string
   readonly VITE_SETTINGS: string
   readonly VITE_SUBMIT_STORGE: string
+  readonly VITE_THREAD_STORAGE: string
 }
 
 interface ImportMeta {

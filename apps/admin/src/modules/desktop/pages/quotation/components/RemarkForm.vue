@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ApiEnum } from '@/inters/quotation'
 import type { RemarkCreate } from '@/inters/quotation/remark'
-import SelectApiEnum from './SelectApiEnum.vue';
-import SelectCategory from './SelectCategory.vue';
+import SelectApiEnum from './SelectApiEnum.vue'
+import SelectCategory from './SelectCategory.vue'
 
 interface HqbFormProps {
   brands: ApiEnum[],

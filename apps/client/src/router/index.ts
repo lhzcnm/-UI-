@@ -44,7 +44,14 @@ router.beforeEach(async (to) => {
     iStore.originUrl = window.location.href
     await handleWxAuthCallback(code)
     if (isOtherPath) return true
-    return to.path
+
+    const { code: _code, ...restQuery } = to.query
+    
+    return {
+      path: to.path,
+      query: restQuery,
+      replace: true
+    }
   }
 
   // handle other path
@@ -55,11 +62,19 @@ router.beforeEach(async (to) => {
 
   // is mobile and not mobile path and not auth
   if (ua.isMobile && !isMobilePath && !isAuth) {
-    return to.path.length > 1 ? `/m${to.path}` : '/m'
+    return {
+      path: to.path.length > 1 ? `/m${to.path}` : '/m',
+      query: to.query,
+      replace: true,
+    }
   }
 
-  if(!ua.isMobile && isMobilePath) {
-    return to.path.replace('/m', '')
+  if (!ua.isMobile && isMobilePath) {
+    return {
+      path: to.path.replace('/m', ''),
+      query: to.query,
+      replace: true,
+    }
   }
 
   // handle auth

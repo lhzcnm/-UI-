@@ -2,13 +2,20 @@
 import SelectCategory from './components/SelectCategory.vue'
 
 import { debounce, xconfirm } from '@3un/utils'
-import type { XTableExpose } from '@3un/ui'
+import type { XTableColumn, XTableExpose } from '@3un/ui'
 
 import { toast } from 'vue-sonner'
 import { getAppearances, getColors, getDeviceBrand, GetDeviceTypes, getStatues } from '@/api/quotation'
-import { QUOTATION_STORE, type QuotationStore } from './utils'
-import { QUOTATION_MAP, QUOTATION_MAP_ITEM, QUOTATION_SCHEMA_MAP, type QuotationListResult, type QuotationSearchParams } from '@/utils/quotation'
-import { deleteQuotation, getQuotationList } from '@/utils/quotation/fn'
+import { QUOTATION_SCHEMA_MAP, QUOTATION_STORE, type QuotationListResult, type QuotationSearchParams, type QuotationStore } from './utils'
+import { QUOTATION_MAP } from '@/utils/quotation'
+import { deleteQuotation, getQuotationList } from './utils/fn'
+import type { Component } from 'vue'
+import FeiyangDialog from './components/FeiyangDialog.vue'
+import HkDialog from './components/HkDialog.vue'
+import HqbDialog from './components/HqbDialog.vue'
+import { columnsFeiyang } from './utils/columnsFeiyang'
+import { columnsHk } from './utils/columnsHk'
+import { columnsHqb } from './utils/columnsHqb'
 
 const store: QuotationStore<QUOTATION_MAP> = reactive({
   visibleBase: false,
@@ -42,6 +49,18 @@ const tableRef = ref<XTableExpose | null>(null)
 
 const selectedIds = ref<number[]>([])
 
+const dialogComponent: Record<QUOTATION_MAP, Component> = {
+  [QUOTATION_MAP.FEIYANG]: FeiyangDialog,
+  [QUOTATION_MAP.HK]: HkDialog,
+  [QUOTATION_MAP.HQB]: HqbDialog,
+}
+
+const quotationColumn: Record<QUOTATION_MAP, XTableColumn[]> = {
+  [QUOTATION_MAP.FEIYANG]: columnsFeiyang,
+  [QUOTATION_MAP.HK]: columnsHk,
+  [QUOTATION_MAP.HQB]: columnsHqb,
+}
+
 watch(
   [
     () => store.page,
@@ -63,7 +82,7 @@ watch(
 )
 
 const columns = computed(() => {
-  return QUOTATION_MAP_ITEM[store.category].columns
+  return quotationColumn[store.category]
 })
 
 async function getQuotationData(params: QuotationSearchParams<typeof store.category>) {
@@ -192,6 +211,6 @@ const handleInput = debounce(() => {
     </div>
 
     <!-- <FeiyangDialog /> -->
-    <component :is="QUOTATION_SCHEMA_MAP[store.category].dialog" />
+    <component :is="dialogComponent[store.category]" />
   </div>
 </template>

@@ -5,6 +5,7 @@ export interface RechargeApi {
   create(params: RechargeParams): R<any>
   check(): R<boolean>
   activity(): R<ActivityItem[]>
+  payFee(): R<any>
 }
 
 export type RechargeMethod = 'wxpay' | 'alipay'

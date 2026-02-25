@@ -2,8 +2,8 @@
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import type { DeviceMapItem } from '../types'
 import { STORE, getCopyToken, getCopyTokenEn } from '../utils'
+import type { DeviceMapItem } from "@/types/device"
 
 interface DeviceCardProps {
   device: DeviceMapItem
@@ -31,8 +31,11 @@ function toDevice() {
 }
 
 async function handlePrint() {
+  store.selected = currentKey
   store.printIndex = currentKey
-  store.visiblePrint = true
+  store.prevStatus = store.deviceStatus
+  store.deviceStatus = 'printView'
+  // store.visiblePrint = true
 }
 
 function handleCopy() {

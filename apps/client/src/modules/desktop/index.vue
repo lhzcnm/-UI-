@@ -12,6 +12,7 @@ const visibility = useDocumentVisibility()
 const iStore = useSettingStore()
 const uStore = useUserStore()
 const systemStore = useSystemStore()
+const serviceStore = useServiceStore()
 
 const isLogout = ref(false)
 
@@ -20,6 +21,7 @@ await iStore.getSettings()
 if(!route.meta.noAuthRequired) {
   await Promise.all([
     uStore.getInfo(),
+    serviceStore.getServices(),
   ])
 }
 
@@ -34,7 +36,7 @@ const menus = [
   { label: t('barItem.home'),    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
   // { label: t('barItem.quote'), path: '/quote', icon: 'circum:receipt' },
   { label: t('barItem.query'), path: '/submit', icon: 'iconoir:atom' },
-  // { label: '自定义查询', path: '/custom-submit', icon: 'iconoir:atom' },
+  { label: t('barItem.custom'), path: '/custom-submit', icon: 'iconoir:atom' },
   {
     label: t('barItem.device'),
     path: '/device',

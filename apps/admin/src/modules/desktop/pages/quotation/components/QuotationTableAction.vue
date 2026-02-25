@@ -2,9 +2,8 @@
 import type { XBtnSplitOptions } from '@3un/ui'
 import { xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
-import { QUOTATION_SCHEMA_MAP, type QuotationItem } from '@/utils/quotation'
-import { QUOTATION_STORE } from '../utils'
-import { deleteQuotation } from '@/utils/quotation/fn'
+import { QUOTATION_SCHEMA_MAP, QUOTATION_STORE, type QuotationItem } from '../utils'
+import { deleteQuotation } from '../utils/fn'
 
 interface TableActionProps {
   row: QuotationItem<typeof store.category>

@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { ORDER_STATUS, xconfirm } from '@3un/utils'
+import { Icon } from '@iconify/vue'
+import QrPreview from '@/components/QrPreview.vue'
 
+import { ORDER_STATUS, xconfirm } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
 
-import { mmToPx } from '@/utils'
-import { type TemplateItem, type ContainerItem, type PrintTemplateJson } from '../types'
+import { mmToPt, mmToPx, pxTomm } from '@/utils'
 import { HISTORY_STORE } from '../utils'
 import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
-import { type CustomSubmitOrder, type Order, type ServiceColumnItem } from '@/api/orders'
-import { Icon } from '@iconify/vue'
+import { orderApi, type CustomSubmitOrder, type Order, type ServiceColumnItem } from '@/api/orders'
+import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
+import axios from 'axios'
+import type { PageItem, PluginPdfRequest } from '@/types/print'
 
 const store = inject(HISTORY_STORE)!
 
@@ -27,14 +30,15 @@ const container = reactive<ContainerItem>({
   fontSize: 4,
 })
 
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 const { services } = useServiceStore()
+
+const isOverflowMap = reactive<Record<string, boolean>>({})
 
 const templateItems = ref<TemplateItem[]>([])
 const serviceCols = ref<ServiceHeader[]>([])
 const selectCols = ref<string[]>([])
 const customOrders = ref<CustomSubmitOrder[]>([])
-const isOverflowMap = reactive<Record<string, boolean>>({})
 const generating = ref<boolean>(false)
 
 const paperRef = ref<HTMLElement | null>(null)
@@ -46,8 +50,14 @@ const defaultItems = [
   {
     name: "IMEI",
     nameEn: "IMEI"
-  }
+  },
+  {
+    name: "二维码",
+    nameEn: "Qrcode",
+  },
 ]
+
+let storageUrl: string[] = []
 
 watch(
   () => container,
@@ -102,7 +112,13 @@ const previewValue = computed(() => {
 
   for (let item of processedColumns.value) {
     const value = order.fields[item]
-    res[item] = value && value !== "" ? value : "{value}"
+
+    if ((/^(处理结果|Result)$/i).test(item)) {
+      res["处理结果"] = order.result
+      res["Result"] = order.result
+    } else {
+      res[item] = value && value !== "" ? value : "{value}"
+    }
   }
   res["IMEI"] = order.imei || "{value}"
   res['订单结果'] = order.result || "{value}"
@@ -215,7 +231,8 @@ function handleSelectColumn(label: string) {
       y: pos.y,
       wrap: false,
       type: isQrcode ? "qrcode" : "text",
-      size: 4,
+      ...(isQrcode && {size: 25}),
+      showField: true,
     }
 
     selectCols.value.push(label)
@@ -351,14 +368,6 @@ function updateOverflowMap() {
 }
 
 async function exportTemplate() {
-  if (!store.selectOrders.length) return
-  if (templateItems.value.length === 0) {
-    if (!await xconfirm('当前没有选择字段, 是否确认导出模板? ')) return
-  }
-  if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
-  }
-
   const template: PrintTemplateJson = {
     serviceId: store.selectOrders[0].serviceId,
 
@@ -376,6 +385,7 @@ async function exportTemplate() {
       wrap: item.wrap,
       type: item.type,
       size: item.size,
+      showField: item.showField,
     }))
   }
 
@@ -417,7 +427,7 @@ async function importTemplate(file: File) {
 
   const currentServiceId = store.selectOrders[0]?.serviceId
   if (template.serviceId !== currentServiceId) {
-    toast.warning("该模板与当前服务不一致")
+    return toast.warning(t('print.prompt.import.serviceNotMatch'))
   }
 
   container.width = template.paper.width
@@ -428,7 +438,7 @@ async function importTemplate(file: File) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item }))
+  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -443,7 +453,7 @@ async function handleChange(e: Event) {
   }
   const extensions = file.name.split('.')[1]
   if (extensions !== 'json') {
-    toast.warning('不支持的文件类型')
+    toast.warning(t('print.prompt.import.serviceNotMatch'))
     uploadRef.value.value = ''
   }
 
@@ -453,12 +463,13 @@ async function handleChange(e: Event) {
 
 async function generatePDF() {
   if (!paperRef.value) return
-  if (generating.value) return toast.warning("请等待pdf生成")
+  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
   if (templateItems.value.length === 0) {
-    if (!await xconfirm("当前没有选择字段, 是否确认打印? ")) return
+    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
   }
+  updateOverflowMap()
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm('当前存在字段超出所设范围, 是否确认导出? ')) return
+    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
   generating.value = true
@@ -472,26 +483,57 @@ async function generatePDF() {
   for (let i = 0; i < customOrders.value.length; i++) {
     const order = customOrders.value[i]
 
+    if (order.status === ORDER_STATUS.FAILED) continue
+
     const page = paperRef.value.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
 
-    // 填充数据
-    page.querySelectorAll<HTMLElement>('.template-item').forEach(itemEl => {
-      const key = itemEl.dataset.key!
-      const value = key === 'IMEI'
-        ? order.imei || ''
-        : order.fields[key] ?? ''
+    const items = Array.from(page.querySelectorAll<HTMLElement>('.template-item'))
 
-      const valueEl = itemEl.querySelector('.template-value')
-      if (valueEl) {
-        valueEl.textContent = stripHtmlTags(value)
+    for (const itemEl of items) {
+      const key = itemEl.dataset.key!
+      
+      if (isQrcodeField(key)) {
+        const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
+        if (!qrcodeItem) continue
+        const { data } = await orderApi.generateQrcode({
+          content: qrcodeStr({ ...order.fields, IMEI: order.imei })}
+        )
+
+        const blob = new Blob([data], { type: 'image/png' })
+        const url = URL.createObjectURL(blob)
+        storageUrl.push(url)
+
+        const img = document.createElement("img")
+
+        const imageLoadPromise = new Promise<void>((resolve, reject) => {
+          img.onload = () => resolve()
+          img.onerror = () => reject(new Error(t('print.prompt.pdf.imgError')))
+          img.src = url
+        })
+
+        img.width = mmToPx(qrcodeItem.size ?? 25)
+        img.height = mmToPx(qrcodeItem.size ?? 25)
+
+        itemEl.querySelector('[data-qrcode]')!.innerHTML = ''
+        itemEl.querySelector('[data-qrcode]')!.appendChild(img)
+
+        await imageLoadPromise
+      } else {
+        const value = key === "IMEI"
+          ? order.imei || ""
+          : order.fields[key] ?? ""
+        
+        itemEl.querySelector(".template-value")!.textContent = stripHtmlTags(value)
       }
-    })
+    }
+
+    await document.fonts.ready
 
     const imgData = await html2image.toPng(page, {
       pixelRatio: 2,
       backgroundColor: "#ffffff",
-      cacheBust: true,
+      cacheBust: false,
       skipFonts: true,
     })
 
@@ -499,7 +541,9 @@ async function generatePDF() {
 
     pdf.addImage(imgData, "PNG", 0, 0, mmToPx(container.width), mmToPx(container.height))
 
-    if (i < store.selectOrders.length - 1) pdf.addPage()
+    if (i < customOrders.value.length - 1) {
+      pdf.addPage()
+    }
   }
 
   generating.value = false
@@ -508,11 +552,164 @@ async function generatePDF() {
   window.open(pdf.output("bloburi"), "_blank")
 }
 
+function isQrcodeField(key: string) {
+  return (/^(二维码|qrcode)$/i).test(key)
+}
+
+function qrcodeStr(object: Record<string, string> | string) {
+  const data = objectToString(object)
+  return data
+  // return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
+}
+
+function objectToString(object: Record<string, string> | string) {
+  return Object.entries(object)
+    .map(([key, value]) => {
+      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
+      if (isQrcode) return
+      if (!selectCols.value.includes(key)) return
+      return `${key}: ${stripHtmlTags(value)}`
+    })
+    .filter(Boolean)
+    .join('\n')
+}
+
+async function getServiceDefaultTemplate(id: number) {
+  const { data } = await serviceApi.getTemplate(id)
+  return data
+}
+
+async function handleDefaultTemplate() {
+  const defaultTemplates = await getServiceDefaultTemplate(store.selectOrders[0].serviceId)
+  if (defaultTemplates) {
+    processDefaultTemplate(defaultTemplates)
+  }
+}
+
+function processDefaultTemplate(jsonStr: string) {
+  if (jsonStr === '') return
+
+  const template = JSON.parse(jsonStr) as PrintTemplateJson
+
+  container.width = template.paper.width
+  container.height = template.paper.height
+  container.fontSize = template.paper.fontSize
+  container.padding.top = template.paper.padding.top
+  container.padding.right = template.paper.padding.right
+  container.padding.bottom = template.paper.padding.bottom
+  container.padding.left = template.paper.padding.left
+
+  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
+
+  selectCols.value = template.items.map(item => item.key)
+}
+
+async function handleGenerate() {
+  if (!paperRef.value) return
+  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
+  if (customOrders.value.length === 0) return toast.warning(t('print.prompt.pdf.notOrder'))
+  if (templateItems.value.length === 0) {
+    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
+  }
+  updateOverflowMap()
+  if (Object.values(isOverflowMap).some(Boolean)) {
+    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
+  }
+
+  try {
+    generating.value = true
+    await pluginGeneratePdf()
+  } catch {
+    await generatePDF()
+  } finally {
+    generating.value = false
+  }
+}
+
+function processRequestParams(): PluginPdfRequest {
+  const submitedOrders = customOrders.value
+  const selTemplates = templateItems.value
+
+  const res: PluginPdfRequest = {
+    serviceId: currentService.value!.id,
+    paper: {
+      ...container,
+      fontSize: mmToPt(container.fontSize),
+    },
+    pages: []
+  }
+
+  for (let i = 0; i < submitedOrders.length; i++) {
+    const order = submitedOrders[i]
+    if (order.status === ORDER_STATUS.FAILED) continue
+
+    const pageItems: PageItem[] = []
+
+    const page = paperRef.value!.cloneNode(true) as HTMLElement
+    const items = Array.from(page.querySelectorAll<HTMLElement>(".template-item"))
+
+    for (const itemEl of items) {
+      const key = itemEl.dataset.key!
+      const template = selTemplates.find(t => t.key === key)
+      if (!template) continue
+
+      if (isQrcodeField(key)) {
+        pageItems.push({
+          ...template,
+          showField: true,
+          x: pxTomm(template.x),
+          y: pxTomm(template.y),
+          value: qrcodeStr({ ...order.fields, IMEI: order.imei }),
+        })
+        continue
+      }
+      pageItems.push({
+        ...template,
+        showField: template.showField ?? true,
+        x: pxTomm(template.x),
+        y: pxTomm(template.y),
+        value: key === "IMEI"
+          ? stripHtmlTags(order.imei) || ""
+          : stripHtmlTags(order.fields[key]) ?? "",
+      })
+    }
+
+    res.pages.push({ items: pageItems })
+  }
+
+  return res
+}
+
+async function pluginGeneratePdf() {
+  try {
+    const body = processRequestParams()
+
+    const { data } = await axios.post(
+      "http://localhost:5000/generate-pdf",
+      body,
+      { responseType: "blob" }
+    )
+
+    const url = URL.createObjectURL(data)
+
+    window.open(url)
+
+    URL.revokeObjectURL(url)
+  } catch {
+    throw Error("request Failed")
+  }
+}
+
 await getServiceColumns(store.selectOrders[0].serviceId)
+await handleDefaultTemplate()
 
 onMounted(() => {
   processRawOrders(store.selectOrders)
   updateOverflowMap()
+})
+
+onBeforeUnmount(() => {
+  storageUrl.map(URL.revokeObjectURL)
 })
 </script>
 
@@ -523,13 +720,13 @@ onMounted(() => {
         <button class="p-2 flex items-center border border-border rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all"
           @click="store.views = 'history'">
           <Icon icon="lucide:step-back" />
-          <span>返回历史记录</span>
+          <span>{{ t('print.button.back.label') }}</span>
         </button>
 
-        <span>当前服务: {{ currentService!.id }} - {{ currentService!.title }}</span>
+        <span>{{ t('print.prompt.service.label') }}: {{ currentService!.id }} - {{ currentService!.title }}</span>
       </div>
       <div class="border p-2 space-y-1">
-        <div class="font-bold text-sm">服务字段</div>
+        <div class="font-bold text-sm">{{ t('print.fields.title') }}</div>
         <div class="flex flex-wrap gap-2">
           <template v-for="column in processedColumns" :key="column">
             <ColumnTags :label="column"
@@ -538,43 +735,44 @@ onMounted(() => {
           </template>
         </div>
       </div>
+      
       <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
         <!-- 字体大小 -->
         <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">字体大小(mm):</div>
+          <div class="font-semibold text-sm">{{ t('print.size.font') }} (mm):</div>
           <div class="flex items-center gap-2 w-40">
             <XInputNumber v-model="container.fontSize" :step="1" size="sm" />
           </div>
         </div>
         <!-- 纸张大小 -->
         <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">纸张大小 (mm)</div>
+          <div class="font-semibold text-sm">{{ t('print.size.paper.title') }} (mm)</div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">长(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.paper.long') }}(mm):</span>
             <XInputNumber v-model="container.height" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">宽(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.paper.width') }}(mm):</span>
             <XInputNumber v-model="container.width" :step="1" size="sm" />
           </div>
         </div>
         <!-- 内边距设置 -->
         <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">页边距 (mm)</div>
+          <div class="font-semibold text-sm">{{ t('print.size.padding.title') }} (mm)</div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">上(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.top') }}(mm):</span>
             <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">下(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.bottom') }}(mm):</span>
             <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">左(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.left') }}(mm):</span>
             <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs w-16">右(mm):</span>
+            <span class="text-xs w-16">{{ t('print.size.padding.right') }}(mm):</span>
             <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
           </div>
         </div>
@@ -582,80 +780,112 @@ onMounted(() => {
 
       <div class="border rounded-md p-3 space-y-3 bg-muted/30">
         <div class="font-semibold text-sm flex items-center gap-2">
-          字段显示配置
+          {{ t('print.fields.config.title') }}
           <span class="text-xs text-muted-foreground">
-            （控制打印预览中字段的展示方式）
+            ({{ t('print.fields.config.tip') }})
           </span>
         </div>
 
         <div class="space-y-2">
-          <div v-for="field in templateItems" :key="field.key"
-            class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition">
+          <div
+            v-for="field in templateItems"
+            :key="field.key"
+            class="flex items-center justify-between gap-3 text-sm px-2 py-1 rounded hover:bg-muted transition"
+          >
+            <!-- 字段名 -->
             <div class="flex items-center gap-2 min-w-0">
               <span class="w-32 truncate font-medium text-foreground">
                 {{ field.label }}
               </span>
-            
-              <span
-                v-if="isOverflowMap[field.key]"
-                class="text-xs text-red-500 whitespace-nowrap"
-              >
-                超出打印范围
-              </span>
-            
-              <span
-                v-else
-                class="text-xs text-muted-foreground"
-              >
-                {{ field.wrap ? '标签与内容分行显示' : '标签与内容同行显示' }}
+              <span class="text-xs text-muted-foreground">
+                {{ isQrcodeField(field.key)
+                  ? `${t('print.size.qrcode.title')}(mm)${t('print.size.qrcode.limitHit')}`
+                  : (field.wrap ? t('print.fields.config.wrap') : t('print.fields.config.nowrap')) }}
               </span>
             </div>
 
-            <label class="flex items-center gap-3 cursor-pointer select-none">
-                <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
-                <div
-                  class="relative w-9 h-5 rounded-full bg-border
-                         peer-checked:bg-primary
-                         transition-colors flex"
-                >
-                  <XSwitch v-model="field.wrap" />
-                </div>
-              </label>
+            <!-- 控制开关 -->
+            <div class="flex items-center">
+              <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
+                <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+                  <Icon icon="lucide:eye" v-if="field.showField" />
+                  <Icon icon="lucide:eye-closed" v-else />
+                  <span>{{ field.showField ? t('print.fields.config.showLabel') : t('print.fields.config.showContent') }}</span>
+                </button>
+                <label class="flex items-center gap-3 cursor-pointer select-none">
+                  <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
+                  <div
+                    class="relative w-9 h-5 rounded-full bg-border
+                           peer-checked:bg-primary
+                           transition-colors flex"
+                  >
+                    <XSwitch v-model="field.wrap" />
+                  </div>
+                </label>
+              </div>
+  
+              <div v-else class="flex items-center gap-2 mr-2">
+                <XInputNumber v-model="field.size!" size="sm" class="w-20" />
+              </div>
+  
+              <button class="hover:text-success" @click="handleSelectColumn(field.key)">
+                <Icon icon="lucide:trash-2" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="flex justify-between space-x-2">
-        <XButton class="flex-1" label="导出模板" color="success" @click="exportTemplate" />
-        <XButton class="flex-1" label="导入模板" @click="openImport" />
-        <XButton class="flex-1" label="打印结果" color="warning" @click="generatePDF" />
+        <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
+        <XButton class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
+        <XButton class="flex-1" :label="t('print.button.print')" color="warning" @click="handleGenerate" />
       </div>
     </section>
 
-    <section class="flex-1 flex flex-col items-center">
-      <div ref="paperRef" class="relative bg-white shadow paper-preview overflow-hidden" :style="paperStyle">
-        <div class="absolute safe-area-border" :style="safeAreaStyle" />
+    <section class="flex-1 flex justify-center">
+      <div
+        ref="paperRef"
+        class="relative bg-white shadow paper-preview"
+        :style="paperStyle"
+      >
+        <div
+          class="absolute safe-area-border"
+          :style="safeAreaStyle"
+        />
 
-        <div v-for="item in templateItems" :key="item.key"
-          class="absolute cursor-move select-none template-item text-black py-1"
+        <div
+          v-for="item in templateItems"
+          :key="item.key"
+          class="absolute cursor-move select-none template-item text-black"
           :class="{ 'overflow-warning': isOverflowMap[item.key] }"
-          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }" @mousedown.prevent
-          @mousedown="startDrag($event, item)" :data-key="item.key">
+          :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' }"
+          @mousedown.prevent
+          @mousedown="startDrag($event, item)"
+          :data-key="item.key"
+        >
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
-              <div class="font-medium leading-tight">
+              <div v-if="item.showField" class="font-medium leading-tight">
                 {{ item.label }}:
               </div>
-              <div class="leading-tight template-value">
+              <div class="leading-tight break-all template-value">
                 {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
               </div>
             </template>
-
+        
             <template v-else>
-              <span class="font-medium">{{ item.label }}:</span>
-              <span class="ml-1 template-value">
-                {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
+              <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
+              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
+          </template>
+
+          <template v-else>
+            <div data-qrcode>
+              <QrPreview
+                :data="qrcodeStr(previewValue)"
+                :size="item.size ?? 25" />
+            </div>
           </template>
         </div>
       </div>
@@ -665,7 +895,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .safe-area-border {
   border: 1px dashed #94a3b8;
   box-sizing: border-box;
