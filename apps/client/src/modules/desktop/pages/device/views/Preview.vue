@@ -470,6 +470,8 @@ async function handleGenerate() {
     if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
+  await nextTick()
+  
   try {
     generating.value = true
     await pluginGeneratePdf()

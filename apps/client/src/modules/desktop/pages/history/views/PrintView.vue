@@ -462,18 +462,8 @@ async function handleChange(e: Event) {
 }
 
 async function generatePDF() {
-  if (!paperRef.value) return
-  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
-  if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
-  }
-  updateOverflowMap()
-  if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
-  }
-
   generating.value = true
-  paperRef.value.classList.add("printing")
+  paperRef.value!.classList.add("printing")
 
   const pdf = new jsPDF({
     unit: "px",
@@ -485,7 +475,7 @@ async function generatePDF() {
 
     if (order.status === ORDER_STATUS.FAILED) continue
 
-    const page = paperRef.value.cloneNode(true) as HTMLElement
+    const page = paperRef.value!.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
 
     const items = Array.from(page.querySelectorAll<HTMLElement>('.template-item'))
@@ -546,8 +536,7 @@ async function generatePDF() {
     }
   }
 
-  generating.value = false
-  paperRef.value.classList.remove("printing")
+  paperRef.value!.classList.remove("printing")
   pdf.autoPrint({ variant: "non-conform" })
   window.open(pdf.output("bloburi"), "_blank")
 }
@@ -616,6 +605,8 @@ async function handleGenerate() {
     if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
+  await nextTick()
+  
   try {
     generating.value = true
     await pluginGeneratePdf()
