@@ -283,6 +283,7 @@ function objectToString(object: Record<string, string> | string) {
 }
 
 function stripHtmlTags(html: string) {
+  if (!html) return ''
   return html.replace(/<[^>]+>/g, '')
 }
 
@@ -532,9 +533,9 @@ async function pluginGeneratePdf() {
     const body = processRequestParams()
 
     const { data } = await axios.post(
-      "http://localhost:5000/generate-pdf",
+      "http://localhost:9999/generate-pdf",
       body,
-      { responseType: "blob" }
+      { responseType: "blob", headers: {'x-token': Date.now().toString(16)}, },
     )
 
     const url = URL.createObjectURL(data)
@@ -542,7 +543,8 @@ async function pluginGeneratePdf() {
     window.open(url)
 
     URL.revokeObjectURL(url)
-  } catch {
+  } catch (err) {
+    console.log(err)
     throw Error("request Failed")
   }
 }

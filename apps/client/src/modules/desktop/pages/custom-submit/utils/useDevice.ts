@@ -47,13 +47,6 @@ let countriesMap = {} as SaleRegionDataset
 export const hasNewVersion = ref<boolean>(false)
 export const hasNotPlugin = ref<boolean>(false)
 
-watch(
-  () => hasNewVersion.value,
-  () => {
-    console.log(hasNewVersion)
-  }
-)
-
 async function getDevices() {
   const [data, region] = await Promise.all([
     fetch('/data/devices-ios.json').then(res => res.json()),
@@ -124,7 +117,6 @@ export async function checkPlugin(t: (str: string) => string) {
     )
 
     const { data } = await response.json()
-    console.log(data)
 
     await handleInfo(data, t)
   }
@@ -135,7 +127,6 @@ export async function checkPlugin(t: (str: string) => string) {
     }
     catch (error) {
       hasNotPlugin.value = true
-      console.warn(error)
     }
   }
 }
@@ -155,7 +146,6 @@ async function handleInfo(data: DeviceResponse[], t: (str: string) => string) {
   if (!data || data.length === 0) return
 
   await checkVersion(data[0].Version)
-  console.log(data[0].Version)
   for (let item of data) {
     await handleDevice(item, t)
   }
