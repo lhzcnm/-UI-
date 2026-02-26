@@ -38,7 +38,7 @@ const router = useRouter()
 
 const loading = ref(false)
 const feeDialog = ref(false)
-const freeFeeThreshold = ref<string>(configs['recharge:threshold'] || '0.00')
+const freeFeeThreshold = ref<string>((+(configs['recharge:threshold'] || '0.00') * 100).toString())
 const handleFee = ref<string>(configs['recharge:fee'] || '0.00')
 
 const queryHash = computed(() => hash(route.query))
@@ -105,7 +105,7 @@ async function handFeeUpdate() {
     },
     {
       key: 'recharge:fee',
-      value: handleFee.value,
+      value: (+handleFee.value / 100).toString(),
     }
   ])
 
