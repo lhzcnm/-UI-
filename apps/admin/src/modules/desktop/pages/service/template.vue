@@ -8,7 +8,7 @@ import { toast } from 'vue-sonner'
 import { getServiceFields, getServices, updateService } from '@/api/services'
 import { type Service } from '@/inters/services'
 import { mmToPx } from '@/utils'
-// import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/inters/services'
+import { hashPrintHeader, textAlign } from '@3un/utils'
 
 interface ContainerItem {
   width: number,
@@ -26,12 +26,14 @@ interface ContainerItem {
 interface TemplateItem {
   key: string,
   label: string,
+  label_local: string,
   x: number,
   y: number,
   wrap?: boolean,
   width?: number,
   height?: number,
   type?: "text" | "qrcode" | "barcode",
+  align?: "left" | "center" | "right",
   size?: number,
   showField: boolean,
 }
@@ -53,19 +55,28 @@ interface PrintTemplateJson {
   items: {
     key: string,
     label: string,
+    label_local: string,
     x: number,
     y: number,
     wrap?: boolean,
     type?: "text" | "qrcode" | "barcode",
+    align?: "left" | "center" | "right",
     size?: number,
     showField: boolean,
   }[],
 }
 
 interface PrintHeader {
-  // key: string,
+  key: string,
   name: string,
   nameEn: string,
+}
+
+interface FieldValue {
+  [key: string]: {
+    title: string,
+    value: string
+  }
 }
 
 const router = useRouter()
@@ -86,6 +97,10 @@ const container = reactive<ContainerItem>({
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
+const resultCol = hashPrintHeader("处理结果")
+const orderResultCol = hashPrintHeader("订单结果")
+const qrcodeCol = hashPrintHeader("二维码")
+
 const serviceId = ref<number>(0)
 const services = ref<Service[]>([])
 const input = ref<string>('')
@@ -98,10 +113,12 @@ const paperRef = ref<HTMLElement | null>(null)
 
 const defaultItems = [
   {
+    key: hashPrintHeader("imei"),
     name: "IMEI",
     nameEn: "IMEI"
   },
   {
+    key: qrcodeCol,
     name: "二维码",
     nameEn: "Qrcode",
   },
@@ -109,7 +126,7 @@ const defaultItems = [
 
 const isEn = computed(() => lang.value === 'en')
 
-const processedColumns = computed(() => serviceCols.value.map(item => isEn.value ? (item.nameEn ? item.nameEn : item.name) : item.name))
+const processedColumns = computed(() => serviceCols.value.map(item => ({key: item.key, label: isEn.value ? item.nameEn : item.name})))
 
 const filteredServices = computed(() => {
   const inputValue = input.value.trim().toLowerCase()
@@ -132,14 +149,26 @@ const paperStyle = computed(() => ({
 }))
 
 const previewValue = computed(() => {
-  let res: Record<string, string> = {}
+  let res: FieldValue = {}
 
   for (let item of processedColumns.value) {
-    res[item] = '{value}'
+    res[item.key] = {
+      title: item.label,
+      value: "{value}"
+    }
   }
-  res["IMEI"] = "{value}"
-  res['订单结果'] = "{value}"
-  res['result'] = "{value}"
+  res[hashPrintHeader("imei")] = {
+    title: "IMEI",
+    value: "{value}"
+  }
+  res[resultCol] = {
+    title: "处理结果",
+    value: "{value}"
+  }
+  res[orderResultCol] = {
+    title: "订单结果",
+    value: "{value}"
+  }
 
   return res
 })
@@ -190,19 +219,23 @@ function highlightText(text: string, keyword: string) {
   return text.replace(reg, '<mark class="x-highlight">$1</mark>')
 }
 
-function handleSelectColumn(label: string) {
-  const index = selectCols.value.indexOf(label)
+function handleSelectColumn(key: string) {
+  const header = serviceCols.value.find(h => h.key === key)
+  if (!header) return
+
+  const index = selectCols.value.indexOf(key)
 
   if (index !== -1) {
     selectCols.value.splice(index, 1)
-    templateItems.value = templateItems.value.filter(i => i.key !== label)
+    templateItems.value = templateItems.value.filter(i => i.key !== key)
   } else {
-    const isQrcode = (/^(二维码|qrcode)$/i).test(label)
+    const isQrcode = isQrcodeField(key)
     const pos = getNextItemPosition()
 
     const newItem: TemplateItem = {
-      key: label,
-      label: label,
+      key: key,
+      label: header.name,
+      label_local: header.nameEn,
       x: pos.x,
       y: pos.y,
       wrap: false,
@@ -211,7 +244,7 @@ function handleSelectColumn(label: string) {
       showField: true,
     }
 
-    selectCols.value.push(label)
+    selectCols.value.push(key)
     templateItems.value.push(newItem)
   }
 }
@@ -251,7 +284,9 @@ async function handleSelected(id: number | undefined) {
   selectCols.value.length = 0
   templateItems.value.length = 0
   const serviceFields = await getFieldsByid(id)
-  serviceCols.value = [...defaultItems, ...serviceFields.list.map(f => ({ name: f.name, nameEn: f.nameEn ? f.nameEn : f.name }))]
+
+  serviceCols.value = [...defaultItems, ...serviceFields.list.map(h =>  ({ key: hashPrintHeader(h.name), name: h.name, nameEn: h.nameEn ? h.nameEn : h.name }))]
+  
   const selService = services.value.find(s => s.packageId === id)
   if (selService) {
     processServiceTemplate(selService.template ?? '')
@@ -267,7 +302,7 @@ async function getFieldsByid(id: number) {
 }
 
 function isQrcodeField(key: string) {
-  return (/^(二维码|qrcode)$/i).test(key)
+  return qrcodeCol === key
 }
 
 function updateOverflowMap() {
@@ -300,18 +335,27 @@ function stripHtmlTags(html: string) {
   return html.replace(/<[^>]+>/g, '')
 }
 
-function qrcodeStr(object: Record<string, string> | string) {
+function qrcodeStr(object: Record<string, string> | string | FieldValue) {
   const data = objectToString(object)
   return data
 }
 
-function objectToString(object: Record<string, string> | string) {
+function objectToString(object: Record<string, string> | string | FieldValue) {
   return Object.entries(object)
-    .map(([key, value]) => {
-      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
+    .map(([key, field]) => {
+      const isQrcode = qrcodeCol === key
       if (isQrcode) return
       if (!selectCols.value.includes(key)) return
-      return `${key}: ${stripHtmlTags(value)}`
+
+      if (typeof field === 'string') {
+        return `${key}: ${stripHtmlTags(field)}`
+      }
+
+      if (typeof field === 'object') {
+        return `${field.title}: ${stripHtmlTags(field.value)}`
+      }
+
+      return undefined
     })
     .filter(Boolean)
     .join('\n')
@@ -401,6 +445,8 @@ async function handleSave() {
       items: templateItems.value.map(item => ({
         key: item.key,
         label: item.label,
+        label_local: item.label_local,
+        align: item.align,
         x: item.x,
         y: item.y,
         wrap: item.wrap,
@@ -413,7 +459,7 @@ async function handleSave() {
     const json = JSON.stringify(curServiceTemplate, null, 2)
     await updateService({
       ...selService,
-      template: json
+      template: json,
     })
 
     toast.success('保存成功')
@@ -439,6 +485,81 @@ function processServiceTemplate(jsonStr: string) {
   templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
+}
+
+function applyAlign(key: string, align: string) {
+  if (!paperRef.value) return
+
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  const el = paperRef.value.querySelector<HTMLElement>(`.template-item[data-key="${key}"]`)
+  const safe = paperRef.value.querySelector<HTMLElement>('.safe-area-border')
+  if (!el || !safe) return
+
+  const elRect = el.getBoundingClientRect()
+  const safeRect = safe.getBoundingClientRect()
+  const paperRect = paperRef.value.getBoundingClientRect()
+
+  const elWidth = elRect.width
+
+  templateItems.value[index].align = align as "left" | "center" | "right"
+
+  if (align === 'left') {
+    templateItems.value[index].x = safeRect.left - paperRect.left
+  }
+
+  if (align === 'center') {
+    templateItems.value[index].x =
+      safeRect.left - paperRect.left +
+      (safeRect.width - elWidth) / 2
+  }
+
+  if (align === 'right') {
+    templateItems.value[index].x =
+      safeRect.right - paperRect.left - elWidth
+  }
+}
+
+function updateAlignPosition() {
+  if (!paperRef.value) return
+
+  const nodes = paperRef.value.querySelectorAll<HTMLElement>('.template-item')
+
+  nodes.forEach(el => {
+    const key = el.dataset.key
+    if (!key) return
+
+    const item = templateItems.value.find(i => i.key === key)
+    if (!item) return
+
+    if (item.align === 'center' || item.align === 'right') {
+      applyAlign(item.key, item.align ?? "left")
+    }
+  })
+}
+
+async function handleTemplateChange(key: string) {
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  templateItems.value[index].showField = !templateItems.value[index].showField
+  await nextTick()
+  updateAlignPosition()
+}
+
+async function handleContainerChange() {
+  await nextTick()
+  updateAlignPosition()
+}
+
+async function handleWrapChange(key: string) {
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  await nextTick()
+  updateOverflowMap()
+  updateAlignPosition()
 }
 
 onMounted(async () => {
@@ -475,9 +596,9 @@ onMounted(async () => {
         <div class="border p-2 space-y-1 rounded-md">
           <div class="font-bold text-sm">服务字段</div>
           <div class="flex flex-wrap gap-2">
-            <template v-for="column in processedColumns" :key="column">
-              <TemplateTag :label="column"
-                :checked="selectCols.includes(column)"
+            <template v-for="column in processedColumns" :key="column.key">
+              <TemplateTag :id="column.key" :label="column.label"
+                :checked="selectCols.includes(column.key)"
                 @click="handleSelectColumn" />
             </template>
           </div>
@@ -487,7 +608,7 @@ onMounted(async () => {
           <div class="flex flex-col space-y-1">
             <div class="font-semibold text-sm">字体大小 (mm):</div>
             <div class="flex items-center gap-2 w-40">
-              <XInputNumber v-model="container.fontSize" :step="1" size="sm" />
+              <XInputNumber v-model="container.fontSize" :step="1" size="sm" @change="handleContainerChange" />
             </div>
           </div>
           <!-- 纸张大小 -->
@@ -495,11 +616,11 @@ onMounted(async () => {
             <div class="font-semibold text-sm">纸张大小 (mm)</div>
             <div class="flex items-center gap-2">
               <span class="text-xs w-16">长(mm):</span>
-              <XInputNumber v-model="container.height" :step="1" size="sm" />
+              <XInputNumber v-model="container.height" :step="1" size="sm" @change="handleContainerChange" />
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs w-16">宽(mm):</span>
-              <XInputNumber v-model="container.width" :step="1" size="sm" />
+              <XInputNumber v-model="container.width" :step="1" size="sm" @change="handleContainerChange" />
             </div>
           </div>
           <!-- 内边距设置 -->
@@ -507,19 +628,19 @@ onMounted(async () => {
             <div class="font-semibold text-sm">页面边距 (mm)</div>
             <div class="flex items-center gap-2">
               <span class="text-xs w-16">上(mm):</span>
-              <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
+              <XInputNumber v-model="container.padding.top" :step="1" size="sm" @change="handleContainerChange" />
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs w-16">下(mm):</span>
-              <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
+              <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" @change="handleContainerChange" />
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs w-16">左(mm):</span>
-              <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
+              <XInputNumber v-model="container.padding.left" :step="1" size="sm" @change="handleContainerChange" />
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs w-16">右(mm):</span>
-              <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
+              <XInputNumber v-model="container.padding.right" :step="1" size="sm" @change="handleContainerChange" />
             </div>
           </div>
         </div>
@@ -549,9 +670,17 @@ onMounted(async () => {
                 </span>
               </div>
 
-              <div class="flex items-center">
-                <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
-                  <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+              <div class="flex items-center gap-4">
+                <div v-if="!isQrcodeField(field.key)" class="flex items-center gap-2">
+                <template v-for="alignItem in textAlign" :key="alignItem.key">
+                  <button class="hover:bg-zinc-50 dark:hover:bg-zinc-800" @click="applyAlign(field.key, alignItem.key)"
+                    :title="isEn ? alignItem.labelLocal : alignItem.label">
+                    <Icon :icon="alignItem.icon" />
+                  </button>
+                </template>
+              </div>
+                <div v-if="!isQrcodeField(field.key)" class="flex gap-2">
+                  <button class="flex items-center gap-2" @click="handleTemplateChange(field.key)">
                     <Icon icon="lucide:eye" v-if="field.showField" />
                     <Icon icon="lucide:eye-closed" v-else />
                     <span>显示标签</span>
@@ -563,7 +692,7 @@ onMounted(async () => {
                              peer-checked:bg-primary
                              transition-colors flex"
                     >
-                      <XSwitch v-model="field.wrap" @change="updateOverflowMap" />
+                      <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" />
                     </div>
                   </label>
                 </div>
@@ -611,13 +740,13 @@ onMounted(async () => {
                 {{ item.label }}:
               </div>
               <div class="leading-tight break-all template-value">
-                {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
+                {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key].value) }}
               </div>
             </template>
         
             <template v-else>
               <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
-              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
+              <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key].value) }}</span>
             </template>
           </template>
 

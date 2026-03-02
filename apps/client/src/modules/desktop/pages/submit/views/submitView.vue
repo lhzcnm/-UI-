@@ -816,12 +816,17 @@ function processHeaderConfirm(headers: ServiceCols[]) {
 // }
 
 const handleThreadChange = debounce(async () => {
-  sessionStorage.setItem(`${threadKey}_${uStore.info.userId}`, threads.value.toString())
+  localStorage.setItem(`${threadKey}_${uStore.info.userId}`, threads.value.toString())
   await serviceApi.setThread(threads.value)
 })
 
 onMounted(() => {
-  const raw = sessionStorage.getItem(`${threadKey}_${uStore.info.userId}`)
+  const raw = localStorage.getItem(`${threadKey}_${uStore.info.userId}`)
+  if (raw === null) {
+    threads.value = 5
+    return
+  }
+
   const value = Number(raw)
 
   let result = 5
@@ -865,7 +870,7 @@ onMounted(() => {
         <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" @change="count = 0" />
 
         <label class="flex items-center space-x-2">
-          <XInputNumber v-model="threads" :step="1" :precision="0" :min="1" :max="20" @change="handleThreadChange" />
+          <XInputNumber v-model="threads" :step="1" :precision="0" :min="1" :max="10" @change="handleThreadChange" />
           <span>提交线程数</span>
         </label>
       </div>

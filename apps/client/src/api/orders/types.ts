@@ -60,8 +60,13 @@ export interface CustomSubmitOrder {
   status: ORDER_STATUS,
   imei: string,
   result: string,
-  fields: {
-    [key: string]: string
+  fields: FieldValue,
+}
+
+export interface FieldValue {
+  [key: string]: {
+    title: string,
+    value: string
   }
 }
 

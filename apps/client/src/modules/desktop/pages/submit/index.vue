@@ -8,7 +8,6 @@ import type { Service } from '@/api/services'
 import type { OrderTableView } from '@/api/orders'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
 import { SUBMIT_STORE, type SubmitStore } from './utils'
-import PrintPreview from './views/printPreview.vue'
 
 interface TheProps {
   id: string
@@ -121,7 +120,6 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
 
 const components: Record<string, Component> = {
   submit: SubmitView,
-  preview: PrintPreview,
 }
 </script>
 

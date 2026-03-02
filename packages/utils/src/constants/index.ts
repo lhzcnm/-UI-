@@ -5,3 +5,4 @@ export const THEME = Symbol('THEME') as IK<Ref<Theme>>
 
 export * from './enums'
 export * from './regexs'
+export * from './variants'

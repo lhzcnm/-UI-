@@ -58,7 +58,7 @@ const displayStatusBg = computed(() => {
     <!-- fields -->
     <section class="px-3 py-2 flex flex-col gap-1.5">
       <div
-        v-for="(value, key) in order.fields"
+        v-for="(field, key) in order.fields"
         :key="key"
         class="flex items-start text-xs leading-relaxed"
       >
@@ -67,14 +67,14 @@ const displayStatusBg = computed(() => {
                  text-zinc-500
                  text-right pr-2"
         >
-          {{ key }}
+          {{ field.title }}
         </span>
 
         <div
           class="flex-1
                  text-zinc-900 dark:text-zinc-100
                  [&_span]:break-all"
-          v-html="value"
+          v-html="field.value"
         />
       </div>
     </section>

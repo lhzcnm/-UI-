@@ -3,7 +3,7 @@ import { Icon } from '@iconify/vue'
 import HeaderTag from '../components/HeaderTag.vue'
 
 import { toast } from 'vue-sonner'
-import { xconfirm } from '@3un/utils'
+import { xconfirm, textAlign } from '@3un/utils'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
 import axios from 'axios'
@@ -45,6 +45,16 @@ const paperRef = ref<HTMLElement | null>(null)
 const uploadRef = ref<HTMLInputElement | null>(null)
 
 let storageUrl: string[] = []
+
+watch(
+  () => templateItems.value,
+  () => {
+    updateAlignPosition()
+  },
+  {
+    deep: true,
+  }
+)
 
 const isEn = computed(() => locale.value === "en")
 
@@ -105,7 +115,7 @@ const previewValue = computed(() => {
   return res
 })
 
-function handleSelectColumn(id: string, label: string) {
+function handleSelectColumn(id: string) {
   const index = selectCols.value.indexOf(id)
 
   if (index !== -1) {
@@ -114,10 +124,13 @@ function handleSelectColumn(id: string, label: string) {
   } else {
     const isQrcode = id === 'qrcode'
     const pos = getNextItemPosition()
+    const field = serviceCols.value.find(c => c.key === id)
+    if (!field) return
 
     const newItem: TemplateItem = {
       key: id,
-      label: label,
+      label: field.name,
+      label_local: field.nameEn,
       x: pos.x,
       y: pos.y,
       wrap: false,
@@ -185,8 +198,10 @@ async function exportTemplate() {
     items: templateItems.value.map(item => ({
       key: item.key,
       label: item.label,
+      label_local: item.label_local,
       x: item.x,
       y: item.y,
+      align: item.align ?? "left",
       wrap: item.wrap,
       type: item.type,
       size: item.size,
@@ -236,7 +251,7 @@ async function importTemplate(file: File) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
+  templateItems.value = template.items.map(item => ({ ...item, align: item.align ?? "left", showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -625,6 +640,79 @@ async function generatePDF() {
   window.open(pdf.output("bloburi"), "_blank")
 }
 
+function applyAlign(key: string, align: string) {
+  if (!paperRef.value) return
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  const el = paperRef.value.querySelector<HTMLElement>(`.template-item[data-key="${key}"]`)
+  if (!el) return
+
+  const safe = paperRef.value.querySelector('.safe-area-border') as HTMLElement
+  if (!safe) return
+
+  const elWidth = el.offsetWidth
+  const safeWidth = safe.offsetWidth
+
+  const paddingLeft = mmToPx(container.padding.left)
+  const paddingRight = mmToPx(container.padding.right)
+
+  templateItems.value[index].align = align as "left" | "center" | "right"
+
+  if (align === 'left') {
+    templateItems.value[index].x = paddingLeft
+  }
+
+  if (align === 'center') {
+    templateItems.value[index].x = paddingLeft + (safeWidth - elWidth) / 2
+  }
+
+  if (align === 'right') {
+    templateItems.value[index].x = mmToPx(container.width) - paddingRight - elWidth
+  }
+}
+
+function updateAlignPosition() {
+  if (!paperRef.value) return
+
+  const nodes = paperRef.value.querySelectorAll<HTMLElement>('.template-item')
+
+  nodes.forEach(el => {
+    const key = el.dataset.key
+    if (!key) return
+
+    const item = templateItems.value.find(i => i.key === key)
+    if (!item) return
+
+    if (item.align === 'center' || item.align === 'right') {
+      applyAlign(item.key, item.align ?? "left")
+    }
+  })
+}
+
+async function handleTemplateChange(key: string) {
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  templateItems.value[index].showField = !templateItems.value[index].showField
+  await nextTick()
+  updateAlignPosition()
+}
+
+async function handleContainerChange() {
+  await nextTick()
+  updateAlignPosition()
+}
+
+async function handleWrapChange(key: string) {
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  await nextTick()
+  updateOverflowMap()
+  updateAlignPosition()
+}
+
 onBeforeUnmount(() => {
   storageUrl.map(URL.revokeObjectURL)
 })
@@ -657,7 +745,7 @@ onBeforeUnmount(() => {
         <div class="flex flex-col space-y-1">
           <div class="font-semibold text-sm">{{ t('print.size.font') }} (mm):</div>
           <div class="flex items-center gap-2 w-40">
-            <XInputNumber v-model="container.fontSize" :step="1" size="sm" />
+            <XInputNumber v-model="container.fontSize" :step="1" size="sm" @change="handleContainerChange" />
           </div>
         </div>
         <!-- 纸张大小 -->
@@ -665,11 +753,11 @@ onBeforeUnmount(() => {
           <div class="font-semibold text-sm">{{ t('print.size.paper.title') }} (mm)</div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.paper.long') }}(mm):</span>
-            <XInputNumber v-model="container.height" :step="1" size="sm" />
+            <XInputNumber v-model="container.height" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.paper.width') }}(mm):</span>
-            <XInputNumber v-model="container.width" :step="1" size="sm" />
+            <XInputNumber v-model="container.width" :step="1" size="sm" @change="handleContainerChange" />
           </div>
         </div>
         <!-- 内边距设置 -->
@@ -677,19 +765,19 @@ onBeforeUnmount(() => {
           <div class="font-semibold text-sm">{{ t('print.size.padding.title') }} (mm)</div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.top') }}(mm):</span>
-            <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.top" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.bottom') }}(mm):</span>
-            <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.left') }}(mm):</span>
-            <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.left" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.right') }}(mm):</span>
-            <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.right" :step="1" size="sm" @change="handleContainerChange" />
           </div>
         </div>
       </div>
@@ -718,9 +806,17 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- 控制开关 -->
-            <div class="flex items-center">
-              <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
-                <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+            <div class="flex items-center gap-4">
+              <div v-if="!isQrcodeField(field.key)" class="flex items-center gap-2">
+                <template v-for="alignItem in textAlign" :key="alignItem.key">
+                  <button class="hover:bg-zinc-50 dark:hover:bg-zinc-800" @click="applyAlign(field.key, alignItem.key)"
+                    :title="isEn ? alignItem.labelLocal : alignItem.label">
+                    <Icon :icon="alignItem.icon" />
+                  </button>
+                </template>
+              </div>
+              <div v-if="!isQrcodeField(field.key)" class="flex gap-2">
+                <button class="flex items-center gap-2" @click="handleTemplateChange(field.key)">
                   <Icon icon="lucide:eye" v-if="field.showField" />
                   <Icon icon="lucide:eye-closed" v-else />
                   <span>{{ field.showField ? t('print.fields.config.showLabel') : t('print.fields.config.showContent') }}</span>
@@ -730,7 +826,7 @@ onBeforeUnmount(() => {
                   <div class="relative w-9 h-5 rounded-full bg-border
                            peer-checked:bg-primary
                            transition-colors flex">
-                    <XSwitch v-model="field.wrap" />
+                    <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" />
                   </div>
                 </label>
               </div>
@@ -739,7 +835,7 @@ onBeforeUnmount(() => {
                 <XInputNumber v-model="field.size!" size="sm" class="w-20" />
               </div>
 
-              <button class="hover:text-success" @click="handleSelectColumn(field.key, field.label)">
+              <button class="hover:text-success" @click="handleSelectColumn(field.key)">
                 <Icon icon="lucide:trash-2" />
               </button>
             </div>

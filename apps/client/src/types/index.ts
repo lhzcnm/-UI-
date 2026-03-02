@@ -14,12 +14,14 @@ export interface ContainerItem {
 export interface TemplateItem {
   key: string,
   label: string,
+  label_local: string,
   x: number,
   y: number,
   wrap?: boolean,
   width?: number,
   height?: number,
   type?: "text" | "qrcode" | "barcode",
+  align?: "left" | "center" | "right",
   showField?: boolean,
   size?: number,
 }
@@ -41,10 +43,12 @@ export interface PrintTemplateJson {
   items: {
     key: string,
     label: string,
+    label_local: string,
     x: number,
     y: number,
     wrap?: boolean,
     type?: "text" | "qrcode" | "barcode",
+    align?: "left" | "center" | "right",
     size?: number,
     showField?: boolean,
   }[],

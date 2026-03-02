@@ -2,7 +2,7 @@
 import { Icon } from '@iconify/vue'
 import QrPreview from '@/components/QrPreview.vue'
 
-import { ORDER_STATUS, xconfirm } from '@3un/utils'
+import { hashPrintHeader, ORDER_STATUS, xconfirm, textAlign } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
@@ -10,8 +10,8 @@ import jsPDF from 'jspdf'
 import { mmToPt, mmToPx, pxTomm } from '@/utils'
 import { HISTORY_STORE } from '../utils'
 import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
-import { orderApi, type CustomSubmitOrder, type Order, type ServiceColumnItem } from '@/api/orders'
-import type { ContainerItem, PrintTemplateJson, TemplateItem } from '@/types'
+import { orderApi, type CustomSubmitOrder, type FieldValue, type Order, type ServiceColumnItem } from '@/api/orders'
+import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/types'
 import axios from 'axios'
 import type { PageItem, PluginPdfRequest } from '@/types/print'
 
@@ -35,8 +35,12 @@ const { services } = useServiceStore()
 
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
+const resultCol = hashPrintHeader("处理结果")
+const orderResultCol = hashPrintHeader("订单结果")
+const qrcodeCol = hashPrintHeader("二维码")
+
 const templateItems = ref<TemplateItem[]>([])
-const serviceCols = ref<ServiceHeader[]>([])
+const serviceCols = ref<PrintHeader[]>([])
 const selectCols = ref<string[]>([])
 const customOrders = ref<CustomSubmitOrder[]>([])
 const generating = ref<boolean>(false)
@@ -48,16 +52,19 @@ const isEn = computed(() => locale.value === "en")
 
 const defaultItems = [
   {
+    key: hashPrintHeader("imei"),
     name: "IMEI",
     nameEn: "IMEI"
   },
   {
+    key: qrcodeCol,
     name: "二维码",
     nameEn: "Qrcode",
   },
 ]
 
 let storageUrl: string[] = []
+let headerKey: string[] = []
 
 watch(
   () => container,
@@ -102,7 +109,7 @@ const currentService = computed(() => {
   return service
 })
 
-const processedColumns = computed(() => serviceCols.value.map(item => isEn.value ? item.nameEn : item.name))
+const processedColumns = computed(() => serviceCols.value.map(item => ({key: item.key, label: isEn.value ? item.nameEn : item.name})))
 
 const previewValue = computed(() => {
   let order = customOrders.value.find(o => o.status === ORDER_STATUS.SUCCESS)
@@ -111,21 +118,22 @@ const previewValue = computed(() => {
   let res: Record<string, string> = {}
 
   for (let item of processedColumns.value) {
-    const value = order.fields[item]
+    const field = order?.fields[item.key] || ''
 
-    if ((/^(处理结果|Result)$/i).test(item)) {
-      res["处理结果"] = order.result
-      res["Result"] = order.result
+    if (resultCol === item.key) {
+      res[resultCol] = order?.result || "{value}"
     } else {
-      res[item] = value && value !== "" ? value : "{value}"
+      res[item.key] = field && field.value !== "" ? field.value : "{value}"
     }
   }
-  res["IMEI"] = order.imei || "{value}"
-  res['订单结果'] = order.result || "{value}"
-  res['result'] = order.result || "{value}"
+  res[hashPrintHeader("imei")] = order?.imei || "{value}"
+  res[orderResultCol] = order?.result || "{value}"
+  res['result'] = order?.result || "{value}"
 
   return res
 })
+
+const previewQrcode = computed(() => getPreviewQrcode())
 
 function startDrag(e: MouseEvent, item: TemplateItem) {
   const target = e.currentTarget as HTMLElement
@@ -195,6 +203,7 @@ function clampPosition(item: TemplateItem, target: HTMLElement) {
 }
 
 function stripHtmlTags(html: string) {
+  if (!html) return ''
   return html.replace(/<[^>]+>/g, '')
 }
 
@@ -209,24 +218,29 @@ async function getServiceColumns(value: number) {
     })
   } else {
     serviceHeader = data
+    headerKey = data.map(h => h.name)
   }
 
-  serviceCols.value = [...defaultItems, ...serviceHeader]
+  serviceCols.value = [...defaultItems, ...serviceHeader.map(h =>  ({ key: hashPrintHeader(h.name), name: h.name, nameEn: h.nameEn ? h.nameEn : h.name }))]
 }
 
-function handleSelectColumn(label: string) {
-  const index = selectCols.value.indexOf(label)
+function handleSelectColumn(key: string) {
+  const header = serviceCols.value.find(h => h.key === key)
+  if (!header) return
+
+  const index = selectCols.value.indexOf(key)
 
   if (index !== -1) {
     selectCols.value.splice(index, 1)
-    templateItems.value = templateItems.value.filter(i => i.key !== label)
+    templateItems.value = templateItems.value.filter(i => i.key !== key)
   } else {
-    const isQrcode = (/^(二维码|qrcode)$/i).test(label)
+    const isQrcode = qrcodeCol === key
     const pos = getNextItemPosition()
 
     const newItem: TemplateItem = {
-      key: label,
-      label: label,
+      key: key,
+      label: header.name,
+      label_local: header.nameEn,
       x: pos.x,
       y: pos.y,
       wrap: false,
@@ -235,7 +249,7 @@ function handleSelectColumn(label: string) {
       showField: true,
     }
 
-    selectCols.value.push(label)
+    selectCols.value.push(key)
     templateItems.value.push(newItem)
   }
 }
@@ -301,14 +315,17 @@ function getFieldsMap(fields: ServiceHeader[]) {
 }
 
 function processResult(content: string) {
-  const result: Record<string, string> = {}
+  const result: FieldValue = {}
   const items = content.split("<br>")
 
   const keyMap = getFieldsMap(serviceCols.value)
 
   if (items.length === 1 && serviceCols.value.length === 1) {
     const key = isEn.value ? (serviceCols.value[0].nameEn ?? serviceCols.value[0].name) : serviceCols.value[0].name
-    result[key] = content
+    result[hashPrintHeader(key)] = {
+      title: key,
+      value: content
+    }
   } else {
     for (const item of items) {
       const [key, ...valueParts] = item.split(/[:：]/)
@@ -319,14 +336,20 @@ function processResult(content: string) {
       if (!mapped) continue
 
       const finalKey = isEn.value ? mapped.en ? mapped.en : mapped.cn : mapped.cn
-      result[finalKey] = value
+      result[hashPrintHeader(mapped.cn)] = {
+        title: finalKey,
+        value: value,
+      }
     }
   }
 
   const isSuccess = judgeOrderStatus(serviceCols.value, items)
 
   if (!isSuccess) {
-    result[processedColumns.value[0]] = content
+    result[hashPrintHeader(headerKey[0])] = {
+      title: headerKey[0],
+      value: content,
+    }
   }
   
   return result
@@ -380,8 +403,10 @@ async function exportTemplate() {
     items: templateItems.value.map(item => ({
       key: item.key,
       label: item.label,
+      label_local: item.label_local,
       x: item.x,
       y: item.y,
+      align: item.align ?? "left",
       wrap: item.wrap,
       type: item.type,
       size: item.size,
@@ -438,7 +463,7 @@ async function importTemplate(file: File) {
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
 
-  templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
+  templateItems.value = template.items.map(item => ({ ...item,  align: item.align ?? "left", showField: item.showField ?? true }))
 
   selectCols.value = template.items.map(item => item.key)
 }
@@ -462,7 +487,6 @@ async function handleChange(e: Event) {
 }
 
 async function generatePDF() {
-  generating.value = true
   paperRef.value!.classList.add("printing")
 
   const pdf = new jsPDF({
@@ -473,7 +497,7 @@ async function generatePDF() {
   for (let i = 0; i < customOrders.value.length; i++) {
     const order = customOrders.value[i]
 
-    if (order.status === ORDER_STATUS.FAILED) continue
+    if (order.status !== ORDER_STATUS.SUCCESS) continue
 
     const page = paperRef.value!.cloneNode(true) as HTMLElement
     document.body.appendChild(page)
@@ -487,9 +511,9 @@ async function generatePDF() {
         const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
         if (!qrcodeItem) continue
         const { data } = await orderApi.generateQrcode({
-          content: qrcodeStr({ ...order.fields, IMEI: order.imei })}
-        )
-
+          content: qrcodeStr({ ...order.fields, [hashPrintHeader("imei")]: {title: "IMEI", value: order.imei} })
+        })
+        
         const blob = new Blob([data], { type: 'image/png' })
         const url = URL.createObjectURL(blob)
         storageUrl.push(url)
@@ -502,17 +526,17 @@ async function generatePDF() {
           img.src = url
         })
 
-        img.width = mmToPx(qrcodeItem.size ?? 25)
-        img.height = mmToPx(qrcodeItem.size ?? 25)
+        img.width = mmToPx(qrcodeItem.size ?? 20)
+        img.height = mmToPx(qrcodeItem.size ?? 20)
 
         itemEl.querySelector('[data-qrcode]')!.innerHTML = ''
         itemEl.querySelector('[data-qrcode]')!.appendChild(img)
 
         await imageLoadPromise
       } else {
-        const value = key === "IMEI"
+        const value = key === hashPrintHeader('imei')
           ? order.imei || ""
-          : order.fields[key] ?? ""
+          : order.fields[key].value ?? ""
         
         itemEl.querySelector(".template-value")!.textContent = stripHtmlTags(value)
       }
@@ -542,22 +566,32 @@ async function generatePDF() {
 }
 
 function isQrcodeField(key: string) {
-  return (/^(二维码|qrcode)$/i).test(key)
+  return qrcodeCol === key
+  // return (/^(二维码|qrcode)$/i).test(key)
 }
 
-function qrcodeStr(object: Record<string, string> | string) {
+function qrcodeStr(object: Record<string, string> | string | FieldValue) {
   const data = objectToString(object)
   return data
   // return `${origin}/qrcode-result?data=${encodeURIComponent(data)}`
 }
 
-function objectToString(object: Record<string, string> | string) {
+function objectToString(object: Record<string, string> | string | FieldValue) {
   return Object.entries(object)
-    .map(([key, value]) => {
-      const isQrcode = (/^(二维码|qrcode)$/i).test(key)
+    .map(([key, field]) => {
+      const isQrcode = qrcodeCol === key
       if (isQrcode) return
       if (!selectCols.value.includes(key)) return
-      return `${key}: ${stripHtmlTags(value)}`
+
+      if (typeof field === 'string') {
+        return `${key}: ${stripHtmlTags(field)}`
+      }
+
+      if (typeof field === 'object') {
+        return `${field.title}: ${stripHtmlTags(field.value)}`
+      }
+
+      return undefined
     })
     .filter(Boolean)
     .join('\n')
@@ -619,8 +653,7 @@ async function handleGenerate() {
 
 function processRequestParams(): PluginPdfRequest {
   const submitedOrders = customOrders.value
-  const selTemplates = templateItems.value
-
+  
   const res: PluginPdfRequest = {
     serviceId: currentService.value!.id,
     paper: {
@@ -632,43 +665,52 @@ function processRequestParams(): PluginPdfRequest {
 
   for (let i = 0; i < submitedOrders.length; i++) {
     const order = submitedOrders[i]
-    if (order.status === ORDER_STATUS.FAILED) continue
+    if (order.status !== ORDER_STATUS.SUCCESS) continue
 
-    const pageItems: PageItem[] = []
-
-    const page = paperRef.value!.cloneNode(true) as HTMLElement
-    const items = Array.from(page.querySelectorAll<HTMLElement>(".template-item"))
-
-    for (const itemEl of items) {
-      const key = itemEl.dataset.key!
-      const template = selTemplates.find(t => t.key === key)
-      if (!template) continue
-
-      if (isQrcodeField(key)) {
-        pageItems.push({
-          ...template,
-          showField: true,
-          x: pxTomm(template.x),
-          y: pxTomm(template.y),
-          value: qrcodeStr({ ...order.fields, IMEI: order.imei }),
-        })
-        continue
-      }
-      pageItems.push({
-        ...template,
-        showField: template.showField ?? true,
-        x: pxTomm(template.x),
-        y: pxTomm(template.y),
-        value: key === "IMEI"
-          ? stripHtmlTags(order.imei) || ""
-          : stripHtmlTags(order.fields[key]) ?? "",
-      })
-    }
+    const pageItems: PageItem[] = processPageItem(order)
 
     res.pages.push({ items: pageItems })
   }
 
   return res
+}
+
+function processPageItem(order: CustomSubmitOrder) {
+  const selTemplates = templateItems.value
+  const pageItems: PageItem[] = []
+
+  const page = paperRef.value!.cloneNode(true) as HTMLElement
+  const items = Array.from(page.querySelectorAll<HTMLElement>(".template-item"))
+
+  for (const itemEl of items) {
+    const key = itemEl.dataset.key!
+    const template = selTemplates.find(t => t.key === key)
+    if (!template) continue
+
+    if (template.type === 'qrcode') {
+      pageItems.push({
+        ...template,
+        label: isEn.value ? template.label_local : template.label,
+        showField: true,
+        x: pxTomm(template.x),
+        y: pxTomm(template.y),
+        value: qrcodeStr({ ...order.fields, IMEI: order.imei }),
+      })
+      continue
+    }
+    pageItems.push({
+      ...template,
+      label: isEn.value ? template.label_local : template.label,
+      showField: template.showField ?? true,
+      x: pxTomm(template.x),
+      y: pxTomm(template.y),
+      value: key === hashPrintHeader("imei")
+        ? stripHtmlTags(order.imei) || ""
+        : stripHtmlTags(order.fields[key] ? order.fields[key].value : '') ?? '',
+    })
+  }
+
+  return pageItems
 }
 
 async function pluginGeneratePdf() {
@@ -687,9 +729,91 @@ async function pluginGeneratePdf() {
 
     URL.revokeObjectURL(url)
   } catch (err) {
-    console.log(err)
+    console.error(err)
     throw Error("request Failed")
   }
+}
+
+function getPreviewQrcode() {
+  const order = customOrders.value.find(o => o.status === ORDER_STATUS.SUCCESS)
+  if (!order) return ''
+
+  return qrcodeStr({ ...order.fields, [hashPrintHeader("imei")]: {title: "IMEI", value: order.imei} })
+}
+
+function applyAlign(key: string, align: string) {
+  if (!paperRef.value) return
+
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  const el = paperRef.value.querySelector<HTMLElement>(`.template-item[data-key="${key}"]`)
+  const safe = paperRef.value.querySelector<HTMLElement>('.safe-area-border')
+  if (!el || !safe) return
+
+  const elRect = el.getBoundingClientRect()
+  const safeRect = safe.getBoundingClientRect()
+  const paperRect = paperRef.value.getBoundingClientRect()
+
+  const elWidth = elRect.width
+
+  templateItems.value[index].align = align as "left" | "center" | "right"
+
+  if (align === 'left') {
+    templateItems.value[index].x = safeRect.left - paperRect.left
+  }
+
+  if (align === 'center') {
+    templateItems.value[index].x =
+      safeRect.left - paperRect.left +
+      (safeRect.width - elWidth) / 2
+  }
+
+  if (align === 'right') {
+    templateItems.value[index].x =
+      safeRect.right - paperRect.left - elWidth
+  }
+}
+
+function updateAlignPosition() {
+  if (!paperRef.value) return
+
+  const nodes = paperRef.value.querySelectorAll<HTMLElement>('.template-item')
+
+  nodes.forEach(el => {
+    const key = el.dataset.key
+    if (!key) return
+
+    const item = templateItems.value.find(i => i.key === key)
+    if (!item) return
+
+    if (item.align === 'center' || item.align === 'right') {
+      applyAlign(item.key, item.align ?? "left")
+    }
+  })
+}
+
+async function handleTemplateChange(key: string) {
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  templateItems.value[index].showField = !templateItems.value[index].showField
+  await nextTick()
+  updateAlignPosition()
+}
+
+async function handleContainerChange() {
+  await nextTick()
+  updateAlignPosition()
+}
+
+async function handleWrapChange(key: string) {
+  const index = templateItems.value.findIndex(t => t.key === key)
+  if (index === -1) return
+
+  await nextTick()
+  updateOverflowMap()
+  updateAlignPosition()
 }
 
 await getServiceColumns(store.selectOrders[0].serviceId)
@@ -720,9 +844,9 @@ onBeforeUnmount(() => {
       <div class="border p-2 space-y-1">
         <div class="font-bold text-sm">{{ t('print.fields.title') }}</div>
         <div class="flex flex-wrap gap-2">
-          <template v-for="column in processedColumns" :key="column">
-            <ColumnTags :label="column"
-              :checked="selectCols.includes(column)"
+          <template v-for="column in processedColumns" :key="column.key">
+            <HeaderTag :label="column.label" :id="column.key"
+              :checked="selectCols.includes(column.key)"
               @click="handleSelectColumn" />
           </template>
         </div>
@@ -733,7 +857,7 @@ onBeforeUnmount(() => {
         <div class="flex flex-col space-y-1">
           <div class="font-semibold text-sm">{{ t('print.size.font') }} (mm):</div>
           <div class="flex items-center gap-2 w-40">
-            <XInputNumber v-model="container.fontSize" :step="1" size="sm" />
+            <XInputNumber v-model="container.fontSize" :step="1" size="sm" @change="handleContainerChange" />
           </div>
         </div>
         <!-- 纸张大小 -->
@@ -741,11 +865,11 @@ onBeforeUnmount(() => {
           <div class="font-semibold text-sm">{{ t('print.size.paper.title') }} (mm)</div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.paper.long') }}(mm):</span>
-            <XInputNumber v-model="container.height" :step="1" size="sm" />
+            <XInputNumber v-model="container.height" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.paper.width') }}(mm):</span>
-            <XInputNumber v-model="container.width" :step="1" size="sm" />
+            <XInputNumber v-model="container.width" :step="1" size="sm" @change="handleContainerChange" />
           </div>
         </div>
         <!-- 内边距设置 -->
@@ -753,19 +877,19 @@ onBeforeUnmount(() => {
           <div class="font-semibold text-sm">{{ t('print.size.padding.title') }} (mm)</div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.top') }}(mm):</span>
-            <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.top" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.bottom') }}(mm):</span>
-            <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.left') }}(mm):</span>
-            <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.left" :step="1" size="sm" @change="handleContainerChange" />
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs w-16">{{ t('print.size.padding.right') }}(mm):</span>
-            <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
+            <XInputNumber v-model="container.padding.right" :step="1" size="sm" @change="handleContainerChange" />
           </div>
         </div>
       </div>
@@ -787,7 +911,7 @@ onBeforeUnmount(() => {
             <!-- 字段名 -->
             <div class="flex items-center gap-2 min-w-0">
               <span class="w-32 truncate font-medium text-foreground">
-                {{ field.label }}
+                {{ isEn ? field.label_local : field.label }}
               </span>
               <span class="text-xs text-muted-foreground">
                 {{ isQrcodeField(field.key)
@@ -797,9 +921,17 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- 控制开关 -->
-            <div class="flex items-center">
-              <div v-if="!isQrcodeField(field.key)" class="mr-4 flex gap-2">
-                <button class="flex items-center gap-2" @click="field.showField = !field.showField">
+            <div class="flex items-center gap-4">
+              <div v-if="!isQrcodeField(field.key)" class="flex items-center gap-2">
+                <template v-for="alignItem in textAlign" :key="alignItem.key">
+                  <button class="hover:bg-zinc-50 dark:hover:bg-zinc-800" @click="applyAlign(field.key, alignItem.key)"
+                    :title="isEn ? alignItem.labelLocal : alignItem.label">
+                    <Icon :icon="alignItem.icon" />
+                  </button>
+                </template>
+              </div>
+              <div v-if="!isQrcodeField(field.key)" class="flex gap-2">
+                <button class="flex items-center gap-2" @click="handleTemplateChange(field.key)">
                   <Icon icon="lucide:eye" v-if="field.showField" />
                   <Icon icon="lucide:eye-closed" v-else />
                   <span>{{ field.showField ? t('print.fields.config.showLabel') : t('print.fields.config.showContent') }}</span>
@@ -811,7 +943,7 @@ onBeforeUnmount(() => {
                            peer-checked:bg-primary
                            transition-colors flex"
                   >
-                    <XSwitch v-model="field.wrap" />
+                    <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" />
                   </div>
                 </label>
               </div>
@@ -859,7 +991,7 @@ onBeforeUnmount(() => {
           <template v-if="item.type !== 'qrcode'">
             <template v-if="item.wrap">
               <div v-if="item.showField" class="font-medium leading-tight">
-                {{ item.label }}:
+                {{ isEn ? item.label_local : item.label }}:
               </div>
               <div class="leading-tight break-all template-value">
                 {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
@@ -867,7 +999,7 @@ onBeforeUnmount(() => {
             </template>
         
             <template v-else>
-              <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
+              <span class="font-medium" v-if="item.showField">{{ isEn ? item.label_local : item.label }}:</span>
               <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
           </template>
@@ -875,7 +1007,7 @@ onBeforeUnmount(() => {
           <template v-else>
             <div data-qrcode>
               <QrPreview
-                :data="qrcodeStr(previewValue)"
+                :data="previewQrcode"
                 :size="item.size ?? 25" />
             </div>
           </template>

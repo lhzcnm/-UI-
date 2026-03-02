@@ -2,12 +2,13 @@
 import { tv } from 'tailwind-variants'
 
 interface ColumnTagProps {
+  id: string,
   label: string,
   checked: boolean,
 }
 
 interface ColumnTagEmits {
-  (e: "click", label: string): void
+  (e: "click", key: string): void
 }
 
 defineProps<ColumnTagProps>()
@@ -28,5 +29,5 @@ const b = style()
 </script>
 
 <template>
-  <button :class="b.base({ checked })" @click="emits('click', label)">{{ label }}</button>
+  <button :class="b.base({ checked })" @click="emits('click', id)">{{ label }}</button>
 </template>

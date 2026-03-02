@@ -1,4 +1,5 @@
 import type { AxiosResponse } from 'axios'
+import { hash } from 'ohash'
 
 /**
  * 格式化时间
@@ -97,4 +98,22 @@ export function debounce(fn: Function, delay: number = 1000) {
       fn.apply(args)
     }, delay)
   }
+}
+
+/**
+ * 
+ * @param str 
+ * @returns 
+ */
+export function hashData(str: string): string {
+  return hash(str)
+}
+
+/**
+ * 
+ * @param str 
+ * @returns 
+ */
+export function hashPrintHeader(str: string): string {
+  return hashData(str).slice(0, 8)
 }
