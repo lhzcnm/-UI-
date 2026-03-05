@@ -1,36 +1,39 @@
 <script setup lang="ts">
 import RechargeSearch from './components/RechargeSearch.vue'
 import RechargeDialog from './components/RechargeDialog.vue'
+import RechargeHandleFee from './components/RechargeHandleFee.vue'
 
 import { toast } from 'vue-sonner'
+import type { XTableExpose } from '@3un/ui'
 import { xconfirm } from '@3un/utils'
 import dayjs from 'dayjs'
 import { hash } from 'ohash'
 
 import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
 import { deleteRecharges, getRecharges } from '@/api/recharge'
-import { zRechargeSearchForm } from '@/inters/recharge'
+import { zRechargeHandleFee, zRechargeSearchForm } from '@/inters/recharge'
 import { createList } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { columns } from './utils/column'
 import { RECHARGE_STORE } from './utils'
-import type { XTableExpose } from '@3un/ui'
-import { updateConfig } from '@/api/settings'
 
 const store: RechargeStore = reactive({
   recharges: createList(),
 
   formSearch: zRechargeSearchForm.parse({}),
   formUpdate: {} as RechargeUpdateParams,
+  handleFee: zRechargeHandleFee.parse({}),
 
   visibleSearch: false,
   visibleUpdate: false,
+  visibleHandleFee: false,
 
   refresh: false,
   index: undefined,
   page: 1,
   limit: 20,
+
 })
 
 provide(RECHARGE_STORE, store)
@@ -43,13 +46,16 @@ const ids = ref<number[]>([])
 const loading = ref(false)
 const tableRef = ref<XTableExpose | null>(null)
 
-const feeDialog = ref(false)
-const freeFeeThreshold = ref<string>((configs['recharge:threshold'] || '0.00'))
-const handleFee = ref<string>((+(configs['recharge:fee'] || '0.00') * 100).toString())
-
 const queryHash = computed(() => hash(route.query))
 const packageStore = usePackageStore()
 await packageStore.getList()
+
+store.handleFee = {
+  aliFee: (+configs['recharge:fee'] * 100).toString(),
+  aliThreshold: configs['recharge:threshold'],
+  wxFee: (+configs['recharge:wxFee'] * 100).toString(),
+  wxThreshold: configs['recharge:wxThreshold'].toString(),
+}
 
 const isAdmin = computed(() => {
   return route.query.q === 'admin'
@@ -121,21 +127,6 @@ async function handleDelete() {
     store.refresh = !store.refresh
   })
 }
-
-async function handFeeUpdate() {
-  updateConfig([
-    {
-      key: 'recharge:threshold',
-      value: freeFeeThreshold.value,
-    },
-    {
-      key: 'recharge:fee',
-      value: (+handleFee.value / 100).toString(),
-    }
-  ])
-
-  feeDialog.value = false
-}
 </script>
 
 <template>
@@ -147,7 +138,7 @@ async function handFeeUpdate() {
 
         <hr class="h-6 w-px mx-4 bg-border" />
 
-        <XButton color="success" label="手续费设置" icon="iconoir:settings" @click="feeDialog = true" />
+        <XButton color="success" label="手续费设置" icon="iconoir:settings" @click="store.visibleHandleFee = true" />
 
         <hr class="h-6 w-px mx-4 bg-border" />
 
@@ -177,36 +168,6 @@ async function handFeeUpdate() {
 
     <RechargeSearch :key="queryHash" />
     <RechargeDialog />
-
-    <XDialog v-model="feeDialog" title="手续费设置">
-      <div class="space-y-3 text-sm">
-        <!-- 手续费界限 -->
-        <div class="flex justify-between items-center">
-          <div class="mb-1 text-muted-foreground">手续费界限:</div>
-          <input
-            v-model="freeFeeThreshold"
-            type="number"
-            placeholder="请输入界限金额"
-            class="bg-transparent w-2/3 rounded-lg border border-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-          />
-        </div>
-
-        <!-- 手续费率 -->
-        <div class="flex justify-between items-center">
-          <div class="mb-1 text-muted-foreground">手续费率 (%):</div>
-          <input
-            v-model="handleFee"
-            type="number"
-            placeholder="请输入手续费率"
-            class="bg-transparent w-2/3 rounded-lg border border-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-          />
-        </div>
-
-        <div class="w-full flex justify-end space-x-2">
-          <XButton @click="feeDialog = false" label="取消" variant="outline" color="primary" />
-          <XButton @click="handFeeUpdate" label="修改" color="primary" />
-        </div>
-      </div>
-    </XDialog>
+    <RechargeHandleFee />
   </div>
 </template>

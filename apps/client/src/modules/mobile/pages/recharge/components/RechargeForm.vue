@@ -14,21 +14,33 @@ const customAmount = ref(0)
 const selectedAmount = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
 
-const payFee = ref(0) /* 手续费 */
-const amountLimit = ref(0) // 后端给的手续费界限值
-const amountList = ref<{ label: string; value: number; info?: string }[]>([])
+// const amountList = ref<{ label: string; value: number; info?: string }[]>([])
 const { t, locale } = useI18n()
+
+const isWechat = computed(() => selectedPayment.value === 'wxpay')
+
+
+const payFee = computed(() => {
+  const res = { fee: iStore.handleFee.fee, threshold: iStore.handleFee.threshold }
+  
+  if (isWechat.value) {
+    res.fee = iStore.handleFee.wxFee
+    res.threshold = iStore.handleFee.wxThreshold
+  }
+  
+  return res
+})
 
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
-  return amount < amountLimit.value ? Number((amount * payFee.value).toFixed(2)) : 0
+  return amount < +payFee.value!.threshold ? Number((amount * +payFee.value!.fee).toFixed(2)) : 0
 })
 
 const rechargeAmount = computed(() => {
   return selectedAmount.value || customAmount.value
 })
 
-const rawAmountList = [
+const amountList = [
   { label: '￥10', value: 10 },
   { label: '￥50', value: 50 },
   { label: '￥100', value: 100 },
@@ -113,24 +125,6 @@ function onBridgeReady(config: WXInvokeConfig) {
     }
   )
 }
-
-//获取手续费率
-async function getFee() {
-  const res = await rechargeApi.payFee()
-  payFee.value = res.data.fee
-  amountLimit.value = res.data.threshold
-
-  amountList.value = rawAmountList.map(item => {
-    return {
-      ...item,
-      ...(item.value >= amountLimit.value
-        ? { info: t('recharge.handleFee') }
-        : {})
-    }
-  })
-}
-
-onMounted(() => { getFee() })
 </script>
 
 <template>
@@ -149,7 +143,7 @@ onMounted(() => { getFee() })
           @click="selectedAmount = item.value; customAmount = item.value"
         >
           <span>{{ item.label }}</span>
-          <span v-if="item.info" class="text-sm text-success">{{ item.info }}</span>
+          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ t('recharge.handleFee') }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
@@ -205,7 +199,7 @@ onMounted(() => { getFee() })
       </div>
       
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.handle') }}({{ (payFee * 100).toFixed(2) }}%)</span>
+        <span>{{ t('recharge.balance.compAmount.handle') }}({{ (+payFee!.fee * 100).toFixed(2) }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
       

@@ -1,11 +1,12 @@
 import type { RECHARGE_TYPE, VOUCHER_TYPE } from '@3un/utils'
 import type { R } from '@3un/shared'
+import type { HandleFeeType } from '../settings'
 
 export interface RechargeApi {
   create(params: RechargeParams): R<any>
   check(): R<boolean>
   activity(): R<ActivityItem[]>
-  payFee(): R<any>
+  payFee(): R<HandleFeeType>
 }
 
 export type RechargeMethod = 'wxpay' | 'alipay'

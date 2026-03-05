@@ -819,8 +819,10 @@ async function handleWrapChange(key: string) {
 await getServiceColumns(store.selectOrders[0].serviceId)
 await handleDefaultTemplate()
 
-onMounted(() => {
+onMounted(async () => {
   processRawOrders(store.selectOrders)
+  await nextTick()
+  updateAlignPosition()
   updateOverflowMap()
 })
 

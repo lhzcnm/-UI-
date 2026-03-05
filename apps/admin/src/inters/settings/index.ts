@@ -112,4 +112,6 @@ export interface Configs {
   'filter:excluded_words': string
   'recharge:fee': string
   'recharge:threshold': string
+  'recharge:wxFee': string
+  'recharge:wxThreshold': string
 }

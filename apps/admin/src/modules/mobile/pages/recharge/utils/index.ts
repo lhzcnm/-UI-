@@ -1,4 +1,4 @@
-import type { RechargeList, RechargeSearchForm, RechargeUpdateParams } from "@/inters/recharge"
+import type { RechargeHandleFee, RechargeList, RechargeSearchForm, RechargeUpdateParams } from "@/inters/recharge"
 import type { RechargePackage, RechargePackageForm } from "@/inters/recharge/package"
 import type { IK } from "@3un/shared"
 
@@ -10,9 +10,11 @@ export interface RechargeStore {
 
   formSearch: RechargeSearchForm
   formUpdate: RechargeUpdateParams
+  handleFee: RechargeHandleFee
 
   visibleSearch: boolean
   visibleUpdate: boolean
+  visibleHandleFee: boolean
 
   refresh: boolean
   index  : number | undefined

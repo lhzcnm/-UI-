@@ -8,30 +8,42 @@ import type { RechargeMethod } from '@/api/recharge'
 import { rechargeApi } from '@/api/recharge'
 import { RECHARGE_STORE } from '../utils'
 
-const iStore = useSettingStore()
+const store = inject(RECHARGE_STORE)!
+
+const { settings, handleFee } = useSettingStore()
 const uStore = useUserStore()
 
 const customAmount = ref(0)
 const selectedAmount = ref(0)
-const payFee = ref(0) /* 手续费 */
-const amountLimit = ref(0) // 后端给的手续费界限值
-const amountList = ref<{ label: string; value: number; info?: string }[]>([])
+// const amountList = ref<{ label: string; value: number; info?: string }[]>([])
 const selectedPayment = ref<RechargeMethod>('wxpay')
-const store = inject(RECHARGE_STORE)!
 
 const { t, locale } = useI18n()
+
+const isWechat = computed(() => selectedPayment.value === 'wxpay')
+
+const payFee = computed(() => {
+  const res = { fee: handleFee.fee, threshold: handleFee.threshold }
+
+  if (isWechat.value) {
+    res.fee = handleFee.wxFee
+    res.threshold = handleFee.wxThreshold
+  }
+
+  return res
+})
 
 const serviceFee = computed(() => {
   const amount = selectedAmount.value || customAmount.value
 
-  return amount < amountLimit.value ? Number((amount * payFee.value).toFixed(2)) : 0
+  return amount < +payFee.value!.threshold ? Number((amount * +payFee.value!.fee).toFixed(2)) : 0
 })
 
 const rechargeAmount = computed(() => {
   return selectedAmount.value || customAmount.value
 })
 
-const rawAmountList = [
+const amountList = [
   { label: '￥10', value: 10 },
   { label: '￥50', value: 50 },
   { label: '￥100', value: 100 },
@@ -42,10 +54,10 @@ const rawAmountList = [
 
 const rechargeInfo = computed(() => {
   return locale.value === 'zh'
-    ? iStore.settings.paymentInfo
-    : iStore.settings.paymentInfoEn
-      ? iStore.settings.paymentInfoEn
-      : iStore.settings.paymentInfo
+    ? settings.paymentInfo
+    : settings.paymentInfoEn
+      ? settings.paymentInfoEn
+      : settings.paymentInfo
 })
 
 function handleCustomAmount(value: any) {
@@ -61,8 +73,8 @@ function handleCustomAmount(value: any) {
 function handleRecharge() {
   if (!rechargeAmount.value) return toast.warning(t('valid.recharge.amount'))
 
-  const minAmount = +iStore.settings.minRechargeAmount
-  const maxAmount = +iStore.settings.maxRechargeAmount
+  const minAmount = +settings.minRechargeAmount
+  const maxAmount = +settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAmount) {
     return toast.warning(t('recharge.amount.min', { amount: minAmount }))
@@ -105,24 +117,6 @@ function checkRecharge() {
     })
   }, 1300)
 }
-
-//获取手续费率
-async function getFee() {
-  const res = await rechargeApi.payFee()
-  payFee.value = res.data.fee
-  amountLimit.value = res.data.threshold
-
-  amountList.value = rawAmountList.map(item => {
-    return {
-      ...item,
-      ...(item.value >= amountLimit.value
-        ? { info: t('recharge.handleFee') }
-        : {})
-    }
-  })
-}
-
-onMounted(() => { getFee() })
 </script>
 
 <template>
@@ -136,7 +130,7 @@ onMounted(() => { getFee() })
           customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
         )" @click="selectedAmount = item.value; customAmount = item.value">
           <span>{{ item.label }}</span>
-          <span v-if="item.info" class="text-sm text-success">{{ item.info }}</span>
+          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ t('recharge.handleFee') }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
@@ -165,7 +159,7 @@ onMounted(() => { getFee() })
       </div>
     </div>
 
-    <div v-if="iStore.settings.enablePaymentInfo" class="bg-muted p-3 rounded-md">
+    <div v-if="settings.enablePaymentInfo" class="bg-muted p-3 rounded-md">
       <p class="mb-2 font-medium">{{ t('recharge.info.title') }}: </p>
       <div class="tiptap text-sm text-muted-foreground" v-html="rechargeInfo" />
     </div>
@@ -177,7 +171,7 @@ onMounted(() => { getFee() })
       </div>
 
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.handle') }}({{ payFee * 100 }}%)</span>
+        <span>{{ t('recharge.balance.compAmount.handle') }}({{ +(payFee!.fee) * 100 }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
 

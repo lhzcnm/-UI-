@@ -47,7 +47,7 @@ const { t, locale } = useI18n()
 const options: XSegmentedOption[] = [
   { label: t('recharge.segment.balance'), value: 'recharge', icon: 'lucide:wallet' },
   { label: t('recharge.segment.member'), value: 'membership', icon: 'lucide:crown' },
-  { label: t('recharge.segment.voucher'), value: 'voucher', icon: 'lucide:ticket-check' }
+  { label: t('recharge.segment.voucher'), value: 'voucher', icon: 'lucide:ticket-check' },
 ]
 
 const titleOptions = {

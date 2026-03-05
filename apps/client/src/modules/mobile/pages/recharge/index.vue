@@ -20,6 +20,7 @@ const iStore = useSettingStore()
 const { t, locale } = useI18n()
 
 await iStore.getSettings()
+await iStore.getHandleFee()
 
 const options: XSegmentedOption[] = [
   { label: t('recharge.segment.balance'), value: 'recharge', icon: 'lucide:wallet' },

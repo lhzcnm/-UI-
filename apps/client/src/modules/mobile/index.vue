@@ -13,6 +13,7 @@ const loadConfig = !isDev && ua.isWechat
 
 await Promise.all([
   iStore.getSettings(),
+  iStore.getHandleFee(),
   loadConfig && getWxConfig(),
 ])
 

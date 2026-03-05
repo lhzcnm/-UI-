@@ -2,27 +2,29 @@
 import RechargeSearch from './components/RechargeSearch.vue'
 import RechargeModal from './components/RechargeModal.vue'
 import RechargeCard from './components/RechargeCard.vue'
+import RechargeHandleFee from './components/RechargeHandleFee.vue'
 
 import dayjs from 'dayjs'
 import { hash } from 'ohash'
 
 import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
-import { zRechargeSearchForm } from '@/inters/recharge'
+import { zRechargeHandleFee, zRechargeSearchForm } from '@/inters/recharge'
 import { getRecharges } from '@/api/recharge'
 import { createList } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { RECHARGE_STORE } from './utils'
-import { updateConfig } from '@/api/settings'
 
 const store: RechargeStore = reactive({
   recharges: createList(),
 
   formSearch: zRechargeSearchForm.parse({}),
   formUpdate: {} as RechargeUpdateParams,
+  handleFee: zRechargeHandleFee.parse({}),
 
   visibleSearch: false,
   visibleUpdate: false,
+  visibleHandleFee: false,
 
   refresh: false,
   index: undefined,
@@ -37,13 +39,17 @@ const route = useRoute()
 const router = useRouter()
 
 const loading = ref(false)
-const feeDialog = ref(false)
-const freeFeeThreshold = ref<string>((configs['recharge:threshold'] || '0.00'))
-const handleFee = ref<string>((+(configs['recharge:fee'] || '0.00') * 100).toString())
 
 const queryHash = computed(() => hash(route.query))
 const packageStore = usePackageStore()
 await packageStore.getList()
+
+store.handleFee = {
+  aliFee: (+configs['recharge:fee'] * 100).toString(),
+  aliThreshold: configs['recharge:threshold'],
+  wxFee: (+configs['recharge:wxFee'] * 100).toString(),
+  wxThreshold: configs['recharge:wxThreshold'].toString(),
+}
 
 watch(
   [
@@ -96,21 +102,6 @@ function resetSearch() {
     query: { q: route.query.q },
   })
 }
-
-async function handFeeUpdate() {
-  updateConfig([
-    {
-      key: 'recharge:threshold',
-      value: freeFeeThreshold.value,
-    },
-    {
-      key: 'recharge:fee',
-      value: (+handleFee.value / 100).toString(),
-    }
-  ])
-
-  feeDialog.value = false
-}
 </script>
 
 <template>
@@ -122,7 +113,7 @@ async function handFeeUpdate() {
         <XButton label="筛选" class="mr-2" icon="lucide:filter" @click="store.visibleSearch = true" />
         <XButton label="清空筛选" variant="outline" class="mr-2" icon="lucide:x" @click="resetSearch" />
 
-        <XButton color="success" variant="outline" label="手续费设置" icon="iconoir:settings" @click="feeDialog = true" />
+        <XButton color="success" variant="outline" label="手续费设置" icon="iconoir:settings" @click="store.visibleHandleFee = true" />
       </template>
     </Toolbar>
 
@@ -136,10 +127,10 @@ async function handFeeUpdate() {
 
     <RechargeSearch :key="queryHash" />
     <RechargeModal />
+    <RechargeHandleFee />
 
-    <XDialog v-model="feeDialog" title="手续费设置">
+    <!-- <XDialog v-model="feeDialog" title="手续费设置">
       <div class="space-y-3 text-sm">
-        <!-- 手续费界限 -->
         <div class="flex justify-between items-center">
           <div class="mb-1 text-muted-foreground">手续费界限:</div>
           <input
@@ -150,7 +141,6 @@ async function handFeeUpdate() {
           />
         </div>
 
-        <!-- 手续费率 -->
         <div class="flex justify-between items-center">
           <div class="mb-1 text-muted-foreground">手续费率 (%):</div>
           <input
@@ -165,6 +155,6 @@ async function handFeeUpdate() {
           <XButton @click="handFeeUpdate" label="修改" color="primary" />
         </div>
       </div>
-    </XDialog>
+    </XDialog> -->
   </div>
 </template>

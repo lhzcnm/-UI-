@@ -39,7 +39,18 @@ export const zRechargeSearchForm = z.object({
   endTime: z.string().optional(),
 })
 
+export const zRechargeHandleFee = z.object({
+  // alipay
+  aliFee: z.string().default(''),
+  aliThreshold: z.string().default(''),
+  // wechat
+  wxFee: z.string().default(''),
+  wxThreshold: z.string().default('')
+})
+
 export type RechargeSearchForm = z.infer<typeof zRechargeSearchForm>
+
+export type RechargeHandleFee = z.infer<typeof zRechargeHandleFee>
 
 // List
 export type RechargeList = IList<Recharge>

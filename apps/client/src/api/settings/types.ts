@@ -77,6 +77,15 @@ export interface Setting {
   mallWarmReminderZH: string
 }
 
+export interface HandleFeeType {
+  // alipay
+  fee: string
+  threshold: string
+  // wechat
+  wxFee: string
+  wxThreshold: string
+}
+
 // export interface Setting {
 //   title: string
 //   phone: string

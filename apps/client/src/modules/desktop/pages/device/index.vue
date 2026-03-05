@@ -52,13 +52,6 @@ const { t } = useI18n()
 const { getServices } = useServiceStore()
 
 watch(
-  () => store.hasNewVersion,
-  () => {
-    console.log(store.hasNewVersion)
-  }
-)
-
-watch(
   ws.data,
   async (value: string) => {
     if (value.startsWith('disconnected')) {

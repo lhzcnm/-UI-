@@ -16,7 +16,10 @@ const serviceStore = useServiceStore()
 
 const isLogout = ref(false)
 
-await iStore.getSettings()
+await Promise.all([
+  iStore.getSettings(),
+  iStore.getHandleFee(),
+])
 
 if(!route.meta.noAuthRequired) {
   await Promise.all([
