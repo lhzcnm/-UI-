@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { Icon } from '@iconify/vue'
 
 interface TextColorPickerProps {
-  editor: Editor
+  editor: Editor | any
 }
 
 const props = defineProps<TextColorPickerProps>()

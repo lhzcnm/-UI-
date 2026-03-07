@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CreateIllustrate from './CreateIllustrate.vue'
+
 import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 
@@ -7,6 +9,7 @@ import { updateSetting } from '@/api/settings'
 
 import { EDITOR_STORE } from '../utils'
 import { updateActivity } from '@/api/activity'
+import { updateIllustrate } from '@/api/illustrate'
 
 interface TheProps {
   getHtml?: () => string
@@ -29,6 +32,7 @@ const previewHtml = ref('')
 
 const options: OptionItem[] = [
   mode === "SanHe" && { label: '更新公告', value: 'adminRemainder', icon: 'solar:diploma-verified-outline' },
+  { label: '说明文档', value: 'illustrateDocx', icon: 'lucide:file-spreadsheet' },
   { label: '中文服务说明', value: 'service', icon: 'lucide:file-text' },
   { label: '英文服务说明', value: 'service-en', icon: 'lucide:globe' },
   { label: '中文活动说明', value: 'activity', icon: 'lucide:balloon' },
@@ -59,12 +63,19 @@ function handleSelectService(value: number) {
 }
 
 function handleSelectType(value: string) {
-  if (value.startsWith('service') || value.startsWith('activity')) return
+  if (value.startsWith('service') || value.startsWith('activity') || value.startsWith('illustrate')) return
 
   const content = store.settings[value] as string
 
   props.setHtml!(content || '')
   previewHtml.value = content || ''
+}
+
+function handleSelectIlustrate(value: string) {
+  console.log(value)
+  console.log(store.illustrates)
+  const illustrate = store.illustrates.get(value)
+  props.setHtml!(illustrate?.serviceDesc || '')
 }
 
 async function handleSave() {
@@ -83,13 +94,18 @@ async function handleSave() {
       mustRead: isEn ? undefined : html,
       mustReadLocal: isEn ? html : undefined,
     })
-  }
-  else if (store.selectedType.startsWith('activity')) {
+  } else if (store.selectedType.startsWith('activity')) {
     const activity = store.activityMap.get(store.selectActivity)!
     await updateActivity({
       ...activity,
       id: store.selectActivity,
       description: html,
+    })
+  } else if (store.selectedType.startsWith('illustrate')) {
+    const illustrate = store.illustrates.get(store.selectIllustrate)!
+    await updateIllustrate({
+      serviceCode: illustrate.serviceCode,
+      serviceDesc: html,
     })
   } else {
     try {
@@ -165,6 +181,15 @@ function handleRefresh() {
           @selected="handleSelectActivity"
         />
       </div>
+
+      <div v-show="store.selectedType.startsWith('illustrate')">
+        <label class="mb-2 block text-sm text-label">说明文档</label>
+
+        <div class="flex gap-2 items-center">
+          <SelectIllustrate v-model="store.selectIllustrate" @selected="handleSelectIlustrate" />
+          <XButton color="success" icon="mingcute:add-line" label="添加说明" variant="outline" @click="store.visibleIllustrateCreate = true" />
+        </div>
+      </div>
     </div>
 
     <div
@@ -210,5 +235,7 @@ function handleRefresh() {
         字符数: {{ previewHtml.length }}
       </span>
     </div>
+
+    <CreateIllustrate />
   </div>
 </template>

@@ -5,7 +5,9 @@ import { ua } from '@3un/utils'
 import type { OrderBatchEditItem } from '@/inters/orders'
 import { getTodoCount } from '@/api/dashboard'
 import { getConfigs, getSettings, getThread } from '@/api/settings'
-import type { Configs } from '@/inters/settings'
+import { type IllustrateMap, type Configs } from '@/inters/settings'
+import { getIllustrates } from '@/api/illustrate'
+import { type IllustrateItem } from '@/inters/illustrate'
 
 export const useSystemStore = defineStore('system', () => {
   let todoTimer: ReturnType<typeof setInterval> | null = null
@@ -17,6 +19,7 @@ export const useSystemStore = defineStore('system', () => {
   const selectedOrders = ref<OrderBatchEditItem[]>([])
   const settings = ref<Record<string, any>>({})
   const configs = ref<Configs>({} as Configs)
+  const illustrates = ref<IllustrateMap>(new Map<string, IllustrateItem>())
 
   const todoCount = reactive({
     ticket    : 0,
@@ -78,6 +81,14 @@ export const useSystemStore = defineStore('system', () => {
     settings.value['threads'] = data
   }
 
+  async function getIllustrateList() {
+    const illustrateData = await getIllustrates()
+    for (const illustrate of illustrateData) {
+      // illustrates.value[illustrate.serviceCode] = illustrate
+      illustrates.value.set(illustrate.serviceCode, illustrate)
+    }
+  }
+
   return {
     showSidebar,
     showSetting,
@@ -86,6 +97,7 @@ export const useSystemStore = defineStore('system', () => {
     selectedOrders,
     settings,
     configs,
+    illustrates,
     toggleSidebar,
     getTodoMsg,
     startTodoTimer,
@@ -93,5 +105,6 @@ export const useSystemStore = defineStore('system', () => {
     getSetting,
     getThreads,
     getConfig,
+    getIllustrateList,
   }
 })

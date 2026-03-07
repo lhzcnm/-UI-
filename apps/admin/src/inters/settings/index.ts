@@ -1,3 +1,5 @@
+import type { IllustrateItem } from "../illustrate"
+
 export interface SettingItem {
   id          : number
   name        : string
@@ -115,3 +117,5 @@ export interface Configs {
   'recharge:wxFee': string
   'recharge:wxThreshold': string
 }
+
+export type IllustrateMap = Map<string, IllustrateItem>

@@ -3,7 +3,7 @@ import type { Editor } from '@tiptap/vue-3'
 import { Icon } from '@iconify/vue'
 
 interface FontSizePickerProps {
-  editor: Editor
+  editor: Editor | any
 }
 
 const props = defineProps<FontSizePickerProps>()

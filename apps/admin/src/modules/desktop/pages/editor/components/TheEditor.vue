@@ -11,6 +11,7 @@ import Underline   from '@tiptap/extension-underline'
 import TextStyle   from '@tiptap/extension-text-style'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign   from '@tiptap/extension-text-align'
+import Image from '@tiptap/extension-image'
 
 import { EDITOR_STORE } from '../utils'
 
@@ -21,20 +22,54 @@ const FontSizeTextStyle = TextStyle.extend({
     return {
       fontSize: {
         default: null,
-        parseHTML: element => element.style.fontSize,
-        renderHTML: attributes => {
+        parseHTML: (element: HTMLElement) => element.style.fontSize,
+        renderHTML: (attributes: Record<string, any>) => {
           if (!attributes.fontSize) return {}
           return { style: `font-size: ${attributes.fontSize}` }
         },
       },
       color: {
         default: null,
-        parseHTML: element => element.style.color,
-        renderHTML: attributes => {
+        parseHTML: (element: HTMLElement) => element.style.color,
+        renderHTML: (attributes: Record<string, any>) => {
           if (!attributes.color) return {}
           return { style: `color: ${attributes.color}` }
         },
       },
+    }
+  },
+})
+
+const CustomImage = Image.extend({
+  inline: false,
+  group: 'block',
+  draggable: true,
+
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      align: {
+        default: 'left',
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-align'),
+        renderHTML: (attributes: Record<string, any>) => {
+          if (!attributes.align) return {}
+          return {
+            'data-align': attributes.align,
+            class: `img-${attributes.align}`,
+          }
+        },
+      },
+    }
+  },
+
+  addCommands() {
+    return {
+      ...this.parent?.(),
+      setImageAlign:
+        (align: 'left' | 'center' | 'right') =>
+        ({ commands }: any) => {
+          return commands.updateAttributes('image', { align })
+        },
     }
   },
 })
@@ -45,6 +80,13 @@ const editor = new Editor({
     StarterKit,
     Underline,
     FontSizeTextStyle,
+    // Image.configure({
+    //   inline: true,
+    //   allowBase64: true,
+    // }),
+    CustomImage.configure({
+      allowBase64: true,
+    }),
     TextAlign.configure({
       types: ['heading', 'paragraph'],
     }),
@@ -54,10 +96,10 @@ const editor = new Editor({
   ],
   editorProps: {
     attributes: {
-      class: 'h-[calc(100vh-10rem)] outline-none'
-    }
+      class: 'h-[calc(100vh-10rem)] outline-none',
+    },
   }
-})
+}) as any
 
 const route = useRoute()
 
@@ -75,11 +117,25 @@ watch(
   { immediate: true },
 )
 
+function setAlign(align: 'left' | 'center' | 'right') {
+  const { state } = editor
+  const { selection } = state
+
+  const node = state.doc.nodeAt(selection.from)
+
+  if (node?.type.name === 'image') {
+    editor.chain().focus().setImageAlign(align).run()
+  } else {
+    editor.chain().focus().setTextAlign(align).run()
+  }
+}
+
 onBeforeUnmount(() => editor.destroy())
 
 defineExpose({
   getHtml: () => editor.getHTML(),
   setHtml: (html: string) => editor.commands.setContent(html),
+  setImage: (url: string) => editor.chain().focus().setImage({ src: url }).run(),
 })
 </script>
 
@@ -188,7 +244,7 @@ defineExpose({
         <button
           class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive({ textAlign: 'left' })}"
-          @click="editor.chain().focus().setTextAlign('left').run()"
+          @click="setAlign('left')"
         >
           <Icon icon="lucide:align-left" class="size-5" />
           <div class="x-tooltip-text top120">左对齐</div>
@@ -196,7 +252,7 @@ defineExpose({
         <button
           class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive({ textAlign: 'center' })}"
-          @click="editor.chain().focus().setTextAlign('center').run()"
+          @click="setAlign('center')"
         >
           <Icon icon="lucide:align-center" class="size-5" />
           <div class="x-tooltip-text top120">居中对齐</div>
@@ -204,7 +260,7 @@ defineExpose({
         <button
           class="x-tooltip hover:bg-muted rounded p-1.5"
           :class="{'bg-muted': editor.isActive({ textAlign: 'right' })}"
-          @click="editor.chain().focus().setTextAlign('right').run()"
+          @click="setAlign('right')"
         >
           <Icon icon="lucide:align-right" class="size-5" />
           <div class="x-tooltip-text top120">右对齐</div>

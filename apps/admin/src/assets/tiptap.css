@@ -67,3 +67,18 @@
     border-top: 1px solid;
   }
 }
+
+.tiptap .img-left {
+  display: block;
+  margin-right: auto;
+}
+
+.tiptap .img-center {
+  display: block;
+  margin: 0 auto;
+}
+
+.tiptap .img-right {
+  display: block;
+  margin-left: auto;
+}

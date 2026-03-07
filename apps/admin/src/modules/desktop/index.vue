@@ -20,6 +20,7 @@ await Promise.all([
   iStore.getSetting(),
   iStore.getThreads(),
   iStore.getConfig(),
+  iStore.getIllustrateList(),
 ])
 
 iStore.startTodoTimer()
