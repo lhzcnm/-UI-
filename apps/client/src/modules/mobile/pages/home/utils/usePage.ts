@@ -24,8 +24,20 @@ export function usePage() {
   // Handle scroll events to update current page indicator
   const carouselRef = ref<HTMLElement | null>(null)
 
+  // Judge if scroll
+  const isScrolling = ref(false)
+  let scrollTimer: number | null = null
+
   function handleScroll() {
     if (!carouselRef.value) return
+
+    isScrolling.value = true
+
+    if (scrollTimer) clearTimeout(scrollTimer)
+
+    scrollTimer = window.setTimeout(() => {
+      isScrolling.value = false
+    }, 100)
     
     const scrollLeft = carouselRef.value.scrollLeft
     const scrollWidth = carouselRef.value.scrollWidth
@@ -72,6 +84,8 @@ export function usePage() {
     totalPages,
     currentPage,
     carouselRef,
+    isScrolling,
+    
     handleScroll,
     scrollToPage,
   }

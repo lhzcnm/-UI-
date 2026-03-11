@@ -52,7 +52,7 @@ onMounted(async () => {
 })
 
 const commonList = getCommonList(store.services)
-const { totalPages, currentPage, pages, carouselRef, handleScroll, scrollToPage } = usePage()
+const { totalPages, currentPage, pages, carouselRef, handleScroll, scrollToPage, isScrolling } = usePage()
 
 const router = useRouter()
 
@@ -65,6 +65,8 @@ const current = ref<ServiceDetail>({
 })
 
 function handleServiceGroupClick(event: MouseEvent) {
+  if (isScrolling.value) return
+  
   const target = event.target as HTMLElement
   const element = target.closest('[data-index]')
 

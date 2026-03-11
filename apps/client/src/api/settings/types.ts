@@ -60,7 +60,11 @@ export interface Setting {
   // 是否启用工单
   enableTricket: boolean
   // 是否启用订单审核
-  enableOrderVerify: boolean
+  // enableOrderVerify: boolean
+  // 查询类订单开启验证
+  queryValidation: boolean
+  // 解锁类订单开启验证
+  unlockValidation: boolean
 
   // 报价单
   beautyMachinePrompt: string

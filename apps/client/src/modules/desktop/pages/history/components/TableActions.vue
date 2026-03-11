@@ -33,6 +33,7 @@ const verify = {
 }
 
 const store = inject(HISTORY_STORE)!
+const { services } = useServiceStore()
 const focreHide = ref(false)
 
 const { t } = useI18n()
@@ -42,8 +43,18 @@ watch(copied, (value) => value && toast.success(t('submit.success', { action: t(
 
 const iStore = useSettingStore()
 
+const isUnlockService = computed(() => {
+  const service = services.get(row.serviceId)
+  if (!service) return false
+  return service.isUnlock
+})
+
+const serviceVertifyType = computed(() => {
+  return isUnlockService.value ? iStore.settings.unlockValidation : iStore.settings.queryValidation
+})
+
 const isShowVerify = computed(() => {
-  return iStore.settings.enableOrderVerify &&
+  return serviceVertifyType.value &&
     verify.isNormal &&
     status.isSuccess &&
     !focreHide.value
@@ -75,7 +86,7 @@ function handleVerify() {
     return
   }
 
-  orderApi.verify(id).then(() => {
+  orderApi.verify(id, { isUnlock: isUnlockService.value }).then(() => {
     toast.success(t('order.prompt.vertified'))
 
     focreHide.value = true

@@ -62,7 +62,7 @@ export const useSystemStore = defineStore('system', () => {
         settings.value[item.name] = item.content
         continue
       }
-      if (item.status) {
+      if (item.status !== null) {
         settings.value[item.name] = item.status
       }
     }

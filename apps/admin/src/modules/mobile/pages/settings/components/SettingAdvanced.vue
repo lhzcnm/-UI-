@@ -14,7 +14,9 @@ const loading = ref(false)
 const form = reactive({
   enableRegister: settings.enableRegister,
   enableOrderVerify: settings.enableOrderVerify,
-  enableTricket: settings.enableTricket,
+  // enableTricket: settings.enableTricket,
+  queryValidation: settings.queryValidation,
+  unlockValidation: settings.unlockValidation,
   minRechargeAmount: settings.minRechargeAmount,
   maxRechargeAmount: settings.maxRechargeAmount,
   minVoucherAmount: settings.minVoucherAmount ?? 0,
@@ -37,11 +39,13 @@ function handleSubmit() {
     updateSetting([
       { name: 'enableRegister', status: form.enableRegister },
       { name: 'enableOrderVerify', status: form.enableOrderVerify },
-      { name: 'enableTricket', status: form.enableTricket },
+      // { name: 'enableTricket', status: form.enableTricket },
       { name: 'minRechargeAmount', content: form.minRechargeAmount.toString() },
       { name: 'maxRechargeAmount', content: form.maxRechargeAmount.toString() },
       { name: 'minVoucherAmount', content: form.minVoucherAmount.toString() },
       { name: 'maxVoucherAmount', content: form.maxVoucherAmount.toString() },
+      { name: 'queryValidation', status: form.queryValidation },
+      { name: 'unlockValidation', status: form.unlockValidation },
     ]),
     updateConfig([
       { key: 'invite:point', value: form.invitePonit.toString() },
@@ -169,12 +173,28 @@ function handleSubmit() {
         <XSwitch v-model="form.enableOrderVerify" />
       </FormField>
   
-      <FormField
+      <!-- <FormField
         label="允许提交工单"
         desc="关闭后，将不允许用户提交工单"
         :content-flex="false"
       >
         <XSwitch v-model="form.enableTricket" />
+      </FormField> -->
+
+      <FormField
+        label="查询类-提交工单"
+        desc="关闭后，将不允许查询类订单提交工单"
+        :content-flex="false"
+      >
+        <XSwitch v-model="form.queryValidation" />
+      </FormField>
+      
+      <FormField
+        label="解锁类-提交工单"
+        desc="关闭后，将不允许解锁类订单提交工单"
+        :content-flex="false"
+      >
+        <XSwitch v-model="form.unlockValidation" />
       </FormField>
     </div>
 

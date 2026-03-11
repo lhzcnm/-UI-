@@ -58,8 +58,18 @@ watch(copied, (value) => value && toast.success(t('submit.success', { action: t(
 
 const iStore = useSettingStore()
 
+const isUnlockService = computed(() => {
+  const service = serviceStore.services.get(order.value.serviceId)
+  if (!service) return false
+  return service.isUnlock
+})
+
+const serviceVertifyType = computed(() => {
+  return isUnlockService.value ? iStore.settings.unlockValidation : iStore.settings.queryValidation
+})
+
 const isShowVerify = computed(() => {
-  return iStore.settings.enableOrderVerify &&
+  return serviceVertifyType.value &&
     verify.value.isNormal &&
     status.value.isSuccess
 })
@@ -100,7 +110,7 @@ function handleVerify() {
   }
 
   window.confirm(t('order.prompt.vertifyConfirm')) && (() => {
-    orderApi.verify(id).then(() => {
+    orderApi.verify(id, { isUnlock: isUnlockService.value }).then(() => {
       order.value.verify = ORDER_VERIFY.REPLIED
       toast.success(t('order.prompt.vertified'))
     })

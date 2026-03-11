@@ -10,7 +10,7 @@ export interface OrderApi {
   submitExport(data: OrderSubmitExportParams): R<string>
   submitOrders(data: SubmitOrderListParams): R<OrderTableView[]>
 
-  verify(id: number): R<void>
+  verify(id: number, params: VertifyParams): R<void>
   orderPrint(body: OrderPrintParams): R<Blob>
 
   cacheImei(body: CacheImeiParams): R<string[]>
@@ -175,4 +175,8 @@ export interface DeleteImeiPrams {
 
 export interface QrcodeImageParams {
   content: string,
+}
+
+export interface VertifyParams {
+  isUnlock: boolean
 }

@@ -8,7 +8,7 @@ export const orderApi: OrderApi = {
   list: (parmas) => http.post(`order/list`, parmas),
 
   export: (parmas) => http.post(`order/export`, parmas),
-  verify: (codeId) => http.get(`order/verify/${codeId}`),
+  verify: (codeId, params) => http.get(`order/verify/${codeId}`, { params }),
 
   submit: (params) => http.post(`order/submit`, params),
   submitExport: (params) => http.post(`order/submit/export`, params),

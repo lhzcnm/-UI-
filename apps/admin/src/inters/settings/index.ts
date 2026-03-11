@@ -73,11 +73,15 @@ export interface Settings {
   // 是否启用注册
   enableRegister: boolean
   // 是否启用工单
-  enableTricket: boolean
+  // enableTricket: boolean
   // 是否启用订单审核
   enableOrderVerify: boolean
   // 邀请码生成文本
   invite: string
+  // 查询类订单开启验证
+  queryValidation: boolean
+  // 解锁类订单开启验证
+  unlockValidation: boolean
 
   // 报价单
   // beautyMachinePrompt: string
