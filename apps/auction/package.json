@@ -1,0 +1,7 @@
+{
+  "name": "@3un/auction",
+  "packageManager": "pnpm@10.29.3",
+  "scripts": {
+    "dev": "vite --host --port 3002"
+  }
+}
