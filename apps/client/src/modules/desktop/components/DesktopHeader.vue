@@ -31,13 +31,17 @@ const systemStore = useSystemStore()
 // ]
 
 const foldIcon = computed(() => {
-  if(systemStore.showSidebar) return 'lucide:panel-left-close'
+  if (systemStore.showSidebar) return 'lucide:panel-left-close'
   return 'lucide:panel-left-open'
 })
 
 // function handleClick(path: string) {
 //   location.href = path
 // }
+
+function goToInstruction() {
+  window.open('http://47.106.114.119', '_blank')
+}
 </script>
 
 <template>
@@ -45,8 +49,15 @@ const foldIcon = computed(() => {
     <div class="flex items-center justify-between h-full border-b border-dashed">
       <div class="flex items-center">
         <TheLogo />
-        <Icon class="ml-16 text-zinc-500 cursor-pointer" width="24" :icon="foldIcon" @click="systemStore.toggleSidebar" />
-        
+        <Icon class="ml-16 mr-4 text-zinc-500 cursor-pointer" width="24" :icon="foldIcon"
+          @click="systemStore.toggleSidebar" />
+
+        <section @click="goToInstruction"
+          class="flex items-center space-x-1 py-1 px-3   hover:text-red-500 dark:hover:text-red-500  text-gray-600 dark:text-gray-50  select-none">
+          <Icon icon="tdesign:error-circle" class="size-4" />
+          <span class="text-md">使用说明</span>
+        </section>
+
       </div>
 
       <nav class="flex items-center space-x-4">
@@ -57,21 +68,19 @@ const foldIcon = computed(() => {
           {{ t(extra.name) }}
         </button> -->
 
-        <RouterLink
-          to="/recharge"
-          :class="twJoin(
-            'flex items-center space-x-2 px-3 py-2 shadow',
-            'bg-success text-white rounded-full'
-          )"
-        >
+        <RouterLink to="/recharge" :class="twJoin(
+          'flex items-center space-x-2 px-3 py-2 shadow',
+          'bg-success text-white rounded-full'
+        )">
           <Icon icon="hugeicons:bitcoin-bag" class="size-5" />
           <span class="text-sm">{{ uStore.info.credits }}</span>
         </RouterLink>
 
+
         <LanguageSwitch />
         <TheTheme />
         <TheAvatar class="size-8" />
-        
+
       </nav>
     </div>
   </header>

@@ -1,0 +1,1 @@
+{"root":["./src/main.ts","./src/router/index.ts","./src/router/routes/desktop.ts","./src/utils/api.ts","./src/utils/http.ts","./src/utils/menu.ts","./src/app.vue","./src/modules/admin/index.vue","./src/modules/client/index.vue"],"version":"5.7.3"}
