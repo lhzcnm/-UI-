@@ -6,6 +6,7 @@ import { h } from 'vue'
 
 import type { Level } from '@/inters/level'
 import { updateLevel } from '@/api/level'
+import { ACCESS_LEVEL, ACCESS_LEVEL_MAP } from '@3un/utils'
 
 export const columns: XColDef<Level> = [
   {
@@ -23,6 +24,15 @@ export const columns: XColDef<Level> = [
     key: 'pricePlanLocal',
     title: '等级名称(英文)',
     minWidth: 128,
+  },
+  {
+    key: 'accessLevel',
+    title: '会员组权限',
+    width: 208,
+    render(value) {
+      const { label } = ACCESS_LEVEL_MAP[value as ACCESS_LEVEL]
+      return label
+    }
   },
   {
     key: 'enableDevice',

@@ -21,6 +21,10 @@ defineExpose({
       <XInput v-model="form.pricePlanLocal" placeholder="等级名称EN" />
     </XFormItem>
 
+    <XFormItem field="accessLevel" label="会员组权限">
+      <SelectAccesslevel v-model="form.accessLevel" />
+    </XFormItem>
+
     <XFormItem label="允许访问设备页面">
       <XSwitch v-model="form.enableDevice" />
     </XFormItem>

@@ -1,4 +1,5 @@
 import type { WithId } from '@3un/shared'
+import { ACCESS_LEVEL } from '@3un/utils'
 import { z } from 'zod/v4'
 
 export * from './service'
@@ -13,6 +14,9 @@ export const zLevel = z.object({
   // updateTime: z.string().default(''),
   // createTime: z.string().default(''),
   // updateByUserId: z.string().default(''),
+  
+  // member permission
+  accessLevel: z.enum(ACCESS_LEVEL).default(ACCESS_LEVEL.BASIC),
 })
 
 export type Level = z.infer<typeof zLevel>

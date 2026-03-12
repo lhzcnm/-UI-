@@ -4,7 +4,7 @@ import type { XTagProps } from '@3un/ui'
 
 import { LEVEL_STORE } from '../utils'
 import { deleteLevel, getLevelServices } from '@/api/level'
-import { xconfirm } from '@3un/utils'
+import { xconfirm, ACCESS_LEVEL_MAP } from '@3un/utils'
 
 interface TheProps {
   level: Level
@@ -23,6 +23,8 @@ const status = computed<XTagProps>(() => {
     label: status ? '禁用' : '启用',
   }
 })
+
+const permission = computed(() => ACCESS_LEVEL_MAP[props.level.accessLevel].label)
 
 function handleSubmit() {
   store.formBase = zLevelForm.parse(props.level)
@@ -66,6 +68,10 @@ async function handleDelete() {
         <span class="text-sm">{{ level.pricePlan }} | {{ level.pricePlanLocal }}</span>
       </div>
       <XTag v-bind="status" />
+    </div>
+
+    <div class="px-6 pb-2 flex items-center text-sm">
+      <span class="">用户组权限: {{ permission }}</span>
     </div>
 
     <div class="flex items-center justify-between px-3 py-2 border-t border-dashed">
