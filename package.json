@@ -9,10 +9,12 @@
     "build:client": "pnpm -F @3un/client build",
     "build:shop": "pnpm -F @3un/shop build",
     "build:admin": "pnpm -F @3un/admin build",
+    "build:guide": "pnpm -F @guide/client build",
     "dev:ui": "pnpm -F @3un/ui dev",
     "dev:client": "pnpm -F @3un/client dev",
     "dev:shop": "pnpm -F @3un/shop dev",
-    "dev:admin": "pnpm -F @3un/admin dev"
+    "dev:admin": "pnpm -F @3un/admin dev",
+    "dev:guide": "pnpm -F @guide/client dev"
   },
   "devDependencies": {
     "@iconify/vue": "5",

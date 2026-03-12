@@ -18,6 +18,7 @@ declare module 'vue' {
     EmailForm: typeof import('./src/components/form/EmailForm.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
     FreshButton: typeof import('./src/modules/mobile/components/FreshButton.vue')['default']
+    HeaderTag: typeof import('./src/components/HeaderTag.vue')['default']
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
     LogoutDialog: typeof import('./src/components/LogoutDialog.vue')['default']
     MobileFooter: typeof import('./src/modules/mobile/components/MobileFooter.vue')['default']
@@ -48,13 +49,9 @@ declare module 'vue' {
     XBulletinBoard: typeof import('@3un/ui')['XBulletinBoard']
     XButton: typeof import('@3un/ui')['XButton']
     XCaptchaSlider: typeof import('@3un/ui')['XCaptchaSlider']
+    XDialog: typeof import('@3un/ui')['XDialog']
     XEmpty: typeof import('@3un/ui')['XEmpty']
     XInput: typeof import('@3un/ui')['XInput']
-    XNativeSelect: typeof import('@3un/ui')['XNativeSelect']
-    XSegmented: typeof import('@3un/ui')['XSegmented']
-    XSimplePagination: typeof import('@3un/ui')['XSimplePagination']
-    XSwitch: typeof import('@3un/ui')['XSwitch']
     XTag: typeof import('@3un/ui')['XTag']
-    XTextarea: typeof import('@3un/ui')['XTextarea']
   }
 }
