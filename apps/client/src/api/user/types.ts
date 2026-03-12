@@ -1,5 +1,6 @@
 import type { PROFILE_TYPE } from '@/modules/desktop/pages/profile/types'
 import type { R, IList, IPage } from '@3un/shared'
+import type { ACCESS_LEVEL } from '@3un/utils'
 
 export interface UserApi {
   info(): R<UserInfo>
@@ -50,6 +51,7 @@ export interface UserInfo {
   rechargeCount: string
   totalReceipts: string
   totalUnpaidReceipts: string
+  accessLevel: ACCESS_LEVEL
   userOrder: {
     failed: number
     success: number

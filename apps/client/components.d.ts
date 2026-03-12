@@ -46,12 +46,13 @@ declare module 'vue' {
     TheTheme: typeof import('./src/components/TheTheme.vue')['default']
     TicketCard: typeof import('./src/components/card/TicketCard.vue')['default']
     WechatForm: typeof import('./src/components/form/WechatForm.vue')['default']
-    XBulletinBoard: typeof import('@3un/ui')['XBulletinBoard']
     XButton: typeof import('@3un/ui')['XButton']
     XCaptchaSlider: typeof import('@3un/ui')['XCaptchaSlider']
     XDialog: typeof import('@3un/ui')['XDialog']
-    XEmpty: typeof import('@3un/ui')['XEmpty']
     XInput: typeof import('@3un/ui')['XInput']
+    XSelect: typeof import('@3un/ui')['XSelect']
+    XSelectItem: typeof import('@3un/ui')['XSelectItem']
     XTag: typeof import('@3un/ui')['XTag']
+    XTextarea: typeof import('@3un/ui')['XTextarea']
   }
 }

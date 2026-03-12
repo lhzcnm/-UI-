@@ -394,3 +394,18 @@ export const ACTIVITY_BONUS_LIST = [
 // export const ACTIVATE_STATUS_MAP = {
 //   []
 // }
+
+export enum ACCESS_LEVEL {
+  BASIC   = 0,
+  AUCTION = 1,
+}
+
+export const ACCESS_LEVEL_MAP = {
+  [ACCESS_LEVEL.BASIC]: { value: ACCESS_LEVEL.BASIC, label: "所有基础功能" },
+  [ACCESS_LEVEL.AUCTION]: { value: ACCESS_LEVEL.AUCTION, label: "基础功能 + 竞价功能" },
+}
+
+export const ACCESS_LEVEL_LIST = [
+  { value: ACCESS_LEVEL.BASIC, label: "所有基础功能" },
+  { value: ACCESS_LEVEL.AUCTION, label: "基础功能 + 竞价功能" },
+]

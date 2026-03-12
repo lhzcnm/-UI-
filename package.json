@@ -14,7 +14,8 @@
     "dev:client": "pnpm -F @3un/client dev",
     "dev:shop": "pnpm -F @3un/shop dev",
     "dev:admin": "pnpm -F @3un/admin dev",
-    "dev:guide": "pnpm -F @guide/client dev"
+    "dev:guide": "pnpm -F @guide/client dev",
+    "dev:auction": "pnpm -F @3un/auction dev"
   },
   "devDependencies": {
     "@iconify/vue": "5",

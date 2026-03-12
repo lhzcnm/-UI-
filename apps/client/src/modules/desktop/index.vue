@@ -5,6 +5,7 @@ import TheSidebar from './components/TheSidebar.vue'
 import { useSystemStore } from '@/stores/system'
 
 import { useDocumentVisibility } from '@vueuse/core'
+import type { SidebarMenu } from './types'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -35,7 +36,7 @@ const hideDevice =
   // 用户未开启设备
   !uStore.info.enableDevice
 
-const menus = [
+const menus: SidebarMenu[] = [
   { label: t('barItem.home'),    path: '/', icon: 'iconoir:home-alt-slim-horiz' },
   // { label: t('barItem.quote'), path: '/quote', icon: 'circum:receipt' },
   { label: t('barItem.query'), path: '/submit', icon: 'iconoir:atom' },
@@ -56,8 +57,8 @@ const menus = [
     hide: !iStore.settings.enableTricket,
   },
   { label: t('barItem.profile'), path: '/profile', icon: 'iconoir:user' },
-  { label: t('barItem.logout'), path: '/logout', icon: 'iconoir:log-out'}
-]
+  { label: t('barItem.logout'), path: '/logout', icon: 'iconoir:log-out'},
+].filter(item => !!item)
 
 watch(visibility, (cur, prev) => {
   if ((cur === 'visible' && prev === 'hidden') && !route.meta.noAuthRequired) {
