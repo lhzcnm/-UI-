@@ -40,7 +40,7 @@ const foldIcon = computed(() => {
 // }
 
 function goToInstruction() {
-  window.open('http://47.106.114.119', '_blank')
+  window.open('http://docx.3unlocked.com/#/', '_blank')
 }
 </script>
 

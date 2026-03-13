@@ -50,7 +50,7 @@ function getMenuNameByValue(value: string): string {
 // API 调用
 async function fetchGroupContent(group: MenuItem): Promise<ContentItem[]> {
   const codes: string[] = []
-  
+
   if (group.children) {
     codes.push(...group.children.map(i => i.value!).filter(Boolean))
   } else if (group.value) {
@@ -74,7 +74,7 @@ async function fetchGroupContent(group: MenuItem): Promise<ContentItem[]> {
 // 菜单交互
 async function scrollToMenu(value?: string): Promise<void> {
   if (!value || !contentRef.value) return
-  
+
   await nextTick()
   const el = contentRef.value.querySelector(`#${value}`) as HTMLElement
   if (el) {
@@ -91,7 +91,7 @@ async function clickMenu(group: MenuItem): Promise<void> {
       openMenus.value = []
       return
     }
-    
+
     openMenus.value = [group.name]
     const data = await fetchGroupContent(group)
     contentList.value = data
@@ -103,7 +103,7 @@ async function clickMenu(group: MenuItem): Promise<void> {
   } else if (group.value) {
     // 二级菜单（直接内容）
     openMenus.value = []
-    
+
     if (active.value !== group.value) {
       active.value = group.value
       const data = await fetchGroupContent(group)
@@ -130,7 +130,7 @@ const filteredMenus = computed<MenuItem[]>(() => {
       if (menu.children) {
         // 一级菜单匹配
         if (menu.name.toLowerCase().includes(keyword)) return menu
-        
+
         // 二级菜单匹配
         const children = menu.children.filter(child =>
           child.name.toLowerCase().includes(keyword)
@@ -166,14 +166,14 @@ function updateActiveMenuOnScroll(): void {
 
   const container = contentRef.value
   const containerRect = container.getBoundingClientRect()
-  
+
   // 找到当前可视区域最靠上的章节
   let currentSection = sections[0].id
   let minDistance = Infinity
 
   sections.forEach(section => {
     if (!section.element) return
-    
+
     const rect = section.element.getBoundingClientRect()
     const distance = Math.abs(rect.top - containerRect.top)
 
@@ -216,11 +216,11 @@ function expandParentMenu(value: string): void {
 // 图片预览 
 function handleContentClick(e: MouseEvent): void {
   const target = e.target as HTMLElement
-  
+
   if (target.tagName === 'IMG' && contentRef.value) {
     const imgs = Array.from(contentRef.value.querySelectorAll('img')) as HTMLImageElement[]
     const img = target as HTMLImageElement
-    
+
     previewState.value = {
       visible: true,
       currentImg: img.src,
@@ -232,7 +232,7 @@ function handleContentClick(e: MouseEvent): void {
 
 function prevImg(e?: MouseEvent): void {
   if (e) e.stopPropagation()
-  
+
   const { images, currentIndex } = previewState.value
   if (!images.length) return
 
@@ -246,7 +246,7 @@ function prevImg(e?: MouseEvent): void {
 
 function nextImg(e?: MouseEvent): void {
   if (e) e.stopPropagation()
-  
+
   const { images, currentIndex } = previewState.value
   if (!images.length) return
 
@@ -269,7 +269,7 @@ function closePreview(): void {
 
 function handleKey(e: KeyboardEvent): void {
   if (!previewState.value.visible) return
-  
+
   switch (e.key) {
     case 'ArrowRight':
       nextImg()
@@ -307,7 +307,7 @@ async function initializeFirstMenu(): Promise<void> {
 // 生命周期 
 onMounted(async () => {
   await initializeFirstMenu()
-  
+
   // 添加滚动监听
   if (contentRef.value) {
     contentRef.value.addEventListener('scroll', () => {
@@ -315,7 +315,7 @@ onMounted(async () => {
       scrollTimeout = setTimeout(updateActiveMenuOnScroll, 50)
     })
   }
-  
+
   // 添加键盘监听
   window.addEventListener('keydown', handleKey)
 })
@@ -336,7 +336,7 @@ watch(contentList, async () => {
   <div class="flex h-screen font-sans text-gray-700 select-none">
 
     <!-- 左侧菜单 -->
-    <aside class="flex flex-col w-64 p-4 border-r shadow-sm h-screen bg-white/40">
+    <aside class="flex flex-col w-64 p-4 border-r h-screen bg-white/40">
 
       <div class="flex flex-col items-center mb-6">
         <div class="text-2xl font-bold text-gray-600">使用说明</div>
@@ -345,12 +345,19 @@ watch(contentList, async () => {
 
       <!-- 搜索 -->
       <div class="relative mb-3">
-        <input 
-          v-model="searchKeyword" 
-          placeholder="关键字搜索..."
-          class="w-full pl-10 pr-3 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-sm" 
-        />
+        <input v-model="searchKeyword" placeholder="关键字搜索..."
+          class="w-full pl-10 pr-3 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-sm" />
         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+        <span v-if="searchKeyword !== ''" @click="searchKeyword = ''"
+          class="group absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 cursor-pointer">
+          <Icon icon="uil:trash-alt" class="size-5" />
+
+          <!-- tooltip -->
+          <span class="absolute -translate-x-1/4 -top-8 hidden group-hover:block whitespace-nowrap 
+           bg-gray-400 text-white text-xs px-2 py-1 rounded shadow">
+            删除
+          </span>
+        </span>
       </div>
 
       <!-- 菜单 -->
@@ -362,46 +369,29 @@ watch(contentList, async () => {
 
         <div v-for="group in filteredMenus" :key="group.name" class="mb-3">
 
-          <div 
-            class="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
-            :class="[
-              active === group.value
-                ? 'text-gray-600 bg-gray-50 font-semibold shadow-inner'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-            ]" 
-            @click="clickMenu(group)"
-          >
+          <div class="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg cursor-pointer" :class="[
+            active === group.value
+              ? 'text-gray-600 bg-gray-50 font-semibold shadow-inner'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+          ]" @click="clickMenu(group)">
             <span>{{ group.name }}</span>
 
-            <span 
-              v-if="group.children" 
-              class="text-xs"
-              :class="openMenus.includes(group.name) ? 'rotate-90' : ''"
-            >
+            <span v-if="group.children" class="text-xs" :class="openMenus.includes(group.name) ? 'rotate-90' : ''">
               <Icon icon="ci:chevron-right" />
             </span>
           </div>
 
           <transition name="menu">
-            <div 
-              v-if="group.children && openMenus.includes(group.name)"
-              class="ml-4 mt-1 border-l border-gray-200 pl-3 space-y-1"
-            >
-              <div 
-                v-for="item in group.children" 
-                :key="item.value" 
-                @click="selectMenu(item.value)"
-                class="relative px-2 py-2 text-sm rounded-lg cursor-pointer" 
-                :class="[
+            <div v-if="group.children && openMenus.includes(group.name)"
+              class="ml-4 mt-1 border-l border-gray-200 pl-3 space-y-1">
+              <div v-for="item in group.children" :key="item.value" @click="selectMenu(item.value)"
+                class="relative px-2 py-2 text-sm rounded-lg cursor-pointer" :class="[
                   active === item.value
                     ? 'bg-gray-50 text-gray-600 font-medium shadow-inner'
                     : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-                ]"
-              >
-                <span 
-                  v-if="active === item.value"
-                  class="absolute left-[-12px] top-0 h-full w-1 bg-gray-500 rounded-r"
-                ></span>
+                ]">
+                <span v-if="active === item.value"
+                  class="absolute left-[-12px] top-0 h-full w-1 bg-gray-500/40 rounded-r"></span>
 
                 {{ item.name }}
               </div>
@@ -415,28 +405,18 @@ watch(contentList, async () => {
     </aside>
 
     <!-- 右侧内容 -->
-    <main 
-      ref="contentRef" 
-      @click="handleContentClick" 
-      class="flex-1 p-4 overflow-auto space-y-6"
-    >
+    <main ref="contentRef" @click="handleContentClick" class="flex-1 overflow-auto">
 
       <template v-if="contentList.length">
 
-        <div 
-          v-for="item in contentList" 
-          :key="item.value" 
-          :id="item.value"
-          class="bg-white/20 w-2/3 mx-auto rounded-lg p-6 shadow-md border border-gray-300/20"
-        >
-          <div class="text-2xl font-bold text-black/80 text-center border-b-2 border-gray-300 pb-2 mb-4">
+        <div v-for="item in contentList" :key="item.value" :id="item.value" class="bg-white/20 w-full pt-4">
+          <div class="text-2xl font-bold text-black/80 text-center border-b border-dashed border-gray-300 pb-4">
             {{ getMenuNameByValue(item.value) }} - 使用说明
           </div>
 
           <div
-            class="text-gray-700 leading-relaxed [&_img]:max-w-full [&_img]:rounded-lg [&_img]:cursor-zoom-in [&_img]:my-4"
-            v-html="item.content"
-          ></div>
+            class="text-gray-700 leading-relaxed [&_img]:max-w-full [&_img]:rounded-lg [&_img]:cursor-zoom-in [&_img]:my-4 px-6 border-b"
+            v-html="item.content"></div>
 
         </div>
 
@@ -449,35 +429,24 @@ watch(contentList, async () => {
     </main>
 
     <!-- 图片预览 -->
-    <div 
-      v-if="previewState.visible" 
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-    >
+    <div v-if="previewState.visible"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <!-- 上一张 -->
-      <div 
-        @click="prevImg"
-        class="absolute left-10 text-white text-5xl cursor-pointer select-none hover:text-sky-400 px-4 "
-      >
+      <div @click="prevImg"
+        class="absolute left-10 text-white text-5xl cursor-pointer select-none hover:text-sky-400 px-4 ">
         ‹
       </div>
 
-      <img 
-        :src="previewState.currentImg" 
-        class="h-[80vh] w-[80vw] object-contain rounded-lg" 
-      />
+      <img :src="previewState.currentImg" class="h-full w-full object-contain rounded-lg select-none" />
 
       <!-- 下一张 -->
-      <div 
-        @click="nextImg"
-        class="absolute right-10 text-white text-5xl cursor-pointer select-none hover:text-sky-400 px-4 "
-      >
+      <div @click="nextImg"
+        class="absolute right-10 text-white text-5xl cursor-pointer select-none hover:text-sky-400 px-4 ">
         ›
       </div>
 
-      <div 
-        @click="closePreview"
-        class="absolute bottom-10 text-center rounded-md w-24 p-2 text-gray-300 hover:text-red-400 bg-gray-300/20 hover:bg-red-500/20 cursor-pointer"
-      >
+      <div @click="closePreview"
+        class="absolute bottom-10 text-center rounded-md w-24 p-2 text-white hover:text-red-400 bg-gray-400 hover:bg-red-500/20 cursor-pointer">
         关闭
       </div>
 
