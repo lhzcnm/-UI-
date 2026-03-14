@@ -59,13 +59,9 @@ async function fetchGroupContent(group: MenuItem): Promise<ContentItem[]> {
   const codes: string[] = []
 
   if (group.children) {
-
     codes.push(...group.children.map(i => i.value!).filter(Boolean))
-
   } else if (group.value) {
-
     codes.push(group.value)
-
   }
 
   if (!codes.length) return []
@@ -82,7 +78,6 @@ async function fetchGroupContent(group: MenuItem): Promise<ContentItem[]> {
   } catch (error) {
 
     console.error('获取文档失败:', error)
-
     return []
 
   }
@@ -100,8 +95,10 @@ async function scrollToMenu(value?: string): Promise<void> {
 
   if (!el) return
 
+  const top = el.offsetTop - 48
+
   contentRef.value.scrollTo({
-    top: el.offsetTop - 10,
+    top,
     behavior: 'smooth'
   })
 
@@ -117,7 +114,6 @@ async function clickMenu(group: MenuItem): Promise<void> {
     if (isOpen) {
 
       openMenus.value = []
-
       return
 
     }
@@ -131,7 +127,6 @@ async function clickMenu(group: MenuItem): Promise<void> {
     if (data.length) {
 
       active.value = data[0].value
-
       await scrollToMenu(active.value)
 
     }
@@ -139,7 +134,6 @@ async function clickMenu(group: MenuItem): Promise<void> {
   } else if (group.value) {
 
     openMenus.value = []
-
     active.value = group.value
 
     const data = await fetchGroupContent(group)
@@ -199,15 +193,13 @@ const filteredMenus = computed<MenuItem[]>(() => {
 watch(searchKeyword, () => {
 
   openMenus.value = []
-
   active.value = ''
-
   contentList.value = []
 
 })
 
 //
-// 微信稳定滚动联动算法
+// 滚动联动
 //
 function updateActiveMenuOnScroll(): void {
 
@@ -228,7 +220,7 @@ function updateActiveMenuOnScroll(): void {
 
     if (!el) continue
 
-    const offsetTop = el.offsetTop - 20
+    const offsetTop = el.offsetTop - 60
 
     if (scrollTop >= offsetTop) {
 
@@ -241,7 +233,6 @@ function updateActiveMenuOnScroll(): void {
   if (current && active.value !== current) {
 
     active.value = current
-
     expandParentMenu(current)
 
   }
@@ -259,7 +250,6 @@ function expandParentMenu(value: string): void {
       if (hasChild && !openMenus.value.includes(menu.name)) {
 
         openMenus.value = [menu.name]
-
         break
 
       }
@@ -267,6 +257,15 @@ function expandParentMenu(value: string): void {
     }
 
   }
+
+}
+
+// scroll 监听
+function handleScroll() {
+
+  if (scrollFrame) cancelAnimationFrame(scrollFrame)
+
+  scrollFrame = requestAnimationFrame(updateActiveMenuOnScroll)
 
 }
 
@@ -301,7 +300,6 @@ function prevImg() {
   const index = (currentIndex - 1 + images.length) % images.length
 
   previewState.value.currentIndex = index
-
   previewState.value.currentImg = images[index]
 
 }
@@ -313,7 +311,6 @@ function nextImg() {
   const index = (currentIndex + 1) % images.length
 
   previewState.value.currentIndex = index
-
   previewState.value.currentImg = images[index]
 
 }
@@ -361,15 +358,7 @@ onMounted(async () => {
   await initializeFirstMenu()
 
   if (contentRef.value) {
-
-    contentRef.value.addEventListener('scroll', () => {
-
-      if (scrollFrame) cancelAnimationFrame(scrollFrame)
-
-      scrollFrame = requestAnimationFrame(updateActiveMenuOnScroll)
-
-    })
-
+    contentRef.value.addEventListener('scroll', handleScroll)
   }
 
 })
@@ -377,6 +366,10 @@ onMounted(async () => {
 onUnmounted(() => {
 
   if (scrollFrame) cancelAnimationFrame(scrollFrame)
+
+  if (contentRef.value) {
+    contentRef.value.removeEventListener('scroll', handleScroll)
+  }
 
 })
 
@@ -388,7 +381,6 @@ watch(contentList, async () => {
 
 })
 </script>
-
 <template>
   <div class="flex h-screen font-sans text-gray-700 select-none">
 
@@ -471,7 +463,7 @@ watch(contentList, async () => {
 
       <template v-if="contentList.length">
 
-        <div v-for="item in contentList" :key="item.value" :id="item.value" class="bg-white w-full pt-4">
+        <div v-for="item in contentList" :key="item.value" :id="item.value" class="bg-white w-full pt-4 scroll-mt-12">
 
           <div
             class="text-xl md:text-2xl font-bold text-black/80 text-center border-b border-dashed border-gray-300 pb-4">
