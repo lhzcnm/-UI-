@@ -28,13 +28,18 @@ const currentPath = computed(() => {
   return cur
 })
 
-function handle(path: string) {
-  if(path.includes('logout')) {
+function handle(menu: SidebarMenu) {
+  if(menu.path.includes('logout')) {
     iStore.logout = true
     return
+  } else if (menu.type === 'extra') {
+    location.href = menu.path
   }
+
   wsStore.close()
-  router.push(path)
+
+  // location.href = path
+  router.push(menu.path)
 }
 </script>
 
@@ -52,7 +57,7 @@ function handle(path: string) {
           currentPath === menu.path && 'bg-primary/20 dark:bg-primary/30 text-primary',
           menu.path.includes('logout') && 'mt-auto hover:bg-danger/20 hover:text-danger'
         )"
-        @click="handle(menu.path)"
+        @click="handle(menu)"
       >
         <Icon :icon="menu.icon" class="size-5" />
         <span>{{ menu.label }}</span>

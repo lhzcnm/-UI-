@@ -180,6 +180,8 @@ importers:
 
   apps/admin: {}
 
+  apps/auction: {}
+
   apps/client: {}
 
   apps/guide: {}

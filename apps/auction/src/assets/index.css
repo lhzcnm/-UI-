@@ -3,9 +3,20 @@
 @import 'tailwindcss/utilities';
 
 @import "@3un/ui/index.css";
+@import "./animation.css";
 
-/* @layer base {
+@layer base {
   :root {
-    --sidebar-w: 3rem;
+    --header-h: 3rem;
+    --siderbar-w: 16rem;
   }
-} */
+}
+
+body {
+  @apply transition-colors bg-background text-foreground;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}

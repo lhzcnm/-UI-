@@ -409,3 +409,45 @@ export const ACCESS_LEVEL_LIST = [
   { value: ACCESS_LEVEL.BASIC, label: "所有基础功能" },
   { value: ACCESS_LEVEL.AUCTION, label: "基础功能 + 竞价功能" },
 ]
+
+/**
+ * auction
+ */
+export enum LOCK_STATUS {
+  NONE = 0,
+  HAD  = 1,
+}
+
+export const LOCK_STATUS_LIST = [
+  { value: LOCK_STATUS.NONE, label: '无锁' },
+  { value: LOCK_STATUS.HAD, label: '有锁' },
+]
+
+export const LOCK_STATUS_MAP = {
+  [LOCK_STATUS.NONE]: { value: LOCK_STATUS.NONE, color: 'success', label: '无锁' },
+  [LOCK_STATUS.HAD]: { value: LOCK_STATUS.HAD, color: 'danger', label: '有锁' },
+}
+
+export enum SCOPE_TYPE {
+  ALL      = 1,
+  PARTIAL  = 2,
+  MODEL    = 3,
+  FAMILY   = 4,
+}
+
+export const SCOPE_TYPE_MAP = {
+  [SCOPE_TYPE.ALL]: { value: SCOPE_TYPE.ALL, label: '型号 + 容量 + 颜色' },
+  [SCOPE_TYPE.PARTIAL]: { value: SCOPE_TYPE.PARTIAL, label: '型号 + 容量 (所有颜色)' },
+  [SCOPE_TYPE.MODEL]: { value: SCOPE_TYPE.MODEL, label: '型号 (所有容量和颜色)' },
+  [SCOPE_TYPE.FAMILY]: { value: SCOPE_TYPE.FAMILY, label: '系列 (Family 等)' }
+}
+
+export enum PRICE_TYPE {
+  ADD  = 0,
+  MIUM = 1,
+}
+
+export const PRICE_TYPE_LIST = [
+  { value: PRICE_TYPE.ADD, label: '增加' },
+  { value: PRICE_TYPE.MIUM, label: '减少' }
+]

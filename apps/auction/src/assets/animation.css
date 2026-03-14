@@ -1,0 +1,19 @@
+/* 左侧滑入 */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+/* fade-in */
+.fade-in-enter-active,
+.fade-in-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-in-enter-from,
+.fade-in-leave-to {
+  opacity: 0;
+}

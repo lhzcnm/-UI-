@@ -117,3 +117,18 @@ export function hashData(str: string): string {
 export function hashPrintHeader(str: string): string {
   return hashData(str).slice(0, 8)
 }
+
+/**
+ * 
+ * @param data 
+ * @returns 
+ */
+export function createFormData(data: object) {
+  const body = new FormData()
+
+  Object.entries(data).forEach(([key, value]) => {
+    body.append(key, value)
+  })
+
+  return body
+}

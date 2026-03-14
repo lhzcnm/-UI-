@@ -15,12 +15,13 @@ export default withTV({
   theme: {
     extend: {
       width: {
+        sidebar: 'var(--siderbar-w)',
+        container: 'calc(100vw - var(--siderbar-w))',
       },
       height: {
+        header: 'var(--header-h)',
+        container: 'calc(100vh - var(--header-h))',
       },
-      maxWidth: {
-      },
-
       keyframes: {
       },
       animation: {

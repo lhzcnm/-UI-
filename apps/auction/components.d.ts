@@ -8,8 +8,19 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    FallBack: typeof import('./src/components/FallBack.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Sidebar: typeof import('./src/components/Sidebar.vue')['default']
+    SidebarItem: typeof import('./src/components/SidebarItem.vue')['default']
+    TheConfirm: typeof import('./src/components/TheConfirm.vue')['default']
+    ToolItem: typeof import('./src/components/ToolItem.vue')['default']
     XButton: typeof import('@3un/ui')['XButton']
+    XDialog: typeof import('@3un/ui')['XDialog']
+    XFormField: typeof import('@3un/ui')['XFormField']
+    XInput: typeof import('@3un/ui')['XInput']
+    XPagination: typeof import('@3un/ui')['XPagination']
+    XSelectItem: typeof import('@3un/ui')['XSelectItem']
+    XTable: typeof import('@3un/ui')['XTable']
   }
 }

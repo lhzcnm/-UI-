@@ -3,7 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>%VITE_APP_NAME%</title>
+  <script>
+  ;(function initTheme() {
+    const html = document.documentElement
+    const storedTheme = localStorage.getItem('theme')
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const applyTheme = storedTheme || (systemTheme ? 'dark' : 'light')
+
+    storedTheme && localStorage.setItem('theme', applyTheme)
+    html.classList.add(applyTheme)
+  })()
+
+  ;(function initLocale() {
+    let locale = localStorage.getItem('locale')
+
+    if(!locale) {
+      locale = navigator.language.startsWith('zh') ? 'zh' : 'en'
+    }
+
+    localStorage.setItem('locale', locale)
+  })()
+  </script>
 </head>
 <body>
   <div id="app"></div>
