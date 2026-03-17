@@ -33,15 +33,16 @@ const style = tv({
 })
 
 const b = style()
+
+function goToInstruction() {
+  window.open('http://docx.3unlocked.com/#/admin', '_blank')
+}
 </script>
 
 <template>
   <div :class="b.root()">
     <div class="flex items-center space-x-2">
-      <button
-        :class="b.iconBtn()" accesskey="b"
-        @click="iStore.toggleSidebar"
-      >
+      <button :class="b.iconBtn()" accesskey="b" @click="iStore.toggleSidebar">
         <Icon :icon="foldIcon" class="size-5" />
         <div class="x-tooltip-text top120">
           {{ iStore.showSidebar ? '折叠' : '展开' }}
@@ -52,10 +53,13 @@ const b = style()
     </div>
 
     <div class="flex items-center space-x-2">
-      <button
-        :class="b.iconBtn()" accesskey="k"
-        @click="visibleSearch = true"
-      >
+      <section @click="goToInstruction"
+        class="flex items-center space-x-1 py-1 px-3   hover:text-red-500 dark:hover:text-red-500  text-gray-600 dark:text-gray-50  select-none">
+        <Icon icon="tdesign:error-circle" class="size-4" />
+        <span class="text-md">使用说明</span>
+      </section>
+
+      <button :class="b.iconBtn()" accesskey="k" @click="visibleSearch = true">
         <Icon icon="lucide:search" class="size-5" />
         <div class="x-tooltip-text top120">搜索</div>
       </button>
@@ -66,10 +70,7 @@ const b = style()
       <TheTheme ghost />
 
       <button :class="b.iconBtn()" @click="toggleFullscreen">
-        <Icon
-          :icon="isFullscreen ? 'lucide:minimize' : 'lucide:maximize'"
-          class="size-5"
-        />
+        <Icon :icon="isFullscreen ? 'lucide:minimize' : 'lucide:maximize'" class="size-5" />
         <div class="x-tooltip-text top120">
           {{ isFullscreen ? '退出全屏' : '全屏' }}
         </div>
@@ -77,10 +78,7 @@ const b = style()
 
       <hr class="h-6 w-px bg-border" />
 
-      <button
-        :class="b.iconBtn()" accesskey="s"
-        @click="iStore.showSetting = true"
-      >
+      <button :class="b.iconBtn()" accesskey="s" @click="iStore.showSetting = true">
         <Icon icon="lucide:settings" class="size-5" />
         <div class="x-tooltip-text top120">设置</div>
       </button>

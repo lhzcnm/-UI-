@@ -336,7 +336,7 @@ watch(contentList, async () => {
   <div class="flex h-screen font-sans text-gray-700 select-none">
 
     <!-- 左侧菜单 -->
-    <aside class="flex flex-col  p-4  h-screen bg-white/40">
+    <aside class="flex flex-col w-64 p-4 border-r h-screen bg-white/40">
 
       <div class="flex flex-col items-center mb-6">
         <div class="text-2xl font-bold text-gray-600">使用说明</div>
@@ -374,7 +374,7 @@ watch(contentList, async () => {
               ? 'text-gray-600 bg-gray-50 font-semibold shadow-inner'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
           ]" @click="clickMenu(group)">
-            <span class="mr-2">{{ group.name }}</span>
+            <span>{{ group.name }}</span>
 
             <span v-if="group.children" class="text-xs" :class="openMenus.includes(group.name) ? 'rotate-90' : ''">
               <Icon icon="ci:chevron-right" />
@@ -405,18 +405,17 @@ watch(contentList, async () => {
     </aside>
 
     <!-- 右侧内容 -->
-    <main ref="contentRef" @click="handleContentClick" class="flex-1 p-4 overflow-auto space-y-6">
+    <main ref="contentRef" @click="handleContentClick" class="flex-1 overflow-auto">
 
       <template v-if="contentList.length">
 
-        <div v-for="item in contentList" :key="item.value" :id="item.value"
-          class="bg-white/20 w-2/3 mx-auto rounded-lg p-6 shadow-md border border-gray-300/20">
-          <div class="text-2xl font-bold text-black/80 text-center border-b-2 border-gray-300 pb-2 mb-4">
+        <div v-for="item in contentList" :key="item.value" :id="item.value" class="bg-white/20 w-full pt-4">
+          <div class="text-2xl font-bold text-black/80 text-center border-b border-dashed border-gray-300 pb-4">
             {{ getMenuNameByValue(item.value) }} - 使用说明
           </div>
 
           <div
-            class="text-gray-700 leading-relaxed [&_img]:max-w-full [&_img]:rounded-lg [&_img]:cursor-zoom-in [&_img]:my-4"
+            class="text-gray-700 leading-relaxed [&_img]:max-w-full [&_img]:rounded-lg [&_img]:cursor-zoom-in [&_img]:my-4 px-6 border-b"
             v-html="item.content"></div>
 
         </div>
@@ -431,14 +430,14 @@ watch(contentList, async () => {
 
     <!-- 图片预览 -->
     <div v-if="previewState.visible"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <!-- 上一张 -->
       <div @click="prevImg"
         class="absolute left-10 text-white text-5xl cursor-pointer select-none hover:text-sky-400 px-4 ">
         ‹
       </div>
 
-      <img :src="previewState.currentImg" class="h-[80vh] w-[80vw] object-contain rounded-lg" />
+      <img :src="previewState.currentImg" class="h-full w-full object-contain rounded-lg select-none" />
 
       <!-- 下一张 -->
       <div @click="nextImg"
@@ -447,7 +446,7 @@ watch(contentList, async () => {
       </div>
 
       <div @click="closePreview"
-        class="absolute bottom-10 text-center rounded-md w-24 p-2 text-gray-300 hover:text-red-400 bg-gray-300/20 hover:bg-red-500/20 cursor-pointer">
+        class="absolute bottom-10 text-center rounded-md w-24 p-2 text-white hover:text-red-400 bg-gray-400 hover:bg-red-500/20 cursor-pointer">
         关闭
       </div>
 

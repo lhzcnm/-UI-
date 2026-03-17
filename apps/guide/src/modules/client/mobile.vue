@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, onUnmounted, nextTick } from 'vue'
 import { Icon } from '@iconify/vue'
-import { MenuItem, menus } from '../../utils/menu'
+import { MenuItem, menusClient } from '../../utils/menu'
 import { api } from '@/utils/api'
 
 interface ContentItem {
@@ -35,7 +35,7 @@ let scrollFrame: number | null = null
 // 获取菜单名称
 function getMenuNameByValue(value: string): string {
 
-  for (const menu of menus) {
+  for (const menu of menusClient) {
 
     if (menu.value === value) return menu.name
 
@@ -160,11 +160,11 @@ async function selectMenu(value?: string): Promise<void> {
 // 搜索
 const filteredMenus = computed<MenuItem[]>(() => {
 
-  if (!searchKeyword.value.trim()) return menus
+  if (!searchKeyword.value.trim()) return menusClient
 
   const keyword = searchKeyword.value.toLowerCase()
 
-  return menus
+  return menusClient
     .map(menu => {
 
       if (menu.children) {
@@ -241,7 +241,7 @@ function updateActiveMenuOnScroll(): void {
 
 function expandParentMenu(value: string): void {
 
-  for (const menu of menus) {
+  for (const menu of menusClient) {
 
     if (menu.children) {
 
@@ -324,7 +324,7 @@ function closePreview() {
 // 初始化
 async function initializeFirstMenu(): Promise<void> {
 
-  const first = menus[0]
+  const first = menusClient[0]
 
   if (first.children) {
 
@@ -398,7 +398,7 @@ watch(contentList, async () => {
 
     <!-- 左侧菜单 -->
     <aside
-      class="flex flex-col w-64 p-4 border-r h-screen bg-white md:static fixed top-0 left-0 z-50 transform transition-transform"
+      class="flex flex-col w-64 p-4 border-r h-full bg-white md:static fixed top-0 left-0 z-50 transform transition-transform"
       :class="mobileMenu ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
 
       <!-- 标题 -->

@@ -74,6 +74,39 @@ export const menus: MenuItem[] = [
   }
 ]
 
+export const menusClient: MenuItem[] = [
+  { name: '顶部功能', value: 'topFunction' },
+  {
+    name: '首页',
+    value: 'homeClient',
+  },
+  {
+    name: '订单',
+    children: [
+      { name: '筛选按钮', value: 'orderFilterClient' },
+      { name: '导出按钮', value: 'orderExportClient' },
+      { name: '开启验证/复制', value: 'orderEnableValidationClient' },
+      { name: '生成图片', value: 'orderGenerateImageClient' },
+    ]
+  },
+  {
+    name: '提交订单',
+    value: 'orderSubmitClient',
+  },
+  {
+    name: '反馈',
+    value: 'feedbackClient',
+  },
+  {
+    name: '我的',
+    children: [
+      { name: '我的账户', value: 'accountClient' },
+      { name: '修改手机号/邮箱', value: 'phoneClient' },
+      { name: '修改账号/密码', value: 'passwordClient' },
+    ]
+  },
+]
+
 export const menusAdmin: MenuItem[] = [
   { name: '顶部功能', value: 'topFunctionAdmin' },
   {
@@ -82,15 +115,7 @@ export const menusAdmin: MenuItem[] = [
       { name: '筛选按钮', value: 'userFilterAdmin' },
       { name: '新增按钮', value: 'userCreateAdmin' },
       { name: '编辑按钮', value: 'userEditAdmin' },
-      { name: '查看详情', value: 'userDetailAdmin' },
-      { name: '积分设置', value: 'userPointsSettingAdmin' },
-      { name: '查询类积分设置', value: 'queryPointsSettingAdmin' },
-      { name: '解锁类积分设置', value: 'unlockPointsSettingAdmin' },
-      { name: '服务设置', value: 'userServiceSettingAdmin' },
-      { name: '订单历史', value: 'userOrderHistoryAdmin' },
-      { name: '积分记录', value: 'userPointsHistoryAdmin' },
-      { name: '充值记录', value: 'userRechargeHistoryAdmin' },
-      { name: '登录日志', value: 'userLoginLogAdmin' },
+      { name: '其他功能', value: 'userOtherFunctionAdmin' }
     ]
   },
 
@@ -107,7 +132,6 @@ export const menusAdmin: MenuItem[] = [
     name: '服务管理 - 字段分割',
     children: [
       { name: '新增按钮', value: 'fieldSplitCreateAdmin' },
-      { name: '批量删除', value: 'fieldSplitDeleteAdmin' },
       { name: '编辑按钮', value: 'fieldSplitEditAdmin' },
     ]
   },
@@ -123,20 +147,12 @@ export const menusAdmin: MenuItem[] = [
 
   {
     name: '服务管理 - 服务组',
-    children: [
-      { name: '新增服务组', value: 'serviceGroupCreateAdmin' },
-      { name: '编辑按钮', value: 'serviceGroupEditAdmin' },
-      { name: '查看服务', value: 'serviceGroupViewAdmin' },
-    ]
+    value: 'serviceGroupAdmin',
   },
 
   {
     name: '服务管理 - 服务',
-    children: [
-      { name: '新增按钮', value: 'serviceCreateAdmin' },
-      { name: '编辑按钮', value: 'serviceEditAdmin' },
-      { name: '其他功能', value: 'serviceOtherFunctionAdmin' },
-    ]
+    value: 'serviceAdmin',
   },
 
   {
@@ -148,83 +164,46 @@ export const menusAdmin: MenuItem[] = [
     name: '订单管理 - 全部订单/等待处理/正在处理',
     children: [
       { name: '筛选按钮', value: 'orderFilterAdmin' },
-      { name: '清空按钮', value: 'orderClearAdmin' },
+      { name: '清理订单', value: 'orderClearAdmin' },
       { name: '编辑按钮', value: 'orderEditAdmin' },
       { name: '导出订单', value: 'orderExportAdmin' },
       { name: '复制IMEI', value: 'orderCopyImeiAdmin' },
       { name: '批量编辑', value: 'orderBatchEditAdmin' },
-      { name: '推送通知', value: 'orderPushNoticeAdmin' },
-      { name: '接受订单', value: 'orderAcceptAdmin' },
-      { name: '重新提交', value: 'orderResubmitAdmin' },
-      { name: '拒绝订单', value: 'orderRejectAdmin' },
     ]
   },
 
   {
     name: '订单管理 - 订单验证',
-    children: [
-      { name: '批量回复', value: 'orderBatchReplyAdmin' },
-      { name: '批量退积分', value: 'orderBatchRefundPointsAdmin' }
-    ]
+    value: 'orderVerifyAdmin',
   },
 
   {
     name: '充值管理 - 会员/管理员/今日充值',
     children: [
-      { name: '筛选按钮', value: 'rechargeFilterAdmin' },
-      { name: '手续费设置', value: 'rechargeFeeSettingAdmin' },
-      { name: '编辑按钮', value: 'rechargeEditAdmin' }
+      { name: '手续费设置', value: 'rechargeFilterAdmin' },
     ]
   },
-
-  {
-    name: '充值管理 - 包月套餐',
-    children: [
-      { name: '添加套餐', value: 'packageCreateAdmin' },
-      { name: '编辑套餐', value: 'packageEditAdmin' }
-    ]
-  },
-
-  {
-    name: '日志管理',
-    value: 'logManageAdmin'
-  },
-
   {
     name: '微信管理 - 菜单栏',
-    children: [
-      { name: '推送按钮', value: 'wechatMenuPushAdmin' },
-      { name: '新增按钮', value: 'wechatMenuCreateAdmin' },
-      { name: '编辑按钮', value: 'wechatMenuEditAdmin' },
-    ]
+    value: 'wechatMenuAdmin',
   },
 
   {
     name: '微信管理 - 客服消息',
-    children: [
-      { name: '新增按钮', value: 'wechatServiceMsgCreateAdmin' },
-      { name: '编辑按钮', value: 'wechatServiceMsgEditAdmin' },
-      { name: '内置客服消息', value: 'wechatBuiltInServiceMsgAdmin' }
-    ]
+    value: 'wechatMessageAdmin',
   },
 
   {
     name: '活动管理 - 活动列表',
     children: [
-      { name: '筛选按钮', value: 'activityFilterAdmin' },
-      { name: '新增活动', value: 'activityCreateAdmin' },
-      { name: '编辑活动', value: 'activityEditAdmin' },
+      { name: '活动', value: 'activityAdmin' },
       { name: '活动规则', value: 'activityRuleAdmin' },
-      { name: '查看描述', value: 'activityDescriptionAdmin' },
     ]
   },
 
   {
     name: '活动管理 - 活动充值',
-    children: [
-      { name: '筛选按钮', value: 'activityRechargeFilterAdmin' },
-      { name: '生成积分卷', value: 'pointsCouponGenerateAdmin' }
-    ]
+    value: 'activityRechargeAdmin',
   },
 
   {
@@ -233,26 +212,13 @@ export const menusAdmin: MenuItem[] = [
   },
 
   {
-    name: '积分记录',
-    value: 'pointsRecordAdmin'
-  },
-
-  {
     name: '工单管理',
-    children: [
-      { name: '筛选按钮', value: 'ticketFilterAdmin' },
-      { name: '常见问题', value: 'ticketFaqAdmin' },
-      { name: '工单列表', value: 'ticketListAdmin' },
-    ]
+    value: 'workOrderAdmin'
   },
 
   {
     name: 'API管理',
-    children: [
-      { name: '新增API', value: 'apiCreateAdmin' },
-      { name: '编辑API', value: 'apiEditAdmin' },
-      { name: '同步按钮', value: 'apiSyncAdmin' },
-    ]
+    value: 'apiAdmin'
   },
 
   {
@@ -268,14 +234,5 @@ export const menusAdmin: MenuItem[] = [
   {
     name: '富文本编辑',
     value: 'toolRichTextEditorAdmin'
-  },
-
-  {
-    name: '设置',
-    children: [
-      { name: '常规设置', value: 'settingGeneralAdmin' },
-      { name: '公告设置', value: 'settingNoticeAdmin' },
-      { name: '高级设置', value: 'settingAdvancedAdmin' },
-    ]
   },
 ]
