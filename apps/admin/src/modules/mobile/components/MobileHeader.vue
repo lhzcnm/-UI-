@@ -19,16 +19,16 @@ const style = tv({
 })
 
 const b = style()
+
+function goToInstruction() {
+  window.open('http://docx.3unlocked.com/#/admin', '_blank')
+}
 </script>
 
 <template>
   <header :class="b.root()">
     <div class="flex items-center space-x-1">
-      <button
-        :class="b.iconBtn()"
-        @click="iStore.toggleSidebar"
-        accesskey="b"
-      >
+      <button :class="b.iconBtn()" @click="iStore.toggleSidebar" accesskey="b">
         <Icon :icon="foldIcon" class="size-5" />
       </button>
 
@@ -39,12 +39,13 @@ const b = style()
       <TodoMsg :ui-btn="b.iconBtn()" />
 
       <TheTheme ghost />
-  
-      <button
-        :class="b.iconBtn()" accesskey="s"
-        @click="$router.push('/settings')"
-      >
+
+      <button :class="b.iconBtn()" accesskey="s" @click="$router.push('/settings')">
         <Icon icon="lucide:settings" class="size-5" />
+      </button>
+
+      <button :class="b.iconBtn()" accesskey="h" @click="goToInstruction">
+        <Icon icon="mdi:help-circle-outline" class="size-5" />
       </button>
     </div>
   </header>
