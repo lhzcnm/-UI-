@@ -1201,7 +1201,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <div class="max-h-full border rounded-md p-3 space-y-3 bg-muted/30 overflow-y-auto">
+      <div class="min-h-56 max-h-full border rounded-md p-3 space-y-3 bg-muted/30 overflow-y-auto">
         <div class="font-semibold text-sm flex items-center gap-2">
           {{ t('print.fields.config.title') }}
           <span class="text-xs text-muted-foreground">

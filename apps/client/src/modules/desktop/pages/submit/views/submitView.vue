@@ -34,6 +34,7 @@ const threads = ref(5)
 const pushMsg = ref(true)
 const reseted = ref<boolean>(false)
 const exportLoading = ref(false)
+const indexes = ref<number[]>([])
 
 const columns = shallowRef<XTableColumn[]>(getDefaultColumns(t))
 
@@ -68,7 +69,6 @@ let headers: string[] = []
 let cacheImei: boolean = false
 let pendingOrders: number[] = []
 let orderImeis: Record<string, number> = {}
-let indexes: number[] = []
 let deletedColumns: XTableColumn[] = []
 
 watch(
@@ -77,6 +77,14 @@ watch(
     if (val !== undefined) {
       handleSelected(val)
     } 
+  }
+)
+
+watch(
+  () => showAll.value,
+  async () => {
+    if (!selService.value) return
+    await handleSubmitOrder(selService.value.id)
   }
 )
 
@@ -109,7 +117,7 @@ async function handleSelected(value: number) {
   
   const key = import.meta.env.VITE_SUBMIT_STORGE
   const isStoraged = localStorage.getItem(`${key}_${value}`)
-  if (isStoraged) {
+  if (isStoraged || showAll.value) {
     await handleSubmitOrder(value)
   }
 
@@ -677,7 +685,7 @@ function resetOrder(status: ORDER_STATUS) {
     }
   }
 
-  imeis.value = Object.keys(orderImeis.value)
+  imeis.value = Object.keys(orderImeis)
 }
 
 function resetNotCoverOrder(status: ORDER_STATUS) {
@@ -692,13 +700,13 @@ function resetNotCoverOrder(status: ORDER_STATUS) {
 function resetSelectRow() {
   if (count > 0) return toast.warning(t("query.prompt.orderHandle"))
   if (submitLoading.value) return toast.warning(t("query.prompt.orderHandle"))
-  if (indexes.length === 0) {
+  if (indexes.value.length === 0) {
     return toast.warning(t("query.fields.prompt.noSelectRow"))
   }
 
   orderImeis = {}
   submited.value = false
-  for (let index of indexes) {
+  for (let index of indexes.value) {
     const arrIndex = index - 1
     const order = store.rawOrders[arrIndex]
     orderImeis[order.imei] = arrIndex
@@ -717,7 +725,7 @@ function resetSelectRow() {
     }
   }
 
-  imeis.value = Object.keys(orderImeis.value)
+  imeis.value = Object.keys(orderImeis)
 }
 
 async function handleMustRead() {
@@ -890,8 +898,17 @@ onMounted(() => {
     </section>
 
     <section class="w-full h-[calc(100%-3rem)]">
-      <XTable ref="tableRef" :data="orders" :columns="columns" row-key="id" class="h-full max-w-full border" selection
-        selected-key="index" @select-change="indexes = $event" @column-delete="handleDeleteHeader" />
+      <XTable
+        ref="tableRef"
+        :data="orders"
+        :columns="columns"
+        row-key="id"
+        class="h-full max-w-full border"
+        selection
+        selected-key="index"
+        @select-change="indexes = $event"
+        @column-delete="handleDeleteHeader"
+      />
     </section>
 
     <TableColumnDialog @confirm="processHeaderConfirm" />

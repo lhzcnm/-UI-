@@ -99,7 +99,7 @@ function handleDisconnect(value: string) {
       store.deviceMap.delete(key)
     }
   }
-``
+
   if (store.deviceMap.size === 0) {
     store.deviceStatus = 'wait'
   }
@@ -107,14 +107,14 @@ function handleDisconnect(value: string) {
 
 await checkPlugin()
 async function checkPlugin() {
-  const controller = new AbortController()
-  setTimeout(() => controller.abort(), 3000)
+  // const controller = new AbortController()
+  // setTimeout(() => controller.abort(), 3000)
 
   try {
     const response = await fetch(
       'http://localhost:9999/info',
       {
-        signal: controller.signal,
+        // signal: controller.signal,
         headers: {'x-token': Date.now().toString(16)},
       },
     )
@@ -124,6 +124,7 @@ async function checkPlugin() {
     await handleInfo(data)
   }
   catch (error) {
+    // console.log(error)
     try {
       const data = await wsFetch({ type: 'info' })
       await handleInfo(data as DeviceResponse[])
@@ -136,9 +137,10 @@ async function checkPlugin() {
 }
 
 async function handleInfo(data: DeviceResponse[]) {
+  console.log(data)
   if (!data || data.length === 0) return
-  if (await checkVersion(data[0].Version)) {
-    version.value = data[0].Version
+  version.value = data[0].Version
+  if (await checkVersion(version.value)) {
     return store.deviceStatus = 'version'
   }
 
@@ -150,6 +152,7 @@ async function checkVersion(version: string = '1.0.0') {
   const response = await fetch('/data/version.json')
   const { latest, lowest } = await response.json()
   store.hasNewVersion = version < latest
+
   return version < lowest
 }
 
