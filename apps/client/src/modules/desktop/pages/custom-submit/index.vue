@@ -840,7 +840,8 @@ function convertResultToHtml(orders: CustomSubmitOrder[]) {
   `).join('')
 }
 
-async function handleGenerate() {
+async function 
+handleGenerate() {
   if (!paperRef.value) return
   if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
   if (customOrders.value.length === 0) return toast.warning(t('print.prompt.pdf.notOrder'))
@@ -862,7 +863,8 @@ async function handleGenerate() {
   } catch {
     try {
       await generatePDF()
-    } catch {
+    } catch(err) {
+      console.error(err)
       toast.warning(t('print.prompt.pdf.error'))
     }
   } finally {
@@ -944,24 +946,18 @@ function processPageItem(order: CustomSubmitOrder) {
 }
 
 async function pluginGeneratePdf() {
-  try {
-    const body = processRequestParams()
+  const body = processRequestParams()
 
-    const { data } = await axios.post(
-      "http://localhost:9999/generate-pdf",
-      body,
-      { responseType: "blob", headers: {'x-token': Date.now().toString(16)}, timeout: 10000 },
-    )
+  const { data } = await axios.post(
+    "http://localhost:9999/generate-pdf",
+    body,
+    { responseType: "blob", headers: {'x-token': Date.now().toString(16)}, timeout: 10000 },
+  )
 
-    const url = URL.createObjectURL(data)
+  const url = URL.createObjectURL(data)
+  window.open(url)
 
-    window.open(url)
-
-    URL.revokeObjectURL(url)
-  } catch (err) {
-    console.error(err)
-    throw Error("request Failed")
-  }
+  URL.revokeObjectURL(url)
 }
 
 async function generatePDF() {
@@ -1023,6 +1019,7 @@ async function generatePDF() {
         }
       } else if (template.type === 'barcode') {
         const canvas = document.createElement('canvas')
+        
         JsBarcode(canvas, order.imei, {
           format: "CODE128",
           width: mmToPx(template.size! * 0.06),
@@ -1030,6 +1027,13 @@ async function generatePDF() {
           displayValue: true,
           fontSize: mmToPx(template.size!),
         })
+        
+        await new Promise(resolve => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(resolve)
+          })
+        })
+
         const blobPromise = new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"))
         const blob = await blobPromise
 
@@ -1038,6 +1042,8 @@ async function generatePDF() {
           storageUrl.push(url)
 
           const img = document.createElement('img')
+
+          img.setAttribute('data-order-barcode', Date.now().toString(12))
 
           const imageLoadPromise = new Promise<void>((resolve, reject) => {
             img.onload = () => resolve()
@@ -1051,6 +1057,12 @@ async function generatePDF() {
             container.appendChild(img)
 
             await imageLoadPromise
+
+            await new Promise(resolve => {
+              requestAnimationFrame(() => {
+                requestAnimationFrame(resolve)
+              })
+            })
           }
         }
       } else {
@@ -1510,7 +1522,9 @@ onBeforeUnmount(() => {
           </template>
 
           <template v-else-if="item.type === 'barcode'">
-            <BarcodePreview :data="previewValue[hashPrintHeader('imei')]" :size="item.size ?? 20" />
+            <div data-barcode>
+              <BarcodePreview :data="previewValue[hashPrintHeader('imei')]" :size="item.size ?? 20" />
+            </div>
           </template>
 
           <template v-else>

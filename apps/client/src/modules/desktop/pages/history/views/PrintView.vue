@@ -605,6 +605,7 @@ async function generatePDF() {
             await imageLoadPromise
           }
         }
+        canvas.remove()
       } else if (template.type === 'barcode') {
         const canvas = document.createElement('canvas')
         JsBarcode(canvas, order.imei, {
@@ -637,6 +638,7 @@ async function generatePDF() {
             await imageLoadPromise
           }
         }
+        canvas.remove()
       } else {
         const value = key === hashPrintHeader('imei')
           ? order.imei || ""
@@ -824,32 +826,23 @@ function processPageItem(order: CustomSubmitOrder) {
 }
 
 async function pluginGeneratePdf() {
-  // const controller = new AbortSignal()
+  const body = processRequestParams()
 
-  // setTimeout(() => controller.aborted, 10)
-  try {
-    const body = processRequestParams()
+  const { data } = await axios.post(
+    "http://localhost:9999/generate-pdf",
+    body,
+    {
+      responseType: "blob",
+      headers: {'x-token': Date.now().toString(16)},
+      timeout: 10000,
+      // signal: controller,
+    },
+  )
 
-    const { data } = await axios.post(
-      "http://localhost:9999/generate-pdf",
-      body,
-      {
-        responseType: "blob",
-        headers: {'x-token': Date.now().toString(16)},
-        timeout: 10000,
-        // signal: controller,
-      },
-    )
+  const url = URL.createObjectURL(data)
+  window.open(url)
 
-    const url = URL.createObjectURL(data)
-
-    window.open(url)
-
-    URL.revokeObjectURL(url)
-  } catch (err) {
-    console.error(err)
-    throw Error("request Failed")
-  }
+  URL.revokeObjectURL(url)
 }
 
 function getPreviewQrcode() {

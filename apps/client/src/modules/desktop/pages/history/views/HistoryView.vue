@@ -213,7 +213,7 @@ async function submitPrint() {
     handleOpenWindow(pdfUrl)
 
   } catch(e) {
-    console.log(e)
+    console.error(e)
   }
 }
 

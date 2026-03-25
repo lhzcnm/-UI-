@@ -66,7 +66,7 @@ async function getLists(params: ProductSearchParams) {
     store.products = await getProductRecords(params)
     loading.value = false
   } catch(err) {
-    console.log(err)
+    console.error(err)
   }
 }
 

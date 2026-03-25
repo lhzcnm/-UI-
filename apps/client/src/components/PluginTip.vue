@@ -44,7 +44,6 @@ async function getInfo() {
 }
 
 async function checkVersion() {
-  console.log(pluginInfo)
   isNotLatest.value = await checkPluginVersion(pluginInfo.version)
 }
 

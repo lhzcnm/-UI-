@@ -188,7 +188,7 @@ async function getRecovery() {
       }
       // console.log(store.recoverDeviceMap)
     } catch(err) {
-      console.log(err)
+      console.error(err)
     }
   } finally {
     if (store.recoverDeviceMap.size > 0) {

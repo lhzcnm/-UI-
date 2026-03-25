@@ -20,7 +20,6 @@ watch(
   () => store.visible,
   (newValue) => {
     if (!newValue) {
-      console.log('close')
       handleClose()
       return
     }
