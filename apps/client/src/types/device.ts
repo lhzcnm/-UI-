@@ -198,3 +198,32 @@ export interface DeviceCache {
   activationLockCode: string
   warrantyCode: string
 }
+
+export interface DeviceRecoveryData {
+  BDID: string      // Board ID (主板标识符，例如 0x04)
+  CPFM: string      // CPU Fuse Matrix (CPU 熔丝矩阵状态)
+  CPID: string      // Chip ID (芯片型号标识，0x7000 代表 Apple A8 芯片)
+  CPRV: string      // Chip Revision (芯片版本)
+  ECID: string      // Exclusive Chip ID (唯一的芯片识别码)
+  IBFL: string      // IBoot Flags (引导加载程序标志位)
+  IMEI: string      // International Mobile Equipment Identity
+  MODE: string      // 当前模式 (例如: Recovery)
+  MODEL: string     // 设备内部代号 (例如: n56ap)
+  NAME: string      // 设备市场名称 (例如: iPhone 6 Plus)
+  NONC: string      // ApNonce (用于验证刷机包签名的随机值)
+  PRODUCT: string   // 产品型号标识 (例如: iPhone7,1)
+  SCEP: string      // Secure Enclave Processor (安全隔区处理器版本)
+  SNON: string      // SEP Nonce (安全隔区的随机值)
+  SRNM: string      // Serial Number (设备序列号)
+  SRTG: string      // SRTG (通常与恢复环境相关的标识)
+}
+
+// 对应 DeviceRecoveryData 的前端展示的数据类型
+export interface DeviceRecoveryMapItem {
+  name: string        // NAME
+  type: string        // product
+  serialNo: string    // SRNM
+  ecid: string        // ECID
+  chip: string        // CPID
+  mode: string        // MODE
+}

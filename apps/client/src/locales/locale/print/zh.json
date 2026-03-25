@@ -1,5 +1,10 @@
 {
   "print": {
+    "direction": {
+      "title": "纸张方向",
+      "portrait": "纵向",
+      "landscape": "横向"
+    },
     "fields": {
       "title": "打印字段",
       "config": {
@@ -64,7 +69,8 @@
         "processing": "请等待订单处理完成",
         "noField": "当前没有选择字段, 是否确认打印? ",
         "overflow": "当前存在字段超出所设范围, 是否确认打印? ",
-        "imgError": "图片加载失败"
+        "imgError": "图片加载失败",
+        "error": "生成pdf失败, 请下载插件或稍后重试"
       },
       "service": {
         "label": "当前服务"
@@ -89,6 +95,9 @@
     "paper": {
       "title": "结果预览区",
       "preview": "可选择订单查看不同的预览结果"
+    },
+    "plugin": {
+      "tip": "推荐安装最新插件获得更清晰的打印效果, 未安装时使用浏览器打印"
     }
   }
 }

@@ -13,6 +13,7 @@ type WebSocketType =
   | 'reboot'
   | 'shutdown'
   | 'mountImage'
+  | 'recoveryInfo'
 
 interface WebSocketParams {
   type                   : WebSocketType

@@ -62,9 +62,12 @@ export async function useFetchWithCache<T>(
 
     if (now - time < duration) {
       const data = JSON.parse(cachedRawData)
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(data), waitTime)
-      })
+
+      if (!isEmptyData(data)) {
+        return new Promise((resolve) => {
+          setTimeout(() => resolve(data), waitTime)
+        })
+      }
     }
   }
 
@@ -91,4 +94,22 @@ export async function useFetchWithCache<T>(
 
 export const clearCache = (storageType = StorageType.Session) => {
   cacheManager.clearExpired(cacheManager.getStorage(storageType))
+}
+
+function isEmptyData(data: any): boolean {
+  if (data == null) return true
+
+  if (typeof data === 'string') {
+    return data.trim() === ''
+  }
+
+  if (Array.isArray(data)) {
+    return data.length === 0
+  }
+
+  if (typeof data === 'object') {
+    return Object.keys(data).length === 0
+  }
+
+  return false
 }

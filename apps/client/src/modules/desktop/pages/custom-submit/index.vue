@@ -9,6 +9,8 @@ import * as html2image from 'html-to-image'
 import jsPDF from 'jspdf'
 import { toast } from 'vue-sonner'
 import { useThrottleFn, watchOnce } from '@vueuse/core'
+import JsBarcode from 'jsbarcode'
+import QRCode from 'qrcode'
 
 import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from '@/types'
 import { getSubmitImei, mmToPt, mmToPx, pxTomm } from '@/utils'
@@ -34,6 +36,7 @@ const container = reactive<ContainerItem>({
   },
   styles: {},
   fontSize: 4,
+  orientation: 'portrait',
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
@@ -56,22 +59,34 @@ const selectOrder = ref<CustomSubmitOrder>()
 const paperRef = ref<HTMLElement | null>(null)
 const uploadRef = ref<HTMLInputElement | null>(null)
 
-const defaultItems = [
+const defaultItems: PrintHeader[] = [
   {
     key: hashPrintHeader("imei"),
     name: "IMEI",
     nameEn: "IMEI",
+    type: "text",
   },
   {
     key: qrcodeCol,
     name: "二维码",
     nameEn: "Qrcode",
+    type: "qrcode",
+  },
+  {
+    key: "barcode",
+    name: "条形码",
+    nameEn: "BarCode",
+    type: "barcode"
   },
 ]
 const splitOptions = [
   { label: 'Windows', command: () => handleDownload(43) },
   { label: 'MacOS Arm', command: () => handleDownload(44) },
   { label: 'MacOS Intel', command: () => handleDownload(45) },
+]
+const directionOptions: { value: 'portrait' | 'landscape', label: string }[] = [
+  { value: 'portrait', label: t('print.direction.portrait') },
+  { value: 'landscape', label: t('print.direction.landscape') },
 ]
 
 let serviceHeaders: ServiceHeader[] = []
@@ -106,7 +121,13 @@ watch(
 
 const isEn = computed(() => locale.value === "en")
 
-const processedColumns = computed(() => serviceCols.value.map(item => ({key: item.key, label: isEn.value ? item.nameEn : item.name})))
+const processedColumns = computed(() => (
+  serviceCols.value.map(item => ({
+    key: item.key,
+    label: isEn.value ? item.nameEn : item.name,
+    type: item.type
+  }))
+))
 
 const currentService = computed(() => services.get(serviceId.value))
 
@@ -120,18 +141,30 @@ const orderStat = computed(() => ({
   failed: customOrders.value.filter(o => o.status === ORDER_STATUS.FAILED).length,
 }))
 
-const paperStyle = computed(() => ({
-  width: `${mmToPx(container.width)}px`,
-  height: `${mmToPx(container.height)}px`,
-  padding: `${mmToPx(container.padding.top)}px
-    ${mmToPx(container.padding.right)}px
-    ${mmToPx(container.padding.bottom)}px
-    ${mmToPx(container.padding.left)}px`,
-  fontSize: `${mmToPx(container.fontSize)}px`
-}))
+const paperStyle = computed(() => {
+  const isLandscape = container.orientation === 'landscape'
+
+  const width = isLandscape ? container.height : container.width
+  const height = isLandscape ? container.width : container.height
+
+  return {
+    width: `${mmToPx(width)}px`,
+    height: `${mmToPx(height)}px`,
+    padding: `${mmToPx(container.padding.top)}px
+      ${mmToPx(container.padding.right)}px
+      ${mmToPx(container.padding.bottom)}px
+      ${mmToPx(container.padding.left)}px`,
+    fontSize: `${mmToPx(container.fontSize)}px`
+  }
+})
 
 const safeAreaStyle = computed(() => {
-  const { padding, width, height } = container
+  const isLandscape = container.orientation === 'landscape'
+
+  const width = isLandscape ? container.height : container.width
+  const height = isLandscape ? container.width : container.height
+
+  const { padding } = container
 
   const left = mmToPx(padding.left)
   const top = mmToPx(padding.top)
@@ -179,33 +212,31 @@ const previewValue = computed(() => {
 
 const previewQrcode = computed(() => getPreviewQrcode())
 
-function handleSelectColumn(key: string) {
-  const header = serviceCols.value.find(h => h.key === key)
-  if (!header) return
-
-  const index = selectCols.value.indexOf(key)
+function handleSelectColumn(id: string, type: "text" | "qrcode" | "barcode" = 'text') {
+  const index = selectCols.value.indexOf(id)
 
   if (index !== -1) {
     selectCols.value.splice(index, 1)
-    templateItems.value = templateItems.value.filter(i => i.key !== key)
+    templateItems.value = templateItems.value.filter(i => i.key !== id)
   } else {
-    const isQrcode = qrcodeCol === key
+    // const isQrcode = id === 'qrcode'
     const pos = getNextItemPosition()
+    const field = serviceCols.value.find(c => c.key === id)
+    if (!field) return
 
     const newItem: TemplateItem = {
-      key: key,
-      label: header.name,
-      label_local: header.nameEn,
+      key: id,
+      label: field.name,
+      label_local: field.nameEn,
       x: pos.x,
       y: pos.y,
       wrap: false,
-      type: isQrcode ? "qrcode" : "text",
+      type: type,
+      size: (type === 'barcode' ? 5 : 10),
       showField: true,
-      align: "left",
-      ...(isQrcode && {size: 20}),
     }
 
-    selectCols.value.push(key)
+    selectCols.value.push(id)
     templateItems.value.push(newItem)
   }
 }
@@ -213,7 +244,7 @@ function handleSelectColumn(key: string) {
 function getNextItemPosition() {
   const baseX = mmToPx(container.padding.left)
   const baseY = mmToPx(container.padding.top)
-  const gap = 6
+  const gap = -6
 
   if (!paperRef.value || templateItems.value.length === 0) {
     return { x: baseX, y: baseY }
@@ -239,15 +270,15 @@ function getNextItemPosition() {
 }
 
 function isQrcodeField(key: string) {
-  return qrcodeCol === key
+  return key === 'qrcode'
 }
 
 async function exportTemplate() {
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.export.noField'))) return
+    if (!await xconfirm(t('print.prompt.export.noField'))) return
   }
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.export.overflow'))) return
+    if (!await xconfirm(t('print.prompt.export.overflow'))) return
   }
 
   const template: PrintTemplateJson = {
@@ -258,6 +289,7 @@ async function exportTemplate() {
       height: container.height,
       padding: { ...container.padding },
       fontSize: container.fontSize,
+      orientation: container.orientation,
     },
     items: templateItems.value.map(item => ({
       key: item.key,
@@ -325,6 +357,7 @@ async function importTemplate(file: File) {
   container.padding.right = template.paper.padding.right
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
+  container.orientation = template.paper.orientation
 
   templateItems.value = template.items.map(item => ({ ...item,  align: item.align ?? "left", showField: item.showField ?? true }))
 
@@ -355,6 +388,8 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
   const startY = e.clientY
   const initX = item.x
   const initY = item.y
+
+  item.align = undefined
 
   function move(ev: MouseEvent) {
     const dx = ev.clientX - startX
@@ -392,9 +427,11 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
 }
 
 function clampPosition(item: TemplateItem, target: HTMLElement) {
+  const isLandscape = container.orientation === 'landscape'
+
   const padding = container.padding
-  const containerW = mmToPx(container.width)
-  const containerH = mmToPx(container.height)
+  const containerW = mmToPx(isLandscape ? container.height : container.width)
+  const containerH = mmToPx(isLandscape ? container.width : container.height)
 
   // 元素实际宽高
   const elRect = target.getBoundingClientRect()
@@ -488,7 +525,13 @@ async function getServiceColumns(value: number) {
     headerKey = data.map(h => h.name)
   }
 
-  serviceCols.value = [...defaultItems, ...serviceHeader.map(h =>  ({ key: hashPrintHeader(h.name), name: h.name, nameEn: h.nameEn ? h.nameEn : h.name }))]
+  serviceCols.value = [...defaultItems, ...serviceHeader.map(h =>  ({
+      key: hashPrintHeader(h.name),
+      name: h.name,
+      nameEn: h.nameEn ? h.nameEn : h.name,
+      type: "text"
+    }) as PrintHeader
+  )]
 }
 
 async function getQueryService() {
@@ -810,15 +853,21 @@ async function handleGenerate() {
     if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
   }
 
+  paperRef.value.classList.add("printing")
   await nextTick()
 
   try {
     generating.value = true
     await pluginGeneratePdf()
   } catch {
-    await generatePDF()
+    try {
+      await generatePDF()
+    } catch {
+      toast.warning(t('print.prompt.pdf.error'))
+    }
   } finally {
     generating.value = false
+    paperRef.value.classList.remove("printing")
   }
 }
 
@@ -868,6 +917,15 @@ function processPageItem(order: CustomSubmitOrder) {
         value: qrcodeStr({ ...order.fields, [hashPrintHeader("imei")]: {title: "IMEI", value: order.imei} }),
       })
       continue
+    } else if (template.type === 'barcode') {
+      pageItems.push({
+        ...template,
+        showField: true,
+        x: pxTomm(template.x),
+        y: pxTomm(template.y),
+        value: order.imei,
+      })
+      continue
     }
     pageItems.push({
       ...template,
@@ -878,6 +936,7 @@ function processPageItem(order: CustomSubmitOrder) {
       value: key === hashPrintHeader("imei")
         ? stripHtmlTags(order.imei) || ""
         : stripHtmlTags(order.fields[key] ? order.fields[key].value : '') ?? '',
+      align: template.align ? template.align : 'left',
     })
   }
 
@@ -891,7 +950,7 @@ async function pluginGeneratePdf() {
     const { data } = await axios.post(
       "http://localhost:9999/generate-pdf",
       body,
-      { responseType: "blob", headers: {'x-token': Date.now().toString(16)}, },
+      { responseType: "blob", headers: {'x-token': Date.now().toString(16)}, timeout: 10000 },
     )
 
     const url = URL.createObjectURL(data)
@@ -906,9 +965,8 @@ async function pluginGeneratePdf() {
 }
 
 async function generatePDF() {
-  paperRef.value!.classList.add("printing")
-
   const pdf = new jsPDF({
+    orientation: container.orientation,
     unit: "px",
     format: [mmToPx(container.width), mmToPx(container.height)],
   })
@@ -925,33 +983,76 @@ async function generatePDF() {
 
     for (const itemEl of items) {
       const key = itemEl.dataset.key!
+
+      const template = templateItems.value.find(t => t.key === key)
+      if (!template) continue
       
-      if (isQrcodeField(key)) {
-        const qrcodeItem = templateItems.value.find(i => i.type === 'qrcode')
-        if (!qrcodeItem) continue
-        const { data } = await orderApi.generateQrcode({
-          content: qrcodeStr({ ...order.fields, IMEI: order.imei })}
-        )
-
-        const blob = new Blob([data], { type: 'image/png' })
-        const url = URL.createObjectURL(blob)
-        storageUrl.push(url)
-
-        const img = document.createElement("img")
-
-        const imageLoadPromise = new Promise<void>((resolve, reject) => {
-          img.onload = () => resolve()
-          img.onerror = () => reject(new Error(t('print.prompt.pdf.imgError')))
-          img.src = url
+      if (template.type === 'qrcode') {
+        const content = qrcodeStr({ ...order.fields, IMEI: order.imei })
+        
+        const canvas = document.createElement('canvas')
+        await QRCode.toCanvas(canvas, content, {
+          margin: 1,
+          scale: 4,
+          errorCorrectionLevel: "M",
         })
 
-        img.width = mmToPx(qrcodeItem.size ?? 20)
-        img.height = mmToPx(qrcodeItem.size ?? 20)
+        const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'))
 
-        itemEl.querySelector('[data-qrcode]')!.innerHTML = ''
-        itemEl.querySelector('[data-qrcode]')!.appendChild(img)
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          storageUrl.push(url)
 
-        await imageLoadPromise
+          const img = document.createElement('img')
+          const imageLoadPromise = new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve()
+            img.onerror = () => reject(new Error(t('print.prompt.pdf.imgError')))
+            img.src = url
+          })
+
+          img.width = mmToPx(template.size ?? 20)
+          img.height = mmToPx(template.size ?? 20)
+
+          const container = itemEl.querySelector('[data-qrcode]')
+          if (container) {
+            container.innerHTML = ''
+            container.appendChild(img)
+
+            await imageLoadPromise
+          }
+        }
+      } else if (template.type === 'barcode') {
+        const canvas = document.createElement('canvas')
+        JsBarcode(canvas, order.imei, {
+          format: "CODE128",
+          width: mmToPx(template.size! * 0.06),
+          height: mmToPx(template.size! * 1.2),
+          displayValue: true,
+          fontSize: mmToPx(template.size!),
+        })
+        const blobPromise = new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"))
+        const blob = await blobPromise
+
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          storageUrl.push(url)
+
+          const img = document.createElement('img')
+
+          const imageLoadPromise = new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve()
+            img.onerror = () => reject(new Error(t('print.prompt.pdf.imgError')))
+            img.src = url
+          })
+
+          const container = itemEl.querySelector('[data-barcode]')
+          if (container) {
+            container.innerHTML = ''
+            container.appendChild(img)
+
+            await imageLoadPromise
+          }
+        }
       } else {
         const value = key === hashPrintHeader('imei')
           ? order.imei || ""
@@ -999,6 +1100,7 @@ function getPreviewQrcode() {
 
 function applyAlign(key: string, align: string) {
   if (!paperRef.value) return
+
   const index = templateItems.value.findIndex(t => t.key === key)
   if (index === -1) return
 
@@ -1007,6 +1109,12 @@ function applyAlign(key: string, align: string) {
 
   const safe = paperRef.value.querySelector('.safe-area-border') as HTMLElement
   if (!safe) return
+
+  const isLandscape = container.orientation === 'landscape'
+
+  const paperWidth = mmToPx(
+    isLandscape ? container.height : container.width
+  )
 
   const elWidth = el.offsetWidth
   const safeWidth = safe.offsetWidth
@@ -1021,11 +1129,13 @@ function applyAlign(key: string, align: string) {
   }
 
   if (align === 'center') {
-    templateItems.value[index].x = paddingLeft + (safeWidth - elWidth) / 2
+    templateItems.value[index].x =
+      paddingLeft + (safeWidth - elWidth) / 2
   }
 
   if (align === 'right') {
-    templateItems.value[index].x = mmToPx(container.width) - paddingRight - elWidth
+    templateItems.value[index].x =
+      paperWidth - paddingRight - elWidth
   }
 }
 
@@ -1091,7 +1201,6 @@ await Promise.all([
   await checkPlugin(t),
 ])
 
-
 onBeforeUnmount(() => {
   storageUrl.map(URL.revokeObjectURL)
 })
@@ -1133,14 +1242,17 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <div class="flex justify-end gap-2">
-        <label class="flex items-center group relative">
-          <XSwitch :label="t('print.button.autoprint.label')" v-model="autoPrint" />
-          <!-- <span class="absolute opacity-0 group-hover:opacity-100 bg-card rounded top-8 left-1 text-sm p-2">{{ t('print.button.autoprint.tip') }}</span> -->
-        </label>
-        <XButton color="success" :label="t('print.button.submit')" @click="handleSubmit" />
-        <XButton :label="t('print.button.showres')" @click="readOrderResult" />
-        <XButton :label="t('print.button.print')" color="warning" @click="handleGenerate" />
+      <div class="flex flex-col gap-y-2">
+        <PluginTip />
+        <div class="flex items-center justify-end gap-2">
+          <label class="flex items-center group relative">
+            <XSwitch :label="t('print.button.autoprint.label')" v-model="autoPrint" />
+            <!-- <span class="absolute opacity-0 group-hover:opacity-100 bg-card rounded top-8 left-1 text-sm p-2">{{ t('print.button.autoprint.tip') }}</span> -->
+          </label>
+          <XButton color="success" :label="t('print.button.submit')" @click="handleSubmit" />
+          <XButton :label="t('print.button.showres')" @click="readOrderResult" />
+          <XButton :label="t('print.button.print')" color="warning" @click="handleGenerate" />
+        </div>
       </div>
 
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
@@ -1153,7 +1265,7 @@ onBeforeUnmount(() => {
         <div class="font-bold text-sm">{{ t('print.fields.title') }}</div>
         <div class="flex flex-wrap gap-2">
           <template v-for="column in processedColumns" :key="column.key">
-            <HeaderTag :id="column.key" :label="column.label"
+            <HeaderTag :id="column.key" :label="column.label" :type="column.type"
               :checked="selectCols.includes(column.key)"
               @click="handleSelectColumn" />
           </template>
@@ -1161,12 +1273,31 @@ onBeforeUnmount(() => {
       </div>
       
       <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
-        <div class="flex flex-col space-y-1">
-          <div class="font-semibold text-sm">{{ t('print.size.font') }} (mm):</div>
-          <div class="flex items-center gap-2 w-40">
-            <XInputNumber v-model="container.fontSize" :step="1" size="sm" @change="handleContainerChange" />
+        <div class="flex flex-col space-y-4">
+          <!-- 字体大小 -->
+          <div class="flex flex-col gap-1">
+            <div class="font-semibold text-sm">{{ t('print.size.font') }} (mm):</div>
+            <div class="flex items-center gap-2 w-40">
+              <XInputNumber v-model="container.fontSize" :step="1" size="sm" @change="handleContainerChange" />
+            </div>
+          </div>
+
+          <!-- 纸张方向 -->
+          <div>
+            <div class="font-semibold text-sm">{{ t('print.direction.title') }}</div>
+            <div class="flex items-center gap-4 text-sm">
+              <template v-for="option in directionOptions" :key="option.value">
+                <button class="flex items-center gap-1 text-lg"
+                  :class="{ 'text-primary': option.value === container.orientation }"
+                  @click="container.orientation = option.value">
+                  <Icon icon="solar:smartphone-linear" :rotate="option.value === 'landscape' ? 45 : 0" />
+                  <span>{{ option.label }}</span>
+                </button>
+              </template>
+            </div>
           </div>
         </div>
+        
         <!-- 纸张大小 -->
         <div class="flex flex-col space-y-1">
           <div class="font-semibold text-sm">{{ t('print.size.paper.title') }} (mm)</div>
@@ -1220,15 +1351,14 @@ onBeforeUnmount(() => {
                 {{ isEn ? field.label_local : field.label }}
               </span>
               <span class="text-xs text-muted-foreground">
-                {{ isQrcodeField(field.key)
+                {{ isQrcodeField(field.type)
                   ? `${t('print.size.qrcode.title')}(mm)${t('print.size.qrcode.limitHit')}`
                   : (field.wrap ? t('print.fields.config.wrap') : t('print.fields.config.nowrap')) }}
               </span>
             </div>
 
-            
             <div class="flex items-center gap-4">
-              <div v-if="!isQrcodeField(field.key)" class="flex items-center gap-2">
+              <div v-if="field.type === 'text'" class="flex items-center gap-2">
                 <template v-for="alignItem in textAlign" :key="alignItem.key">
                   <button class="hover:bg-zinc-50 dark:hover:bg-zinc-800" @click="applyAlign(field.key, alignItem.key)"
                     :title="isEn ? alignItem.labelLocal : alignItem.label">
@@ -1236,7 +1366,7 @@ onBeforeUnmount(() => {
                   </button>
                 </template>
               </div>
-              <div v-if="!isQrcodeField(field.key)" class="flex gap-2">
+              <div v-if="field.type === 'text'" class="flex gap-2">
                 <button class="flex items-center gap-2" @click="handleTemplateChange(field.key)">
                   <Icon icon="lucide:eye" v-if="field.showField" />
                   <Icon icon="lucide:eye-closed" v-else />
@@ -1255,7 +1385,7 @@ onBeforeUnmount(() => {
               </div>
   
               <div v-else class="flex items-center gap-2 mr-2">
-                <XInputNumber v-model="field.size!" size="sm" class="w-20" :min="20" @change="updateOverflowMap" />
+                <XInputNumber v-model="field.size!" size="sm" class="w-20" :min="1" @change="updateOverflowMap" />
               </div>
   
               <button class="hover:text-success" @click="handleSelectColumn(field.key)">
@@ -1360,11 +1490,10 @@ onBeforeUnmount(() => {
           class="absolute cursor-move select-none template-item text-black"
           :class="{ 'overflow-warning': isOverflowMap[item.key] }"
           :style="{ left: item.x + 'px', top: item.y + 'px', maxWidth: '100%',  }"
-          @mousedown.prevent
-          @mousedown="startDrag($event, item)"
+          @mousedown.prevent="startDrag($event, item)"
           :data-key="item.key"
         >
-          <template v-if="item.type !== 'qrcode'">
+          <template v-if="item.type === 'text'">
             <template v-if="item.wrap">
               <div v-if="item.showField" class="font-medium leading-tight">
                 {{ isEn ? item.label_local : item.label }}:
@@ -1378,6 +1507,10 @@ onBeforeUnmount(() => {
               <span class="font-medium" v-if="item.showField">{{ isEn ? item.label_local : item.label }}:</span>
               <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}</span>
             </template>
+          </template>
+
+          <template v-else-if="item.type === 'barcode'">
+            <BarcodePreview :data="previewValue[hashPrintHeader('imei')]" :size="item.size ?? 20" />
           </template>
 
           <template v-else>
@@ -1423,6 +1556,11 @@ onBeforeUnmount(() => {
 .overflow-warning {
   outline: 1px dashed #ef4444;
   background: rgba(239, 68, 68, 0.05);
+}
+
+.printing .overflow-warning {
+  outline: none;
+  background: transparent;
 }
 
 .template-item .template-value {

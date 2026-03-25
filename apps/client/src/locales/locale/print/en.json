@@ -1,5 +1,10 @@
 {
   "print": {
+    "direction": {
+      "title": "Directionary",
+      "portrait": "portrait",
+      "landscape": "landscape"
+    },
     "fields": {
       "title": "Print Fields",
       "config": {
@@ -64,7 +69,8 @@
         "processing": "Please wait for order processing to complete",
         "noField": "No fields are currently selected. Do you want to continue printing?",
         "overflow": "Some fields exceed the defined area. Do you still want to print?",
-        "imgError": "Failed to load image"
+        "imgError": "Failed to load image",
+        "error": "Failed to generate the PDF. Please install the plugin or try again later."
       },
       "service": {
         "label": "Current Service"
@@ -89,6 +95,9 @@
     "paper": {
       "title": "Preview Area",
       "preview": "Select an order to view different preview results"
+    },
+    "plugin": {
+      "tip": "For optimal print quality, please install the latest plugin. Browser printing will be used as a fallback if the plugin is not installed."
     }
   }
 }

@@ -28,6 +28,10 @@
       "total": "共 {total} 台设备",
       "hasNew": "发现新版本, 点击下载新版本"
     },
+    "recoverys": {
+      "title": "恢复模式列表",
+      "total": "共 {total} 台设备"
+    },
     "card": {
       "serial": "序列号",
       "type": "型号"

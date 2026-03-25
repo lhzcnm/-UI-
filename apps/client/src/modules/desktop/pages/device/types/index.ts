@@ -1,5 +1,5 @@
 import type { ServiceDetail } from "@/api/services"
-import type { DeviceMapItem } from "@/types/device"
+import type { DeviceMapItem, DeviceRecoveryMapItem } from "@/types/device"
 
 // Store
 export type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version' | 'printView'
@@ -7,6 +7,7 @@ export type ScreenshotStatus = 'wait' | 'success' | 'fail'
 
 export interface DeviceStore {
   deviceMap        : Map<string, DeviceMapItem>
+  recoverDeviceMap : Map<string, DeviceRecoveryMapItem>,
   deviceStatus     : DeviceStatus
   prevStatus       : DeviceStatus
   screenshotStatus : ScreenshotStatus

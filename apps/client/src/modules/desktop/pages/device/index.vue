@@ -19,6 +19,8 @@ import type {
   BatteryResponse,
   DeviceBaseInfo,
   DeviceProduct,
+  DeviceRecoveryData,
+  DeviceRecoveryMapItem,
   DeviceResponse,
   ProductDataset,
   ProductItem,
@@ -28,6 +30,7 @@ import type {
 
 const store: DeviceStore = reactive({
   deviceMap        : new Map(),
+  recoverDeviceMap : new Map(),
   visiblePrint     : false,
   hasNewVersion    : false,
   deviceStatus     : 'wait',
@@ -58,15 +61,31 @@ watch(
       if (await checkVersion(version.value)) {
         return store.deviceStatus = 'version'
       }
+      if (value.includes('Recovery')) {
+        const match = value.match(/0x[0-9a-fA-F]+/)
+
+        if (match) {
+          store.recoverDeviceMap.delete(match[0])
+        }
+        return
+      }
 
       return handleDisconnect(value)
     }
 
+    const data = JSON.parse(value) as any
+
+    if (data.type === 'recovery_attached') {
+      const rawData = data.data as DeviceRecoveryData
+      store.recoverDeviceMap.set(rawData.ECID, processRecoveryDevice(rawData))
+      return
+    }
+
     if (value.startsWith('{"id"')) return
     if (value.includes('DeviceID')) {
-      const data = JSON.parse(value) as DeviceResponse
-      if (await checkVersion(data.Version)) {
-        version.value = data.Version
+      const rawData = data as DeviceResponse
+      if (await checkVersion(rawData.Version)) {
+        version.value = rawData.Version
         return store.deviceStatus = 'version'
       }
 
@@ -100,27 +119,26 @@ function handleDisconnect(value: string) {
     }
   }
 
-  if (store.deviceMap.size === 0) {
+  if (store.deviceMap.size === 0 && store.recoverDeviceMap.size === 0) {
     store.deviceStatus = 'wait'
   }
 }
 
-await checkPlugin()
 async function checkPlugin() {
-  // const controller = new AbortController()
-  // setTimeout(() => controller.abort(), 3000)
-
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), 3000)
+  
   try {
     const response = await fetch(
       'http://localhost:9999/info',
       {
-        // signal: controller.signal,
+        signal: controller.signal,
         headers: {'x-token': Date.now().toString(16)},
       },
     )
-
+    
     const { data } = await response.json()
-
+    
     await handleInfo(data)
   }
   catch (error) {
@@ -136,8 +154,53 @@ async function checkPlugin() {
   }
 }
 
+async function getRecovery() {
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), 3000)
+
+  try {
+    const response = await fetch(
+      'http://localhost:9999/info/recovery',
+      {
+        signal: controller.signal,
+        headers: { 'x-token': Date.now().toString(16) },
+      },
+    )
+    
+    const { data }: { data: DeviceRecoveryData[] } = await response.json()
+
+    if (!data || data.length === 0) return
+
+    for (let device of data) {
+      const recoveryDevice = processRecoveryDevice(device)
+      store.recoverDeviceMap.set(device.ECID, recoveryDevice)
+    }
+  } catch(err) {
+    console.warn(err)
+    try {
+      const data: { devices: DeviceRecoveryData[] } = await wsFetch({ type: 'recoveryInfo' })
+
+      if (!data.devices || data.devices.length === 0) return
+      
+      for (let device of data.devices) {
+        const recoveryDevice = processRecoveryDevice(device)
+        store.recoverDeviceMap.set(device.ECID, recoveryDevice)
+      }
+      // console.log(store.recoverDeviceMap)
+    } catch(err) {
+      console.log(err)
+    }
+  } finally {
+    if (store.recoverDeviceMap.size > 0) {
+      store.deviceStatus = 'list'
+    }
+  }
+}
+
+await checkPlugin()
+await getRecovery()
+
 async function handleInfo(data: DeviceResponse[]) {
-  console.log(data)
   if (!data || data.length === 0) return
   version.value = data[0].Version
   if (await checkVersion(version.value)) {
@@ -186,12 +249,14 @@ function getProduct(data: DeviceBaseInfo) {
   type ProductKey = keyof typeof datasets
 
   let product = null
+
   if (data.ProductType in datasets) {
     product = datasets[data.ProductType as ProductKey] as ProductItem
     if (Array.isArray(product)) product = product[0]  
   }
 
   let color = t('device.info.color.unknown')
+
   if (data.DeviceColor in product) {
     color = product[data.DeviceColor]
   }
@@ -322,6 +387,17 @@ async function checkScreenshot(id: string) {
 
   if (isSuccess) await getScreenshot(id)
   store.screenshotStatus = status
+}
+
+function processRecoveryDevice(device: DeviceRecoveryData): DeviceRecoveryMapItem {
+  return {
+    name: device.NAME,
+    type: device.PRODUCT,
+    serialNo: device.SRNM,
+    ecid: device.ECID,
+    chip: device.CPID,
+    mode: device.MODE,
+  }
 }
 
 await Promise.all([

@@ -10,6 +10,7 @@ export interface PageItem {
 
   value?: string,
   size? :number,
+  align?: "left" | "center" | "right",
 
   showField: boolean,
 }
@@ -26,6 +27,7 @@ export interface PluginPdfRequest {
       left: number,
     },
     fontSize: number,
+    orientation?: "portrait" | "landscape",
   },
   pages: {
     items: PageItem[],

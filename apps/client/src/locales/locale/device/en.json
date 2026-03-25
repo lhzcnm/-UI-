@@ -28,6 +28,10 @@
       "total": "Total {total} devices",
       "hasNew": "New version found, click to download"
     },
+    "recoverys": {
+      "title": "Recovery Mode List",
+      "total": "Total {total} devices"
+    },
     "card": {
       "serial": "Serial Number",
       "type": "Model"

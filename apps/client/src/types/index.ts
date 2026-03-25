@@ -9,6 +9,8 @@ export interface ContainerItem {
   },
   fontSize: number,
   styles: Record<string, string>,
+  // portrait - 纵向, landscape - 横向
+  orientation?: "portrait" | "landscape",
 }
 
 export interface TemplateItem {
@@ -20,7 +22,7 @@ export interface TemplateItem {
   wrap?: boolean,
   width?: number,
   height?: number,
-  type?: "text" | "qrcode" | "barcode",
+  type: "text" | "qrcode" | "barcode",
   align?: "left" | "center" | "right",
   showField?: boolean,
   size?: number,
@@ -39,6 +41,7 @@ export interface PrintTemplateJson {
       left: number,
     },
     fontSize: number,
+    orientation?: "portrait" | "landscape",
   },
   items: {
     key: string,
@@ -47,7 +50,7 @@ export interface PrintTemplateJson {
     x: number,
     y: number,
     wrap?: boolean,
-    type?: "text" | "qrcode" | "barcode",
+    type: "text" | "qrcode" | "barcode",
     align?: "left" | "center" | "right",
     size?: number,
     showField?: boolean,
@@ -58,4 +61,5 @@ export interface PrintHeader {
   key: string,
   name: string,
   nameEn: string,
+  type: "text" | "qrcode" | "barcode",
 }

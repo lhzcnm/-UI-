@@ -16,7 +16,7 @@ export interface OrderApi {
   cacheImei(body: CacheImeiParams): R<string[]>
   deleteCacheImei(params: DeleteImeiPrams): R<void>
 
-  generateQrcode(params: QrcodeImageParams): R<Blob>
+  // generateQrcode(params: QrcodeImageParams): R<Blob>
 }
 
 export interface Order {
