@@ -6,7 +6,7 @@ import path from 'node:path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const resolve = (p) => path.resolve(__dirname, p)
 
-const MAX_WORKERS = 8
+const MAX_WORKERS = 4
 
 const list = [
   { mode: "SanHe", obfuscator: false },

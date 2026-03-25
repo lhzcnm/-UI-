@@ -72,8 +72,6 @@ function handleSelectType(value: string) {
 }
 
 function handleSelectIlustrate(value: string) {
-  console.log(value)
-  console.log(store.illustrates)
   const illustrate = store.illustrates.get(value)
   props.setHtml!(illustrate?.serviceDesc || '')
 }
