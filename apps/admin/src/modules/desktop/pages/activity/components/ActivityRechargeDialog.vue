@@ -37,7 +37,7 @@ async function handleSubmit() {
     @close="handleClose"
   >
     <template #default>
-      <ActivityRechargeForm class="p-4" v-model="store.formCreate" :amount="store.payment.credits" />
+      <ActivityRechargeForm form-class="p-4" v-model="store.formCreate" :amount="store.payment.credits" />
     </template>
 
     <template #footer>

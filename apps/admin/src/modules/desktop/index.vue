@@ -13,6 +13,8 @@ const serviceStore = useServiceStore()
 const levelStore = useLevelStore()
 const remindVisible = ref<boolean>(true)
 
+const isAdmin = import.meta.env.VITE_APP_ADMIN
+
 await Promise.all([
   serviceStore.getItems(),
   serviceStore.getGroups(),
@@ -20,7 +22,7 @@ await Promise.all([
   iStore.getSetting(),
   iStore.getThreads(),
   iStore.getConfig(),
-  iStore.getIllustrateList(),
+  isAdmin === 'true' && iStore.getIllustrateList(),
 ])
 
 iStore.startTodoTimer()

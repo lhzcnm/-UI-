@@ -22,7 +22,7 @@ defineExpose({
     </XFormItem>
 
     <XFormItem field="accessLevel" label="会员组权限">
-      <SelectAccesslevel v-model="form.accessLevel" />
+      <NativeSelectAccesslevel v-model="form.accessLevel" />
     </XFormItem>
 
     <XFormItem label="允许访问设备页面">

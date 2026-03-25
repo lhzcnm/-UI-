@@ -32,7 +32,7 @@ const previewHtml = ref('')
 
 const options: OptionItem[] = [
   mode === "SanHe" && { label: '更新公告', value: 'adminRemainder', icon: 'solar:diploma-verified-outline' },
-  mode === "SanHe" && { label: '说明文档', value: 'illustrateDocx', icon: 'lucide:file-spreadsheet' },
+  mode === "LuShen" && { label: '说明文档', value: 'illustrateDocx', icon: 'lucide:file-spreadsheet' },
   { label: '中文服务说明', value: 'service', icon: 'lucide:file-text' },
   { label: '英文服务说明', value: 'service-en', icon: 'lucide:globe' },
   { label: '中文活动说明', value: 'activity', icon: 'lucide:balloon' },

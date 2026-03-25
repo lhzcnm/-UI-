@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import type { ClassNameValue } from 'tailwind-merge'
+import { twMerge, type ClassNameValue } from 'tailwind-merge'
 import { VOUCHER_TYPE_LIST } from "@3un/utils"
 
 import { type ActivityVoucherCreate } from '@/inters/voucher/activity'
 
 interface ActivityVoucherFormProps {
   amount: string,
-  class: ClassNameValue,
+  formClass: ClassNameValue,
 }
 
 const props = defineProps<ActivityVoucherFormProps>()
 
 const form = defineModel<ActivityVoucherCreate>({ required: true })
+
+const formClass = computed(() => (twMerge('divide-y', props.formClass)))
 </script>
 
 <template>
-  <form class="divide-y" :class="props.class" @submit.prevent>
+  <form :class="formClass" @submit.prevent>
     <FormField class="py-2" label="充值id" desc="" required>
       <XInput disabled v-model="form.paymentId" placeholder="充值ID" />
     </FormField>
