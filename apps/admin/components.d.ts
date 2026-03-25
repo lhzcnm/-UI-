@@ -42,7 +42,6 @@ declare module 'vue' {
     XDialog: typeof import('@3un/ui')['XDialog']
     XInput: typeof import('@3un/ui')['XInput']
     XInputNumber: typeof import('@3un/ui')['XInputNumber']
-    XNativeSelect: typeof import('@3un/ui')['XNativeSelect']
     XPopover: typeof import('@3un/ui')['XPopover']
     XSelect: typeof import('@3un/ui')['XSelect']
     XSelectGroup: typeof import('@3un/ui')['XSelectGroup']
