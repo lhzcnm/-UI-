@@ -28,7 +28,11 @@ const settings = ref(iStore.settings as Settings)
 
 watch(
   () => iStore.showSetting,
-  (value) => value && init()
+  (value) => {
+    if (value) {
+      init()
+    }
+  }
 )
 
 await init()
