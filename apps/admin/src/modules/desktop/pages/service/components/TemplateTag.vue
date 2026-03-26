@@ -5,10 +5,11 @@ interface ColumnTagProps {
   id: string,
   label: string,
   checked: boolean,
+  type: "text" | "qrcode" | "barcode",
 }
 
 interface ColumnTagEmits {
-  (e: "click", key: string): void
+  (e: "click", key: string, type: "text" | "qrcode" | "barcode",): void
 }
 
 defineProps<ColumnTagProps>()
@@ -29,5 +30,5 @@ const b = style()
 </script>
 
 <template>
-  <button :class="b.base({ checked })" @click="emits('click', id)">{{ label }}</button>
+  <button :class="b.base({ checked })" @click="emits('click', id, type)">{{ label }}</button>
 </template>

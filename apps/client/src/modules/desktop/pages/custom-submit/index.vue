@@ -36,7 +36,7 @@ const container = reactive<ContainerItem>({
   },
   styles: {},
   fontSize: 4,
-  orientation: 'portrait',
+  orientation: 'landscape',
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
@@ -1259,7 +1259,6 @@ onBeforeUnmount(() => {
         <div class="flex items-center justify-end gap-2">
           <label class="flex items-center group relative">
             <XSwitch :label="t('print.button.autoprint.label')" v-model="autoPrint" />
-            <!-- <span class="absolute opacity-0 group-hover:opacity-100 bg-card rounded top-8 left-1 text-sm p-2">{{ t('print.button.autoprint.tip') }}</span> -->
           </label>
           <XButton color="success" :label="t('print.button.submit')" @click="handleSubmit" />
           <XButton :label="t('print.button.showres')" @click="readOrderResult" />

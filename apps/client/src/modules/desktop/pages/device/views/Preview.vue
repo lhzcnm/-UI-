@@ -26,7 +26,7 @@ const container = reactive<ContainerItem>({
   },
   styles: {},
   fontSize: 4,
-  orientation: 'portrait',
+  orientation: 'landscape',
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 

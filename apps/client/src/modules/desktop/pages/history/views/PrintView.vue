@@ -30,7 +30,7 @@ const container = reactive<ContainerItem>({
   },
   styles: {},
   fontSize: 4,
-  orientation: 'portrait',
+  orientation: 'landscape',
 })
 
 const { t, locale } = useI18n()
