@@ -187,6 +187,8 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
   const initX = item.x
   const initY = item.y
 
+  item.align = undefined
+
   function move(ev: MouseEvent) {
     const dx = ev.clientX - startX
     const dy = ev.clientY - startY
@@ -726,7 +728,7 @@ function processDefaultTemplate(jsonStr: string) {
   container.padding.right = template.paper.padding.right
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
-  container.orientation = template.paper.orientation
+  container.orientation = template.paper.orientation ?? 'landscape'
 
   templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
@@ -807,6 +809,15 @@ function processPageItem(order: CustomSubmitOrder) {
         x: pxTomm(template.x),
         y: pxTomm(template.y),
         value: qrcodeStr({ ...order.fields, IMEI: order.imei }),
+      })
+      continue
+    } else if (template.type === 'barcode') {
+      pageItems.push({
+        ...template,
+        showField: true,
+        x: pxTomm(template.x),
+        y: pxTomm(template.y),
+        value: order.imei,
       })
       continue
     }
@@ -1031,7 +1042,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <div class="border rounded-md p-3 space-y-3 bg-muted/30">
+      <div class="min-h-56 border rounded-md p-3 space-y-3 bg-muted/30">
         <div class="font-semibold text-sm flex items-center gap-2">
           {{ t('print.fields.config.title') }}
           <span class="text-xs text-muted-foreground">
@@ -1179,6 +1190,11 @@ onBeforeUnmount(() => {
 .overflow-warning {
   outline: 1px dashed #ef4444;
   background: rgba(239, 68, 68, 0.05);
+}
+
+.printing .overflow-warning {
+  outline: none;
+  background: transparent;
 }
 
 .template-item .template-value {

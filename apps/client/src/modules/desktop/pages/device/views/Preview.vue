@@ -334,6 +334,8 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
   const initX = item.x
   const initY = item.y
 
+  item.align = undefined
+
   function move(ev: MouseEvent) {
     const dx = ev.clientX - startX
     const dy = ev.clientY - startY
@@ -1041,6 +1043,11 @@ onBeforeUnmount(() => {
 .overflow-warning {
   outline: 1px dashed #ef4444;
   background: rgba(239, 68, 68, 0.05);
+}
+
+.printing .overflow-warning {
+  outline: none;
+  background: transparent;
 }
 
 .template-item .template-value {
