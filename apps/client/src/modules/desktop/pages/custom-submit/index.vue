@@ -1386,7 +1386,7 @@ onBeforeUnmount(() => {
                 <label class="flex items-center gap-3 cursor-pointer select-none">
                   <input type="checkbox" class="peer sr-only" v-model="field.wrap" />
                   <div
-                    class="relative w-9 h-5 rounded-full bg-border
+                    class="relative w-9 h-5 rounded-full bg-border 
                            peer-checked:bg-primary
                            transition-colors flex"
                   >

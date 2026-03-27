@@ -114,7 +114,7 @@ function goToInstruction() {
       <div class="flex justify-between">
         <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
 
-        <XButton icon="mdi:help-circle-outline" @click="goToInstruction" label="说明文档" size="sm" variant="outline"/>
+        <XButton icon="mdi:help-circle-outline" @click="goToInstruction" label="使用说明" size="sm" variant="outline"/>
       </div>
 
       <div class="space-y-2" @click="handleServiceItemClick">

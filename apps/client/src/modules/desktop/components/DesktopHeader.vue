@@ -56,7 +56,7 @@ function goToInstruction() {
           class="flex items-center justify-center space-x-1 px-2 py-1 rounded-full shadow-md  
                 hover:text-red-500 dark:hover:text-red-500 text-blue-600 dark:text-gray-50  select-none">
           <Icon icon="tdesign:error-circle" class="size-5" />
-          <span class="text-md font-bold">说明文档</span>
+          <span class="text-md font-bold">使用说明</span>
         </section>
 
       </div>
