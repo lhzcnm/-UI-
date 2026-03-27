@@ -28,6 +28,7 @@ export interface Service {
   isNew: boolean
   isHot: boolean
   isUnlock: boolean
+  verify: boolean
 }
 export interface ServiceView {
   id: number

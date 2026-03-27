@@ -69,7 +69,11 @@ const serviceVertifyType = computed(() => {
 })
 
 const isShowVerify = computed(() => {
+  const service = serviceStore.services.get(props.order.serviceId)
+  if (!service) return false
+
   return serviceVertifyType.value &&
+    service.verify &&
     verify.value.isNormal &&
     status.value.isSuccess
 })
@@ -110,7 +114,7 @@ function handleVerify() {
   }
 
   window.confirm(t('order.prompt.vertifyConfirm')) && (() => {
-    orderApi.verify(id, { isUnlock: isUnlockService.value }).then(() => {
+    orderApi.verify(id, { isUnlock: isUnlockService.value, serviceId: order.value.serviceId }).then(() => {
       order.value.verify = ORDER_VERIFY.REPLIED
       toast.success(t('order.prompt.vertified'))
     })

@@ -179,4 +179,5 @@ export interface QrcodeImageParams {
 
 export interface VertifyParams {
   isUnlock: boolean
+  serviceId: number
 }

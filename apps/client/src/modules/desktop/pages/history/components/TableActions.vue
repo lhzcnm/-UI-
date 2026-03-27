@@ -54,7 +54,11 @@ const serviceVertifyType = computed(() => {
 })
 
 const isShowVerify = computed(() => {
+  const service = services.get(row.serviceId)
+  if (!service) return false
+
   return serviceVertifyType.value &&
+    service.verify &&
     verify.isNormal &&
     status.isSuccess &&
     !focreHide.value
@@ -86,7 +90,7 @@ function handleVerify() {
     return
   }
 
-  orderApi.verify(id, { isUnlock: isUnlockService.value }).then(() => {
+  orderApi.verify(id, { isUnlock: isUnlockService.value, serviceId: row.serviceId }).then(() => {
     toast.success(t('order.prompt.vertified'))
 
     focreHide.value = true

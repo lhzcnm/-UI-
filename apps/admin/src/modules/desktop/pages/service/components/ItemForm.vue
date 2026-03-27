@@ -155,6 +155,14 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
+      label="是否允许提交验证"
+      desc="禁用后, 该服务不允许提交验证"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.verify" />
+    </FormField>
+
+    <FormField
       label="禁用服务"
       desc="禁用后，用户看不到也不能提交订单"
       :content-flex="false"

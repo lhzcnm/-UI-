@@ -37,6 +37,7 @@ export const zService = z.object({
   testimonials: z.boolean().default(false),
   packageOrderBy: z.number().default(0),
   template: z.string().default('').nullable(),
+  verify: z.boolean().default(true),
 
   // ⬇️ 废弃字段
   // cronNo: z.number(),

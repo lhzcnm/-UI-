@@ -159,6 +159,31 @@ export const columns: XColDef<Service> = [
     },
   },
   {
+    key: 'verify',
+    title: '是否允许验证',
+    width: 108,
+    render(value, row) {
+      return h(XSwitch, {
+        modelValue: value,
+        "onUpdate:modelValue": async (val) => {
+          const oldVal = row.verify
+          
+          try {
+            await updateService({
+              packageId: row.packageId,
+              verify: val
+            })
+
+            row.verify = val
+          }
+          catch {
+            setTimeout(() => row.verify = oldVal, 1000)
+          }
+        }
+      })
+    }
+  },
+  {
     key: 'disablePackage',
     title: '禁用',
     width: 108,
