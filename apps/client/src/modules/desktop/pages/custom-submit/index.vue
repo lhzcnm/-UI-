@@ -289,7 +289,7 @@ async function exportTemplate() {
       height: container.height,
       padding: { ...container.padding },
       fontSize: container.fontSize,
-      orientation: container.orientation,
+      orientation: container.orientation ?? 'landscape',
     },
     items: templateItems.value.map(item => ({
       key: item.key,
@@ -357,7 +357,7 @@ async function importTemplate(file: File) {
   container.padding.right = template.paper.padding.right
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
-  container.orientation = template.paper.orientation
+  container.orientation = template.paper.orientation ?? 'landscape'
 
   templateItems.value = template.items.map(item => ({ ...item,  align: item.align ?? "left", showField: item.showField ?? true }))
 
@@ -574,6 +574,7 @@ function processDefaultTemplate(jsonStr: string) {
   container.padding.right = template.paper.padding.right
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
+  container.orientation = template.paper.orientation ?? 'landscape'
 
   templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
@@ -840,8 +841,7 @@ function convertResultToHtml(orders: CustomSubmitOrder[]) {
   `).join('')
 }
 
-async function 
-handleGenerate() {
+async function handleGenerate() {
   if (!paperRef.value) return
   if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
   if (customOrders.value.length === 0) return toast.warning(t('print.prompt.pdf.notOrder'))

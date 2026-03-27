@@ -520,7 +520,7 @@ async function importTemplate(file: File) {
   container.padding.right = template.paper.padding.right
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
-  container.orientation = template.paper.orientation
+  container.orientation = template.paper.orientation ?? 'landscape'
 
   templateItems.value = template.items.map(item => ({ ...item,  align: item.align ?? "left", showField: item.showField ?? true }))
 

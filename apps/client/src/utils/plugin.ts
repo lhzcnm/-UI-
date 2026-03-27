@@ -5,7 +5,9 @@ export async function getPluginInfo() {
   const { data } = await axios.get<PluginInfo>(
     "http://localhost:9999/plugin",
     {
-      headers: { "x-token": Date.now().toString(16), },
+      headers: {
+        "x-token": Date.now().toString(16),
+      },
       timeout: 3000,
     }
   )
