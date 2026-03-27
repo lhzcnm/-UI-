@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
 function goToInstruction() {
@@ -20,8 +19,8 @@ function goToInstruction() {
         <LanguageSwitch />
         <TheTheme />
         <FreshButton />
-        <button @click="goToInstruction()" class="bg-muted text-muted-foreground p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800">
-          <Icon icon="mdi:help-circle-outline" class="size-5"/>
+        <button @click="goToInstruction()" class="border text-[12px] w-8 h-8 rounded-full text-sky-500 border-sky-200">
+          说明
         </button>
         <TheAvatar class="size-8" />
       </nav>
