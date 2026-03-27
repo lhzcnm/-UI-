@@ -56,7 +56,7 @@ const style = tv({
       'mb-4 overflow-hidden rounded-xl border p-4 transition-all animate-in fade-in slide-in-from-top-2',
       'border-danger'
     ],
-    container: 'relative flex items-center gap-3'
+    container: 'flex items-center gap-3 flex-wrap'
   }
 })
 
@@ -66,7 +66,7 @@ const b = style()
 <template>
   <div v-if="isNotLatest" :class="b.root()">
     <div :class="b.container()">
-      <div class="flex-1 space-y-1 flex gap-2 items-center">
+      <div class="flex-1 space-y-1 flex gap-2 items-center flex-wrap">
         <h4>{{ t('print.plugin.tip') }}</h4>
         <XButtonSplit
           size="sm"

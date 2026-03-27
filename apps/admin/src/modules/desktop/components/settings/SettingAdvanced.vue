@@ -36,8 +36,6 @@ const iStore = useSystemStore()
 function handleSubmit() {
   loading.value = true
 
-  console.log(form.queryValidation)
-  console.log(form.unlockValidation)
   const response = Promise.all([
     updateSetting([
       { name: 'enableRegister', status: form.enableRegister },

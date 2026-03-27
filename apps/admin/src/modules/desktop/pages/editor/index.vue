@@ -35,6 +35,7 @@ const allowTypes = [
 ]
 
 const MAX_SIZE = 12 * 1024 * 1024
+const isAdmin = import.meta.env.VITE_APP_ADMIN
 
 async function getSetting() {
   const data = await getSettings()
@@ -70,7 +71,7 @@ async function getIllustrateList() {
 await Promise.all([
   getSetting(),
   getActivities(),
-  getIllustrateList(),
+  isAdmin === 'true' && getIllustrateList(),
 ])
 
 const editor = useTemplateRef('editor')

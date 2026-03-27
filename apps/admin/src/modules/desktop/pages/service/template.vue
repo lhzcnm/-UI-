@@ -9,6 +9,7 @@ import { getServiceFields, getServices, updateService } from '@/api/services'
 import { type Service } from '@/inters/services'
 import { mmToPx } from '@/utils'
 import { hashPrintHeader, textAlign } from '@3un/utils'
+import TemplateBarcode from './components/TemplateBarcode.vue'
 
 interface ContainerItem {
   width: number,
@@ -21,6 +22,8 @@ interface ContainerItem {
   },
   fontSize: number,
   styles: Record<string, string>,
+  // portrait - 纵向, landscape - 横向
+  orientation?: "portrait" | "landscape",
 }
 
 interface TemplateItem {
@@ -51,6 +54,7 @@ interface PrintTemplateJson {
       left: number,
     },
     fontSize: number,
+    orientation?: "portrait" | "landscape",
   },
   items: {
     key: string,
@@ -70,6 +74,7 @@ interface PrintHeader {
   key: string,
   name: string,
   nameEn: string,
+  type: "text" | "qrcode" | "barcode",
 }
 
 interface FieldValue {
@@ -94,6 +99,7 @@ const container = reactive<ContainerItem>({
   },
   styles: {},
   fontSize: 4,
+  orientation: 'landscape',
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
@@ -111,22 +117,40 @@ const lang = ref<'zh' | 'en'>('zh')
 
 const paperRef = ref<HTMLElement | null>(null)
 
-const defaultItems = [
+const defaultItems: PrintHeader[] = [
   {
     key: hashPrintHeader("imei"),
     name: "IMEI",
-    nameEn: "IMEI"
+    nameEn: "IMEI",
+    type: "text",
   },
   {
     key: qrcodeCol,
     name: "二维码",
     nameEn: "Qrcode",
+    type: "qrcode",
   },
+  {
+    key: "barcode",
+    name: "条形码",
+    nameEn: "BarCode",
+    type: "barcode"
+  },
+]
+const directionOptions: { value: 'portrait' | 'landscape', label: string }[] = [
+  { value: 'portrait', label: '纵向' },
+  { value: 'landscape', label: '横向' },
 ]
 
 const isEn = computed(() => lang.value === 'en')
 
-const processedColumns = computed(() => serviceCols.value.map(item => ({key: item.key, label: isEn.value ? item.nameEn : item.name})))
+const processedColumns = computed(() => (
+  serviceCols.value.map(item => ({
+    key: item.key,
+    label: isEn.value ? item.nameEn : item.name,
+    type: item.type
+  }))
+))
 
 const filteredServices = computed(() => {
   const inputValue = input.value.trim().toLowerCase()
@@ -138,15 +162,22 @@ const filteredServices = computed(() => {
   return res
 })
 
-const paperStyle = computed(() => ({
-  width: `${mmToPx(container.width)}px`,
-  height: `${mmToPx(container.height)}px`,
-  padding: `${mmToPx(container.padding.top)}px
-    ${mmToPx(container.padding.right)}px
-    ${mmToPx(container.padding.bottom)}px
-    ${mmToPx(container.padding.left)}px`,
-  fontSize: `${mmToPx(container.fontSize)}px`
-}))
+const paperStyle = computed(() => {
+  const isLandscape = container.orientation === 'landscape'
+
+  const width = isLandscape ? container.height : container.width
+  const height = isLandscape ? container.width : container.height
+
+  return {
+    width: `${mmToPx(width)}px`,
+    height: `${mmToPx(height)}px`,
+    padding: `${mmToPx(container.padding.top)}px
+      ${mmToPx(container.padding.right)}px
+      ${mmToPx(container.padding.bottom)}px
+      ${mmToPx(container.padding.left)}px`,
+    fontSize: `${mmToPx(container.fontSize)}px`
+  }
+})
 
 const previewValue = computed(() => {
   let res: FieldValue = {}
@@ -174,7 +205,12 @@ const previewValue = computed(() => {
 })
 
 const safeAreaStyle = computed(() => {
-  const { padding, width, height } = container
+  const isLandscape = container.orientation === 'landscape'
+
+  const width = isLandscape ? container.height : container.width
+  const height = isLandscape ? container.width : container.height
+
+  const { padding } = container
 
   const left = mmToPx(padding.left)
   const top = mmToPx(padding.top)
@@ -219,7 +255,7 @@ function highlightText(text: string, keyword: string) {
   return text.replace(reg, '<mark class="x-highlight">$1</mark>')
 }
 
-function handleSelectColumn(key: string) {
+function handleSelectColumn(key: string, type: "text" | "qrcode" | "barcode" = 'text') {
   const header = serviceCols.value.find(h => h.key === key)
   if (!header) return
 
@@ -229,7 +265,7 @@ function handleSelectColumn(key: string) {
     selectCols.value.splice(index, 1)
     templateItems.value = templateItems.value.filter(i => i.key !== key)
   } else {
-    const isQrcode = isQrcodeField(key)
+    // const isQrcode = isQrcodeField(key)
     const pos = getNextItemPosition()
 
     const newItem: TemplateItem = {
@@ -239,8 +275,8 @@ function handleSelectColumn(key: string) {
       x: pos.x,
       y: pos.y,
       wrap: false,
-      type: isQrcode ? "qrcode" : "text",
-      ...(isQrcode && {size: 25}),
+      type: type,
+      size: (type === 'barcode' ? 5 : 10),
       showField: true,
     }
 
@@ -252,7 +288,7 @@ function handleSelectColumn(key: string) {
 function getNextItemPosition() {
   const baseX = mmToPx(container.padding.left)
   const baseY = mmToPx(container.padding.top)
-  const gap = 6
+  const gap = -6
 
   if (!paperRef.value || templateItems.value.length === 0) {
     return { x: baseX, y: baseY }
@@ -285,7 +321,15 @@ async function handleSelected(id: number | undefined) {
   templateItems.value.length = 0
   const serviceFields = await getFieldsByid(id)
 
-  serviceCols.value = [...defaultItems, ...serviceFields.list.map(h =>  ({ key: hashPrintHeader(h.name), name: h.name, nameEn: h.nameEn ? h.nameEn : h.name }))]
+  serviceCols.value = [
+    ...defaultItems,
+    ...serviceFields.list.map<PrintHeader>(h => ({
+      key: hashPrintHeader(h.name),
+      name: h.name,
+      nameEn: h.nameEn ? h.nameEn : h.name,
+      type: "text"
+    }))
+  ]
   
   const selService = services.value.find(s => s.packageId === id)
   if (selService) {
@@ -302,7 +346,7 @@ async function getFieldsByid(id: number) {
 }
 
 function isQrcodeField(key: string) {
-  return qrcodeCol === key
+  return key === 'qrcode'
 }
 
 function updateOverflowMap() {
@@ -332,6 +376,7 @@ function isItemOverflow(el: HTMLElement) {
 }
 
 function stripHtmlTags(html: string) {
+  if (!html) return ''
   return html.replace(/<[^>]+>/g, '')
 }
 
@@ -370,6 +415,8 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
   const initX = item.x
   const initY = item.y
 
+  item.align = undefined
+
   function move(ev: MouseEvent) {
     const dx = ev.clientX - startX
     const dy = ev.clientY - startY
@@ -406,9 +453,11 @@ function startDrag(e: MouseEvent, item: TemplateItem) {
 }
 
 function clampPosition(item: TemplateItem, target: HTMLElement) {
+  const isLandscape = container.orientation === 'landscape'
+
   const padding = container.padding
-  const containerW = mmToPx(container.width)
-  const containerH = mmToPx(container.height)
+  const containerW = mmToPx(isLandscape ? container.height : container.width)
+  const containerH = mmToPx(isLandscape ? container.width : container.height)
 
   // 元素实际宽高
   const elRect = target.getBoundingClientRect()
@@ -441,6 +490,7 @@ async function handleSave() {
         height: container.height,
         padding: { ...container.padding },
         fontSize: container.fontSize,
+        orientation: container.orientation ?? 'portrait',
       },
       items: templateItems.value.map(item => ({
         key: item.key,
@@ -455,7 +505,7 @@ async function handleSave() {
         showField: item.showField,
       }))
     }
-  
+
     const json = JSON.stringify(curServiceTemplate, null, 2)
     await updateService({
       ...selService,
@@ -481,6 +531,7 @@ function processServiceTemplate(jsonStr: string) {
   container.padding.right = template.paper.padding.right
   container.padding.bottom = template.paper.padding.bottom
   container.padding.left = template.paper.padding.left
+  container.orientation = template.paper.orientation
 
   templateItems.value = template.items.map(item => ({ ...item, showField: item.showField ?? true }))
 
@@ -494,30 +545,37 @@ function applyAlign(key: string, align: string) {
   if (index === -1) return
 
   const el = paperRef.value.querySelector<HTMLElement>(`.template-item[data-key="${key}"]`)
-  const safe = paperRef.value.querySelector<HTMLElement>('.safe-area-border')
-  if (!el || !safe) return
+  if (!el) return
 
-  const elRect = el.getBoundingClientRect()
-  const safeRect = safe.getBoundingClientRect()
-  const paperRect = paperRef.value.getBoundingClientRect()
+  const safe = paperRef.value.querySelector('.safe-area-border') as HTMLElement
+  if (!safe) return
 
-  const elWidth = elRect.width
+  const isLandscape = container.orientation === 'landscape'
+
+  const paperWidth = mmToPx(
+    isLandscape ? container.height : container.width
+  )
+
+  const elWidth = el.offsetWidth
+  const safeWidth = safe.offsetWidth
+
+  const paddingLeft = mmToPx(container.padding.left)
+  const paddingRight = mmToPx(container.padding.right)
 
   templateItems.value[index].align = align as "left" | "center" | "right"
 
   if (align === 'left') {
-    templateItems.value[index].x = safeRect.left - paperRect.left
+    templateItems.value[index].x = paddingLeft
   }
 
   if (align === 'center') {
     templateItems.value[index].x =
-      safeRect.left - paperRect.left +
-      (safeRect.width - elWidth) / 2
+      paddingLeft + (safeWidth - elWidth) / 2
   }
 
   if (align === 'right') {
     templateItems.value[index].x =
-      safeRect.right - paperRect.left - elWidth
+      paperWidth - paddingRight - elWidth
   }
 }
 
@@ -598,19 +656,38 @@ onMounted(async () => {
           <div class="flex flex-wrap gap-2">
             <template v-for="column in processedColumns" :key="column.key">
               <TemplateTag :id="column.key" :label="column.label"
-                :checked="selectCols.includes(column.key)"
+                :checked="selectCols.includes(column.key)" :type="column.type"
                 @click="handleSelectColumn" />
             </template>
           </div>
         </div>
 
         <div class="grid grid-cols-3 gap-4 p-2 rounded-md border border-border shadow-sm">
-          <div class="flex flex-col space-y-1">
+          <div class="flex flex-col space-y-4">
+          <!-- 字体大小 -->
+          <div class="flex flex-col gap-1">
             <div class="font-semibold text-sm">字体大小 (mm):</div>
             <div class="flex items-center gap-2 w-40">
               <XInputNumber v-model="container.fontSize" :step="1" size="sm" @change="handleContainerChange" />
             </div>
           </div>
+
+          <!-- 纸张方向 -->
+          <div>
+            <div class="font-semibold text-sm">纸张方向</div>
+            <div class="flex items-center gap-4 text-sm">
+              <template v-for="option in directionOptions" :key="option.value">
+                <button class="flex items-center gap-1 text-lg"
+                  :class="{ 'text-primary': option.value === container.orientation }"
+                  @click="container.orientation = option.value">
+                  <Icon icon="solar:smartphone-linear" :rotate="option.value === 'landscape' ? 45 : 0" />
+                  <span>{{ option.label }}</span>
+                </button>
+              </template>
+            </div>
+          </div>
+        </div>
+
           <!-- 纸张大小 -->
           <div class="flex flex-col space-y-1">
             <div class="font-semibold text-sm">纸张大小 (mm)</div>
@@ -664,14 +741,14 @@ onMounted(async () => {
                   {{ field.label }}
                 </span>
                 <span class="text-xs text-muted-foreground">
-                  {{ isQrcodeField(field.key)
+                  {{ isQrcodeField(field.type!)
                     ? '二维码尺寸(mm)二维码尺寸过小可能会导致无法识别'
                     : (field.wrap ? '标签与内容分行显示' : '标签与内容同行显示') }}
                 </span>
               </div>
 
               <div class="flex items-center gap-4">
-                <div v-if="!isQrcodeField(field.key)" class="flex items-center gap-2">
+                <div v-if="field.type === 'text'" class="flex items-center gap-2">
                 <template v-for="alignItem in textAlign" :key="alignItem.key">
                   <button class="hover:bg-zinc-50 dark:hover:bg-zinc-800" @click="applyAlign(field.key, alignItem.key)"
                     :title="isEn ? alignItem.labelLocal : alignItem.label">
@@ -679,7 +756,7 @@ onMounted(async () => {
                   </button>
                 </template>
               </div>
-                <div v-if="!isQrcodeField(field.key)" class="flex gap-2">
+                <div v-if="field.type === 'text'" class="flex gap-2">
                   <button class="flex items-center gap-2" @click="handleTemplateChange(field.key)">
                     <Icon icon="lucide:eye" v-if="field.showField" />
                     <Icon icon="lucide:eye-closed" v-else />
@@ -698,7 +775,7 @@ onMounted(async () => {
                 </div>
   
                 <div v-else class="flex items-center gap-2 mr-2">
-                  <XInputNumber v-model="field.size!" size="sm" :min="20" @change="updateOverflowMap" />
+                  <XInputNumber v-model="field.size!" size="sm" :min="1" @change="updateOverflowMap" />
                 </div>
   
                 <button class="hover:text-success" @click="handleSelectColumn(field.key)">
@@ -734,7 +811,7 @@ onMounted(async () => {
           @mousedown="startDrag($event, item)"
           :data-key="item.key"
         >
-          <template v-if="item.type !== 'qrcode'">
+          <template v-if="item.type === 'text'">
             <template v-if="item.wrap">
               <div v-if="item.showField" class="font-medium leading-tight">
                 {{ item.label }}:
@@ -748,6 +825,12 @@ onMounted(async () => {
               <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
               <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key].value) }}</span>
             </template>
+          </template>
+
+          <template v-else-if="item.type === 'barcode'">
+            <div data-barcode>
+              <TemplateBarcode data="{value}" :size="item.size ?? 20" />
+            </div>
           </template>
 
           <template v-else>

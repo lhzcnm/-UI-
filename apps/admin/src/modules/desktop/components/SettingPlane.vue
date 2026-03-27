@@ -28,7 +28,11 @@ const settings = ref(iStore.settings as Settings)
 
 watch(
   () => iStore.showSetting,
-  (value) => value && init()
+  (value) => {
+    if (value) {
+      init()
+    }
+  }
 )
 
 await init()
@@ -71,8 +75,8 @@ async function init() {
     uiHeader="p-3 pb-0"
     draggable
   >
-    <div class="flex h-[calc(100%-3.5rem)]">
-      <div class="w-40 space-y-1 text-sm px-3 border-r">
+    <div class="flex h-[calc(100%-3.5rem)] overflow-y-auto">
+      <div class="w-40 space-y-1 text-sm px-3 border-r overflow-y-auto">
         <button
           v-for="item in options" :key="item.value"
           :class="twJoin(
