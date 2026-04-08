@@ -2,6 +2,7 @@
 import type { Configs, Settings } from '@/inters/settings'
 import { updateSetting, updateConfig, updateThread } from '@/api/settings'
 import { toast } from 'vue-sonner'
+import { handleInputChange } from '@/utils'
 
 interface SettingPlaneProps {
   settings: Settings
@@ -35,6 +36,9 @@ const form = reactive({
 const iStore = useSystemStore()
 
 function handleSubmit() {
+  if (form.orderRetainDays < 30) {
+    return toast.warning("历史订单至少需要保留30天")
+  }
   loading.value = true
 
   const response = Promise.all([
@@ -216,7 +220,7 @@ function handleSubmit() {
 
       <XFormField label="订单保留天数" desc="设置保留订单最大天数">
         <div class="ml-auto flex items-center gap-2">
-          <XInput ui-root="w-20" v-model="form.orderRetainDays" />
+          <XInput ui-root="w-20" v-model="form.orderRetainDays" @input="(e: Event) => form.orderRetainDays = handleInputChange(e)" />
           <span>天</span>
         </div>
       </XFormField>

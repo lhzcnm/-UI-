@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { UserPaidSearchForm } from '@/inters/users'
+import { handleInputChange } from '@/utils'
+
 const form = defineModel<UserPaidSearchForm>({ required: true })
 </script>
 
@@ -18,7 +20,7 @@ const form = defineModel<UserPaidSearchForm>({ required: true })
 
     <div>
       <label class="block text-label text-sm mb-1">用户ID</label>
-      <XInput v-model="form.userId" placeholder="用户ID" />
+      <XInput v-model="form.userId" placeholder="用户ID" @input="(e: Event) => form.userId = handleInputChange(e)" />
     </div>
 
     <div>

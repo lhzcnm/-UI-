@@ -57,6 +57,10 @@ async function getVoucherList(params: VoucherListForm) {
 }
 
 async function batchDelete() {
+  if (ids.value.length === 0) {
+    return toast.warning("请选择需要删除的行")
+  }
+  
   try {
     await deleteVoucher(ids.value)
     toast.success("删除成功")

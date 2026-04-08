@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import MonitorServerSearchForm from './MonitorServerSearchForm.vue'
 
-import { useCopyFn } from '@3un/utils'
+import { IP_REG, useCopyFn } from '@3un/utils'
 
 import { MONITOR_SERVER_STORE } from '../utils'
+import { toast } from 'vue-sonner'
 
 const store = inject(MONITOR_SERVER_STORE)!
 
@@ -21,6 +22,11 @@ function handleCancel() {
 }
 
 function handleSubmit() {
+  const { serverIp } = copied.value
+  if (serverIp && IP_REG.test(serverIp)) {
+    return toast.warning("请输入正确的ipv4地址")
+  }
+  
   store.formSearch = copied.value
   store.visibleSearch = false
   store.refresh = !store.refresh

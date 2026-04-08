@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { type OrderAutoCleanSettings } from '@/inters/orders';
+import { type OrderAutoCleanSettings } from '@/inters/orders'
 import { ORDER_STORE } from '../utils'
-import { useCopyFn } from '@3un/utils';
-import { updateSetting } from '@/api/settings';
+import { useCopyFn } from '@3un/utils'
+import { updateSetting } from '@/api/settings'
+import { toast } from 'vue-sonner'
 
 const store = inject(ORDER_STORE)!
 const iStore = useSystemStore()
@@ -20,6 +21,10 @@ watch(
 
 async function handleSubmit() {
   const { autoCleanEnable, orderRetainDays } = form.value
+
+  if (orderRetainDays < 30) {
+    return toast.warning("历史订单至少需要保留30天")
+  }
 
   // console.log(AutoCleanEnable)
   // console.log(OrderRetainDays)

@@ -132,3 +132,11 @@ export function createFormData(data: object) {
 
   return body
 }
+
+export function filterByRegex(str: string, regex: RegExp) {
+  const matches = str
+    .trim()
+    .match(new RegExp(regex.source, 'g'))
+  
+  return matches ? matches.join('') : ''
+}

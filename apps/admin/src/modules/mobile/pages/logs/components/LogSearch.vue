@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import LogSearchForm from './LogSearchForm.vue'
-import { useCopyFn } from '@3un/utils'
+import { IP_REG, useCopyFn } from '@3un/utils'
 import { LOG_STORE } from '../utils'
+import { toast } from 'vue-sonner'
 
 const store = inject(LOG_STORE)!
 const cloned = useCopyFn(() => store.formSearch)
@@ -13,6 +14,11 @@ watch(
 )
 
 function handleSubmit() {
+  const { ip } = copied.value
+  if (ip && !IP_REG.test(ip)) {
+    return toast.warning("请输入正确的ipv4地址")
+  }
+
   store.formSearch = copied.value
   store.visibleSearch = false
   store.refresh = !store.refresh

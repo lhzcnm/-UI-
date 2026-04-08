@@ -1,4 +1,4 @@
-import { useCopyFn } from '@3un/utils'
+import { filterByRegex, useCopyFn } from '@3un/utils'
 
 /**
  * 生成随机数
@@ -39,4 +39,13 @@ const MM_TO_PX = 96 / 25.4
 
 export function mmToPx(mm: number) {
   return mm * MM_TO_PX
+}
+
+export function filterNumber(input: string) {
+  return filterByRegex(input, /[0-9]/)
+}
+
+export function handleInputChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  return Number(filterNumber(target.value))
 }
