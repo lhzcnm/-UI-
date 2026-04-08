@@ -3,20 +3,28 @@ import type { CR } from '@3un/shared'
 
 import { toast } from 'vue-sonner'
 import axios from 'axios'
+import { getToken, handleUnauthorized, processHeartBeat } from '.'
 
-const key = import.meta.env.VITE_ACCESS_TOKEN
-const token = localStorage.getItem(key)
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    skipAuth?: boolean
+  }
+}
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: { Authorization: token },
+  headers: { Authorization: getToken() },
   timeout: 5000 * 60,
 })
 
-http.interceptors.request.use(config => {
+http.interceptors.request.use(async (config) => {
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)
-  
+
+  if (config.skipAuth) return config
+
+  await processHeartBeat()
+
   config.headers.Authorization = token
 
   if(!config.headers['Accept-Language'])
@@ -64,14 +72,6 @@ function handleHttpError(error: AxiosError<CR<null>>) {
   // }
 
   return Promise.reject(error)
-}
-
-async function handleUnauthorized() {
-  toast.warning('身份认证过期，请重新登录')
-
-  localStorage.clear()
-  sessionStorage.clear()
-  window.location.reload()
 }
 
 export default http

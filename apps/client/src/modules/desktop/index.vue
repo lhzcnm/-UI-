@@ -7,6 +7,7 @@ import { useSystemStore } from '@/stores/system'
 import { useDocumentVisibility } from '@vueuse/core'
 import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
+import { startHeartBeatScheduler, stopHeartBeatScheduler } from '@/utils'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -68,6 +69,14 @@ watch(visibility, (cur, prev) => {
   if ((cur === 'visible' && prev === 'hidden') && !route.meta.noAuthRequired) {
     uStore.getInfo()
   }
+})
+
+onMounted(() => {
+  startHeartBeatScheduler()
+})
+
+onBeforeUnmount(() =>{
+  stopHeartBeatScheduler()
 })
 </script>
 

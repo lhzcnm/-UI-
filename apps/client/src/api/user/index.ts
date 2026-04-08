@@ -29,4 +29,6 @@ export const userApi: UserApi = {
 
   unbindApply: (params) => http.post("/user/unbind/apply", params),
   unbindConfirm: (params) => http.post("/user/unbind/confirm", params),
+
+  // heartBeat: () => http.get('user/heartbeat'),
 }

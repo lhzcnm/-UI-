@@ -22,6 +22,7 @@ interface ImportMetaEnv {
   readonly VITE_SETTINGS: string
   readonly VITE_SUBMIT_STORGE: string
   readonly VITE_THREAD_STORAGE: string
+  readonly VITE_TOKEN_EXPIRE_TIME: string
 }
 
 interface ImportMeta {

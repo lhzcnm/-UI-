@@ -28,6 +28,8 @@ export interface UserApi {
 
   unbindApply(params: UnBindApplyParams): R<void>
   unbindConfirm(params: UnBindConfirmParams): R<void>
+
+  // heartBeat(): R<void>
 }
 
 export interface UserInfo {
