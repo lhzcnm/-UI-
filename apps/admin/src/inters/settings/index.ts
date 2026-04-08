@@ -102,6 +102,9 @@ export interface Settings {
 
   // 线程数
   threads: number
+
+  AutoCleanEnable: boolean
+  OrderRetainDays: number
 }
 
 // Config

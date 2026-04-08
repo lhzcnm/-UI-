@@ -28,9 +28,11 @@ const settings = ref(iStore.settings as Settings)
 
 watch(
   () => iStore.showSetting,
-  (value) => {
+  async (value) => {
     if (value) {
-      init()
+      tab.value = 'routine'
+      await init()
+      settings.value = iStore.settings as Settings
     }
   }
 )
@@ -41,6 +43,7 @@ async function init() {
   await Promise.all([
     // getSetting(),
     iStore.getConfig(),
+    iStore.getSetting(),
   ])
 }
 

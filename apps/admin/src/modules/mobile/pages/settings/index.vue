@@ -15,7 +15,12 @@ const configs = ref()
 
 watch(
   () => iStore.showSetting,
-  (value) => value && init()
+  async (value) => {
+    if (value) {
+      await init()
+      settings.value = iStore.settings as Settings
+    } 
+  }
 )
 
 await init()
@@ -23,6 +28,7 @@ await init()
 async function init() {
   await Promise.all([
     // getSetting(),
+    iStore.getSetting(),
     getConfig(),
   ])
 }

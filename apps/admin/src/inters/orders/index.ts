@@ -134,3 +134,8 @@ export interface OrderCleanForm {
   checked: string
   time: string
 }
+
+export interface OrderAutoCleanSettings {
+  autoCleanEnable: boolean
+  orderRetainDays: number
+}

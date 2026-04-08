@@ -8,27 +8,28 @@ interface SettingPlaneProps {
   configs: Configs
 }
 
-const { settings, configs } =
+const props =
   defineProps<SettingPlaneProps>()
 
 const loading = ref(false)
 const form = reactive({
-  enableRegister: settings.enableRegister,
-  enableOrderVerify: settings.enableOrderVerify,
-  // enableTricket: settings.enableTricket,
-  queryValidation: settings.queryValidation,
-  unlockValidation: settings.unlockValidation,
-  minRechargeAmount: settings.minRechargeAmount,
-  maxRechargeAmount: settings.maxRechargeAmount,
-  minVoucherAmount: settings.minVoucherAmount ?? 0,
-  maxVoucherAmount: settings.maxVoucherAmount ?? 0,
-  invitePonit: +configs['invite:point'],
-  inviteForPonit: +configs['invite:for:point'],
-  excludedWords: configs['filter:excluded_words']
-    ? JSON.parse(configs['filter:excluded_words']).join('|')
+  enableRegister: props.settings.enableRegister,
+  enableOrderVerify: props.settings.enableOrderVerify,
+  queryValidation: props.settings.queryValidation,
+  unlockValidation: props.settings.unlockValidation,
+  minRechargeAmount: props.settings.minRechargeAmount,
+  maxRechargeAmount: props.settings.maxRechargeAmount,
+  minVoucherAmount: props.settings.minVoucherAmount ?? 0,
+  maxVoucherAmount: props.settings.maxVoucherAmount ?? 0,
+  invitePonit: +props.configs['invite:point'],
+  inviteForPonit: +props.configs['invite:for:point'],
+  excludedWords: props.configs['filter:excluded_words']
+    ? JSON.parse(props.configs['filter:excluded_words']).join('|')
     : '',
-  invite: settings.invite,
-  threads: settings.threads ?? 5,
+  invite: props.settings.invite,
+  threads: props.settings.threads ?? 5,
+  autoCleanEnable: props.settings["AutoCleanEnable"],
+  orderRetainDays: props.settings["OrderRetainDays"],
 })
 
 const iStore = useSystemStore()
@@ -48,6 +49,8 @@ function handleSubmit() {
       { name: 'minVoucherAmount', content: form.minVoucherAmount.toString() },
       { name: 'maxVoucherAmount', content: form.maxVoucherAmount.toString() },
       { name: 'invite', content: form.invite },
+      { name: 'AutoCleanEnable', status: form.autoCleanEnable },
+      { name: 'OrderRetainDays', content: form.orderRetainDays.toString() },
     ]),
     updateConfig([
       { key: 'invite:point', value: form.invitePonit.toString() },
@@ -67,6 +70,7 @@ function handleSubmit() {
   response.then(() => {
     toast.success('修改成功')
     iStore.showSetting = false
+    iStore.getSetting()
   })
 
   response.finally(() => {
@@ -205,6 +209,17 @@ function handleSubmit() {
       >
         <XSwitch v-model="form.unlockValidation" />
       </FormField>
+
+      <XFormField label="允许自动清理" desc="是否开启订单自动清理">
+        <XSwitch class="ml-auto" v-model="form.autoCleanEnable" />
+      </XFormField>
+
+      <XFormField label="订单保留天数" desc="设置保留订单最大天数">
+        <div class="ml-auto flex items-center gap-2">
+          <XInput ui-root="w-20" v-model="form.orderRetainDays" />
+          <span>天</span>
+        </div>
+      </XFormField>
     </div>
 
     <div class="px-4 py-3 flex justify-end border-t">
