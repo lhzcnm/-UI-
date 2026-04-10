@@ -3,14 +3,15 @@ import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from '../components/ImportPlane.vue'
 import TableColumnDialog from '../components/TableColumnDialog.vue'
 
+import { h } from 'vue'
+import { toast } from 'vue-sonner'
 import { XTag, type XBtnSplitOptions, type XTableColumn, type XTableExpose } from '@3un/ui'
+
 import { SUBMIT_STORE } from '../utils'
 import { getDefaultColumns, getDefaultResultColumns } from '../utils/columns'
 import { serviceApi, type FieldMap, type Service, type ServiceCols } from '@/api/services'
 import { orderApi, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
 import { ASYNC_ORDER_STATUS, ASYNC_ORDER_STATUS_MAP, debounce, downloadURL, ORDER_STATUS, ORDER_VERIFY, xconfirm } from '@3un/utils'
-import { h } from 'vue'
-import { toast } from 'vue-sonner'
 import router from '@/router'
 
 const store = inject(SUBMIT_STORE)!
@@ -268,24 +269,33 @@ async function handleSubmitOrder(id: number) {
 
 async function handleImport(imeiList: string[], remark: string) {
   if (!selService.value) return
-  if (count > 0 && !selService.value?.isUnlock) return
+  if (disabled.value) return toast.warning(t('query.prompt.importDisable'))
+  // if (count > 0 && !selService.value?.isUnlock) return
 
   store.page = 1
   tableRef.value?.initFilter()
   close()
 
+  imeis.value = [...new Set([...imeiList, ...imeis.value,])]
+  // console.log(imeis.value)
+  const submitedOrders = processWaitList(store.selectId!, imeis.value, remark)
+  store.rawOrders.splice(0, getWaitingOrderLength(store.rawOrders), ...submitedOrders)
+  // store.rawOrders = submitedOrders
+  // imeis.value = store.rawOrders.map(o => o.imei)
+
   if (!cacheImei) {
-    await orderApi.cacheImei({ imeiList, serviceId: selService.value.id })
+    await orderApi.cacheImei({ imeiList: imeis.value, serviceId: selService.value.id })
   }
 
-  const submitedOrders = processWaitList(store.selectId!, imeiList, remark)
-
-  store.rawOrders.splice(0, 0, ...submitedOrders)
   submited.value = false
-  imeis.value = imeiList
   comments.value = remark
-  count = imeiList.length
+  count = imeis.value.length
   cacheImei = false
+}
+
+function getWaitingOrderLength(rawOrders: OrderTableView[]) {
+  const waitProcessOrder = rawOrders.filter(o => o.status === ORDER_STATUS.WAIT)
+  return waitProcessOrder.length
 }
 
 async function getSubmitOrderList(orderIds: number[]) {
@@ -404,7 +414,6 @@ async function handleSubmit() {
 
   const submitOrders = store.rawOrders.map(item => {
     if (item.status === ORDER_STATUS.WAIT) {
-
       return item
     }
     return null
@@ -616,7 +625,7 @@ async function handleFresh() {
   if (store.rawOrders.length === 0) return toast.warning(t('query.prompt.importNull'))
 
   pendingOrders = store.rawOrders.map(item => {
-    if (item.status === ORDER_STATUS.PROCESSING) {
+    if (item.status === ORDER_STATUS.PROCESSING || item.status === ORDER_STATUS.WAIT) {
       return item.id
     }
     return null

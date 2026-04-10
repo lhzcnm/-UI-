@@ -259,8 +259,7 @@ function getProduct(data: DeviceBaseInfo) {
 
   if (data.DeviceColor in product) {
     color = product[data.DeviceColor]
-  }
-  else if (data.SerialNumber.length === 12) {
+  } else if (data.SerialNumber.length === 12) {
     const suffix = data.SerialNumber.slice(-4)
     color = datasets[suffix as ProductKey] as string
   }

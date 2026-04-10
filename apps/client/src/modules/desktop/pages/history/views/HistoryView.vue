@@ -55,28 +55,28 @@ function openSearch() {
 }
 
 function openExport() {
-  if(selectRows.value.length === 1) {
+  if(selectRows.value.length > 0) {
     const index = store.orders.list.findIndex(o => o.id === selectRows.value[0])
     if (index !== -1) {
       const order = store.orders.list[index]
-      handleExport(order.serviceId, [order.id.toString()])
+      handleExport(order.serviceId, selectRows.value.map(i => i.toString()))
       return
     }
   }
-  const firstOrder = store.orders.list[0]
-  if (isSameService(firstOrder)) {
-    handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
-    return
-  }
+  // const firstOrder = store.orders.list[0]
+  // if (isSameService(firstOrder)) {
+  //   handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
+  //   return
+  // }
 
   store.exportForm = { ...form.export }
   store.visibleExport = true
 }
 
-function isSameService(firstOrder: Order) {
-  if (store.orders.total === 0) return false
-  return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
-}
+// function isSameService(firstOrder: Order) {
+//   if (store.orders.total === 0) return false
+//   return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
+// }
 
 function handleExport(serviceId: number, orderIds: string[]) {
   const params: OrderExportParams = {

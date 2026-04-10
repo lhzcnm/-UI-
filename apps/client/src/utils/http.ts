@@ -21,6 +21,8 @@ http.interceptors.request.use(async (config) => {
   const key = import.meta.env.VITE_ACCESS_TOKEN
   const token = localStorage.getItem(key)
 
+  // console.log(config)
+  // console.log(config.skipAuth)
   if (config.skipAuth) return config
 
   await processHeartBeat()

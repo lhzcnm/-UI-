@@ -8,11 +8,11 @@ const authApi: AuthApi = {
   getCaptcha: () => http.get('auth/captcha-refresh', { skipAuth: true }),
   checkCaptcha: (params) => http.post('auth/captcha-check', params, { skipAuth: true }),
 
-  getQrcode: () => http.get('auth/qrcode'),
+  getQrcode: () => http.get('auth/qrcode', { skipAuth: true }),
 	accountLogin: params => http.post('auth/login/account', params, { skipAuth: true }),
 	phoneLogin: params => http.post('auth/login/phone', params, { skipAuth: true }),
   mailLogin: params => http.post('auth/login/email', params, { skipAuth: true }),
-	checkQrcode: (nonce) => http.post(`auth/qrcode/${nonce}`, { skipAuth: true }),
+	checkQrcode: (nonce) => http.post(`auth/qrcode/${nonce}`, null, { skipAuth: true }),
   
   forgotPsw: (params) => http.put('auth/forgot-psw', params, { skipAuth: true }),
 

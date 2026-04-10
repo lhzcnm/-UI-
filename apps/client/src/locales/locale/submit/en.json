@@ -13,7 +13,8 @@
       "balance": "Balance",
       "refreshNone": "All orders have been processed or submission failed",
       "unit": "UnitPrice: {price}",
-      "reseted": "Please Submit Order"
+      "reseted": "Please Submit Order",
+      "importDisable": "Please wait the order all process done"
     },
     "result": "Query Result",
     "submit": "Submit Order",

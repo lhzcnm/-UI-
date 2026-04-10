@@ -21,6 +21,14 @@ async function authHeartBeat() {
   } 
 }
 
+function isTokenNearExpire() {
+  const expireAt = Number(localStorage.getItem(tokenExpireTimeKey))
+  if (!expireAt) return true
+
+  const now = Date.now()
+  return expireAt - now < 20 * 1000
+}
+
 export function getToken() {
   return localStorage.getItem(tokenStorageKey)
 }
@@ -31,14 +39,6 @@ export function setToken(token: string, expireAt?: number) {
   if (expireAt) {
     localStorage.setItem(tokenExpireTimeKey, expireAt.toString())
   }
-}
-
-function isTokenNearExpire() {
-  const expireAt = Number(localStorage.getItem(tokenExpireTimeKey))
-  if (!expireAt) return true
-
-  const now = Date.now()
-  return expireAt - now < 20 * 1000
 }
 
 export async function processHeartBeat() {
@@ -56,8 +56,8 @@ export async function processHeartBeat() {
 
     isHeartBeatRunning = false
 
-    // const nextExpireAt = Date.now() + 10 * 60 * 1000
-    const nextExpireAt = Date.now() + 60 * 1000
+    const nextExpireAt = Date.now() + 10 * 60 * 1000
+    // const nextExpireAt = Date.now() + 60 * 1000
     setToken(getToken() || '', nextExpireAt)
   }
 }
