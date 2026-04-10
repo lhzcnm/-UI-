@@ -8,17 +8,20 @@ const { t } = useI18n()
 const diskInfo = computed(() => {
   const { memory } = store.deviceMap.get(store.selected)!
   const total = memory.TotalDiskCapacity
+  const systemCapacity = memory.TotalSystemCapacity
+  const dataCapacity = memory.TotalDataAvailable
+  const avaialCapacity = memory.AmountDataAvailable
 
   return {
     totalDiskCapacity: formatSize(total),
-    totalSystemCapacity: formatSize(memory.TotalSystemCapacity),
-    totalDataCapacity: formatSize(memory.TotalDataCapacity),
-    amountDataAvailable: formatSize(memory.AmountDataAvailable),
+    totalSystemCapacity: formatSize(systemCapacity),
+    totalDataCapacity: formatSize(dataCapacity),
+    amountDataAvailable: formatSize(avaialCapacity),
     
-    totalDiskCapacityPer: getPercentage(memory.TotalDiskCapacity, total),
-    totalSystemCapacityPer: getPercentage(memory.TotalSystemCapacity, total),
-    totalDataCapacityPer: getPercentage(memory.TotalDataCapacity, total),
-    amountDataAvailablePer: getPercentage(memory.AmountDataAvailable, total),
+    totalDiskCapacityPer: getPercentage(total, total),
+    totalSystemCapacityPer: getPercentage(systemCapacity, total),
+    totalDataCapacityPer: getPercentage(dataCapacity, total),
+    amountDataAvailablePer: getPercentage(avaialCapacity, total),
   }
 })
 

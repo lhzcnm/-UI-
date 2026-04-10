@@ -47,8 +47,9 @@ function handleClose() {
     v-model="store.visibleAutoClean"
     draggable
     title="订单自动清理"
-    ui-root="sm:p-0"
+    ui-root="sm:p-0 z-[1000]"
     ui-header="p-4 border-b"
+    ui-mask="z-[9999]"
   >
     <template #default>
       <OrderAutoCleanForm class="p-4" v-model="form" />
@@ -57,7 +58,7 @@ function handleClose() {
     <template #footer>
       <div class="p-4 flex justify-end gap-2">
         <XButton variant="soft" @click="handleClose">取消</XButton>
-        <XButton @click="handleSubmit">提交</XButton>
+        <XButton @click="handleSubmit">确认</XButton>
       </div>
     </template>
   </XDialog>

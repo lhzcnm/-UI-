@@ -1,20 +1,39 @@
 <script setup lang="ts">
 import { type OrderAutoCleanSettings } from '@/inters/orders'
-import { XFormField } from '@3un/ui'
 
 const form = defineModel<OrderAutoCleanSettings>({ required: true })
 </script>
 
 <template>
-  <form class="divide-y">
-    <XFormField label="允许自动清理" desc="是否开启订单自动清理">
-      <XSwitch class="ml-auto" v-model="form.autoCleanEnable" />
-    </XFormField>
-    <XFormField label="订单保留天数" desc="设置保留订单最大天数">
-      <div class="ml-auto flex items-center gap-2">
-        <XInput ui-root="w-20" v-model="form.orderRetainDays" />
-        <span>天</span>
+  <form class="space-y-4 rounded-xl shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col">
+        <span class="text-sm font-medium text-label">
+          开启自动清理
+        </span>
+        <span class="text-xs text-gray-500">
+          自动清理过期订单数据
+        </span>
       </div>
-    </XFormField>
+
+      <XSwitch v-model="form.autoCleanEnable" />
+    </div>
+
+    <div
+      class="px-2 border-l-2 border-l-border space-y-2"
+    >
+      <label class="text-sm text-label">
+        订单保留天数(单位: 天)
+      </label>
+
+      <div class="flex items-center gap-2">
+        <XInput
+          class="w-32"
+          placeholder="例如 30"
+          v-model="form.orderRetainDays"
+        />
+        <!-- <span class="text-sm text-gray-500">天</span> -->
+      </div>
+    </div>
   </form>
 </template>
