@@ -34,6 +34,7 @@ export const zService = z.object({
   isNew: z.boolean().default(false),
   isHot: z.boolean().default(false),
   isUnlock: z.boolean().default(false),
+  isDeviceShow: z.boolean().default(false),
   testimonials: z.boolean().default(false),
   packageOrderBy: z.number().default(0),
   template: z.string().default('').nullable(),

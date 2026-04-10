@@ -163,6 +163,14 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
+      label="设备读取服务"
+      desc="如果开启, 将可以在设备读取页面使用"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.isDeviceShow" />
+    </FormField>
+
+    <FormField
       label="禁用服务"
       desc="禁用后，用户看不到也不能提交订单"
       :content-flex="false"
