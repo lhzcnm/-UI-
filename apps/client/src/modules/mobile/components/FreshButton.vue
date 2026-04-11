@@ -17,7 +17,7 @@ function doRefresh() {
     aria-label="Refresh Button"
     @click="doRefresh"
   >
-    <Icon icon="lucide:refresh-cw" class="size-5" />
+    <Icon icon="lucide:refresh-cw" class="size-4" />
     <!-- <span>刷新</span> -->
   </button>
 </template>

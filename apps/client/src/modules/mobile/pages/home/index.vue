@@ -96,10 +96,7 @@ function handleServiceItemClick(event: MouseEvent) {
   router.push(`/m/submit/${id}`)
 }
 
-// 跳转说明文档
-function goToInstruction() {
-  window.open('http://docx.3unlocked.com/#/', '_blank')
-}
+
 </script>
 
 <template>
@@ -111,11 +108,7 @@ function goToInstruction() {
     />
 
     <section v-if="commonList.length" class="mb-4">
-      <div class="flex justify-between">
         <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
-
-        <XButton icon="mdi:help-circle-outline" @click="goToInstruction" label="使用说明" size="sm" variant="outline"/>
-      </div>
 
       <div class="space-y-2" @click="handleServiceItemClick">
         <ServiceItemCard
