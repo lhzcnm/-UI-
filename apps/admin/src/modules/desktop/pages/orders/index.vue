@@ -232,15 +232,15 @@ const handleBatchEdit = selectDecorator(() => {
           @click="handleCleanOrder"
         />
 
-        <hr class="h-6 w-px mx-4 bg-border" />
+        <!-- <hr class="h-6 w-px mx-4 bg-border" /> -->
 
-        <XButton
+        <!-- <XButton
           label="历史订单自动清理"
           color="success"
           variant="soft"
           icon="lucide:cctv"
           @click="store.visibleAutoClean = true"
-        />
+        /> -->
       </div>
 
       <XPagination
