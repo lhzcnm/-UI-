@@ -299,6 +299,8 @@ async function handleImport(imeiList: string[], remark: string) {
   store.rawOrders.splice(0, getWaitingOrderLength(store.rawOrders), ...submitedOrders)
   // store.rawOrders = submitedOrders
   // imeis.value = store.rawOrders.map(o => o.imei)
+  processRawOrder()
+  console.log(store.rawOrders)
 
   if (!cacheImei) {
     await orderApi.cacheImei({ imeiList: imeis.value, serviceId: selService.value.id })
@@ -308,6 +310,19 @@ async function handleImport(imeiList: string[], remark: string) {
   comments.value = remark
   count = imeis.value.length
   cacheImei = false
+}
+
+function processRawOrder() {
+  let index = 0
+  let orders = []
+  for (let order of store.rawOrders) {
+    orders.push({
+      ...order,
+      index: ++index,
+    })
+  }
+
+  store.rawOrders = orders
 }
 
 function getWaitingOrderLength(rawOrders: OrderTableView[]) {
@@ -590,7 +605,19 @@ function handleCount() {
 }
 
 function handleExport() {
-  const ids = store.rawOrders.map((item) => item.id).filter(item => item !== null && item !== undefined)
+  let ids = store.rawOrders.map((item) => item.id).filter(item => item !== null && item !== undefined)
+
+  if (indexes.value.length > 0) {
+    ids.length = 0
+    for (const index of indexes.value) {
+      const order = store.rawOrders.find((o) => o.index === index)
+
+      if (order && order.id) {
+        ids.push(order.id)
+      }
+    }
+  }
+
   if (!store.selectId || !ids?.length) {
     toast.warning(t('query.prompt.importNull'))
     return
@@ -671,7 +698,7 @@ async function handleFresh() {
 function resetOrder(status: ORDER_STATUS) {
   if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
   if (reseted.value) return toast.warning(t('query.prompt.reseted'))
-  if (store.rawOrders.some(o => o.status === status)) return
+  if (!store.rawOrders.some(o => o.status === status)) return
 
   submited.value = false
   const data = store.rawOrders.filter(item => item.status === status)
@@ -717,9 +744,10 @@ function resetOrder(status: ORDER_STATUS) {
 }
 
 function resetNotCoverOrder(status: ORDER_STATUS) {
+  if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
   if (reseted.value) return toast.warning(t('query.prompt.reseted'))
-  if (store.rawOrders.some(o => o.status === status)) return
-  
+  if (!store.rawOrders.some(o => o.status === status)) return
+
   submited.value = false
   const data = store.rawOrders.filter(item => item.status === status)
   imeis.value = [...new Set(data.map(item => item.imei))]
