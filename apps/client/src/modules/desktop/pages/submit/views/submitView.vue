@@ -300,7 +300,6 @@ async function handleImport(imeiList: string[], remark: string) {
   // store.rawOrders = submitedOrders
   // imeis.value = store.rawOrders.map(o => o.imei)
   processRawOrder()
-  console.log(store.rawOrders)
 
   if (!cacheImei) {
     await orderApi.cacheImei({ imeiList: imeis.value, serviceId: selService.value.id })
