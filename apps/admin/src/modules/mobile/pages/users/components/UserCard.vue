@@ -3,7 +3,7 @@ import { Icon } from '@iconify/vue'
 import { USER_ROLE_MAP } from '@3un/utils'
 
 import type { User } from '@/inters/users'
-import { getExtraInfo } from '@/api/users'
+import { getExtraInfo, loginUserFront } from '@/api/users'
 import { USER_STORE } from '../utils'
 
 interface TheProps {
@@ -14,6 +14,13 @@ interface TheProps {
 const props = defineProps<TheProps>()
 const store = inject(USER_STORE)!
 const levelStore = useLevelStore()
+
+const iStore = useSystemStore();
+let frontUrl = iStore.configs["url"]
+
+if (!frontUrl.endsWith("/")) {
+  frontUrl += "/"
+}
 
 const level = computed(() =>
   levelStore.levelMap.get(props.user.pricePlanId!)
@@ -35,6 +42,19 @@ async function handleClick() {
 
   store.index = props.index
   store.visibleDetail = true
+}
+
+async function handleClickAuthFront() {
+  const newWin = window.open("about:blank")
+
+  try {
+    const ticket = await loginUserFront({ userId: props.user.userId })
+    if (newWin) {
+      newWin.location.href = `${frontUrl}auth-by-ticket?ticket=${ticket}`
+    }
+  } catch {
+    newWin?.close()
+  }
 }
 </script>
 
@@ -64,6 +84,10 @@ async function handleClick() {
     <div class="mt-1 space-y-1 text-sm">
       <p>微信ID: {{ user.weiXinOpenid || '未绑定' }}</p>
       <p>注册时间: {{ user.addedAt }}</p>
+    </div>
+
+    <div class="flex justify-end items-center">
+      <XButton color="warning" label="登录前台" size="sm" @click.stop="handleClickAuthFront" />
     </div>
   </button>
 </template>

@@ -27,6 +27,7 @@ import type {
   SaleRegion,
   SaleRegionDataset
 } from '@/types/device'
+import { orderApi } from '@/api/orders'
 
 const store: DeviceStore = reactive({
   deviceMap        : new Map(),
@@ -45,8 +46,10 @@ const store: DeviceStore = reactive({
 provide(STORE, store)
 
 const [datasets, countriesMap] = await Promise.all([
-  fetch('/data/devices-ios.json').then(res => res.json()),
-  fetch('/data/sales-region.json').then(res => res.json()),
+  // fetch('/data/devices-ios.json').then(res => res.json()),
+  // fetch('/data/sales-region.json').then(res => res.json()),
+  getDeviceJson(),
+  getSalesRegionJson(),
 ]) as [ProductDataset, SaleRegionDataset]
 
 const version = ref('')
@@ -399,8 +402,20 @@ function processRecoveryDevice(device: DeviceRecoveryData): DeviceRecoveryMapIte
   }
 }
 
+async function getDeviceJson() {
+  const { data } = await orderApi.devices()
+  return JSON.parse(data)
+}
+
+async function getSalesRegionJson() {
+  const { data } = await orderApi.salesRegion()
+  return JSON.parse(data)
+}
+
 await Promise.all([
   getServices(),
+  // getDeviceJson(),
+  // getSalesRegionJson(),
 ])
 
 const components = {

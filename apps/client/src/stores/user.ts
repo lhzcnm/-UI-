@@ -1,3 +1,4 @@
+import i18n from '@/locales'
 import type { UserInfo } from '@/api/user'
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
@@ -19,23 +20,17 @@ export interface popularModelsType{
 }
 
 interface Quote{
-  
-
   PopularModelsObj: popularModelsType
   PopularModelsData: popularModelsType[]
-
-  
 }
-import i18n from '@/locales'
 
 export const useUserStore = defineStore('userStore', () => {
   const quote = ref<Quote>({
-
     PopularModelsObj: {} as popularModelsType,
     PopularModelsData: [],
-
   })
   const info = ref<UserInfo>({} as UserInfo)
+  const isAdminLogin = ref<boolean>(false)
 
   async function getInfo(force = false) {
     const locale = localStorage.getItem('locale') ?? 'zh'
@@ -100,6 +95,8 @@ export const useUserStore = defineStore('userStore', () => {
   return {
     quote,
     info,
+    isAdminLogin,
+    
     getInfo,
     updateCredit,
     updateName,

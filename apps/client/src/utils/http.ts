@@ -3,7 +3,7 @@ import type { CR } from '@3un/shared'
 
 import { toast } from 'vue-sonner'
 import axios from 'axios'
-import { getToken, handleUnauthorized, processHeartBeat } from '.'
+import { getHeartBeatRunning, getToken, handleUnauthorized, processHeartBeat } from '.'
 
 declare module 'axios' {
   interface AxiosRequestConfig {
@@ -18,14 +18,16 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(async (config) => {
+  const uStore = useUserStore()
   const key = import.meta.env.VITE_ACCESS_TOKEN
-  const token = localStorage.getItem(key)
+  const adminKey = import.meta.env.VITE_ADMIN_TOKEN
+  const token = uStore.isAdminLogin ? sessionStorage.getItem(adminKey) : localStorage.getItem(key)
 
-  // console.log(config)
-  // console.log(config.skipAuth)
   if (config.skipAuth) return config
 
-  await processHeartBeat()
+  if (getHeartBeatRunning()) {
+    await processHeartBeat()
+  }
 
   config.headers.Authorization = token
 

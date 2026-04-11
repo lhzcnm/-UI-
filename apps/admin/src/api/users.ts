@@ -1,4 +1,4 @@
-import type { User, UserCreateParams, UserExtraInfo, UserList, UserListParams, UserPaidList, UserPaidListParams, UserPointForm, UserService, UserServiceCreateParams, UserServiceUpdateParams, UserUpdateParams } from '@/inters/users'
+import type { User, UserCreateParams, UserExtraInfo, UserList, UserListParams, UserLoginFront, UserPaidList, UserPaidListParams, UserPointForm, UserService, UserServiceCreateParams, UserServiceUpdateParams, UserUpdateParams } from '@/inters/users'
 import { zUser, zUserPaid, zUserService } from '@/inters/users'
 
 import type { AxiosResponse } from 'axios'
@@ -96,4 +96,10 @@ export const updateUserApiKey: ApiKeyUpdateFn = async (userId) => {
 type BulkApiKeyUpdateFn = (userId: number) => Promise<string>
 export const updateUserBulkApiKey: BulkApiKeyUpdateFn = async (userId) => {
   return (await http.get(`/user/bulkKey/${userId}`)).data
+}
+
+type LoginFrontFn = (body: UserLoginFront) => Promise<string>
+export const loginUserFront: LoginFrontFn = async (body) => {
+  const { data } = await http.post<string>('/user/generateCode', body)
+  return data
 }

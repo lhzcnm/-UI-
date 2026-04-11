@@ -19,6 +19,8 @@ export interface AuthApi {
   register: (params: RegisterRequest) => R<string>
   register_sms: (phone: string) => R<string>
   register_mail: (email: string) => R<string>
+
+  ticketAuth: (body: TicketAuth) => R<string>
 }
 
 export type LoginMode = 'account' | 'phone' | 'wechat' | 'mail'
@@ -84,4 +86,8 @@ export interface RegisterForm {
 
 export interface RegisterRequest extends RegisterForm {
   id: string,
+}
+
+export interface TicketAuth {
+  code: string,
 }

@@ -25,7 +25,7 @@ router.beforeEach((to) => {
   const token = localStorage.getItem(key) || sessionStorage.getItem(key)
 
   // handle auth
-  const isAuth = to.path.includes('auth')
+  const isAuth = (to.path.includes('auth') || to.meta.skipAuth)
   if (!isAuth && !token) return '/auth'
   if (isAuth && token) return '/dashboard'
 

@@ -7,6 +7,7 @@ const tokenExpireTimeKey = import.meta.env.VITE_TOKEN_EXPIRE_TIME
 let isHeartBeatRunning = false
 let heartBeatPromise: Promise<boolean> | null = null
 let heartBeatTimer: number | null = null
+let heartBeatRunning: boolean = false
 
 async function authHeartBeat() {
   try {
@@ -67,17 +68,19 @@ export async function handleUnauthorized() {
 
   localStorage.clear()
   sessionStorage.clear()
-  window.location.reload()
+  // window.location.reload()
+  window.location.href = '/auth'
 }
 
 export function startHeartBeatScheduler() {
   if (heartBeatTimer) return
 
+  heartBeatRunning = true
   heartBeatTimer = window.setInterval(async () => {
     try {
       if (!getToken()) return
 
-      console.log('Checking token heartbeat...')
+      // console.log('Checking token heartbeat...')
 
       if (!isTokenNearExpire()) return
 
@@ -92,5 +95,10 @@ export function stopHeartBeatScheduler() {
   if (heartBeatTimer) {
     clearInterval(heartBeatTimer)
     heartBeatTimer = null
+    heartBeatRunning = false
   }
+}
+
+export function getHeartBeatRunning() {
+  return heartBeatRunning
 }

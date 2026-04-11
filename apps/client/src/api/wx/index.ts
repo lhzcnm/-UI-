@@ -4,7 +4,7 @@ import http from '@/utils/http'
 export * from './types'
 
 export const wxApi: WxApi = {
-  accessToken: (code) => http.get(`wx/login/${code}`),
+  accessToken: (code) => http.get(`wx/login/${code}`, { skipAuth: true }),
   config: (url) => http.get(`wx/config?url=${url}`),
   invite: (openId) => http.get(`wx/invite/${openId}`, { responseType: "blob" }),
   ocr: (data) => http.postForm(`wx/ocr`, data, { timeout: 15000 }),

@@ -38,6 +38,11 @@
     "toast": {
       "noFeature": "暂不支持注册功能",
       "registerSuccess": "注册成功"
+    },
+    "ticket": {
+      "loading": "正在为您自动登录...",
+      "success": "登录成功, 正在跳转...",
+      "failed": "登录失败, 正在跳转登录页..."
     }
   }
 }

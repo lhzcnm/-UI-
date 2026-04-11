@@ -38,6 +38,11 @@
     "toast": {
       "noFeature": "Registration is not supported yet",
       "registerSuccess": "Registration successful"
+    },
+    "ticket": {
+      "loading": "Signing you in automatically...",
+      "success": "Login successful. Redirecting...",
+      "failed": "Login failed. Redirecting to the login page..."
     }
   }
 }

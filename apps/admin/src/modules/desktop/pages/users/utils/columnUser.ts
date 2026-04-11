@@ -1,11 +1,11 @@
 import UserAction from '../components/UserAction.vue'
 
-import { XSwitch, type XColDef } from '@3un/ui'
+import { XButton, XSwitch, type XColDef } from '@3un/ui'
 import { USER_ROLE_MAP } from '@3un/utils'
 import { h } from 'vue'
 
 import type { User } from '@/inters/users'
-import { updateUser } from '@/api/users'
+import { loginUserFront, updateUser } from '@/api/users'
 
 export const columns: XColDef<User> = [
   {
@@ -84,6 +84,38 @@ export const columns: XColDef<User> = [
     key: 'addedAt',
     title: '注册时间',
     width: 180,
+  },
+  {
+    key: 'loginAction',
+    title: '登录前台',
+    width: 128,
+    render(_, row) {
+      const iStore = useSystemStore()
+      let frontUrl = iStore.configs['url']
+
+      if (!frontUrl.endsWith('/')) {
+        frontUrl += '/'
+      }
+      async function handleClick() {
+        const newWin = window.open('about:blank')
+        
+        try {
+          const ticket = await loginUserFront({ userId: row.userId })
+          if (newWin) {
+            newWin.location.href = `${frontUrl}auth-by-ticket?ticket=${ticket}`
+          }
+        } catch {
+          newWin?.close()
+        }
+      }
+      return h(XButton, {
+        size: 'sm',
+        label: '登录前台',
+        // variant: 'soft',
+        color: 'warning',
+        onClick: () => handleClick()
+      })
+    }
   },
   {
     key: 'disableUser',

@@ -75,7 +75,7 @@ onMounted(() => {
   startHeartBeatScheduler()
 })
 
-onBeforeUnmount(() =>{
+onBeforeUnmount(async () =>{
   stopHeartBeatScheduler()
 })
 </script>

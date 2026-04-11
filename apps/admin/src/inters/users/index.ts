@@ -105,6 +105,10 @@ export const zUserForm = zUser.omit({
   addedAt: true,
 })
 
+export const zUserLoginFront = zUser.pick({
+  userId: true,
+})
+
 // Create & Update
 export type UserCreateParams = z.infer<typeof zUserForm>
 export type UserUpdateParams = WithId<UserCreateParams, 'userId'>
@@ -123,3 +127,4 @@ export const zUserPointForm = z.object({
 })
 
 export type UserPointForm = z.infer<typeof zUserPointForm>
+export type UserLoginFront = z.infer<typeof zUserLoginFront>

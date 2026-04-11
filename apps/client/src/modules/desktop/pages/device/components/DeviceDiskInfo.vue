@@ -9,7 +9,7 @@ const diskInfo = computed(() => {
   const { memory } = store.deviceMap.get(store.selected)!
   const total = memory.TotalDiskCapacity
   const systemCapacity = memory.TotalSystemCapacity
-  const dataCapacity = memory.TotalDataAvailable
+  const dataCapacity = memory.TotalDataCapacity
   const avaialCapacity = memory.AmountDataAvailable
 
   return {

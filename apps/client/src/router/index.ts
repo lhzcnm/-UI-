@@ -15,13 +15,14 @@ declare module 'vue-router' {
     hideFooter?: boolean
     hideSidebar?: boolean
     noAuthRequired?: boolean
+    force?: boolean
   }
 }
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    auth, notFound,
+    ...auth, notFound,
     ua.isMobile
       ? mobile
       : desktop
@@ -31,8 +32,14 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
+  if (to.meta.force) {
+    return
+  }
+
+  const uStore = useUserStore()
   const key = import.meta.env.VITE_ACCESS_TOKEN
-  const token = localStorage.getItem(key)
+  const adminKey = import.meta.env.VITE_ADMIN_TOKEN
+  const token = uStore.isAdminLogin ? sessionStorage.getItem(adminKey) : localStorage.getItem(key)
 
   const otherPaths = ['scan', 'service', 'orderDetail', 'qrcode-result']
   const isOtherPath = otherPaths.some(p => to.path.includes(p))

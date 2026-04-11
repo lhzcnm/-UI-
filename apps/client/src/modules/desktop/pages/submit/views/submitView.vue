@@ -5,13 +5,25 @@ import TableColumnDialog from '../components/TableColumnDialog.vue'
 
 import { h } from 'vue'
 import { toast } from 'vue-sonner'
-import { XTag, type XBtnSplitOptions, type XTableColumn, type XTableExpose } from '@3un/ui'
+import {
+  XTag,
+  type XBtnSplitOptions,
+  type XTableColumn,
+  type XTableExpose
+} from '@3un/ui'
+import {
+  ASYNC_ORDER_STATUS,
+  ASYNC_ORDER_STATUS_MAP,
+  debounce,
+  downloadURL,
+  ORDER_STATUS,
+  ORDER_VERIFY, xconfirm
+} from '@3un/utils'
 
 import { SUBMIT_STORE } from '../utils'
 import { getDefaultColumns, getDefaultResultColumns } from '../utils/columns'
 import { serviceApi, type FieldMap, type Service, type ServiceCols } from '@/api/services'
 import { orderApi, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
-import { ASYNC_ORDER_STATUS, ASYNC_ORDER_STATUS_MAP, debounce, downloadURL, ORDER_STATUS, ORDER_VERIFY, xconfirm } from '@3un/utils'
 import router from '@/router'
 
 const store = inject(SUBMIT_STORE)!
@@ -87,6 +99,11 @@ watch(
     if (!selService.value) return
     await handleSubmitOrder(selService.value.id)
   }
+)
+
+watch(
+  () => store.limit,
+  () => store.page = 1
 )
 
 const isEn = computed(() => locale.value === 'en')
@@ -610,6 +627,7 @@ async function reset() {
   submited.value = false
   comments.value = ''
   count = 0
+  store.page = 1
 
   if (selService.value) {
     const key = import.meta.env.VITE_SUBMIT_STORGE
@@ -653,6 +671,7 @@ async function handleFresh() {
 function resetOrder(status: ORDER_STATUS) {
   if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
   if (reseted.value) return toast.warning(t('query.prompt.reseted'))
+  if (store.rawOrders.some(o => o.status === status)) return
 
   submited.value = false
   const data = store.rawOrders.filter(item => item.status === status)
@@ -699,6 +718,8 @@ function resetOrder(status: ORDER_STATUS) {
 
 function resetNotCoverOrder(status: ORDER_STATUS) {
   if (reseted.value) return toast.warning(t('query.prompt.reseted'))
+  if (store.rawOrders.some(o => o.status === status)) return
+  
   submited.value = false
   const data = store.rawOrders.filter(item => item.status === status)
   imeis.value = [...new Set(data.map(item => item.imei))]

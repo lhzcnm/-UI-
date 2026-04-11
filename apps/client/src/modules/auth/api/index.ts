@@ -19,6 +19,8 @@ const authApi: AuthApi = {
   register: (params) => http.post('auth/register', params, { skipAuth: true }),
   register_sms: (phone) => http.get(`auth/register/sms/${phone}`, { skipAuth: true }),
   register_mail: (email) => http.get(`auth/register/email/${email}`, { skipAuth: true }),
+
+  ticketAuth: (body) => http.post('auth/exchange', body, { skipAuth: true })
 }
 
 export default authApi
