@@ -260,7 +260,7 @@ function getProduct(data: DeviceBaseInfo) {
 
   let color = t('device.info.color.unknown')
 
-  if (data.DeviceColor in product) {
+  if (product && data.DeviceColor in product) {
     color = product[data.DeviceColor]
   } else if (data.SerialNumber.length === 12) {
     const suffix = data.SerialNumber.slice(-4)
@@ -270,7 +270,7 @@ function getProduct(data: DeviceBaseInfo) {
   let modelNumber = ''
   let imeiPrefix = data.InternationalMobileEquipmentIdentity.slice(0, 8)
 
-  if (imeiPrefix in product) {
+  if (product && imeiPrefix in product) {
     modelNumber = product[imeiPrefix as ProductKey] as string
   }
 
