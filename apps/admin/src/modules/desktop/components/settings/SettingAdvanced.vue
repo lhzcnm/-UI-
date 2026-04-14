@@ -220,7 +220,12 @@ function handleSubmit() {
 
       <XFormField label="订单保留天数" desc="设置保留订单最大天数">
         <div class="ml-auto flex items-center gap-2">
-          <XInput ui-root="w-20" v-model="form.orderRetainDays" @input="(e: Event) => form.orderRetainDays = handleInputChange(e)" />
+          <XInput
+            ui-root="w-20"
+            v-model="form.orderRetainDays"
+            @input="(e: Event) => form.orderRetainDays = handleInputChange(e)"
+            @change="(e: Event) => form.orderRetainDays = handleInputChange(e)"
+          />
           <span>天</span>
         </div>
       </XFormField>
