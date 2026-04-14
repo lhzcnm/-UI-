@@ -7,7 +7,7 @@ import { useSystemStore } from '@/stores/system'
 import { useDocumentVisibility } from '@vueuse/core'
 import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
-import { startHeartBeatScheduler, stopHeartBeatScheduler } from '@/utils'
+import { closeChannel, startChannel } from '@/utils/heartBeat'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -72,11 +72,13 @@ watch(visibility, (cur, prev) => {
 })
 
 onMounted(() => {
-  startHeartBeatScheduler()
+  if (!uStore.isAdminLogin) {
+    startChannel()
+  }
 })
 
 onBeforeUnmount(async () =>{
-  stopHeartBeatScheduler()
+  closeChannel()
 })
 </script>
 
@@ -100,4 +102,5 @@ onBeforeUnmount(async () =>{
     </RouterView>
   </div>
   <LogoutDialog />
+  <IdleModal />
 </template>

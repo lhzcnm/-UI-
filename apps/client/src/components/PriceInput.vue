@@ -1,15 +1,31 @@
 <script setup lang="ts">
+import { handleInputChange } from '@/utils';
 import type { ClassNameValue } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
+
 
 interface PriceInputProps {
   class?: ClassNameValue,
   placeholder?: string,
+  // input?: number
 }
 
+// interface priceInputEmits {
+//   input: [e: Event]
+// }
+
 const props = defineProps<PriceInputProps>()
+// const emits = defineEmits<priceInputEmits>()
+const priceInputRef = ref<HTMLInputElement | null>(null)
 
 const input = defineModel<number>({ required: true })
+
+function handleInput(e: Event) {
+  if (!priceInputRef.value) return
+  const value = handleInputChange(e)
+  input.value = value
+  priceInputRef.value.value = input.value.toString()
+}
 
 const style = tv({
   slots: {
@@ -40,10 +56,12 @@ const b = style()
       ￥
     </span>
     <input
+      ref="priceInputRef"
       :class="b.input()"
       type="text"
-      placeholder="请输入充值金额"
-      v-model="input"
+      :placeholder="placeholder"
+      :value="input"
+      @input="handleInput"
     >
   </div>
 </template>

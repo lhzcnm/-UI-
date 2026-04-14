@@ -37,6 +37,7 @@ watch(
 async function handleSubmit() {
   try {
     let date = store.formClean.time
+    loading.value = true
   
     if (store.formClean.checked !== 'custom' && store.formClean.checked !== 'auto') {
       date = dayjs()
@@ -46,12 +47,10 @@ async function handleSubmit() {
       await handleAutoCleanSubmit()
     } else if (!date) {
       toast.warning('请选择日期')
-      return
+    } else {
+      await cleanOrder(date)
     }
   
-    loading.value = true
-    await cleanOrder(date)
-
     store.visibleClear = false
     store.refresh = !store.refresh
     store.page = 1

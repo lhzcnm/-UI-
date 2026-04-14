@@ -60,15 +60,15 @@ const rechargeInfo = computed(() => {
       : settings.paymentInfo
 })
 
-function handleCustomAmount(value: any) {
-  if (!value) return
+// function handleCustomAmount(value: any) {
+//   if (!value) return
 
-  const numStr = value.toString().replace(/[^\d]/g, '')
-  const numValue = numStr ? parseInt(numStr) : 0
+//   const numStr = value.toString().replace(/[^\d]/g, '')
+//   const numValue = numStr ? parseInt(numStr) : 0
 
-  customAmount.value = numValue
-  selectedAmount.value = 0
-}
+//   customAmount.value = numValue
+//   selectedAmount.value = 0
+// }
 
 function handleRecharge() {
   if (!rechargeAmount.value) return toast.warning(t('valid.recharge.amount'))
@@ -134,8 +134,12 @@ function checkRecharge() {
         </button>
       </div>
       <div class="flex items-center space-x-2">
-        <PriceInput :model-value="customAmount ? customAmount : 0" :placeholder="t('recharge.amount.placeholder')"
-          @update:model-value="handleCustomAmount" />
+        <PriceInput
+          v-model="customAmount"
+          :placeholder="t('recharge.amount.placeholder')"
+        />
+        <!-- <PriceInput v-model="customAmount" :placeholder="t('recharge.amount.placeholder')"
+          @update:model-value="handleCustomAmount" /> -->
       </div>
     </div>
 

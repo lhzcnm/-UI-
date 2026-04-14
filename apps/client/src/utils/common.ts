@@ -1,6 +1,6 @@
 import type { Service } from '@/api/services'
 
-import { IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator, useCopyFn } from '@3un/utils'
+import { filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator, useCopyFn } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
 
 export function findAllIMEIAndSNs(str: string) {
@@ -136,4 +136,13 @@ export function pxTomm(px: number) {
 
 export function mmToPt(mm: number) {
   return mm * MM_TO_PT
+}
+
+export function filterNumber(input: string) {
+  return filterByRegex(input, /[0-9]/)
+}
+
+export function handleInputChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  return Number(filterNumber(target.value))
 }

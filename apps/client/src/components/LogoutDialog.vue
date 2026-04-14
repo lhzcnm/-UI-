@@ -5,6 +5,7 @@ const { t } = useI18n()
 
 function handleLogout() {
   iStore.logout = false
+  uStore.isAdminLogin = false
   uStore.logout()
 }
 </script>

@@ -88,5 +88,6 @@
   "request": {
     "timeout": "Request timeout, please try again later",
     "error": "Request failed, please try again later"
-  }
+  },
+  "expire": "The system will automatically log out soon, indicating that you have not used the system for an extended period of time."
 }

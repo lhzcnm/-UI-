@@ -148,7 +148,7 @@ function onBridgeReady(config: WXInvokeConfig) {
       </div>
       <div class="flex items-center space-x-2">
         <PriceInput
-          :model-value="customAmount ? customAmount : 0"
+          v-model="customAmount"
           :placeholder="t('recharge.amount.placeholder')"
           @update:model-value="handleCustomAmount"
         />

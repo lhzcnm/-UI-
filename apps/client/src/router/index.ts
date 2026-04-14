@@ -19,6 +19,9 @@ declare module 'vue-router' {
   }
 }
 
+const key = import.meta.env.VITE_ACCESS_TOKEN
+const adminKey = import.meta.env.VITE_ADMIN_TOKEN
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -37,8 +40,6 @@ router.beforeEach(async (to) => {
   }
 
   const uStore = useUserStore()
-  const key = import.meta.env.VITE_ACCESS_TOKEN
-  const adminKey = import.meta.env.VITE_ADMIN_TOKEN
   const token = uStore.isAdminLogin ? sessionStorage.getItem(adminKey) : localStorage.getItem(key)
 
   const otherPaths = ['scan', 'service', 'orderDetail', 'qrcode-result']

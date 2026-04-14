@@ -22,6 +22,7 @@ async function handleTicketAuth(ticket: string) {
     prompt.value = t('auth.ticket.success')
 
     sessionStorage.setItem(tokenKey, data)
+    uStore.isAdminLogin = true
 
     setTimeout(() => {
       router.replace('/')
@@ -46,7 +47,6 @@ onMounted(() => {
     return
   }
 
-  uStore.isAdminLogin = true
   handleTicketAuth(ticket)
 })
 </script>

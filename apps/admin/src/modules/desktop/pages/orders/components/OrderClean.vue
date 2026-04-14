@@ -45,6 +45,7 @@ async function handleSubmit() {
         .format('YYYY-MM-DD')
     } else if (store.formClean.checked === 'auto') {
       await handleAutoCleanSubmit()
+      return
     } else if (!date) {
       toast.warning('请选择日期')
       return

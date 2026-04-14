@@ -71,7 +71,7 @@ await Promise.all([
         </XPopover>
         <XPopover
           v-model="chatVisible" trigger="click"
-          ui-content="p-4"
+          ui-content="p-4" closeOnClickOutside
         >
           <template #trigger>
             <XButton icon="lucide:headset" :label="t('profile.button.customer')" />
