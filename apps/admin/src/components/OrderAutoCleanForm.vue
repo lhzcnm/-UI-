@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type OrderAutoCleanSettings } from '@/inters/orders'
+import { handleInputChange } from '@/utils'
 
 const form = defineModel<OrderAutoCleanSettings>({ required: true })
 </script>
@@ -31,6 +32,8 @@ const form = defineModel<OrderAutoCleanSettings>({ required: true })
           class="w-32"
           placeholder="例如 30"
           v-model="form.orderRetainDays"
+          @input="(e: Event) => form.orderRetainDays = handleInputChange(e)"
+          @change="(e: Event) => form.orderRetainDays = handleInputChange(e)"
         />
         <!-- <span class="text-sm text-gray-500">天</span> -->
       </div>

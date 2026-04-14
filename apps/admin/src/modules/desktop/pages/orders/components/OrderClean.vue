@@ -39,6 +39,7 @@ async function handleSubmit() {
   try {
     let date = store.formClean.time
   
+    loading.value = true
     if (store.formClean.checked !== 'custom' && store.formClean.checked !== 'auto') {
       date = dayjs()
         .subtract(+store.formClean.checked, 'day')
@@ -48,12 +49,10 @@ async function handleSubmit() {
       return
     } else if (!date) {
       toast.warning('请选择日期')
-      return
-    }
-  
-    loading.value = true
-    await cleanOrder(date)
+    } 
 
+    await cleanOrder(date)
+  
     store.visibleClear = false
     store.refresh = !store.refresh
     store.page = 1
@@ -68,6 +67,9 @@ async function handleAutoCleanSubmit() {
   if (orderRetainDays < 30) {
     return toast.warning("历史订单至少需要保留30天")
   }
+  if (orderRetainDays > 180) {
+    return toast.warning("历史订单至多保留180天")
+  }
 
   await updateSetting([
     { name: 'AutoCleanEnable', status: autoCleanEnable },
@@ -75,6 +77,9 @@ async function handleAutoCleanSubmit() {
   ])
 
   await iStore.getSetting()
+  store.visibleClear = false
+  store.refresh = !store.refresh
+  store.page = 1
 }
 </script>
 
