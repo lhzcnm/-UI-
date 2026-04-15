@@ -11,7 +11,12 @@ const form = defineModel<OrderSearchForm>({ required: true })
     <div class="flex space-x-2">
       <div class="w-1/2">
         <label class="block text-sm text-label mb-1">用户ID</label>
-        <XInput v-model="form.userId" placeholder="用户ID" @input="(e: Event) => form.userId = handleInputChange(e)" />
+        <XInput
+          v-model="form.userId"
+          placeholder="用户ID"
+          @input="(e: Event) => form.userId = handleInputChange(e)"
+          @change="(e: Event) => form.userId = handleInputChange(e)"
+        />
       </div>
       <div class="w-1/2">
         <label class="block text-sm text-label mb-1">用户名</label>

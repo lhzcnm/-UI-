@@ -17,7 +17,6 @@ import type { OrderStore } from './utils'
 import { columns } from './utils/column'
 import { ORDER_STORE } from './utils'
 import type { XTableExpose } from '@3un/ui'
-import OrderAutoClean from './components/OrderAutoClean.vue'
 
 const store: OrderStore = reactive({
   orders: createList(),
@@ -29,7 +28,6 @@ const store: OrderStore = reactive({
   visibleSearch: false,
   visibleUpdate: false,
   visibleClear: false,
-  visibleAutoClean: false,
 
   refresh: false,
   index  : undefined,
@@ -323,6 +321,5 @@ const handleBatchEdit = selectDecorator(() => {
     <OrderSearch :key="queryHash" />
     <OrderDialog />
     <OrderClean />
-    <OrderAutoClean />
   </div>
 </template>

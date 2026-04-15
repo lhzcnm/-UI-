@@ -27,6 +27,7 @@ function numberInput(e: Event) {
         placeholder="请输入手续费比例，如 10 表示 10%"
         v-model="form.aliFee"
         @input="(event: Event) => form.aliFee = percentInput(event)"
+        @change="(event: Event) => form.aliFee = percentInput(event)"
       />
     </FormField>
 
@@ -35,6 +36,7 @@ function numberInput(e: Event) {
         placeholder="请输入免手续费的最低充值金额"
         v-model="form.aliThreshold"
         @input="(event: Event) => form.aliThreshold = numberInput(event)"
+        @change="(event: Event) => form.aliThreshold = percentInput(event)"
       />
     </FormField>
 
@@ -43,6 +45,7 @@ function numberInput(e: Event) {
         placeholder="请输入手续费比例，如 10 表示 10%"
         v-model="form.wxFee"
         @input="(event: Event) => form.wxFee = percentInput(event)"
+        @change="(event: Event) => form.wxFee = percentInput(event)"
       />
     </FormField>
 
@@ -51,6 +54,7 @@ function numberInput(e: Event) {
         placeholder="请输入免手续费的最低充值金额"
         v-model="form.wxThreshold"
         @input="(event: Event) => form.wxThreshold = numberInput(event)"
+        @change="(event: Event) => form.wxThreshold = percentInput(event)"
       />
     </FormField>
   </form>

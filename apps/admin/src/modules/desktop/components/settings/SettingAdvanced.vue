@@ -31,6 +31,8 @@ const form = reactive({
   threads: props.settings.threads ?? 5,
   autoCleanEnable: props.settings["AutoCleanEnable"],
   orderRetainDays: props.settings["OrderRetainDays"],
+  autoCreditCleanEnable: props.settings["AutoCleanCreditsEnable"],
+  creditsRetainDays: props.settings["creditsRetainDays"],
 })
 
 const iStore = useSystemStore()
@@ -55,6 +57,8 @@ function handleSubmit() {
       { name: 'invite', content: form.invite },
       { name: 'AutoCleanEnable', status: form.autoCleanEnable },
       { name: 'OrderRetainDays', content: form.orderRetainDays.toString() },
+      { name: 'AutoCleanCreditsEnable', status: form.autoCreditCleanEnable },
+      { name: 'creditsRetainDays', content: form.creditsRetainDays.toString() },
     ]),
     updateConfig([
       { key: 'invite:point', value: form.invitePonit.toString() },
@@ -214,17 +218,33 @@ function handleSubmit() {
         <XSwitch v-model="form.unlockValidation" />
       </FormField>
 
-      <XFormField label="允许自动清理" desc="是否开启订单自动清理">
+      <XFormField label="订单自动清理" desc="订单是否开启自动清理">
         <XSwitch class="ml-auto" v-model="form.autoCleanEnable" />
       </XFormField>
 
-      <XFormField label="订单保留天数" desc="设置保留订单最大天数">
+      <XFormField label="订单保留天数" desc="订单自动清理最大保留天数">
         <div class="ml-auto flex items-center gap-2">
           <XInput
             ui-root="w-20"
             v-model="form.orderRetainDays"
             @input="(e: Event) => form.orderRetainDays = handleInputChange(e)"
             @change="(e: Event) => form.orderRetainDays = handleInputChange(e)"
+          />
+          <span>天</span>
+        </div>
+      </XFormField>
+
+      <XFormField label="积分记录自动清理" desc="积分记录开启自动清理">
+        <XSwitch class="ml-auto" v-model="form.autoCreditCleanEnable" />
+      </XFormField>
+
+      <XFormField label="积分记录保留天数" desc="积分记录自动清理最大保留天数">
+        <div class="ml-auto flex items-center gap-2">
+          <XInput
+            ui-root="w-20"
+            v-model="form.creditsRetainDays"
+            @input="(e: Event) => form.creditsRetainDays = handleInputChange(e)"
+            @change="(e: Event) => form.creditsRetainDays = handleInputChange(e)"
           />
           <span>天</span>
         </div>

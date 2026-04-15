@@ -16,7 +16,6 @@ export interface OrderStore {
   visibleSearch: boolean
   visibleUpdate: boolean
   visibleClear: boolean
-  visibleAutoClean: boolean
 
   refresh: boolean
   index  : number | undefined

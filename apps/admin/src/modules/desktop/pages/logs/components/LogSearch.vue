@@ -19,7 +19,10 @@ function handleSubmit() {
     return toast.warning("请输入正确的ipv4地址")
   }
   
-  store.formSearch = copied.value
+  store.formSearch = {
+    ...copied.value,
+    userId: !!copied.value.userId ? copied.value.userId : undefined
+  }
   store.visibleSearch = false
   store.refresh = !store.refresh
   store.page = 1

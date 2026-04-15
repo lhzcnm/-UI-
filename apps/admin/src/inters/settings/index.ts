@@ -103,8 +103,12 @@ export interface Settings {
   // 线程数
   threads: number
 
+  // 订单自动清理
   AutoCleanEnable: boolean
   OrderRetainDays: number
+  // 积分记录自动清理
+  AutoCleanCreditsEnable: boolean
+  creditsRetainDays: number
 }
 
 // Config
@@ -123,6 +127,11 @@ export interface Configs {
   'recharge:threshold': string
   'recharge:wxFee': string
   'recharge:wxThreshold': string
+}
+
+export interface AutoCleanSettings {
+  autoCleanEnable: boolean
+  retainDays: number
 }
 
 export type IllustrateMap = Map<string, IllustrateItem>

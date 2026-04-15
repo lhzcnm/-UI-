@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { OrderAutoCleanSettings, OrderCleanForm } from '@/inters/orders'
+import type { OrderCleanForm } from '@/inters/orders'
+import type { AutoCleanSettings } from '@/inters/settings'
 
 const form = defineModel<OrderCleanForm>({ required: true })
-const autoCleanForm = defineModel<OrderAutoCleanSettings>('auto', { required: true })
+const autoCleanForm = defineModel<AutoCleanSettings>('auto', { required: true })
 </script>
 
 <template>

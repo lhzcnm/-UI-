@@ -13,7 +13,10 @@ watch(
 )
 
 function handleSubmit() {
-  store.formSearch = copied.value
+  store.formSearch = {
+    ...copied.value,
+    userId: !!copied.value.userId ? copied.value.userId : undefined
+  }
   store.visibleSearch = false
   store.refresh = !store.refresh
   store.page = 1

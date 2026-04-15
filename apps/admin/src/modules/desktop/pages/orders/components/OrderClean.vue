@@ -7,8 +7,8 @@ import dayjs from 'dayjs'
 import { useCopyFn } from '@3un/utils'
 
 import { ORDER_STORE } from '../utils'
-import type { OrderAutoCleanSettings } from '@/inters/orders'
 import { updateSetting } from '@/api/settings'
+import type { AutoCleanSettings } from '@/inters/settings'
 // import { updateSetting } from '@/api/settings'
 
 const store = inject(ORDER_STORE)!
@@ -18,9 +18,9 @@ const loading = ref(false)
 
 const cloned = useCopyFn(() => ({
   autoCleanEnable: iStore.settings["AutoCleanEnable"] ?? false,
-  orderRetainDays: iStore.settings["OrderRetainDays"] ?? 30,
+  retainDays: iStore.settings["OrderRetainDays"] ?? 30,
 }))
-const autoCleanForm = ref<OrderAutoCleanSettings>(cloned())
+const autoCleanForm = ref<AutoCleanSettings>(cloned())
 
 watch(
   () => store.visibleClear,
@@ -62,18 +62,21 @@ async function handleSubmit() {
 }
 
 async function handleAutoCleanSubmit() {
-  const { autoCleanEnable, orderRetainDays } = autoCleanForm.value
+  const { autoCleanEnable, retainDays } = autoCleanForm.value
 
-  if (orderRetainDays < 30) {
+  if (autoCleanEnable && !retainDays) {
+    return toast.warning("请输入订单保留日期")
+  }
+  if (autoCleanEnable && retainDays < 30) {
     return toast.warning("历史订单至少需要保留30天")
   }
-  if (orderRetainDays > 180) {
+  if (autoCleanEnable && retainDays > 180) {
     return toast.warning("历史订单至多保留180天")
   }
 
   await updateSetting([
     { name: 'AutoCleanEnable', status: autoCleanEnable },
-    { name: 'OrderRetainDays', content: orderRetainDays.toString() },
+    { name: 'OrderRetainDays', content: retainDays.toString() },
   ])
 
   await iStore.getSetting()
