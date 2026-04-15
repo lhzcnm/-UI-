@@ -100,10 +100,14 @@ export const menusClient: MenuItem[] = [
   {
     name: '我的',
     children: [
-      { name: '我的账户', value: 'accountClient' },
+      { name: '我的账户/充值/包月会员', value: 'accountClient' },
       { name: '修改手机号/邮箱', value: 'phoneClient' },
       { name: '修改账号/密码', value: 'passwordClient' },
     ]
+  },
+  {
+    name: '公众号关键字',
+    value: 'wxIpt'
   },
 ]
 
