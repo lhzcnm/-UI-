@@ -20,6 +20,7 @@ declare module 'vue' {
     Fallback: typeof import('./src/components/Fallback.vue')['default']
     FreshButton: typeof import('./src/modules/mobile/components/FreshButton.vue')['default']
     HeaderTag: typeof import('./src/components/HeaderTag.vue')['default']
+    IdleModal: typeof import('./src/modules/desktop/components/IdleModal.vue')['default']
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
     LogoutDialog: typeof import('./src/components/LogoutDialog.vue')['default']
     MobileFooter: typeof import('./src/modules/mobile/components/MobileFooter.vue')['default']
