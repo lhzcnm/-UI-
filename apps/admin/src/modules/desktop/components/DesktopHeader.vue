@@ -94,6 +94,6 @@ function goToInstruction() {
 
     <SearchPlane v-model="visibleSearch" />
     <SettingPlane />
-    <OssPlane />
+    <OssPlane v-if="mode === 'SanHe'" />
   </div>
 </template>
