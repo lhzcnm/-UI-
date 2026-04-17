@@ -26,7 +26,7 @@ watch(
   (val) => {
     if (val) {
       autoCleanForm.value = cloned()
-      console.log(autoCleanForm)
+      // console.log(autoCleanForm)
 
       if (autoCleanForm.value.autoCleanEnable) {
         store.formClean.checked = 'auto'

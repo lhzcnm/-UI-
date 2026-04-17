@@ -23,7 +23,7 @@ const form = ref<OssUpdateParams>({
 watch(
   () => iStore.showOss,
   async (val) => {
-    console.log(val)
+    // console.log(val)
     if (val) {
       await getServers()
       form.value = {

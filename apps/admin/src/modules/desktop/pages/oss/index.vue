@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import OssUpload from './components/OssUpload.vue'
+
 import type { IPage } from '@3un/shared'
+import type { XTableExpose } from '@3un/ui'
 
 import { getOssDataList } from '@/api/oss'
 import { createList } from '@/utils'
 import { columns } from './utils/column'
-import type { XTableExpose } from '@3un/ui'
 import { OSS_STORE, type OssStore } from './utils'
-import OssUpload from './components/OssUpload.vue'
 
 const store = reactive<OssStore>({
   visibleUpdate: false,

@@ -35,7 +35,7 @@ function handleDelete(index: number) {
 }
 
 function processData(data: ServiceFieldForm[]) {
-  console.log(data)
+  // console.log(data)
   return data
     .filter((field) => !!field.name && !!field.nameEn && field.sortNum >= 0 && field.width > 0)
     .map((field) => ({ ...field, serviceId: serviceId.value }))

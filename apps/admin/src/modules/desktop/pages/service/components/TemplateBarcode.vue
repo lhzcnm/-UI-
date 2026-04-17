@@ -4,7 +4,7 @@ import JsBarcode from 'jsbarcode'
 
 interface BarcodePreviewProps {
   data: string,
-  size: number,
+  size: number | undefined,
 }
 
 const props = defineProps<BarcodePreviewProps>()
@@ -21,10 +21,10 @@ function renderBarcode() {
 
   JsBarcode(barcodeRef.value, props.data, {
     format: "CODE128",
-    width: mmToPx(props.size * 0.06),
-    height: mmToPx(props.size * 1.2),
+    width: mmToPx((props.size ?? 5) * 0.06),
+    height: mmToPx((props.size ?? 5) * 1.2),
     displayValue: true,
-    fontSize: mmToPx(props.size),
+    fontSize: mmToPx((props.size ?? 5)),
   })
 }
 

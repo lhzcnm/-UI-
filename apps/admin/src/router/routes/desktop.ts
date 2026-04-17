@@ -6,7 +6,6 @@ import wechat from './desktop/wechat'
 import orders from './desktop/orders'
 import tools from './desktop/tools'
 import recharge from './desktop/recharge'
-import quotations from './desktop/quotation'
 import { activities } from './desktop/activity'
 import { monitors } from './desktop/monitor'
 
@@ -22,7 +21,6 @@ const desktop: RouteRecordRaw = {
     ...orders,
     ...tools,
     ...recharge,
-    ...quotations,
     ...activities,
     ...monitors,
     {

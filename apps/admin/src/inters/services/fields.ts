@@ -39,7 +39,7 @@ export const zServiceFieldForm = zServiceField.omit({ id: true })
 export type ServiceFieldForm = z.infer<typeof zServiceFieldForm>
 // Create
 // export type ServiceFieldCreateParams = z.infer<typeof zServiceFieldForm>
-export type ServiceFieldUpdateParams = WithId<ServiceFieldCreateParams, 'id'>
+export type ServiceFieldUpdateParams = WithId<ServiceFieldForm, 'id'>
 
 export interface ServiceFieldCreateParams {
   items: ServiceFieldForm[],

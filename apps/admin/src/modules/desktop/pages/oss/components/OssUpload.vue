@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import OssUploadForm from './OssUploadForm.vue'
+
 import { type OssUpload, zOssUpload } from '@/inters/oss'
 import { OSS_STORE } from '../utils'
 import { validate, type ValidRule } from '@/utils'
 import { UpdateOssData } from '@/api/oss'
-import OssUploadForm from './OssUploadForm.vue'
 
 const store = inject(OSS_STORE)!
 

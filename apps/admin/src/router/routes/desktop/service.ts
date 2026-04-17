@@ -21,11 +21,6 @@ const service: RouteRecordRaw[] = [
     name: 'Unlock',
     component: () => import('@desktop/pages/service/unlock.vue'),
   },
-  {
-    path: 'service/template',
-    name: 'ServiceTemplate',
-    component: () => import('@desktop/pages/service/template.vue'),
-  },
 ]
 
 export default service

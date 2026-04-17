@@ -4,14 +4,14 @@ import { useQRCode } from '@vueuse/integrations/useQRCode'
 
 interface QrPreviewProps {
   data: string,
-  size: number,
+  size: number | undefined,
 }
 
 const props = defineProps<QrPreviewProps>()
 
 const qrCode = useQRCode(computed(() => props.data || ""))
 
-const pxSize = computed(() => mmToPx(props.size))
+const pxSize = computed(() => mmToPx(props.size ?? 15))
 </script>
 
 <template>
