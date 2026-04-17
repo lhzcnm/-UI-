@@ -11,6 +11,7 @@ import { createList } from '@/utils'
 import { FIELD_STORE, type ServiceFieldStore } from './utils'
 import { columns } from './utils/columnField'
 import type { XTableExpose } from '@3un/ui'
+import FieldCreate from './components/FieldCreate.vue'
 
 const serviceStore = useServiceStore()
 await serviceStore.getItems()
@@ -20,24 +21,26 @@ const store: ServiceFieldStore = reactive({
 
   formBase: zServiceFieldForm.parse({}),
   visibleBase: false,
+  visibleCreate: false,
 
   refresh: false,
   loading: false,
   index  : undefined,
   page   : 1,
   limit  : 20,
+  serviceId: undefined,
 })
 
 provide(FIELD_STORE, store)
 
-const serviceId = ref<number>()
+// const serviceId = ref<number>()
 const ids = ref<number[]>([])
 const loading = ref(false)
 const tableRef = ref<XTableExpose | null>(null)
 
 watch(
   [
-    () => serviceId.value,
+    () => store.serviceId,
     () => store.page,
     () => store.limit,
     () => store.refresh,
@@ -61,13 +64,13 @@ function getList(params: ServiceFieldListParams) {
   tableRef.value?.scrollToTop()
 }
 
-function openCreate() {
-  if(!serviceId.value) {
-    store.formBase = zServiceFieldForm.parse({})
-  }
-  store.index = undefined
-  store.visibleBase = true
-}
+// function openCreate() {
+//   if(!serviceId.value) {
+//     store.formBase = zServiceFieldForm.parse({})
+//   }
+//   store.index = undefined
+//   store.visibleBase = true
+// }
 
 function handleDelete() {
   if (!ids.value.length) {
@@ -86,7 +89,7 @@ function handleDelete() {
     <section class="flex justify-between p-3 border-b">
       <div class="flex items-center">
         <SelectService
-          v-model="serviceId"
+          v-model="store.serviceId"
           ui-trigger="w-56"
           clearable
         />
@@ -98,7 +101,7 @@ function handleDelete() {
           class="mr-2"
           color="success"
           icon="lucide:circle-plus"
-          @click="openCreate"
+          @click="store.visibleCreate = true"
         />
 
         <XButton
@@ -131,5 +134,6 @@ function handleDelete() {
     </div>
 
     <FieldDialog />
+    <FieldCreate />
   </div>
 </template>

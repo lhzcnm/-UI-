@@ -8,6 +8,7 @@ import { getServiceFields } from '@/api/services'
 import { createList } from '@/utils'
 
 import { FIELD_STORE, type ServiceFieldStore } from './utils'
+import FieldCreate from './components/FieldCreate.vue'
 
 const serviceStore = useServiceStore()
 await serviceStore.getItems()
@@ -17,22 +18,25 @@ const store: ServiceFieldStore = reactive({
 
   formBase: zServiceFieldForm.parse({}),
   visibleBase: false,
+  visibleCreate: false,
 
   refresh: false,
   loading: false,
   index  : undefined,
   page   : 1,
   limit  : 20,
+  serviceId: undefined
 })
 
 provide(FIELD_STORE, store)
 
-const serviceId = ref<number>()
+// const serviceId = ref<number>()
 const loading = ref(false)
+const visible = ref(false)
 
 watch(
   [
-    () => serviceId.value,
+    () => store.serviceId,
     () => store.page,
     () => store.limit,
     () => store.refresh,
@@ -55,17 +59,14 @@ function getList(params: ServiceFieldListParams) {
 }
 
 function openCreate() {
-  if(!serviceId.value) {
-    store.formBase = zServiceFieldForm.parse({})
-  }
-  store.index = undefined
-  store.visibleBase = true
+  store.visibleCreate = true
+  visible.value = false
 }
 </script>
 
 <template>
   <div>
-    <Toolbar :loading="loading">
+    <Toolbar v-model="visible" :loading="loading">
       <XSimplePagination 
         v-model="store.page"
         :limit="store.limit"
@@ -76,7 +77,7 @@ function openCreate() {
         <div class="space-y-3" @click.stop>
           <div>
             <label class="block text-sm text-label mb-1">服务组</label>
-            <NativeSelectService v-model="serviceId" />
+            <NativeSelectService v-model="store.serviceId" />
           </div>
           <div>
             <label class="block text-sm text-label mb-1">操作</label>
@@ -99,5 +100,6 @@ function openCreate() {
     </section>
 
     <FieldModal />
+    <FieldCreate />
   </div>
 </template>

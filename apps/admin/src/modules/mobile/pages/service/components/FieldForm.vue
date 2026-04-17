@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { ServiceFieldCreateParams } from '@/inters/services'
+import type { ServiceFieldForm } from '@/inters/services'
 import { zServiceFieldForm } from '@/inters/services'
 
-const form = defineModel<ServiceFieldCreateParams>({ required: true })
+const form = defineModel<ServiceFieldForm>({ required: true })
 const formRef = useTemplateRef('formRef')
 
 defineExpose({

@@ -12,10 +12,10 @@ export const zMonitorServer = z.object({
 })
 
 export const zMonitorSearch = z.object({
-  serverIp: z.string().default(""),
-  serverName: z.string().default(""),
-  domain: z.string().default(""),
-  domainName: z.string().default(""),
+  serverIp: z.string().default("").optional(),
+  serverName: z.string().default("").optional(),
+  domain: z.string().default("").optional(),
+  domainName: z.string().default("").optional(),
 })
 
 export const zMonitorForm = z.object({

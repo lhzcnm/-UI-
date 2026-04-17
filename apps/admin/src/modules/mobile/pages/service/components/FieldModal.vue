@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import FieldForm from './FieldForm.vue'
-import { createServiceField, updateServiceField } from '@/api/services'
+import { updateServiceField } from '@/api/services'
 import { FIELD_STORE } from '../utils'
 
 const store = inject(FIELD_STORE)!
 const formRef = useTemplateRef('formRef')
 
 async function handleCreate() {
-  await createServiceField(store.formBase)
-  store.refresh = !store.refresh
-  store.visibleBase = false
+  console.log("创建字段已移出")
+  // await createServiceField(store.formBase)
+  // store.refresh = !store.refresh
+  // store.visibleBase = false
 }
 
 async function handleUpdate() {

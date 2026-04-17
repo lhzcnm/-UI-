@@ -3,6 +3,7 @@ import SearchPlane from './SearchPlane.vue'
 
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
+import OssPlane from './oss/OssPlane.vue'
 
 interface HeaderProps {
   isFullscreen: boolean
@@ -13,6 +14,8 @@ defineProps<HeaderProps>()
 
 const iStore = useSystemStore()
 const visibleSearch = ref(false)
+
+const mode = import.meta.env.VITE_APP_MODE
 
 const foldIcon = computed(() => {
   if (iStore.showSidebar) return 'lucide:panel-left-close'
@@ -78,6 +81,11 @@ function goToInstruction() {
 
       <hr class="h-6 w-px bg-border" />
 
+      <button :class="b.iconBtn()" v-if="mode === 'SanHe'"  @click="iStore.showOss = true">
+        <Icon icon="lucide:cloud-upload" class="size-5" />
+        <div class="x-tooltip-text top120">更新桌面端程序</div>
+      </button>
+
       <button :class="b.iconBtn()" accesskey="s" @click="iStore.showSetting = true">
         <Icon icon="lucide:settings" class="size-5" />
         <div class="x-tooltip-text top120">设置</div>
@@ -86,5 +94,6 @@ function goToInstruction() {
 
     <SearchPlane v-model="visibleSearch" />
     <SettingPlane />
+    <OssPlane />
   </div>
 </template>

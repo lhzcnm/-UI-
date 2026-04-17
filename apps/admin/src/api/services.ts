@@ -69,10 +69,10 @@ export const getServiceFields: ServiceFieldListFn = async (params) => {
   return { ...data, list: data.list.map((item) => zServiceField.parse(item)) }
 }
 
-type ServiceFieldCreateFn = (body: ServiceFieldCreateParams) => Promise<ServiceField>
+type ServiceFieldCreateFn = (body: ServiceFieldCreateParams) => Promise<ServiceField[]>
 export const createServiceField: ServiceFieldCreateFn = async (body) => {
-  const { data } = await http.post('/services/field', body)
-  return zServiceField.parse(data)
+  const { data } = await http.post<ServiceField[]>('/services/field', body)
+  return data.map(field => zServiceField.parse(field))
 }
 
 type ServiceFieldUpdateFn = (body: ServiceFieldUpdateParams) => Promise<number>

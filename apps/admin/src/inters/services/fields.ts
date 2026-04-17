@@ -36,6 +36,11 @@ export interface ServiceFieldListParams extends IPage, ServiceFieldSearchParams 
 // Form
 export const zServiceFieldForm = zServiceField.omit({ id: true })
 
+export type ServiceFieldForm = z.infer<typeof zServiceFieldForm>
 // Create
-export type ServiceFieldCreateParams = z.infer<typeof zServiceFieldForm>
+// export type ServiceFieldCreateParams = z.infer<typeof zServiceFieldForm>
 export type ServiceFieldUpdateParams = WithId<ServiceFieldCreateParams, 'id'>
+
+export interface ServiceFieldCreateParams {
+  items: ServiceFieldForm[],
+}

@@ -14,6 +14,7 @@ export const useSystemStore = defineStore('system', () => {
 
   const showSidebar = useStorage<boolean>('show-sidebar', ua.isDesktop)
   const showSetting = ref(false)
+  const showOss = ref(false)
 
   const breadcrumbItems = ref<string[]>([])
   const selectedOrders = ref<OrderBatchEditItem[]>([])
@@ -92,6 +93,7 @@ export const useSystemStore = defineStore('system', () => {
   return {
     showSidebar,
     showSetting,
+    showOss,
     todoCount,
     breadcrumbItems,
     selectedOrders,

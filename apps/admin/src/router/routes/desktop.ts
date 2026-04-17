@@ -60,6 +60,11 @@ const desktop: RouteRecordRaw = {
       name: 'Voucher',
       component: () => import('@desktop/pages/voucher/index.vue'),
     },
+    {
+      path: 'oss',
+      name: 'Oss',
+      component: () => import('@desktop/pages/oss/index.vue'),
+    },
   ],
 }
 

@@ -161,6 +161,12 @@ export const menus: SidebarMenu[] = [
     match: 'jifenjilu',
   },
   {
+    label: 'oss管理',
+    path: '/oss',
+    icon: 'lucide:cloud',
+    match: 'oss'
+  },
+  {
     label: '工单管理',
     path: '/tickets',
     icon: 'lucide:messages-square',

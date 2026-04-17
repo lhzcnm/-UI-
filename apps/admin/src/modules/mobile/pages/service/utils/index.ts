@@ -1,4 +1,4 @@
-import type { ServiceField, ServiceFieldCreateParams, ServiceGroupCreateParams, ServiceCreateParams, UnlockCreateParams, Unlock } from '@/inters/services'
+import type { ServiceField, ServiceGroupCreateParams, ServiceCreateParams, UnlockCreateParams, Unlock, ServiceFieldForm } from '@/inters/services'
 import type { UpstreamServiceForm } from '@/inters/services/upstream'
 import type { Upstream } from '@/inters/upstream'
 import type { IList, IK } from '@3un/shared'
@@ -32,14 +32,16 @@ export interface ServiceGroupStore {
 export interface ServiceFieldStore {
   fields: IList<ServiceField>
 
-  formBase: ServiceFieldCreateParams
+  formBase: ServiceFieldForm
   visibleBase: boolean
+  visibleCreate: boolean
 
   refresh: boolean
   loading: boolean
   index  : number | undefined
   page   : number
   limit  : number
+  serviceId: number | undefined
 }
 
 // Unlock

@@ -84,8 +84,7 @@ async function handleFile(file: File) {
   try {
     if (['txt', 'csv'].includes(extension)) {
       text = await file.text()
-    }
-    else if (['xlsx', 'xls'].includes(extension)) {
+    } else if (['xlsx', 'xls'].includes(extension)) {
       const buffer = await file.arrayBuffer()
       const workbook = XLSX.read(buffer)
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
