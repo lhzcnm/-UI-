@@ -331,36 +331,6 @@ function handleSummary(
   }
 }
 
-// async function getPrevCache(imei: string) {
-//   const { data } = await http.post<DeviceCache>(
-//     '/device/prev-query',
-//     {
-//       networkLockId: 1160,
-//       activationLockId: 1161,
-//       warrantyId: 1162,
-//       imei: imei,
-//     },
-//   )
-
-//   return data
-// }
-
-// function getDeviceCacheStatus(cache: DeviceCache) {
-//   const hasNetworkLock = cache.networkLockCode !== '--'
-//   const hasActivationLock = cache.activationLockCode !== '--'
-//   const hasWarranty = cache.warrantyCode !== '--'
-
-//   return {
-//     hasNetworkLock: hasNetworkLock,
-//     hasActivationLock: hasActivationLock,
-//     hasWarranty: hasWarranty,
-
-//     showNetworkLock: !hasNetworkLock,
-//     showActivationLock: !hasActivationLock,
-//     showWarranty: !hasWarranty,
-//   }
-// }
-
 async function getBatteryInfo(device: DeviceBaseInfo) {
   return await wsFetch<BatteryResponse>({
     Uid: device.UniqueDeviceID,

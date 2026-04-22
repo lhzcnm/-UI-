@@ -1,5 +1,5 @@
 import type { StatusMap, TypeListItem, TypeMap } from '@3un/shared'
-import { IMEI_AND_SN_REG, IMEI_REG, SN_REG } from './regexs'
+import { IMEI_AND_SN_REG, IMEI_REG, SN_REG, DOMESTIC_REG } from './regexs'
 
 // User Role
 export enum USER_ROLE {
@@ -20,6 +20,7 @@ export enum IMEI_TYPE {
   IMEI       = 2,
   SN         = 4,
   IMEI_OR_SN = 6,
+  DOMESTIC = 7,
 }
 export const IMEI_TYPE_MAP: TypeMap = {
   [IMEI_TYPE.NULL]       : {
@@ -52,6 +53,12 @@ export const IMEI_TYPE_MAP: TypeMap = {
     key: 'type.imei.6',
     regex: IMEI_AND_SN_REG,
   },
+  [IMEI_TYPE.DOMESTIC] : {
+    value: IMEI_TYPE.DOMESTIC,
+    label: 'DOMESTIC MACHINES',
+    key: '',
+    regex: DOMESTIC_REG,
+  }
 }
 // Recharge Type
 export enum RECHARGE_TYPE {

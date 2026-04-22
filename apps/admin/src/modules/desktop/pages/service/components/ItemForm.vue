@@ -89,6 +89,11 @@ const store = useServiceStore()
           :value="IMEI_TYPE.IMEI_OR_SN"
           name="imeiType" label="IMEI OR SN"
         />
+        <XRadio
+          v-model="form.imeiFieldType"
+          :value="IMEI_TYPE.DOMESTIC"
+          name="imeiType" label="国产机类型"
+        />
       </div>
     </FormField>
 

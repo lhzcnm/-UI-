@@ -1,12 +1,17 @@
 import type { Service } from '@/api/services'
 
-import { filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator, useCopyFn } from '@3un/utils'
+import { DOMESTIC_REG, filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator, useCopyFn } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
 
-export function findAllIMEIAndSNs(str: string) {
+export function findAllIMEIAndSNs(str: string, type: IMEI_TYPE) {
   if (!str.trim()) return []
 
-  const matches = str.match(IMEI_AND_SN_REG)
+  let matches: string[] | undefined = str.split('\n').map(s => s.trim())
+
+  if (type !== IMEI_TYPE.DOMESTIC) {
+    matches = str.match(IMEI_AND_SN_REG)?.map(s => s.toString())
+  }
+
   if (!matches) return []
 
   const result = []
@@ -19,8 +24,8 @@ export function findAllIMEIAndSNs(str: string) {
     }
 
     match = match.toLocaleUpperCase()
-    if (SNValidator.isValid(match)) {
-      if (match.length === 11) 
+    if (SNValidator.isValid(match, IMEI_TYPE_MAP[type].regex)) {
+      if (match.length === 11)
         match = match.slice(1)
       result.push(match)
     }
@@ -41,13 +46,21 @@ export function getSubmitImei(imei: string, type: IMEI_TYPE) {
     return formatImeiType5(imei)
   }
 
-  const imeiList = findAllIMEIAndSNs(imei)
-
+  const imeiList = findAllIMEIAndSNs(imei, type)
   if (type === IMEI_TYPE.IMEI) {
     return imeiList.filter(imei => imei.length === 15)
-  }
-  else if (type === IMEI_TYPE.SN) {
+  } else if (type === IMEI_TYPE.SN) {
     return imeiList.filter(imei => imei.length < 15)
+  } else if (type === IMEI_TYPE.DOMESTIC) {
+    return imeiList.filter(imei => {
+      const isPureNumber = /^\d+$/.test(imei)
+
+      if (isPureNumber) return true
+
+      console.log(DOMESTIC_REG.test(imei))
+
+      return DOMESTIC_REG.test(imei)
+    })
   }
 
   return imeiList

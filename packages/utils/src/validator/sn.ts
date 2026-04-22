@@ -1,4 +1,4 @@
-import { SN_REG } from '../constants/regexs'
+// import { SN_REG } from '../constants/regexs'
 
 export class SNValidator {
 
@@ -6,8 +6,8 @@ export class SNValidator {
     'MODEL', 'MACBOOK', 'CHINA', 'CALIF'
   ]
 
-  public static isValid(sn: string) {
-    if (![10, 11, 12].includes(sn.length)) return false
+  public static isValid(sn: string, snReg: RegExp) {
+    if (![10, 11, 12, 14, 15, 16].includes(sn.length)) return false
     let firstChar = sn[0]
 
     // 香港地区扫描的10位SN，会多出一个S
@@ -20,7 +20,7 @@ export class SNValidator {
 
     if (sn.length === 12 && !'CDFGHJ'.includes(firstChar)) return false
     if (sn.length === 10 && 'ABEIOSZ'.includes(firstChar)) return false
-    if (!SN_REG.test(sn)) return false
+    if (!snReg.test(sn)) return false
 
     if (this.excludePrefixs.some(prefix => sn.startsWith(prefix))) return false
     return true
