@@ -11,6 +11,7 @@ declare module 'vue' {
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     DesktopHeader: typeof import('./src/modules/desktop/components/DesktopHeader.vue')['default']
     Fallback: typeof import('./src/components/Fallback.vue')['default']
+    FieldBatchForm: typeof import('./src/components/Serevice/fields/FieldBatchForm.vue')['default']
     FormDialog: typeof import('./src/modules/desktop/components/FormDialog.vue')['default']
     FormField: typeof import('./src/modules/desktop/components/FormField.vue')['default']
     FormModal: typeof import('./src/modules/mobile/components/FormModal.vue')['default']
