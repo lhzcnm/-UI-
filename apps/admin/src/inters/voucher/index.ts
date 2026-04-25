@@ -12,7 +12,7 @@ export const zVoucher = z.object({
   useTime: z.string().nullable(),
   createTime: z.string(),
   type: z.enum(VOUCHER_ENUM).default(VOUCHER_ENUM.COMMON),
-  creditsUsageType: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON),
+  creditsUsageType: z.enum(VOUCHER_TYPE).default(VOUCHER_TYPE.COMMON).nullable(),
 })
 
 export const zVoucherSearchForm = z.object({

@@ -13,15 +13,11 @@ export const columns: XColDef<Voucher> = [
     key: 'id',
     title: 'ID',
     width: 108,
-    thClassName: 'text-center',
-    tdClassName: 'text-center'
   },
   {
     key: 'code',
     title: '券码',
     minWidth: 128,
-    thClassName: 'text-center',
-    tdClassName: 'text-center'
   },
   {
     key: 'type',
