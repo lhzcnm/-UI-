@@ -8,6 +8,7 @@ import { xconfirm } from '@3un/utils'
 
 import { usePage } from './utils/usePage'
 import { getCommonList } from '@/utils'
+import Quote from './components/Quote.vue'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
@@ -59,14 +60,14 @@ const router = useRouter()
 // Current open group
 const visible = ref(false)
 const current = ref<ServiceDetail>({
-  id      : 0,
-  title   : '',
+  id: 0,
+  title: '',
   children: [],
 })
 
 function handleServiceGroupClick(event: MouseEvent) {
   if (isScrolling.value) return
-  
+
   const target = event.target as HTMLElement
   const element = target.closest('[data-index]')
 
@@ -101,21 +102,19 @@ function handleServiceItemClick(event: MouseEvent) {
 
 <template>
   <div class="p-3">
-    <XBulletinBoard
-      v-if="iStore.settings.enableScrollingAnnc"
-      class="px-2 py-3 mb-4" :text="bullerBoardContent"
-      :style="{ '--bg': 'hsl(var(--card))' }"
-    />
+    <XBulletinBoard v-if="iStore.settings.enableScrollingAnnc" class="px-2 py-3 mb-4" :text="bullerBoardContent"
+      :style="{ '--bg': 'hsl(var(--card))' }" />
+
+    <section class="mb-4">
+      <h2 class="text-xl font-bold mb-3">报价单</h2>
+      <Quote/>
+    </section>
 
     <section v-if="commonList.length" class="mb-4">
-        <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
+      <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
 
       <div class="space-y-2" @click="handleServiceItemClick">
-        <ServiceItemCard
-          v-for="item in commonList"
-          :key="item.id" :data="item"
-          :data-id="item.id"
-        />
+        <ServiceItemCard v-for="item in commonList" :key="item.id" :data="item" :data-id="item.id" />
       </div>
     </section>
 
@@ -123,52 +122,32 @@ function handleServiceItemClick(event: MouseEvent) {
       <div class="flex justify-between items-center mb-2">
         <h2 class="text-lg font-bold">{{ t('home.list') }}</h2>
         <div class="space-x-2">
-          <button 
-            v-for="page in totalPages" :key="page - 1"
-            :class="twJoin(
-              'size-1.5 rounded-full transition-all duration-300',
-              currentPage === page - 1 ? 'bg-primary' : 'bg-zinc-300'
-            )"
-            @click="scrollToPage(page - 1)"
-          />
+          <button v-for="page in totalPages" :key="page - 1" :class="twJoin(
+            'size-1.5 rounded-full transition-all duration-300',
+            currentPage === page - 1 ? 'bg-primary' : 'bg-zinc-300'
+          )" @click="scrollToPage(page - 1)" />
         </div>
       </div>
       <div class="relative">
-        <div 
-          ref="carouselRef"
-          class="x-overflow-none overflow-x-auto snap-x snap-mandatory scroll-smooth"
-          style="scrollbar-width: none; -ms-overflow-style: none;"
-          @scroll="handleScroll"
-        >
+        <div ref="carouselRef" class="x-overflow-none overflow-x-auto snap-x snap-mandatory scroll-smooth"
+          style="scrollbar-width: none; -ms-overflow-style: none;" @scroll="handleScroll">
           <div class="flex w-full">
-            <div 
-              v-for="(page, pageIndex) in pages" :key="pageIndex"
-              class="space-y-2 w-[80%] flex-shrink-0 snap-start pr-2 last:pr-0"
-              @click="handleServiceGroupClick"
-            >
-              <ServiceGroupCard
-                v-for="(group, index) in page" :key="group.id" 
-                :group="group" :data-index="index"
-                class="w-full"
-              />
+            <div v-for="(page, pageIndex) in pages" :key="pageIndex"
+              class="space-y-2 w-[80%] flex-shrink-0 snap-start pr-2 last:pr-0" @click="handleServiceGroupClick">
+              <ServiceGroupCard v-for="(group, index) in page" :key="group.id" :group="group" :data-index="index"
+                class="w-full" />
             </div>
           </div>
         </div>
 
-        <div 
-          v-show="currentPage < totalPages - 1"
-          :class="twJoin(
-            'absolute top-0 right-0 bottom-0 w-8',
-            'bg-gradient-to-l from-zinc-100 dark:from-black',
-            'to-[rgba(255,255,255,0)] pointer-events-none'
-          )"
-        />
+        <div v-show="currentPage < totalPages - 1" :class="twJoin(
+          'absolute top-0 right-0 bottom-0 w-8',
+          'bg-gradient-to-l from-zinc-100 dark:from-black',
+          'to-[rgba(255,255,255,0)] pointer-events-none'
+        )" />
       </div>
     </section>
 
-    <PickService
-      v-model="visible"
-      :group="current"
-    />
+    <PickService v-model="visible" :group="current" />
   </div>
 </template>

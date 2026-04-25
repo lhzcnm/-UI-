@@ -5,6 +5,7 @@ import PickService from './components/PickService.vue'
 import { xconfirm } from '@3un/utils'
 import { useStorage } from '@vueuse/core'
 import { getCommonList } from '@/utils'
+import Quote from './components/Quote.vue'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
@@ -58,7 +59,7 @@ function openGroupDialog(group: ServiceDetail) {
 function handleServiceItemClick(event: MouseEvent) {
   const target = event.target as HTMLElement
   const element = target.closest('[data-id]')
- 
+
   if (!element) return
 
   const dataId = element.getAttribute('data-id')
@@ -70,37 +71,26 @@ function handleServiceItemClick(event: MouseEvent) {
 
 <template>
   <div class="p-4">
-    <XBulletinBoard
-      v-if="iStore.settings.enableScrollingAnnc"
-      class="mb-4" :text="bulletinBoardText"
-      :style="{ '--bg': 'hsl(var(--card))' }"
-    />
+    <XBulletinBoard v-if="iStore.settings.enableScrollingAnnc" class="mb-4" :text="bulletinBoardText"
+      :style="{ '--bg': 'hsl(var(--card))' }" />
 
     <section class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]">
-      <ServiceGroupCard
-        v-for="group in store.details"
-        :key="group.id" :group="group"
-        @click="openGroupDialog(group)"
-      />
+      <ServiceGroupCard v-for="group in store.details" :key="group.id" :group="group" @click="openGroupDialog(group)" />
     </section>
 
-    <section v-if="commonList.length" class="mt-8">
+    <section v-if="commonList.length" class="my-8">
       <h2 class="text-xl font-bold mb-3">{{ t('home.service') }}</h2>
-      <div
-        class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]"
-        @click="handleServiceItemClick"
-      >
-        <ServiceItemCard
-          v-for="item in commonList"
-          :key="item.id" :data="item"
-          :data-id="item.id"
-        />
+      <div class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]" @click="handleServiceItemClick">
+        <ServiceItemCard v-for="item in commonList" :key="item.id" :data="item" :data-id="item.id" />
       </div>
     </section>
 
-    <PickService
-      v-model="visible"
-      :group="current"
-    />
+    <section class="mt-8">
+      <h2 class="text-xl font-bold mb-3">实时报价单</h2>
+      <Quote />
+    </section>
+
+
+    <PickService v-model="visible" :group="current" />
   </div>
 </template>

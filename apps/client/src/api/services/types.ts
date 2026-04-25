@@ -8,6 +8,7 @@ export interface ServiceApi {
   setThread: (threadNumber?: number) => R<any>
   favorite: (serviceId?: number) => R<number[]>
   getTemplate: (serviceId: number) => R<string>
+  getQuoteImage: () => R<any>
 }
 
 export interface ServiceDetail {
