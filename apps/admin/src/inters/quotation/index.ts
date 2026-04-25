@@ -1,6 +1,7 @@
 import { BRAND_STATUS } from "@3un/utils"
 import z from "zod/v4"
 import { zPage } from "../common"
+import { QUOTATION_ENUM } from "@/utils/enum"
 
 export const zBaseQuotation = z.object({
   id: z.number(),
@@ -22,5 +23,11 @@ export const zApiEnum = z.object({
   descCn: z.string(),
 })
 
+export const zQuotationUploadForm = z.object({
+  file: z.file().optional(),
+  key: z.enum(QUOTATION_ENUM).default(QUOTATION_ENUM.OLD),
+})
+
 export type QuotationSearchForm = z.infer<typeof zQuotationSearch>
 export type ApiEnum = z.infer<typeof zApiEnum>
+export type QuotationUpload = z.infer<typeof zQuotationUploadForm>

@@ -30,9 +30,17 @@ export const columns: XColDef<MonitorServer> = [
     width: 128,
   },
   {
+    key: 'frontDomain',
+    title: '公众号域名',
+    width: 108,
+    render(value) {
+      return '*' + value
+    }
+  },
+  {
     key: "action",
     title: "操作",
-    width: 28,
+    width: 88,
     fixed: "right",
     render: (_, row) => {
       return h(ServerAction, {

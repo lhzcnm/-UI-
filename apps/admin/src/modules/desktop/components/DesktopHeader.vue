@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SearchPlane from './SearchPlane.vue'
+import QuotationUpload from './quotation/QuotationUpload.vue'
 
 import { Icon } from '@iconify/vue'
 import { tv } from 'tailwind-variants'
@@ -56,11 +57,19 @@ function goToInstruction() {
     </div>
 
     <div class="flex items-center space-x-2">
-      <section @click="goToInstruction"
+      <button @click="goToInstruction"
         class="flex items-center space-x-1 py-1 px-3   hover:text-red-500 dark:hover:text-red-500  text-gray-600 dark:text-gray-50  select-none">
         <Icon icon="tdesign:error-circle" class="size-4" />
         <span class="text-md">使用说明</span>
-      </section>
+      </button>
+
+      <button
+        class="flex items-center text-muted-foreground gap-2 hover:text-success"
+        @click="iStore.showQuotation = true"
+      >
+        <Icon icon="lucide:upload" class="size-4" />
+        <span>上传报价单</span>
+      </button>
 
       <button :class="b.iconBtn()" accesskey="k" @click="visibleSearch = true">
         <Icon icon="lucide:search" class="size-5" />
@@ -95,5 +104,6 @@ function goToInstruction() {
     <SearchPlane v-model="visibleSearch" />
     <SettingPlane />
     <OssPlane v-if="mode === 'SanHe'" />
+    <QuotationUpload />
   </div>
 </template>

@@ -5,6 +5,7 @@ import { toast } from 'vue-sonner'
 import axios from 'axios'
 
 const key = import.meta.env.VITE_ACCESS_TOKEN
+const adminKey = import.meta.env.VITE_ADMIN_TOKEN
 const token = localStorage.getItem(key)
 
 const http = axios.create({
@@ -14,9 +15,13 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(config => {
-  const key = import.meta.env.VITE_ACCESS_TOKEN
-  let token = localStorage.getItem(key)
-  if (!token) token = sessionStorage.getItem(key)
+  const uStore = useUserStore()
+  let token: string | null = null
+  if (uStore.isAdminAuth) {
+    token = sessionStorage.getItem(adminKey)
+  } else {
+    token = localStorage.getItem(key) || sessionStorage.getItem(key)
+  }
 
   config.headers.Authorization = token
   return config

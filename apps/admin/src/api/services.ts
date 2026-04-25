@@ -7,7 +7,7 @@ import http from '@/utils/http'
 // service
 type ServicesFn = (params?: ServiceSearch) => Promise<Service[]>
 export const getServices: ServicesFn = async (params) => {
-  const { data } = await http.get<any[]>('/service', { params })
+  const { data } = await http.get<Service[]>('/service', { params })
   return data.map((item) => zService.parse(item))
 }
 

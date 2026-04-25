@@ -9,6 +9,13 @@ import auth     from './routes/auth'
 import desktop  from './routes/desktop'
 import mobile   from './routes/mobile'
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    isAuth?: boolean
+    force?: boolean
+  }
+}
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -21,11 +28,23 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
+  if (to.meta.force) {
+    return
+  }
+  
   const key = import.meta.env.VITE_ACCESS_TOKEN
-  const token = localStorage.getItem(key) || sessionStorage.getItem(key)
+  const adminKey = import.meta.env.VITE_ADMIN_TOKEN
+  const uStore = useUserStore()
+  let token: string | null = ''
+
+  if (uStore.isAdminAuth) {
+    token = sessionStorage.getItem(adminKey)
+  } else {
+    token = localStorage.getItem(key) || sessionStorage.getItem(key)
+  }
 
   // handle auth
-  const isAuth = (to.path.includes('auth') || to.meta.skipAuth)
+  const isAuth = to.meta.isAuth
   if (!isAuth && !token) return '/auth'
   if (isAuth && token) return '/dashboard'
 

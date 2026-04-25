@@ -123,3 +123,9 @@ export const deleteRemark: delateRemarkFn = async (body) => {
   const { data } = await http.delete('/quotation/remark', { data: body })
   return data
 }
+
+// 上传报价单图片
+type UploadQuotationImage = (body: FormData) => Promise<void>
+export const uploadQuotationImage: UploadQuotationImage = async (body) => {
+  await http.post('/config/upload/quotation', body)
+}

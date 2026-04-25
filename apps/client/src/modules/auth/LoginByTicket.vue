@@ -34,7 +34,7 @@ async function handleTicketAuth(ticket: string) {
 
     setTimeout(() => {
       router.replace('/auth')
-    }, 15000)
+    }, 800)
   }
 }
 

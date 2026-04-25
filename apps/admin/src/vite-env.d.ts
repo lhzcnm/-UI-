@@ -8,4 +8,5 @@ interface ImportMetaEnv {
   
   // storage key
   readonly VITE_ACCESS_TOKEN: string
+  readonly VITE_ADMIN_TOKEN: string
 }

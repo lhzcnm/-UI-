@@ -6,6 +6,7 @@ export const zMonitorServer = z.object({
   serverId: z.number(),
   serverIp: z.string(),
   serverName: z.string(),
+  frontDomain: z.string(),
   domainId: z.number(),
   domain: z.string(),
   domainName: z.string(),

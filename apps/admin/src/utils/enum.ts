@@ -1,3 +1,4 @@
+// oss
 export enum OSS_UPLOAD_ENUM {
   PLUGIN_WIN = 43,
   PLUGIN_MAC_ARM = 44,
@@ -15,4 +16,15 @@ export const OSS_UPLOAD_TYPE_LIST = [
   { value: OSS_UPLOAD_ENUM.DESKTOP_WIN, label: '桌面端 windows' },
   { value: OSS_UPLOAD_ENUM.DESKTOP_MAC_ARM, label: '桌面端 mac arm' },
   { value: OSS_UPLOAD_ENUM.DESKTOP_MAC_AMD, label: '桌面端 mac x86' },
+]
+
+// quotation
+export enum QUOTATION_ENUM {
+  OLD = 'quotation:old',
+  NEW = 'quotation:new'
+}
+
+export const QUOTATION_ENUM_LIST = [
+  { value: QUOTATION_ENUM.OLD, label: '报价单 - 旧机' },
+  { value: QUOTATION_ENUM.NEW, label: '报价单 - 新机' },
 ]

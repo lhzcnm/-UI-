@@ -80,6 +80,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   async function logout() {
     await userApi.logout()
+    isAdminLogin.value = false
 
     sessionStorage.clear()
     localStorage.clear()
