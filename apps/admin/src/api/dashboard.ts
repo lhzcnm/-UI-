@@ -1,4 +1,4 @@
-import type { OrderStatItem, RangeStatParams, TodoCountItem, UserStatItem } from "@/inters/dashboard"
+import { zRechargeTodayItem, type OrderStatItem, type RangeStatParams, type RechargeTodayList, type RechargeTodayParams, type TodoCountItem, type UserStatItem } from "@/inters/dashboard"
 import type { UserList } from "@/inters/users"
 import http from "@/utils/http"
 
@@ -45,4 +45,10 @@ export const getUserRank: UserRankFn = async (page) => {
 type UserStatFn = () => Promise<UserStatItem>
 export const getUserToday: UserStatFn = async () => {
   return (await http.get('/dashboard/user-stat')).data
+}
+
+type UserRechargeFn = (body: RechargeTodayParams) => Promise<RechargeTodayList>
+export const getTodayRecharge: UserRechargeFn = async (body) => {
+  const { data } = await http.post<RechargeTodayList>('/dashboard/today-recharge', body)
+  return { ...data, list: data.list.map(item => zRechargeTodayItem.parse(item)) }
 }

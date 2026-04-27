@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUserRank } from '@/api/dashboard'
 import type { UserList } from '@/inters/users'
-import { createList } from '@/utils'
+import { createList, getAvatar } from '@/utils'
 
 const users = ref<UserList>(createList())
 
@@ -18,13 +18,6 @@ watch(
   },
   { immediate: true }
 )
-
-function getAvatar(url: string | null) {
-  const mode = import.meta.env.VITE_APP_MODE
-  const defaultAvatar = `/${mode}/default_avatar.jpg`
-
-  return url || defaultAvatar
-}
 </script>
 
 <template>

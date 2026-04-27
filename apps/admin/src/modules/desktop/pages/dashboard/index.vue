@@ -18,6 +18,7 @@ import lightTheme from '@/utils/echarts/light'
 import darkTheme from '@/utils/echarts/dark'
 
 import { type StatStore, STORE } from './utils'
+import UserRecharge from './components/UserRecharge.vue'
 
 echarts.registerTheme('light', lightTheme)
 echarts.registerTheme('dark', darkTheme)
@@ -46,13 +47,14 @@ provide(STORE, store)
   <div class="p-6 space-y-6">
     <CardSection />
 
-    <div class="flex space-x-6">
+    <div class="flex gap-x-6 flex-col xl:flex-row gap-y-2">
       <div class="flex-1 space-y-6">
         <RealtimeOrderSection />
         <OrderSection />
       </div>
 
-      <UserRanking class="flex-shrink-0 min-w-96" />
+      <UserRecharge class="flex-shrink-0 min-w-full xl:min-w-96 max-h-[41rem]" />
+      <UserRanking class="flex-shrink-0 min-w-full xl:min-w-96" />
     </div>
 
     <div class="flex space-x-6">

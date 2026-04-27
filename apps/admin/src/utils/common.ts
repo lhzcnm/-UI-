@@ -49,3 +49,10 @@ export function handleInputChange(e: Event) {
   const target = e.target as HTMLInputElement
   return Number(filterNumber(target.value))
 }
+
+export function getAvatar(url: string | null) {
+  const mode = import.meta.env.VITE_APP_MODE
+  const defaultAvatar = `/${mode}/default_avatar.jpg`
+
+  return url || defaultAvatar
+}

@@ -18,6 +18,7 @@ import lightTheme from '@/utils/echarts/light'
 import darkTheme from '@/utils/echarts/dark'
 
 import { type StatStore, STORE } from './utils'
+import UserRecharge from './components/UserRecharge.vue'
 
 echarts.registerTheme('light', lightTheme)
 echarts.registerTheme('dark', darkTheme)
@@ -49,6 +50,7 @@ provide(STORE, store)
     <RealtimeOrderSection />
     <OrderSection />
 
+    <UserRecharge />
     <UserRanking />
 
     <ServiceSection />
