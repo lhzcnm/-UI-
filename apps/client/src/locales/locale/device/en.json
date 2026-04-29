@@ -62,7 +62,16 @@
         "actived": {
           "already": "Actived",
           "not": "Inactive",
-          "nega": "Deactivated"
+          "action": {
+            "dialog": {
+              "title": "Device Activate",
+              "hint": "Activation lock has been detected on your device. Please enter your Apple ID and password to activate the device.",
+              "apple": "AppleId",
+              "pwd": "Password"
+            },
+            "positive": "Activate",
+            "nega": "Unactivate"
+          }
         },
         "query": {
           "confirm": "No free queries left.\nContinue will cost {point} pts",

@@ -28,17 +28,25 @@ const form = computed({
 })
 
 const defaultState = form.value.ActivationState
-const isActivated = ref(defaultState === t('device.info.grid.actived.already'))
+const isActivated = ref(defaultState.toLowerCase() === 'activated')
+const loading = ref<boolean>(false)
 
 async function handleActivation() {
-  const suffix = isActivated.value ? 'deactivate' : 'activation'
-  const [_, uniqueId] = store.selected.split(':')
-  
-  await wsFetch({ type: suffix, Uid: uniqueId })
-  isActivated.value = !isActivated.value
-  form.value.ActivationState = isActivated.value
-    ? t('device.info.grid.status.already')
-    : t('device.info.grid.status.not')
+  if (loading.value) return
+
+  loading.value = true
+  try {
+    const suffix = isActivated.value ? 'deactivate' : 'activation'
+    const [_, uniqueId] = store.selected.split(':')
+    
+    await wsFetch({ type: suffix, Uid: uniqueId })
+    isActivated.value = !isActivated.value
+    form.value.ActivationState = isActivated.value
+      ? t('device.info.grid.status.already')
+      : t('device.info.grid.status.not')
+  } catch {} finally {
+    loading.value = false
+  }
 }
 
 async function cp(event: MouseEvent) {
@@ -108,14 +116,14 @@ const b = style()
     </div>
 
     <div class="flex-1 space-y-1">
-      <div class="flex items-center" v-show="form.ActivationState">
+      <div class="flex items-center">
         <span :class="b.label()">{{ t('device.info.grid.activeStatus') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ form.ActivationState }}
+            {{ isActivated ? t('device.info.grid.actived.already') : t('device.info.grid.actived.not') }}
           </span>
           <button class="ml-2 text-primary" @click="handleActivation">
-            {{ isActivated ? t('device.info.grid.actived.nega') : t('device.info.grid.actived.already') }}
+            {{ isActivated ? t('device.info.grid.actived.action.nega') : t('device.info.grid.actived.action.positive') }}
           </button>
         </div>
       </div>

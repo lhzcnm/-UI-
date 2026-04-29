@@ -62,7 +62,16 @@
         "actived": {
           "already": "已激活",
           "not": "未激活",
-          "nega": "反激活"
+          "action": {
+            "dialog": {
+              "title": "设备激活",
+              "hint": "检测到设备开启了激活锁, 请输入AppleId和密码激活设备",
+              "apple": "AppleId",
+              "pwd": "密码"
+            },
+            "positive": "激活",
+            "nega": "反激活" 
+          }
         },
         "query": {
           "confirm": "当前账户该服务已无免费查询次数\n如果继续查询将扣除 {point} 积分",
