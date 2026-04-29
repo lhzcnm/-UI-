@@ -19,6 +19,7 @@ const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
 const store = inject(STORE)!
+const deviceStore = useDeviceStore()
 
 const deviceMockup = {
   iPhone8: {
@@ -79,7 +80,7 @@ const handleRestart = useThrottleFn(onRestart, 1000)
 const handleShutdown = useThrottleFn(onShutdown, 1000)
 
 const deviceImage = computed(() => {
-  const { product } = store.deviceMap.get(store.selected)!
+  const { product } = deviceStore.deviceMap.get(store.selected)!
 
   let matched1 = product.Name.match(/^iPhone (\d+)/)
   if (matched1) return deviceMockup[getIphoneDeviceType(matched1)]
@@ -94,7 +95,7 @@ const deviceImage = computed(() => {
 })
 
 const deviceName = computed(() => {
-  const selected = store.deviceMap.get(store.selected)!
+  const selected = deviceStore.deviceMap.get(store.selected)!
   return selected.info.DeviceName
 })
 

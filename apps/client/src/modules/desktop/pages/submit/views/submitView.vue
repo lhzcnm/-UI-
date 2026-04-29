@@ -875,11 +875,6 @@ function processHeaderConfirm(headers: ServiceCols[]) {
   processResultColumns()
 }
 
-// function handleChange() {
-//   if (store.rawOrders.length === 0) return
-//   store.view = 'preview'
-// }
-
 const handleThreadChange = debounce(async () => {
   localStorage.setItem(`${threadKey}_${uStore.info.userId}`, threads.value.toString())
   await serviceApi.setThread(threads.value)

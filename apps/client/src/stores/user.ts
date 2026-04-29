@@ -3,6 +3,7 @@ import type { UserInfo } from '@/api/user'
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import { useFetchWithCache } from '@3un/utils'
+import { useStorage } from '@vueuse/core'
 // import type { quoteIhone } from '@/modules/mobile/pages/profile/utils'
 
 export interface price{
@@ -30,7 +31,7 @@ export const useUserStore = defineStore('userStore', () => {
     PopularModelsData: [],
   })
   const info = ref<UserInfo>({} as UserInfo)
-  const isAdminLogin = ref<boolean>(false)
+  const isAdminLogin = useStorage('isAdminLogin', false, sessionStorage)
 
   async function getInfo(force = false) {
     const locale = localStorage.getItem('locale') ?? 'zh'

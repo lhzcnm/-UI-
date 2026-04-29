@@ -8,6 +8,7 @@ import { useDocumentVisibility } from '@vueuse/core'
 import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
 import { closeChannel, startChannel } from '@/utils/heartBeat'
+import { setDataSets, setVersion } from '@/utils/device'
 
 const route = useRoute()
 const visibility = useDocumentVisibility()
@@ -22,6 +23,8 @@ const isLogout = ref(false)
 await Promise.all([
   iStore.getSettings(),
   iStore.getHandleFee(),
+  setDataSets(),
+  setVersion(),
 ])
 
 if(!route.meta.noAuthRequired) {

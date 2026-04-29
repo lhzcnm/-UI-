@@ -23,6 +23,7 @@ export class SNValidator {
     if (!snReg.test(sn)) return false
 
     if (this.excludePrefixs.some(prefix => sn.startsWith(prefix))) return false
+
     return true
   }
 }

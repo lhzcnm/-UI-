@@ -7,6 +7,7 @@ import { wsFetch, STORE, getCopyToken, getCopyTokenEn } from '../utils'
 
 const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
+const deviceStore = useDeviceStore()
 const { t, locale } = useI18n()
 
 const isRecoveryMode = ref(false)
@@ -38,7 +39,7 @@ async function handlePrint() {
 }
 
 function handleCopy() {
-  const device = store.deviceMap.get(store.selected)!
+  const device = deviceStore.deviceMap.get(store.selected)!
   const tokens = locale.value === 'zh' ? getCopyToken(device.summary) : getCopyTokenEn(device.summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
@@ -46,13 +47,13 @@ function handleCopy() {
 }
 
 const diskCapacity = computed(() => {
-  const device = store.deviceMap.get(store.selected)!
+  const device = deviceStore.deviceMap.get(store.selected)!
   const total = device.memory.TotalDiskCapacity
   return `${total / 1000 / 1000 / 1000}GB`
 })
 
 const colorLabel = computed(() => {
-  const device = store.deviceMap.get(store.selected)!
+  const device = deviceStore.deviceMap.get(store.selected)!
   return device.product.Color
 })
 </script>
@@ -71,7 +72,7 @@ const colorLabel = computed(() => {
         ui-trigger="w-44 sm:h-8"
       >
         <XSelectItem
-          v-for="[key, device] in store.deviceMap" :key="key"
+          v-for="[key, device] in deviceStore.deviceMap" :key="key"
           :value="key" :label="device.product.Name"
         />
       </XSelect>
@@ -89,7 +90,7 @@ const colorLabel = computed(() => {
 
     <div class="flex items-center space-x-2">
       <XButton
-        v-if="store.deviceMap.size"
+        v-if="deviceStore.deviceMap.size"
         icon="lucide:list"
         :label="t('device.list.title')" size="sm"
         @click="store.deviceStatus = 'list'"

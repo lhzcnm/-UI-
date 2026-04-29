@@ -24,7 +24,11 @@ export function findAllIMEIAndSNs(str: string, type: IMEI_TYPE) {
     }
 
     match = match.toLocaleUpperCase()
-    if (SNValidator.isValid(match, IMEI_TYPE_MAP[type].regex)) {
+    let snReg = IMEI_TYPE_MAP[IMEI_TYPE.SN].regex
+    if (type === IMEI_TYPE.DOMESTIC) {
+      snReg = IMEI_TYPE_MAP[IMEI_TYPE.DOMESTIC].regex
+    }
+    if (SNValidator.isValid(match, snReg)) {
       if (match.length === 11)
         match = match.slice(1)
       result.push(match)
@@ -46,7 +50,9 @@ export function getSubmitImei(imei: string, type: IMEI_TYPE) {
     return formatImeiType5(imei)
   }
 
+  console.log(imei)
   const imeiList = findAllIMEIAndSNs(imei, type)
+  // console.log(imeiList)
   if (type === IMEI_TYPE.IMEI) {
     return imeiList.filter(imei => imei.length === 15)
   } else if (type === IMEI_TYPE.SN) {

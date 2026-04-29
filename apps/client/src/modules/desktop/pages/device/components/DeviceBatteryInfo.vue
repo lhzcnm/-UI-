@@ -5,11 +5,12 @@ import type { BatteryResponse } from '@/types/device'
 import { STORE } from '../utils'
 
 const store = inject(STORE)!
+const deviceStore = useDeviceStore()
 
 const { t } = useI18n()
 
 const batteryInfo = computed(() => {
-  const { battery } = store.deviceMap.get(store.selected)!
+  const { battery } = deviceStore.deviceMap.get(store.selected)!
   const current = battery.NominalChargeCapacity
   const isFull = battery.CurrentCapacity === 100
   const design = battery.DesignCapacity

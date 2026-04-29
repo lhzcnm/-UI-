@@ -218,12 +218,29 @@ export interface DeviceRecoveryData {
   SRTG: string      // SRTG (通常与恢复环境相关的标识)
 }
 
-// 对应 DeviceRecoveryData 的前端展示的数据类型
 export interface DeviceRecoveryMapItem {
-  name: string        // NAME
-  type: string        // product
-  serialNo: string    // SRNM
-  ecid: string        // ECID
-  chip: string        // CPID
-  mode: string        // MODE
+  // 基础展示
+  name: string          // NAME
+  type: string          // PRODUCT (iPhone7,1)
+  model: string         // MODEL (n56ap)
+  mode: string          // MODE
+
+  // 标识类
+  serialNo: string      // SRNM
+  ecid: string          // ECID
+  imei?: string         // IMEI (有些设备没有)
+
+  // 硬件信息
+  chip: string          // CPID
+  boardId: string       // BDID
+  chipRev: string       // CPRV
+
+  // 安全相关（可以选择是否展示）
+  apNonce?: string      // NONC
+  sepNonce?: string     // SNON
+  sep?: string          // SCEP
+
+  // 状态类
+  ibootFlag?: string    // IBFL
+  srtg?: string         // SRTG
 }

@@ -2,11 +2,12 @@
 import { STORE, formatSize } from '../utils'
 
 const store = inject(STORE)!
+const deviceStore = useDeviceStore()
 
 const { t } = useI18n()
 
 const diskInfo = computed(() => {
-  const { memory } = store.deviceMap.get(store.selected)!
+  const { memory } = deviceStore.deviceMap.get(store.selected)!
   const total = memory.TotalDiskCapacity
   const systemCapacity = memory.TotalSystemCapacity
   const dataCapacity = memory.TotalDataCapacity
