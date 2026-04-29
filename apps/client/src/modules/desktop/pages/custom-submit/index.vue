@@ -16,10 +16,10 @@ import type { ContainerItem, PrintHeader, PrintTemplateJson, TemplateItem } from
 import { getSubmitImei, mmToPt, mmToPx, pxTomm } from '@/utils'
 import { serviceApi, type FieldMap, type ServiceDetail, type ServiceHeader } from '@/api/services'
 import { orderApi, type CustomSubmitOrder, type FieldValue, type Order, type OrderSubmitParams, type OrderSubmitResult, type ServiceColumnItem } from '@/api/orders'
-import { checkPlugin, deviceMap, handleDevice, handleDisconnect, ws, hasNewVersion, hasNotPlugin } from "./utils/useDevice"
-import type { DeviceResponse } from '@/types/device'
 import type { PageItem, PluginPdfRequest } from '@/types/print'
+import { checkVersion, hasNewVersion } from '@/utils/device'
 
+const deviceStore = useDeviceStore()
 const { services, getServices } = useServiceStore()
 const { t, locale } = useI18n()
 const { connect, close } = useWsStore()
@@ -93,21 +93,7 @@ let serviceHeaders: ServiceHeader[] = []
 let headerKey: string[] = []
 let submited: boolean = false
 let storageUrl: string[] = []
-
-watch(
-  ws.data,
-  async (val: string) => {
-    if (val.startsWith('disconnected')) {
-      return handleDisconnect(val)
-    }
-    if (val.startsWith('{"id"')) return
-    if (val.includes('DeviceID')) {
-      const data = JSON.parse(val) as DeviceResponse
-
-      await handleDevice(data, t)
-    }
-  }
-)
+let pluginRunning: boolean = false
 
 watch(
   () => templateItems.value,
@@ -1207,10 +1193,34 @@ async function handleWrapChange(key: string) {
   updateAlignPosition()
 }
 
+async function init() {
+  try {
+    await deviceStore.getPluginInfo()
+    pluginRunning = true
+  } catch {
+    pluginRunning = false
+    deviceStore.pluginMustUpdate = true
+  }
+}
+
+async function checkPluginInfo() {
+  if (pluginRunning) {
+    if (checkVersion(deviceStore.version)) {
+      deviceStore.pluginMustUpdate = true
+    }
+    
+    if (hasNewVersion(deviceStore.version)) {
+      deviceStore.hasNewVersion = true
+    }
+  }
+}
+
+await init()
+await checkPluginInfo()
+
 await Promise.all([
   getServices(),
   getQueryService(),
-  await checkPlugin(t),
 ])
 
 onBeforeUnmount(() => {
@@ -1420,7 +1430,7 @@ onBeforeUnmount(() => {
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
-      <template v-if="hasNotPlugin">
+      <template v-if="deviceStore.pluginMustUpdate">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
           <div class="flex items-center gap-2 text-sm text-muted-foreground">
           <span class="flex-1 h-px bg-zinc-500"></span>
@@ -1437,14 +1447,14 @@ onBeforeUnmount(() => {
           
         </div>
       </template>
-      <template v-else-if="deviceMap.size === 0">
+      <template v-else-if="deviceStore.deviceMap.size === 0">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
           {{ t('print.device.noDevice') }}
         </div>
       </template>
       <template v-else>
         <div class="grid grid-cols-3 gap-2">
-          <template v-for="[_, phone] in deviceMap">
+          <template v-for="[_, phone] in deviceStore.deviceMap">
             <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
               @click="handleClickPhone(phone.info.InternationalMobileEquipmentIdentity)">
               <div class="mb-4">
@@ -1462,7 +1472,7 @@ onBeforeUnmount(() => {
         </div>
       </template>
 
-      <template v-if="!hasNotPlugin && hasNewVersion">
+      <template v-if="!deviceStore.pluginMustUpdate && deviceStore.hasNewVersion">
         <div class="flex items-center gap-2 text-sm text-muted-foreground">
           <span class="flex-1 h-px bg-zinc-500"></span>
           <div class="flex items-center gap-2">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RecoveryDeviceCard from './RecoveryDeviceCard.vue'
-import { STORE } from '../utils'
+// import { STORE } from '../utils'
 
 // const store = inject(STORE)!
 

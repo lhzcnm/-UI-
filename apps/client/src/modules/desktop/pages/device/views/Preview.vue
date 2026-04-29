@@ -13,6 +13,7 @@ import type { PageItem, PluginPdfRequest } from '@/types/print'
 
 const store = inject(STORE)!
 
+const deviceStore = useDeviceStore()
 const { t, locale } = useI18n()
 
 const container = reactive<ContainerItem>({
@@ -30,7 +31,7 @@ const container = reactive<ContainerItem>({
 })
 const isOverflowMap = reactive<Record<string, boolean>>({})
 
-const device = computed(() => store.deviceMap.get(store.printIndex))
+const device = computed(() => deviceStore.deviceMap.get(store.printIndex))
 
 // const device = ref(store.deviceMap.get(store.selected))
 const templateItems = ref<TemplateItem[]>([])

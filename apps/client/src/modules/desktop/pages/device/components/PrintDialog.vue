@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { toast } from 'vue-sonner'
-import { getPrintPayload, STORE, wsFetch } from '../utils'
+import { STORE, wsFetch } from '../utils'
 
 interface Template {
   id     : number
@@ -37,7 +37,7 @@ const loading = ref(false)
 const selected = ref(1)
 
 async function handleSubmit() {
-  const device = store.deviceMap.get(store.printIndex)
+  // const device = store.deviceMap.get(store.printIndex)
   // const options = {
   //   activationLock: [2, 3, 4].includes(selected.value),
   //   networkLock: [2, 3, 4].includes(selected.value),
@@ -59,7 +59,7 @@ async function handleSubmit() {
 
   loading.value = true
   const response = await wsFetch<string>({
-    ...getPrintPayload(device!),
+    // ...getPrintPayload(device!),
     TemplateId: selected.value,
     type: 'print',
   })
