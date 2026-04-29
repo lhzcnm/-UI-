@@ -1,12 +1,37 @@
 {
   "home": {
-    "service": "Common Services",
+    "service": "Services",
     "list": "Service Overview",
     "dialog": {
-      "service": "Services"
+      "service": "Service List"
     },
     "placeholder": {
-      "service": "Search Service"
+      "service": "Search services"
+    }
+  },
+  "quotation": {
+    "title": "Real-time Quote",
+    "newDevice": {
+      "title": "New Device Quote",
+      "description": "Latest Models · Best Prices",
+      "icon": "📱"
+    },
+    "oldDevice": {
+      "title": "Trade-in Quote",
+      "description": "Recycle Value · Trade-in Deal",
+      "icon": "♻️"
+    },
+    "dialog": {
+      "download": "Download Quote",
+      "close": "Close",
+      "noImage": "No Image Available"
+    },
+    "toast": {
+      "downloadSuccess": "Download Successful",
+      "downloadFailed": "Download Failed"
+    },
+    "error": {
+      "getImage": "Failed to load quote image"
     }
   }
 }

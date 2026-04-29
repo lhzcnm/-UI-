@@ -2,6 +2,9 @@
 import { ref, onMounted } from 'vue'
 import { serviceApi } from '@/api/services'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // 图片数据
 const oldImage = ref<string>('')
@@ -19,21 +22,21 @@ async function getQuoteImg(): Promise<void> {
     oldImage.value = res.data.oldQuotation
     newImage.value = res.data.newQuotation
   } catch (error) {
-    console.error('获取报价图片失败:', error)
+    console.error(t('quotation.error.getImage'), error)
   }
 }
 
 // 打开新机报价弹窗
 function openNewQuote(): void {
   currentImage.value = newImage.value
-  currentTitle.value = '新机报价'
+  currentTitle.value = t('quotation.newDevice.title')
   dialogVisible.value = true
 }
 
 // 打开旧机报价弹窗
 function openOldQuote(): void {
   currentImage.value = oldImage.value
-  currentTitle.value = '旧机报价'
+  currentTitle.value = t('quotation.oldDevice.title')
   dialogVisible.value = true
 }
 
@@ -55,8 +58,8 @@ function handleOverlayClick(e: MouseEvent): void {
 async function imgDownload(url: string, fileName: string) {
   try {
     const response = await fetch(url)
-    const bolb = await response.blob()
-    const blobUrl = URL.createObjectURL(bolb)
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
 
     const link = document.createElement('a')
     link.href = blobUrl
@@ -68,10 +71,10 @@ async function imgDownload(url: string, fileName: string) {
     document.body.removeChild(link)
 
     URL.revokeObjectURL(blobUrl)
-    toast.success('下载成功')
+    toast.success(t('quotation.toast.downloadSuccess'))
 
   } catch (e) {
-    toast.error('下载失败')
+    toast.error(t('quotation.toast.downloadFailed'))
   }
 }
 
@@ -94,11 +97,11 @@ onMounted(() => {
         <div class="flex items-center gap-4">
           <div
             class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300 text-2xl">
-            📱
+            {{ t('quotation.newDevice.icon') }}
           </div>
           <div>
-            <h3 class="text-xl font-bold tracking-tight text-gray-800 dark:text-white">新机报价</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">最新机型 · 一手价格</p>
+            <h3 class="text-xl font-bold tracking-tight text-gray-800 dark:text-white">{{ t('quotation.newDevice.title') }}</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ t('quotation.newDevice.description') }}</p>
           </div>
         </div>
         <div
@@ -122,11 +125,11 @@ onMounted(() => {
         <div class="flex items-center gap-4">
           <div
             class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300 text-2xl">
-            ♻️
+            {{ t('quotation.oldDevice.icon') }}
           </div>
           <div>
-            <h3 class="text-xl font-bold tracking-tight text-gray-800 dark:text-white">旧机报价</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">回收估值 · 以旧换新</p>
+            <h3 class="text-xl font-bold tracking-tight text-gray-800 dark:text-white">{{ t('quotation.oldDevice.title') }}</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ t('quotation.oldDevice.description') }}</p>
           </div>
         </div>
         <div
@@ -151,19 +154,19 @@ onMounted(() => {
             <!-- 标题栏 -->
             <div class="px-5 pt-4 pb-2 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
               <h3 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-2">
-                <span class="text-xl">{{ currentTitle === '新机报价' ? '📱' : '♻️' }}</span>
+                <span class="text-xl">{{ currentTitle === t('quotation.newDevice.title') ? t('quotation.newDevice.icon') : t('quotation.oldDevice.icon') }}</span>
                 {{ currentTitle }}
               </h3>
 
               <div class="flex space-x-2">
-                <button @click="imgDownload(currentImage,currentTitle)"
+                <button @click="imgDownload(currentImage, currentTitle)"
                   class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/70 transition-all duration-200 text-sm font-medium">
-                  下载报价单
+                  {{ t('quotation.dialog.download') }}
                 </button>
 
                 <button @click="closeDialog"
                   class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/70 transition-all duration-200 text-sm font-medium">
-                  关闭
+                  {{ t('quotation.dialog.close') }}
                 </button>
               </div>
             </div>
@@ -178,7 +181,7 @@ onMounted(() => {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span class="text-sm">暂无图片</span>
+                <span class="text-sm">{{ t('quotation.dialog.noImage') }}</span>
               </div>
             </div>
           </div>

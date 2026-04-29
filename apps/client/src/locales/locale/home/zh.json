@@ -8,5 +8,30 @@
     "placeholder": {
       "service": "搜索服务"
     }
+  },
+  "quotation": {
+     "title": "实时报价单",
+    "newDevice": {
+      "title": "新机报价",
+      "description": "最新机型 · 一手价格",
+      "icon": "📱"
+    },
+    "oldDevice": {
+      "title": "旧机报价",
+      "description": "回收估值 · 以旧换新",
+      "icon": "♻️"
+    },
+    "dialog": {
+      "download": "下载报价单",
+      "close": "关闭",
+      "noImage": "暂无图片"
+    },
+    "toast": {
+      "downloadSuccess": "下载成功",
+      "downloadFailed": "下载失败"
+    },
+    "error": {
+      "getImage": "获取报价图片失败"
+    }
   }
 }

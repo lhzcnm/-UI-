@@ -66,6 +66,7 @@ declare global {
   const useSlots: typeof import('vue')['useSlots']
   const useSystemStore: typeof import('./src/stores/system')['useSystemStore']
   const useTemplateRef: typeof import('vue')['useTemplateRef']
+  const useUserStore: typeof import('./src/stores/user')['useUserStore']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']
