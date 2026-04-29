@@ -55,7 +55,8 @@ const customOrders = ref<CustomSubmitOrder[]>([])
 const autoPrint = ref<boolean>(false)
 const count = ref<number>(0)
 const selectOrder = ref<CustomSubmitOrder>()
-
+const hasDeviceSn = ref<boolean>(false)
+  
 const paperRef = ref<HTMLElement | null>(null)
 const uploadRef = ref<HTMLInputElement | null>(null)
 
@@ -567,7 +568,11 @@ function processDefaultTemplate(jsonStr: string) {
   selectCols.value = template.items.map(item => item.key)
 }
 
-function handleClickPhone(imei: string) {
+function handleClickPhone(imei: string, isNormal: boolean = true) {
+  if (isNormal) {
+    hasDeviceSn.value = true
+  }
+
   if (!strImeis.value.trim()) {
     strImeis.value = imei
     return
@@ -1453,22 +1458,50 @@ onBeforeUnmount(() => {
         </div>
       </template>
       <template v-else>
-        <div class="grid grid-cols-3 gap-2">
-          <template v-for="[_, phone] in deviceStore.deviceMap">
-            <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
-              @click="handleClickPhone(phone.info.InternationalMobileEquipmentIdentity)">
-              <div class="mb-4">
-                <div class="flex items-center justify-between mb-1">
-                  <h3>{{ phone.product.Name }}</h3>
-                </div>
-                <div class="text-sm text-muted-foreground">
-                  <p>{{ t('device.card.serial') }}: {{ phone.info.SerialNumber }}</p>
-                  <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
-                  <p>{{ t('device.card.type') }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+        <div class="flex flex-col">
+          <div class="grid grid-cols-3 gap-2">
+            <template v-for="[_, phone] in deviceStore.deviceMap">
+              <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
+                @click="handleClickPhone(phone.info.InternationalMobileEquipmentIdentity ?? phone.info.SerialNumber)">
+                <div class="mb-4">
+                  <div class="flex items-center justify-between mb-1">
+                    <h3>{{ phone.product.Name }}</h3>
+                  </div>
+                  <div class="text-sm text-muted-foreground">
+                    <p>{{ t('device.card.serial') }}: {{ phone.info.SerialNumber }}</p>
+                    <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
+                    <p>{{ t('device.card.type') }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+                  </div>
                 </div>
               </div>
+            </template>
+          </div>
+
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 class="text-xl font-bold text-foreground">{{ t('device.recoverys.title') }}</h2>
+              <p class="text-sm text-muted-foreground">{{ t('device.recoverys.total', { total: deviceStore.recoveryDeviceMap.size}) }}</p>
             </div>
-          </template>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <template v-for="[_, device] in deviceStore.recoveryDeviceMap">
+              <div class="p-4 bg-card border rounded hover:shadow transition-all duration-200 cursor-pointer"
+                @click="handleClickPhone(device.serialNo, false)">
+                <div class="mb-4">
+                  <div class="flex items-center justify-between mb-1">
+                    <h3>{{ device.name }}</h3>
+                  </div>
+
+                  <div class="text-sm text-muted-foreground">
+                    <p>ecid: {{ device.ecid }}</p>
+                    <p>{{ t('device.card.serial') }}: {{ device.serialNo }}</p>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+
         </div>
       </template>
 

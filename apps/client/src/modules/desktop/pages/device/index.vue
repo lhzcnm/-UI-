@@ -68,7 +68,6 @@ watch(
 watch(
   [() => deviceStore.deviceMap.size, () => deviceStore.recoveryDeviceMap.size],
   ([deviceSize, reccoverySize]) => {
-    console.log(deviceSize, reccoverySize)
     if (deviceSize === 0 && reccoverySize === 0) {
       store.deviceStatus = 'wait'
     } else {

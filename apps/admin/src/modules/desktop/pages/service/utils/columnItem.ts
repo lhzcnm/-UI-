@@ -79,11 +79,10 @@ export const columns: XColDef<Service> = [
     async onSave(val, row) {
       let price = Number(val)
 
-      if (isNaN(price) || price < 0.1) {
+      if (isNaN(price) || price < 0.01) {
         price = 0.1
       }
 
-      // 保留两位小数
       price = Number(price.toFixed(2))
 
       const body = {
@@ -97,8 +96,7 @@ export const columns: XColDef<Service> = [
     render(value) {
       let price = Number(value)
 
-      // 非数字 / NaN / 小于 0.1 → 统一显示 0.1
-      if (isNaN(price) || price < 0.1) {
+      if (isNaN(price) || price < 0.01) {
         price = 0.1
       }
 
