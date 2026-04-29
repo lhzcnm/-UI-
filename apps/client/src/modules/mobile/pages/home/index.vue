@@ -106,7 +106,7 @@ function handleServiceItemClick(event: MouseEvent) {
       :style="{ '--bg': 'hsl(var(--card))' }" />
 
     <section class="mb-4">
-      <h2 class="text-xl font-bold mb-3">报价单</h2>
+      <h2 class="text-xl font-bold mb-3">{{ t('quotation.title') }}</h2>
       <Quote/>
     </section>
 

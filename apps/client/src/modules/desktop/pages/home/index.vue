@@ -86,7 +86,7 @@ function handleServiceItemClick(event: MouseEvent) {
     </section>
 
     <section class="mt-8">
-      <h2 class="text-xl font-bold mb-3">实时报价单</h2>
+      <h2 class="text-xl font-bold mb-3">{{ t('quotation.title') }}</h2>
       <Quote />
     </section>
 
