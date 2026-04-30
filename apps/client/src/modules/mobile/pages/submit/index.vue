@@ -151,7 +151,12 @@ async function handleFileChange(event: Event) {
 
 function handleImei(text = '') {
   const imeiType = store.service?.imeiType || IMEI_TYPE.NONE
-  let validList = getSubmitImei(text, imeiType)
+  const service = serviceStore.services.get(form.serviceId)
+
+  let validList: string[] = []
+  if (service) {
+    validList = getSubmitImei(text, imeiType, service.domesticSerialType)
+  }
 
   // 防止 IMEI 和 SN 混用时识别为空
   if (validList.length === 0 && imeiType !== IMEI_TYPE.SN) {

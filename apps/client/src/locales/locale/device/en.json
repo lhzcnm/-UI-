@@ -21,7 +21,8 @@
       "print": "Print Label",
       "view": "View Device",
       "inRecover": "Enter Recovery Mode",
-      "outRecover": "Exit Recovery Mode"
+      "outRecover": "Exit Recovery Mode",
+      "generate": "Generate Image"
     },
     "list": {
       "title": "Device List",

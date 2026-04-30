@@ -7,6 +7,7 @@ import {
   type DeviceRecoveryData,
   type DeviceRecoveryMapItem,
   type DeviceResponse,
+  type LanguageItem,
   type ProductDataset,
   type ProductItem,
   type SaleRegion,
@@ -15,11 +16,14 @@ import {
 import http from '../http'
 import { wsFetch } from './websocket'
 import { maskText } from '../common'
+import { getLanuagestring } from '../constant'
 
 interface VersionResp {
   latest: string,
   lowest: string,
 }
+
+const { isEn } = useSystemStore()
 
 let datasetsPromise: Promise<[ProductDataset, SaleRegionDataset]> | null = null
 let datasets: ProductDataset, countriesMap: SaleRegionDataset
@@ -153,22 +157,45 @@ async function getVersion(): Promise<VersionResp> {
   return { latest, lowest }
 }
 
+function isLangText(val: any): val is LanguageItem {
+  return val && typeof val === 'object' && 'ch' in val && 'en' in val
+}
+
 function getProduct(data: DeviceBaseInfo) {
   type ProductKey = keyof typeof datasets
 
   let product = null
+  const langKey = isEn ? 'en' : 'ch'
   if (data.ProductType in datasets) {
     product = datasets[data.ProductType as ProductKey] as ProductItem
     if (Array.isArray(product)) product = product[0]  
   }
 
-  let color = '未知颜色'
-  if (product && data.DeviceColor in product) {
-    color = product[data.DeviceColor]
+  let color = getLanuagestring('unknown_color', isEn ? 'en' : 'zh')
+
+  if (data.ModelNumber in datasets) {
+    const dataSet = datasets[data.ModelNumber]
+    if (isLangText(dataSet)) {
+      color = dataSet[langKey] as string
+    }
+  }
+  else if (product && data.ModelNumber in product) {
+    color = product[data.ModelNumber][langKey]
   }
   else if (data.SerialNumber.length === 12) {
     const suffix = data.SerialNumber.slice(-4)
-    color = datasets[suffix as ProductKey] as string
+    let rawColor = datasets[suffix as ProductKey]
+
+    if (typeof rawColor === 'string') {
+      color = rawColor as string
+    } else if (isLangText(rawColor)) {
+      color = rawColor[langKey] as string
+    }
+  }
+
+  let chip: string | null = null
+  if (isLangText(product.Chip)) {
+    chip = product.Chip[langKey]
   }
 
   let modelNumber = ''
@@ -180,8 +207,8 @@ function getProduct(data: DeviceBaseInfo) {
 
   return {
     Name: product ? product.Name : data.ProductType,
-    Chip: product ? product.Chip : data.CPUArchitecture,
-    ModelNumber: modelNumber || '未知',
+    Chip: product ? chip ? chip : data.CPUArchitecture : data.CPUArchitecture,
+    ModelNumber: modelNumber || getLanuagestring('unknown', isEn ? 'en' : 'zh'),
     Color: color,
   }
 }
@@ -213,7 +240,9 @@ function handleSummary(
     Ecid            : info.Ecid.toUpperCase(),
     WiFiAddress     : maskText(info.WiFiAddress, 9, 11),
     ActivationState : info.ActivationState,
-    iCloud          : ICloud.CloudBackupEnabled ? 'device.info.grid.open.already' : 'device.info.grid.open.not',
+    iCloud          : ICloud.CloudBackupEnabled
+      ? getLanuagestring('device_icloud_enable', isEn ? 'en' : 'zh')
+      : getLanuagestring('device_icloud_disable', isEn ? 'en' : 'zh'),
     CPU             : product.Chip || '--',
     SalesRegion     : salesRegion,
   }

@@ -1,5 +1,5 @@
 import type { StatusMap, TypeListItem, TypeMap } from '@3un/shared'
-import { IMEI_AND_SN_REG, IMEI_REG, SN_REG, DOMESTIC_REG } from './regexs'
+import { IMEI_AND_SN_REG, IMEI_REG, SN_REG, DOMESTIC_DEFAULT_REG, DOMESTIC_XIAOMI_REG, DOMESTIC_OPPO_REG, DOMESTIC_VIVO_REG } from './regexs'
 
 // User Role
 export enum USER_ROLE {
@@ -53,13 +53,53 @@ export const IMEI_TYPE_MAP: TypeMap = {
     key: 'type.imei.6',
     regex: IMEI_AND_SN_REG,
   },
-  [IMEI_TYPE.DOMESTIC] : {
-    value: IMEI_TYPE.DOMESTIC,
-    label: 'DOMESTIC MACHINES',
-    key: '',
-    regex: DOMESTIC_REG,
-  }
+  // [IMEI_TYPE.DOMESTIC] : {
+  //   value: IMEI_TYPE.DOMESTIC,
+  //   label: 'DOMESTIC MACHINES',
+  //   key: '',
+  //   regex: DOMESTIC_REG,
+  // }
 }
+
+export enum DOMESTIC_IMEI_TYPE {
+  DEFAULT = 0,
+  XIAOMI = 1,
+  OPPO = 2,
+  VIVO = 3,
+}
+export const DOMESTIC_IMEI_MAP: TypeMap = {
+  [DOMESTIC_IMEI_TYPE.DEFAULT]: {
+    value: DOMESTIC_IMEI_TYPE.DEFAULT,
+    label: '未知类型',
+    key: 'domestic.0',
+    regex: DOMESTIC_DEFAULT_REG
+  },
+  [DOMESTIC_IMEI_TYPE.XIAOMI]: {
+    value: DOMESTIC_IMEI_TYPE.XIAOMI,
+    label: 'xiaomi',
+    key: 'domestic.1',
+    regex: DOMESTIC_XIAOMI_REG
+  },
+  [DOMESTIC_IMEI_TYPE.OPPO]: {
+    value: DOMESTIC_IMEI_TYPE.OPPO,
+    label: 'oppo',
+    key: 'domestic.2',
+    regex: DOMESTIC_OPPO_REG
+  },
+  [DOMESTIC_IMEI_TYPE.VIVO]: {
+    value: DOMESTIC_IMEI_TYPE.VIVO,
+    label: 'vivo',
+    key: 'domestic.3',
+    regex: DOMESTIC_VIVO_REG
+  },
+}
+export const DOMESTIC_IMEI_LIST = [
+  { value: DOMESTIC_IMEI_TYPE.DEFAULT, label: '默认规则' },
+  { value: DOMESTIC_IMEI_TYPE.XIAOMI, label: '小米' },
+  { value: DOMESTIC_IMEI_TYPE.OPPO, label: 'oppo' },
+  { value: DOMESTIC_IMEI_TYPE.VIVO, label: 'vivo' },
+]
+
 // Recharge Type
 export enum RECHARGE_TYPE {
   BALANCE    = 1,

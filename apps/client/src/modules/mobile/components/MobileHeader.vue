@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
+
+const { t, locale } = useI18n()
+
+const isEn = computed(() => locale.value === 'en')
 
 function goToInstruction() {
   window.open('http://docx.3unlocked.com/#/', '_blank')
@@ -19,8 +24,13 @@ function goToInstruction() {
         <LanguageSwitch />
         <TheTheme />
         <FreshButton />
-        <button @click="goToInstruction()" class="border text-[12px] w-8 h-8 rounded-full text-sky-500 border-sky-200">
-          说明
+        <button
+          @click="goToInstruction()"
+          class="border text-[12px] w-8 h-8 rounded-full text-sky-500 border-sky-200"
+        >
+          <Icon v-if="isEn" icon="lucide:circle-question-mark" />
+
+          <span v-else>{{ t('illustrate') }}</span>
         </button>
         <TheAvatar class="size-8" />
       </nav>

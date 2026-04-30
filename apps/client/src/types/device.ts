@@ -1,4 +1,8 @@
 // Datasets
+export interface LanguageItem {
+  ch: string
+  en: string
+}
 export interface ProductDataset {
   [key: string]: string | ProductItem | ProductItem[]
 }
@@ -7,9 +11,9 @@ export interface SaleRegionDataset {
 }
 
 export interface ProductItem {
-  [key: string]: string
+  [key: string]: string | LanguageItem
   Name: string
-  Chip: string
+  Chip: string | LanguageItem
 }
 export interface SaleRegion {
   chinese: string

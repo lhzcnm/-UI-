@@ -1,9 +1,9 @@
 import type { Service } from '@/api/services'
 
-import { DOMESTIC_REG, filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNValidator, useCopyFn } from '@3un/utils'
+import { DOMESTIC_IMEI_MAP, DOMESTIC_IMEI_TYPE, filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNDomestic, SNValidator, useCopyFn } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
 
-export function findAllIMEIAndSNs(str: string, type: IMEI_TYPE) {
+export function findAllIMEIAndSNs(str: string, type: IMEI_TYPE, domestic: DOMESTIC_IMEI_TYPE) {
   if (!str.trim()) return []
 
   let matches: string[] | undefined = str.split('\n').map(s => s.trim())
@@ -24,14 +24,18 @@ export function findAllIMEIAndSNs(str: string, type: IMEI_TYPE) {
     }
 
     match = match.toLocaleUpperCase()
-    let snReg = IMEI_TYPE_MAP[IMEI_TYPE.SN].regex
+
     if (type === IMEI_TYPE.DOMESTIC) {
-      snReg = IMEI_TYPE_MAP[IMEI_TYPE.DOMESTIC].regex
-    }
-    if (SNValidator.isValid(match, snReg)) {
-      if (match.length === 11)
-        match = match.slice(1)
-      result.push(match)
+      if (!(domestic in DOMESTIC_IMEI_TYPE)) continue
+      if (SNDomestic.isValid(match, DOMESTIC_IMEI_MAP[domestic].regex)) {
+        result.push(match)
+      }
+    } else {
+      if (SNValidator.isValid(match)) {
+        if (match.length === 11)
+          match = match.slice(1)
+        result.push(match)
+      }
     }
   }
 
@@ -45,28 +49,17 @@ export function formatImeiType5(imei: string) {
   )]
 }
 
-export function getSubmitImei(imei: string, type: IMEI_TYPE) {
+export function getSubmitImei(imei: string, type: IMEI_TYPE, domestic?: DOMESTIC_IMEI_TYPE) {
   if (type === IMEI_TYPE.NONE) {
     return formatImeiType5(imei)
   }
 
-  console.log(imei)
-  const imeiList = findAllIMEIAndSNs(imei, type)
+  const imeiList = findAllIMEIAndSNs(imei, type, domestic ?? DOMESTIC_IMEI_TYPE.DEFAULT)
   // console.log(imeiList)
   if (type === IMEI_TYPE.IMEI) {
     return imeiList.filter(imei => imei.length === 15)
   } else if (type === IMEI_TYPE.SN) {
     return imeiList.filter(imei => imei.length < 15)
-  } else if (type === IMEI_TYPE.DOMESTIC) {
-    return imeiList.filter(imei => {
-      const isPureNumber = /^\d+$/.test(imei)
-
-      if (isPureNumber) return true
-
-      console.log(DOMESTIC_REG.test(imei))
-
-      return DOMESTIC_REG.test(imei)
-    })
   }
 
   return imeiList

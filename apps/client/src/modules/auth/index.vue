@@ -11,9 +11,11 @@ const store: AuthStore = reactive({
 provide(AUTH_STORE, store)
 
 const iStore = useSettingStore()
+const uStore = useUserStore()
 await iStore.getSettings()
 
 onMounted(() => {
+  uStore.isAdminLogin = false
   const guestKey = import.meta.env.VITE_GUEST_TOKEN
   localStorage.removeItem(guestKey)
 })

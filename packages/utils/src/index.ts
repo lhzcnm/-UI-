@@ -4,6 +4,7 @@ export * from './composables/useFetchWithCache'
 
 export * from './validator/imei'
 export * from './validator/sn'
+export * from './validator/domestic'
 
 export * from './constants'
 export * from './common'

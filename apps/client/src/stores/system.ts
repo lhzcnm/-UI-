@@ -9,6 +9,8 @@ export const useSystemStore = defineStore('system', () => {
   const fromRoute = ref<string>('')
   const logout = ref<boolean>(false)
 
+  const isEn = computed(() => locale.value === 'en')
+
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
   }
@@ -27,6 +29,7 @@ export const useSystemStore = defineStore('system', () => {
     locale,
     fromRoute,
     logout,
+    isEn,
 
     toggleSidebar,
     setLocale,

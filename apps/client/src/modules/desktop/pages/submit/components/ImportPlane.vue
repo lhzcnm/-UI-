@@ -30,7 +30,7 @@ const validImeiList = computed(() => {
   const service = store.services.get(props.selectedId!)
   const imeiType = service?.imeiType || IMEI_TYPE.NONE
 
-  return getSubmitImei(imei.value, imeiType)
+  return getSubmitImei(imei.value, imeiType, service?.domesticSerialType)
 })
 
 const unitPrice = computed(() => {

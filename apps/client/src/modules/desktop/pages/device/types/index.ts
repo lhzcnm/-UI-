@@ -11,6 +11,8 @@ export interface DeviceStore {
   prevStatus       : DeviceStatus
   screenshotStatus : ScreenshotStatus
   visiblePrint     : boolean
+  visibleImage: boolean
+  previewImage: Blob | null
   printIndex       : string
   screenshot       : string
   selected         : string

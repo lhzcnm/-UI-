@@ -18,7 +18,9 @@ import { checkVersion, hasNewVersion } from '@/utils/device'
 
 const store: DeviceStore = reactive({
   visiblePrint     : false,
+  visibleImage: false,
   hasNewVersion    : false,
+  previewImage: null,
   deviceStatus     : 'wait',
   prevStatus       : 'wait',
   screenshotStatus : 'wait',

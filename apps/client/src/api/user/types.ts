@@ -54,6 +54,7 @@ export interface UserInfo {
   totalReceipts: string
   totalUnpaidReceipts: string
   accessLevel: ACCESS_LEVEL
+  heartbeatEnabled: boolean
   userOrder: {
     failed: number
     success: number

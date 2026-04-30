@@ -118,6 +118,7 @@ const previewValue = computed(() => {
   let res: Record<string, string> = {}
 
   const deviceItem = device.value
+  // const customLabelVals = customLabels.value
 
   res["name"] = deviceItem?.product.Name || "{value}"
   res["model"] = `${deviceItem?.info.ModelNumber} ${deviceItem?.info.RegionInfo}` || "{value}"
@@ -127,12 +128,16 @@ const previewValue = computed(() => {
   res["sn"] = deviceItem?.info.SerialNumber ?? "{value}"
   res["border"] = deviceItem?.info.MLBSerialNumber || "{value}"
   res["version"] = `${deviceItem?.info.ProductVersion} (${deviceItem?.info.BuildVersion})`
-  res["batteryCycle"] = deviceItem?.battery.CycleCount.toString() ?? "{value}"
-  res["disk"] = `${deviceItem?.memory.TotalSystemCapacity ? formatSize(deviceItem.memory.TotalDiskCapacity) : "{value}"}`
+  res["batteryCycle"] = deviceItem?.battery.CycleCount ? deviceItem?.battery.CycleCount.toString() : "{value}"
+  res["disk"] = `${deviceItem?.memory.TotalDiskCapacity ? formatSize(deviceItem.memory.TotalDiskCapacity) : "{value}"}`
   res["blueBooth"] = deviceItem?.info.BluetoothAddress ?? "{value}"
   res["ethernet"] = deviceItem?.info.EthernetAddress ?? "{value}"
   res["ECID"] = deviceItem?.info.Ecid ?? "{value}"
   res["UDID"] = deviceItem?.info.UniqueDeviceID ?? "{value}"
+
+  // for (const key of Object.keys(customLabelVals)) {
+  //   res[key] = customLabelVals[key].value
+  // }
 
   return res
 })
@@ -476,7 +481,7 @@ function getDefaultHeaders(): PrintHeader[] {
     {
       key: "batteryCycle",
       name: "充电循环次数",
-      nameEn: "Charge Count",
+      nameEn: "Cycle Charge Count",
       type: "text",
     },
     {

@@ -21,7 +21,8 @@
       "print": "打印标签",
       "view": "查看设备",
       "inRecover": "进入恢复模式",
-      "outRecover": "退出恢复模式"
+      "outRecover": "退出恢复模式",
+      "generate": "生成图片"
     },
     "list": {
       "title": "设备列表",

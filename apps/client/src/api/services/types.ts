@@ -1,4 +1,4 @@
-import type { IMEI_TYPE } from '@3un/utils'
+import type { DOMESTIC_IMEI_TYPE, IMEI_TYPE } from '@3un/utils'
 import type { R } from '@3un/shared'
 
 export interface ServiceApi {
@@ -25,6 +25,7 @@ export interface Service {
   storePrice: string
   taken: string
   imeiType: IMEI_TYPE
+  domesticSerialType: DOMESTIC_IMEI_TYPE
   mustRead: string
   isNew: boolean
   isHot: boolean

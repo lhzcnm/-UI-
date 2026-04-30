@@ -5,7 +5,7 @@ import PickService from './components/PickService.vue'
 import { xconfirm } from '@3un/utils'
 import { useStorage } from '@vueuse/core'
 import { getCommonList } from '@/utils'
-import Quote from './components/Quote.vue'
+// import Quote from './components/Quote.vue'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
@@ -87,7 +87,7 @@ function handleServiceItemClick(event: MouseEvent) {
 
     <section class="mt-8">
       <h2 class="text-xl font-bold mb-3">{{ t('quotation.title') }}</h2>
-      <Quote />
+      <!-- <Quote /> -->
     </section>
 
 

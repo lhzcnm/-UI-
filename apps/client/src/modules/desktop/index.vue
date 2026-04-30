@@ -75,13 +75,14 @@ watch(visibility, (cur, prev) => {
 })
 
 onMounted(() => {
-  if (!uStore.isAdminLogin) {
+  if (!uStore.isAdminLogin && uStore.info.heartbeatEnabled) {
     startChannel()
   }
 })
 
 onBeforeUnmount(async () =>{
   closeChannel()
+  uStore.isAdminLogin = false
 })
 </script>
 

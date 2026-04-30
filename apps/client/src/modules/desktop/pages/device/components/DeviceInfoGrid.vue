@@ -148,7 +148,7 @@ const b = style()
         <span :class="b.label()">{{ t('device.info.grid.iCloudBackup') }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ t(form.iCloud) }}
+            {{ form.iCloud }}
           </span>
         </div>
       </div>

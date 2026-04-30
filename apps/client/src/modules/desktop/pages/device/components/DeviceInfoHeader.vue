@@ -3,11 +3,13 @@ import { twJoin } from 'tailwind-merge'
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import { wsFetch, STORE, getCopyToken, getCopyTokenEn } from '../utils'
+import { wsFetch, STORE, getCopyToken, getCopyTokenEn, renderDeviceMapItemToBlob } from '../utils'
+import PreviewImage from './previewImage.vue'
 
 const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
 const deviceStore = useDeviceStore()
+const iStore = useSystemStore()
 const { t, locale } = useI18n()
 
 const isRecoveryMode = ref(false)
@@ -32,7 +34,6 @@ async function handleExitRecoveryMode(uniqueId: string) {
 }
 
 async function handlePrint() {
-  // store.visiblePrint = true
   store.printIndex = store.selected
   store.prevStatus = store.deviceStatus
   store.deviceStatus = 'printView'
@@ -56,6 +57,18 @@ const colorLabel = computed(() => {
   const device = deviceStore.deviceMap.get(store.selected)!
   return device.product.Color
 })
+
+async function handleGenerate() {
+  const device = deviceStore.deviceMap.get(store.selected)
+  if (device) {
+    const blob = await renderDeviceMapItemToBlob(device, {
+      lang: iStore.isEn ? 'en' : 'zh'
+    })
+
+    store.previewImage = blob
+    store.visibleImage = true
+  }
+}
 </script>
 
 <template>
@@ -96,6 +109,12 @@ const colorLabel = computed(() => {
         @click="store.deviceStatus = 'list'"
       />
 
+      <XButton
+        icon="lucide:camera" size="sm"
+        :label="t('device.button.generate')"
+        @click="handleGenerate"
+      />
+
       <XButton size="sm" color="success" @click="handleRecoveryMode">
         {{ isRecoveryMode ? t('device.button.outRecover') : t('device.button.inRecover') }}
       </XButton>
@@ -111,5 +130,7 @@ const colorLabel = computed(() => {
         @click="handlePrint"
       />
     </div>
+
+    <PreviewImage />
   </div>
 </template>

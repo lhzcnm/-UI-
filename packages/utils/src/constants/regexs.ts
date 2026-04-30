@@ -22,8 +22,20 @@ export const IMEI_REG = /\d{2} *\d{6} *\d{6} *\d/
 // SN
 export const SN_REG = /((?!\d)(?=.*[A-Za-z])[A-Za-z0-9]{10,12})/
 
-// DOMESTIC
-export const DOMESTIC_REG = /^(?=.*[A-Za-z])[0-9a-zA-Z/]{14,16}$/
-
 // IP v4
 export const IP_REG = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
+// DOMESTIC
+// export const DOMESTIC_REG = /^(?=.*[A-Za-z])[0-9a-zA-Z/]{14,16}$/
+
+// DOMESTIC DEFAULT（长度10-20，允许字母数字/，且至少一个字母）
+export const DOMESTIC_DEFAULT_REG = /^(?=.{10,20}$)(?=.*[A-Za-z])[A-Za-z0-9/]+$/
+
+// DOMESTIC XIAOMI（长度14-16，允许字母数字/，至少一个字母，且最多一个 /）
+export const DOMESTIC_XIAOMI_REG = /^(?=.{14,16}$)(?=.*[A-Za-z])(?!.*\/.*\/)[A-Za-z0-9/]+$/
+
+// DOMESTIC OPPO（长度20，只能字母数字，至少一个字母）
+export const DOMESTIC_OPPO_REG = /^(?=.{20}$)(?=.*[A-Za-z])[A-Za-z0-9]+$/
+
+// DOMESTIC VIVO（长度15，只能字母数字，至少一个字母）
+export const DOMESTIC_VIVO_REG = /^(?=.{15}$)(?=.*[A-Za-z])[A-Za-z0-9]+$/
