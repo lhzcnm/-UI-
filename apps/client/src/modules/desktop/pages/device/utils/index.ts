@@ -199,6 +199,7 @@ function buildDeviceSections(device: DeviceMapItem, lang: LanuageItem = 'zh') {
         [getLanuagestring('device_ethernet_address', lang), info.EthernetAddress],
         [getLanuagestring('device_hardware_chip_id', lang), safeString(info.ChipID)],
         [getLanuagestring('device_hardware_board_id', lang), safeString(info.BoardID)],
+        [getLanuagestring('device_hardware_board_no', lang), safeString(summary.MLBSerialNumber)],
       ],
     },
     {

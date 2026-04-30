@@ -132,6 +132,10 @@ const customLanuageMap: LanuageMap = {
     zh: "主板 ID",
     en: "Board ID",
   },
+  device_hardware_board_no: {
+    zh: "主板序号",
+    en: "Board No",
+  },
   device_disk_total: {
     zh: "总磁盘容量",
     en: "Total Disk Capacity",

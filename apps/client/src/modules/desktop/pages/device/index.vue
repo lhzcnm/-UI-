@@ -44,7 +44,7 @@ watch(
 
 watch(
   () => deviceStore.pluginMustUpdate,
-  (val) => val && (store.deviceStatus = 'list')
+  (val) => val && (store.deviceStatus = 'plugin')
 )
 
 watch(
