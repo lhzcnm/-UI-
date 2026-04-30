@@ -90,7 +90,7 @@ watch(
     if (val !== undefined) {
       handleSelected(val)
     } 
-  }
+  }, { immediate: true }
 )
 
 watch(

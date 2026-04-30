@@ -62,7 +62,7 @@ async function getRechargeList(data: RechargeTodayParams) {
   
             <XTag :label="PAYMENT_STATUS_MAP[item.paymentStatus].label"
               :color="PAYMENT_STATUS_MAP[item.paymentStatus].color" />
-            <div class="font-semibold text-base text-primary">金额: ¥{{ item.amount }}</div>
+            <div class="font-semibold text-base text-primary">¥{{ item.amount }}</div>
           </div>
         </div>
       </div>
