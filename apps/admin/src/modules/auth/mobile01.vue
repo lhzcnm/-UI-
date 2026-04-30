@@ -16,6 +16,8 @@ interface LoginMethodOption {
   icon: string
 }
 
+const uStore = useUserStore()
+
 type LoginMethod = keyof LoginMethodOptions
 const loginMethod = ref<LoginMethod>('password')
 const isAccountLogin = computed(() => loginMethod.value === 'password')
@@ -42,6 +44,10 @@ function toggleLoginMethod() {
   const isPassword = loginMethod.value === 'password'
   loginMethod.value = isPassword ? 'wechat' : 'password'
 }
+
+onMounted(() => {
+  uStore.isAdminAuth = false
+})
 </script>
 
 <template>

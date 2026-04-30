@@ -50,18 +50,18 @@ async function getRechargeList(data: RechargeTodayParams) {
               <img :src="getAvatar(item.headImgUrl)" alt="Avatar" class="size-7 mr-2 border rounded">
               <div class="min-w-0 text-sm truncate space-y-1">
                 <a :href="`/users?uid=${item.userId}`" class="underline hover:text-success">
-                  {{ item.nickName || `UID ${item.userId}` }}
+                  {{ item.userId || `UID ${item.userId}` }}
                 </a>
               </div>
             </div>
+          </div>
+          
+          <div class="text-right text-sm flex items-center gap-2">
             <XTag :label="PAYMENT_METHOD_MAP[item.paymentMethod].label"
               :color="PAYMENT_METHOD_MAP[item.paymentMethod].color" />
-
+  
             <XTag :label="PAYMENT_STATUS_MAP[item.paymentStatus].label"
               :color="PAYMENT_STATUS_MAP[item.paymentStatus].color" />
-          </div>
-
-          <div class="text-right text-sm">
             <div class="font-semibold text-base text-primary">金额: ¥{{ item.amount }}</div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { IMEI_TYPE } from '@3un/utils'
+import { DOMESTIC_IMEI_TYPE, IMEI_TYPE } from '@3un/utils'
 import type { WithId } from '@3un/shared'
 import { z } from 'zod/v4'
 
@@ -39,6 +39,7 @@ export const zService = z.object({
   packageOrderBy: z.number().default(0),
   template: z.string().default('').nullable(),
   verify: z.boolean().default(true),
+  domesticSerialType: z.enum(DOMESTIC_IMEI_TYPE).default(DOMESTIC_IMEI_TYPE.DEFAULT),
 
   // ⬇️ 废弃字段
   // cronNo: z.number(),

@@ -11,6 +11,7 @@ const remindKey = "annc-remind"
 
 const serviceStore = useServiceStore()
 const levelStore = useLevelStore()
+const uStore = useUserStore()
 const remindVisible = ref<boolean>(true)
 
 const isAdmin = import.meta.env.VITE_APP_ADMIN
@@ -57,7 +58,11 @@ onMounted(async () => {
   }
 })
 
-onUnmounted(() => iStore.stopTodoTimer())
+onBeforeUnmount(() => uStore.isAdminAuth = false)
+
+onUnmounted(() => {
+  iStore.stopTodoTimer()
+})
 </script>
 
 <template>

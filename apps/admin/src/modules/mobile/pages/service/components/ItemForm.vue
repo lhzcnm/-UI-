@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ServiceCreateParams } from '@/inters/services'
-import { IMEI_TYPE } from '@3un/utils'
+import { IMEI_TYPE, DOMESTIC_IMEI_LIST } from '@3un/utils'
 import { XRadio, XSwitch } from '@3un/ui'
 
 interface ItemFormProps {
@@ -96,6 +96,19 @@ const store = useServiceStore()
           name="imeiType" label="国产机类型"
         />
       </div>
+    </FormField>
+
+    <FormField
+      v-if="form.imeiFieldType === IMEI_TYPE.DOMESTIC"
+      label="国产机提交类型"
+      desc="用户提交订单, 限制提交的数据类型"
+    >
+      <XNativeSelect
+        v-model="form.domesticSerialType"
+        :options="DOMESTIC_IMEI_LIST"
+        value-key="value"
+        label-key="label"
+      />
     </FormField>
 
     <FormField

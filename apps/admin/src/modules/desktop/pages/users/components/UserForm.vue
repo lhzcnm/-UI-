@@ -73,12 +73,21 @@ const levelStore = useLevelStore()
     </FormField>
 
     <FormField
+      label="心跳检测"
+      desc="关闭后, 该用户前台不做心跳检测"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.heartbeatEnabled" />
+    </FormField>
+
+    <FormField
       label="网站管理员"
       desc="开启后，用户可以登录网站后台"
       :content-flex="false"
     >
       <XSwitch v-model="form.role" :active-value="1" :inactive-value="0" />
     </FormField>
+    
 
     <FormField
       label="经销商"

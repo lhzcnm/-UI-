@@ -118,6 +118,29 @@ export const columns: XColDef<User> = [
     }
   },
   {
+    key: 'heartbeatEnabled',
+    title: '心跳检测',
+    width: 128,
+    render(_, row) {
+      return h(XSwitch, {
+        modelValue: row.heartbeatEnabled,
+        "onUpdate:modelValue": async (val: boolean) => {
+          const oldVal = row.heartbeatEnabled
+          try {
+            await updateUser({
+              ...row,
+              userId: row.userId,
+              heartbeatEnabled: val
+            })
+            row.heartbeatEnabled = val
+          } catch {
+            setTimeout(() => row.heartbeatEnabled = oldVal, 1000)
+          }
+        }
+      })
+    }
+  },
+  {
     key: 'disableUser',
     title: '禁用',
     width: 128,
@@ -127,6 +150,7 @@ export const columns: XColDef<User> = [
         'onUpdate:modelValue': async (val) => {
           const oldVal = row.disableUser
           const response = updateUser({
+            ...row,
             userId: row.userId,
             disableUser: val,
           })

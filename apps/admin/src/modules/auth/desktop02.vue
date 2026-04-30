@@ -2,6 +2,12 @@
 import KeyForm from './components/KeyForm.vue'
 
 import { twJoin } from 'tailwind-merge'
+
+const uStore = useUserStore()
+
+onMounted(() => {
+  uStore.isAdminAuth = false
+})
 </script>
 
 <template>
