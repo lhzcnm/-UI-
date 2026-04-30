@@ -88,7 +88,7 @@ onMounted(() => {
   <section class="grid gap-5 md:gap-6 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]">
     <!-- 新机报价卡片 -->
     <div @click="openNewQuote"
-      class="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 hover:shadow-indigo-500/10 dark:hover:shadow-indigo-600/20 transition-all duration-500 hover:-translate-y-1 cursor-pointer">
+      class="group relative overflow-hidden rounded-xl bg-card border border-border hover:shadow-indigo-500/10 dark:hover:shadow-indigo-600/20 transition-all duration-500 hover:-translate-y-1 cursor-pointer">
       <div
         class="absolute inset-0 bg-gradient-to-r from-indigo-50 via-transparent to-transparent dark:from-indigo-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       </div>
@@ -116,7 +116,7 @@ onMounted(() => {
 
     <!-- 旧机报价卡片 -->
     <div @click="openOldQuote"
-      class="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 hover:shadow-emerald-500/10 dark:hover:shadow-emerald-600/20 transition-all duration-500 hover:-translate-y-1 cursor-pointer">
+      class="group relative overflow-hidden rounded-xl bg-card border border-border hover:shadow-emerald-500/10 dark:hover:shadow-emerald-600/20 transition-all duration-500 hover:-translate-y-1 cursor-pointer">
       <div
         class="absolute inset-0 bg-gradient-to-r from-emerald-50 via-transparent to-transparent dark:from-emerald-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       </div>
@@ -147,12 +147,12 @@ onMounted(() => {
   <Teleport to="body">
     <Transition name="fade">
       <div v-if="dialogVisible" @click="handleOverlayClick"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-all duration-300">
+        class="fixed inset-0 z-50 flex h-screen items-center justify-center  bg-black/70 backdrop-blur-sm transition-all duration-300">
         <Transition name="zoom">
           <div v-if="dialogVisible" @click.stop
-            class="w-full h-full bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden">
+            class="w-full h-full flex flex-col bg-white dark:bg-black rounded-2xl shadow-2xl overflow-hidden">
             <!-- 标题栏 -->
-            <div class="px-5 pt-4 pb-2 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <div class="p-2 h-16 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
               <h3 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-2">
                 <span class="text-xl">{{ currentTitle === t('quotation.newDevice.title') ? t('quotation.newDevice.icon') : t('quotation.oldDevice.icon') }}</span>
                 {{ currentTitle }}
@@ -172,8 +172,8 @@ onMounted(() => {
             </div>
 
             <!-- 图片区域 -->
-            <div class="relative bg-gray-100 dark:bg-gray-800">
-              <img :src="currentImage" :alt="currentTitle" class="w-full object-contain max-h-[70vh] min-h-[200px]"
+            <div class="relative bg-white p-2 flex-1 overflow-y-auto dark:bg-black">
+              <img :src="currentImage" :alt="currentTitle" class=" mx-auto object-contain "
                 @error="(e) => ((e.target as HTMLImageElement).style.display = 'none')" />
 
               <div v-if="!currentImage" class="flex flex-col items-center justify-center py-16 text-gray-400">
