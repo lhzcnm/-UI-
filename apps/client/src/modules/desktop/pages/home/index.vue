@@ -85,10 +85,10 @@ function handleServiceItemClick(event: MouseEvent) {
       </div>
     </section>
 
-    <section class="mt-8">
+    <!-- <section class="mt-8">
       <h2 class="text-xl font-bold mb-3">{{ t('quotation.title') }}</h2>
-      <!-- <Quote /> -->
-    </section>
+      <Quote />
+    </section> -->
 
 
     <PickService v-model="visible" :group="current" />

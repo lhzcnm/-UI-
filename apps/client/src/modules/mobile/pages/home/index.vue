@@ -8,7 +8,6 @@ import { xconfirm } from '@3un/utils'
 
 import { usePage } from './utils/usePage'
 import { getCommonList } from '@/utils'
-import Quote from './components/Quote.vue'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
@@ -105,10 +104,10 @@ function handleServiceItemClick(event: MouseEvent) {
     <XBulletinBoard v-if="iStore.settings.enableScrollingAnnc" class="px-2 py-3 mb-4" :text="bullerBoardContent"
       :style="{ '--bg': 'hsl(var(--card))' }" />
 
-    <section class="mb-4">
+    <!-- <section class="mb-4">
       <h2 class="text-xl font-bold mb-3">{{ t('quotation.title') }}</h2>
       <Quote/>
-    </section>
+    </section> -->
 
     <section v-if="commonList.length" class="mb-4">
       <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
