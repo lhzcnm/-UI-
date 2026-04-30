@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDeviceStore } from '@/stores/device'
 import DeviceCard from '../components/DeviceCard.vue'
 import PluginDownload from '../components/PluginDowload.vue'
 import RecoveryList from '../components/RecoveryList.vue'
