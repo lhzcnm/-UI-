@@ -42,7 +42,7 @@ export const zRechargeTodayItem = z.object({
   paymentMethod: z.enum(PAYMENT_METHOD),
   credits: z.string(),
   userId: z.number(),
-  nickName: z.string(),
+  // nickName: z.string().nullable(),
   headImgUrl: z.string().nullable(),
 })
 
