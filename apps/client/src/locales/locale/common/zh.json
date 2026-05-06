@@ -90,5 +90,6 @@
     "error": "请求失败，请稍后重试"
   },
   "expire": "检测到您长时间未操作, 系统即将自动退出",
-  "illustrate": "使用说明"
+  "illustrate": "使用说明",
+  "illustrate-mobile": "说明"
 }

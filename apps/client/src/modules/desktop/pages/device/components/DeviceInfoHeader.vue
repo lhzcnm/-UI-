@@ -3,8 +3,9 @@ import { twJoin } from 'tailwind-merge'
 import { useClipboard } from "@vueuse/core"
 import { toast } from "vue-sonner"
 
-import { wsFetch, STORE, getCopyToken, getCopyTokenEn, renderDeviceMapItemToBlob } from '../utils'
+import { STORE, getCopyToken, getCopyTokenEn, renderDeviceMapItemToBlob } from '../utils'
 import PreviewImage from './previewImage.vue'
+import { wsFetch } from '@/utils/device/websocket'
 
 const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!

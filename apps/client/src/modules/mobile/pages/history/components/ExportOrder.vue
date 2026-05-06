@@ -3,7 +3,7 @@ import BaseForm from './BaseForm.vue'
 import { HISTORY_STORE, form, formatOrderParams } from '../utils'
 import { orderApi } from '@/api/orders'
 import { downloadURL } from '@3un/utils'
-import { toast } from 'vue-sonner'
+// import { toast } from 'vue-sonner'
 import { serviceApi } from '@/api/services'
 
 const store = inject(HISTORY_STORE)!
@@ -13,9 +13,9 @@ const headers = ref<string[]>([])
 const { t, locale } = useI18n()
 
 async function handleSubmit() {
-  if (!store.exportForm.serviceId) {
-    return toast.warning(t('prompt.serviceNull'))
-  }
+  // if (!store.exportForm.serviceId) {
+  //   return toast.warning(t('prompt.serviceNull'))
+  // }
 
   submitLoading.value = true
   await getServiceHeader(store.exportForm.serviceId)

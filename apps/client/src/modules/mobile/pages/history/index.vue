@@ -134,6 +134,16 @@ function isSameService(firstOrder: Order) {
   return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
 }
 
+function handleRefresh(order: Order, respOrder: Order) {
+  const index = store.orders.list.findIndex(o => o.id === order.id)
+  if (index === -1) return
+
+  store.orders.list[index] = {
+    ...store.orders.list[index],
+    ...respOrder,
+  }
+}
+
 onUnmounted(() => {
   handleClose()
 })
@@ -172,6 +182,7 @@ onUnmounted(() => {
           v-for="order in store.orders.list"
           :key="order.id" :order="order"
           @generate="handleGenerate"
+          @refresh="handleRefresh"
         />
       </template>
     </section>

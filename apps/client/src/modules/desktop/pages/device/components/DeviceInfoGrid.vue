@@ -6,7 +6,8 @@ import { toast } from 'vue-sonner'
 // import { xconfirm } from '@3un/utils'
 
 // import http from '@/utils/http'
-import { wsFetch, STORE } from '../utils'
+import { STORE } from '../utils'
+import { wsFetch } from '@/utils/device/websocket'
 
 const style = tv({
   slots: {

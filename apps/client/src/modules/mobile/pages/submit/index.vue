@@ -58,6 +58,8 @@ const form = reactive({
   imei: props.imei || '',
 })
 
+const imeis = ref<string>('')
+
 const mode = import.meta.env.VITE_APP_MODE
 
 const textBtnModes = [
@@ -350,8 +352,6 @@ function submitOrder(service: Service) {
         title: t('query.title.mobile.result'),
         text: errorOrders.join('<br>'),
       })
-
-      form.imei = ""
       
       return
     }
@@ -369,6 +369,10 @@ function submitOrder(service: Service) {
 
   response.finally(() => {
     submitLoading.value = false
+
+    if (service.isUnlock) {
+      form.imei = ''
+    }
   })
 }
 
@@ -386,7 +390,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
     if (isFailed) handleCount()
 
     buckets.push({
-      id: 0, index: i,
+      id: item.codeId ?? 0, index: i,
       serviceId: form.serviceId,
       credits: store.service?.price || 0,
       result: isFailed ? item.message : t('query.prompt.orderHandle'),
@@ -399,17 +403,18 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
     })
   }
 
-  store.rawOrders = buckets
+  store.rawOrders.length = 0
+  store.rawOrders.push(...buckets)
 }
 
 function handleOrder(order: Order) {
   const index = validImeiList.value.indexOf(order.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', order)
 
-  store.rawOrders[index] = {
+  store.rawOrders.splice(index, 1, {
     ...store.rawOrders[index],
     ...order,
-  }
+  })
 }
 
 async function handleCount() {

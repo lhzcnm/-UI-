@@ -26,11 +26,12 @@ function goToInstruction() {
         <FreshButton />
         <button
           @click="goToInstruction()"
-          class="border text-[12px] w-8 h-8 rounded-full text-sky-500 border-sky-200"
+          class="text-[12px] flex items-center justify-center w-8 h-8 text-primary border-border"
+          :class="{ 'border rounded-full': !isEn }"
         >
-          <Icon v-if="isEn" icon="lucide:circle-question-mark" />
+          <Icon v-if="isEn" icon="lucide:circle-question-mark" class="size-full" />
 
-          <span v-else>{{ t('illustrate') }}</span>
+          <span v-else>{{ t('illustrate-mobile') }}</span>
         </button>
         <TheAvatar class="size-8" />
       </nav>

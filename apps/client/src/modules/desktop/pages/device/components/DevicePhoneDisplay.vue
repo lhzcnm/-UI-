@@ -4,7 +4,8 @@ import { tv } from 'tailwind-variants'
 import { useThrottleFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 
-import { wsFetch, STORE } from '../utils'
+import { STORE } from '../utils'
+import { wsFetch } from '@/utils/device/websocket'
 
 const b = tv({
   base: [

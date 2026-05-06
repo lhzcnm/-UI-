@@ -24,6 +24,7 @@ interface OrderCardProps {
 
 interface OrderCardEmits {
   generate: [order: Order]
+  refresh: [order: Order, respOrder: Order]
 }
 
 const props = defineProps<OrderCardProps>()
@@ -31,26 +32,26 @@ const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
 const { t } = useI18n()
 
-const order = ref(props.order)
+// const order = ref(props.order)
 const serviceStore = useServiceStore()
 const serviceName = computed(() => {
-  const id = order.value.serviceId
+  const id = props.order.serviceId
   const service = serviceStore.services.get(id)
   return service ? service.title : '--'
 })
 
 const status = computed(() => ({
-  isSuccess: order.value.status === ORDER_STATUS.SUCCESS,
-  isFailed: order.value.status === ORDER_STATUS.FAILED,
-  isProcessing: order.value.status === ORDER_STATUS.PROCESSING,
-  isWait: order.value.status === ORDER_STATUS.WAIT,
+  isSuccess: props.order.status === ORDER_STATUS.SUCCESS,
+  isFailed: props.order.status === ORDER_STATUS.FAILED,
+  isProcessing: props.order.status === ORDER_STATUS.PROCESSING,
+  isWait: props.order.status === ORDER_STATUS.WAIT,
 }))
 
 const verify = computed(() => ({
-  isNormal: order.value.verify === ORDER_VERIFY.NORMAL,
-  isReplied: order.value.verify === ORDER_VERIFY.REPLIED,
-  isSolved: order.value.verify === ORDER_VERIFY.SOLVED,
-  isRefunded: order.value.verify === ORDER_VERIFY.REFUNDED,
+  isNormal: props.order.verify === ORDER_VERIFY.NORMAL,
+  isReplied: props.order.verify === ORDER_VERIFY.REPLIED,
+  isSolved: props.order.verify === ORDER_VERIFY.SOLVED,
+  isRefunded: props.order.verify === ORDER_VERIFY.REFUNDED,
 }))
 
 const { copy, copied } = useClipboard({ legacy: true })
@@ -59,7 +60,7 @@ watch(copied, (value) => value && toast.success(t('submit.success', { action: t(
 const iStore = useSettingStore()
 
 const isUnlockService = computed(() => {
-  const service = serviceStore.services.get(order.value.serviceId)
+  const service = serviceStore.services.get(props.order.serviceId)
   if (!service) return false
   return service.isUnlock
 })
@@ -79,8 +80,9 @@ const isShowVerify = computed(() => {
 })
 
 const handleRefresh = useThrottleFn(() => {
-  orderApi.item(order.value.id).then((response) => {
-    order.value = response.data
+  orderApi.item(props.order.id).then((response) => {
+    // props.order = response.data
+    emits('refresh', props.order, response.data)
     toast.success(t('submit.success', { action: t('action.refresh') }))
   })
 }, 500)
@@ -103,7 +105,7 @@ const orderImei = computed(() => {
   return ""
 })
 function handleVerify() {
-  const { id, createTime } = order.value
+  const { id, createTime } = props.order
   const createUnix = new Date(createTime).getTime()
   const diff = Date.now() - createUnix
   const daysDiff = diff / (24 * 3600 * 1000)
@@ -114,15 +116,15 @@ function handleVerify() {
   }
 
   window.confirm(t('order.prompt.vertifyConfirm')) && (() => {
-    orderApi.verify(id, { isUnlock: isUnlockService.value, serviceId: order.value.serviceId }).then(() => {
-      order.value.verify = ORDER_VERIFY.REPLIED
+    orderApi.verify(id, { isUnlock: isUnlockService.value, serviceId: props.order.serviceId }).then(() => {
+      props.order.verify = ORDER_VERIFY.REPLIED
       toast.success(t('order.prompt.vertified'))
     })
   })()
 }
 
 function handleCopy() {
-  const items = order.value.result.split('<br>')
+  const items = props.order.result.split('<br>')
   copy(items.map(stripHtml).join('\n'))
 }
 </script>
