@@ -66,7 +66,7 @@ function goToInstruction() {
   >
     <template #trigger>
       <button class="px-2 py-1 flex items-center space-x-2 border brder-primary rounded-md bg-primary/15 text-primary">
-        <Icon icon="lucide:toolbox" class="size-6" />
+        <!-- <Icon icon="lucide:toolbox" class="size-6" /> -->
         <span>{{ getLanuagestring('funtion_tools', lang) }}</span>
       </button>
     </template>
