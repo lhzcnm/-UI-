@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from "vue-router"
 
-export const monitors: RouteRecordRaw[] = [
+const monitors: RouteRecordRaw[] = [
   {
     path: "on-monitor",
     name: "serverMonitorPlatform",
@@ -19,3 +19,5 @@ export const monitors: RouteRecordRaw[] = [
     ]
   }
 ]
+
+export default monitors

@@ -127,6 +127,7 @@ export interface Configs {
   'recharge:threshold': string
   'recharge:wxFee': string
   'recharge:wxThreshold': string
+  'PrintLabeltemplate': string
 }
 
 export interface AutoCleanSettings {

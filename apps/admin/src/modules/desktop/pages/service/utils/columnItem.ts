@@ -168,6 +168,7 @@ export const columns: XColDef<Service> = [
           
           try {
             await updateService({
+              ...row,
               packageId: row.packageId,
               verify: val
             })

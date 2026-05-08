@@ -49,6 +49,15 @@ export const menus: SidebarMenu[] = [
     ].filter(item => !!item),
   },
   {
+    label: '打印模板',
+    path: '/print',
+    icon: 'lucide:layout-template',
+    children: [
+      { label: '服务模板', match: 'fuwumuban', icon: '', path: '/print/service' },
+      { label: '设备模板', match: 'shebeimuban', icon: '', path: '/print/device' },
+    ],
+  },
+  {
     label: '订单管理',
     path: '/orders',
     icon: 'lucide:shopping-bag',

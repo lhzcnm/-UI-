@@ -42,5 +42,4 @@ export default defineConfig({
       '@forms': resolve('./src/components/forms'),
     },
   },
-  
 })

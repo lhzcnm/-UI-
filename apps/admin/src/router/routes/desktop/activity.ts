@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-export const activities: RouteRecordRaw[] = [
+const activities: RouteRecordRaw[] = [
   {
     path: 'activity',
     name: 'officalActivityPage',
@@ -12,3 +12,5 @@ export const activities: RouteRecordRaw[] = [
     component: () => import('@desktop/pages/activity/recharge.vue'),
   },
 ]
+
+export default activities

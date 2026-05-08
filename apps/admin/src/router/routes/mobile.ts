@@ -5,8 +5,8 @@ import service from './mobile/service'
 import orders from './mobile/orders'
 import recharge from './mobile/recharge'
 import wechat from './mobile/wechat'
-import { activities } from './mobile/activity'
-import { monitors } from './mobile/monitor'
+import activities from './mobile/activity'
+import monitors from './mobile/monitor'
 
 const mobile: RouteRecordRaw = {
   path: '/m',

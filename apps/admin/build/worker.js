@@ -1,6 +1,7 @@
-import { parentPort, workerData } from "node:worker_threads";
-import obfuscator from "vite-plugin-bundle-obfuscator";
-import { build } from "vite";
+import { parentPort, workerData } from "node:worker_threads"
+import obfuscator from "vite-plugin-bundle-obfuscator"
+import { visualizer } from 'rollup-plugin-visualizer'
+import { build } from "vite"
 
 function manualChunks(id) {
   // console.log(id)
@@ -37,12 +38,16 @@ function manualChunks(id) {
   if (id.includes("modules/mobile")) return "mobile";
   if (id.includes("modules/auth")) return "auth";
 
-  return "common";
+  // console.log(`manual chunk common package: ${id}`)
+
+  return undefined;
 }
 
 async function startBuild() {
   const { item } = workerData;
-  const plugins = [];
+  const plugins = [
+    visualizer({ filename: `./dist/${item.mode}/stats.html` })
+  ];
 
   if (item.obfuscator) {
     plugins.push(
@@ -67,6 +72,7 @@ async function startBuild() {
       mode: item.mode,
       build: {
         chunkSizeWarningLimit: 1024,
+    
         terserOptions: {
           compress: {
             drop_console: true,
@@ -80,10 +86,11 @@ async function startBuild() {
             manualChunks,
           },
           // onwarn(warning, warn) {
-          //   if (warning.code === "CIRCULAR_DEPENDENCY") {
-          //     console.log("循环依赖:");
-          //     console.dir(warning)
-          //   }
+          //   console.log(`${warning}, line: 84`)
+          //   // if (warning.code === "CIRCULAR_DEPENDENCY") {
+          //   //   console.log("循环依赖:");
+          //   //   console.dir(warning)
+          //   // }
           //   warn(warning);
           // },
         },
