@@ -211,6 +211,22 @@ const customLanuageMap: LanuageMap = {
   preview: {
     zh: "预览",
     en: "Preview"
+  },
+  theme: {
+    zh: "明暗切换",
+    en: "Theme"
+  },
+  refresh: {
+    zh: "刷新",
+    en: "Refresh",
+  },
+  instructions: {
+    zh: "说明",
+    en: "Instructions",
+  },
+  funtion_tools: {
+    zh: "操作组",
+    en: "Actions"
   }
 }
 

@@ -42,7 +42,7 @@ router.beforeEach(async (to) => {
   const uStore = useUserStore()
   const token = uStore.isAdminLogin ? sessionStorage.getItem(adminKey) : localStorage.getItem(key)
 
-  const otherPaths = ['scan', 'service', 'orderDetail', 'qrcode-result']
+  const otherPaths = ['scan', 'service', 'orderDetail', 'qrcode-result', 'redirect']
   const isOtherPath = otherPaths.some(p => to.path.includes(p))
 
   // handle wx auth

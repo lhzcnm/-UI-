@@ -116,6 +116,22 @@
         "download": "请点击右上角\n在浏览器打开\n下载邀请码",
         "inviteCode": "保存图片"
       }
+    },
+    "vertification": {
+      "type": "验证方式",
+      "code": "验证码"
+    },
+    "unbind": {
+      "title": "解绑确认",
+      "prompt": {
+        "noAuth": "请先绑定该认证方式",
+        "mustUnbind": "请选择解绑内容",
+        "waitGetCode": "请等待 {count} 秒后重新获取",
+        "needCode": "请输入验证码",
+        "notPair": "当前验证方式与获取验证码验证方式不一致",
+        "codeError": "请输入正确的6位数验证码",
+        "success": "解绑成功, 请重新登录"
+      }
     }
   }
 }

@@ -72,6 +72,8 @@
       "prompt": {
         "noSelectRow": "请选择行"
       }
-    }
+    },
+    "showAll": "显示全部",
+    "thread": "提交线程数"
   }
 }

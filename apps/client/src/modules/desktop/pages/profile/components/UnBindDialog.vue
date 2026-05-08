@@ -49,15 +49,15 @@ function close() {
 
 async function handleSendCode() {
   if (!displayValidType.value) {
-    return toast.warning("请先绑定该认证方式")
+    return toast.warning(t('profile.unbind.prompt.noAuth'))
   }
 
   if (!store.validType) {
-    return toast.warning("请选择解绑内容")
+    return toast.warning(t('profile.unbind.prompt.mustUnbind'))
   }
 
   if (store.isGetCode) {
-    return toast.warning(`请等待 ${count} 秒后重新获取`)
+    return toast.warning(t('profile.unbind.prompt.waitGetCode', { count: count }))
   }
 
   try {
@@ -74,19 +74,19 @@ async function handleSendCode() {
 
 async function handleConfirmCode() {
   if (!store.validType) {
-    return toast.warning("请选择解绑内容")
+    return toast.warning(t('profile.unbind.prompt.mustUnbind'))
   }
 
   if (!store.code) {
-    return toast.warning("请输入验证码")
+    return toast.warning(t('profile.unbind.prompt.needCode'))
   }
 
   if (store.validType !== type.value) {
-    return toast.warning("当前验证方式与获取验证码验证方式不一致")
+    return toast.warning(t('profile.unbind.prompt.notPair'))
   }
 
   if (store.code.length !== 6) {
-    return toast.warning("请输入正确的验证码")
+    return toast.warning(t('profile.unbind.prompt.codeError'))
   }
 
   try {
@@ -96,7 +96,7 @@ async function handleConfirmCode() {
       code: store.code,
     })
 
-    toast.success("解绑成功, 请重新登录")
+    toast.success(t('profile.unbind.prompt.success'))
     setTimeout(() => {
       uStore.logout()
     }, 1500)
@@ -107,7 +107,7 @@ async function handleConfirmCode() {
 <template>
   <XDialog
     v-model="store.visibleUnBind"
-    title="解绑确认"
+    :title="t('profile.unbind.title')"
     ui-root="sm:p-0"
     ui-header="p-4 border-b"
     @close="close">
@@ -115,7 +115,7 @@ async function handleConfirmCode() {
       <form class="p-4 border-b divide-y divide-dashed divide-border" @submit.prevent>
         <div class="flex py-4 pt-0 border-dashed flex-col space-y-2">
           <div class="flex">
-            <p class="text-base font-semibold before:content-['*'] before:text-rose-500 before:text-sm">验证方式</p>
+            <p class="text-base font-semibold before:content-['*'] before:text-rose-500 before:text-sm">{{ t('profile.vertification.type') }}</p>
           </div>
 
           <div class="flex items-center space-x-2">
@@ -130,25 +130,25 @@ async function handleConfirmCode() {
                 v-model="store.validType"
                 :value="type.value"
               />
-              <span>{{ type.label }}</span>
+              <span>{{ t(type.label) }}</span>
             </label>
           </div>
         </div>
 
         <div class="flex py-4 border-dashed flex-col space-y-2">
           <div class="flex">
-            <p class="text-base font-semibold before:content-['*'] before:text-rose-500 before:text-sm">{{ VALID_TYPE_MAP[store.validType] }}</p>
+            <p class="text-base font-semibold before:content-['*'] before:text-rose-500 before:text-sm">{{ t(VALID_TYPE_MAP[store.validType]) }}</p>
           </div>
           <XInput :disabled="true" v-model="displayValidType" />
         </div>
 
         <div class="flex py-4 border-dashed flex-col space-y-2 pb-0">
           <div class="flex">
-            <p class="text-base font-semibold before:content-['*'] before:text-rose-500 before:text-sm">验证码</p>
+            <p class="text-base font-semibold before:content-['*'] before:text-rose-500 before:text-sm">{{ t('profile.vertification.code') }}</p>
           </div>
 
           <div class="flex space-x-2">
-            <XInput placeholder="请输入验证码" v-model="store.code" />
+            <XInput :placeholder="t('profile.vertification.code')" v-model="store.code" />
             <XButton @click="handleSendCode">
               {{ store.isGetCode ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
             </XButton>
@@ -159,8 +159,10 @@ async function handleConfirmCode() {
 
     <template #footer>
       <div class="p-4 flex justify-end space-x-2 mt-2">
-        <XButton variant="soft" label="取消" @click="close" />
-        <XButton label="确认" @click="handleConfirmCode" />
+        <ButtonGroup
+          :layouts="['cancel', 'confirm']"
+          @cancel="close" @confirm="handleConfirmCode"
+        />
       </div>
     </template>
   </XDialog>

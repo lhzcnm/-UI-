@@ -10,6 +10,8 @@ interface RecoveryDeviceCardProps {
 
 const { device, ecid } = defineProps<RecoveryDeviceCardProps>()
 
+const { t } = useI18n()
+
 async function handleLeaveRecovery() {
   try {
     await axios.get(
@@ -65,7 +67,7 @@ async function handleLeaveRecovery() {
 
     <div class="flex items-center gap-2 pt-3">
       <XButton
-        label="退出恢复模式"
+        :label="t('device.button.outRecover')"
         class="flex-1"
         size="sm"
         color="success"

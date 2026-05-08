@@ -116,6 +116,22 @@
         "download": "Click the top right\nOpen in browser\nDownload invite code",
         "inviteCode": "Save Image"
       }
+    },
+    "vertification": {
+      "type": "Verification Method",
+      "code": "Verification Code"
+    },
+    "unbind": {
+      "title": "Unbind Confirmation",
+      "prompt": {
+        "noAuth": "Please bind this verification method first",
+        "mustUnbind": "Please select the content to unbind",
+        "waitGetCode": "Please wait {count} seconds before requesting again",
+        "needCode": "Please enter the verification code",
+        "notPair": "The current verification method does not match the method used to get the code",
+        "codeError": "Please enter a valid 6-digit verification code",
+        "success": "Unbinding successful, please log in again"
+      }
     }
   }
 }

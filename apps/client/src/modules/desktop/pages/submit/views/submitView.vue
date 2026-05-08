@@ -927,11 +927,11 @@ onMounted(() => {
 
         <XSwitch v-model="pushMsg" :label="t('query.pushRes')" @change="handlePushMsgChange" />
 
-        <XSwitch v-model="showAll" label="显示全部" v-if="store.selectId" @change="count = 0" />
+        <XSwitch v-model="showAll" :label="t('query.showAll')" v-if="store.selectId" @change="count = 0" />
 
         <label class="flex items-center space-x-2">
           <XInputNumber v-model="threads" :step="1" :precision="0" :min="1" :max="10" @change="handleThreadChange" />
-          <span>提交线程数</span>
+          <span>{{ t('query.thread') }}</span>
         </label>
       </div>
 

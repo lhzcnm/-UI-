@@ -60,7 +60,7 @@
         "filter": "Field Filter",
         "reset": {
           "cover": {
-            "success": "Reset successful",
+            "success": "Reset successful", 
             "failed": "Reset failed"
           },
           "noCover": {
@@ -72,6 +72,8 @@
       "prompt": {
         "noSelectRow": "Please Select Row"
       }
-    }
+    },
+    "showAll": "Show All",
+    "thread": "Threads"
   }
 }

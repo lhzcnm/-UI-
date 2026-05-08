@@ -22,6 +22,11 @@ const other: RouteRecordRaw[] = [
     name: 'qrcode-result',
     component: () => import('@/modules/other/QrcodeResult.vue'),
   },
+  {
+    path: '/redirect',
+    name: 'Redirect',
+    component: () => import('@/modules/other/Redirect.vue')
+  }
 ]
 
 export default other

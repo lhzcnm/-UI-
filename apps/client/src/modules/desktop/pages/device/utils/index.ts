@@ -153,9 +153,10 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
 function buildDeviceSections(device: DeviceMapItem, lang: LanuageItem = 'zh') {
   const { info, memory, product, battery, summary } = device
   const salesRegion = summary.SalesRegion
-  const regionLabel = salesRegion
-    ? `${salesRegion.chinese || '--'} / ${salesRegion.english || '--'}`
-    : '--'
+  const regionLabel = lang === 'zh' ?  `${salesRegion.chinese || '--'}` : `${salesRegion.english || '--'}`
+  // const regionLabel = salesRegion
+  //   ? `${salesRegion.chinese || '--'} / ${salesRegion.english || '--'}`
+  //   : '--'
   
   const isUnActivate = summary.ActivationState === 'Unactivated'
 
