@@ -25,7 +25,7 @@ import {
   type PrintTemplateJson,
   type TemplateType
 } from './type'
-import { functionItems, getQrcodeVal, initContainer, isTextField, ptToPx, scaleOptions } from './utils'
+import { functionItems, getQrcodeVal, initContainer, isTextField, ptToPx, pxToMM, scaleOptions } from './utils'
 import { handleInputChange, mmToPx } from '@/utils'
 import { stripHtmlTags } from './utils'
 
@@ -252,7 +252,11 @@ function processedDefaultTemplate(serviceId: number) {
   } else {
     const json = JSON.parse(template) as PrintTemplateJson
     container.value = json.paper
-    templateItems.value = json.items
+    templateItems.value = json.items.map(item => ({
+      ...item,
+      x: mmToPx(item.x),
+      y: mmToPx(item.y),
+    }))
     qrcodeKeys.value = json.qrcodeKeys
     selectCols.value = templateItems.value.map(i => i.key)
     // customLabels.value = json.customLabels
@@ -519,7 +523,11 @@ async function handleSave() {
       isDevice: false,
 
       paper: container.value,
-      items: templateItems.value,
+      items: templateItems.value.map(item => ({
+        ...item,
+        x: pxToMM(item.x),
+        y: pxToMM(item.y),
+      })),
 
       qrcodeKeys: qrcodeKeys.value,
       customLabels: {},

@@ -8,7 +8,7 @@ import QrPreview from './component/QrPreview.vue'
 import { handleInputChange } from '@/utils'
 
 import type { ContainerItem, HeaderTag, PrintHeader, PrintTemplateJson, TemplateItem, TemplateType } from './type'
-import { getQrcodeVal, initContainer, isTextField, mmToPx, ptToPx, scaleOptions, stripHtmlTags } from './utils'
+import { getQrcodeVal, initContainer, isTextField, mmToPx, ptToPx, pxToMM, scaleOptions, stripHtmlTags } from './utils'
 import { textAlign } from '@3un/utils'
 import type { CSSProperties } from 'vue'
 import { updateConfig } from '@/api/settings'
@@ -480,7 +480,11 @@ async function handleSave() {
       isDevice: true,
 
       paper: container.value,
-      items: templateItems.value,
+      items: templateItems.value.map(item => ({
+        ...item,
+        x: pxToMM(item.x),
+        y: pxToMM(item.y),
+      })),
 
       qrcodeKeys: qrcodeKeys.value,
       customLabels: {},
@@ -504,7 +508,11 @@ function processDefaultTemplate(jsonStr: string) {
   } else {
     const json = JSON.parse(jsonStr) as PrintTemplateJson
     container.value = json.paper
-    templateItems.value = json.items
+    templateItems.value = json.items.map(item => ({
+      ...item,
+      x: mmToPx(item.x),
+      y: mmToPx(item.y),
+    }))
     qrcodeKeys.value = json.qrcodeKeys
     selectCols.value = templateItems.value.map(i => i.key)
   }

@@ -34,8 +34,13 @@ export const scaleOptions = [
 ]
 
 const MM_TO_PX = 96 / 25.4
+const PX_TO_MM = 25.4 / 96
 // const MM_TO_PT = 72 / 25.4
 const PT_TO_MM = 25.4 / 72
+
+export function pxToMM(px: number) {
+  return px * PX_TO_MM
+}
 
 export function mmToPx(mm: number) {
   return mm * MM_TO_PX
