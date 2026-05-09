@@ -254,6 +254,7 @@ function processedDefaultTemplate(serviceId: number) {
     container.value = json.paper
     templateItems.value = json.items
     qrcodeKeys.value = json.qrcodeKeys
+    selectCols.value = templateItems.value.map(i => i.key)
     // customLabels.value = json.customLabels
   }
 }
@@ -294,7 +295,7 @@ function handleSelectColumn(id: string, type: TemplateType = 'text') {
       wrap: false,
       type: type,
       size: isTextField(type) ? 8 : (type === 'barcode' ? 3 : 15),
-      showField: false,
+      showField: true,
       barcodeWidth: 1,
     }
 
@@ -569,7 +570,7 @@ await getQueryService()
     </section>
 
     <section class="p-3 flex gap-32">
-      <div class="flex-shrink-0 flex flex-col gap-2 min-w-96 max-w-[40%]">
+      <div class="flex-shrink-0 flex flex-col gap-2 min-w-96 max-w-[42%]">
         <HeaderTagConfig :headers="processedColumns" :select-cols="selectCols" @selected="handleSelectColumn" />
 
         <PaperConfig v-model="container" />
@@ -601,7 +602,11 @@ await getQueryService()
                     </button>
                   </div>
 
-                  <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" />
+                  <!-- <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" /> -->
+                  <XSelect v-model="field.wrap" ui-trigger="w-32" @selected="handleWrapChange">
+                    <XSelectItem :value="true">标签与内容换行</XSelectItem>
+                    <XSelectItem :value="false">标签与内容同行</XSelectItem>
+                  </XSelect>
 
                   <XSelect v-model="field.showField" ui-trigger="w-32">
                     <XSelectItem :value="true">显示标签与内容</XSelectItem>
@@ -714,15 +719,20 @@ await getQueryService()
   
                     <template v-else>
                       <span class="font-medium" v-if="item.showField">{{ item.label }}:</span>
-                      <span class="ml-1 break-all template-value">{{ typeof previewValue === "string" ? previewValue :
-                        stripHtmlTags(previewValue[item.key]) }}</span>
+                      <span class="ml-1 break-all template-value">
+                        {{ typeof previewValue === "string" ? previewValue : stripHtmlTags(previewValue[item.key]) }}
+                      </span>
                     </template>
                   </template>
   
                   <template v-else-if="item.type === 'barcode'">
                     <div data-barcode>
-                      <BarcodePreview :data="barcodeVal" :size="item.size ?? 20" :show-field="item.showField!"
-                        :module-width-px="item.barcodeWidth!" />
+                      <BarcodePreview
+                        :data="barcodeVal"
+                        :size="item.size ?? 20"
+                        :show-field="item.showField!"
+                        :module-width-px="item.barcodeWidth!"
+                      />
                     </div>
                   </template>
   

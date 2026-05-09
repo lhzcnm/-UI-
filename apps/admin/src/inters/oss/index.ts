@@ -5,7 +5,7 @@ export const zOssItem = z.object({
   ossId: z.number(),
   fileName: z.string(),
   url: z.string(),
-  createTime: z.string(),
+  createTime: z.string().nullable(),
   originalName: z.string(),
   service: z.string(),
 })

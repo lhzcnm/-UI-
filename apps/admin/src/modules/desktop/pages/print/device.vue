@@ -506,6 +506,7 @@ function processDefaultTemplate(jsonStr: string) {
     container.value = json.paper
     templateItems.value = json.items
     qrcodeKeys.value = json.qrcodeKeys
+    selectCols.value = templateItems.value.map(i => i.key)
   }
 }
 
@@ -522,7 +523,7 @@ onMounted(() => {
 <template>
   <div>
     <section class="p-3 flex gap-32">
-      <div class="flex-shrink-0 flex flex-col gap-2 min-w-96 max-w-[40%]">
+      <div class="flex-shrink-0 flex flex-col gap-2 min-w-96 max-w-[42%]">
         <HeaderTagConfig :headers="processedColumns" :select-cols="selectCols" @selected="handleSelectColumn" />
 
         <PaperConfig v-model="container" />
@@ -554,7 +555,11 @@ onMounted(() => {
                     </button>
                   </div>
 
-                  <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" />
+                  <!-- <XSwitch v-model="field.wrap" @change="handleWrapChange(field.key)" /> -->
+                  <XSelect v-model="field.wrap" ui-trigger="w-32" @selected="handleWrapChange">
+                    <XSelectItem :value="true">标签与内容换行</XSelectItem>
+                    <XSelectItem :value="false">标签与内容同行</XSelectItem>
+                  </XSelect>
 
                   <XSelect v-model="field.showField" ui-trigger="w-32">
                     <XSelectItem :value="true">显示标签与内容</XSelectItem>

@@ -2,51 +2,67 @@ import { parentPort, workerData } from "node:worker_threads"
 import obfuscator from "vite-plugin-bundle-obfuscator"
 import { visualizer } from 'rollup-plugin-visualizer'
 import { build } from "vite"
+import { fileURLToPath, URL } from 'node:url'
+
+function resolve(path) {
+  return fileURLToPath(new URL(path, import.meta.url))
+}
 
 function manualChunks(id) {
-  // console.log(id)
-  if (id.includes("jsencrypt")) return "jsencrypt";
+  // vue core
+  if (
+    id.includes("/node_modules/vue/") ||
+    id.includes("/node_modules/@vue/")
+  ) {
+    return "vue";
+  }
+
+  // tiptap ecosystem
   if (
     id.includes("tiptap") ||
     id.includes("prosemirror") ||
     id.includes("w3c-keyname") ||
     id.includes("orderedmap") ||
     id.includes("rope-sequence")
-  )
+  ) {
     return "tiptap";
+  }
 
-  if (id.includes("echarts") || id.includes("zrender") || id.includes("tslib"))
+  // echarts ecosystem
+  if (id.includes("echarts")) {
     return "echarts";
+  }
 
+  // utility libs
   if (
     id.includes("@vueuse") ||
     id.includes("@floating-ui") ||
     id.includes("@iconify/vue") ||
-    id.includes("tailwind") ||
     id.includes("vue-sonner") ||
     id.includes("axios") ||
     id.includes("dayjs") ||
     id.includes("ohash") ||
     id.includes("klona")
-  )
+  ) {
     return "vendor-utils";
+  }
 
-  if (id.includes("node_modules")) return "vendor";
-
+  // app modules
   if (id.includes("modules/other")) return "other";
   if (id.includes("modules/desktop")) return "desktop";
   if (id.includes("modules/mobile")) return "mobile";
   if (id.includes("modules/auth")) return "auth";
 
-  // console.log(`manual chunk common package: ${id}`)
-
-  return undefined;
+  // fallback
+  if (id.includes("node_modules")) {
+    return "vendor";
+  }
 }
 
 async function startBuild() {
   const { item } = workerData;
   const plugins = [
-    visualizer({ filename: `./dist/${item.mode}/stats.html` })
+    // visualizer({ filename: `./dist/${item.mode}/stats.html` })
   ];
 
   if (item.obfuscator) {
@@ -67,10 +83,19 @@ async function startBuild() {
 
   try {
     await build({
+      resolve: {
+        alias: {
+          '@logo': resolve(`../src/components/logos/${item.mode}.vue`)
+        }
+      },
       plugins,
       envDir: "./config",
+      // cacheDir: `node_modules/.vite_${item.mode}`,
+      cacheDir: `node_modules/.vite_${item.mode}`,
       mode: item.mode,
       build: {
+        outDir: `./dist/${item.mode}`,
+        emptyOutDir: true,
         chunkSizeWarningLimit: 1024,
     
         terserOptions: {
@@ -82,7 +107,7 @@ async function startBuild() {
         sourcemap: false,
         rollupOptions: {
           output: {
-            dir: `./dist/${item.mode}`,
+            // dir: `./dist/${item.mode}`,
             manualChunks,
           },
           // onwarn(warning, warn) {

@@ -1,5 +1,7 @@
 // import { ua } from "@3un/utils"
 
+import { ua } from "@3un/utils"
+
 export interface SidebarMenu {
   label      : string
   icon       : string
@@ -169,7 +171,7 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:coins',
     match: 'jifenjilu',
   },
-  {
+  ua.isDesktop && {
     label: 'oss管理',
     path: '/oss',
     icon: 'lucide:cloud',

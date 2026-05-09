@@ -10,3 +10,9 @@ interface ImportMetaEnv {
   readonly VITE_ACCESS_TOKEN: string
   readonly VITE_ADMIN_TOKEN: string
 }
+
+declare module '@logo' {
+  import type { DefineComponent } from "vue"
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}

@@ -7,7 +7,7 @@ interface SelectHeaderProps {
   headers: PrintHeader[],
 }
 
-const props = defineProps<SelectHeaderProps>()
+defineProps<SelectHeaderProps>()
 const modelKeys = defineModel<string[]>('keys', { required: true, default: [] })
 const visible = defineModel<boolean>({ required: true, default: false })
 

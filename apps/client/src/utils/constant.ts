@@ -225,7 +225,7 @@ const customLanuageMap: LanuageMap = {
     en: "Instructions",
   },
   funtion_tools: {
-    zh: "操作组",
+    zh: "功能选择",
     en: "Actions"
   }
 }

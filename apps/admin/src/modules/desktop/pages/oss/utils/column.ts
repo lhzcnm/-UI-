@@ -27,6 +27,9 @@ export const columns: XColDef<OssItem> = [
     key: 'createTime',
     title: '上传时间',
     width: 158,
+    render(value) {
+      return value ?? '--'
+    }
   },
   {
     key: 'service',

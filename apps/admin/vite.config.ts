@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, type PluginOption } from 'vite'
+import { defineConfig, loadEnv, type PluginOption } from 'vite'
 
 import vue from '@vitejs/plugin-vue'
 import Imports from 'unplugin-auto-import/vite'
@@ -11,35 +11,42 @@ function resolve(path: string) {
   return fileURLToPath(new URL(path, import.meta.url))
 }
 
-export default defineConfig({
-  envDir: './config',
-  plugins: [
-    vue(),
-    Imports({
-      ignore: ['h'],
-      imports: ['vue', 'vue-router'],
-      dirs: ['src/stores', 'src/composables'],
-    }),
-    Components({
-      resolvers: [UIResolver()],
-      globs: [
-        'src/components/**/*.vue',
-        '!src/components/logos/*.vue',
-        '!src/components/forms/**/*.vue',
-        'src/modules/mobile/components/*.vue',
-        'src/modules/desktop/components/*.vue',
-      ],
-    }),
-    visualizer({ filename: './dist/stats.html' }) as PluginOption,
-  ],
-  resolve: {
-    alias: {
-      '@': resolve('./src'),
-      '@auth': resolve('./src/modules/auth'),
-      '@desktop': resolve('./src/modules/desktop'),
-      '@mobile': resolve('./src/modules/mobile'),
-      '@other': resolve('./src/modules/other'),
-      '@forms': resolve('./src/components/forms'),
+export default defineConfig(() => {
+  const envDir = './config'
+  const env = loadEnv("", envDir)
+  const mode = env.VITE_APP_MODE || "LuShen"
+
+  return {
+    envDir: envDir,
+    plugins: [
+      vue(),
+      Imports({
+        ignore: ['h'],
+        imports: ['vue', 'vue-router'],
+        dirs: ['src/stores', 'src/composables'],
+      }),
+      Components({
+        resolvers: [UIResolver()],
+        globs: [
+          'src/components/**/*.vue',
+          '!src/components/logos/*.vue',
+          '!src/components/forms/**/*.vue',
+          'src/modules/mobile/components/*.vue',
+          'src/modules/desktop/components/*.vue',
+        ],
+      }),
+      visualizer({ filename: './dist/stats.html' }) as PluginOption,
+    ],
+    resolve: {
+      alias: {
+        '@': resolve('./src'),
+        '@auth': resolve('./src/modules/auth'),
+        '@desktop': resolve('./src/modules/desktop'),
+        '@mobile': resolve('./src/modules/mobile'),
+        '@other': resolve('./src/modules/other'),
+        '@forms': resolve('./src/components/forms'),
+        '@logo': resolve(`./src/components/logos/${mode}.vue`)
+      },
     },
-  },
+  }
 })

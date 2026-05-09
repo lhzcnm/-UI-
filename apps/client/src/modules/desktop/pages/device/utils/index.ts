@@ -75,6 +75,7 @@ export function getPrintPayload(device: DeviceMapItem) {
     // Warranty             : summary.Warranty,
   }
 }
+
 export interface DeviceImageRenderOptions {
   width?: number
   pixelRatio?: number
@@ -230,7 +231,7 @@ function buildDeviceSections(device: DeviceMapItem, lang: LanuageItem = 'zh') {
 export function renderDeviceMapItemToCanvas(device: DeviceMapItem, options: DeviceImageRenderOptions = {}) {
   const {
     width = 1200,
-    pixelRatio = window.devicePixelRatio || 2,
+    pixelRatio = 1,
     backgroundColor = '#ffffff',
     textColor = '#1f2937',
     sectionGap = 28,

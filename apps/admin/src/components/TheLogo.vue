@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import LogoComponent from '@logo'
 import { modeOptions, type ModeKey } from '@/types'
 
 interface TheLogoProps {
@@ -17,7 +18,7 @@ const props = withDefaults(
 )
 
 const mode = import.meta.env.VITE_APP_MODE as ModeKey
-const logo = await import(`./logos/${mode}.vue`)
+// const logo = await import(`./logos/${mode}.vue`)
 
 const compWidth = computed(() => {
   return props.width ? props.width : modeOptions[mode].width
@@ -28,7 +29,7 @@ const compWidth = computed(() => {
   <!-- <h1 class="cursor-default select-none flex"> -->
   <RouterLink to="/" class="inline-flex items-center justify-center text-[0px] align-bottom">
     <img v-if="showLogo" class="w-6 h-6 mr-2" :src="`/${mode}/favicon.png`" alt="">
-    <component :is="logo.default" :style="{ width: compWidth, height: height }" />
+    <component :is="LogoComponent" :style="{ width: compWidth, height: height }" />
   </RouterLink>
   <!-- </h1> -->
 </template>
