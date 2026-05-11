@@ -24,7 +24,7 @@ const form = defineModel<AutoCleanSettings>({ required: true })
       class="px-2 border-l-2 border-l-border space-y-2"
     >
       <label class="text-sm text-label">
-        订单保留天数(单位: 天)
+        保留天数(单位: 天)
       </label>
 
       <div class="flex items-center gap-2">

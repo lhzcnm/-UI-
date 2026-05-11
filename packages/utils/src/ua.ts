@@ -82,8 +82,29 @@ class DeviceDetector {
 
   private detectMobile(): boolean {
     const mobileKeywords = [
-      'android', 'iphone', 'ipod', 'blackberry',
-      'windows phone'
+      // Android 设备
+      'android',
+
+      // iPhone / iPod
+      'iphone',
+      'ipod',
+
+      // Blackberry 老设备
+      'blackberry',
+
+      // Windows Phone
+      'windows phone',
+
+      // 大部分手机浏览器 UA 都会带 mobile
+      // 用于识别普通手机客户端
+      'mobile',
+
+      // 部分新版鸿蒙设备（尤其微信 / 系统 WebView）
+      // 可能没有 mobile，但会带 phone
+      // 某些华为 HarmonyOS 3/4 设备会出现这种情况
+      // 所以这里额外兼容 phone
+      'phone',
+      'harmony'
     ]
 
     return mobileKeywords.some(keyword =>
