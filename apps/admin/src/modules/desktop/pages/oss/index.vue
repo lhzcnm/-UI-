@@ -4,10 +4,11 @@ import OssUpload from './components/OssUpload.vue'
 import type { IPage } from '@3un/shared'
 import type { XTableExpose } from '@3un/ui'
 
-import { getOssDataList } from '@/api/oss'
+import { deleteOssData, getOssDataList } from '@/api/oss'
 import { createList } from '@/utils'
 import { columns } from './utils/column'
 import { OSS_STORE, type OssStore } from './utils'
+import { toast } from 'vue-sonner'
 
 const store = reactive<OssStore>({
   visibleUpdate: false,
@@ -21,8 +22,11 @@ const store = reactive<OssStore>({
 provide(OSS_STORE, store)
 
 const loading = ref<boolean>(false)
+const selectIds = ref<number[]>([])
 
 const tableRef = ref<XTableExpose | null>(null)
+
+const notDelete = [43, 44, 45, 46, 47, 48]
 
 watch(
   ([() => store.page, () => store.pageSize, () => store.refresh]),
@@ -52,6 +56,23 @@ async function getList(params: IPage) {
 function openUpdate() {
   store.visibleUpdate = true
 }
+
+async function handleBatchDelete() {
+  if (selectIds.value.length === 0) return toast.warning("请选择需要删除的数据")
+
+  const hasProtected = selectIds.value.some(id => notDelete.includes(id))
+
+  if (hasProtected) {
+    return toast.error("包含系统保留文件，禁止删除")
+  }
+  
+  try {
+    await deleteOssData(selectIds.value)
+    toast.success("删除成功")
+    store.page = 1
+    store.refresh = !store.refresh
+  } catch {}
+}
 </script>
 
 <template>
@@ -60,6 +81,7 @@ function openUpdate() {
       <div class="flex items-center space-x-4">
         <XButton label="更新oss" icon="lucide:cloud-upload" @click="openUpdate" />
         <XButton label="刷新" icon="lucide:refresh-ccw" color="warning" @click="store.refresh = !store.refresh" />
+        <XButton label="批量删除" color="danger" icon="lucide:trash-2" @click="handleBatchDelete"  />
       </div>
 
       <XPagination
@@ -84,6 +106,9 @@ function openUpdate() {
         :columns="columns"
         :data="store.ossData.list"
         :loading="loading"
+        selection
+        selected-key="ossId"
+        @select-change="selectIds = $event"
       />
     </div>
 

@@ -19,3 +19,8 @@ type UpdateServerOssUpdateFn = (body: OssUpdateParams) => Promise<void>
 export const updateServerOss: UpdateServerOssUpdateFn = async (body) => {
   await http.post('oss/sendOssData', body)
 }
+
+type DeleteOssDataFn = (ids: number[]) => Promise<void>
+export const deleteOssData: DeleteOssDataFn = async (ids) => {
+  await http.delete('oss', { data: ids })
+}
