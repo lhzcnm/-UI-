@@ -578,7 +578,7 @@ onBeforeMount(() => {})
     <div class="flex space-x-2">
       <XButton
         class="flex-1"
-        :label="t('query.button.mobile.storage')"
+        :label="t('query.title.history')"
         :loading="submitLoading"
         @click="handleOpenOrder"
       ></XButton>
