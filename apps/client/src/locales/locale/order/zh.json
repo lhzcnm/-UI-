@@ -64,6 +64,9 @@
       "title": "打印参数",
       "paper": "纸张大小",
       "unit": "单位"
+    },
+    "upload": {
+      "imei": "上传文件读取IMEI/SN"
     }
   }
 }

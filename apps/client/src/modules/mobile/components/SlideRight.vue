@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge'
 interface SlideRightProps {
   title?: string
   headerClass?: string
+  uiBody?: string
 }
 
 interface SlideRightEmits {
@@ -28,7 +29,7 @@ watch(visible, (value) => !value && emit('close'))
           </button>
           <div class="pl-9 text-lg font-medium truncate">{{ title }}</div>
         </section>
-        <section class="flex-1 overflow-y-auto">
+        <section class="flex-1 overflow-y-auto" :class="uiBody">
           <slot />
         </section>
       </div>

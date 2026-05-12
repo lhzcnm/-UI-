@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
 import type { OrderSearchForm } from '@/api/orders'
 import { ORDER_STATUS } from '@3un/utils'
+import { twJoin } from 'tailwind-merge'
+import { toast } from 'vue-sonner'
+import * as XLSX from 'xlsx'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 const serviceStore = useServiceStore()
 const groupId = ref(-1)
 const { t } = useI18n()
+
+const fileInputRef = useTemplateRef('fileInputRef')
 
 const options = computed(() => {
   const findIndex = serviceStore.details.findIndex(item =>
@@ -22,6 +28,36 @@ const statusOptions = [
   { label: t('order.button.mobile.status.3'), value: ORDER_STATUS.FAILED },
   { label: t('order.button.mobile.status.4'), value: ORDER_STATUS.PROCESSING },
 ]
+
+async function handleFileChange(event: Event) {
+  const file = (event.target as HTMLInputElement).files![0]
+  const extension = file.name.split('.').pop()!.toLowerCase()
+  let text = ''
+
+  try {
+    if (['txt', 'csv'].includes(extension)) {
+      text = await file.text()
+    }
+    else if (['xlsx', 'xls'].includes(extension)) {
+      const buffer = await file.arrayBuffer()
+      const workbook = XLSX.read(buffer)
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+      const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 })
+      text = data.flat().filter(Boolean).join('\n')
+    }
+
+    const trimed = form.value.imei.trim()
+    const imeiList = text
+    form.value.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
+  } catch (error) {
+    console.error('[File parse error]', error)
+    toast.error(t('query.prompt.file'))
+  }
+}
+
+function handleFileInput() {
+  fileInputRef.value?.click()
+}
 </script>
 
 <template>
@@ -29,34 +65,16 @@ const statusOptions = [
     <div class="space-y-1">
       <label class="inline-block mb-1 text-sm text-label">{{ t('service.select') }}: </label>
       <div class="flex items-center space-x-2">
-        <XNativeSelect
-          v-model="groupId"
-          :default="-1"
-          :options="[...serviceStore.details]"
-          @change="form.serviceId = 0"
-          :placeholder="t('serviceGroup.placeholder')"
-          label-key="title"
-          value-key="id"
-        />
-        <XNativeSelect
-          v-model="form.serviceId"
-          :options="options"
-          :disabled="groupId === -1"
-          :default="0"
-          :placeholder="t('service.placeholder')"
-          label-key="title"
-          value-key="id"
-        />
+        <XNativeSelect v-model="groupId" :default="-1" :options="[...serviceStore.details]" @change="form.serviceId = 0"
+          :placeholder="t('serviceGroup.placeholder')" label-key="title" value-key="id" />
+        <XNativeSelect v-model="form.serviceId" :options="options" :disabled="groupId === -1" :default="0"
+          :placeholder="t('service.placeholder')" label-key="title" value-key="id" />
       </div>
     </div>
 
     <div class="space-y-1">
       <label class="text-sm text-label">{{ t('order.listCol.status') }}: </label>
-      <XSegmented
-        v-model="form.status"
-        :options="statusOptions"
-        :default-value="-1"
-      />
+      <XSegmented v-model="form.status" :options="statusOptions" :default-value="-1" />
     </div>
 
     <div class="space-y-1">
@@ -69,18 +87,26 @@ const statusOptions = [
 
     <div class="space-y-1">
       <label class="inline-block mb-1 text-sm text-label">{{ t('order.form.orderId.title') }}:</label>
-      <XTextarea
-        v-model="form.codeIds" rows="4"
-        :placeholder="t('order.form.orderId.placeholder')"
-      />
+      <XTextarea v-model="form.codeIds" rows="4" :placeholder="t('order.form.orderId.placeholder')" />
     </div>
 
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-label">IMEI/SN:</label>
-      <XTextarea
-        v-model="form.imei" rows="4"
-        placeholder="IMEI/SN"
-      />
+      <div class="flex items-center justify-between">
+        <label class="inline-block mb-1 text-sm text-label">IMEI/SN:</label>
+        <button 
+          :class="twJoin(
+            'p-1 rounded flex items-center justify-center space-x-2 text-xs',
+            'bg-muted text-muted-foreground',
+          )"
+          @click="handleFileInput"
+        >
+          <Icon icon="lucide:file-input" />
+          <span>{{ t('order.upload.imei') }}</span>
+        </button>
+      </div>
+      <XTextarea v-model="form.imei" rows="4" placeholder="IMEI/SN" />
     </div>
+
+    <input ref="fileInputRef" type="file" hidden accept=".xlsx,.xls,.csv,.txt" @change="handleFileChange" />
   </div>
 </template>

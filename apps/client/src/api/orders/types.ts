@@ -86,8 +86,8 @@ export interface OrderSearchForm {
   serviceId: number
   status: ORDER_STATUS | -1
   imei: string
-  startTime: string
-  endTime: string
+  startTime?: string
+  endTime?: string
   codeIds?: string
 }
 

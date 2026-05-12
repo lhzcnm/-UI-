@@ -42,14 +42,16 @@
       "mobile": {
         "image": "Select Image",
         "camera": "Take Photo",
-        "pushRes": "Push Result (large load off)"
+        "pushRes": "Push Result (large load off)",
+        "storage": "Storage Order"
       }
     },
     "title": {
       "mobile": {
         "result": "Order Result",
         "success": "Submit Success"
-      }
+      },
+      "history": "History"
     },
     "info": {
       "additional": "Additional Information"

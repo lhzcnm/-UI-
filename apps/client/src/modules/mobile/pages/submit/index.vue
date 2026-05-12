@@ -20,6 +20,7 @@ import { SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
 import { wxApi } from '@/api/wx'
 import type { AxiosResponse } from 'axios'
+import OrderHistoryModal from './components/OrderHistoryModal.vue'
 
 interface TheProps {
   id: string
@@ -41,6 +42,7 @@ const store: SubmitStore = reactive({
   serviceId: 0,
   rawOrders: [],
   visible: false,
+  visibleHistory: false,
   count: 0,
   serviceHeader: [],
 })
@@ -433,6 +435,14 @@ function handlePushMsgChange(value: boolean) {
   const confirm = window.confirm(t('query.prompt.pushRes'))
   if (!confirm) form.pushMsg = true
 }
+
+function handleOpenOrder() {
+  if (!form.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+
+  store.visibleHistory = true
+}
+
+onBeforeMount(() => {})
 </script>
 
 <template>
@@ -565,13 +575,22 @@ function handlePushMsgChange(value: boolean) {
       />
     </div>
 
-    <XButton
-      class="w-full"
-      :label="t('button.submit')"
-      :loading="submitLoading"
-      @click="handleSubmit"
-    />
+    <div class="flex space-x-2">
+      <XButton
+        class="flex-1"
+        :label="t('query.button.mobile.storage')"
+        :loading="submitLoading"
+        @click="handleOpenOrder"
+      ></XButton>
+      <XButton
+        class="flex-1"
+        :label="t('button.submit')"
+        :loading="submitLoading"
+        @click="handleSubmit"
+      />
+    </div>
 
     <OrderResultModal />
+    <OrderHistoryModal :service-id="form.serviceId" />
   </div>
 </template>

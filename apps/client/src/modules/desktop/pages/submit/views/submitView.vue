@@ -925,9 +925,9 @@ onMounted(() => {
         <XButton v-show="mustRead" variant="outline" :label="t('query.service')" color="warning"
           @click="handleMustRead" />
 
-        <XSwitch v-model="pushMsg" :label="t('query.pushRes')" :left-label="true" @change="handlePushMsgChange" />
+        <XSwitch v-model="pushMsg" :left-label="t('query.pushRes')" @change="handlePushMsgChange" />
 
-        <XSwitch v-model="showAll" :label="t('query.showAll')" :left-label="true" v-if="store.selectId" @change="count = 0" />
+        <XSwitch v-model="showAll" :left-label="t('query.showAll')" v-if="store.selectId" @change="count = 0" />
 
         <label class="flex items-center space-x-2">
           <span>{{ t('query.thread') }}</span>

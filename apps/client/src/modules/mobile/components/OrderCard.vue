@@ -20,6 +20,7 @@ interface OrderCardProps {
   isSubmit?: boolean
   class?: string
   index?: number
+  visibleImage?: boolean
 }
 
 interface OrderCardEmits {
@@ -27,7 +28,12 @@ interface OrderCardEmits {
   refresh: [order: Order, respOrder: Order]
 }
 
-const props = defineProps<OrderCardProps>()
+const props = withDefaults(
+  defineProps<OrderCardProps>(),
+  {
+    visibleImage: true,
+  },
+)
 const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
 const { t } = useI18n()
@@ -232,7 +238,7 @@ function handleCopy() {
           </button>
 
           <button
-            v-if="status.isSuccess"
+            v-if="status.isSuccess && visibleImage"
             class="inline-flex items-center space-x-0.5 text-muted-foreground"
             @click="emits('generate', order)"
           >

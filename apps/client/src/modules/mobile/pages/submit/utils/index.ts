@@ -7,6 +7,7 @@ export interface SubmitStore {
   serviceId: number
   rawOrders: Order[]
   visible: boolean
+  visibleHistory: boolean
   count: number
   serviceHeader: string[]
 }

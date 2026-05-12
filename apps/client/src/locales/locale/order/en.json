@@ -64,6 +64,9 @@
       "title": "Print Settings",
       "paper": "Paper Size",
       "unit": "Unit"
+    },
+    "upload": {
+      "imei": "Upload File To Read IMEI/SN"
     }
   }
 }

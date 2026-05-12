@@ -42,14 +42,16 @@
       "mobile": {
         "image": "选择图片",
         "camera": "拍照识别",
-        "pushRes": "推送结果(提交量较大时，建议关闭)"
+        "pushRes": "推送结果(提交量较大时，建议关闭)",
+        "storage": "缓存订单"
       }
     },
     "title": {
       "mobile": {
         "result": "订单结果",
         "success": "提交成功"
-      }
+      },
+      "history": "订单历史"
     },
     "info": {
       "additional": "附加信息"
