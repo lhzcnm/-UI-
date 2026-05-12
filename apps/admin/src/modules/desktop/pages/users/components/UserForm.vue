@@ -30,7 +30,7 @@ const levelStore = useLevelStore()
       <XInput v-model="form.nickName" placeholder="用户昵称" />
     </FormField>
 
-    <FormField label="密码" desc="8-18位密码。至少要包含一位数字和字母，支持特殊字符" required>
+    <FormField label="密码" desc="8-18位密码。支持特殊字符" required>
       <XInput v-model="form.userPassword" placeholder="密码" />
     </FormField>
 

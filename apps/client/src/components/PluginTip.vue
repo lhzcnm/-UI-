@@ -74,6 +74,7 @@ const b = style()
           :label="t('device.button.download')"
           :open-click="true"
         />
+        <XButton size="sm" :label="t('button.fresh')" @click="$router.go(0)" />
       </div>
     </div>
   </div>

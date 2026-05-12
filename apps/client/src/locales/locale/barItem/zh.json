@@ -1,7 +1,7 @@
 {
   "barItem": {
     "home": "首页",
-    "query": "订单查询",
+    "query": "订单提交",
     "device": "我的设备",
     "recharge": "积分充值",
     "workOrder": "我的工单",

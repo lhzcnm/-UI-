@@ -1239,7 +1239,8 @@ onBeforeUnmount(() => {
       <SelectService
         :services="queryServices"
         v-model="serviceId"
-        @selected="handleSelected" />
+        @selected="handleSelected"
+      />
 
       <div class="flex justify-between gap-8">
         <div class="flex-1">
@@ -1435,7 +1436,7 @@ onBeforeUnmount(() => {
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
-      <template v-if="deviceStore.pluginMustUpdate">
+      <!-- <template v-if="deviceStore.pluginMustUpdate">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
           <div class="flex items-center gap-2 text-sm text-muted-foreground">
           <span class="flex-1 h-px bg-zinc-500"></span>
@@ -1451,8 +1452,8 @@ onBeforeUnmount(() => {
         </div>
           
         </div>
-      </template>
-      <template v-else-if="deviceStore.deviceMap.size === 0">
+      </template> -->
+      <template v-if="deviceStore.deviceMap.size === 0">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
           {{ t('print.device.noDevice') }}
         </div>
