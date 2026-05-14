@@ -227,7 +227,31 @@ const customLanuageMap: LanuageMap = {
   funtion_tools: {
     zh: "功能选择",
     en: "Actions"
-  }
+  },
+  print_commonly_used_service: {
+    zh: "常用服务选择",
+    en: "Commonly Used Service"
+  },
+  align_layout: {
+    zh: "布局定位",
+    en: "Layout Postition"
+  },
+  align_free: {
+    zh: "不限制",
+    en: "Not Limit"
+  },
+  align_left: {
+    zh: "左对齐",
+    en: "Left Align"
+  },
+  align_center: {
+    zh: "居中对齐",
+    en: "Center Align"
+  },
+  align_Right: {
+    zh: "右对齐",
+    en: "Right Align"
+  },
 }
 
 export function getLanuagestring(key: string, lang: LanuageItem) {

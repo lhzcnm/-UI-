@@ -2,19 +2,32 @@
 import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
 
-import { useDocumentVisibility } from '@vueuse/core'
+// import { useDocumentVisibility } from '@vueuse/core'
 import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
 import { closeChannel, startChannel } from '@/utils/heartBeat'
 import { setDataSets, setVersion } from '@/utils/device'
 
 const route = useRoute()
-const visibility = useDocumentVisibility()
+// const visibility = useDocumentVisibility()
 
 const iStore = useSettingStore()
 const uStore = useUserStore()
 const systemStore = useSystemStore()
 // const serviceStore = useServiceStore()
+
+await Promise.all([
+  iStore.getSettings(),
+  iStore.getHandleFee(),
+  setDataSets(),
+  setVersion(),
+  !route.meta.noAuthRequired && uStore.getInfo(),
+])
+
+// watch(visibility, (cur) => {
+//   if ((cur === 'visible') && !route.meta.noAuthRequired) {
+//   }
+// }, { immediate: true })
 
 const isLogout = ref(false)
 
@@ -51,19 +64,6 @@ const menus: SidebarMenu[] = [
   uStore.info.accessLevel === ACCESS_LEVEL.AUCTION && { label: t('barItem.auction'), path: '/auction', icon: 'lucide:laptop-minimal', type: 'extra' as const },
   { label: t('barItem.logout'), path: '/logout', icon: 'iconoir:log-out', type: 'basic' as const },
 ].filter((item) => !!item)
-
-watch(visibility, (cur) => {
-  if ((cur === 'visible') && !route.meta.noAuthRequired) {
-    uStore.getInfo()
-  }
-}, { immediate: true })
-
-await Promise.all([
-  iStore.getSettings(),
-  iStore.getHandleFee(),
-  setDataSets(),
-  setVersion(),
-])
 
 onMounted(async () => {
   if (!uStore.isAdminLogin && uStore.info.heartbeatEnabled) {

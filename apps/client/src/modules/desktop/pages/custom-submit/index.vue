@@ -21,12 +21,14 @@ import { checkVersion, hasNewVersion } from '@/utils/device'
 import usePrinter from '@/composable/print'
 import type { DeviceMapItem } from '@/types/device'
 import { generatePDF } from '@/utils/print'
+import { getLanuagestring } from '@/utils/constant'
 
 const deviceStore = useDeviceStore()
 const { services, getServices } = useServiceStore()
 const { t, locale } = useI18n()
 const { connect, close } = useWsStore()
 const { updateCredit } = useUserStore()
+const iStore = useSystemStore()
 
 const {
   container,
@@ -1228,7 +1230,7 @@ onBeforeUnmount(() => {
       />
 
       <div class="flex flex-col gap-2">
-        <div class="text-sm font-medium text-slate-700 dark:text-slate-200">服务 ID 选择</div>
+        <div class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ getLanuagestring("print_commonly_used_service", iStore.lang) }}</div>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
           <button
             v-for="service in deviceServices" :key="service.id"

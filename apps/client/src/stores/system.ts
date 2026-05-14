@@ -1,4 +1,5 @@
 import i18n from '@/locales'
+import type { LanuageItem } from '@/utils/constant'
 import { ua } from '@3un/utils'
 import { useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
@@ -10,7 +11,7 @@ export const useSystemStore = defineStore('system', () => {
   const logout = ref<boolean>(false)
 
   const isEn = computed(() => locale.value === 'en')
-  const lang = computed(() => isEn.value ? 'en' : 'zh')
+  const lang = computed<LanuageItem>(() => isEn.value ? 'en' : 'zh')
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
