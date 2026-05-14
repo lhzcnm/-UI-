@@ -5,12 +5,12 @@ export type DeviceStatus = 'list' | 'detail' | 'wait' | 'plugin' | 'version' | '
 export type ScreenshotStatus = 'wait' | 'success' | 'fail'
 
 export interface DeviceStore {
-  // deviceMap        : Map<string, DeviceMapItem>
-  // recoverDeviceMap : Map<string, DeviceRecoveryMapItem>,
   deviceStatus     : DeviceStatus
   prevStatus       : DeviceStatus
   screenshotStatus : ScreenshotStatus
   visiblePrint     : boolean
+  visibleCreateLabel: boolean
+  visibleActivate: boolean
   visibleImage: boolean
   previewImage: Blob | null
   printIndex       : string

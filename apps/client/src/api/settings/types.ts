@@ -2,6 +2,7 @@ import type { R } from '@3un/shared'
 
 export interface SettingApi {
   get: () => R<Setting>
+  getConfig: (params: ConfigParams) => R<ConfigItem>
 }
 
 export interface Setting {
@@ -110,3 +111,15 @@ export interface HandleFeeType {
 //   orderFeedback: string
 //   tricket: string
 // }
+
+export interface ConfigParams {
+  key: string
+}
+
+export interface ConfigItem {
+  id          : number
+  key         : string
+  value       : string
+  description : string
+}
+

@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import type { TemplateType } from '@/types'
 import { tv } from 'tailwind-variants'
 
 interface ColumnTagProps {
   id: string,
   label: string,
-  type?: "text" | "qrcode" | "barcode",
+  type?: TemplateType,
   checked: boolean,
 }
 
 interface ColumnTagEmits {
-  (e: "click", id: string, type?: "text" | "qrcode" | "barcode"): void
+  (e: "click", id: string, type?: TemplateType): void
 }
 
 defineProps<ColumnTagProps>()

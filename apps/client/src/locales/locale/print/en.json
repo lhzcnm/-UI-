@@ -8,12 +8,23 @@
     "fields": {
       "title": "Print Fields",
       "config": {
-        "title": "Field Display Settings",
-        "tip": "Control how fields are displayed in the print preview area",
-        "wrap": "Label and content on separate lines",
-        "nowrap": "Label and content on the same line",
+        "title": "Field Display Configuration",
+        "tip": "Control the display method in the print preview area",
+        "wrap": "Display label and content on separate lines",
+        "nowrap": "Display label and content on the same line",
         "showLabel": "Show label and content",
         "showContent": "Show content only"
+      },
+      "background": {
+        "black": "Black background, white text",
+        "white": "White background, black text"
+      },
+      "barcode": {
+        "common": "Show barcode and content",
+        "only": "Show barcode only"
+      },
+      "qrcode": {
+        "label": "QR Code Settings"
       }
     },
     "size": {
@@ -89,7 +100,7 @@
       "module": "Device Reader Module",
       "title": "Device Information",
       "download": "Please download the plugin and refresh the page",
-      "noDevice": "Connect a USB device to display the device list",
+      "noDevice": "Plugin had Running, Connect a USB device to display the device list",
       "hasUpdate": "Plugin update detected. Please update as soon as possible"
     },
     "paper": {

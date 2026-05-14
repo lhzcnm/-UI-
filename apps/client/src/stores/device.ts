@@ -29,7 +29,6 @@ export const useDeviceStore = defineStore('device', () => {
   
         deviceMap.value = handleDisconnect(val, deviceMap.value)
 
-        console.log(deviceMap.value)
         return
       }
 
@@ -49,7 +48,6 @@ export const useDeviceStore = defineStore('device', () => {
         }
 
         deviceMap.value = await handleDevice(data, deviceMap.value)
-        console.log(deviceMap.value)
       }
     }
   )

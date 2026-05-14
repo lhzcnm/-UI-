@@ -34,7 +34,7 @@ const displayStatusBg = computed(() => {
            rounded-lg
            bg-slate-100 dark:bg-slate-800
            border border-slate-200 dark:border-slate-700
-           shadow-sm"
+           shadow-sm overflow-y-auto"
     @click="emits('click', order)"
   >
     <!-- header -->

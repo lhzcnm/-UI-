@@ -2,8 +2,6 @@
 import DesktopHeader from './components/DesktopHeader.vue'
 import TheSidebar from './components/TheSidebar.vue'
 
-import { useSystemStore } from '@/stores/system'
-
 import { useDocumentVisibility } from '@vueuse/core'
 import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
@@ -16,23 +14,9 @@ const visibility = useDocumentVisibility()
 const iStore = useSettingStore()
 const uStore = useUserStore()
 const systemStore = useSystemStore()
-const serviceStore = useServiceStore()
+// const serviceStore = useServiceStore()
 
 const isLogout = ref(false)
-
-await Promise.all([
-  iStore.getSettings(),
-  iStore.getHandleFee(),
-  setDataSets(),
-  setVersion(),
-])
-
-if(!route.meta.noAuthRequired) {
-  await Promise.all([
-    uStore.getInfo(),
-    serviceStore.getServices(),
-  ])
-}
 
 const { t } = useI18n()
 
@@ -42,7 +26,7 @@ const hideDevice =
   !uStore.info.enableDevice
 
 const menus: SidebarMenu[] = [
-  { label: t('barItem.home'),    path: '/', icon: 'iconoir:home-alt-slim-horiz', type: 'basic' as const },
+  { label: t('barItem.home'), path: '/', icon: 'iconoir:home-alt-slim-horiz', type: 'basic' as const },
   // { label: t('barItem.quote'), path: '/quote', icon: 'circum:receipt' },
   { label: t('barItem.query'), path: '/submit', icon: 'iconoir:atom', type: 'basic' as const },
   { label: t('barItem.custom'), path: '/custom-submit', icon: 'iconoir:atom', type: 'basic' as const },
@@ -74,29 +58,36 @@ watch(visibility, (cur, prev) => {
   }
 })
 
-onMounted(() => {
+await Promise.all([
+  iStore.getSettings(),
+  iStore.getHandleFee(),
+  setDataSets(),
+  setVersion(),
+])
+
+onMounted(async () => {
   if (!uStore.isAdminLogin && uStore.info.heartbeatEnabled) {
     startChannel()
   }
 })
 
-onBeforeUnmount(async () =>{
+onBeforeUnmount(async () => {
   closeChannel()
   uStore.isAdminLogin = false
 })
 </script>
 
 <template>
-  <DesktopHeader v-if="!route.meta.hideHeader" />
+  <DesktopHeader />
   <div class="flex h-container">
     <Transition name="slide-left">
-      <TheSidebar v-model="isLogout" v-if="!route.meta.hideSidebar" v-show="systemStore.showSidebar" :menus />
+      <TheSidebar v-model="isLogout" v-show="systemStore.showSidebar" :menus />
     </Transition>
     <RouterView v-slot="{ Component }" :key="route.path">
-      <main v-if="Component" class="flex-1 overflow-x-auto">
+      <main class="flex-1 overflow-x-auto">
         <Transition name="fade-in" mode="out-in">
           <Suspense>
-            <component :is="Component" />
+            <component :is="Component" v-if="Component" />
             <template #fallback>
               <Fallback />
             </template>

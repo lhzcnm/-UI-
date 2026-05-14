@@ -197,11 +197,11 @@ export interface DeviceICloud {
   LastiTunesBackupTZ: string
 }
 
-export interface DeviceCache {
-  networkLockCode: string
-  activationLockCode: string
-  warrantyCode: string
-}
+// export interface DeviceCache {
+//   networkLockCode: string
+//   activationLockCode: string
+//   warrantyCode: string
+// }
 
 export interface DeviceRecoveryData {
   BDID: string      // Board ID (主板标识符，例如 0x04)

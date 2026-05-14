@@ -16,16 +16,15 @@ provide(THEME, theme)
 
 <template>
   <RouterView v-slot="{ Component }">
-    <template v-if="Component">
-      <Suspense>
-        <component :is="Component" />
-      </Suspense>
-    </template>
+    <Suspense>
+      <component :is="Component" v-if="Component" />
+
+      <template #fallback>
+        <Fallback />
+      </template>
+    </Suspense>
+
   </RouterView>
   <TheConfirm />
-  <Toaster
-    richColors
-    position="top-center"
-    :theme="theme.name"
-  />
+  <Toaster richColors position="top-center" :theme="theme.name" />
 </template>

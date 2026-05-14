@@ -43,8 +43,8 @@ function createInitForm(): OrderSearchForm {
     serviceId: 0,
     status: -1,
     imei: '',
-    startTime: undefined,
-    endTime: undefined,
+    startTime: '',
+    endTime: '',
     codeIds: '',
   }
 }

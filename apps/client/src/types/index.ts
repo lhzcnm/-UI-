@@ -1,3 +1,14 @@
+import type { LAYOUT_POSITION } from "./print"
+
+export type TemplateType = "text" | "qrcode" | "barcode" | "custom" | "Function" | "device"
+export type TemplateDirection = "portrait" | "landscape"
+// export type LayoutMode = "free" | "center-all" | "left-all" | "right-all"
+
+export interface LabelCreateForm {
+  label: string
+  value: string
+}
+
 export interface ContainerItem {
   width: number,
   height: number,
@@ -7,10 +18,10 @@ export interface ContainerItem {
     bottom: number,
     left: number,
   },
-  fontSize: number,
-  styles: Record<string, string>,
+  // fontSize: number,
   // portrait - 纵向, landscape - 横向
-  orientation?: "portrait" | "landscape",
+  orientation?: TemplateDirection,
+  layout?: LAYOUT_POSITION
 }
 
 export interface TemplateItem {
@@ -22,14 +33,17 @@ export interface TemplateItem {
   wrap?: boolean,
   width?: number,
   height?: number,
-  type: "text" | "qrcode" | "barcode",
+  type: TemplateType,
   align?: "left" | "center" | "right",
   showField?: boolean,
   size?: number,
+  barcodeWidth?: number,
+  flip?: boolean,
 }
 
 export interface PrintTemplateJson {
   serviceId?: number,
+  isDevice?: boolean,
 
   paper: {
     width: number,
@@ -40,8 +54,7 @@ export interface PrintTemplateJson {
       bottom: number,
       left: number,
     },
-    fontSize: number,
-    orientation?: "portrait" | "landscape",
+    orientation?: TemplateDirection,
   },
   items: {
     key: string,
@@ -50,16 +63,25 @@ export interface PrintTemplateJson {
     x: number,
     y: number,
     wrap?: boolean,
-    type: "text" | "qrcode" | "barcode",
+    type: TemplateType,
     align?: "left" | "center" | "right",
     size?: number,
     showField?: boolean,
+    barcodeWidth?: number,
   }[],
+
+  qrcodeKeys: string[],
+  customLabels: Record<string, LabelCreateForm>,
 }
 
 export interface PrintHeader {
   key: string,
   name: string,
   nameEn: string,
-  type: "text" | "qrcode" | "barcode",
+  type: TemplateType,
+}
+
+export interface PaperDirectionOption {
+  value: TemplateDirection,
+  label: string,
 }

@@ -18,7 +18,7 @@ const logo = await import(`./logo/${mode}/${locale}.vue`)
 <template>
   <h1 class="cursor-default select-none">
     <RouterLink to="/" class="inline-block text-[0px] align-bottom">
-      <component :is="logo.default" :height="size" />
+      <component :is="logo.default" :height="size" v-if="logo" />
     </RouterLink>
   </h1>
 </template>

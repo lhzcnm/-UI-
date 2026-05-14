@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { mmToPx } from '@/utils'
+import { mmToPt, mmToPx } from '@/utils'
 import JsBarcode from 'jsbarcode'
 
 interface BarcodePreviewProps {
   data: string,
   size: number,
+  showField: boolean,
+  moduleWidthPx: number,
 }
 
 const props = defineProps<BarcodePreviewProps>()
@@ -12,7 +14,7 @@ const props = defineProps<BarcodePreviewProps>()
 const barcodeRef = ref<SVGElement | null>()
 
 watch(
-  [() => props.data, () => props.size],
+  [() => props.data, () => props.size, () => props.showField, () => props.moduleWidthPx],
   () => renderBarcode()
 )
 
@@ -21,10 +23,11 @@ function renderBarcode() {
 
   JsBarcode(barcodeRef.value, props.data, {
     format: "CODE128",
-    width: mmToPx(props.size * 0.06),
-    height: mmToPx(props.size * 1.2),
-    displayValue: true,
-    fontSize: mmToPx(props.size),
+    width: props.moduleWidthPx,
+    height: mmToPx(props.size),
+    displayValue: props.showField,
+    fontSize: mmToPt(props.size * 0.5),
+    margin: 0,
   })
 }
 

@@ -1,4 +1,5 @@
 import type { Service } from '@/api/services'
+import type { PrintTemplateJson } from '@/types'
 
 import { DOMESTIC_IMEI_MAP, DOMESTIC_IMEI_TYPE, filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNDomestic, SNValidator, useCopyFn } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
@@ -137,6 +138,12 @@ export const createList = useCopyFn(
 
 const MM_TO_PX = 96 / 25.4
 const MM_TO_PT = 72 / 25.4
+const PT_TO_MM = 25.4 / 72
+const PX_TO_MM = 25.4 / 96
+
+export function pxToMM(px: number) {
+  return px * PX_TO_MM
+}
 
 export function mmToPx(mm: number) {
   return mm * MM_TO_PX
@@ -150,6 +157,15 @@ export function mmToPt(mm: number) {
   return mm * MM_TO_PT
 }
 
+export function ptToPx(pt: number) {
+  return mmToPx(pt * PT_TO_MM)
+}
+
+export function stripHtmlTags(html: string) {
+  if (!html) return ''
+  return html.replace(/<[^>]+>/g, '')
+}
+
 export function filterNumber(input: string) {
   return filterByRegex(input, /[0-9]/)
 }
@@ -157,4 +173,48 @@ export function filterNumber(input: string) {
 export function handleInputChange(e: Event) {
   const target = e.target as HTMLInputElement
   return Number(filterNumber(target.value))
+}
+
+export function readTemplateFile(file: File): Promise<PrintTemplateJson> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const json = JSON.parse(reader.result as string)
+        resolve(json)
+      } catch (e) {
+        reject(e)
+      }
+    }
+    reader.onerror = reject
+    reader.readAsText(file)
+  })
+}
+
+export function openIframe(url: string) {
+  const iframe = document.createElement('iframe')
+  
+  iframe.style.position = "fixed"
+  iframe.style.right = "0"
+  iframe.style.bottom = "0"
+  iframe.style.width = "0"
+  iframe.style.height = "0"
+  iframe.style.border = "0"
+
+  iframe.src = url
+
+  document.body.appendChild(iframe)
+
+  iframe.onload = () => {
+    setTimeout(() => {
+      iframe.contentWindow?.focus()
+      iframe.contentWindow?.print()
+    }, 500)
+  }
+
+  iframe.onclose = () => {
+    setTimeout(() => {
+      iframe.remove()
+    }, 1000)
+  }
 }
