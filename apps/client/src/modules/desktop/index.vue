@@ -52,11 +52,11 @@ const menus: SidebarMenu[] = [
   { label: t('barItem.logout'), path: '/logout', icon: 'iconoir:log-out', type: 'basic' as const },
 ].filter((item) => !!item)
 
-watch(visibility, (cur, prev) => {
-  if ((cur === 'visible' && prev === 'hidden') && !route.meta.noAuthRequired) {
+watch(visibility, (cur) => {
+  if ((cur === 'visible') && !route.meta.noAuthRequired) {
     uStore.getInfo()
   }
-})
+}, { immediate: true })
 
 await Promise.all([
   iStore.getSettings(),

@@ -68,6 +68,7 @@
     "pdf-lib": "^1.17.1",
     "pinia": "^3",
     "qrcode": "^1.5.4",
+    "qrcode-generator": "^2.0.4",
     "randexp": "^0.5.3",
     "tailwind-merge": "2.5.4",
     "tailwind-variants": "0.3.1",

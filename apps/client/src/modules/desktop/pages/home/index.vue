@@ -90,7 +90,6 @@ function handleServiceItemClick(event: MouseEvent) {
       <Quote />
     </section> -->
 
-
     <PickService v-model="visible" :group="current" />
   </div>
 </template>
