@@ -9,7 +9,7 @@ const router = useRouter()
 const iStore = useSystemStore()
 
 const order = computed<Order | undefined>(() => {
-  if (store.index) {
+  if (store.index !== undefined) {
     return store.orders.list[store.index] ?? []
   }
   return undefined

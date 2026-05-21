@@ -6,6 +6,7 @@ import ImgOrder from '../components/ImgOrder.vue'
 import PrintDialog from '../components/PrintDialog.vue'
 import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
 import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
+import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
 import { toast } from 'vue-sonner'
 import { useClipboard } from '@vueuse/core'
@@ -17,7 +18,6 @@ import { form, formatOrderParams, HISTORY_STORE } from '../utils'
 import { getOrderColumns } from '../utils/columns'
 import { orderApi, type Order, type OrderExportParams, type OrderPrintParams } from '@/api/orders'
 import type { ImgOrderItem } from '../types'
-import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
 const store = inject(HISTORY_STORE)!
 

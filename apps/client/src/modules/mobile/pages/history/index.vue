@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ImgOrder from './components/ImgOrder.vue'
 import SearchOrder from './components/SearchOrder.vue'
 import ExportOrder from './components/ExportOrder.vue'
 import OrderVoucher from '@/components/shared/OrderVoucher.vue'
@@ -9,7 +10,6 @@ import { twJoin } from 'tailwind-merge'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
 import { orderApi, type Order, type OrderExportParams } from '@/api/orders'
-import ImgOrder from './components/ImgOrder.vue'
 import type { ImgOrderItem } from './types'
 import * as html2Image from 'html-to-image'
 import { h, render } from 'vue'

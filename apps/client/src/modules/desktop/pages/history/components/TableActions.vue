@@ -117,6 +117,10 @@ async function getOrderDetail() {
 }
 
 async function openUplockRecommend() {
+  if (row.status !== ORDER_STATUS.SUCCESS) {
+    toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
+    return
+  }
   await getOrderDetail()
   if (row.recommends?.length === 0) {
     toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
@@ -130,7 +134,7 @@ async function openUplockRecommend() {
 const btnSplits: XBtnSplitOptions = [
   ...(isShowVerify.value ? [{ label: t('order.button.table.vertify'), command: handleVerify }] : []),
   ...(status.isProcessing && !focreHide.value ? [{ label: t('button.fresh'), command: handleRefresh }] : []),
-  ...(!isUnlockService.value ? [{label: getLanuagestring('unlock_recommend_column', systemStore.lang), command: openUplockRecommend}] : [])
+  ...(!isUnlockService.value ? [{ label: getLanuagestring('unlock_recommend_column', systemStore.lang), command: openUplockRecommend }] : [])
 ]
 </script>
 
