@@ -25,6 +25,7 @@ import { getDefaultColumns, getDefaultResultColumns } from '../utils/columns'
 import { serviceApi, type FieldMap, type Service, type ServiceCols } from '@/api/services'
 import { orderApi, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
 import router from '@/router'
+import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
 const store = inject(SUBMIT_STORE)!
 
@@ -194,8 +195,8 @@ function generateColumns(headers: ServiceCols[]) {
 function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   const defaultCols = getDefaultColumns(t)
   const len = defaultCols.length
-  const frontCols = defaultCols.slice(0, serviceCols.length > 0 ? len - 2 : len - 1)
-  const endCols = defaultCols.slice(-1)
+  const frontCols = defaultCols.slice(0, serviceCols.length > 0 ? len - 3 : len - 2)
+  const endCols = defaultCols.slice(-2, -1)
 
   const asyncCols: XTableColumn[] = [
     {
@@ -236,12 +237,12 @@ function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
 
   const len = defaultCols.length
   let frontCols = defaultCols
-  let end = len - 1
+  let end = len - 2
   if (serviceCols.length > 0) {
-    end = len - 2
+    end = len - 3
   }
   frontCols = defaultCols.slice(0, end)
-  const endCols = defaultCols.slice(-1)
+  const endCols = defaultCols.slice(-2)
 
   store.serviceCols = [
     ...store.serviceCols,
@@ -274,6 +275,7 @@ async function handleSubmitOrder(id: number) {
     ...item,
     ...(processOrderResult(item.result)),
     index: i + 1,
+    isStorage: true,
   }))
 
   pendingOrders = data.map(item => {
@@ -395,6 +397,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
       remark: remark,
       result: '',
       createTime: '',
+      isStorage: false,
     }
 
     serviceColumns.value.forEach(item => {
@@ -591,6 +594,7 @@ function handleOrder(rawData: string) {
     status: data.status,
     id: data.id,
     result: data.result,
+    recommends: data.recommends,
   }
 }
 
@@ -964,5 +968,6 @@ onMounted(() => {
     </section>
 
     <TableColumnDialog @confirm="processHeaderConfirm" />
+    <UnlockRecommendDialog />
   </div>
 </template>

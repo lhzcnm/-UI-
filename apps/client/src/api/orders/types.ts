@@ -53,8 +53,9 @@ export interface OrderTableView {
   remark: string
   result: string
   createTime: string
-  [key: string]: any
-}
+  recommends: OrderRecommend[] | null
+  isStorage: boolean
+  [key: string]: any}
 
 export interface CustomSubmitOrder {
   id: number | null,

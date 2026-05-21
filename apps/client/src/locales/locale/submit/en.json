@@ -11,7 +11,7 @@
       "scan": "IMEI/SN not recognized",
       "file": "Failed to parse the file",
       "balance": "Balance",
-      "refreshNone": "All orders have been processed or submission failed",
+      "refreshNone": "All orders have been processed or All orders submission failed",
       "unit": "UnitPrice: {price}",
       "reseted": "Please Submit Order",
       "importDisable": "Please wait the order all process done"

@@ -16,12 +16,14 @@ interface TheProps {
 
 const store = reactive<SubmitStore>({
   visibleHeaderFilter: false,
+  visibleUnlockRecommend: false,
   
   selectHeaders: [],
   serviceCols: [],
   rawOrders: [],
 
   selectId: 0,
+  selectOrderId: undefined,
   page: 1,
   limit: 50,
   view: 'submit',

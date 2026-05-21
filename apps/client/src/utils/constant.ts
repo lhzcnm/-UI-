@@ -5,9 +5,9 @@ interface LanuageMapItem {
   en: string
 }
 
-type LanuageMap = Record<string, LanuageMapItem>
+type LanguageMap = Record<string, LanuageMapItem>
 
-const customLanuageMap: LanuageMap = {
+const customLanguageMap: LanguageMap = {
   unknown: {
     zh: "未知",
     en: "Unknown",
@@ -252,10 +252,28 @@ const customLanuageMap: LanuageMap = {
     zh: "右对齐",
     en: "Right Align"
   },
-}
+  unlock_recommend_column: {
+    zh: "推荐服务",
+    en: "Recommend Service",
+  },
+  unlock_recommend: {
+    zh: "推荐解锁服务",
+    en: "Unlock Recommend Service",
+  },
+  no_unlock_recommend: {
+    zh: "暂无推荐解锁服务",
+    en: "No Unlock Recommend Service",
+  },
+  go_to_recommend: {
+    zh: "前往提交",
+    en: "Go To Submit",
+  }
+} as const
 
-export function getLanuagestring(key: string, lang: LanuageItem) {
-  const entry = customLanuageMap[key]
+type LanguageKey = keyof typeof customLanguageMap
+
+export function getLanuagestring(key: LanguageKey, lang: LanuageItem) {
+  const entry = customLanguageMap[key]
   if (!entry) return key
   return entry[lang] ?? entry.zh ?? key
 }

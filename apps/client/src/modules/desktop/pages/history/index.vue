@@ -16,6 +16,7 @@ const store: HistoryStore = reactive({
   visibleExport: false,
   visibleOrderImg: false,
   visiblePrint: false,
+  visibleUnlockRecommend: false,
   paperSize: {
     labelWidth: '',
     labelHeight: '',
@@ -23,6 +24,8 @@ const store: HistoryStore = reactive({
 
   views: 'history',
   selectOrders: [],
+
+  index: undefined,
 })
 
 const imgOrders = reactive<ImgOrderItem[]>([])

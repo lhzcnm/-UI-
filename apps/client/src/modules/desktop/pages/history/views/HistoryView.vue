@@ -17,6 +17,7 @@ import { form, formatOrderParams, HISTORY_STORE } from '../utils'
 import { getOrderColumns } from '../utils/columns'
 import { orderApi, type Order, type OrderExportParams, type OrderPrintParams } from '@/api/orders'
 import type { ImgOrderItem } from '../types'
+import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
 const store = inject(HISTORY_STORE)!
 
@@ -279,5 +280,6 @@ onUnmounted(() => {
     <ExportOrder />
     <ImgOrder :imgOrders="imgOrders" @close="handleClose" />
     <PrintDialog @confirm="submitPrint" />
+    <UnlockRecommendDialog />
   </div>
 </template>

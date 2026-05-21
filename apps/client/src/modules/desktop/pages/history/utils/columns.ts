@@ -56,13 +56,13 @@ export function getOrderColumns(): XColDef<Order> {
         return h('div', { innerHTML: value })
       }
     },
-    { key: 'createTime', title: t('order.listCol.creaTime'), width: 148, },
+    { key: 'createTime', title: t('order.listCol.creaTime'), width: 148, thClassName: 'text-center' },
     { key: 'remark', title: t('order.listCol.remark'), width: 168, },
     {
       key: 'action',
       title: t('action.operation'),
       fixed: 'right',
-      width: 200,
+      width: 128,
       render(_, row, index) {
         return h(TableActions, { row, index })
       }

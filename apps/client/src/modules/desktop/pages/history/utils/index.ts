@@ -14,9 +14,12 @@ export interface HistoryStore {
   visibleExport: boolean
   visibleOrderImg: boolean
   visiblePrint: boolean
+  visibleUnlockRecommend: boolean
 
   views: 'history' | 'print'
-  selectOrders: Order[]
+  selectOrders: Order[],
+
+  index: number | undefined,
 }
 
 type HistoryStoreKey = InjectionKey<HistoryStore>

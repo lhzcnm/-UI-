@@ -7,12 +7,14 @@ export const SUBMIT_STORE: IK<SubmitStore> = Symbol("submit")
 
 export interface SubmitStore {
   visibleHeaderFilter: boolean,
+  visibleUnlockRecommend: boolean,
 
   serviceCols: ServiceCols[],
   selectHeaders: string[],
   rawOrders: OrderTableView[],
-  
+
   selectId: number | undefined,
+  selectOrderId: number | undefined,
   page: number,
   limit: number,
   view: 'submit' | 'preview',

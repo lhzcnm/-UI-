@@ -1,8 +1,14 @@
+import UnlockRecommendAction from '../components/UnlockRecommendAction.vue'
+
 import type { OrderTableView } from '@/api/orders'
 
 import { ORDER_STATUS, ORDER_STATUS_MAP } from '@3un/utils'
 import { XTag, type XTableColumn } from '@3un/ui'
 import { h } from 'vue'
+
+import { getLanuagestring } from "@/utils/constant"
+
+const iStore = useSystemStore()
 
 export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
   return [
@@ -49,7 +55,21 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
         return h('span', { innerHTML: value })
       },
     },
-    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160, isColDel: true, isFilter: true }
+    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160, isColDel: true, isFilter: true },
+    {
+      key: 'recommends',
+      title: getLanuagestring("unlock_recommend_column", iStore.lang),
+      width: 238,
+      isColDel: true,
+      render(_, row: OrderTableView) {
+        if (!row.isStorage && (!row.recommends || row.recommends.length === 0 || row.status !== ORDER_STATUS.SUCCESS)) {
+          return getLanuagestring("no_unlock_recommend", iStore.lang)
+        }
+        return h(UnlockRecommendAction, {
+          order: row,
+        })
+      }
+    },
   ]
 }
 

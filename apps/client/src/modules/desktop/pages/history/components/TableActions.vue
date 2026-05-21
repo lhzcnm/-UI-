@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { XButton } from '@3un/ui'
+import { type XBtnSplitOptions } from '@3un/ui'
 
 import { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import { stripHtml } from '@3un/utils'
@@ -10,6 +10,7 @@ import { toast } from 'vue-sonner'
 import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
 import { HISTORY_STORE } from '../utils'
+import { getLanuagestring } from '@/utils/constant'
 
 interface TableActionProps {
   index: number
@@ -42,6 +43,7 @@ const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
 
 const iStore = useSettingStore()
+const systemStore = useSystemStore()
 
 const isUnlockService = computed(() => {
   const service = services.get(row.serviceId)
@@ -105,26 +107,38 @@ function handleCopy() {
   const items = row.result.split('<br>')
   copy(items.map(stripHtml).join('\n'))
 }
+
+async function getOrderDetail() {
+  const { data } = await orderApi.item(row.id)
+  store.orders.list[index] = {
+    ...store.orders.list[index],
+    recommends: data.recommends,
+  }
+}
+
+async function openUplockRecommend() {
+  await getOrderDetail()
+  if (row.recommends?.length === 0) {
+    toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
+    return
+  }
+
+  store.index = index
+  store.visibleUnlockRecommend = true
+}
+
+const btnSplits: XBtnSplitOptions = [
+  ...(isShowVerify.value ? [{ label: t('order.button.table.vertify'), command: handleVerify }] : []),
+  ...(status.isProcessing && !focreHide.value ? [{ label: t('button.fresh'), command: handleRefresh }] : []),
+  ...(!isUnlockService.value ? [{label: getLanuagestring('unlock_recommend_column', systemStore.lang), command: openUplockRecommend}] : [])
+]
 </script>
 
 <template>
-  <div class="space-x-1 pt-1">
-    <XButton
-      color="success" :label="t('order.button.table.copy')"
-      size="sm" @click="handleCopy"
-    />
-
-    <XButton
-      v-if="isShowVerify"
-      variant="outline" color="warning"
-      :label="t('order.button.table.vertify')" size="sm"
-      @click="handleVerify"
-    />
-
-    <XButton
-      v-if="status.isProcessing && !focreHide"
-      :label="t('button.fresh')" size="sm"
-      @click="handleRefresh"
-    />
-  </div>
+  <XButtonSplit
+    :options="btnSplits"
+    :label="t('order.button.table.copy')"
+    size="sm"
+    @click="handleCopy"
+  />
 </template>

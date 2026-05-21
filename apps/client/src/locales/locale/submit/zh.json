@@ -11,7 +11,7 @@
       "scan": "识别不到IMEI/SN",
       "file": "文件解析错误",
       "balance": "当前余额",
-      "refreshNone": "所有订单处理完成或订单提交失败",
+      "refreshNone": "所有订单处理完成或所有订单处理失败",
       "unit": "单价: {price}",
       "reseted": "请先提交订单",
       "importDisable": "请等待订单处理完成"
