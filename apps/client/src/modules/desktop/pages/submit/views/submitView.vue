@@ -906,7 +906,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-4 h-full w-full">
+  <div class="p-4 h-full">
     <section class="w-full flex items-center justify-between mb-3">
       <div class="flex items-center space-x-2">
         <SelectService v-model="store.selectId" ui-trigger="w-52" @selected="handleSelected" />
@@ -953,19 +953,19 @@ onMounted(() => {
       />
     </section>
 
-    <section class="w-full h-[calc(100%-3rem)]">
-      <XTable
-        ref="tableRef"
-        :data="orders"
-        :columns="columns"
-        row-key="id"
-        class="h-full max-w-full border"
-        selection
-        selected-key="index"
-        @select-change="indexes = $event"
-        @column-delete="handleDeleteHeader"
-      />
-    </section>
+    <!-- <section class="flex-1 flex "> -->
+    <XTable
+      ref="tableRef"
+      :data="orders"
+      :columns="columns"
+      row-key="id"
+      class="h-[calc(100%-3rem)] max-w-full border"
+      selection
+      selected-key="index"
+      @select-change="indexes = $event"
+      @column-delete="handleDeleteHeader"
+    />
+    <!-- </section> -->
 
     <TableColumnDialog @confirm="processHeaderConfirm" />
     <UnlockRecommendDialog />

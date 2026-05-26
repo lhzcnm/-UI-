@@ -55,7 +55,6 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
         return h('span', { innerHTML: value })
       },
     },
-    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160, isColDel: true, isFilter: true },
     {
       key: 'recommends',
       title: getLanuagestring("unlock_recommend_column", iStore.lang),
@@ -70,6 +69,7 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
         })
       }
     },
+    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160, isColDel: true, isFilter: true },
   ]
 }
 

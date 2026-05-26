@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import OrderVoucher from '@/components/shared/OrderVoucher.vue'
-import SearchOrder from '../components/SearchOrder.vue'
-import ExportOrder from '../components/ExportOrder.vue'
 import ImgOrder from '../components/ImgOrder.vue'
+import ExportOrder from '../components/ExportOrder.vue'
+import SearchOrder from '../components/SearchOrder.vue'
 import PrintDialog from '../components/PrintDialog.vue'
+import OrderVoucher from '@/components/shared/OrderVoucher.vue'
 import OrderExportImgZh from '@/components/shared/OrderExportImgZh.vue'
 import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
@@ -12,6 +12,7 @@ import { toast } from 'vue-sonner'
 import { useClipboard } from '@vueuse/core'
 import { downloadURL, ORDER_STATUS } from '@3un/utils'
 import * as html2image from 'html-to-image'
+import type { XTableExpose } from '@3un/ui'
 import { h, render } from 'vue'
 
 import { form, formatOrderParams, HISTORY_STORE } from '../utils'
@@ -32,11 +33,14 @@ const loading = ref(false)
 
 const imgOrders = reactive<ImgOrderItem[]>([])
 
+const tableRef = ref<XTableExpose | null>(null)
+
 const columns = getOrderColumns()
 
 watch(
   [page, limit],
   async ([pageVal, pageSizeVal]) => {
+    tableRef.value?.scrollToTop()
     loading.value = true
 
     const params = formatOrderParams(store.searchForm)
@@ -267,6 +271,7 @@ onUnmounted(() => {
     </section>
 
     <XTable
+      ref="tableRef"
       :data="store.orders.list"
       :columns="columns"
       :loading="loading"

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { type XBtnSplitOptions } from '@3un/ui'
-
 import { ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import { stripHtml } from '@3un/utils'
 import { ref } from 'vue'
@@ -130,19 +128,40 @@ async function openUplockRecommend() {
   store.index = index
   store.visibleUnlockRecommend = true
 }
-
-const btnSplits: XBtnSplitOptions = [
-  ...(isShowVerify.value ? [{ label: t('order.button.table.vertify'), command: handleVerify }] : []),
-  ...(status.isProcessing && !focreHide.value ? [{ label: t('button.fresh'), command: handleRefresh }] : []),
-  ...(!isUnlockService.value ? [{ label: getLanuagestring('unlock_recommend_column', systemStore.lang), command: openUplockRecommend }] : [])
-]
 </script>
 
 <template>
-  <XButtonSplit
-    :options="btnSplits"
-    :label="t('order.button.table.copy')"
-    size="sm"
-    @click="handleCopy"
-  />
+  <div class="flex flex-wrap gap-2">
+    <XButton
+      :label="t('order.button.table.copy')"
+      size="sm"
+      class="flex-1 min-w-[120px]"
+      @click="handleCopy"
+    />
+
+    <XButton
+      v-if="isShowVerify"
+      :label="t('order.button.table.vertify')"
+      size="sm"
+      color="warning"
+      class="flex-1 min-w-[120px]"
+      @click="handleVerify"
+    />
+
+    <XButton
+      v-if="status.isProcessing"
+      :label="t('button.fresh')"
+      size="sm"
+      class="flex-1 min-w-[120px]"
+      @click="handleRefresh"
+    />
+
+    <XButton
+      v-if="!isUnlockService && status.isSuccess"
+      :label="getLanuagestring('unlock_recommend_column', systemStore.lang)"
+      size="sm"
+      class="w-full"
+      @click="openUplockRecommend"
+    />
+  </div>
 </template>

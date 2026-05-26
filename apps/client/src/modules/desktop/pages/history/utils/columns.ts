@@ -62,7 +62,7 @@ export function getOrderColumns(): XColDef<Order> {
       key: 'action',
       title: t('action.operation'),
       fixed: 'right',
-      width: 128,
+      width: 138,
       render(_, row, index) {
         return h(TableActions, { row, index })
       }
