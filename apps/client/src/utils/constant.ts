@@ -225,7 +225,7 @@ const customLanguageMap: LanguageMap = {
     en: "Instructions",
   },
   funtion_tools: {
-    zh: "功能选择",
+    zh: "功能",
     en: "Actions"
   },
   print_commonly_used_service: {

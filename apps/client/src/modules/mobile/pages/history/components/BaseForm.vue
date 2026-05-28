@@ -82,6 +82,8 @@ function handleFileInput() {
 <template>
   <div class="space-y-3">
     <div class="space-y-1">
+      
+
       <label class="inline-block mb-1 text-sm text-label">{{ t('service.select') }}: </label>
       <div class="flex items-center space-x-2">
         <XNativeSelect v-model="groupId" :default="-1" :options="[...serviceStore.details]" @change="form.serviceId = 0"

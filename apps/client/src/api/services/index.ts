@@ -7,7 +7,15 @@ export const serviceApi: ServiceApi = {
   item: (id) => http.get(`service/item/${id}`),
   header: (id) => http.get(`service/field/${id}`),
   setThread: (threadNumber) => http.post(`order/updateThreadNumber/${threadNumber}`),
-  favorite: (id?) => http.get(`service/collection`,{ params: { serviceId: id } }),
+  favorite: (id?) => http.get(`service/collection`, { params: { serviceId: id } }),
   getTemplate: (id) => http.get(`service/get/${id}`),
-  getQuoteImage: () => http.get('/config/quotation')
+  getQuoteImage: () => http.get('/config/quotation'),
+
+  // 导入文件识别imei 和 sn
+  importFile: (formData: FormData) => {
+    return http.post('order/import', formData, {
+      headers: {
+      }
+    })
+  }
 }

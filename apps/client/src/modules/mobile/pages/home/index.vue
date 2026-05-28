@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ServiceDetail } from '@/api/services'
+import { serviceApi, type ServiceDetail } from '@/api/services'
 import PickService from './components/PickService.vue'
 
 import { twJoin } from 'tailwind-merge'
@@ -96,6 +96,20 @@ function handleServiceItemClick(event: MouseEvent) {
   router.push(`/m/submit/${id}`)
 }
 
+const favoriteIds= ref<number[]>()
+
+async function favoriteClick(serviceId: number | undefined) {
+  try {
+    const res = await serviceApi.favorite(serviceId)
+    favoriteIds.value = res.data
+    console.log(favoriteIds.value)
+  } catch {
+  }
+}
+
+onBeforeMount(() =>{
+  favoriteClick(undefined)
+})
 
 </script>
 
@@ -113,7 +127,7 @@ function handleServiceItemClick(event: MouseEvent) {
       <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
 
       <div class="space-y-2" @click="handleServiceItemClick">
-        <ServiceItemCard v-for="item in commonList" :key="item.id" :data="item" :data-id="item.id" />
+        <ServiceItemCard :favorite-ids="favoriteIds!" v-for="item in commonList"  :key="item.id" :data="item" :data-id="item.id" />
       </div>
     </section>
 

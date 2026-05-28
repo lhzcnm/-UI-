@@ -5,27 +5,30 @@ import { orderApi } from '@/api/orders'
 import { downloadURL } from '@3un/utils'
 // import { toast } from 'vue-sonner'
 import { serviceApi } from '@/api/services'
+import { toast } from 'vue-sonner'
 
 const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
 const headers = ref<string[]>([])
+const fileName = ref<string | undefined>()
 
 const { t, locale } = useI18n()
 
 async function handleSubmit() {
-  // if (!store.exportForm.serviceId) {
-  //   return toast.warning(t('prompt.serviceNull'))
-  // }
+  if (!store.exportForm.serviceId) {
+    return toast.warning(t('prompt.serviceNull'))
+  }
 
   submitLoading.value = true
   await getServiceHeader(store.exportForm.serviceId)
-  const params = formatOrderParams({...store.exportForm})
+  const params = formatOrderParams({ ...store.exportForm })
 
   try {
     const { data } = await orderApi.export({
       serviceId: store.exportForm.serviceId,
       ...params,
       excelHead: headers.value,
+      fileName: fileName.value
     })
     downloadURL(data)
     store.visibleExport = false
@@ -45,14 +48,18 @@ async function getServiceHeader(id: number) {
 </script>
 
 <template>
-  <TheModal
-    v-model="store.visibleExport"
-    :title="t('order.title.export')" class="h-[78%]"
-    @close="handleClose"
-  >
+  <TheModal v-model="store.visibleExport" :title="t('order.title.export')" class="h-[78%]" @close="handleClose">
+    
+    <section class="flex justify-center items-center px-4">
+      <label class="inline-block mb-1 text-sm text-label w-24">{{ t('order.exportFileName') }}:</label>
+
+      <XInput v-model="fileName" class="flex-1" :placeholder="t('order.enterExportFileName')" />
+    </section>
+
     <BaseForm v-model="store.exportForm" class="px-4" />
     <div class="flex justify-end p-4">
-      <XButton color="success" :loading="submitLoading" @click="handleSubmit">{{ t('order.button.mobile.export') }}</XButton>
+      <XButton color="success" :loading="submitLoading" @click="handleSubmit">{{ t('order.button.mobile.export') }}
+      </XButton>
     </div>
   </TheModal>
 </template>

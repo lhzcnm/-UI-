@@ -1,5 +1,13 @@
 {
   "query": {
+    "mixedDataWarning": "Mixed data detected, please select the data to import",
+    "fileImportDataSelection": "File Import Data Selection",
+    "submitOrder": "Submit Order",
+    "favorite": {
+      "favorite": "Favorite",
+      "favorited": "Favorited",
+      "favoriteService": "Favorite Service"
+    },
     "prompt": {
       "repeat": "Do not submit repeatedly",
       "serviveNull": "Please select a service first",
@@ -62,7 +70,7 @@
         "filter": "Field Filter",
         "reset": {
           "cover": {
-            "success": "Reset successful", 
+            "success": "Reset successful",
             "failed": "Reset failed"
           },
           "noCover": {

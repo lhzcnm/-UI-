@@ -9,6 +9,12 @@ export interface ServiceApi {
   favorite: (serviceId?: number) => R<number[]>
   getTemplate: (serviceId: number) => R<string>
   getQuoteImage: () => R<any>
+  importFile: (params: FormData) => R<fileDataType>
+}
+
+export interface fileDataType{
+  success: boolean
+  collected: string[]
 }
 
 export interface ServiceDetail {
