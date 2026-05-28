@@ -9,12 +9,12 @@ import OrderExportImgEn from '@/components/shared/OrderExportImgEn.vue'
 import { twJoin } from 'tailwind-merge'
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form, formatOrderParams } from './utils'
-import { orderApi, type Order, type OrderExportParams } from '@/api/orders'
+import { orderApi, type Order } from '@/api/orders'
 import type { ImgOrderItem } from './types'
 import * as html2Image from 'html-to-image'
 import { h, render } from 'vue'
 import { toast } from 'vue-sonner'
-import { downloadURL } from '@3un/utils'
+// import { downloadURL } from '@3un/utils'
 
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
@@ -110,29 +110,29 @@ function handleClose() {
   URL.revokeObjectURL(imgOrder.img)
 }
 
-function openExport() {
-  const firstOrder = store.orders.list[0]
-  if (isSameService(firstOrder)) {
-    handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
-    return
-  }
-  store.visibleExport = true
-}
+// function openExport() {
+//   const firstOrder = store.orders.list[0]
+//   if (isSameService(firstOrder)) {
+//     handleExport(firstOrder.serviceId, store.orders.list.map(o => o.id.toString()))
+//     return
+//   }
+//   store.visibleExport = true
+// }
 
-function handleExport(serviceId: number, orderIds: string[]) {
-  const params: OrderExportParams = {
-    serviceId: serviceId,
-    orderIdList: orderIds,
-  }
-  orderApi.export(params).then(({ data }) => {
-    downloadURL(data)
-  })
-}
+// function handleExport(serviceId: number, orderIds: string[]) {
+//   const params: OrderExportParams = {
+//     serviceId: serviceId,
+//     orderIdList: orderIds,
+//   }
+//   orderApi.export(params).then(({ data }) => {
+//     downloadURL(data)
+//   })
+// }
 
-function isSameService(firstOrder: Order) {
-  if (store.orders.total === 0) return false
-  return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
-}
+// function isSameService(firstOrder: Order) {
+//   if (store.orders.total === 0) return false
+//   return store.orders.list.every(o => o.serviceId === firstOrder.serviceId)
+// }
 
 function handleRefresh(order: Order, respOrder: Order) {
   const index = store.orders.list.findIndex(o => o.id === order.id)
@@ -161,7 +161,7 @@ onUnmounted(() => {
       <div class="space-x-2">
         <ButtonGroup
           :layouts="['filter', 'export']"
-          @filter="store.visibleSearch = true" @export="openExport"
+          @filter="store.visibleSearch = true" @export="store.visibleExport = true"
         />
       </div>
 

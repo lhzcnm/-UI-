@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ServiceDetail, ServiceView } from '@/api/services'
+import { serviceApi, type ServiceDetail, type ServiceView } from '@/api/services'
 
 interface ServiceGroupVaulProps {
   group: ServiceDetail
@@ -53,6 +53,21 @@ function handleClick(event: MouseEvent) {
 
   router.push(`/m/submit/${id}`)
 }
+
+
+const favoriteIds= ref<number[]>()
+
+async function favoriteClick(serviceId: number | undefined) {
+  try {
+    const res = await serviceApi.favorite(serviceId)
+    favoriteIds.value = res.data
+  } catch {
+  }
+}
+
+onMounted(() =>{
+  favoriteClick(undefined)
+})
 </script>
 
 <template>
@@ -66,6 +81,7 @@ function handleClick(event: MouseEvent) {
         v-for="item in filteredChildren"
         :key="item.id" :data="item"
         :data-id="item.id"
+        :favorite-ids="favoriteIds!"
       />
     </div>
   </TheModal>

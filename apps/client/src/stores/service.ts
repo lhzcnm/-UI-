@@ -5,6 +5,8 @@ import { serviceApi } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
 
 export const useServiceStore = defineStore('serviceStore', () => {
+  /** 文件导入数据弹窗数据类型选择 */
+  const importFile = ref<File>()
   const details = shallowRef<ServiceDetail[]>([])
   const services = shallowRef<Map<number, Service>>(new Map())
 
@@ -46,6 +48,7 @@ export const useServiceStore = defineStore('serviceStore', () => {
   }
 
   return {
+    importFile,
     services,
     details,
     getServices,

@@ -5,22 +5,24 @@ import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 import { twJoin } from 'tailwind-merge'
 import dayjs from 'dayjs'
-import * as XLSX from 'xlsx'
+
 
 import type { SubmitStore } from './utils'
 import { serviceApi, type Service } from '@/api/services'
 import type { Order, OrderSubmitResult } from '@/api/orders'
 
-import { ua, IMEIValidator, xconfirm } from '@3un/utils'
+import { ua, IMEIValidator, xconfirm, createFormData } from '@3un/utils'
 import { getSubmitImei, base64ToFile } from '@/utils'
 import { IMEI_TYPE, ORDER_STATUS, ORDER_VERIFY } from '@3un/utils'
 import type { XNativeSelectValue } from '@3un/ui'
 
-import { SUBMIT_STORE } from './utils'
+import { findNodes, SUBMIT_STORE } from './utils'
 import { orderApi } from '@/api/orders'
 import { wxApi } from '@/api/wx'
 import type { AxiosResponse } from 'axios'
 import OrderHistoryModal from './components/OrderHistoryModal.vue'
+import ServiceItemCard from './components/ServiceItemCard.vue'
+import ExportDialog from './components/ExportDialog.vue'
 
 interface TheProps {
   id: string
@@ -32,8 +34,13 @@ const props = defineProps<TheProps>()
 const serviceStore = useServiceStore()
 await serviceStore.getServices()
 
+const importDialog = ref<boolean>(false)
+
 const { connect, close } = useWsStore()
 const uStore = useUserStore()
+const favoriteData = ref<any[]>([])
+const favoriteIds = ref<number[]>([])
+const storeService = useServiceStore()
 
 const { t, locale } = useI18n()
 
@@ -87,7 +94,7 @@ const validImeiList = computed(() => handleImei(form.imei))
 const fileInputRef = useTemplateRef('fileInputRef')
 
 const usefulCount = computed(() => {
-  if(!store.service) return
+  if (!store.service) return
   return Math.floor(+uStore.info.credits / store.service.price)
 })
 
@@ -125,31 +132,105 @@ async function handleServiceCols(value: number) {
   store.serviceHeader = data.map(item => (locale.value === 'zh' ? item.name : item.nameEn ? item.nameEn : item.name))
 }
 
+// 原前端上传文件IMEI/SN处理逻辑
+// async function handleFileChange(event: Event) {
+//   if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+
+//   const file = (event.target as HTMLInputElement).files![0]
+//   const extension = file.name.split('.').pop()!.toLowerCase()
+//   let text = ''
+
+//   try {
+//     if (['txt', 'csv'].includes(extension)) {
+//       text = await file.text()
+//     }
+//     else if (['xlsx', 'xls'].includes(extension)) {
+//       const buffer = await file.arrayBuffer()
+//       const workbook = XLSX.read(buffer)
+//       const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+//       const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 })
+//       text = data.flat().filter(Boolean).join('\n')
+//     }
+
+//     const trimed = form.imei.trim()
+//     const imeiList = handleImei(text).join('\n')
+//     form.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
+//   } catch (error) {
+//     console.error('[File parse error]', error)
+//     toast.error(t('query.prompt.file'))
+//   }
+// }
+
+// 上传文件 后端处理IMEI/SN逻辑
 async function handleFileChange(event: Event) {
   if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
 
-  const file = (event.target as HTMLInputElement).files![0]
-  const extension = file.name.split('.').pop()!.toLowerCase()
-  let text = ''
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  // 验证文件类型
+  const extension = file.name.split('.').pop()?.toLowerCase()
+  const validExtensions = ['txt', 'csv', 'xlsx', 'xls']
+  if (!extension || !validExtensions.includes(extension)) {
+    toast.warning('不支持的文件格式，请上传 txt、csv、xlsx 或 xls 文件')
+    return
+  }
+
+  // 验证文件大小
+  if (file.size > 50 * 1024 * 1024) {
+    toast.warning('文件过大，请上传小于50MB的文件')
+    return
+  }
 
   try {
-    if (['txt', 'csv'].includes(extension)) {
-      text = await file.text()
-    }
-    else if (['xlsx', 'xls'].includes(extension)) {
-      const buffer = await file.arrayBuffer()
-      const workbook = XLSX.read(buffer)
-      const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-      const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 })
-      text = data.flat().filter(Boolean).join('\n')
+    // 创建 FormData
+    const formData = createFormData({
+      file: file,
+    })
+    serviceStore.importFile = file
+    const res = await serviceApi.importFile(formData)
+
+    if (res.data.success) {
+      form.imei = res.data.collected.join('\n')
+    } else {
+      importDialog.value = true
     }
 
-    const trimed = form.imei.trim()
-    const imeiList = handleImei(text).join('\n')
-    form.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
+    toast.success('文件上传成功')
   } catch (error) {
-    console.error('[File parse error]', error)
-    toast.error(t('query.prompt.file'))
+    toast.error('文件上传失败')
+  } finally {
+    // 清空 input
+    (event.target as HTMLInputElement).value = ''
+  }
+}
+
+// 上传文件同时包含IMEI和sn, 提示框提交逻辑
+async function handSubmit(mode: number) {
+  try {
+    if (!serviceStore.importFile) {
+      toast.warning('请先选择文件')
+      return
+    }
+
+    const formData = createFormData({
+      file: serviceStore.importFile,
+      type: mode
+    })
+
+    const res = await serviceApi.importFile(formData)
+
+    // 验证返回数据
+    if (res.data?.collected && Array.isArray(res.data.collected)) {
+      form.imei = res.data.collected.join('\n')
+      importDialog.value = false
+    } else {
+      toast.warning('未检测到有效数据')
+    }
+
+  } catch (error) {
+    console.error('导入失败:', error)
+    toast.error('文件导入失败，请重试')
   }
 }
 
@@ -196,7 +277,7 @@ function handlePhoto() {
         })
 
         response.catch((err) => {
-          if(err.code === "ECONNABORTED") {
+          if (err.code === "ECONNABORTED") {
             return toast.error(t('request.timeout'))
           }
           return toast.error(t('request.error'))
@@ -231,7 +312,7 @@ function handlePickImage() {
           const response = await wxApi.ocr(formData)
           return response.data
         } catch (err: AxiosResponse | any) {
-          if(err.code === "ECONNABORTED") {
+          if (err.code === "ECONNABORTED") {
             return toast.error(t('request.timeout'))
           }
           return toast.error(t('request.error'))
@@ -262,7 +343,7 @@ function getImageData(localId: string) {
       fail: (res) => reject(res.errMsg),
       success: ({ localData }) => {
         let base64 = localData
-        
+
         // 在 iOS 上，需要去掉 data:image/jpeg;base64, 前缀
         if (ua.os === 'iOS') {
           base64 = base64.replace(/^data:image\/\w+;base64,/, '')
@@ -278,6 +359,8 @@ function handleServiceChange(value: XNativeSelectValue) {
   store.service = serviceStore.services.get(+value!)
   store.serviceId = +value!
   store.rawOrders = []
+  form.groupId = findNodes(storeService.details, { mode: 'parent', targetId: +value! }) as any
+  form.serviceId = store.serviceId
   store.count = 0
   handleServiceCols(+value!)
 
@@ -349,12 +432,11 @@ function submitOrder(service: Service) {
     const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : t('query.title.mobile.success')}`)
 
     if (service.isUnlock) {
-      // toast.success(`${t('submit.success', { action: t('action.submit') })}, ${t('query.viewRes')}`)
       xconfirm({
         title: t('query.title.mobile.result'),
         text: errorOrders.join('<br>'),
       })
-      
+
       return
     }
 
@@ -431,166 +513,174 @@ async function handleCount() {
 
 function handlePushMsgChange(value: boolean) {
   if (value) return
-  
+
   const confirm = window.confirm(t('query.prompt.pushRes'))
   if (!confirm) form.pushMsg = true
 }
 
 function handleOpenOrder() {
-  if (!form.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+  if (store.serviceId == 0) return toast.warning(t('query.prompt.serviveNull'))
 
   store.visibleHistory = true
 }
 
-onBeforeMount(() => {})
+onBeforeMount(() => { })
+
+
+
+async function favoriteClick(serviceId: number | undefined) {
+  try {
+    const res = await serviceApi.favorite(serviceId)
+    favoriteIds.value = res.data
+    favoriteData.value = findNodes(storeService.details, { mode: 'children', targetIds: res.data }) as any
+  } catch {
+  }
+}
+
+onMounted(() => {
+  favoriteClick(undefined)
+})
 </script>
 
 <template>
-  <div class="p-4 m-3 space-y-4 bg-card rounded-lg">
-    <div>
-      <div class="flex items-center justify-between mb-2">
-        <h2 class="font-medium">{{ t('service.select') }}</h2>
-        <RouterLink
-          v-if="form.serviceId"
-          :to="`/service/${form.serviceId}`"
-          class="flex items-center text-sm text-muted-foreground"
-        >
-          {{ t('query.service') }}
-          <Icon icon="lucide:chevron-right" />
-        </RouterLink>
+  <div class="w-full h-full">
+    <!-- 收藏服务 -->
+    <div v-if="favoriteData.length > 0" class="flex flex-col m-2 max-h-56 bg-card rounded-lg">
+      <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
+        收藏服务
       </div>
-      <div class="space-y-2">
-        <XNativeSelect
-          v-model="form.groupId"
-          :default="-1"
-          :options="[...serviceStore.details]"
-          @change="form.serviceId = 0"
-          :placeholder="t('serviceGroup.placeholder')"
-          label-key="title"
-          value-key="id"
-          class="w-full"
-        />
-        <XNativeSelect
-          v-model="form.serviceId"
-          :default="0"
-          :options="options"
-          :disabled="form.groupId === -1"
-          @change="handleServiceChange"
-          :placeholder="t('service.placeholder')"
-          label-key="title"
-          value-key="id"
-          class="w-full"
-        />
-      </div>
+
+      <section class="flex-1 overflow-auto">
+        <ServiceItemCard @click="handleServiceChange(item.id)" v-for="item in favoriteData" :key="item.id" :data="item"
+          :data-id="item.id" @update-service="favoriteClick(undefined)" />
+      </section>
     </div>
 
-    <div>
-      <div class="flex items-center justify-between mb-2">
-        <h2 class="font-medium">IMEI/SN</h2>
-        <div class="flex items-center space-x-2">
-          <template v-if="textBtnModes.includes(mode)">
-            <button 
-              :class="twJoin(
-                'flex items-center justify-center',
-                'text-muted-foreground rounded-full',
-                'h-8 text-sm bg-muted'
-              )"
-              @click="handleFileInput"
-            >
-              <span>{{ t('button.import') }}</span>
-            </button>
-          </template>
-          <template v-else>
-            <button 
-              :class="twJoin(
+    <section class="m-2 bg-card rounded-lg">
+      <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
+        提交订单
+      </div>
+
+      <div class="p-2 space-y-4">
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-medium">{{ t('service.select') }}</h2>
+            <RouterLink v-if="form.serviceId" :to="`/service/${form.serviceId}`"
+              class="flex items-center text-sm text-muted-foreground">
+              {{ t('query.service') }}
+              <Icon icon="lucide:chevron-right" />
+            </RouterLink>
+          </div>
+          <div class="flex space-x-2">
+            <XNativeSelect v-model="form.groupId" :default="-1" :options="[...serviceStore.details]"
+              @change="form.serviceId = 0" :placeholder="t('serviceGroup.placeholder')" label-key="title" value-key="id"
+              class="w-full" />
+            <XNativeSelect v-model="form.serviceId" :default="0" :options="options" :disabled="form.groupId === -1"
+              @change="handleServiceChange" :placeholder="t('service.placeholder')" label-key="title" value-key="id"
+              class="w-full" />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-medium">IMEI/SN</h2>
+            <div class="flex items-center space-x-2">
+              <template v-if="textBtnModes.includes(mode)">
+                <button :class="twJoin(
+                  'flex items-center justify-center',
+                  'text-muted-foreground rounded-full',
+                  'h-8 text-sm bg-muted'
+                )" @click="handleFileInput">
+                  <span>{{ t('button.import') }}</span>
+                </button>
+              </template>
+
+              <!-- 导入文件 -->
+              <template v-else>
+                <button :class="twJoin(
+                  'flex items-center justify-center size-8',
+                  'bg-muted text-muted-foreground rounded-full',
+                )" @click="handleFileInput">
+                  <Icon icon="lucide:file-input" />
+                </button>
+              </template>
+
+              <button v-if="ua.isWechat" :class="twJoin(
                 'flex items-center justify-center size-8',
                 'bg-muted text-muted-foreground rounded-full',
-              )"
-              @click="handleFileInput"
-            >
-              <Icon icon="lucide:file-input" />
-            </button>
-          </template>
+              )" @click="handleScan">
+                <Icon icon="lucide:scan-line" />
+              </button>
 
-          <button
-            v-if="ua.isWechat"
-            :class="twJoin(
-              'flex items-center justify-center size-8',
-              'bg-muted text-muted-foreground rounded-full',
-            )"
-            @click="handleScan"
-          >
-            <Icon icon="lucide:scan-line" />
-          </button>
+              <button v-if="form.serviceId !== 0" :class="twJoin(
+                'flex items-center justify-center size-8',
+                'bg-muted text-muted-foreground rounded-full',
+              )" @click="favoriteClick(form.serviceId)">
+                <Icon :icon="favoriteIds.includes(form.serviceId) ? 'tabler:star-filled' : 'tabler:star'"
+                  :class="favoriteIds?.includes(form.serviceId) ? 'text-yellow-500' : 'text-gray-400'" />
+
+              </button>
+
+            </div>
+          </div>
+
+          <div class="relative mb-2">
+            <div class="flex justify-between space-x-2">
+              <XTextarea v-model="form.imei" rows="5" :placeholder="t('query.imei.placeholder')" />
+
+              <div v-if="ua.isWechat" class="flex flex-col justify-between py-1">
+                <XButton variant="outline" size="sm" icon="gridicons:aside" :label="t('query.title.history')" :loading="submitLoading"
+                  @click="handleOpenOrder">
+                </XButton>
+
+                <XButton variant="outline" size="sm" :label="t('query.button.mobile.image')" color="success"
+                  icon="lucide:image-up" @click="handlePickImage" />
+
+                <XButton variant="outline" size="sm" :label="t('query.button.mobile.camera')" icon="lucide:camera"
+                  @click="handlePhoto" />
+              </div>
+            </div>
+
+            <div class="flex flex-col">
+              <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', {
+                price:
+                  unitPrice
+              })
+              }}</span>
+              <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{
+                uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+            </div>
+            <!-- <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
+            <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
+              <Icon icon="svg-spinners:270-ring" class="text-primary" />
+            </div>
+          </div>
+
+          <input ref="fileInputRef" type="file" hidden accept=".xlsx,.xls,.csv,.txt" @change="handleFileChange" />
+
+
         </div>
-      </div>
 
-      <div class="relative mb-2">
-        <XTextarea
-          v-model="form.imei" rows="5"
-          :placeholder="t('query.imei.placeholder')"
-        />
+        <div>
+          <h2 class="font-medium mb-2">{{ t('query.info.additional') }}</h2>
+          <XTextarea v-model="form.remark" :placeholder="t('remark.placeholder')" class="mb-3" />
 
-        <div class="flex flex-col">
-          <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', { price: unitPrice }) }}</span>
-          <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+          <XSwitch v-model="form.pushMsg" :label="t('query.button.mobile.pushRes')" @change="handlePushMsgChange" />
         </div>
-        <!-- <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
-        <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
-          <Icon icon="svg-spinners:270-ring" class="text-primary" />
-        </div>
+
+        <XButton class="w-full" :label="t('button.submit')" :loading="submitLoading" @click="handleSubmit" />
+
+        <OrderResultModal />
+        <OrderHistoryModal :service-id="store.serviceId" />
       </div>
+    </section>
 
-      <input
-        ref="fileInputRef"
-        type="file" hidden
-        accept=".xlsx,.xls,.csv,.txt" 
-        @change="handleFileChange"
-      />
 
-      <div v-if="ua.isWechat" class="flex items-center justify-between space-x-2">
-        <XButton
-          class="w-full" :label="t('query.button.mobile.image')"
-          color="success" icon="lucide:image-up" @click="handlePickImage"
-        />
-        <XButton
-          class="w-full" :label="t('query.button.mobile.camera')"
-          icon="lucide:camera" @click="handlePhoto"
-        />
-      </div>
-    </div>
-
-    <div>
-      <h2 class="font-medium mb-2">{{ t('query.info.additional') }}</h2>
-      <XTextarea 
-        v-model="form.remark"
-        :placeholder="t('remark.placeholder')"
-        class="mb-3"
-      />
-
-      <XSwitch
-        v-model="form.pushMsg"
-        :label="t('query.button.mobile.pushRes')"
-        @change="handlePushMsgChange"
-      />
-    </div>
-
-    <div class="flex space-x-2">
-      <XButton
-        class="flex-1"
-        :label="t('query.title.history')"
-        :loading="submitLoading"
-        @click="handleOpenOrder"
-      ></XButton>
-      <XButton
-        class="flex-1"
-        :label="t('button.submit')"
-        :loading="submitLoading"
-        @click="handleSubmit"
-      />
-    </div>
-
-    <OrderResultModal />
-    <OrderHistoryModal :service-id="form.serviceId" />
+    <XDialog v-model="importDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]" ui-header="pt-4 px-2 "
+      title="文件导入数据选择" draggable>
+      <ExportDialog @update-mode="handSubmit" />
+    </XDialog>
   </div>
+
 </template>

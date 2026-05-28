@@ -1,17 +1,43 @@
 <script setup lang="ts">
-import type { ServiceView } from '@/api/services'
+import { serviceApi, type ServiceView } from '@/api/services'
 import { twJoin } from 'tailwind-merge'
 
-const { data } = defineProps<{ data: ServiceView }>()
+interface ServuceItemCardEmits {
+  updateService: []
+}
+interface ServuceItemCardProps {
+  data: ServiceView
+  favoriteIds?: number[]
+}
+
+const { data, favoriteIds } = defineProps<ServuceItemCardProps>()
+
+const emits = defineEmits<ServuceItemCardEmits>()
+
+const favoriteBool = ref<boolean>(true)
 
 const { t } = useI18n()
+
+async function favoriteClick(serviceId: number | undefined) {
+  try {
+    const res = await serviceApi.favorite(serviceId)
+    favoriteBool.value = res.data.includes(data.id)
+    emits('updateService')
+  } catch {
+  }
+}
+
+onMounted(() => {
+  if(!favoriteIds) return 
+  favoriteBool.value = favoriteIds.includes(data.id)
+})
 </script>
 
 <template>
   <a
     href="javascript:void(0)"
     :class="twJoin(
-      'block p-3 bg-card',
+      'block p-3 bg-card space-y-1',
       'hover:border-primary hover:bg-border/60',
       'border border-border rounded-lg transition-colors')"
   >
@@ -28,6 +54,11 @@ const { t } = useI18n()
         <XTag color="success" class="ml-1">{{ data.taken }}</XTag>
       </div>
     </div>
-    <div class="text-sm text-muted-foreground mt-1 text-ellipsis overflow-hidden" v-html="data.title" />
+    
+    <div class="flex justify-between">
+      <div class="text-sm text-muted-foreground mt-1 text-ellipsis overflow-hidden" v-html="data.title" />
+
+      <XButton @click.stop="favoriteClick(data.id)" variant="outline" size="sm">{{ favoriteBool? '已收藏' : '收藏' }}</XButton>
+    </div>
   </a>
 </template>

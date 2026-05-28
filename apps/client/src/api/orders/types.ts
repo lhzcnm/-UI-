@@ -101,6 +101,7 @@ export interface OrderExportParams {
   startTime?: string
   endTime?: string
   excelHead?: string[]
+  fileName?: string
 }
 export interface OrderExportForm {
   serviceId: number
