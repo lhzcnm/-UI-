@@ -2,15 +2,17 @@
 import { Icon } from '@iconify/vue'
 
 import { type OrderSearchForm } from '@/api/orders'
-import { ORDER_STATUS } from '@3un/utils'
+import { IMEI_TYPE, IMEIValidator, ORDER_STATUS } from '@3un/utils'
 import { twJoin } from 'tailwind-merge'
 import { toast } from 'vue-sonner'
 import * as XLSX from 'xlsx'
+import { getSubmitImei } from '@/utils'
 
 interface OrderSearchModalEmits {
   filter: [params: OrderSearchForm]
 }
 
+const serviceStore = useServiceStore()
 const { t } = useI18n()
 
 const emits = defineEmits<OrderSearchModalEmits>()
@@ -82,12 +84,30 @@ async function handleFileChange(event: Event) {
     }
 
     const trimed = form.value.imei.trim()
-    const imeiList = text
+    const imeiList = handleImei(text).join('\n')
     form.value.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
   } catch (error) {
     console.error('[File parse error]', error)
     toast.error(t('query.prompt.file'))
   }
+}
+
+function handleImei(text = '') {
+  const service = serviceStore.services.get(form.value.serviceId)
+  const imeiType = service ? service.imeiType : IMEI_TYPE.NONE
+  // const service = serviceStore.services.get(form.serviceId)
+
+  let validList: string[] = []
+  if (service) {
+    validList = getSubmitImei(text, imeiType, service.domesticSerialType)
+  }
+
+  // 防止 IMEI 和 SN 混用时识别为空
+  if (validList.length === 0 && imeiType !== IMEI_TYPE.SN) {
+    validList = IMEIValidator.findAllImeis(text)
+  }
+
+  return validList
 }
 </script>
 
