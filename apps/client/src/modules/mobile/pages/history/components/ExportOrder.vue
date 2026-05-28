@@ -51,9 +51,9 @@ async function getServiceHeader(id: number) {
   <TheModal v-model="store.visibleExport" :title="t('order.title.export')" class="h-[78%]" @close="handleClose">
     
     <section class="flex justify-center items-center px-4">
-      <label class="inline-block mb-1 text-sm text-label w-24">导出文件名:</label>
+      <label class="inline-block mb-1 text-sm text-label w-24">{{ t('order.exportFileName') }}:</label>
 
-      <XInput v-model="fileName" class="flex-1" placeholder="请输入导出文件的名称" />
+      <XInput v-model="fileName" class="flex-1" :placeholder="t('order.enterExportFileName')" />
     </section>
 
     <BaseForm v-model="store.exportForm" class="px-4" />

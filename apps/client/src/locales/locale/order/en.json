@@ -1,5 +1,7 @@
 {
   "order": {
+    "exportFileName": "Export File Name",
+    "enterExportFileName": "Please enter the export file name",
     "button": {
       "print": "Print Result",
       "generate": "Generate Image",

@@ -1,5 +1,7 @@
 {
   "order": {
+    "enterExportFileName": "请输入导出文件的名称",
+    "exportFileName": "导出文件名",
     "button": {
       "print": "打印结果",
       "generate": "生成图片",

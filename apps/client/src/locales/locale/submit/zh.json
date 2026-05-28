@@ -1,5 +1,13 @@
 {
   "query": {
+    "mixedDataWarning": "检测到混合数据，请选择需要导入的数据",
+    "fileImportDataSelection": "文件导入数据选择",
+    "submitOrder": "提交订单",
+    "favorite":{
+      "favorite": "收藏",
+      "favorited": "已收藏",
+      "favoriteService":"收藏服务"
+    },
     "prompt": {
       "repeat": "请勿重复提交",
       "serviveNull": "请先选择服务",
@@ -10,7 +18,7 @@
       "pushRes": "确认不接收公众号推送结果吗?\n订单量较大时,建议关闭",
       "scan": "识别不到IMEI/SN",
       "file": "文件解析错误",
-      "balance": "当前余额",
+      "balance": "余额",
       "refreshNone": "所有订单处理完成或所有订单处理失败",
       "unit": "单价: {price}",
       "reseted": "请先提交订单",

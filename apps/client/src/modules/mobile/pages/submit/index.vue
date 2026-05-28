@@ -196,9 +196,7 @@ async function handleFileChange(event: Event) {
       importDialog.value = true
     }
 
-    toast.success('文件上传成功')
   } catch (error) {
-    toast.error('文件上传失败')
   } finally {
     // 清空 input
     (event.target as HTMLInputElement).value = ''
@@ -547,7 +545,7 @@ onMounted(() => {
     <!-- 收藏服务 -->
     <div v-if="favoriteData.length > 0" class="flex flex-col m-2 max-h-56 bg-card rounded-lg">
       <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
-        收藏服务
+        {{ t('query.favorite.favoriteService') }}
       </div>
 
       <section class="flex-1 overflow-auto">
@@ -558,7 +556,7 @@ onMounted(() => {
 
     <section class="m-2 bg-card rounded-lg">
       <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
-        提交订单
+        {{ t('query.submitOrder') }}
       </div>
 
       <div class="p-2 space-y-4">
@@ -678,7 +676,7 @@ onMounted(() => {
 
 
     <XDialog v-model="importDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]" ui-header="pt-4 px-2 "
-      title="文件导入数据选择" draggable>
+      :title="t('query.fileImportDataSelection')" draggable>
       <ExportDialog @update-mode="handSubmit" />
     </XDialog>
   </div>

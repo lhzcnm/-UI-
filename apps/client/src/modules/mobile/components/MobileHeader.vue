@@ -23,9 +23,8 @@ import { twJoin } from 'tailwind-merge'
       <TheLogo size="1.75rem" />
 
       <nav class="flex items-center space-x-3">
-        <LanguageSwitch />
-
         <FuntionButtonGroup />
+        <LanguageSwitch />
         <TheAvatar class="size-8" />
       </nav>
     </div>
