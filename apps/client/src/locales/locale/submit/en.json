@@ -3,6 +3,9 @@
     "mixedDataWarning": "Mixed data detected, please select the data to import",
     "fileImportDataSelection": "File Import Data Selection",
     "submitOrder": "Submit Order",
+    "previousBatchOrders": "Prev Orders",
+    "allOrders": "All orders",
+    "currentData": "Current data",
     "favorite": {
       "favorite": "Favorite",
       "favorited": "Favorited",

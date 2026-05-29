@@ -218,6 +218,8 @@ async function handSubmit(mode: number) {
 
     const res = await serviceApi.importFile(formData)
 
+    console.log(res)
+
     // 验证返回数据
     if (res.data?.collected && Array.isArray(res.data.collected)) {
       form.imei = res.data.collected.join('\n')
@@ -427,6 +429,10 @@ function submitOrder(service: Service) {
   response.then(({ data }) => {
     serviceStore.addRecentService(service.id)
 
+    // 缓存这一批提交的订单id
+    const codeIds = data.map(item => item.codeId)
+    localStorage.setItem('codeIds', JSON.stringify(codeIds))
+
     const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : t('query.title.mobile.success')}`)
 
     if (service.isUnlock) {
@@ -535,6 +541,12 @@ async function favoriteClick(serviceId: number | undefined) {
   }
 }
 
+const imeiCount = computed(() => {
+  return form.imei && form.imei.trim() !== ''
+    ? form.imei.split('\n').filter(item => item.trim() !== '').length
+    : 0
+})
+
 onMounted(() => {
   favoriteClick(undefined)
 })
@@ -626,12 +638,11 @@ onMounted(() => {
           <div class="relative mb-2">
             <div class="flex justify-between space-x-2">
               <XTextarea v-model="form.imei" rows="5" :placeholder="t('query.imei.placeholder')" />
+              <XButton variant="outline" size="sm" icon="gridicons:aside" :label="t('query.title.history')"
+                :loading="submitLoading" @click="handleOpenOrder">
+              </XButton>
 
               <div v-if="ua.isWechat" class="flex flex-col justify-between py-1">
-                <XButton variant="outline" size="sm" icon="gridicons:aside" :label="t('query.title.history')" :loading="submitLoading"
-                  @click="handleOpenOrder">
-                </XButton>
-
                 <XButton variant="outline" size="sm" :label="t('query.button.mobile.image')" color="success"
                   icon="lucide:image-up" @click="handlePickImage" />
 
@@ -641,11 +652,16 @@ onMounted(() => {
             </div>
 
             <div class="flex flex-col">
-              <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', {
-                price:
-                  unitPrice
-              })
-              }}</span>
+
+              <div class="flex space-x-2">
+                <div class="text-sm text-muted-foreground">{{ t('query.currentData')}}：{{ imeiCount }}</div>
+                <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', {
+                  price:
+                    unitPrice
+                })
+                  }}</span>
+              </div>
+
               <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{
                 uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
             </div>

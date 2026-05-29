@@ -20,9 +20,19 @@ const pageSize = ref<number>(50)
 const orders = ref<OrderListResponse>(createList())
 const refresh = ref<boolean>(false)
 const visibleSearch = ref<boolean>(false)
+const options: any[] = [
+  { label: t('query.previousBatchOrders'), value: 'last', icon: '' },
+  { label: t('query.allOrders'), value: 'all', icon: '' },
+]
 
+const orderTab = ref<string>('last')
 watch(
   () => store.visibleHistory,
+  (val) => val && (initData())
+)
+
+watch(
+  () => orderTab.value,
   (val) => val && (initData())
 )
 
@@ -39,11 +49,13 @@ watch(
 
 async function initData() {
   page.value = 1
+  const orderIds = orderTab.value == 'all' ? undefined : JSON.parse(localStorage.getItem('codeIds')!)
 
   await getOrderData({
     serviceId: props.serviceId,
     page: page.value,
     pageSize: pageSize.value,
+    codeIdList: orderIds
   })
 }
 
@@ -53,7 +65,7 @@ async function getOrderData(params: OrderListParams) {
 }
 
 async function exportOrder() {
-  const orderIds = orders.value.list.map(o => o.id.toString())
+  const orderIds = orderTab.value == 'all' ? undefined : JSON.parse(localStorage.getItem('codeIds')!)
 
   try {
     const { data } = await orderApi.export({
@@ -62,8 +74,10 @@ async function exportOrder() {
     })
 
     downloadURL(data)
-  } catch {}
+  } catch { }
 }
+
+
 
 function openFilter() {
   visibleSearch.value = true
@@ -82,44 +96,31 @@ async function handleFilter(params: OrderSearchForm) {
     pageSize: pageSize.value,
   })
 }
+
+
 </script>
 
 <template>
-  <SlideRight
-    v-model="store.visibleHistory"
-    :title="t('query.title.history')"
-    header-class="border-b"
-    ui-body="flex flex-col"
-  >
+  <SlideRight v-model="store.visibleHistory" :title="t('query.title.history')" header-class="border-b"
+    ui-body="flex flex-col">
     <template #default>
-      <section class="p-3 flex justify-between border-b">
+      <section class="flex justify-evenly mt-2 fixed right-2 -top-0">
+        <XSegmented v-model="orderTab" :options="options" class="bg-card text" />
+      </section>
+
+      <section class="p-2 flex justify-between border-b">
         <div class="flex items-center space-x-2">
-          <ButtonGroup
-            :layouts="['filter', 'export']"
-            @export="exportOrder"
-            @filter="openFilter"
-          />
+          <ButtonGroup :layouts="orderTab == 'all'? ['filter', 'export'] : [ 'export']" @export="exportOrder" @filter="openFilter" />
         </div>
-        <XSimplePagination
-          v-model="page"
-          :limit="pageSize"
-          :total="orders.total"
-        />
+        <XSimplePagination v-model="page" :limit="pageSize" :total="orders.total" />
       </section>
 
       <section class="mt-2 p-3 flex flex-col space-y-2 overflow-y-auto">
-        <NoMessage
-          v-if="orders.list.length === 0"
-          class="bg-card border rounded-lg"
-        />
+        <NoMessage v-if="orders.list.length === 0" class="bg-card border rounded-lg" />
 
         <template v-else>
-          <OrderCard
-            v-for="order in orders.list" :key="order.id"
-            :order="order"
-            :visible-image="false"
-            class="border rounded"
-          />
+          <OrderCard v-for="order in orders.list" :key="order.id" :order="order" :visible-image="false"
+            class="border rounded" />
         </template>
       </section>
 
