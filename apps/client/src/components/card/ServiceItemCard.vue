@@ -58,7 +58,7 @@ onMounted(() => {
     <div class="flex justify-between">
       <div class="text-sm text-muted-foreground mt-1 text-ellipsis overflow-hidden" v-html="data.title" />
 
-      <XButton @click.stop="favoriteClick(data.id)" variant="outline" size="sm">{{ favoriteBool ? t('query.favorite.favorited') :
+      <XButton :icon="favoriteBool? 'tabler:star-filled' : 'tabler:star'" @click.stop="favoriteClick(data.id)" :variant="favoriteBool ? 'soft' : 'outline'" :color="favoriteBool ?  'warning' : 'primary'" size="sm">{{ favoriteBool ? t('query.favorite.favorited') :
           t('query.favorite.favorite') }}</XButton>
     </div>
   </a>

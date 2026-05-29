@@ -2,6 +2,9 @@
   "query": {
     "mixedDataWarning": "检测到混合数据，请选择需要导入的数据",
     "fileImportDataSelection": "文件导入数据选择",
+    "currentData":"当前数据",
+    "previousBatchOrders":"上一批订单",
+    "allOrders": "全部订单",
     "submitOrder": "提交订单",
     "favorite":{
       "favorite": "收藏",

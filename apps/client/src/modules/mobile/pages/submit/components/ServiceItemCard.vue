@@ -12,8 +12,6 @@ const emits = defineEmits<ServuceItemCardEmits>()
 
 const favoriteBool = ref<boolean>(true)
 
-const { t } = useI18n()
-
 async function favoriteClick(serviceId: number | undefined) {
   try {
     const res = await serviceApi.favorite(serviceId)
@@ -30,15 +28,16 @@ async function favoriteClick(serviceId: number | undefined) {
     <div
       class="hover:text-sky-500  hover:rounded-md flex items-center justify-between space-x-2 w-full border-b p-1 border-dashed">
 
-      <div class="space-x-1 flex w-3/5">
-        <Icon icon="tabler:star-filled" class="text-yellow-400 w-6" />
+      <div class="flex space-x-1 justify-center items-center w-3/5">
+        <Icon @click.stop="favoriteClick(data.id)" icon="tabler:star-filled" class="text-yellow-400 w-6" />
+         <!-- <XButton icon="tabler:star-filled" @click.stop="favoriteClick(data.id)" variant="ghost" color="warning" size="sm">{{ favoriteBool ? t('query.favorite.favorited') :
+          t('query.favorite.favorite') }}</XButton> -->
         <div class="flex-1 text-sm ">{{ data.id + " - " + data.title }}</div>
       </div>
 
       <div class="flex justify-end space-x-2 text-xs">
-        <XTag color="primary" size="sm" class="flex items-center">{{ data.price }}</XTag>
-        <XButton @click.stop="favoriteClick(data.id)" variant="soft" color="warning" size="sm">{{ favoriteBool ? t('query.favorite.favorited') :
-          t('query.favorite.favorite') }}</XButton>
+        <XTag color="success" size="sm" class="flex items-center">{{ data.price }}</XTag>
+        <XTag color="primary" size="sm" class="flex items-center">{{ data.taken }}</XTag>
       </div>
     </div>
 
