@@ -12,8 +12,6 @@ const emits = defineEmits<ServuceItemCardEmits>()
 
 const favoriteBool = ref<boolean>(true)
 
-const { t } = useI18n()
-
 async function favoriteClick(serviceId: number | undefined) {
   try {
     const res = await serviceApi.favorite(serviceId)

@@ -638,15 +638,17 @@ onMounted(() => {
           <div class="relative mb-2">
             <div class="flex justify-between space-x-2">
               <XTextarea v-model="form.imei" rows="5" :placeholder="t('query.imei.placeholder')" />
-              <XButton variant="outline" size="sm" icon="gridicons:aside" :label="t('query.title.history')"
-                :loading="submitLoading" @click="handleOpenOrder">
-              </XButton>
 
-              <div v-if="ua.isWechat" class="flex flex-col justify-between py-1">
-                <XButton variant="outline" size="sm" :label="t('query.button.mobile.image')" color="success"
+
+              <div  class="flex flex-col justify-between py-1">
+                <XButton variant="outline" size="sm" icon="gridicons:aside" :label="t('query.title.history')"
+                  :loading="submitLoading" @click="handleOpenOrder">
+                </XButton>
+
+                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="t('query.button.mobile.image')" color="success"
                   icon="lucide:image-up" @click="handlePickImage" />
 
-                <XButton variant="outline" size="sm" :label="t('query.button.mobile.camera')" icon="lucide:camera"
+                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="t('query.button.mobile.camera')" icon="lucide:camera"
                   @click="handlePhoto" />
               </div>
             </div>
@@ -654,12 +656,12 @@ onMounted(() => {
             <div class="flex flex-col">
 
               <div class="flex space-x-2">
-                <div class="text-sm text-muted-foreground">{{ t('query.currentData')}}：{{ imeiCount }}</div>
+                <div class="text-sm text-muted-foreground">{{ t('query.currentData') }}：{{ imeiCount }}</div>
                 <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', {
                   price:
                     unitPrice
                 })
-                  }}</span>
+                }}</span>
               </div>
 
               <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{
