@@ -80,9 +80,9 @@ async function getServiceHeader(id: number) {
       </template>
 
       <section class="flex justify-center items-center p-2 border-t">
-        <label class="inline-block mb-1 text-sm text-label w-32">{{ t('order.exportFileName') }}:</label>
+        <!-- <label class="inline-block mb-1 text-sm text-label w-32">{{ t('order.exportFileName') }}:</label> -->
 
-        <XInput v-model="fileName" class="flex-1" :placeholder="t('order.enterExportFileName')" />
+        <XInput v-model="fileName" class="flex-1 w-2/3" :placeholder="t('order.enterExportFileName')" />
       </section>
 
       <div class="text-sm text-center text-muted-foreground mb-2">{{ t('order.customFileNameHint') }}</div>
