@@ -50,11 +50,12 @@ watch(
 async function initData() {
   page.value = 1
   const orderIds = orderTab.value == 'all' ? undefined : JSON.parse(localStorage.getItem('codeIds')!)
+  const size = orderTab.value == 'all' ? pageSize.value : 1000
 
   await getOrderData({
     serviceId: props.serviceId,
     page: page.value,
-    pageSize: pageSize.value,
+    pageSize: size,
     codeIdList: orderIds
   })
 }
@@ -112,7 +113,7 @@ async function handleFilter(params: OrderSearchForm) {
         <div class="flex items-center space-x-2">
           <ButtonGroup :layouts="orderTab == 'all'? ['filter', 'export'] : [ 'export']" @export="exportOrder" @filter="openFilter" />
         </div>
-        <XSimplePagination v-model="page" :limit="pageSize" :total="orders.total" />
+        <XSimplePagination v-if="orderTab == 'all'" v-model="page" :limit="pageSize" :total="orders.total" />
       </section>
 
       <section class="mt-2 p-3 flex flex-col space-y-2 overflow-y-auto">
