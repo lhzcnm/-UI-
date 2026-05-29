@@ -1,7 +1,8 @@
 {
   "order": {
     "enterExportFileName": "请输入导出文件的名称",
-    "exportFileName": "导出文件名",
+    "exportFileName": "自定义导出文件名",
+    "customFileNameHint": "支持自定义导出文件名；若留空，则使用默认文件名",
     "button": {
       "print": "打印结果",
       "generate": "生成图片",
