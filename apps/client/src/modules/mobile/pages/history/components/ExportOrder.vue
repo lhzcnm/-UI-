@@ -73,23 +73,24 @@ async function getServiceHeader(id: number) {
       :title="t('query.fileImportDataSelection')" draggable>
 
       <template #header>
-        <div class="p-2">
+        <div class="p-2 border-b">
           <div class="w-full text-center">{{ t('order.exportFileName') }}</div>
           <div @click="exportDialog = false" class="fixed top-1 right-4">x</div>
         </div>
       </template>
 
-      <section class="flex justify-center items-center p-2 border-t">
-        <!-- <label class="inline-block mb-1 text-sm text-label w-32">{{ t('order.exportFileName') }}:</label> -->
+      <section class="flex flex-col justify-center items-center space-y-2 mx-auto px-6 py-2">
 
-        <XInput v-model="fileName" class="flex-1 w-2/3" :placeholder="t('order.enterExportFileName')" />
+        <XInput v-model="fileName" class="w-2/3" :placeholder="t('order.enterExportFileName')" />
+        <div class="text-sm text-center text-muted-foreground mb-2">{{ t('order.customFileNameHint') }}</div>
+
       </section>
 
-      <div class="text-sm text-center text-muted-foreground mb-2">{{ t('order.customFileNameHint') }}</div>
 
       <div class="p-2 border-t">
-        <XButton class="w-full" variant="soft" :loading="submitLoading" @click="handleSubmit">{{ t('order.button.mobile.export') }}
-      </XButton>
+        <XButton class="w-full" variant="soft" :loading="submitLoading" @click="handleSubmit">{{
+          t('order.button.mobile.export') }}
+        </XButton>
       </div>
     </XDialog>
 
