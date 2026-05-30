@@ -218,8 +218,6 @@ async function handSubmit(mode: number) {
 
     const res = await serviceApi.importFile(formData)
 
-    console.log(res)
-
     // 验证返回数据
     if (res.data?.collected && Array.isArray(res.data.collected)) {
       form.imei = res.data.collected.join('\n')

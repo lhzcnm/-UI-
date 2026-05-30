@@ -102,7 +102,6 @@ async function favoriteClick(serviceId: number | undefined) {
   try {
     const res = await serviceApi.favorite(serviceId)
     favoriteIds.value = res.data
-    console.log(favoriteIds.value)
   } catch {
   }
 }
