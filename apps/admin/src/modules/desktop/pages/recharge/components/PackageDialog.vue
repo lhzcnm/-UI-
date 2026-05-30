@@ -2,9 +2,21 @@
 import PackageForm from './PackageForm.vue'
 import { createRechargePackage, updateRechargePackage } from '@/api/recharge'
 import { PACKAGE_STORE } from '../utils'
+import { PLAN_TYPE_ENUM } from '@/utils/enum.ts'
 
 const store = inject(PACKAGE_STORE)!
 const formRef = useTemplateRef('formRef')
+
+const levelStore = useLevelStore()
+
+const levels = computed(() => levelStore.levels.filter(l => l.upgradeType !== PLAN_TYPE_ENUM.GRANDTOTAL))
+
+watch(
+  () => store.visibleBase,
+  () => {
+    store.formBase.planId = levels.value.length > 0 ? levels.value[0].pricePlanId : 0
+  }
+)
 
 async function handleCreate() {
   const price = store.formBase.price.toString() as unknown as number

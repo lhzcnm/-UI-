@@ -1,3 +1,4 @@
+import { PLAN_TYPE_ENUM } from '@/utils/enum'
 import type { WithId } from '@3un/shared'
 import { ACCESS_LEVEL } from '@3un/utils'
 import { z } from 'zod/v4'
@@ -17,6 +18,9 @@ export const zLevel = z.object({
   
   // member permission
   accessLevel: z.enum(ACCESS_LEVEL).default(ACCESS_LEVEL.BASIC),
+  // 会员等级升级所需充值金额
+  thresholdAmount: z.number().default(0),
+  upgradeType: z.enum(PLAN_TYPE_ENUM).default(PLAN_TYPE_ENUM.SUBSCRIPTION),
 })
 
 export type Level = z.infer<typeof zLevel>

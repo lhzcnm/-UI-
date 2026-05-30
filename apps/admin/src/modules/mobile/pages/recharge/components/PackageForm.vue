@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { RechargePackageForm } from '@/inters/recharge'
 import { zRechargePackageForm } from '@/inters/recharge'
+import { PLAN_TYPE_ENUM } from '@/utils/enum'
 
 const form = defineModel<RechargePackageForm>({ required: true })
 const formRef = useTemplateRef('formRef')
 const levelStore = useLevelStore()
+
+const levels = computed(() => levelStore.levels.filter(l => l.upgradeType !== PLAN_TYPE_ENUM.GRANDTOTAL))
 
 defineExpose({
   validateForm: () => formRef.value!.validateForm(),
@@ -17,7 +20,7 @@ defineExpose({
     <XFormItem label="所属等级">
       <XNativeSelect
         v-model="form.planId"
-        :options="levelStore.levels"
+        :options="levels"
         value-key="pricePlanId"
         label-key="pricePlan"
       />

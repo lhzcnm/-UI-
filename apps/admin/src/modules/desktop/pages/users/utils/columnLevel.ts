@@ -7,6 +7,7 @@ import { h } from 'vue'
 import type { Level } from '@/inters/level'
 import { updateLevel } from '@/api/level'
 import { ACCESS_LEVEL, ACCESS_LEVEL_MAP } from '@3un/utils'
+import { PLAN_TYPE_ENUM } from '@/utils/enum.ts'
 
 export const columns: XColDef<Level> = [
   {
@@ -24,6 +25,24 @@ export const columns: XColDef<Level> = [
     key: 'pricePlanLocal',
     title: '等级名称(英文)',
     minWidth: 128,
+  },
+  {
+    key: 'thresholdAmount',
+    title: '升级条件',
+    width: 158,
+
+    render(value, row) {
+      switch (row.upgradeType) {
+        case PLAN_TYPE_ENUM.GRANDTOTAL:
+          return `累计充值满 ${value} 元`
+
+        case PLAN_TYPE_ENUM.SUBSCRIPTION:
+          return `包月会员`
+
+        default:
+          return '-'
+      }
+    }
   },
   {
     key: 'accessLevel',

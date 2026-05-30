@@ -28,3 +28,19 @@ export const QUOTATION_ENUM_LIST = [
   { value: QUOTATION_ENUM.OLD, label: '报价单 - 旧机' },
   { value: QUOTATION_ENUM.NEW, label: '报价单 - 新机' },
 ]
+
+export enum PLAN_TYPE_ENUM {
+  GRANDTOTAL = 0,
+  SUBSCRIPTION = 1,
+}
+
+export const PLAN_TYPE_LIST = [
+  {
+    value: PLAN_TYPE_ENUM.GRANDTOTAL,
+    label: '充值额度自动升级',
+  },
+  {
+    value: PLAN_TYPE_ENUM.SUBSCRIPTION,
+    label: '一次性付费会员',
+  },
+]

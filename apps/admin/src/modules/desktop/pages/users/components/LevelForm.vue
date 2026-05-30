@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import SelectLevelType from '@desktop/components/SelectLevelType.vue'
+
 import type { LevelCreateParams } from '@/inters/level'
 import { zLevelForm } from '@/inters/level'
+import { handleInputChange } from '@/utils'
+import { PLAN_TYPE_ENUM } from '@/utils/enum'
 
 const form = defineModel<LevelCreateParams>({ required: true })
 const formRef = useTemplateRef('formRef')
@@ -23,6 +27,22 @@ defineExpose({
 
     <XFormItem field="accessLevel" label="会员组权限">
       <SelectAccesslevel v-model="form.accessLevel" />
+    </XFormItem>
+
+    <XFormItem field="upgradeType" label="会员组类型">
+      <SelectLevelType v-model="form.upgradeType" />
+    </XFormItem>
+
+    <XFormItem
+      v-show="form.upgradeType === PLAN_TYPE_ENUM.GRANDTOTAL"
+      field="thresholdAmount"
+      label="升级到该会员所需充值金额"
+    >
+      <XInput
+        v-model="form.thresholdAmount" placeholder="累计充值"
+        @input="(e: Event) => form.thresholdAmount = handleInputChange(e)"
+        @change="(e: Event) => form.thresholdAmount = handleInputChange(e)"
+      />
     </XFormItem>
 
     <XFormItem label="允许访问设备页面">

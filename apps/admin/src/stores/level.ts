@@ -9,17 +9,22 @@ export const useLevelStore = defineStore('level', () => {
   const levels = useStorage<Level[]>('levels', [], sessionStorage)
   const levelMap = ref(new Map<number, Level>())
 
+  watch(
+    () => levels.value,
+    () => {
+      levelMap.value.clear()
+      levelMap.value = new Map(
+        levels.value.map(item => [item.pricePlanId, item])
+      )
+    },
+    { deep: true }
+  )
   async function getList(force = false) {
     const data = await useFetchWithCache({
       fetchFn: getLevels,
       key: 'levels',
       force,
     })
-
-    levelMap.value.clear()
-    levelMap.value = new Map(
-      data.map(item => [item.pricePlanId, item])
-    )
 
     levels.value = data
   }
