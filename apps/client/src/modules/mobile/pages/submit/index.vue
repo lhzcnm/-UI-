@@ -693,8 +693,13 @@ onMounted(() => {
     </section>
 
 
-    <XDialog v-model="importDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]" ui-header="pt-4 px-2 "
-      :title="t('query.fileImportDataSelection')" draggable>
+    <XDialog v-model="importDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]" draggable>
+      <template #header>
+        <div class="p-2">
+          <div class="w-full text-center">{{ t('query.fileImportDataSelection') }}</div>
+          <div @click="importDialog = false" class="fixed top-1 right-4">x</div>
+        </div>
+      </template>
       <ExportDialog @update-mode="handSubmit" />
     </XDialog>
   </div>

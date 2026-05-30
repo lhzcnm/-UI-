@@ -2,6 +2,7 @@
   "order": {
     "exportFileName": "Export File Name",
     "enterExportFileName": "Please enter the export file name",
+    "customFileNameHint": "Custom export file name supported; if left blank, the default file name will be used",
     "button": {
       "print": "Print Result",
       "generate": "Generate Image",
