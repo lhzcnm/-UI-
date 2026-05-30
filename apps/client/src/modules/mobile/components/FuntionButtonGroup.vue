@@ -65,7 +65,7 @@ function goToInstruction() {
     :close-on-click-outside="true"
   >
     <template #trigger>
-      <button class=" py-1 flex items-center bg-gray-300/20 rounded-full px-2 text-gray-500 text-sm">
+      <button class="py-1 flex items-center bg-muted rounded-full px-2 text-gray-500 text-sm">
         <Icon icon="uil:setting" class="size-5" />
         <span>{{ getLanuagestring('funtion_tools', lang) }}</span>
       </button>
