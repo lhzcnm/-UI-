@@ -171,7 +171,7 @@ export const menus: SidebarMenu[] = [
     icon: 'lucide:coins',
     match: 'jifenjilu',
   },
-  ua.isDesktop && {
+  ua.isDesktop && (mode === 'SanHe' || mode === 'LuShen') && {
     label: 'oss管理',
     path: '/oss',
     icon: 'lucide:cloud',
