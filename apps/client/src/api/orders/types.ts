@@ -19,6 +19,8 @@ export interface OrderApi {
   // generateQrcode(params: QrcodeImageParams): R<Blob>
   devices(): R<string>
   salesRegion(): R<string>
+
+  hasProcessing(): R<boolean>
 }
 
 export interface Order {

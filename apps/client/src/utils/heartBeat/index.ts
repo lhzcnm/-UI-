@@ -2,6 +2,7 @@ import { toast } from 'vue-sonner'
 
 import { CrossTabChannel } from './channel'
 import http from '../http'
+import { orderApi } from '@/api/orders'
 
 export * from './channel'
 
@@ -57,14 +58,21 @@ export function startChannel() {
     const now = Date.now()
 
     if (now - lastActiveTime > INACTIVE_TIME) {
+      if (await hadProcessingOrder()) {
+        console.log('detect had query order')
+        inactiveCount = 0
+        lastActiveTime = now
+        return
+      }
       console.log('detect user not active')
       visibleInacvite.value = true
+
       if (inactiveCount >= 3) {
         await logout()
         handleUnauthorized()
-        return
+      } else {
+        inactiveCount++
       }
-      inactiveCount++
       return
     }
 
@@ -186,4 +194,9 @@ function isShouleRefresh() {
 
   return now - lastActiveTime < INACTIVE_TIME &&
       now - lastRefreshTime > REFRESH_INTERVAL
+}
+
+async function hadProcessingOrder() {
+  const { data } = await orderApi.hasProcessing()
+  return data
 }

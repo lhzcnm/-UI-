@@ -21,4 +21,6 @@ export const orderApi: OrderApi = {
   // generateQrcode: (params) => http.get('order/qrcode/image', { params, responseType: 'blob' }),
   devices: () => http.get('order/DeviceJson'),
   salesRegion: () => http.get('order/salesRegion'),
+
+  hasProcessing: () => http.get('order/status'),
 }
