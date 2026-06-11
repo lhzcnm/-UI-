@@ -44,7 +44,6 @@ export const columns: XColDef<User> = [
     render(value) {
       const levelStore = useLevelStore()
       const level = levelStore.levelMap.get(value)
-      console.log(level)
       return level ? level.pricePlan : '未知'
     },
   },

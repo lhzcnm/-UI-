@@ -2,6 +2,7 @@
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from '../components/ImportPlane.vue'
 import TableColumnDialog from '../components/TableColumnDialog.vue'
+import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
 import { h } from 'vue'
 import { toast } from 'vue-sonner'
@@ -25,7 +26,6 @@ import { getDefaultColumns, getDefaultResultColumns } from '../utils/columns'
 import { serviceApi, type FieldMap, type Service, type ServiceCols } from '@/api/services'
 import { orderApi, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
 import router from '@/router'
-import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
 const store = inject(SUBMIT_STORE)!
 
