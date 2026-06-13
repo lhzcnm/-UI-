@@ -10,7 +10,8 @@ import { getSubmitImei } from '@/utils'
 const form = defineModel<OrderSearchForm>({ required: true })
 const serviceStore = useServiceStore()
 const groupId = ref(-1)
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 
 const fileInputRef = useTemplateRef('fileInputRef')
 
@@ -24,10 +25,10 @@ const options = computed(() => {
 })
 
 const statusOptions = [
-  { label: t('order.button.mobile.status.-1'), value: -1 },
-  { label: t('order.button.mobile.status.2'), value: ORDER_STATUS.SUCCESS },
-  { label: t('order.button.mobile.status.3'), value: ORDER_STATUS.FAILED },
-  { label: t('order.button.mobile.status.4'), value: ORDER_STATUS.PROCESSING },
+  { label: localStore.localData['history_All'], value: -1 },
+  { label: localStore.localData['history_SuccessLabel'], value: ORDER_STATUS.SUCCESS },
+  { label: localStore.localData['history_Failed'], value: ORDER_STATUS.FAILED },
+  { label: localStore.localData['history_Process'], value: ORDER_STATUS.PROCESSING },
 ]
 
 async function handleFileChange(event: Event) {
@@ -52,7 +53,7 @@ async function handleFileChange(event: Event) {
     form.value.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
   } catch (error) {
     console.error('[File parse error]', error)
-    toast.error(t('query.prompt.file'))
+    toast.error(localStore.localData['history_FailedFile'])
   }
 }
 
@@ -84,31 +85,31 @@ function handleFileInput() {
     <div class="space-y-1">
       
 
-      <label class="inline-block mb-1 text-sm text-label">{{ t('service.select') }}: </label>
+      <label class="inline-block mb-1 text-sm text-label">{{ localStore.localData['history_SelectService'] }}: </label>
       <div class="flex items-center space-x-2">
         <XNativeSelect v-model="groupId" :default="-1" :options="[...serviceStore.details]" @change="form.serviceId = 0"
-          :placeholder="t('serviceGroup.placeholder')" label-key="title" value-key="id" />
+          :placeholder="localStore.localData['history_SelectGroup']" label-key="title" value-key="id" />
         <XNativeSelect v-model="form.serviceId" :options="options" :disabled="groupId === -1" :default="0"
-          :placeholder="t('service.placeholder')" label-key="title" value-key="id" />
+          :placeholder="localStore.localData['history_Service_Select']" label-key="title" value-key="id" />
       </div>
     </div>
 
     <div class="space-y-1">
-      <label class="text-sm text-label">{{ t('order.listCol.status') }}: </label>
+      <label class="text-sm text-label">{{ localStore.localData['history_TableHeadOrderStatus'] }}: </label>
       <XSegmented v-model="form.status" :options="statusOptions" :default-value="-1" />
     </div>
 
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-label">{{ t('date.mobile.title') }}: </label>
+      <label class="inline-block mb-1 text-sm text-label">{{ localStore.localData['history_TableHeadSubmitTime'] }}: </label>
       <div class="flex items-center space-x-2">
-        <XNativeDate v-model="form.startTime" :placeholder="t('date.mobile.start')" />
-        <XNativeDate v-model="form.endTime" :placeholder="t('date.mobile.end')" />
+        <XNativeDate v-model="form.startTime" :placeholder="localStore.localData['history_StartTime']" />
+        <XNativeDate v-model="form.endTime" :placeholder="localStore.localData['history_EndTime']" />
       </div>
     </div>
 
     <div class="space-y-1">
-      <label class="inline-block mb-1 text-sm text-label">{{ t('order.form.orderId.title') }}:</label>
-      <XTextarea v-model="form.codeIds" rows="4" :placeholder="t('order.form.orderId.placeholder')" />
+      <label class="inline-block mb-1 text-sm text-label">{{ localStore.localData['history_OrderID'] }}:</label>
+      <XTextarea v-model="form.codeIds" rows="4" :placeholder="localStore.localData['history_EnterOrders']" />
     </div>
 
     <div class="space-y-1">
@@ -122,7 +123,7 @@ function handleFileInput() {
           @click="handleFileInput"
         >
           <Icon icon="lucide:file-input" />
-          <span>{{ t('order.upload.imei') }}</span>
+          <span>{{ localStore.localData['history_ImportIMEI'] }}</span>
         </button>
       </div>
       <XTextarea v-model="form.imei" rows="4" placeholder="IMEI/SN" />

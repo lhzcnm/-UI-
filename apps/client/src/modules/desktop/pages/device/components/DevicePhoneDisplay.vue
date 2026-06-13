@@ -14,8 +14,8 @@ const b = tv({
   ],
 })
 
-const { t } = useI18n()
-
+// const { t } = useI18n()
+const localStore = useLocalStore()
 const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())
 
@@ -123,21 +123,21 @@ function getCurrentDate() {
   const now = new Date()
   const day = now.getDate()
   const month = now.getMonth() + 1
-  const weekday = t(`weekday.${now.getDay()}`)
+  const weekday = localStore.localData[`device_weekday${now.getDay()}`]
 
-  return t('device.date', { month, day, weekday })
+  return localStore.localData['device_date'].replace('@', month).replace('#', day.toString()).replace('&', weekday)
 }
 
 async function onRestart() {
   const [_, uniqueId] = store.selected.split(':')
   await wsFetch({ type: 'reboot', Uid: uniqueId })
-  toast.success(t('command.title', { action: t('command.success') }))
+  toast.success(localStore.localData['device_CommandSent'])
 }
 
 async function onShutdown() {
   const [_, uniqueId] = store.selected.split(':')
   await wsFetch({ type: 'shutdown', Uid: uniqueId })
-  toast.success(t('command.title', { action: t('command.success') }))
+  toast.success(localStore.localData['device_CommandSent'])
 }
 
 async function onRefresh() {
@@ -166,50 +166,38 @@ async function onRefresh() {
       </span>
     </div>
 
-    <div
-      class="relative mx-auto"
-      :style="{ 
-        width: deviceImage.imageWidth,
-        height: deviceImage.imageHeight
-      }"
-    >
-      <img
-        :src="deviceImage.image" alt="Device Mockup"
-        class="absolute z-10 size-full drop-shadow-2xl"
-        draggable="false"
-      >
+    <div class="relative mx-auto" :style="{
+      width: deviceImage.imageWidth,
+      height: deviceImage.imageHeight
+    }">
+      <img :src="deviceImage.image" alt="Device Mockup" class="absolute z-10 size-full drop-shadow-2xl"
+        draggable="false">
 
-      <div
-        class="absolute overflow-hidden"
-        :style="{
-          left: deviceImage.left,
-          top: deviceImage.top,
-          width: deviceImage.width,
-          height: deviceImage.height,
-          borderRadius: deviceImage.imageRadius,
-        }"
-      >
+      <div class="absolute overflow-hidden" :style="{
+        left: deviceImage.left,
+        top: deviceImage.top,
+        width: deviceImage.width,
+        height: deviceImage.height,
+        borderRadius: deviceImage.imageRadius,
+      }">
         <template v-if="store.screenshotStatus === 'wait'">
           <div class="absolute size-full flex items-center justify-center">
             <div class="flex flex-col justify-center items-center px-1 py-2 border rounded bg-muted/50">
               <Icon icon="lucide:loader" class="size-6 animate-spin" />
-              <span class="inline-block text-sm mt-3">{{ t('device.info.imgLoading') }}...</span>
+              <span class="inline-block text-sm mt-3">{{ localStore.localData['device_ImgLoading'] }}...</span>
             </div>
           </div>
         </template>
         <template v-else-if="isSuccess">
-          <img
-            :src="store.screenshot"
-            alt="Device Screenshot"
-            class="size-full"
-            draggable="false"
-            @error="store.screenshot = ''"
-          >
+          <img :src="store.screenshot" alt="Device Screenshot" class="size-full" draggable="false"
+            @error="store.screenshot = ''">
         </template>
         <template v-else>
           <div class="relative size-full rounded bg-gradient-to-br from-green-400 via-blue-500 to-rose-400"></div>
-          <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-3xl font-bold">{{ currentTime }}</div>
-          <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm mt-2 whitespace-nowrap">{{ currentDate }}</div>
+          <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-3xl font-bold">{{ currentTime
+            }}</div>
+          <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-white text-sm mt-2 whitespace-nowrap">{{
+            currentDate }}</div>
         </template>
       </div>
     </div>
@@ -217,15 +205,15 @@ async function onRefresh() {
     <div class="flex justify-center space-x-4 mt-6 text-muted-foreground">
       <button :class="b()" @click="handleRestart">
         <Icon icon="lucide:rotate-cw" />
-        <span>{{ t('device.info.button.reset') }}</span>
+        <span>{{ localStore.localData['device_RestartButton'] }}</span>
       </button>
       <button :class="b()" @click="handleShutdown">
         <Icon icon="lucide:power" />
-        <span>{{ t('device.info.button.shutdown') }}</span>
+        <span>{{ localStore.localData['device_ShutdownButton'] }}</span>
       </button>
       <button :class="b()" @click="handleRefresh">
         <Icon icon="lucide:refresh-ccw" />
-        <span>{{ t('device.info.button.refresh') }}</span>
+        <span>{{ localStore.localData['device_RefreshButton'] }}</span>
       </button>
     </div>
   </div>

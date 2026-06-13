@@ -14,6 +14,7 @@ const visible = defineModel<boolean>({ required: true })
 
 const clone = useCopyFn(() => initForm)
 const copied = ref<LabelCreateForm>(clone())
+const localStore = useLocalStore()
 
 const emits = defineEmits<LabelCreateEmits>()
 
@@ -48,7 +49,7 @@ function handleCreate() {
 <template>
   <XDialog
     v-model="visible"
-    title="自定义标签"
+    :title="localStore.localData['print_CustomLabelTitle']"
     ui-root="sm:p-0"
     ui-header="p-4 border-b"
   >
@@ -58,8 +59,8 @@ function handleCreate() {
 
     <template #footer>
       <div class="p-4 flex items-center justify-end gap-2">
-        <XButton variant="soft" label="取消" @click="handleCancel" />
-        <XButton label="添加" @click="handleCreate" />
+        <XButton variant="soft" :label="localStore.localData['print_CancelButtonDialog']" @click="handleCancel" />
+        <XButton :label="localStore.localData['print_AddButtonDialog']" @click="handleCreate" />
       </div>
     </template>
   </XDialog>

@@ -19,19 +19,23 @@ const form = reactive({
   password: '',
 })
 
-const { t } = useI18n()
 const store = useSettingStore()
+
+const localStore = useLocalStore()
+localStore.localData[VERIFY_MSG.USERNAME]
 
 function rules(data: typeof form) {
   const { username, password } = data
+
+  
   return [
-    { rule: !!username.trim(), message: t(VERIFY_MSG.USERNAME) },
-    { rule: username.length >=6 && username.length <= 16, message: t(VERIFY_MSG.USERNAME_LENGTH) },
-    { rule: USERNAME_REG.test(username), message: t(VERIFY_MSG.USERNAME_FORMAT) },
+    { rule: !!username.trim(), message: localStore.localData[VERIFY_MSG.USERNAME] },
+    { rule: username.length >=6 && username.length <= 16, message: localStore.localData[VERIFY_MSG.USERNAME_LENGTH] },
+    { rule: USERNAME_REG.test(username), message: localStore.localData[VERIFY_MSG.USERNAME_FORMAT] },
     
-    { rule: !!password.trim(), message: t(VERIFY_MSG.PASSWORD) },
-    { rule: password.length >= 8 && password.length <= 18, message: t(VERIFY_MSG.PASSWORD_LENGTH) },
-    { rule: PASSWORD_REG.test(password), message: t(VERIFY_MSG.PASSWORD_FORMAT) },
+    { rule: !!password.trim(), message: localStore.localData[VERIFY_MSG.PASSWORD] },
+    { rule: password.length >= 8 && password.length <= 18, message: localStore.localData[VERIFY_MSG.PASSWORD_LENGTH] },
+    { rule: PASSWORD_REG.test(password), message: localStore.localData[VERIFY_MSG.PASSWORD_FORMAT] },
   ]
 }
 
@@ -42,9 +46,9 @@ function onSubmit() {
 
 function naviToRegister() {
   if (settings.enableRegister) {
-    router.push('/auth/register')
+    router.push('/auth/forgot')
   } else {
-    toast.warning(t('auth.toast.noFeature'))
+    toast.warning(localStore.localData['login_NoFeature'])
   }
 }
 
@@ -69,24 +73,24 @@ defineExpose({
 function toRegister() {
   const flag = store.settings.enableRegister
   if (flag) router.push('/auth/register')
-  else  toast.info(t('auth.prompt.register'))
+  else  toast.info(localStore.localData['login_PromptRegister'])
 }
 </script>
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-4">{{ t('auth.method.account') }}</h2>
+    <h2 class="text-2xl font-bold mb-4">{{ localStore.localData['login_AccountLogin'] }}</h2>
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <XInput v-model="form.username" :placeholder="t('auth.placeholder.userName')" />
-      <XInput v-model="form.password" type="password" :placeholder="`${t('auth.placeholder.pwd')} / API KEY`" />
-      <XButton class="w-full" :label="t('auth.login')" type="submit" />
+      <XInput v-model="form.username" :placeholder="localStore.localData['login_Username']" />
+      <XInput v-model="form.password" type="password" :placeholder="`${localStore.localData['login_Password']} / API KEY`" />
+      <XButton class="w-full" :label="localStore.localData['login_Login']" type="submit" />
     </form>
     <div class="flex items-center justify-between mt-3 text-muted-foreground text-sm">
-      <span>{{ t('auth.noAccount') }}?<a href="javascript:void(0)" class="hover:underline text-primary" @click="toRegister">{{ t('auth.register') }}</a></span>
-      <button class="hover:underline" @click="naviToRegister">{{ t('auth.forget.label') }}?</button>
+      <span>{{ localStore.localData['login_NoAccount'] }}?<a href="javascript:void(0)" class="hover:underline text-primary" @click="toRegister">{{ localStore.localData['login_RegisterNow'] }}</a></span>
+      <button class="hover:underline" @click="naviToRegister">{{ localStore.localData['login_ForgotPassword'] }}?</button>
     </div>
     <div class="mt-6">
-      <hr class="hr-fade-content text-muted-foreground mb-2" :data-content="t('auth.method.third')">
+      <hr class="hr-fade-content text-muted-foreground mb-2" :data-content="localStore.localData['login_ThirdLogin']">
       <div class="flex items-center justify-center space-x-2 select-none">
         <a href="javascript:void(0)" @click="mode = 'wechat'" class="rounded-full bg-teal-500 p-1">
           <Icon icon="mage:we-chat" class="size-7 sm:size-6 text-white" />

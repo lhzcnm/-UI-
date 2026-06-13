@@ -17,7 +17,7 @@ const form: ForgotPswForm = reactive({
   confirmPassword: '',
 })
 
-const { t } = useI18n()
+const localStore=useLocalStore()
 
 async function sendCaptcha() {
   const isPhone = /^1[3-9]\d{9}$/.test(form.target)
@@ -68,7 +68,7 @@ async function resetPassword() {
       password,
     })
 
-    toast.success(t('submit.success', { action: `${t('auth.placeholder.pwd')}${t('action.reset')}` }))
+    toast.success(localStore.localData['login_PasswordReset_Toast'])
     router.push('/auth')
   }
   catch (err) {
@@ -80,21 +80,21 @@ async function resetPassword() {
 <template>
   <div class="flex-1 py-4 sm:py-0">
     <div>
-      <h2 class="text-2xl font-bold mb-4">{{ t('auth.forget.title') }}</h2>
+      <h2 class="text-2xl font-bold mb-4">{{ localStore.localData['login_ResetPassword'] }}</h2>
       <form class="space-y-4" @submit.prevent="onSubmit">
-        <XInput v-model="form.target" :placeholder="t('auth.forget.auth')" />
+        <XInput v-model="form.target" :placeholder="localStore.localData['login_EmailOrPhone']" />
         <div class="flex items-center space-x-2">
-          <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
+          <XInput v-model="form.code" :placeholder="localStore.localData['login_VerificationCode']" />
           <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-            {{ isRunning ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
+            {{ isRunning ? localStore.localData['login_Resend'].replace('@',count) : localStore.localData['login_SendCode'] }}
           </XButton>
         </div>
-        <XInput v-model="form.password" type="password" :placeholder="t('auth.forget.pwd')" />
-        <XInput v-model="form.confirmPassword" type="password" :placeholder="t('auth.forget.confirmPwd')" />
+        <XInput v-model="form.password" type="password" :placeholder="localStore.localData['login_Password']" />
+        <XInput v-model="form.confirmPassword" type="password" :placeholder="localStore.localData['login_ConfirmPassword']" />
 
         <div class="flex items-center space-x-2">
-          <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="router.push('/auth')"></XButton>
-          <XButton class="w-full" type="submit" :label="t('auth.forget.button')" />
+          <XButton :label="localStore.localData['login_AccountLogin']" variant="soft" type="button" @click="router.push('/auth')"></XButton>
+          <XButton class="w-full" type="submit" :label="localStore.localData['login_Reset']" />
         </div>
       </form>
     </div>

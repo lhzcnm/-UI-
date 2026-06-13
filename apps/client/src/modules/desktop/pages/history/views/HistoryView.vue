@@ -23,7 +23,7 @@ import type { ImgOrderItem } from '../types'
 const store = inject(HISTORY_STORE)!
 
 const { copy } = useClipboard({ legacy: true })
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 
 const page = ref(1)
 const limit = ref(20)
@@ -94,7 +94,7 @@ function handleExport(serviceId: number, orderIds: string[]) {
 
 function handleCopy() {
   if (selectRows.value.length === 0) {
-    toast.warning(t('order.prompt.order'))
+    toast.warning(localStore.localData['history_SelectOrder_Toast'])
     return
   }
 
@@ -106,7 +106,7 @@ function handleCopy() {
   }
 
   copy(res.join('\n'))
-  toast.success(t('order.prompt.copy'))
+  toast.success(localStore.localData['history_Copied_Toast'])
 }
 
 function handleClose() {
@@ -119,16 +119,16 @@ function handleClose() {
 
 function openPrint() {
   if(selectRows.value.length === 0) {
-    return toast.warning(t('order.prompt.order'))
+    return toast.warning(localStore.localData['history_SelectOrder_Toast'])
   }
   if (!validServiceUnique(selectRows.value)) {
-    return toast.warning(t('print.prompt.history.moreService'))
+    return toast.warning(localStore.localData['history_CannotPrints_Toast'])
   }
 
   store.selectOrders = getOrdersyId(selectRows.value)
 
   if (store.selectOrders.length === 0) {
-    return toast.warning(t('print.prompt.history.hasFailed'))
+    return toast.warning(localStore.localData['history_ProcessingAndFail_Toast'])
   }
   store.views = 'print'
 }
@@ -151,7 +151,7 @@ function handleGenerate() {
   imgOrders.length = 0
 
   if(selectRows.value.length === 0) {
-    toast.warning(t('order.prompt.order'))
+    toast.warning(localStore.localData['history_SelectOrder_Toast'])
     return
   }
 
@@ -167,6 +167,7 @@ function handleGenerate() {
     if(order.status === ORDER_STATUS.FAILED) {
       continue
     }
+    
     const container = document.createElement('div')
     document.body.append(container)
     // container.className = `opacity-0 flex`
@@ -237,6 +238,8 @@ function handleOpenWindow(url: string) {
     }
 }
 
+const localStore = useLocalStore()
+
 onUnmounted(() => {
   handleClose()
 })
@@ -248,11 +251,12 @@ onUnmounted(() => {
       <div class="space-x-2 whitespace-nowrap">
         <ButtonGroup
           :layouts="['filter', 'export']"
+          :labels="{filter: localStore.localData['history_Filter'],export: localStore.localData['history_Export']}"
           @filter="openSearch" @export="openExport"
         />
-        <XButton color="warning" :label="t('order.button.print')" @click="openPrint" />
-        <XButton variant="soft" :label="`${t('button.copy')} IMEI`" @click="handleCopy" />
-        <XButton variant="soft" color="success" :label="t('order.button.generate')" :disabled="generated" @click="handleGenerate" />
+        <XButton color="warning" :label="localStore.localData['history_PrintResult']" @click="openPrint" />
+        <XButton variant="soft" :label="localStore.localData['history_CopyIMEI']" @click="handleCopy" />
+        <XButton variant="soft" color="success" :label="localStore.localData['history_GenerateImages']" :disabled="generated" @click="handleGenerate" />
       </div>
 
       <XPagination

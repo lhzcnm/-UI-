@@ -8,6 +8,7 @@ import { xconfirm } from '@3un/utils'
 
 import { usePage } from './utils/usePage'
 import { getCommonList } from '@/utils'
+import { toast } from 'vue-sonner'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
@@ -19,7 +20,8 @@ await Promise.all([
 
 const { popupAnnc, popupAnncEn, enablePopupAnnc, scrollingAnnc, scrollingAnncEn } = iStore.settings
 const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const confirmContent = computed(() => {
   return locale.value === 'zh'
@@ -40,9 +42,9 @@ const bullerBoardContent = computed(() => {
 onMounted(async () => {
   if (!anncVisible.value) return
   const result = await xconfirm({
-    title: t('announcement.title'),
+    title: localStore.localData['home_Announcement'],
     text: confirmContent.value,
-    confirmText: t('button.confirm'),
+    confirmText: localStore.localData['home_Confirm'],
     cancelText: undefined,
   })
 
@@ -52,7 +54,7 @@ onMounted(async () => {
 })
 
 const commonList = getCommonList(store.services)
-const { totalPages, currentPage, pages, carouselRef, handleScroll, scrollToPage, isScrolling } = usePage()
+const { totalPages, currentPage, pages, handleScroll, scrollToPage, isScrolling } = usePage()
 
 const router = useRouter()
 
@@ -123,7 +125,7 @@ onBeforeMount(() =>{
     </section> -->
 
     <section v-if="commonList.length" class="mb-4">
-      <h2 class="text-lg font-bold mb-3">{{ t('home.service') }}</h2>
+      <h2 class="text-lg font-bold mb-3">{{ localStore.localData['home_Services'] }}</h2>
 
       <div class="space-y-2" @click="handleServiceItemClick">
         <ServiceItemCard :favorite-ids="favoriteIds!" v-for="item in commonList"  :key="item.id" :data="item" :data-id="item.id" />
@@ -132,7 +134,7 @@ onBeforeMount(() =>{
 
     <section class="my-4">
       <div class="flex justify-between items-center mb-2">
-        <h2 class="text-lg font-bold">{{ t('home.list') }}</h2>
+        <h2 class="text-lg font-bold">{{ localStore.localData['home_ListService'] }}</h2>
         <div class="space-x-2">
           <button v-for="page in totalPages" :key="page - 1" :class="twJoin(
             'size-1.5 rounded-full transition-all duration-300',

@@ -202,17 +202,17 @@ export enum ORDER_STATUS {
 }
 export const ORDER_STATUS_MAP: StatusMap = {
   // [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.order.1' },
-  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.order.6' },
-  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功', labelEn: 'Success', key: 'status.order.2' },
-  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败', labelEn: 'Failed', key: 'status.order.3' },
-  [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', labelEn: 'Processing', key: 'status.order.4' },
+  [ORDER_STATUS.WAIT]       : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'history_Pending_Submission' },
+  [ORDER_STATUS.SUCCESS]    : { color: 'success', label: '处理成功', labelEn: 'Success', key: 'history_Success' },
+  [ORDER_STATUS.FAILED]     : { color: 'danger', label: '处理失败', labelEn: 'Failed', key: 'history_Fail' },
+  [ORDER_STATUS.PROCESSING] : { color: 'primary', label: '正在处理', labelEn: 'Processing', key: 'history_Processing' },
 }
 export const ORDER_STATUS_LIST = [
-  { value: ORDER_STATUS.WAIT, label: '等待提交', key: 'status.order.6' },
+  { value: ORDER_STATUS.WAIT, label: '等待提交', key: 'history_Pending_Submission' },
   // { value: ORDER_STATUS.WAIT, label: '等待提交', key: 'status.order.5' },
-  { value: ORDER_STATUS.SUCCESS, label: '处理成功', key: 'status.order.2' },
-  { value: ORDER_STATUS.FAILED, label: '处理失败', key: 'status.order.3' },
-  { value: ORDER_STATUS.PROCESSING, label: '正在处理', key: 'status.order.4' },
+  { value: ORDER_STATUS.SUCCESS, label: '处理成功', key: 'history_Success' },
+  { value: ORDER_STATUS.FAILED, label: '处理失败', key: 'history_Fail' },
+  { value: ORDER_STATUS.PROCESSING, label: '正在处理', key: 'history_Processing' },
 ]
 
 // async order
@@ -235,10 +235,10 @@ export enum ORDER_VERIFY {
   REFUNDED  = 3,
 }
 export const ORDER_VERIFY_MAP: StatusMap = {
-  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', labelEn: 'Normal', key: 'status.vertify.0' },
-  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', labelEn: 'Feedback', key: 'status.vertify.1' },
-  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', labelEn: 'Solved', key: 'status.vertify.2' },
-  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', labelEn: 'Refund', key: 'status.vertify.3' },
+  [ORDER_VERIFY.NORMAL]    : { color: 'info', label: '正常', labelEn: 'Normal', key: 'history_ORDER_VERIFY_MAP1' },
+  [ORDER_VERIFY.REPLIED]   : { color: 'primary', label: '已反馈', labelEn: 'Feedback', key: 'history_ORDER_VERIFY_MAP2' },
+  [ORDER_VERIFY.SOLVED]    : { color: 'success', label: '已解决', labelEn: 'Solved', key: 'history_ORDER_VERIFY_MAP3' },
+  [ORDER_VERIFY.REFUNDED]  : { color: 'danger', label: '已退款', labelEn: 'Refund', key: 'history_ORDER_VERIFY_MAP4' },
 }
 export const ORDER_VERIFY_LIST = [
   { value: ORDER_VERIFY.NORMAL, label: '正常' },
@@ -276,9 +276,9 @@ export const TICKET_PRIORITY_MAP: StatusMap = {
   [TICKET_PRIORITY.LOW]    : { color: 'info', label: '可以等待', key: 'status.ticket.2' },
 }
 export const TICKET_PRIORITY_LIST = [
-  { value: TICKET_PRIORITY.HIGH, label: '紧急', key: 'status.ticket.0' },
-  { value: TICKET_PRIORITY.MEDIUM, label: '普通', key: 'status.ticket.1' },
-  { value: TICKET_PRIORITY.LOW, label: '可以等待', key: 'status.ticket.2' },
+  { value: TICKET_PRIORITY.HIGH, label: '紧急', key: 'ticket_StatusTicket0' },
+  { value: TICKET_PRIORITY.MEDIUM, label: '普通', key: 'ticket_StatusTicket1' },
+  { value: TICKET_PRIORITY.LOW, label: '可以等待', key: 'ticket_StatusTicket2' },
 ]
 
 // Ticket Type

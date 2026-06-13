@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 </script>
 
 <template>
@@ -13,9 +13,9 @@ const { t } = useI18n()
       </div>
     </div>
     <div class="mt-12 text-center space-y-4">
-      <h2 class="text-2xl font-semibold text-foreground">{{ t('device.plugin.wait.title') }}</h2>
-      <p class="text-base text-muted-foreground max-w-md whitespace-pre">
-        {{ t('device.plugin.wait.text') }}
+      <h2 class="text-2xl font-semibold text-foreground">{{ localStore.localData['device_WaitingConnection'] }}</h2>
+      <p class="text-base text-muted-foreground max-w-md">
+        {{ localStore.localData['device_PluginWaitText'] }}
       </p>
     </div>
   </div>

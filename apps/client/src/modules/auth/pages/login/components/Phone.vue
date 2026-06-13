@@ -15,10 +15,10 @@ const router = useRouter()
 
 const form = reactive({ phone: store.data, code: '' })
 const { count, isRunning, startCountdown } = useCountdown()
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 async function sendCaptcha() {
-  const validRule = [{ rule: !!form.phone, message: t(VERIFY_MSG.PHONE) }]
+  const validRule = [{ rule: !!form.phone, message: localStore.localData[VERIFY_MSG.PHONE] }]
   if (!validate(validRule) || isRunning.value) return
 
   await authApi.sms(form.phone)
@@ -28,8 +28,8 @@ async function sendCaptcha() {
 function rules(data: typeof form) {
   const { phone, code } = data
   return [
-    { rule: !!phone.trim(), message: t(VERIFY_MSG.PHONE) },
-    { rule: CAPTCHA_REG.test(code.trim()), message: t(VERIFY_MSG.CODE) },
+    { rule: !!phone.trim(), message: localStore.localData[VERIFY_MSG.PHONE] },
+    { rule: CAPTCHA_REG.test(code.trim()), message: localStore.localData[VERIFY_MSG.CODE] },
   ]
 }
 
@@ -61,19 +61,19 @@ defineExpose({
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-4">{{ t('auth.method.phone') }}</h2>
+    <h2 class="text-2xl font-bold mb-4">{{ localStore.localData['login_PhoneLogin'] }}</h2>
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <XInput v-model="form.phone" :placeholder="t('auth.placeholder.phone')" />
+      <XInput v-model="form.phone" :placeholder="localStore.localData['login_Phone']" />
       <div class="flex items-center space-x-2">
-        <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
+        <XInput v-model="form.code" :placeholder="localStore.localData['login_VerificationCode']" />
         <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-          {{ isRunning ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
+          {{ isRunning ? localStore.localData['login_Resend'].replace('@',count) : localStore.localData['login_SendCode'] }}
         </XButton>
       </div>
 
       <div class="flex items-center space-x-2">
-        <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="naviBack"></XButton>
-        <XButton class="w-full" :label="t('auth.login')" type="submit" />
+        <XButton :label="localStore.localData['login_AccountLogin']" variant="soft" type="button" @click="naviBack"></XButton>
+        <XButton class="w-full" :label="localStore.localData['login_PLogin']" type="submit" />
       </div>
     </form>
   </div>

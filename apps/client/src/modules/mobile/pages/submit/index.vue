@@ -42,7 +42,8 @@ const favoriteData = ref<any[]>([])
 const favoriteIds = ref<number[]>([])
 const storeService = useServiceStore()
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const store: SubmitStore = reactive({
   service: undefined,
@@ -110,7 +111,7 @@ function getGroupId(serviceId: number) {
 }
 
 function handleScan() {
-  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+  if (!store.serviceId) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
 
   window.wx.scanQRCode({
     needResult: 1,
@@ -118,7 +119,7 @@ function handleScan() {
     fail: (res: any) => window.alert(res.errMsg),
     success: (res: any) => {
       const imei = res.resultStr.split(',')[1]
-      if (!imei) return toast.warning(t('query.prompt.scan'))
+      if (!imei) return toast.warning(localStore.localData['submit_NullImei'])
 
       const trimed = form.imei.trim()
       form.imei = trimed ? `${trimed}\n${imei}` : imei
@@ -163,7 +164,7 @@ async function handleServiceCols(value: number) {
 
 // 上传文件 后端处理IMEI/SN逻辑
 async function handleFileChange(event: Event) {
-  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+  if (!store.serviceId) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
 
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
@@ -250,7 +251,7 @@ function handleImei(text = '') {
 }
 
 function handlePhoto() {
-  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+  if (!store.serviceId) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
 
   window.wx.chooseImage({
     sizeType: ['original'],
@@ -276,9 +277,9 @@ function handlePhoto() {
 
         response.catch((err) => {
           if (err.code === "ECONNABORTED") {
-            return toast.error(t('request.timeout'))
+            return toast.error(localStore.localData['submit_RequestTimeout'])
           }
-          return toast.error(t('request.error'))
+          return toast.error(localStore.localData['submit_RequestError'])
         })
 
         response.finally(() => {
@@ -290,7 +291,7 @@ function handlePhoto() {
 }
 
 function handlePickImage() {
-  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+  if (!store.serviceId) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
 
   window.wx.chooseImage({
     count: 9,
@@ -311,9 +312,9 @@ function handlePickImage() {
           return response.data
         } catch (err: AxiosResponse | any) {
           if (err.code === "ECONNABORTED") {
-            return toast.error(t('request.timeout'))
+            return toast.error(localStore.localData['submit_RequestTimeout'])
           }
-          return toast.error(t('request.error'))
+          return toast.error(localStore.localData['submit_RequestError'])
         } finally {
           formatLoading.value = false
         }
@@ -330,7 +331,7 @@ function handlePickImage() {
 }
 
 function handleFileInput() {
-  if (!store.serviceId) return toast.warning(t('query.prompt.serviveNull'))
+  if (!store.serviceId) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
   fileInputRef.value?.click()
 }
 
@@ -369,11 +370,11 @@ function handleServiceChange(value: XNativeSelectValue) {
 
 function handleSubmit() {
   if (!store.service) {
-    return toast.warning(t('query.prompt.serviveNull'))
+    return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
   }
 
   if (!form.imei.trim()) {
-    return toast.warning(t('query.prompt.scan'))
+    return toast.warning(localStore.localData['submit_NullImei'])
   }
 
   submitLoading.value = true
@@ -431,11 +432,11 @@ function submitOrder(service: Service) {
     const codeIds = data.map(item => item.codeId)
     localStorage.setItem('codeIds', JSON.stringify(codeIds))
 
-    const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : t('query.title.mobile.success')}`)
+    const errorOrders = data.map(item => `${item.imei}: ${item.message ? item.message : localStore.localData['submit_SubmitSuccess']}`)
 
     if (service.isUnlock) {
       xconfirm({
-        title: t('query.title.mobile.result'),
+        title: localStore.localData['submit_OrderResultTable'],
         text: errorOrders.join('<br>'),
       })
 
@@ -479,7 +480,7 @@ function fillSubmitOrderResult(data: OrderSubmitResult[]) {
       id: item.codeId ?? 0, index: i,
       serviceId: form.serviceId,
       credits: store.service?.price || 0,
-      result: isFailed ? item.message : t('query.prompt.orderHandle'),
+      result: isFailed ? item.message : localStore.localData['submit_ProcessingOrder'],
       verify: ORDER_VERIFY.NORMAL,
       status: item.status,
       imei: item.imei,
@@ -516,12 +517,12 @@ async function handleCount() {
 function handlePushMsgChange(value: boolean) {
   if (value) return
 
-  const confirm = window.confirm(t('query.prompt.pushRes'))
+  const confirm = window.confirm(localStore.localData['submit_PushResultToast'])
   if (!confirm) form.pushMsg = true
 }
 
 function handleOpenOrder() {
-  if (store.serviceId == 0) return toast.warning(t('query.prompt.serviveNull'))
+  if (store.serviceId == 0) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
 
   store.visibleHistory = true
 }
@@ -548,6 +549,8 @@ const imeiCount = computed(() => {
 onMounted(() => {
   favoriteClick(undefined)
 })
+
+// const { t } = useI18n()
 </script>
 
 <template>
@@ -555,7 +558,7 @@ onMounted(() => {
     <!-- 收藏服务 -->
     <div v-if="favoriteData.length > 0" class="flex flex-col m-2 max-h-56 bg-card rounded-lg">
       <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
-        {{ t('query.favorite.favoriteService') }}
+        {{ localStore.localData['submit_FavoriteService'] }}
       </div>
 
       <section class="flex-1 overflow-auto">
@@ -566,26 +569,26 @@ onMounted(() => {
 
     <section class="m-2 bg-card rounded-lg">
       <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
-        {{ t('query.submitOrder') }}
+        {{ localStore.localData['submit_SubmitOrders'] }}
       </div>
 
       <div class="p-2 space-y-4">
 
         <div>
           <div class="flex items-center justify-between mb-2">
-            <h2 class="font-medium">{{ t('service.select') }}</h2>
+            <h2 class="font-medium">{{ localStore.localData['submit_SelectServicesTiltle'] }}</h2>
             <RouterLink v-if="form.serviceId" :to="`/service/${form.serviceId}`"
               class="flex items-center text-sm text-muted-foreground">
-              {{ t('query.service') }}
+              {{ localStore.localData['submit_ServiceDescription'] }}
               <Icon icon="lucide:chevron-right" />
             </RouterLink>
           </div>
           <div class="flex space-x-2">
             <XNativeSelect v-model="form.groupId" :default="-1" :options="[...serviceStore.details]"
-              @change="form.serviceId = 0" :placeholder="t('serviceGroup.placeholder')" label-key="title" value-key="id"
+              @change="form.serviceId = 0" :placeholder="localStore.localData['submit_SelectGroup']" label-key="title" value-key="id"
               class="w-full" />
             <XNativeSelect v-model="form.serviceId" :default="0" :options="options" :disabled="form.groupId === -1"
-              @change="handleServiceChange" :placeholder="t('service.placeholder')" label-key="title" value-key="id"
+              @change="handleServiceChange" :placeholder="localStore.localData['submit_ServicePlaceholderTable']" label-key="title" value-key="id"
               class="w-full" />
           </div>
         </div>
@@ -600,7 +603,7 @@ onMounted(() => {
                   'text-muted-foreground rounded-full',
                   'h-8 text-sm bg-muted'
                 )" @click="handleFileInput">
-                  <span>{{ t('button.import') }}</span>
+                  <span>{{ localStore.localData['submit_Import'] }}</span>
                 </button>
               </template>
 
@@ -635,18 +638,18 @@ onMounted(() => {
 
           <div class="relative mb-2">
             <div class="flex justify-between space-x-2">
-              <XTextarea v-model="form.imei" rows="5" :placeholder="t('query.imei.placeholder')" />
+              <XTextarea v-model="form.imei" rows="5" :placeholder="localStore.localData['submit_ImportIMEIPlaceholder']" />
 
 
               <div  class="flex flex-col justify-between py-1">
-                <XButton variant="outline" size="sm" icon="gridicons:aside" :label="t('query.title.history')"
+                <XButton variant="outline" size="sm" icon="gridicons:aside" :label="localStore.localData['submit_OrdersHistory']" color="primary"
                   :loading="submitLoading" @click="handleOpenOrder">
                 </XButton>
 
-                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="t('query.button.mobile.image')" color="success"
+                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="localStore.localData['submit_SelectImg']" color="success"
                   icon="lucide:image-up" @click="handlePickImage" />
 
-                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="t('query.button.mobile.camera')" icon="lucide:camera"
+                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="localStore.localData['submit_TakePhoto']" icon="lucide:camera"
                   @click="handlePhoto" />
               </div>
             </div>
@@ -654,16 +657,13 @@ onMounted(() => {
             <div class="flex flex-col">
 
               <div class="flex space-x-2">
-                <div class="text-sm text-muted-foreground">{{ t('query.currentData') }}：{{ imeiCount }}</div>
-                <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.unit', {
-                  price:
-                    unitPrice
-                })
-                }}</span>
+                <div class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportVaildQuantity'] }}：{{ imeiCount }}</div>
+                
+                <span v-if="store.service" class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportUnitPrice'].replace('@', unitPrice) }}</span>
               </div>
 
-              <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{
-                uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span>
+              <span v-if="store.service" class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportBlance'] }}: ￥{{
+                uStore.info.credits }}, {{ localStore.localData['submit_ImportSubmitOrder'].replace('@', unitPrice) }}</span>
             </div>
             <!-- <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
             <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
@@ -677,13 +677,13 @@ onMounted(() => {
         </div>
 
         <div>
-          <h2 class="font-medium mb-2">{{ t('query.info.additional') }}</h2>
-          <XTextarea v-model="form.remark" :placeholder="t('remark.placeholder')" class="mb-3" />
+          <h2 class="font-medium mb-2">{{ localStore.localData['submit_Additional'] }}</h2>
+          <XTextarea v-model="form.remark" :placeholder="localStore.localData['submit_ImportRemarkPlaceholder']" class="mb-3" />
 
-          <XSwitch v-model="form.pushMsg" :label="t('query.button.mobile.pushRes')" @change="handlePushMsgChange" />
+          <XSwitch v-model="form.pushMsg" :label="localStore.localData['submit_PushResultToast']" @change="handlePushMsgChange" />
         </div>
 
-        <XButton class="w-full" :label="t('button.submit')" :loading="submitLoading" @click="handleSubmit" />
+        <XButton class="w-full" :label="localStore.localData['submit_Submit']" :loading="submitLoading" @click="handleSubmit" />
 
         <OrderResultModal />
         <OrderHistoryModal :service-id="store.serviceId" />
@@ -694,7 +694,7 @@ onMounted(() => {
     <XDialog v-model="importDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]" draggable>
       <template #header>
         <div class="p-2">
-          <div class="w-full text-center">{{ t('query.fileImportDataSelection') }}</div>
+          <div class="w-full text-center">{{ localStore.localData['submit_FileImportSelect'] }}</div>
           <div @click="importDialog = false" class="fixed top-1 right-4">x</div>
         </div>
       </template>

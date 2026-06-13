@@ -13,7 +13,8 @@ const emits = defineEmits<XSelectEmits>()
 
 const input = ref('')
 
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 
 const filteredServices = computed(() => {
   const inputValue = input.value.trim().toLowerCase()
@@ -62,7 +63,7 @@ function highlightText(text: string, keyword: string) {
     v-model:input="input"
     v-bind="$attrs"
     filterable
-    :placeholder="t('service.placeholder')"
+    :placeholder="localStore.localData['device_SelectService']"
     placement="bottom-start"
     @selected="emits('selected', $event)"
   >

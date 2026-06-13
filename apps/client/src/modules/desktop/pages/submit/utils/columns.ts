@@ -9,12 +9,13 @@ import { h } from 'vue'
 import { getLanuagestring } from "@/utils/constant"
 
 const iStore = useSystemStore()
+const localStore = useLocalStore()
 
-export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
+export function getDefaultColumns(): XTableColumn[] {
   return [
     {
       key: 'index',
-      title: t('query.listCol.index'),
+      title: localStore.localData['submit_Index'],
       align: 'center',
       width: 64,
       render: (_, __, index) => {
@@ -23,31 +24,31 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
     },
     {
       key: 'service',
-      title: t('query.listCol.service'),
+      title: localStore.localData['submit_ServiceTableHead'],
       width: 220,
       render: (_: any, row: OrderTableView) => {
-        if (!row || !row.serviceId) return t('service.placeholder')
+        if (!row || !row.serviceId) return localStore.localData['submit_ServicePlaceholderTable']
         return `${row.serviceId} - ${row.serviceName}`
       }
     },
     { key: 'imei', title: 'IMEI/SN', width: 158 },
-    { key: 'credits', title: t('service.point'), width: 58 },
+    { key: 'credits', title: localStore.localData['submit_PointTable'], width: 58 },
     {
       key: 'status',
-      title: t('query.listCol.status'),
+      title: localStore.localData['submit_OrderStatusTable'],
       width: 108,
       render: (value: ORDER_STATUS) => {
         const id = value || ORDER_STATUS.WAIT
         const tag = ORDER_STATUS_MAP[id]
         return h(XTag, {
-          label: t(tag.key!),
+          label: localStore.localData[tag.key!],
           color: tag.color,
         })
       }
     },
     {
       key: 'result',
-      title: t('query.listCol.result'),
+      title: localStore.localData['submit_OrderResultTable'],
       minWidth: 320,
       tdClassName: 'leading-6 py-1',
       isColDel: true,
@@ -69,14 +70,14 @@ export function getDefaultColumns(t: (key: string) => string): XTableColumn[] {
         })
       }
     },
-    { key: 'remark', title: t('query.listCol.remark'), minWidth: 160, isColDel: true, isFilter: true },
+    { key: 'remark', title: localStore.localData['submit_RemarkTable'], minWidth: 160, isColDel: true, isFilter: true },
   ]
 }
 
-export function getDefaultResultColumns(t: (key: string) => string): XTableColumn {
+export function getDefaultResultColumns(): XTableColumn {
   return {
     key: 'result',
-    title: t('query.listCol.result'),
+    title: localStore.localData['submit_OrderResultTable'],
     minWidth: 320,
     tdClassName: 'leading-6 py-1',
     isColDel: true,

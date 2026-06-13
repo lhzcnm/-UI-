@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import PluginDownload from '../components/PluginDowload.vue'
 import { Icon } from '@iconify/vue'
-
-const { t } = useI18n()
+const localStore = useLocalStore()
 </script>
 
 <template>
@@ -15,10 +14,10 @@ const { t } = useI18n()
     </div>
     <div class="mt-12 text-center space-y-4">
       <h2 class="text-2xl font-semibold text-foreground">
-        {{ t('device.plugin.toLow.title') }}
+        {{ localStore.localData['device_VersionLow'] }}
       </h2>
       <p class="text-base text-muted-foreground max-w-md">
-        {{ t('device.plugin.toLow.text') }}
+        {{ localStore.localData['device_InstallButton'] }}
       </p>
       <div class="space-x-4 text-center">
         <PluginDownload />
@@ -26,7 +25,7 @@ const { t } = useI18n()
           variant="soft" icon="lucide:refresh-cw"
           @click="$router.go(0)"
         >
-          {{ t('device.button.refresh') }}
+          {{ localStore.localData['device_RefreshPage'] }}
         </XButton>
       </div>
     </div>

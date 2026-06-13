@@ -18,11 +18,11 @@ export enum VALID_TYPE {
 }
 
 export const VALID_TYPE_LIST = [
-  { value: VALID_TYPE.PHONE, label: 'profile.form.label.phone' },
-  { value: VALID_TYPE.EMAIL, label: 'profile.form.label.email' },
+  { value: VALID_TYPE.PHONE, label: 'profile_PhoneNumber' },
+  { value: VALID_TYPE.EMAIL, label: 'profile_Email' },
 ]
 
 export const VALID_TYPE_MAP = {
-  [VALID_TYPE.PHONE]: 'profile.form.label.phone',
-  [VALID_TYPE.EMAIL]: 'profile.form.label.email',
+  [VALID_TYPE.PHONE]: 'profile_LabelPhone',
+  [VALID_TYPE.EMAIL]: 'profile_LabelEmail',
 }

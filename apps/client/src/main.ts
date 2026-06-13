@@ -14,4 +14,12 @@ app.use(router)
 app.use(pinia)
 app.use(i18n)
 
+import { useLocalStore } from './stores/local.ts'
+
+const store = useLocalStore()
+
+
+
+store.getLocalData()
+
 app.mount('#app')

@@ -13,14 +13,14 @@ interface ImgOrderEmits {
 const emits = defineEmits<ImgOrderEmits>()
 const store = inject(HISTORY_STORE)!
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const { imgOrder } = defineProps<ImgOrderProps>()
 </script>
 
 <template>
   <SlideRight
-    :title="t('order.title.img')" v-model="store.visibleImg"
+    :title="localStore.localData['history_OrderImage']" v-model="store.visibleImg"
     @close="emits('close')"
   >
     <template #default>
@@ -33,7 +33,7 @@ const { imgOrder } = defineProps<ImgOrderProps>()
             :download="`${imgOrder.id}_${imgOrder.imei}.png`"
             class="px-5 py-2 bg-primary text-white rounded-md shadow hover:bg-primary-dark transition"
           >
-            {{ t('order.button.mobile.download') }}
+            {{ localStore.localData['history_DownloadImg'] }}
           </a>
         </div>
       </div>

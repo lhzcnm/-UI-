@@ -1,15 +1,16 @@
 <script setup lang="ts">
 const store = useUserStore()
-const { t } = useI18n()
+const localStore = useLocalStore()
+
 </script>
 
 <template>
   <div class="border rounded-lg p-6 bg-card">
-    <h3 class="text-lg mb-4">{{ t('profile.stat.title') }}</h3>
+    <h3 class="text-lg mb-4">{{ localStore.localData['profile_StatTitle'] }}</h3>
     <div class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
       <div class="border rounded-lg p-4">
         <div class="text-sm text-muted-foreground mb-3">
-          {{ t('profile.stat.balance') }}
+          {{ localStore.localData['Available Balance'] }}
         </div>
         <div>
           <data
@@ -21,13 +22,13 @@ const { t } = useI18n()
           <span class="text-sm text-muted-foreground">￥</span>
         </div>
         <div class="space-y-1 text-sm mt-2">
-          <p class="text-success">{{ t('profile.stat.amount') }} {{ store.info.totalReceipts }}</p>
-          <p class="text-warning">{{ t('profile.stat.lock') }} {{ store.info.rechargeCount }}</p>
+          <p class="text-success">{{ localStore.localData['profile_StatAmount'] }} {{ store.info.totalReceipts }}</p>
+          <p class="text-warning">{{ localStore.localData['profile_StatLock'] }} {{ store.info.rechargeCount }}</p>
         </div>
       </div>
       <div class="border rounded-lg p-4">
         <div class="text-sm text-muted-foreground mb-3">
-          {{ t('profile.stat.order') }}
+          {{ localStore.localData['profile_StatOrder'] }}
         </div>
         <div>
           <data
@@ -36,35 +37,35 @@ const { t } = useI18n()
           >
             {{ store.info.userOrder.total }}
           </data>
-          <span class="text-sm text-muted-foreground">{{ t('profile.stat.piece') }}</span>
+          <span class="text-sm text-muted-foreground">{{ localStore.localData['profile_StatPiece'] }}</span>
         </div>
         <div class="space-x-3 text-sm mt-2">
-          <span class="text-success">{{ t('profile.stat.success') }} {{ store.info.userOrder.success }}</span>
-          <span class="text-danger">{{ t('profile.stat.fail') }} {{ store.info.userOrder.failed }}</span>
+          <span class="text-success">{{ localStore.localData['profile_StatSuccess'] }} {{ store.info.userOrder.success }}</span>
+          <span class="text-danger">{{ localStore.localData['profile_StatFail'] }} {{ store.info.userOrder.failed }}</span>
         </div>
       </div>
       <div class="border rounded-lg p-4">
         <div class="text-sm text-muted-foreground mb-3">
-          {{ t('profile.stat.memberExpire') }}
+          {{ localStore.localData['profile_StatMemberExpire	'] }}
         </div>
         <div>
           <data
             class="text-xl font-bold mr-1"
             :value="store.info.memberExp"
           >
-            {{ store.info.memberExp || t('profile.stat.notActivate') }}
+            {{ store.info.memberExp || localStore.localData['profile_StatNotActivate']}}
           </data>
         </div>
         <RouterLink
           to="/recharge/membership"
           class="inline-block mt-3 text-sm text-primary"
         >
-          {{ store.info.memberExp ? t('profile.stat.reNewal') : t('profile.stat.activateNow') }}
+          {{ store.info.memberExp ? localStore.localData['profile_StatReNewal']: localStore.localData['profile_StatActivateNow'] }}
         </RouterLink>
       </div>
       <div class="border rounded-lg p-4">
         <div class="text-sm text-muted-foreground mb-3">
-          {{ t('profile.stat.useDay') }}
+          {{ localStore.localData['profile_StatUseDay'] }}
         </div>
         <div>
           <data
@@ -73,7 +74,7 @@ const { t } = useI18n()
           >
             {{ store.info.usageDays }}
           </data>
-          <span class="text-sm text-muted-foreground">{{ t('profile.stat.day') }}</span>
+          <span class="text-sm text-muted-foreground">{{ localStore.localData['profile_StatDay'] }}</span>
         </div>
       </div>
     </div>

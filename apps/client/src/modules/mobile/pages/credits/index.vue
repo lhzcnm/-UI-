@@ -14,8 +14,8 @@ const loading = ref(false)
 
 const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
 const logs = ref<CreditLogsResponse>(IPage)
-const { t } = useI18n()
 
+const localStore = useLocalStore()
 watch(
   page,
   async (value) => {
@@ -34,7 +34,7 @@ watch(
 
 <template>
   <div class="h-full">
-    <BackHeader :title="t('credit.title')" />
+    <BackHeader :title="localStore.localData['credits_PointsHistory']" />
 
     <Fallback v-if="loading" />
     <template v-else>
@@ -50,7 +50,7 @@ watch(
           :total="logs.total"
         />
         <span class="text-sm text-muted-foreground">
-          {{ t('credit.total', { count: logs.total }) }}
+          {{ localStore.localData['credits_Total'].replace('@',logs.total) }}
         </span>
       </div>
 

@@ -19,7 +19,8 @@ const style = tv({
 const store = inject(STORE)!
 // const uStore = useUserStore()
 const deviceStore = useDeviceStore()
-const { t, locale } = useI18n()
+const {  locale } = useI18n()
+const localStore = useLocalStore()
 
 const { copy } = useClipboard({ legacy: true })
 
@@ -43,8 +44,8 @@ async function handleActivation() {
     await wsFetch({ type: suffix, Uid: uniqueId })
     isActivated.value = !isActivated.value
     form.value.ActivationState = isActivated.value
-      ? t('device.info.grid.status.already')
-      : t('device.info.grid.status.not')
+      ? localStore.localData['device_Actived']
+      : localStore.localData['device_Inactive']
   } catch {} finally {
     loading.value = false
   }
@@ -56,7 +57,7 @@ async function cp(event: MouseEvent) {
 
   if (text && text.trim()) {
     await copy(text.trim())
-    toast.success(t('submit.success', { action: t('action.copy') }))
+    toast.success(localStore.localData['device_CopySucceeded'])
   }
 }
 
@@ -67,37 +68,37 @@ const b = style()
   <div class="flex gap-4 p-4 bg-card">
     <div class="flex-1 space-y-1">
       <div v-show="form.SerialNumber">
-        <span :class="b.label()">{{ t('device.info.grid.sn') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_SerialNumber'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.SerialNumber }}
         </span>
       </div>
       <div v-show="form.Imei">
-        <span :class="b.label()">{{ t('device.info.grid.imei') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_IMElNumber'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.Imei }}
         </span>
       </div>
       <div v-show="form.ModelNumber">
-        <span :class="b.label()">{{ t('device.info.grid.typeNumber') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_ModelNumber'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.ModelNumber }} {{ form.RegionInfo }}
         </span>
       </div>
       <div v-show="form.ProductType">
-        <span :class="b.label()">{{ t('device.info.grid.prodType') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_ProductType'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.ProductType }}
         </span>
       </div>
       <div v-show="form.ProductVersion">
-        <span :class="b.label()">{{ t('device.info.grid.system') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_OSVer'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.ProductVersion }} ({{ form.BuildVersion }})
         </span>
       </div>
       <div v-show="form.MLBSerialNumber">
-        <span :class="b.label()">{{ t('device.info.grid.motherNo') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_BoardNo'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.MLBSerialNumber }}
         </span>
@@ -118,19 +119,19 @@ const b = style()
 
     <div class="flex-1 space-y-1">
       <div class="flex items-center">
-        <span :class="b.label()">{{ t('device.info.grid.activeStatus') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_ActivatedStatus'] }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
-            {{ isActivated ? t('device.info.grid.actived.already') : t('device.info.grid.actived.not') }}
+            {{ isActivated ? localStore.localData['device_Actived'] : localStore.localData['device_Inactive'] }}
           </span>
           <button class="ml-2 text-primary" @click="handleActivation">
-            {{ isActivated ? t('device.info.grid.actived.action.nega') : t('device.info.grid.actived.action.positive') }}
+            {{ isActivated ? localStore.localData['device_Unactivate'] : localStore.localData['device_Activate'] }}
           </button>
         </div>
       </div>
 
       <div class="flex items-center" v-show="form.WiFiAddress">
-        <span :class="b.label()">{{ t('device.info.grid.wifiAddr') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_WiFiAddr'] }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ form.WiFiAddress.toUpperCase() }}
@@ -138,7 +139,7 @@ const b = style()
         </div>
       </div>
       <div class="flex items-center" v-show="form.SalesRegion">
-        <span :class="b.label()">{{ t('device.info.grid.region') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_Region'] }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ locale === 'zh' ? form.SalesRegion.chinese : form.SalesRegion.english }}
@@ -146,7 +147,7 @@ const b = style()
         </div>
       </div>
       <div class="flex items-center" v-show="form.iCloud">
-        <span :class="b.label()">{{ t('device.info.grid.iCloudBackup') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_iCloud'] }}</span>
         <div class="flex-1 flex items-center justify-between">
           <span :class="b.value()" @click="cp">
             {{ form.iCloud }}
@@ -154,7 +155,7 @@ const b = style()
         </div>
       </div>
       <div class="flex items-center" v-show="form.CPU">
-        <span :class="b.label()">{{ t('device.info.grid.cpu') }}</span>
+        <span :class="b.label()">{{ localStore.localData['device_CPU_Types'] }}</span>
         <span :class="b.value()" @click="cp">
           {{ form.CPU }}
         </span>

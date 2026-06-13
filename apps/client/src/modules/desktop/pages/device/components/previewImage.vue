@@ -7,7 +7,7 @@ import { STORE } from '../utils'
 const store = inject(STORE)!
 const { deviceMap } = useDeviceStore()
 const iStore = useSystemStore()
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const imageUrl = ref<string>('')
 
@@ -87,8 +87,8 @@ onBeforeUnmount(() => {
 
     <template #footer>
       <div class="flex flex-wrap items-center justify-end gap-2 border-t px-4 py-3">
-        <XButton variant="soft" :label="t('button.cancel')" @click="store.visibleImage = false" />
-        <XButton :label="t('button.download')" @click="handleSave" />
+        <XButton variant="soft" :label="localStore.localData['device_PluginCancel']" @click="store.visibleImage = false" />
+        <XButton :label="localStore.localData['device_DownloadPlugin']" @click="handleSave" />
       </div>
     </template>
   </XDialog>

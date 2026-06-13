@@ -3,19 +3,19 @@ import type { XColDef } from '@3un/ui'
 import { h } from 'vue'
 
 const store = useServiceStore()
+const localStore = useLocalStore()
 
 export function getCreditColumns(): XColDef<CreditLogItem> {
-  const { t } = useI18n()
 
   return [
     {
       key: 'packageId',
-      title: t('credit.listCol.service'),
+      title: localStore.localData['credits_Service'],
       width: 220,
       render: (value) => {
         if (!value) return '积分充值'
         const service = store.services.get(value)
-        return service ? `${service.id} - ${service.title}` : t('service.notFound')
+        return service ? `${service.id} - ${service.title}` : localStore.localData['credits_ServiceNotFound']
       }
     },
     {
@@ -25,7 +25,7 @@ export function getCreditColumns(): XColDef<CreditLogItem> {
     },
     {
       key: 'credits',
-      title: t('credit.listCol.amount'),
+      title: localStore.localData['credits_Amout'],
       width: 88,
       render: (value: number, row) => {
         const isSubmit = /提交订单|order|订单提交|Code Request/.test(row.description)
@@ -47,12 +47,12 @@ export function getCreditColumns(): XColDef<CreditLogItem> {
     },
     {
       key: 'description',
-      title: t('credit.listCol.reason'),
+      title: localStore.localData['credits_Reason'],
       width: 280
     },
     {
       key: 'historyDtTm',
-      title: t('credit.listCol.time'),
+      title: localStore.localData['credits_Time'],
       width: 180
     },
     {
@@ -62,7 +62,7 @@ export function getCreditColumns(): XColDef<CreditLogItem> {
     },
     {
       key: 'comments',
-      title: t('credit.listCol.commment'),
+      title: localStore.localData['credits_Comment'],
       minWidth: 180
     }
   ]

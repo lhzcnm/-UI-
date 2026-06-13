@@ -9,22 +9,23 @@ import { STORE } from '../utils'
 const store = inject(STORE)!
 const deviceStore = useDeviceStore()
 
-const { t } = useI18n()
+const localStore = useLocalStore()
+// const { t } = useI18n()
 </script>
 
 <template>
   <div class="flex flex-col gap-4">
     <div>
       <div class="flex justify-between items-center mb-4">
-        <div>
-          <h2 class="text-xl font-bold text-foreground">{{ t('device.list.title') }}</h2>
-          <p class="text-sm text-muted-foreground">{{ t('device.list.total', { total: deviceStore.deviceMap.size }) }}
+        <div>device.list.title
+          <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['device_DeviceList'] }}</h2>
+          <p class="text-sm text-muted-foreground">{{ localStore.localData['device_TotalDevices'].replace('@',deviceStore.deviceMap.size) }}
           </p>
         </div>
 
         <div v-if="store.hasNewVersion" class="text-right">
           <div class="text-sm text-warning mb-1">
-            {{ t('device.list.hasNew') }}:
+            {{ localStore.localData['device_NewFound'] }}:
           </div>
           <PluginDownload size="sm" />
         </div>

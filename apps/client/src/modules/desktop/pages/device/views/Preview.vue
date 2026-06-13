@@ -20,7 +20,8 @@ import { settingApi } from '@/api/settings'
 const store = inject(STORE)!
 
 const deviceStore = useDeviceStore()
-const { t } = useI18n()
+const localStore = useLocalStore()
+// const { t } = useI18n()
 
 const {
   container,
@@ -199,10 +200,10 @@ function getNextItemPosition() {
 
 async function exportTemplate() {
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.export.noField'))) return
+    if (!await xconfirm(localStore.localData['device_ExportTemplate'])) return
   }
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.export.overflow'))) return
+    if (!await xconfirm(localStore.localData['device_StillExport'])) return
   }
   
   await saveTemplate(
@@ -230,7 +231,7 @@ async function handleChange(e: Event) {
   }
   const extensions = file.name.split('.')[1]
   if (extensions !== 'json') {
-    toast.warning(t('print.prompt.import.serviceNotMatch'))
+    toast.warning(localStore.localData['device_serviceNotMatch'])
     uploadRef.value.value = ''
   }
 
@@ -242,7 +243,7 @@ async function importTemplateFile(file: File) {
   const template = await readTemplateFile(file)
 
   if (template.serviceId) {
-    return toast.warning(t('print.prompt.import.serviceNotMatch'))
+    return toast.warning(localStore.localData['device_serviceNotMatch'])
   }
 
   const {
@@ -463,13 +464,13 @@ function getDefaultHeaders(): PrintHeader[] {
 
 async function handleGenerate() {
   if (!paperRef.value) return
-  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
+  if (generating.value) return toast.warning(localStore.localData['device_GeneratingPDF'])
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
+    if (!await xconfirm(localStore.localData['device_NoField'])) return
   }
   updateOverflowMap()
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
+    if (!await xconfirm(localStore.localData['device_FieldOverflow'])) return
   }
 
   await nextTick()
@@ -482,7 +483,7 @@ async function handleGenerate() {
     try {
       await handleWebGenerate()
     } catch {
-      toast.warning(t('print.prompt.pdf.error'))
+      toast.warning(localStore.localData['device_PdfError'])
     }
   } finally {
     generating.value = false
@@ -751,14 +752,14 @@ onBeforeUnmount(() => {
           class="p-2 flex items-center border border-border rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all"
           @click="store.deviceStatus = store.prevStatus">
           <Icon icon="lucide:step-back" />
-          <span>{{ t('print.button.back.label') }}</span>
+          <span>{{ localStore.localData['device_Return'] }}</span>
         </button>
       </div>
 
       <HeaderTagConfig
         :headers="processedColumns"
         :select-cols="selectCols"
-        :title="t('print.fields.title')"
+        :title="localStore.localData['device_PrintFields']"
         @selected="handleSelectColumn"
       />
 
@@ -769,9 +770,9 @@ onBeforeUnmount(() => {
 
       <div class="min-h-56 max-h-full border rounded-md p-3 space-y-3 bg-muted/30 overflow-y-auto">
         <div class="font-semibold text-sm flex items-center gap-2">
-          {{ t('print.fields.config.title') }}
+          {{ localStore.localData['device_DisplayConfiguration'] }}
           <span class="text-xs text-muted-foreground">
-            ({{ t('print.fields.config.tip') }})
+            ({{ localStore.localData['device_DisplayMethod'] }})
           </span>
         </div>
 
@@ -800,23 +801,23 @@ onBeforeUnmount(() => {
                 </div>
 
                 <XSelect v-model="field.wrap" ui-trigger="w-32" @selected="handleWrapChange">
-                  <XSelectItem :value="true">{{ t('print.fields.config.wrap') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.config.nowrap') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['device_SeparateLines'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['device_SameLine'] }}</XSelectItem>
                 </XSelect>
 
                 <XSelect v-model="field.showField" ui-trigger="w-32">
-                  <XSelectItem :value="true">{{ t('print.fields.config.showLabel') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.config.showContent') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['device_Show'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['device_ShowContent'] }}</XSelectItem>
                 </XSelect>
 
                 <button @click="field.flip = false" class="px-2 py-1 border rounded text-xs hover:bg-primary/50"
                   :class="{ 'bg-primary': !field.flip }">
-                  {{ t('print.fields.background.white') }}
+                  {{ localStore.localData['device_WhiteBackground'] }}
                 </button>
 
                 <button @click="field.flip = true" class="px-2 py-1 border rounded text-xs"
                   :class="{ 'bg-primary': field.flip }">
-                  {{ t('print.fields.background.black') }}
+                  {{ localStore.localData['device_BlackBackground'] }}
                 </button>
               </template>
 
@@ -829,8 +830,8 @@ onBeforeUnmount(() => {
                 </div>
 
                 <XSelect v-model="field.showField" ui-trigger="w-52">
-                  <XSelectItem :value="true">{{ t('print.fields.barcode.common') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.barcode.only') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['device_BarcodeCommon'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['device_ShowBarcode'] }}</XSelectItem>
                 </XSelect>
 
                 <XInputNumber v-model="field.barcodeWidth!" size="sm" class="w-16" :min="1" :max="10" />
@@ -849,7 +850,7 @@ onBeforeUnmount(() => {
                 <button class="flex items-center gap-1 px-2 py-1 border rounded text-xs"
                   @click="visibleSelQrHeader = true">
                   <Icon icon="lucide:settings" />
-                  {{ t('print.fields.qrcode.label') }}
+                  {{ localStore.localData['device_QRSettings'] }}
                 </button>
 
                 <XInput
@@ -869,9 +870,9 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="flex justify-between space-x-2">
-        <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
-        <XButton class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
-        <XButton class="flex-1" :label="t('print.button.print')" color="warning" :loading="loading"
+        <XButton class="flex-1" :label="localStore.localData['device_Export']" color="success" @click="exportTemplate" />
+        <XButton class="flex-1" :label="localStore.localData['device_Import']" @click="openImport" />
+        <XButton class="flex-1" :label="localStore.localData['device_PrintResult']" color="warning" :loading="loading"
           @click="handleGenerate" />
       </div>
     </section>

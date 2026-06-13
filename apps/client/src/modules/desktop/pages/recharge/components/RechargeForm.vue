@@ -18,7 +18,8 @@ const selectedAmount = ref(0)
 // const amountList = ref<{ label: string; value: number; info?: string }[]>([])
 const selectedPayment = ref<RechargeMethod>('wxpay')
 
-const { t, locale } = useI18n()
+const {  locale } = useI18n()
+const localStore = useLocalStore()
 
 const isWechat = computed(() => selectedPayment.value === 'wxpay')
 
@@ -71,17 +72,17 @@ const rechargeInfo = computed(() => {
 // }
 
 function handleRecharge() {
-  if (!rechargeAmount.value) return toast.warning(t('valid.recharge.amount'))
+  if (!rechargeAmount.value) return toast.warning(localStore.localData['recharge_AmountZero_Toast'])
 
   const minAmount = +settings.minRechargeAmount
   const maxAmount = +settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAmount) {
-    return toast.warning(t('recharge.amount.min', { amount: minAmount }))
+    return toast.warning(localStore.localData['recharge_MinRecharge'].replace('@',minAmount))
   }
 
   if (rechargeAmount.value > maxAmount) {
-    return toast.warning(t('recharge.amount.max', { amount: maxAmount }))
+    return toast.warning(localStore.localData['recharge_MaxRecharge'].replace('@',maxAmount))
   }
 
   const response = rechargeApi.create({
@@ -92,12 +93,12 @@ function handleRecharge() {
   })
 
   response.then(({ data }) => {
-    if (selectedPayment.value === 'wxpay') {
+    if ( selectedPayment.value === 'wxpay') {
       store.visible = true
       store.url = data
       checkRecharge()
     }
-    if (selectedPayment.value === 'alipay') {
+    if ( selectedPayment.value === 'alipay') {
       window.location.href = data
     }
   })
@@ -109,7 +110,7 @@ function checkRecharge() {
     response.then(({ data }) => {
       if (!data) return
 
-      toast.success(t('submit.success', { action: t('action.recharge') }))
+      toast.success(localStore.localData['recharge_RechangeSuccess_Toast'])
       uStore.updateCredit()
       store.isComplete = true
       store.refresh = !store.refresh
@@ -122,7 +123,7 @@ function checkRecharge() {
 <template>
   <div class="bg-card border p-4 rounded-md space-y-6">
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">{{ t('recharge.balance.title') }}</h3>
+      <h3 class="text-lg font-medium">{{ localStore.localData['recharge_RechargeAmount'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">
         <button v-for="item in amountList" :key="item.value" :class="twMerge(
           'flex flex-col items-center justify-center space-y-1',
@@ -130,13 +131,13 @@ function checkRecharge() {
           customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
         )" @click="selectedAmount = item.value; customAmount = item.value">
           <span>{{ item.label }}</span>
-          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ t('recharge.handleFee') }}</span>
+          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ localStore.localData['recharge_CostFree'] }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
         <PriceInput
           v-model="customAmount"
-          :placeholder="t('recharge.amount.placeholder')"
+          :placeholder="localStore.localData['recharge_CustomAmount']"
         />
         <!-- <PriceInput v-model="customAmount" :placeholder="t('recharge.amount.placeholder')"
           @update:model-value="handleCustomAmount" /> -->
@@ -144,43 +145,43 @@ function checkRecharge() {
     </div>
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">{{ t('recharge.method.title') }}</h3>
+      <h3 class="text-lg font-medium">{{ localStore.localData['recharge_PaymentMethod'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
         <button :class="twMerge(
           'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
           selectedPayment === 'wxpay' && 'ring-2 ring-primary bg-primary/10',
         )" @click="selectedPayment = 'wxpay'">
           <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
-          <span>{{ t('recharge.method.wechat') }}</span>
+          <span>{{ localStore.localData['recharge_WeChatPay'] }}</span>
         </button>
         <button :class="twMerge(
           'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
           selectedPayment === 'alipay' && 'ring-2 ring-primary bg-primary/10',
         )" @click="selectedPayment = 'alipay'">
           <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
-          <span>{{ t('recharge.method.ali') }}</span>
+          <span>{{ localStore.localData['recharge_Alipay'] }}</span>
         </button>
       </div>
     </div>
 
     <div v-if="settings.enablePaymentInfo" class="bg-muted p-3 rounded-md">
-      <p class="mb-2 font-medium">{{ t('recharge.info.title') }}: </p>
+      <p class="mb-2 font-medium">{{ localStore.localData['recharge_RechargeInfo'] }}: </p>
       <div class="tiptap text-sm text-muted-foreground" v-html="rechargeInfo" />
     </div>
 
     <div class="space-y-2">
       <div class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.title') }}</span>
+        <span>{{ localStore.localData['recharge_RechargeAmount'] }}</span>
         <span>￥{{ rechargeAmount }}</span>
       </div>
 
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.handle') }}({{ +(payFee!.fee) * 100 }}%)</span>
+        <span>{{ localStore.localData['recharge_HandlingFee'] }}({{ +(payFee!.fee) * 100 }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t">
-        <span>{{ t('recharge.balance.compAmount.real') }}</span>
+        <span>{{ localStore.localData['recharge_PayableAmount'] }}</span>
         <span class="text-lg font-medium text-danger">
           ￥{{ (rechargeAmount + serviceFee).toFixed(2) }}
         </span>
@@ -188,7 +189,7 @@ function checkRecharge() {
     </div>
 
     <div class="flex items-center justify-end">
-      <XButton :label="t('recharge.button.balance')" @click="handleRecharge" />
+      <XButton :label="localStore.localData['recharge_RechargeNow']" @click="handleRecharge" />
     </div>
   </div>
 </template>

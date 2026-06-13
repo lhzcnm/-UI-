@@ -47,7 +47,8 @@ const {
   importTemplate,
 } = usePrinter()
 
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 const { services } = useServiceStore()
 
 const resultCol = hashPrintHeader("处理结果")
@@ -454,10 +455,10 @@ function updateOverflowMap() {
 
 async function exportTemplate() {
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.export.noField'))) return
+    if (!await xconfirm(localStore.localData['history_NoFields_Toast'])) return
   }
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.export.overflow'))) return
+    if (!await xconfirm(localStore.localData['history_FieldsRange'])) return
   }
 
   await saveTemplate(
@@ -485,7 +486,7 @@ async function handleChange(e: Event) {
   }
   const extensions = file.name.split('.')[1]
   if (extensions !== 'json') {
-    toast.warning(t('print.prompt.import.serviceNotMatch'))
+    toast.warning(localStore.localData['history_Inconsistent'])
     uploadRef.value.value = ''
   }
 
@@ -498,7 +499,7 @@ async function importTemplateFile(file: File) {
 
   const currentServiceId = currentService.value?.id ?? 0
   if (currentServiceId !== 0 && template.serviceId !== currentServiceId) {
-    return toast.warning(t('print.prompt.import.serviceNotMatch'))
+    return toast.warning(localStore.localData['history_Inconsistent'])
   }
 
   const {
@@ -531,14 +532,14 @@ async function handleWebGenerate() {
 
 async function handleGenerate() {
   if (!paperRef.value) return
-  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
-  if (customOrders.value.length === 0) return toast.warning(t('print.prompt.pdf.notOrder'))
+  if (generating.value) return toast.warning(localStore.localData['history_WaitPDF'])
+  if (customOrders.value.length === 0) return toast.warning(localStore.localData['history_FirstSubmitOrder'])
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
+    if (!await xconfirm(localStore.localData['history_NoFields_Toast'])) return
   }
   updateOverflowMap()
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
+    if (!await xconfirm(localStore.localData['history_FieldsOutRange'])) return
   }
 
   paperRef.value.classList.add("printing")
@@ -551,7 +552,7 @@ async function handleGenerate() {
     try {
       await handleWebGenerate()
     } catch {
-      toast.warning(t('print.prompt.pdf.error'))
+      toast.warning(localStore.localData['history_FailsPDF'])
     }
   } finally {
     generating.value = false
@@ -837,24 +838,24 @@ onBeforeUnmount(() => {
         <button class="p-2 flex items-center border border-border rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-all"
           @click="store.views = 'history'">
           <Icon icon="lucide:step-back" />
-          <span>{{ t('print.button.back.label') }}</span>
+          <span>{{ localStore.localData['history_PrintReturn'] }}</span>
         </button>
 
-        <span>{{ t('print.prompt.service.label') }}: {{ currentService!.id }} - {{ currentService!.title }}</span>
+        <span>{{ localStore.localData['history_Currentservice'] }}: {{ currentService!.id }} - {{ currentService!.title }}</span>
       </div>
 
       <HeaderTagConfig
         :headers="processedColumns"
         :select-cols="selectCols"
-        :title="t('print.fields.title')"
+        :title="localStore.localData['history_PrintFields']"
         @selected="handleSelectColumn"
       />
 
       <div class="min-h-56 border rounded-md p-3 space-y-3 bg-muted/30">
         <div class="font-semibold text-sm flex items-center gap-2">
-          {{ t('print.fields.config.title') }}
+          {{ localStore.localData['history_FiledConfiguration'] }}
           <span class="text-xs text-muted-foreground">
-            ({{ t('print.fields.config.tip') }})
+            ({{ localStore.localData['history_ConfigTip'] }})
           </span>
         </div>
 
@@ -888,23 +889,23 @@ onBeforeUnmount(() => {
                 </div>
 
                 <XSelect v-model="field.wrap" ui-trigger="w-32" @selected="handleWrapChange">
-                  <XSelectItem :value="true">{{ t('print.fields.config.wrap') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.config.nowrap') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['history_LabelContentLines'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['history_LabelContentNoWrap'] }}</XSelectItem>
                 </XSelect>
 
                 <XSelect v-model="field.showField" ui-trigger="w-32">
-                  <XSelectItem :value="true">{{ t('print.fields.config.showLabel') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.config.showContent') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['history_LabelAndContent'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['history_OnlyShowContent'] }}</XSelectItem>
                 </XSelect>
 
                 <button @click="field.flip = false" class="px-2 py-1 border rounded text-xs hover:bg-primary/50"
                   :class="{ 'bg-primary': !field.flip }">
-                  {{ t('print.fields.background.white') }}
+                  {{ localStore.localData['history_White'] }}
                 </button>
 
                 <button @click="field.flip = true" class="px-2 py-1 border rounded text-xs"
                   :class="{ 'bg-primary': field.flip }">
-                  {{ t('print.fields.background.black') }}
+                  {{ localStore.localData['history_Black'] }}
                 </button>
               </template>
 
@@ -917,8 +918,8 @@ onBeforeUnmount(() => {
                 </div>
 
                 <XSelect v-model="field.showField" ui-trigger="w-52">
-                  <XSelectItem :value="true">{{ t('print.fields.barcode.common') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.barcode.only') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['history_ShowBarcode'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['history_OnlyShowBarcode'] }}</XSelectItem>
                 </XSelect>
 
                 <XInputNumber v-model="field.barcodeWidth!" size="sm" class="w-16" :min="1" :max="10" />
@@ -937,7 +938,7 @@ onBeforeUnmount(() => {
                 <button class="flex items-center gap-1 px-2 py-1 border rounded text-xs"
                   @click="visibleSelQrHeader = true">
                   <Icon icon="lucide:settings" />
-                  {{ t('print.fields.qrcode.label') }}
+                  {{ localStore.localData['history_PrintQrcode'] }}
                 </button>
 
                 <XInput
@@ -959,9 +960,9 @@ onBeforeUnmount(() => {
       <div class="flex flex-col items-center">
         <PluginTip />
         <div class="w-full flex items-center justify-between gap-2">
-          <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
-          <XButton class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
-          <XButton class="flex-1" :label="t('print.button.print')" color="warning" @click="handleGenerate" />
+          <XButton class="flex-1" :label="localStore.localData['history_ExportTemplate']" color="success" @click="exportTemplate" />
+          <XButton class="flex-1" :label="localStore.localData['history_ImportTemplate']" @click="openImport" />
+          <XButton class="flex-1" :label="localStore.localData['history_PrintOrderResult']" color="warning" @click="handleGenerate" />
         </div>
       </div>
     </section>

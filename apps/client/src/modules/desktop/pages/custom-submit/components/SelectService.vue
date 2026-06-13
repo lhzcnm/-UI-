@@ -15,7 +15,7 @@ const emits = defineEmits<XSelectEmits>()
 const input = ref('')
 const favoriteIds = ref<number[]>()
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const filteredServices = computed(() => {
   const inputValue = input.value.trim().toLowerCase()
@@ -88,7 +88,7 @@ await favoriteService(undefined)
     v-model:input="input"
     v-bind="$attrs"
     filterable
-    :placeholder="t('service.placeholder')"
+    :placeholder="localStore.localData['print_CustomServiceSelect']"
     placement="bottom-start"
     @selected="emits('selected', $event)"
   >

@@ -8,7 +8,8 @@ const loading = ref(false)
 
 const store = inject(RECHARGE_STORE)!
 
-const { t } = useI18n()
+const localStore = useLocalStore()
+//const { t } = useI18n()
 
 watch(() => store.isComplete, () => getList())
 watch(
@@ -48,7 +49,7 @@ function handleExport() {
   <section class="flex-1 min-w-max bg-card border rounded-md">
     <div class="flex items-center justify-between p-4">
       <XButton
-        icon="lucide:arrow-down-to-line" :label="t('recharge.button.export')" color="success"
+        icon="lucide:arrow-down-to-line" :label="localStore.localData['recharge_ExportRecords']" color="success"
         :loading="loading" @click="handleExport"
       />
       <XPagination
@@ -59,7 +60,7 @@ function handleExport() {
     </div>
 
     <div class="h-[calc(100%-5.25rem)] overflow-y-auto px-4">
-      <NoMessage v-if="store.bills.total === 0" :title="t('dataNull')" />
+      <NoMessage v-if="store.bills.total === 0" :title="localStore.localData['recharge_NoRecords']" />
       <div v-else class="grid gap-3 grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
         <BillCard
           v-for="item in store.bills.list"

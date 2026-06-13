@@ -5,19 +5,20 @@ import { Icon } from '@iconify/vue'
 const store = useSettingStore()
 const route = useRoute()
 
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 
 const routes = [
-  { name: t('barItem.mobile.home'), path: '/m', icon: 'iconoir:home-alt-slim-horiz' },
-  { name: t('barItem.mobile.order'), path: '/m/history', icon: 'iconoir:page-flip' },
-  { name: t('barItem.mobile.submit'), path: '/m/submit', icon: 'iconoir:atom' },
+  { name: localStore.localData['top_Home'], path: '/m', icon: 'iconoir:home-alt-slim-horiz' },
+  { name: localStore.localData['top_Orders'], path: '/m/history', icon: 'iconoir:page-flip' },
+  { name: localStore.localData['top_SubmitOrder'], path: '/m/submit', icon: 'iconoir:atom' },
   {
-    name: t('barItem.mobile.feedback'),
+    name: localStore.localData['top_Feedback'],
     path: '/m/ticket',
     icon: 'iconoir:chat-lines',
     hide: !store.settings.enableTricket,
   },
-  { name: t('barItem.mobile.profile'), path: '/m/profile', icon: 'iconoir:user' },
+  { name: localStore.localData['top_Profile'], path: '/m/profile', icon: 'iconoir:user' },
 ]
 
 const currentPath = computed(() => {

@@ -17,15 +17,16 @@ const activeTab = ref<TabMode>(props.tab || 'recharge')
 const activity = shallowRef<ActivityItem | null>(null)
 
 const iStore = useSettingStore()
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 await iStore.getSettings()
 await iStore.getHandleFee()
 
 const options: XSegmentedOption[] = [
-  { label: t('recharge.segment.balance'), value: 'recharge', icon: 'lucide:wallet' },
-  { label: t('recharge.segment.member'), value: 'membership', icon: 'lucide:crown' },
-  { label: t('recharge.segment.voucher'), value: 'voucher', icon: 'lucide:ticket-check' },
+  { label: localStore.localData['recharge_Balance'], value: 'recharge', icon: 'lucide:wallet' },
+  { label: localStore.localData['recharge_Membership'], value: 'membership', icon: 'lucide:crown' },
+  { label: localStore.localData['recharge_Voucher'], value: 'voucher', icon: 'lucide:ticket-check' },
 ]
 
 const titleOptions = {

@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_MODE: string
   readonly VITE_API_URL: string
   readonly VITE_APP_ADMIN: string
+  readonly VITE_APP_LOCAL: string
   
   // storage key
   readonly VITE_ACCESS_TOKEN: string

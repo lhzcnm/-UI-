@@ -7,7 +7,8 @@ interface TableColumnDialogEmits {
 }
 
 const store = inject(SUBMIT_STORE)!
-const { t } = useI18n()
+const localStore = useLocalStore()
+
 
 const emit = defineEmits<TableColumnDialogEmits>()
 
@@ -76,7 +77,7 @@ function handleClose() {
 <template>
   <XDialog
     v-model="store.visibleHeaderFilter"
-    :title="t('query.fields.title.filter')"
+    :title="localStore.localData['submit_FieldsDialog']"
     @close="handleClose">
     <template #default>
       <div class="filter-modal">    
@@ -88,7 +89,7 @@ function handleClose() {
               value="all"
               :checked="allSelected"
               @change="toggleAll" />
-              <span>{{ t("all") }}</span>
+              <span>{{ localStore.localData['submit_FieldsDialogAll'] }}</span>
           </label>
           <div class="grid grid-cols-3 space-y-2">
             <label
@@ -111,8 +112,8 @@ function handleClose() {
 
     <template #footer>
       <div class="flex justify-end gap-2">
-        <XButton variant="soft" :label="t('button.cancel')" @click="handleClose" />
-        <XButton :label="t('button.confirm')" @click="handleConfirm" />
+        <XButton variant="soft" :label="localStore.localData['submit_FieldsDialogCancel']" @click="handleClose" />
+        <XButton :label="localStore.localData['submit_FieldsDialogConfirm']" @click="handleConfirm" />
       </div>
     </template>
   </XDialog>

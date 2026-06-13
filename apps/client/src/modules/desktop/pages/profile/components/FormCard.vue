@@ -12,16 +12,17 @@ import { PROFILE_STORE } from '../utils'
 
 const store = inject(PROFILE_STORE)!
 const ustore = useUserStore()
-const { t } = useI18n()
+
+const localStore = useLocalStore()
 
 const activeForm = ref<Action | null>(null)
 const activeTitle = computed(() => {
   const options = {
-    account: t('profile.form.title.account'),
-    password: t('profile.form.title.pwd'),
-    phone: t('profile.form.title.phone'),
-    email: t('profile.form.title.email'),
-    wechat: t('profile.form.title.wechat'),
+    account:localStore.localData['profile_TitleAccount'],
+    password: localStore.localData['profile_TitlePwd'],
+    phone: localStore.localData['profile_TitlePhone'],
+    email: localStore.localData['profile_TitleEmail'],
+    wechat: localStore.localData['profile_TitleWechat'],
   }
 
   return options[activeForm.value as Action]
@@ -56,8 +57,8 @@ function openUnbind(type: PROFILE_TYPE) {
 
     <div class="relative mt-4">
       <FormField
-        :label="t('profile.form.label.account')" class="mb-4"
-        :action-text="t('profile.edit')"
+        :label="localStore.localData['profile_LabelAccount']" class="mb-4"
+        :action-text="localStore.localData['profile_edit']"
         :value="ustore.info.username"
         @action="showForm('account')"
       />
@@ -70,26 +71,26 @@ function openUnbind(type: PROFILE_TYPE) {
       /> -->
       <div class="mb-4">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-sm text-muted-foreground">{{ t('profile.form.label.wechat') }}</span>
+          <span class="text-sm text-muted-foreground">{{ localStore.localData['profile_LabelWechat'] }}</span>
           <div class="flex space-x-2">
             <a
               v-if="ustore.info.openId"
               href="javascript:void(0)"
               class="text-sm text-primary hover:underline"
               @click="openUnbind(1)">
-              {{ t("profile.form.bind.un") }}
+              {{ localStore.localData['profile_BindUn'] }}
             </a>
             <a
               href="javascript:void(0)"
               class="text-sm text-primary hover:underline"
               @click="showForm('wechat')"
             >
-              {{ ustore.info.openId ? t('profile.params.bind.change') : t('profile.params.bind.title') }}
+              {{ ustore.info.openId ? localStore.localData['profile_BindChange'] : localStore.localData['profile_BindTitle'] }}
             </a>
           </div>
         </div>
         <input
-          :value="ustore.info.openId ? t('profile.params.bind.binding') : t('profile.params.bind.unbound')" type="text" readonly
+          :value="ustore.info.openId ? localStore.localData['profile_BindBinding'] : localStore.localData['profile_BindUnbound']" type="text" readonly
           class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted/80"
         />
       </div>
@@ -103,26 +104,26 @@ function openUnbind(type: PROFILE_TYPE) {
 
       <div class="mb-4">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-sm text-muted-foreground">{{ t('profile.form.label.phone') }}</span>
+          <span class="text-sm text-muted-foreground">{{ localStore.localData['profile_LabelPhone'] }}</span>
           <div class="flex space-x-2">
             <a
               v-if="ustore.info.phone"
               href="javascript:void(0)"
               class="text-sm text-primary hover:underline"
               @click="openUnbind(2)">
-              {{ t("profile.form.bind.un") }}
+              {{ localStore.localData['profile_BindUn'] }}
             </a>
             <a
               href="javascript:void(0)"
               class="text-sm text-primary hover:underline"
               @click="showForm('phone')"
             >
-              {{ ustore.info.phone ? t('profile.edit') : t('profile.params.bind.title') }}
+              {{ ustore.info.phone ? localStore.localData['profile_edit'] : localStore.localData['profile_BindTitle	'] }}
             </a>
           </div>
         </div>
         <input
-          :value="ustore.info.phone || t('profile.params.bind.unbound')" type="text" readonly
+          :value="ustore.info.phone || localStore.localData['profile_BindUnbound']" type="text" readonly
           class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted/80"
         />
       </div>
@@ -136,33 +137,33 @@ function openUnbind(type: PROFILE_TYPE) {
 
       <div class="mb-4">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-sm text-muted-foreground">{{ t('profile.form.label.email') }}</span>
+          <span class="text-sm text-muted-foreground">{{ localStore.localData['profile_LabelEmail'] }}</span>
           <div class="flex space-x-2">
             <a
               v-if="ustore.info.email"
               href="javascript:void(0)"
               class="text-sm text-primary hover:underline"
               @click="openUnbind(3)">
-              {{ t("profile.form.bind.un") }}
+              {{ localStore.localData['profile_BindUn'] }}
             </a>
             <a
               href="javascript:void(0)"
               class="text-sm text-primary hover:underline"
               @click="showForm('email')"
             >
-              {{ ustore.info.email ? t('profile.edit') : t('profile.params.bind.title') }}
+              {{ ustore.info.email ? localStore.localData['profile_edit'] : localStore.localData['profile_BindTitle'] }}
             </a>
           </div>
         </div>
         <input
-          :value="ustore.info.email || t('profile.params.bind.unbound')" type="text" readonly
+          :value="ustore.info.email || localStore.localData['profile_BindUnbound']" type="text" readonly
           class="w-full h-9 px-2.5 text-sm border rounded-md outline-none bg-muted/80"
         />
       </div>
 
       <FormField
         class="mb-4"
-        :label="t('profile.form.label.pwd')" :action-text="t('profile.edit')"
+        :label="localStore.localData['profile_LabelPwd']" :action-text="localStore.localData['profile_edit']"
         value="********" type="password"
         @action="showForm('password')"
       />

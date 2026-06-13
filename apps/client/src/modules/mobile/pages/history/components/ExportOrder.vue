@@ -14,7 +14,8 @@ const fileName = ref<string | undefined>()
 
 const exportDialog = ref<boolean>(false)
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 async function handleSubmit() {
   submitLoading.value = true
@@ -39,7 +40,7 @@ async function handleSubmit() {
 
 function openFileDialog() {
   if (!store.exportForm.serviceId) {
-    return toast.warning(t('prompt.serviceNull'))
+    return toast.warning(localStore.localData['history_Service_Select'])
   }
 
   exportDialog.value = true
@@ -58,38 +59,38 @@ async function getServiceHeader(id: number) {
 </script>
 
 <template>
-  <TheModal v-model="store.visibleExport" :title="t('order.title.export')" class="h-[78%]" @close="handleClose">
+  <TheModal v-model="store.visibleExport" :title="localStore.localData['history_ExportOrder']" class="h-[78%]" @close="handleClose">
 
 
 
     <BaseForm v-model="store.exportForm" class="px-4" />
     <div class="flex justify-end p-4">
-      <XButton color="success" :loading="submitLoading" @click="openFileDialog">{{ t('order.button.mobile.export')
+      <XButton color="success" :loading="submitLoading" @click="openFileDialog">{{ localStore.localData['history_ExportOrder']
       }}
       </XButton>
     </div>
 
     <XDialog v-model="exportDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]"
-      :title="t('query.fileImportDataSelection')" draggable>
+      :title="localStore.localData['history_SelectFileTypes']" draggable>
 
       <template #header>
         <div class="p-2 border-b">
-          <div class="w-full text-center">{{ t('order.exportFileName') }}</div>
+          <div class="w-full text-center">{{ localStore.localData['history_ExportName'] }}</div>
           <div @click="exportDialog = false" class="fixed top-1 right-4">x</div>
         </div>
       </template>
 
       <section class="flex flex-col justify-center items-center space-y-2 mx-auto px-6 py-2">
 
-        <XInput v-model="fileName" class="w-2/3" :placeholder="t('order.enterExportFileName')" />
-        <div class="text-sm text-center text-muted-foreground mb-2">{{ t('order.customFileNameHint') }}</div>
+        <XInput v-model="fileName" class="w-2/3" :placeholder="localStore.localData['history_ExportFileName']" />
+        <div class="text-sm text-center text-muted-foreground mb-2">{{ localStore.localData['history_CustomFileName'] }}</div>
 
       </section>
 
 
       <div class="p-2 border-t">
         <XButton class="w-full" variant="soft" :loading="submitLoading" @click="handleSubmit">{{
-          t('order.button.mobile.export') }}
+          localStore.localData['history_ExportOrder'] }}
         </XButton>
       </div>
     </XDialog>

@@ -35,10 +35,10 @@ const store = inject(HISTORY_STORE)!
 const { services } = useServiceStore()
 const focreHide = ref(false)
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
+watch(copied, (value) => value && toast.success(localStore.localData['history_TableCopySuccess']))
 
 const iStore = useSettingStore()
 const systemStore = useSystemStore()
@@ -66,7 +66,7 @@ const isShowVerify = computed(() => {
 
 const handleRefresh = useThrottleFn(() => {
   orderApi.item(row.id).then(({ data }) => {
-    toast.success(t('submit.success', { action: t('action.refresh') }))
+    toast.success(localStore.localData['history_RefreshSuccess'])
 
     if (data.status === ORDER_STATUS.SUCCESS) {
       focreHide.value = true
@@ -86,12 +86,12 @@ function handleVerify() {
   const daysDiff = diff / (24 * 3600 * 1000)
 
   if (daysDiff > 3) {
-    toast.info(t('order.prompt.orderTimeout'))
+    toast.info(localStore.localData['history_Verification_Toast'])
     return
   }
 
   orderApi.verify(id, { isUnlock: isUnlockService.value, serviceId: row.serviceId }).then(() => {
-    toast.success(t('order.prompt.vertified'))
+    toast.success(localStore.localData['history_SubmitVerification'])
 
     focreHide.value = true
     store.orders.list[index] = {
@@ -133,7 +133,7 @@ async function openUplockRecommend() {
 <template>
   <div class="flex flex-wrap gap-2">
     <XButton
-      :label="t('order.button.table.copy')"
+      :label="localStore.localData['history_TableCopy']"
       size="sm"
       class="flex-1 min-w-[120px]"
       @click="handleCopy"
@@ -141,7 +141,7 @@ async function openUplockRecommend() {
 
     <XButton
       v-if="isShowVerify"
-      :label="t('order.button.table.vertify')"
+      :label="localStore.localData['history_Verification']"
       size="sm"
       color="warning"
       class="flex-1 min-w-[120px]"
@@ -150,7 +150,7 @@ async function openUplockRecommend() {
 
     <XButton
       v-if="status.isProcessing"
-      :label="t('button.fresh')"
+      :label="localStore.localData['history_TableRefresh']"
       size="sm"
       class="flex-1 min-w-[120px]"
       @click="handleRefresh"

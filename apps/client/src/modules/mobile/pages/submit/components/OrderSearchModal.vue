@@ -12,8 +12,9 @@ interface OrderSearchModalEmits {
   filter: [params: OrderSearchForm]
 }
 
+// const { t } = useI18n()
 const serviceStore = useServiceStore()
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const emits = defineEmits<OrderSearchModalEmits>()
 const visible = defineModel<boolean>({ required: true })
@@ -25,10 +26,10 @@ const fileInputRef = useTemplateRef('fileInputRef')
 let hasFilter: boolean = false
 
 const statusOptions = [
-  { label: t('order.button.mobile.status.-1'), value: -1 },
-  { label: t('order.button.mobile.status.2'), value: ORDER_STATUS.SUCCESS },
-  { label: t('order.button.mobile.status.3'), value: ORDER_STATUS.FAILED },
-  { label: t('order.button.mobile.status.4'), value: ORDER_STATUS.PROCESSING },
+  { label: localStore.localData['submit_FieldsDialogAll'], value: -1 },
+  { label: localStore.localData['submit_Success'], value: ORDER_STATUS.SUCCESS },
+  { label: localStore.localData['submit_Failed'], value: ORDER_STATUS.FAILED },
+  { label: localStore.localData['submit_Processing'], value: ORDER_STATUS.PROCESSING },
 ]
 
 watch(
@@ -88,7 +89,7 @@ async function handleFileChange(event: Event) {
     form.value.imei = trimed ? `${trimed}\n${imeiList}` : imeiList
   } catch (error) {
     console.error('[File parse error]', error)
-    toast.error(t('query.prompt.file'))
+    toast.error(localStore.localData['submit_ImportFileError'])
   }
 }
 
@@ -112,26 +113,26 @@ function handleImei(text = '') {
 </script>
 
 <template>
-  <TheModal v-model="visible" :title="t('order.title.filter')" class="h-[78%]">
+  <TheModal v-model="visible" :title="localStore.localData['submit_FilterOrders']" class="h-[78%]">
     <template #default>
       <div class="p-4 space-y-3">
         <div class="space-y-1">
           <div class="space-y-1">
-            <label class="text-sm text-label">{{ t('order.listCol.status') }}: </label>
+            <label class="text-sm text-label">{{ localStore.localData['submit_OrderStatusTable'] }}: </label>
             <XSegmented v-model="form.status" :options="statusOptions" :default-value="-1" />
           </div>
 
           <div class="space-y-1">
-            <label class="inline-block mb-1 text-sm text-label">{{ t('date.mobile.title') }}: </label>
+            <label class="inline-block mb-1 text-sm text-label">{{ localStore.localData['submit_SubmitTime'] }}: </label>
             <div class="flex items-center space-x-2">
-              <XNativeDate v-model="form.startTime" :placeholder="t('date.mobile.start')" />
-              <XNativeDate v-model="form.endTime" :placeholder="t('date.mobile.end')" />
+              <XNativeDate v-model="form.startTime" :placeholder="localStore.localData['submit_StartTime']" />
+              <XNativeDate v-model="form.endTime" :placeholder="localStore.localData['submit_EndTime']" />
             </div>
           </div>
 
           <div class="space-y-1">
-            <label class="inline-block mb-1 text-sm text-label">{{ t('order.form.orderId.title') }}:</label>
-            <XTextarea v-model="form.codeIds" rows="4" :placeholder="t('order.form.orderId.placeholder')" />
+            <label class="inline-block mb-1 text-sm text-label">{{ localStore.localData['submit_OrderID'] }}:</label>
+            <XTextarea v-model="form.codeIds" rows="4" :placeholder="localStore.localData['submit_ImportOrderID']" />
           </div>
 
           <div class="space-y-1">
@@ -145,7 +146,7 @@ function handleImei(text = '') {
                 @click="handleFileInput"
               >
                 <Icon icon="lucide:file-input" />
-                <span>{{ t('order.upload.imei') }}</span>
+                <span>{{ localStore.localData['submit_UploadFile'] }}</span>
               </button>
             </div>
             <XTextarea v-model="form.imei" rows="4" placeholder="IMEI/SN" />
@@ -154,8 +155,8 @@ function handleImei(text = '') {
       </div>
 
       <div class="flex justify-end space-x-2 p-4">
-        <XButton color="success" variant="soft" @click="handleReset">{{ t('order.button.mobile.reset') }}</XButton>
-        <XButton @click="handleSubmit">{{ t('order.button.mobile.search') }}</XButton>
+        <XButton color="success" variant="soft" @click="handleReset">{{ localStore.localData['submit_ResetForm'] }}</XButton>
+        <XButton @click="handleSubmit">{{ localStore.localData['submit_FilterOrders'] }}</XButton>
       </div>
 
       <input ref="fileInputRef" type="file" hidden accept=".xlsx,.xls,.csv,.txt" @change="handleFileChange" />

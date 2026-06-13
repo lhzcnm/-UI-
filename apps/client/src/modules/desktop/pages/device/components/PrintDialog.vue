@@ -8,6 +8,7 @@ interface Template {
   preview: string
 }
 
+const localStore = useLocalStore()
 const baseTag = ['设备名称', '颜色', 'IMEI', '主板序号', '版本', '型号', '容量', '电池循环次数']
 const templates: Template[] = [
   {
@@ -82,7 +83,7 @@ async function handleSubmit() {
   <XDialog
     v-model="store.visiblePrint"
     ui-root="sm:max-w-2xl"
-    title="选择标签模板"
+    :title="localStore.localData['device_SelectLabelTemplate']"
   >
     <div class="h-[450px] overflow-y-auto">
       <div class="grid grid-cols-2 gap-3">
@@ -92,7 +93,7 @@ async function handleSubmit() {
         >
           <div class="flex items-center px-3 h-10 space-x-2">
             <input v-model="selected" type="radio" :value="template.id" name="template" class="size-4" />
-            <div class="font-semibold">模板 {{ template.id }}</div>
+            <div class="font-semibold">{{ localStore.localData['device_Template'] }} {{ template.id }}</div>
           </div>
 
           <div class="p-3 pt-0 h-64">
@@ -108,8 +109,8 @@ async function handleSubmit() {
 
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">
-        <XButton variant="soft" label="取消" @click="store.visiblePrint = false" />
-        <XButton :loading :disabled="selected === null" label="打印" @click="handleSubmit" />
+        <XButton variant="soft" :label="localStore.localData['device_CancelPrintDialog']" @click="store.visiblePrint = false" />
+        <XButton :loading :disabled="selected === null" :label="localStore.localData['device_PrintDialog']" @click="handleSubmit" />
       </div>
     </template>
   </XDialog>
