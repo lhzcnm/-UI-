@@ -4,11 +4,11 @@ import { h } from "vue"
 import ServerAction from "../components/ServerAction.vue"
 
 export const columns: XColDef<MonitorServer> = [
-  {
-    key: "serverId",
-    title: "ID",
-    width: 58,
-  },
+  // {
+  //   key: "serverId",
+  //   title: "ID",
+  //   width: 58,
+  // },
   {
     key: "serverIp",
     title: "IP",

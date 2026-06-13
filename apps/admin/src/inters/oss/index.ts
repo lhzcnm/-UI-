@@ -20,6 +20,6 @@ export type OssItem = z.infer<typeof zOssItem>
 export type OssUpload = z.infer<typeof zOssUpload>
 
 export interface OssUpdateParams {
-  serviceId: number,
+  domainId: number,
   tblOss: OssUpload
 }

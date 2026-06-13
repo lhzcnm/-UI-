@@ -16,7 +16,7 @@ const iStore = useSystemStore()
 
 const serverOptions = ref<OptionItem[]>([])
 const form = ref<OssUpdateParams>({
-  serviceId: 0,
+  domainId: 0,
   tblOss: zOssUpload.parse({}),
 })
 
@@ -27,7 +27,7 @@ watch(
     if (val) {
       await getServers()
       form.value = {
-        serviceId: 0,
+        domainId: 0,
         tblOss: zOssUpload.parse({}),
       }
     }
@@ -44,7 +44,7 @@ function processServerData(data: MonitorServer[]) {
 
   for (let server of data) {
     res.push({
-      value: server.serverId,
+      value: server.domainId,
       label: server.serverName,
     })
   }
@@ -59,7 +59,7 @@ async function handleConfirm() {
     // iStore.showOss = false
 
     form.value = {
-      serviceId: 0,
+      domainId: 0,
       tblOss: zOssUpload.parse({}),
     }
   } catch {}
@@ -80,7 +80,7 @@ await getServers()
       <form class="divide-y p-4" @submit.prevent>
         <FormField label="上传服务器" desc="需要上传的服务器">
           <XSelect
-            v-model="form.serviceId"
+            v-model="form.domainId"
           >
             <XSelectItem
               v-for="option in serverOptions" :key="option.value"

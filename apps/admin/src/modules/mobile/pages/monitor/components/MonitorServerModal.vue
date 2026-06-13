@@ -13,7 +13,6 @@ async function handleSubmit() {
     await updateMonitorServer({
       ...store.formBase,
       domainId: store.domainId!,
-      serverId: store.serverId!,
     })
 
     toast.success("更新成功")

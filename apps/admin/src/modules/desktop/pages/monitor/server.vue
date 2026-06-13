@@ -20,7 +20,6 @@ const store: MonitorServerStore = reactive({
   page: 1,
   limit: 20,
   refresh: false,
-  serverId: undefined,
   domainId: undefined,
 })
 

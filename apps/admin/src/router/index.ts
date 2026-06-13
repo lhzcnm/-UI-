@@ -85,7 +85,7 @@ router.afterEach((to) => {
 
   // find main menu by path
   const mainMenu = menus.concat(tools)
-    .find(menu => menu.path === `/${firstLevel}`)
+    .find(menu => menu.path.startsWith(`/${firstLevel}`))
 
   if (mainMenu) {
     if (!mainMenu.children) {
