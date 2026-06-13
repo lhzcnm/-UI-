@@ -25,8 +25,7 @@ async function updateLocal() {
 </script>
 
 <template>
-  <XDialog v-model="store.localDialog.updateDialog" ui-root="p-0 sm:p-0 sm:max-w-[450px]"
-    ui-header="pt-4 px-4 dark:text-gray-400" title="编辑前台中英文" draggable>
+  <TheModal v-model="store.localDialog.updateDialog"  title="编辑前台中英文" >
     
     <FormBase v-model="store.updateForm"/>
     <div class="flex justify-end gap-3 mt-auto border-t px-4 select-none">
@@ -35,5 +34,5 @@ async function updateLocal() {
         <XButton @click="updateLocal">编辑</XButton>
       </div>
     </div>
-  </XDialog>
+  </TheModal>
 </template>

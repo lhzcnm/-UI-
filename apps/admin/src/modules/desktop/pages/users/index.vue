@@ -66,12 +66,22 @@ watch(
     () => store.refresh,
   ],
   ([pageValue, limitValue]) => {
-    getList({
+    const heartbeatEnabled = store.formSearch.heartbeatEnabled == -1 ? undefined :
+      store.formSearch.heartbeatEnabled == 0 ? false : true
+
+    const disableUser = store.formSearch.disableUser == -1 ? undefined :
+      store.formSearch.disableUser == 0 ? false : true
+
+    const params = {
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
+      heartbeatEnabled,
+      disableUser,
       planId: toUndef(store.formSearch.planId),
-    })
+    } as UserListParams
+
+    getList(params)
   },
 )
 
@@ -114,7 +124,7 @@ function resetSearch() {
   router.replace({
     force: true,
     path: route.path,
-    query: {q: route.query.q}
+    query: { q: route.query.q }
   })
 }
 </script>
@@ -123,58 +133,30 @@ function resetSearch() {
   <div>
     <section class="flex justify-between p-3 border-b">
       <div class="flex items-center">
-        <XButton
-          label="筛选"
-          class="mr-2"
-          icon="lucide:filter"
-          @click="store.visibleSearch = true"
-        />
-        <XButton
-          label="清空筛选"
-          variant="outline"
-          icon="lucide:brush-cleaning"
-          @click="resetSearch"
-        />
+        <XButton label="筛选" class="mr-2" icon="lucide:filter" @click="store.visibleSearch = true" />
+        <XButton label="清空筛选" variant="outline" icon="lucide:brush-cleaning" @click="resetSearch" />
 
         <hr class="h-6 w-px mx-4 bg-border" />
 
-        <XButton
-          label="新增"
-          color="success"
-          icon="lucide:plus"
-          @click="openCreate"
-        />
+        <XButton label="新增" color="success" icon="lucide:plus" @click="openCreate" />
       </div>
 
-      <XPagination
-        v-model="store.page"
-        v-model:limit="store.limit"
-        :total="store.users.total"
-        :layouts="[
-          'total',
-          'prev',
-          'pager',
-          'next',
-          'sizes',
-          'jumper',
-        ]"
-      />
+      <XPagination v-model="store.page" v-model:limit="store.limit" :total="store.users.total" :layouts="[
+        'total',
+        'prev',
+        'pager',
+        'next',
+        'sizes',
+        'jumper',
+      ]" />
     </section>
 
     <div class="p-3 pb-0">
-      <XTable
-        ref="tableRef"
-        :columns="columns"
-        :data="store.users.list"
-        :loading="loading"
-        row-key="userId"
-        class="border h-[calc(100vh-8.75rem)]"
-      />
+      <XTable ref="tableRef" :columns="columns" :data="store.users.list" :loading="loading" row-key="userId"
+        class="border h-[calc(100vh-8.75rem)]" />
     </div>
 
-    <UserSearch
-      :key="queryHash"
-    />
+    <UserSearch :key="queryHash" />
 
     <UserDialog />
     <UserPoint />

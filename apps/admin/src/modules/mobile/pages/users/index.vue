@@ -54,11 +54,20 @@ watch(
     () => store.refresh,
   ],
   ([pageValue, limitValue]) => {
-    getList({
+    const heartbeatEnabled = store.formSearch.heartbeatEnabled == -1 ? undefined :
+      store.formSearch.heartbeatEnabled == 0 ? false : true
+
+    const disableUser = store.formSearch.disableUser == -1 ? undefined :
+      store.formSearch.disableUser == 0 ? false : true
+
+    const params = {
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
-    })
+      heartbeatEnabled,
+      disableUser,
+    } as UserListParams
+    getList(params)
   },
 )
 

@@ -36,7 +36,8 @@ const props = withDefaults(
 )
 const emits = defineEmits<OrderCardEmits>()
 const { isSubmit, class: className } = props
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 
 // const order = ref(props.order)
 const serviceStore = useServiceStore()
@@ -61,7 +62,7 @@ const verify = computed(() => ({
 }))
 
 const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
+watch(copied, (value) => value && toast.success(localStore.localData['history_TableCopySuccess']))
 
 const iStore = useSettingStore()
 
@@ -89,7 +90,7 @@ const handleRefresh = useThrottleFn(() => {
   orderApi.item(props.order.id).then((response) => {
     // props.order = response.data
     emits('refresh', props.order, response.data)
-    toast.success(t('submit.success', { action: t('action.refresh') }))
+    toast.success(localStore.localData['history_SuccessRefresh'])
   })
 }, 500)
 
@@ -117,14 +118,14 @@ function handleVerify() {
   const daysDiff = diff / (24 * 3600 * 1000)
 
   if (daysDiff > 3) {
-    toast.info(t('order.prompt.orderTimeout'))
+    toast.info(localStore.localData['history_Verification_Toast'])
     return
   }
 
-  window.confirm(t('order.prompt.vertifyConfirm')) && (() => {
+  window.confirm(localStore.localData['history_VerifyOrder']) && (() => {
     orderApi.verify(id, { isUnlock: isUnlockService.value, serviceId: props.order.serviceId }).then(() => {
       props.order.verify = ORDER_VERIFY.REPLIED
-      toast.success(t('order.prompt.vertified'))
+      toast.success(localStore.localData['history_SubmitVerification'])
     })
   })()
 }
@@ -160,20 +161,20 @@ function handleCopy() {
       </span>
       <span v-else class="text-base font-medium">{{ order.id }}</span>
       <div class="flex space-x-2">
-        <XTag :color="ORDER_STATUS_MAP[order.status].color" :label="t(ORDER_STATUS_MAP[order.status].key!)" />
-        <XTag v-if="!isSubmit" :color="ORDER_VERIFY_MAP[order.verify].color" :label="t(ORDER_VERIFY_MAP[order.verify].key!)" />
+        <XTag :color="ORDER_STATUS_MAP[order.status].color" :label="localStore.localData[ORDER_STATUS_MAP[order.status].key!]" />
+        <XTag v-if="!isSubmit" :color="ORDER_VERIFY_MAP[order.verify].color" :label="localStore.localData[ORDER_VERIFY_MAP[order.verify].key!]" />
       </div>
     </div>
 
     <div class="text-sm whitespace-pre">
       <div class="flex items-start">
-        <span class="text-muted-foreground shrink-0">{{ t('order.listCol.service' )}}: </span>
+        <span class="text-muted-foreground shrink-0">{{ localStore.localData['history_TableHeadServuce'] }}: </span>
         <span class="font-medium break-all whitespace-pre-line">{{ serviceName }}</span>
       </div>
 
       <div class="flex items-center group">
         <div class="flex items-center">
-          <span class="text-muted-foreground shrink-0">{{ t('order.listCol.dataSource') }}: </span>
+          <span class="text-muted-foreground shrink-0">{{ localStore.localData['history_Source'] }}: </span>
           <span class="font-medium font-mono">{{ order.imei }}</span>
         </div>
         <button
@@ -188,12 +189,12 @@ function handleCopy() {
       </div>
 
       <div v-if="order.createTime" class="flex items-center">
-        <span class="text-muted-foreground shrink-0">{{ t('order.listCol.creaTime') }}: </span>
+        <span class="text-muted-foreground shrink-0">{{ localStore.localData['history_TableHeadSubmitTime'] }}: </span>
         <span class="font-medium">{{ order.createTime }}</span>
       </div>
 
       <div class="flex items-center">
-        <span class="text-muted-foreground shrink-0">{{ t('order.listCol.point.title') }}: </span>
+        <span class="text-muted-foreground shrink-0">{{ localStore.localData['history_Points'] }}: </span>
         <span
           :class="twJoin(
             'font-medium text-danger',
@@ -202,13 +203,13 @@ function handleCopy() {
         >
           {{ order.credits }}
         </span>
-        <span v-if="status.isFailed" class="text-xs">{{ t('order.listCol.point.fail') }}</span>
+        <span v-if="status.isFailed" class="text-xs">{{ localStore.localData['history_Returned'] }}</span>
       </div>
     </div>
 
     <div class="text-sm">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-muted-foreground">{{ t('order.listCol.result') }}: </span>
+        <span class="text-muted-foreground">{{ localStore.localData['history_TableHeadResult'] }}: </span>
         <div class="flex items-center space-x-3">
           <button
             v-if="!isSubmit && status.isProcessing"
@@ -216,7 +217,7 @@ function handleCopy() {
             @click="handleRefresh"
           >
             <Icon icon="lucide:refresh-cw" class="size-4" />
-            <span class="text-xs">{{ t('button.fresh') }}</span>
+            <span class="text-xs">{{ localStore.localData['history_TableRefresh'] }}</span>
           </button>
 
           <button
@@ -225,7 +226,7 @@ function handleCopy() {
             @click="handleVerify"
           >
             <Icon icon="lucide:info" class="size-4" />
-            <span class="text-xs">{{ t('order.button.table.vertify') }}</span>
+            <span class="text-xs">{{ localStore.localData['history_Verification'] }}</span>
           </button>
 
           <button
@@ -234,7 +235,7 @@ function handleCopy() {
             @click="handleCopy"
           >
             <Icon icon="lucide:clipboard-copy" class="size-4" />
-            <span class="text-xs">{{ t('button.copy') }}</span>
+            <span class="text-xs">{{ localStore.localData['history_Copy'] }}</span>
           </button>
 
           <button
@@ -243,7 +244,7 @@ function handleCopy() {
             @click="emits('generate', order)"
           >
             <Icon icon="lucide:instagram" class="size-4" />
-            <span class="text-xs">{{ t('order.button.generate') }}</span>
+            <span class="text-xs">{{ localStore.localData['history_GenerateImages'] }}</span>
           </button>
         </div>
       </div>
@@ -255,14 +256,14 @@ function handleCopy() {
     </div>
 
     <div class="text-sm" v-if="order.remark">
-      <div class="text-muted-foreground mb-1.5">{{ t('order.listCol.remark') }}: </div>
+      <div class="text-muted-foreground mb-1.5">{{ localStore.localData['history_TableHeadRemarks'] }}: </div>
       <div class="bg-muted rounded p-3">
         {{ order.remark }}
       </div>
     </div>
 
     <div class="text-sm" v-if="order.recommends && order.recommends.length">
-      <div class="text-muted-foreground mb-1.5">{{ t('order.listCol.recommend') }}: </div>
+      <div class="text-muted-foreground mb-1.5">{{ localStore.localData['history_UnlocedService'] }}: </div>
       <ol class="bg-muted rounded p-3 list-decimal list-inside">
         <li v-for="recommend in order.recommends" :key="recommend.packageId">
           <a

@@ -19,7 +19,6 @@ export interface SidebarMenuChild {
 }
 
 const mode = import.meta.env.VITE_APP_MODE
-const local = import.meta.env.VITE_APP_LOCAL == 'true'
 
 export const menus: SidebarMenu[] = [
   {
@@ -29,11 +28,11 @@ export const menus: SidebarMenu[] = [
     match: 'yibiaopan',
   },
   {
-    label: '前台中英文管理',
+    label: '前台中英',
     path: '/local',
     icon: 'lucide:home',
     children: [
-      { label: '中英文管理', match: 'local', path: '/local' },
+      { label: '全部中英', match: 'local', path: '/local' },
       { label: '工具栏', match: 'local', path: '/local?q=1' },
       { label: '侧边栏', match: 'local', path: '/local?q=2' },
       { label: '登录页面', match: 'local', path: '/local?q=3' },
@@ -71,7 +70,7 @@ export const menus: SidebarMenu[] = [
       // ua.isDesktop && { label: '打印模板', match: 'fuwu', icon: 'lucide:package', path: '/service/template' },
     ].filter(item => !!item),
   },
-  {
+  ua.isDesktop &&{
     label: '打印模板',
     path: '/print',
     icon: 'lucide:layout-template',

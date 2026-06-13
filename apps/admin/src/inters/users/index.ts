@@ -91,6 +91,8 @@ export const zUserSearchForm = z.object({
   nickname: z.string().optional(),
   openId: z.string().optional(),
   isAdmin: z.boolean().default(false),
+  heartbeatEnabled: z.union([z.number(),z.boolean(),z.undefined()]).optional().default(-1),
+  disableUser:z.union([z.number(),z.boolean(),z.undefined()]).optional().default(-1)
 })
 
 export type UserSearchForm = z.infer<typeof zUserSearchForm>

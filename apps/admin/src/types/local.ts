@@ -21,20 +21,24 @@ export interface putLocalParams extends postLocalParams {
 
 export interface localList {
   id: number
-  messageKey: string
   ch: string
   en: string
+  remark: string
+  module: number
+  moduleName: string
   createTime: string
   updateTime: string
+  messageKey: string
 }
 
 export interface localListTableTypes {
   id: number
-  messageKey: string
   ch: string
   en: string
-  createTime: string
-  updateTime: string
+  remark: string
   module: number
   moduleName: string
+  createTime: string
+  updateTime: string
+  messageKey: string
 }
