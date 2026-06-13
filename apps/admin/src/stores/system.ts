@@ -29,14 +29,7 @@ export const useSystemStore = defineStore('system', () => {
     awaiting  : 0,
     processing: 0,
   })
-
-  watch(
-    () => breadcrumbItems.value,
-    () => {
-      console.log(breadcrumbItems.value)
-    }
-  )
-
+  
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
   }
