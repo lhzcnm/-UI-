@@ -6,11 +6,11 @@ const monitors: RouteRecordRaw[] = [
     name: "serverMonitorPlatform",
     redirect: "/on-monitor/users",
     children: [
-      {
-        path: "users",
-        name: "serverMonitorUsers",
-        component: () => import("@mobile/pages/monitor/user.vue"),
-      },
+      // {
+      //   path: "users",
+      //   name: "serverMonitorUsers",
+      //   component: () => import("@mobile/pages/monitor/user.vue"),
+      // },
       {
         path: "servers",
         name: "serverMonitorServers",
