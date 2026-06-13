@@ -3,7 +3,7 @@ import { z } from "zod/v4"
 import type { IList } from "../common"
 
 export const zMonitorServer = z.object({
-  serverId: z.number(),
+  // serverId: z.number(),
   serverIp: z.string(),
   serverName: z.string(),
   frontDomain: z.string(),
@@ -27,7 +27,6 @@ export const zMonitorForm = z.object({
 })
 
 export const zMonitorUpdate = zMonitorForm.extend({
-  serverId: z.number(),
   domainId: z.number(),
 })
 

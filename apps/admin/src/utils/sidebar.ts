@@ -171,13 +171,14 @@ export const menus: SidebarMenu[] = [
     ],
   },
   mode === "SanHe" && {
-    label: "监控平台",
-    path: "/on-monitor",
+    label: "监控服务器",
+    path: "/on-monitor/servers",
     icon: "lucide:server",
-    children: [
-      { label: "监控平台用户", match: "monitorUsers", path: "/on-monitor/users" },
-      { label: "监控服务器", match: "monitorServers", path: "/on-monitor/servers" },
-    ]
+    match: "monitorServers",
+    // children: [
+    //   // { label: "监控平台用户", match: "monitorUsers", path: "/on-monitor/users" },
+    //   { label: "监控服务器", match: "monitorServers", path: "/on-monitor/servers" },
+    // ]
   },
   {
     label: '积分券管理',

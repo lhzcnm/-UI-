@@ -16,7 +16,6 @@ const loading = ref<boolean>(false)
 
 function openUpdate() {
   store.formBase = zMonitorForm.parse(row)
-  store.serverId = row.serverId
   store.domainId = row.domainId
   store.visibleBase = true
 }

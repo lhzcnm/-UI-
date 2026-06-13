@@ -29,7 +29,7 @@ export const useSystemStore = defineStore('system', () => {
     awaiting  : 0,
     processing: 0,
   })
-
+  
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value
   }

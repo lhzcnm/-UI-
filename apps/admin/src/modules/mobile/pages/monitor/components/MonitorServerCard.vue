@@ -11,7 +11,6 @@ const props = defineProps<MonitorServerCardProps>()
 const store = inject(MONITOR_SERVER_STORE)!
 
 function openUpdate() {
-  store.serverId = props.server.serverId
   store.domainId = props.server.domainId
   store.formBase = zMonitorForm.parse(props.server)
   store.visibleBase = true
@@ -26,7 +25,6 @@ function openUpdate() {
       <div class="flex items-center gap-2 text-lg font-medium text-foreground">
         {{ server.serverName }}
       </div>
-      <div class="text-xs text-muted-foreground">#{{ server.serverId }}</div>
     </div>
 
     <div class="text-sm flex flex-col gap-1 text-muted-foreground mt-1">
