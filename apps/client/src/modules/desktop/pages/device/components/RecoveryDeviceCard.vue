@@ -10,7 +10,7 @@ interface RecoveryDeviceCardProps {
 
 const { device, ecid } = defineProps<RecoveryDeviceCardProps>()
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 async function handleLeaveRecovery() {
   try {
@@ -67,7 +67,7 @@ async function handleLeaveRecovery() {
 
     <div class="flex items-center gap-2 pt-3">
       <XButton
-        :label="t('device.button.outRecover')"
+        :label="localStore.localData['device_ExitRecovery']"
         class="flex-1"
         size="sm"
         color="success"

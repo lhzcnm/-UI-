@@ -25,7 +25,8 @@ import { getLanuagestring } from '@/utils/constant'
 
 const deviceStore = useDeviceStore()
 const { services, getServices } = useServiceStore()
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 const { connect, close } = useWsStore()
 const { updateCredit } = useUserStore()
 const iStore = useSystemStore()
@@ -347,10 +348,10 @@ function getNextItemPosition() {
 
 async function exportTemplate() {
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.export.noField'))) return
+    if (!await xconfirm(localStore.localData['print_NoFieldsExport_Toast'])) return
   }
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.export.overflow'))) return
+    if (!await xconfirm(localStore.localData['print_SomeFieldsExceed_Toast'])) return
   }
 
   await saveTemplate(
@@ -378,7 +379,7 @@ async function handleChange(e: Event) {
   }
   const extensions = file.name.split('.')[1]
   if (extensions !== 'json') {
-    toast.warning(t('print.prompt.import.serviceNotMatch'))
+    toast.warning(localStore.localData['print_ModuleService_Toast'])
     uploadRef.value.value = ''
   }
 
@@ -391,7 +392,7 @@ async function importTemplateFile(file: File) {
 
   const currentServiceId = serviceId.value
   if (currentServiceId !== 0 && template.serviceId !== currentServiceId) {
-    return toast.warning(t('print.prompt.import.serviceNotMatch'))
+    return toast.warning(localStore.localData['print_ModuleService_Toast'])
   }
 
   const {
@@ -603,16 +604,16 @@ function handleClickPhone(imei: string, isNormal: boolean = true) {
 }
 
 async function handleSubmit() {
-  if (serviceId.value === 0) return toast.warning(t('query.prompt.serviveNull'))
-  if (!currentService.value) return toast.warning(t('query.prompt.serviveNull'))
-  if (submited) return toast.warning(t('query.prompt.repeat'))
+  if (serviceId.value === 0) return toast.warning(localStore.localData['print_PleaseSelectService_Toast'])
+  if (!currentService.value) return toast.warning(localStore.localData['print_PleaseSelectService_Toast'])
+  if (submited) return toast.warning(localStore.localData['print_NotSubmitRepeatedly_Toast'])
 
   const imeis = getSubmitImei(strImeis.value, currentService.value.imeiType)
 
   customOrders.value = []
   customOrders.value = processSubmitOrder(imeis)
 
-  if (imeis.length === 0) return toast.warning(t('query.prompt.scan'))
+  if (imeis.length === 0) return toast.warning(localStore.localData['print_NotRecongnized'])
 
   strImeis.value = ''
 
@@ -630,7 +631,7 @@ function dispatchWebsocket() {
     status,
     (value) => {
       if (value !== 'OPEN') {
-        console.warn(`[3un] WebSocket ${t('submit.fail', { action: t('action.connect') })}`, value)
+        // console.warn(`[3un] WebSocket ${t('submit.fail', { action: t('action.connect') })}`, value)
         return close()
       }
     }
@@ -810,7 +811,7 @@ function processOrderResult(content: string) {
 
 function readOrderResult() {
   xconfirm({
-    title: t('print.dialog.order.title'),
+    title: localStore.localData['print_ResultsOrder'],
     text: convertResultToHtml(customOrders.value),
   })
 }
@@ -846,15 +847,15 @@ function convertResultToHtml(orders: CustomSubmitOrder[]) {
 
 async function handleGenerate() {
   if (!paperRef.value) return
-  if (generating.value) return toast.warning(t('print.prompt.pdf.gerenting'))
-  if (customOrders.value.length === 0) return toast.warning(t('print.prompt.pdf.notOrder'))
-  if (count.value > 0) return toast.warning(t('print.prompt.pdf.processing'))
+  if (generating.value) return toast.warning(localStore.localData['print_WaitPDF'])
+  if (customOrders.value.length === 0) return toast.warning(localStore.localData['print_FIrstSubmitOrder_Toast'])
+  if (count.value > 0) return toast.warning(localStore.localData['print_WaitOrdersFinish_Toast'])
   if (templateItems.value.length === 0) {
-    if (!await xconfirm(t('print.prompt.pdf.noField'))) return
+    if (!await xconfirm(localStore.localData['print_NoFieldsIsPrint'])) return
   }
   updateOverflowMap()
   if (Object.values(isOverflowMap).some(Boolean)) {
-    if (!await xconfirm(t('print.prompt.pdf.overflow'))) return
+    if (!await xconfirm(localStore.localData['print_SomeExceedFields_Toast'])) return
   }
 
   paperRef.value.classList.add("printing")
@@ -868,7 +869,7 @@ async function handleGenerate() {
       await handleWebGenerate()
     } catch(err) {
       console.error(err)
-      toast.warning(t('print.prompt.pdf.error'))
+      toast.warning(localStore.localData['print_FailedPDF'])
     }
   } finally {
     generating.value = false
@@ -1250,27 +1251,27 @@ onBeforeUnmount(() => {
 
       <div class="flex justify-between gap-8">
         <div class="flex-1">
-          <XTextarea v-model="strImeis" :placeholder="t('imei.placeholder')" rows="8" @change="submited = false" />
+          <XTextarea v-model="strImeis" :placeholder="localStore.localData['print_Input_IMEI/SN']" rows="8" @change="submited = false" />
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ t('query.imei.valid') }}: <b class="text-primary">{{ validImeis.length }}</b></span>
+              <span>{{ localStore.localData['print_CustomVaildData'] }}: <b class="text-primary">{{ validImeis.length }}</b></span>
             </div>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ t('query.imei.processing') }}: <b class="text-primary">{{ count }}</b></span>
+              <span>{{ localStore.localData['print_ProcessingOrders'] }}: <b class="text-primary">{{ count }}</b></span>
             </div>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ t('query.imei.processed') }}: <b class="text-success">{{ orderStat.success }}</b></span>
+              <span>{{ localStore.localData['print_SuccessfulOrders'] }}: <b class="text-success">{{ orderStat.success }}</b></span>
             </div>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ t('query.imei.failed') }}: <b class="text-danger">{{ orderStat.failed }}</b></span>
+              <span>{{ localStore.localData['print_FailedOrders'] }}: <b class="text-danger">{{ orderStat.failed }}</b></span>
             </div>
           </div>
         </div>
@@ -1280,29 +1281,29 @@ onBeforeUnmount(() => {
         <PluginTip />
         <div class="flex items-center justify-end gap-2">
           <label class="flex items-center group relative">
-            <XSwitch :label="t('print.button.autoprint.label')" v-model="autoPrint" />
+            <XSwitch :label="localStore.localData['print_AutoPrint']" v-model="autoPrint" />
           </label>
-          <XButton color="success" :label="t('print.button.submit')" @click="handleSubmit" />
-          <XButton :label="t('print.button.showres')" @click="readOrderResult" />
-          <XButton :label="t('print.button.print')" color="warning" @click="handleGenerate" />
+          <XButton color="success" :label="localStore.localData['print_SubmitOrders']" @click="handleSubmit" />
+          <XButton :label="localStore.localData['print_ViewOrderResult']" @click="readOrderResult" />
+          <XButton :label="localStore.localData['print_PrintResult']" color="warning" @click="handleGenerate" />
         </div>
       </div>
 
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
         <span class="flex-1 h-px bg-zinc-500"></span>
-        <span>{{ t('print.prompt.filterFailed') }}</span>
+        <span>{{ localStore.localData['print_SmallTitle'] }}</span>
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
       <HeaderTagConfig
         :headers="processedColumns"
         :select-cols="selectCols"
-        :title="t('print.fields.title')"
+        :title="localStore.localData['print_PrintFields']"
         @selected="handleSelectColumn"
       />
 
       <div class="border p-2 space-y-1">
-        <div class="font-bold text-sm">{{ t('print.device.title') }}</div>
+        <div class="font-bold text-sm">{{ localStore.localData['print_Device'] }}</div>
         <div class="flex flex-wrap gap-2">
           <template v-for="item in deviceFields" :key="item.key">
             <HeaderTag
@@ -1323,9 +1324,9 @@ onBeforeUnmount(() => {
 
       <div class="min-h-56 max-h-full border rounded-md p-3 space-y-3 bg-muted/30 overflow-y-auto">
         <div class="font-semibold text-sm flex items-center gap-2">
-          {{ t('print.fields.config.title') }}
+          {{ localStore.localData['print_FieldsConfig'] }}
           <span class="text-xs text-muted-foreground">
-            ({{ t('print.fields.config.tip') }})
+            ({{ localStore.localData['print_ControlDisplay'] }})
           </span>
         </div>
 
@@ -1341,7 +1342,7 @@ onBeforeUnmount(() => {
                 <XInput
                   v-model="field.size"
                   ui-root="w-16"
-                  placeholder="字号"
+                  :placeholder="localStore.localData['print_FontSize']"
                   @input="(e: Event) => field.size = handleInputChange(e)"
                   @change="(e: Event) => field.size = handleInputChange(e)"
                 />
@@ -1354,23 +1355,23 @@ onBeforeUnmount(() => {
                 </div>
 
                 <XSelect v-model="field.wrap" ui-trigger="w-32" @selected="handleWrapChange">
-                  <XSelectItem :value="true">{{ t('print.fields.config.wrap') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.config.nowrap') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['print_SomeLine'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['print_OneLine'] }}</XSelectItem>
                 </XSelect>
 
                 <XSelect v-model="field.showField" ui-trigger="w-32">
-                  <XSelectItem :value="true">{{ t('print.fields.config.showLabel') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.config.showContent') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['print_LabelContent'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['print_OnlyContent'] }}</XSelectItem>
                 </XSelect>
 
                 <button @click="field.flip = false" class="px-2 py-1 border rounded text-xs hover:bg-primary/50"
                   :class="{ 'bg-primary': !field.flip }">
-                  {{ t('print.fields.background.white') }}
+                  {{ localStore.localData['print_White'] }}
                 </button>
 
                 <button @click="field.flip = true" class="px-2 py-1 border rounded text-xs"
                   :class="{ 'bg-primary': field.flip }">
-                  {{ t('print.fields.background.black') }}
+                  {{ localStore.localData['print_Black'] }}
                 </button>
               </template>
 
@@ -1383,8 +1384,8 @@ onBeforeUnmount(() => {
                 </div>
 
                 <XSelect v-model="field.showField" ui-trigger="w-52">
-                  <XSelectItem :value="true">{{ t('print.fields.barcode.common') }}</XSelectItem>
-                  <XSelectItem :value="false">{{ t('print.fields.barcode.only') }}</XSelectItem>
+                  <XSelectItem :value="true">{{ localStore.localData['print_BarcodeContent'] }}</XSelectItem>
+                  <XSelectItem :value="false">{{ localStore.localData['print_OnlyBarcode'] }}</XSelectItem>
                 </XSelect>
 
                 <XInputNumber v-model="field.barcodeWidth!" size="sm" class="w-16" :min="1" :max="10" />
@@ -1403,7 +1404,7 @@ onBeforeUnmount(() => {
                 <button class="flex items-center gap-1 px-2 py-1 border rounded text-xs"
                   @click="visibleSelQrHeader = true">
                   <Icon icon="lucide:settings" />
-                  {{ t('print.fields.qrcode.label') }}
+                  {{ localStore.localData['print_QRcode'] }}
                 </button>
 
                 <XInput
@@ -1424,14 +1425,14 @@ onBeforeUnmount(() => {
 
       <div class="flex flex-col gap-2">
         <div class="flex justify-between space-x-2">
-          <XButton class="flex-1" :label="t('print.button.template.export')" color="success" @click="exportTemplate" />
-          <XButton color="warning" class="flex-1" :label="t('print.button.template.import')" @click="openImport" />
+          <XButton class="flex-1" :label="localStore.localData['print_ExportTemplate']" color="success" @click="exportTemplate" />
+          <XButton color="warning" class="flex-1" :label="localStore.localData['print_ImportTemplate']" @click="openImport" />
         </div>
       </div>
 
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
         <span class="flex-1 h-px bg-zinc-500"></span>
-        <span>{{ t('print.device.module') }}</span>
+        <span>{{ localStore.localData['print_ReaderModule'] }}</span>
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
@@ -1455,7 +1456,7 @@ onBeforeUnmount(() => {
       
       <template v-if="deviceStore.deviceMap.size === 0 && deviceStore.recoveryDeviceMap.size === 0">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
-          {{ t('print.device.noDevice') }}
+          {{ localStore.localData['print_USB_Runing'] }}
         </div>
       </template>
       <template v-else>
@@ -1469,9 +1470,9 @@ onBeforeUnmount(() => {
                     <h3>{{ phone.product.Name }}</h3>
                   </div>
                   <div class="text-sm text-muted-foreground">
-                    <p>{{ t('device.card.serial') }}: {{ phone.info.SerialNumber }}</p>
+                    <p>{{ localStore.localData['print_SerialNumber'] }}: {{ phone.info.SerialNumber }}</p>
                     <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
-                    <p>{{ t('device.card.type') }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+                    <p>{{ localStore.localData['print_Model'] }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
                   </div>
                 </div>
               </div>
@@ -1480,8 +1481,8 @@ onBeforeUnmount(() => {
 
           <div class="flex justify-between items-center mb-4">
             <div>
-              <h2 class="text-xl font-bold text-foreground">{{ t('device.recoverys.title') }}</h2>
-              <p class="text-sm text-muted-foreground">{{ t('device.recoverys.total', { total: deviceStore.recoveryDeviceMap.size}) }}</p>
+              <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['print_ReciveryList'] }}</h2>
+              <p class="text-sm text-muted-foreground">{{ localStore.localData['print_TotalDevices'].replace('@', deviceStore.recoveryDeviceMap.size) }}</p>
             </div>
           </div>
 
@@ -1496,7 +1497,7 @@ onBeforeUnmount(() => {
 
                   <div class="text-sm text-muted-foreground">
                     <p>ecid: {{ device.ecid }}</p>
-                    <p>{{ t('device.card.serial') }}: {{ device.serialNo }}</p>
+                    <p>{{ localStore.localData['print_SerialNumber'] }}: {{ device.serialNo }}</p>
                   </div>
                 </div>
               </div>
@@ -1509,12 +1510,12 @@ onBeforeUnmount(() => {
         <div class="flex items-center gap-2 text-sm text-muted-foreground">
           <span class="flex-1 h-px bg-zinc-500"></span>
           <div class="flex items-center gap-2">
-            <span>{{ t('print.device.hasUpdate') }}</span>
+            <span>{{ localStore.localData['print_UpdatePlugin'] }}</span>
             <XButtonSplit
-              :label="t('device.button.download')" :options="splitOptions"
+              :label="localStore.localData['print_DownloadPlugin']" :options="splitOptions"
               size="sm" :openClick="true"
             />
-            <XButton size="sm" :label="t('button.fresh')" @click="$router.go(0)" />
+            <XButton size="sm" :label="localStore.localData['print_Refresh']" @click="$router.go(0)" />
           </div>
           <span class="flex-1 h-px bg-zinc-500"></span>
         </div>
@@ -1524,7 +1525,7 @@ onBeforeUnmount(() => {
     <section class="flex-1 flex flex-col items-center gap-y-4">
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
         <span class="flex-1 h-px bg-zinc-500"></span>
-        <span>{{ t('print.paper.title') }}</span>
+        <span>{{ localStore.localData['print_PreviewArea'] }}</span>
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
@@ -1597,7 +1598,7 @@ onBeforeUnmount(() => {
 
       <div class="w-full flex items-center gap-4 text-sm">
         <span class="flex-1 h-px bg-border"></span>
-        <span class="">{{ t('print.paper.preview') }}</span>
+        <span class="">{{ localStore.localData['print_DifferentPreview'] }}</span>
         <span class="flex-1 h-px bg-border"></span>
       </div>
 

@@ -14,8 +14,7 @@ const countdown = ref(7200)
 const qrcode = useQRCode(text)
 let timer = 0
 
-const { t } = useI18n()
-
+const localStore = useLocalStore()
 watch(
   () => store.visible,
   (newValue) => {
@@ -73,7 +72,7 @@ function handleClose() {
       <div v-if="!store.isComplete" class="flex flex-col items-center justify-center space-y-4 p-4">
         <div class="flex space-x-1 items-center">
           <Icon icon="ri:wechat-pay-fill" class="size-9 text-success" />
-          <div class="text-2xl font-medium">{{ t('recharge.qrcode.title') }}</div>
+          <div class="text-2xl font-medium">{{ localStore.localData['recharge_WeChatPaymentQR'] }}</div>
         </div>
 
         <div
@@ -88,13 +87,13 @@ function handleClose() {
               'text-center text-sm',
             )"
           >
-            {{ t('recharge.qrcode.expired') }}
+            {{ localStore.localData['recharge_QRExpired'] }}
           </div>
         </div>
 
         <div class="text-center text-sm text-muted-foreground">
-          <div v-if="!isExpired">{{ t('recharge.qrcode.validity') }}: {{ formatTime(countdown) }}</div>
-          <div>{{ t('recharge.qrcode.text') }}</div>
+          <div v-if="!isExpired">{{ localStore.localData['recharge_QRCodeValidity'] }}: {{ formatTime(countdown) }}</div>
+          <div>{{ localStore.localData['recharge_ScanPayment'] }}</div>
         </div>
       </div>
       <div v-else class="flex flex-col items-center justify-center space-y-4 p-8">
@@ -105,7 +104,7 @@ function handleClose() {
           />
           <div class="absolute top-0 bottom-0 left-0 right-0 size-16 rounded-full border-4 border-success animate-circle-expand" />
         </div>
-        <div class="text-xl font-medium text-success opacity-0 animate-fade-up">{{ t('recharge.qrcode.success') }}</div>
+        <div class="text-xl font-medium text-success opacity-0 animate-fade-up">{{ localStore.localData['recharge_QRPaymentSuccess'] }}</div>
       </div>
     </Transition>
   </XDialog>

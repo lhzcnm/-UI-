@@ -16,7 +16,7 @@ const emits = defineEmits<ImgOrderEmits>()
 
 const store = inject(HISTORY_STORE)!
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 function handleClick(order: ImgOrderItem) {
   const a = document.createElement('a')
@@ -31,7 +31,7 @@ function handleClick(order: ImgOrderItem) {
 <template>
   <XDialog
     v-model="store.visibleOrderImg" maskClosable draggable
-    :title="t('order.title.img')"
+    :title="localStore.localData['history_OrderImage']"
     uiRoot="sm:max-w-full h-[calc(100vh-10rem)] flex flex-col w-auto"
     @close="emits('close')"
   >
@@ -40,7 +40,7 @@ function handleClick(order: ImgOrderItem) {
         <div class="border rounded relative" v-for="(order) in imgOrders" :key="order.id">
           <img class="border m-2" :src="order.img" :alt="`${order.id}_${order.imei}`">
           <div class="absolute top-2 right-2 z-20">
-            <XButton variant="ghost" :label="t('button.download')" @click="handleClick(order)" />
+            <XButton variant="ghost" :label="localStore.localData['history_DownloadImage']" @click="handleClick(order)" />
           </div>
         </div>
       </div>

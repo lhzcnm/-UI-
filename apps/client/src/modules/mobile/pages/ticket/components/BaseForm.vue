@@ -13,7 +13,8 @@ const form = defineModel<TicketCreateForm>({ required: true })
 
 // const ticketOptions = reactive<TicketOptions[]>([])
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 function handleDepartName(item: TicketType) {
   let res = item.departmentName
@@ -29,7 +30,7 @@ function handleDepartName(item: TicketType) {
 <template>
   <form class="space-y-3" @submit.prevent>
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('ticket.form.type') }}</label>
+      <label class="text-label text-sm">{{ localStore.localData['ticket_TicketType'] }}</label>
       <!-- <XNativeSelect
         v-model="form.type"
         :options="typeList"
@@ -58,7 +59,7 @@ function handleDepartName(item: TicketType) {
     </div>
 
     <div class="space-y-1 flex flex-col">
-      <label class="text-label text-sm">{{ t('ticket.form.level') }}</label>
+      <label class="text-label text-sm">{{ localStore.localData['ticket_PriorityLevel'] }}</label>
       <!-- <XNativeSelect
         v-model="form.priority"
         :options="TICKET_PRIORITY_LIST"
@@ -81,19 +82,19 @@ function handleDepartName(item: TicketType) {
           <option
             v-for="option in TICKET_PRIORITY_LIST" :key="option.key"
             :value="option.value"
-          >{{ t(option.key) }}</option>
+          >{{ localStore.localData[option.key] }}</option>
         </select>
       </div>
     </div>
 
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('ticket.form.topic') }}</label>
-      <XInput v-model="form.subject" :placeholder="t('ticket.placeholder.topic')" />
+      <label class="text-label text-sm">{{ localStore.localData['ticket_TicketSubject'] }}</label>
+      <XInput v-model="form.subject" :placeholder="localStore.localData['ticket_Topic']" />
     </div>
 
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('ticket.form.msg') }}</label>
-      <XTextarea v-model="form.msg" rows="5" :placeholder="t('ticket.placeholder.msg')" />
+      <label class="text-label text-sm">{{ localStore.localData['ticket_FeedbackContent'] }}</label>
+      <XTextarea v-model="form.msg" rows="5" :placeholder="localStore.localData['ticket_placeholderMsg']" />
     </div>
   </form>
 </template>

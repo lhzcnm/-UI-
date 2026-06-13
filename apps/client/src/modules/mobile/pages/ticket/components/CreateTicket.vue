@@ -6,7 +6,7 @@ import { ticketApi } from '@/api/tickets'
 const store = inject(TICKET_STORE)!
 
 const submitLoading = ref(false)
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 function handleSubmit() {
   submitLoading.value = true
@@ -30,13 +30,13 @@ function handleClose() {
 <template>
   <TheModal
     v-model="store.visibleCreate"
-    :title="t('ticket.title.create')" class="h-[78%]"
+    :title="localStore.localData['ticket_CreateTicket']" class="h-[78%]"
     @close="handleClose"
   >
     <BaseForm v-model="store.createForm" :type-list="store.types" class="px-4" />
     <div class="flex justify-end p-4">
       <XButton
-        :loading="submitLoading" :label="t('button.submit')"
+        :loading="submitLoading" :label="localStore.localData['ticket_Submit']"
         @click="handleSubmit"
       />
     </div>

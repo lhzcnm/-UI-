@@ -13,7 +13,7 @@ const store = inject(TICKET_STORE)!
 
 const msg = ref('')
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const currentTicket = computed(() => {
   if (store.index === undefined) return
@@ -28,7 +28,7 @@ const isSolved = computed(() => {
 function handleSubmit() {
   if (isSolved.value) return
   if (msg.value.trim() === '') {
-    toast.warning(t('ticket.prompt.msgNull'))
+    toast.warning(localStore.localData['ticket_msgNull'])
     return
   }
 
@@ -62,7 +62,7 @@ function handleSubmit() {
         >
           <img 
             :src="getAvatar(reply.replyId, uStore.info.avatar)"
-            :alt="reply.replyId ? t('ticket.customer') : t('ticket.user')"
+            :alt="reply.replyId ? localStore.localData['ticket_Customer'] : localStore.localData['ticket_User']"
             class="flex-shrink-0 size-8 rounded-full object-cover"
             draggable="false"
           />
@@ -86,13 +86,13 @@ function handleSubmit() {
             'w-full h-full pl-2 text-base sm:text-sm bg-transparent',
             'resize-none focus:outline-none'
           )"
-          :placeholder="t('ticket.placeholder.chat')"
+          :placeholder="localStore.localData['ticket_chat']"
           rows="3"
         />
         <XButton
           :disabled="isSolved"
           @click="handleSubmit"
-          :label="t('ticket.title.send')"
+          :label="localStore.localData['ticket_Send']"
         />
       </div>
     </div>

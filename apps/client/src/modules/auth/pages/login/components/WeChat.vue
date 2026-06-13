@@ -12,8 +12,7 @@ const nonce = ref('')
 const imageURL = ref('')
 const expiredMask = ref(false)
 const router = useRouter()
-const { t } = useI18n()
-
+const localStore = useLocalStore()
 onMounted(() => refreshQrcode())
 
 function refreshQrcode() {
@@ -49,7 +48,7 @@ function validQrcode() {
 
 <template>
   <div class="flex flex-col items-center justify-center space-y-4 h-full">
-    <h2 class="text-xl font-bold">{{ t('auth.method.wechat') }}</h2>
+    <h2 class="text-xl font-bold">{{ localStore.localData['login_WeChatLogin'] }}</h2>
     <div class="relative overflow-hidden w-44 h-44 border rounded-lg select-none">
       <img
         v-if="imageURL"
@@ -78,7 +77,7 @@ function validQrcode() {
           @click="refreshQrcode"
         >
           <Icon icon="lucide:rotate-cw" class="size-4" />
-          <span>{{ t('auth.refresh') }}</span>
+          <span>{{ localStore.localData['login_Refresh'] }}</span>
         </a>
       </div>
     </div>
@@ -90,7 +89,7 @@ function validQrcode() {
       )"
       @click="mode = 'account'"
     >
-      {{ t('auth.backTo', { action: t('auth.method.account') }) }}
+      {{ localStore.localData['login_QrAccountLogin'] }}
     </a>
   </div>
 </template>

@@ -24,6 +24,7 @@ const pageSize = ref(20)
 const generated = ref<boolean>(false)
 
 const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const mainNode = document.getElementById('main')
 
@@ -161,6 +162,7 @@ onUnmounted(() => {
       <div class="space-x-2">
         <ButtonGroup
           :layouts="['filter', 'export']"
+          :labels="{filter:localStore.localData['history_Filter'], export:localStore.localData['history_Export']}"
           @filter="store.visibleSearch = true" @export="store.visibleExport = true"
         />
       </div>

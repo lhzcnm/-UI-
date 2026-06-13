@@ -12,6 +12,7 @@ const modelKeys = defineModel<string[]>('keys', { required: true, default: [] })
 const visible = defineModel<boolean>({ required: true, default: false })
 
 const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const selKeys = ref<string[]>([])
 
@@ -37,7 +38,7 @@ function handleConfirm() {
 </script>
 
 <template>
-  <XDialog v-model="visible" title="二维码显示内容">
+  <XDialog v-model="visible" :title="localStore.localData['print_QRcodeTitleDialog']">
     <template #default>
       <div class="flex items-center gap-4 flex-wrap">
         <label class="flex gap-2 items-center" v-for="header in headers" :key="header.key">
@@ -50,8 +51,8 @@ function handleConfirm() {
 
     <template #footer>
       <div class="mt-2 flex items-center gap-2 justify-end">
-        <XButton variant="soft" @click="handleClose">取消</XButton>
-        <XButton @click="handleConfirm">确认</XButton>
+        <XButton variant="soft" @click="handleClose">{{ localStore.localData['print_DialogCancelButton'] }}</XButton>
+        <XButton @click="handleConfirm">{{ localStore.localData['print_DialogConfirmButton'] }}</XButton>
       </div>
     </template>
   </XDialog>

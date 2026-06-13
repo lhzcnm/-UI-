@@ -9,7 +9,7 @@ const limit = ref(20)
 const IPage = { list: [], total: 0, page: 1, pageSize: 20 }
 const bills = ref<InvoicesResponse>(IPage)
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 watch(
   page,
@@ -27,7 +27,7 @@ watch(
 
 <template>
   <div class="h-full">
-    <BackHeader :title="t('recharge.history.title')" />
+    <BackHeader :title="localStore.localData['recharge_RechargeHistory']" />
 
     <div
       :class="twJoin(
@@ -41,7 +41,7 @@ watch(
         :total="bills.total"
       />
       <span class="text-sm text-muted-foreground">
-        {{ t('recharge.history.total', { count: bills.total }) }}
+        {{ localStore.localData['recharge_Total'].replace('@',bills.total) }}
       </span>
     </div>
 

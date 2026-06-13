@@ -2,7 +2,7 @@
 import { useThrottleFn } from '@vueuse/core'
 import { ua } from '@3un/utils'
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const handleDownload = useThrottleFn(
   (id?: number) => {
@@ -28,7 +28,7 @@ const options = [
 
 <template>
   <XButtonSplit
-    :label="t('device.button.download')" :options="options"
+    :label="localStore.localData['device_DownloadPlugin']" :options="options"
     @click="handleDownload()"
   />
 </template>

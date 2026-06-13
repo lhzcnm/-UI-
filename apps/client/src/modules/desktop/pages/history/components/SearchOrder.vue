@@ -7,7 +7,7 @@ import { orderApi } from '@/api/orders'
 const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 function handleSubmit() {
   if(submitLoading.value) return
@@ -43,7 +43,7 @@ function handleReset() {
     v-model="store.visibleSearch"
     :close-on-esc="false"
     :mask-closable="false"
-    :title="t('order.title.filter')"
+    :title="localStore.localData['history_FilterOrders']"
   >
     <BaseForm v-model="store.searchForm" />
 
@@ -51,12 +51,15 @@ function handleReset() {
       <div class="flex justify-between space-x-2 mt-4">
         <XButton
           :loading="submitLoading"
-          :label="t('button.reset')" color="success"
+          :label="localStore.localData['history_Reset']" color="success"
           @click="handleReset"
         />
         <div class="space-x-2">
           <ButtonGroup
-            :layouts="['cancel', 'confirm']"
+            :layouts="['cancel', 'confirm']":labels="{
+              cancel: localStore.localData['history_CancelSearch'],
+              confirm: localStore.localData['history_ConfirmSearch']
+            }"
             @cancel="store.visibleSearch = false" @confirm="handleSubmit"
           />
         </div>

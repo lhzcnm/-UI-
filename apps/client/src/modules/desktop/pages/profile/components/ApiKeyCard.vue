@@ -10,7 +10,9 @@ const iStore = useSettingStore()
 const showApiUsageInfo = ref(false)
 
 const { copy } = useClipboard({ legacy: true })
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
+
 
 const apiUsageContent = computed(() => {
   return locale.value === 'zh'
@@ -22,12 +24,12 @@ const apiUsageContent = computed(() => {
 
 async function handleCopy() {
   await copy(store.info.apiKey)
-  toast.success(t('submit.success', { action: t('action.copy') }))
+  toast.success(localStore.localData['profile_SuccessCopy'])
 }
 
 async function handleRefresh() {
   await store.refreshApi()
-  toast.success(t('submit.success', { action: t('action.refresh') }))
+  toast.success(localStore.localData['profile_SuccessRefresh'])
 }
 </script>
 
@@ -40,7 +42,7 @@ async function handleRefresh() {
         @click="showApiUsageInfo = true"
       >
         <Icon icon="lucide:info" class="size-4" />
-        <span class="text-sm">{{ t('profile.apiKey.useInfo') }}</span>
+        <span class="text-sm">{{ localStore.localData['profile_UsageGuide'] }}</span>
       </button>
     </div>
 
@@ -53,15 +55,15 @@ async function handleRefresh() {
       </div>
 
       <div class="space-x-2">
-        <XButton icon="lucide:refresh-cw" :label="t('button.fresh')" @click="handleRefresh" />
-        <XButton icon="lucide:copy" :label="t('button.copy')" color="success" @click="handleCopy" />
+        <XButton icon="lucide:refresh-cw" :label="localStore.localData['profile_Refresh']" @click="handleRefresh" />
+        <XButton icon="lucide:copy" :label="localStore.localData['profile_Copy']" color="success" @click="handleCopy" />
       </div>      
     </div>
 
     <XDialog
       v-model="showApiUsageInfo"
       :text="apiUsageContent"
-      :title="t('profile.apiKey.info')"
+      :title="localStore.localData['profile_APIUsageInstructions']"
       ui-root="sm:max-w-2xl"
       ui-text="tiptap"
     />

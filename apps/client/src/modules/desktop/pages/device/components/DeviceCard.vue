@@ -15,7 +15,8 @@ const { info, memory, product, summary, deviceId } = props.device
 const currentKey = `${deviceId}:${info.UniqueDeviceID}`
 
 const { copy } = useClipboard({ legacy: true })
-const { t, locale } = useI18n()
+const {  locale } = useI18n()
+const localStore = useLocalStore()
 
 const store = inject(STORE)!
 const isPrinting = ref(false)
@@ -42,7 +43,7 @@ function handleCopy() {
   const tokens = locale.value === 'zh' ? getCopyToken(summary) : getCopyTokenEn(summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
-  toast.success(t('submit.success', { action: t('action.copy') }))
+  toast.success(localStore.localData['device_CopySucceeded'])
 }
 </script>
 
@@ -54,27 +55,27 @@ function handleCopy() {
         <XTag color="primary" :label="diskCapacity" size="sm" />
       </div>
       <div class="text-sm text-muted-foreground">
-        <p>{{ t('device.card.serial') }}: {{ info.SerialNumber }}</p>
-        <p>{{ t('device.card.type') }}: {{ info.ModelNumber }} {{ info.RegionInfo }}</p>
+        <p>{{ localStore.localData['device_SerialNumber'] }}: {{ info.SerialNumber }}</p>
+        <p>{{ localStore.localData['device_Model'] }}: {{ info.ModelNumber }} {{ info.RegionInfo }}</p>
       </div>
     </div>
     <div class="flex items-center space-x-2 pt-3 border-t border-dashed">
       <XButton
         class="flex-1"
         size="sm" variant="outline"
-        color="success" :label="t('device.button.copy')"
+        color="success" :label="localStore.localData['device_Copy']"
         @click="handleCopy"
       />
       <XButton
         class="flex-1"
         size="sm" variant="outline"
-        color="success" :label="t('device.button.print')"
+        color="success" :label="localStore.localData['device_PrintLabel']"
         :loading="isPrinting"
         @click="handlePrint"
       />
       <XButton
         class="flex-1"
-        size="sm" :label="t('device.button.view')"
+        size="sm" :label="localStore.localData['device_ViewDevice']"
         @click="toDevice"
       />
     </div>

@@ -19,8 +19,8 @@ const selectedPayment = ref<RechargeMethod>('wxpay')
 const memberPkg = ref<MemberPackage[]>([])
 const memberList = ref<MemberItem[]>([])
 const pkgTotalAmount = ref<string>('')
-
-const { t } = useI18n()
+const localStore = useLocalStore()
+//const { t } = useI18n()
 
 const store = inject(RECHARGE_STORE)!
 
@@ -93,7 +93,7 @@ function checkRecharge() {
     response.then(({ data }) => {
       if (!data) return
 
-      toast.success(t('submit.success', { action: t('action.recharge') }))
+      toast.success(localStore.localData['recharge_RechangeSuccess_Toast'])
       uStore.updateCredit()
       store.isComplete = true
       store.refresh = !store.refresh
@@ -116,7 +116,7 @@ function isSamePrice(item: MemberPackage) {
 <template>
   <div class="bg-card border p-4 rounded-md space-y-6">
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">{{ t('recharge.member.title') }}</h3>
+      <h3 class="text-lg font-medium">{{ localStore.localData['recharge_MembershipPlan'] }}</h3>
       <div class="grid grid-cols-2 gap-3">
         <button
           v-for="item in memberList" :key="item.id"
@@ -134,7 +134,7 @@ function isSamePrice(item: MemberPackage) {
     </div>
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">{{ t('recharge.method.title') }}</h3>
+      <h3 class="text-lg font-medium">{{ localStore.localData['recharge_PaymentMethod'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
         <button
           :class="twMerge(
@@ -144,7 +144,7 @@ function isSamePrice(item: MemberPackage) {
           @click="selectedPayment = 'wxpay'"
         >
           <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
-          <span>{{ t('recharge.method.wechat') }}</span>
+          <span>{{ localStore.localData['recharge_WeChatPay'] }}</span>
         </button>
         <button
           :class="twMerge(
@@ -154,16 +154,16 @@ function isSamePrice(item: MemberPackage) {
           @click="selectedPayment = 'alipay'"
         >
           <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
-          <span>{{ t('recharge.method.ali') }}</span>
+          <span>{{ localStore.localData['recharge_Alipay'] }}</span>
         </button>
       </div>
     </div>
 
     <div class="space-y-3 overflow-y-auto max-h-[400px]">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg text-warning">{{ t('recharge.member.rights.title') }}</h3>
+        <h3 class="text-lg text-warning">{{ localStore.localData['recharge_Benefits'] }}</h3>
         <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-          {{ t('recharge.member.rights.text1') }}: <b class="text-danger">￥{{ pkgTotalAmount }}</b>
+          {{ localStore.localData['recharge_SaveEveryMonth'] }}: <b class="text-danger">￥{{ pkgTotalAmount }}</b>
         </span>
       </div>
 
@@ -178,12 +178,12 @@ function isSamePrice(item: MemberPackage) {
 
           <div class="flex justify-between space-x-2 mt-1 text-sm">
             <p v-if="item.freeCount" class="text-muted-foreground">
-              <span>{{ t('recharge.member.rights.text2', { price: item.price }) }}</span>
-              <span class="text-primary font-bold">{{ t('recharge.member.rights.text3', { count: item.freeCount }) }}</span>
-              <span>{{ t('recharge.member.rights.text4') }}</span>
+              <span> {{ localStore.localData['recharge_OriginalPrice'].replace('@',item.price) }}</span>
+              <span class="text-primary font-bold">{{localStore.localData['recharge_Now'].replace('@',item.freeCount)}}</span>
+              <span>{{ localStore.localData['recharge_FreeQueries'] }}</span>
               <div v-if="!isSamePrice(item)">
-                <span>{{ t('recharge.member.rights.text5', { count: item.freeCount }) }}</span>
-                <span>{{ t('recharge.member.rights.text6', { price: item.price }) }}</span>
+                <span>{{localStore.localData['recharge_Exceeding'].replace('@',item.freeCount)}}</span>
+                <span>{{localStore.localData['recharge_DiscountPrice'].replace('@',item.price)}}</span>
               </div>
             </p>
           </div>
@@ -193,7 +193,7 @@ function isSamePrice(item: MemberPackage) {
 
     <div class="flex items-center justify-end">
       <XButton
-        :label="t('recharge.button.member')"
+        :label="localStore.localData['recharge_Activate']"
         :disabled="!selectedPlan"
         @click="handleRecharge"
       />

@@ -5,51 +5,50 @@ import { ORDER_STATUS_LIST } from '@3un/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent>
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('service.title') }}</label>
+      <label class="text-label text-sm">{{ localStore.localData['history_FormService'] }}</label>
       <SelectService v-model="form.serviceId" />
     </div>
 
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('order.form.status.title') }}</label>
+      <label class="text-label text-sm">{{ localStore.localData['history_OrderStatus'] }}</label>
       <XSelect
         v-model="form.status"
         :teleport="false"
-        :placeholder="t('order.form.status.placeholder')"
       >
-        <XSelectItem :value="-1" :label="t('all')" />
+        <XSelectItem :value="-1" :label="localStore.localData['history_All']" />
         <XSelectItem
           v-for="item in ORDER_STATUS_LIST" :key="item.value"
-          :value="item.value" :label="t(item.key)"
+          :value="item.value" :label="localStore.localData[item.key]"
         />
       </XSelect>
     </div>
 
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('date.title') }}</label>
+      <label class="text-label text-sm">{{ localStore.localData['history_Date'] }}</label>
       <XDateRangePicker
         v-model:start="form.startTime"
         v-model:end="form.endTime"
         label-format="YYYY-MM-DD"
-        :placeholder="t('date.placeholder')"
+        :placeholder="localStore.localData['history_TimeRange']"
       />
     </div>
 
     <div class="space-y-1">
-      <label class="text-label text-sm">{{ t('order.form.orderId.title') }}</label>
-      <XTextarea v-model="form.codeIds" :placeholder="t('order.form.orderId.placeholder')" rows="6" />
+      <label class="text-label text-sm">{{ localStore.localData['history_OrderID'] }}</label>
+      <XTextarea v-model="form.codeIds" :placeholder="localStore.localData['history_EnterOrders']" rows="6" />
     </div>
 
     <div class="space-y-1">
       <label class="text-label text-sm">IMEI/SN</label>
       <XTextarea
         v-model="form.imei"
-        :placeholder="t('imei.placeholder')"
+        :placeholder="localStore.localData['history_EnterImei']"
         rows="8"
       />
     </div>

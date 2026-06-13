@@ -7,6 +7,7 @@ const store = inject(TICKET_STORE)!
 const submitLoading = ref(false)
 
 const { t } = useI18n()
+const localStore = useLocalStore()
 
 function handleSubmit() {
   submitLoading.value = true
@@ -28,7 +29,7 @@ function handleSubmit() {
     v-model="store.visibleCreate"
     :close-on-esc="false"
     :mask-closable="false"
-    :title="t('ticket.title.create')"
+    :title="localStore.localData['ticket_CreateTicket']"
   >
     <BaseForm v-model="store.createForm" :type-list="store.types" />
 

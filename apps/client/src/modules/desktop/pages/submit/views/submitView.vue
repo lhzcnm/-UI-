@@ -49,29 +49,30 @@ const pushMsg = ref(true)
 const reseted = ref<boolean>(false)
 const exportLoading = ref(false)
 const indexes = ref<number[]>([])
+const localStore = useLocalStore()
 
-const columns = shallowRef<XTableColumn[]>(getDefaultColumns(t))
+const columns = shallowRef<XTableColumn[]>(getDefaultColumns())
 
 const threadKey = import.meta.env.VITE_THREAD_STORAGE
 
 const btnSplitOpts: XBtnSplitOptions = [
   {
-    label: t("query.fields.title.reset.cover.success"),
+    label: localStore.localData['submit_ResetSuccess'],
     icon: "",
     command: () => resetOrder(ORDER_STATUS.SUCCESS),
   },
   {
-    label: t("query.fields.title.reset.cover.failed"),
+    label: localStore.localData['submit_ResetFailed'],
     icon: "",
     command: () => resetOrder(ORDER_STATUS.FAILED),
   },
   {
-    label: t("query.fields.title.reset.noCover.success"),
+    label: localStore.localData['submit_ResetSuccessNew'],
     icon: "",
     command: () => resetNotCoverOrder(ORDER_STATUS.SUCCESS),
   },
   {
-    label: t("query.fields.title.reset.noCover.failed"),
+    label: localStore.localData['submit_ResetFailedNew'],
     icon: "",
     command: () => resetNotCoverOrder(ORDER_STATUS.FAILED),
   },
@@ -90,7 +91,7 @@ watch(
   (val) => {
     if (val !== undefined) {
       handleSelected(val)
-    } 
+    }
   }, { immediate: true }
 )
 
@@ -129,11 +130,11 @@ async function handleSelected(value: number) {
   store.rawOrders.length = 0
   count = 0
   disabled.value = false
-  
+
   selService.value = serviceStore.services.get(value)!
-  
+
   await handleServiceCols(value)
-  
+
   const key = import.meta.env.VITE_SUBMIT_STORGE
   const isStoraged = localStorage.getItem(`${key}_${value}`)
   if (isStoraged || showAll.value) {
@@ -193,7 +194,7 @@ function generateColumns(headers: ServiceCols[]) {
 }
 
 function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
-  const defaultCols = getDefaultColumns(t)
+  const defaultCols = getDefaultColumns()
   const len = defaultCols.length
   const frontCols = defaultCols.slice(0, serviceCols.length > 0 ? len - 3 : len - 2)
   const endCols = defaultCols.slice(-2, -1)
@@ -233,7 +234,7 @@ function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
 }
 
 function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
-  const defaultCols = getDefaultColumns(t)
+  const defaultCols = getDefaultColumns()
 
   const len = defaultCols.length
   let frontCols = defaultCols
@@ -663,7 +664,7 @@ async function reset() {
     const key = import.meta.env.VITE_SUBMIT_STORGE
     const id = selService.value.id
     localStorage.removeItem(`${key}_${id}`)
-    await orderApi.deleteCacheImei({serviceId: selService.value.id})
+    await orderApi.deleteCacheImei({ serviceId: selService.value.id })
   }
 
   close()
@@ -815,7 +816,7 @@ function handleDeleteHeader(column: XTableColumn) {
   if (headerIndex !== -1) {
     store.selectHeaders.splice(headerIndex, 1)
   }
-  
+
   if (columnIndex !== -1) {
     columns.value = columns.value.filter(c => c.key !== column.key)
     deletedColumns.push(column)
@@ -829,8 +830,8 @@ function handleDeleteHeader(column: XTableColumn) {
 function processResultColumns() {
   const deleteKeys = deletedColumns.map(c => c.key)
   const isAllServiceColsDel = headers.every(c => deleteKeys.includes(c))
-  const resultCol = getDefaultResultColumns(t)
-  
+  const resultCol = getDefaultResultColumns()
+
   const index = columns.value.findIndex(c => c.key === resultCol.key)
   if (isAllServiceColsDel) {
     if (index === -1) {
@@ -913,58 +914,47 @@ onMounted(() => {
 
         <ImportPlane :selected-id="store.selectId" @submit="handleImport" />
 
-        <ButtonGroup :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport"
-          @clear="reset" />
+        <ButtonGroup :labels="{
+          submit: localStore.localData['submit_Submit'],
+          export: localStore.localData['submit_Export'],
+          clear: localStore.localData['submit_Clear']
+        }" :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport" @clear="reset" />
 
-        <XButton v-if="selService" :label="t('query.result')" color="warning" :disabled="disabled"
-          :loading="loading" @click="handleFresh" />
-        
+        <XButton v-if="selService" :label="localStore.localData['submit_QueryResult']" color="warning" :disabled="disabled" :loading="loading"
+          @click="handleFresh" />
+
         <!-- <XButton label="打印标签" @click="handleChange" /> -->
 
-        <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="t('query.fields.title.filter')"
+        <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="localStore.localData['submit_FieldsFilter']"
           color="primary" @click="store.visibleHeaderFilter = true" />
 
-        <XButtonSplit :label="t('button.reset')" :options="btnSplitOpts" @click="resetSelectRow" />
+        <XButtonSplit :label="localStore.localData['submit_Reset']" :options="btnSplitOpts" @click="resetSelectRow" />
 
-        <XButton v-show="mustRead" variant="outline" :label="t('query.service')" color="warning"
+        <XButton v-show="mustRead" variant="outline" :label="localStore.localData['submit_ServiceDescription']" color="warning"
           @click="handleMustRead" />
 
-        <XSwitch v-model="pushMsg" :left-label="t('query.pushRes')" @change="handlePushMsgChange" />
+        <XSwitch v-model="pushMsg" :left-label="localStore.localData['submit_PushResult']" @change="handlePushMsgChange" />
 
-        <XSwitch v-model="showAll" :left-label="t('query.showAll')" v-if="store.selectId" @change="count = 0" />
+        <XSwitch v-model="showAll" :left-label="localStore.localData['submit_ShowAll']" v-if="store.selectId" @change="count = 0" />
 
         <label class="flex items-center space-x-2">
-          <span>{{ t('query.thread') }}</span>
+          <span>{{ localStore.localData['submit_ThreadCount'] }}</span>
           <XInputNumber v-model="threads" :step="1" :precision="0" :min="1" :max="10" @change="handleThreadChange" />
         </label>
       </div>
 
-      <XPagination
-        v-model="store.page" v-model:limit="store.limit"
-        :total="store.rawOrders.length"
-        :sizes
-        :layouts="[
-          'total',
-          'prev',
-          'pager',
-          'next',
-          'sizes',
-        ]"
-      />
+      <XPagination v-model="store.page" v-model:limit="store.limit" :total="store.rawOrders.length" :sizes :layouts="[
+        'total',
+        'prev',
+        'pager',
+        'next',
+        'sizes',
+      ]" />
     </section>
 
     <!-- <section class="flex-1 flex "> -->
-    <XTable
-      ref="tableRef"
-      :data="orders"
-      :columns="columns"
-      row-key="id"
-      class="h-[calc(100%-3rem)] max-w-full border"
-      selection
-      selected-key="index"
-      @select-change="indexes = $event"
-      @column-delete="handleDeleteHeader"
-    />
+    <XTable ref="tableRef" :data="orders" :columns="columns" row-key="id" class="h-[calc(100%-3rem)] max-w-full border"
+      selection selected-key="index" @select-change="indexes = $event" @column-delete="handleDeleteHeader" />
     <!-- </section> -->
 
     <TableColumnDialog @confirm="processHeaderConfirm" />

@@ -9,7 +9,7 @@ interface PaperConfigEmits {
   selectLayout: [layout: LAYOUT_POSITION]
 }
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const container = defineModel<ContainerItem>({ required: true })
 const emits = defineEmits<PaperConfigEmits>()
@@ -34,7 +34,7 @@ function getDate() {
     <div class="flex flex-col space-y-4">
       <!-- 纸张方向 -->
       <div>
-        <div class="font-semibold text-sm">{{ t('print.direction.title') }}</div>
+        <div class="font-semibold text-sm">{{ localStore.localData['print_PaperOrientation'] }}</div>
         <div class="flex items-center gap-4 text-sm">
           <template v-for="option in directionOptions" :key="option.value">
             <button class="flex items-center gap-1 text-lg"
@@ -62,33 +62,33 @@ function getDate() {
     </div>
     <!-- 纸张大小 -->
     <div class="flex flex-col space-y-1">
-      <div class="font-semibold text-sm">{{ t('print.size.paper.title') }} (mm)</div>
+      <div class="font-semibold text-sm">{{ localStore.localData['print_PaperSize'] }} (mm)</div>
       <div class="flex items-center gap-2">
-        <span class="text-xs w-16">{{ t('print.size.paper.long') }}(mm):</span>
+        <span class="text-xs w-16">{{ localStore.localData['print_Long'] }}(mm):</span>
         <XInputNumber v-model="container.width" :step="1" size="sm" />
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs w-16">{{ t('print.size.paper.width') }}(mm):</span>
+        <span class="text-xs w-16">{{ localStore.localData['print_Width'] }}(mm):</span>
         <XInputNumber v-model="container.height" :step="1" size="sm" />
       </div>
     </div>
     <!-- 内边距设置 -->
     <div class="flex flex-col space-y-1">
-      <div class="font-semibold text-sm">{{ t('print.size.padding.title') }} (mm)</div>
+      <div class="font-semibold text-sm">{{ localStore.localData['print_PageMargins'] }} (mm)</div>
       <div class="flex items-center gap-2">
-        <span class="text-xs w-16">{{ t('print.size.padding.top') }}(mm):</span>
+        <span class="text-xs w-16">{{ localStore.localData['print_Top'] }}(mm):</span>
         <XInputNumber v-model="container.padding.top" :step="1" size="sm" />
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs w-16">{{ t('print.size.padding.bottom') }}(mm):</span>
+        <span class="text-xs w-16">{{ localStore.localData['print_Bottom']  }}(mm):</span>
         <XInputNumber v-model="container.padding.bottom" :step="1" size="sm" />
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs w-16">{{ t('print.size.padding.left') }}(mm):</span>
+        <span class="text-xs w-16">{{ localStore.localData['print_Left'] }}(mm):</span>
         <XInputNumber v-model="container.padding.left" :step="1" size="sm" />
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs w-16">{{ t('print.size.padding.right') }}(mm):</span>
+        <span class="text-xs w-16">{{ localStore.localData['print_Right'] }}(mm):</span>
         <XInputNumber v-model="container.padding.right" :step="1" size="sm" />
       </div>
     </div>

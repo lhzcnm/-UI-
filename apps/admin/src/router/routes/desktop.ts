@@ -9,6 +9,7 @@ import recharge from './desktop/recharge'
 import activities from './desktop/activity'
 import monitors from './desktop/monitor'
 import print from './desktop/print'
+import local from './desktop/local'
 
 const desktop: RouteRecordRaw = {
   path: '/',
@@ -25,11 +26,13 @@ const desktop: RouteRecordRaw = {
     ...activities,
     ...monitors,
     ...print,
+    ...local,
     {
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@desktop/pages/dashboard/index.vue'),
     },
+    
     {
       path: 'tickets',
       name: 'Tickets',

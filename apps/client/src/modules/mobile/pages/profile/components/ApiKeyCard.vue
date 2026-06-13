@@ -8,14 +8,15 @@ import { maskText } from '@/utils'
 
 const store = useUserStore()
 const iStore = useSettingStore()
-const { t, locale } = useI18n()
+const {  locale } = useI18n()
+const localStore = useLocalStore()
 
 const { copy, copied } = useClipboard({ legacy: true })
-watch(copied, (value) => value && toast.success(t('submit.success', { action: t('action.copy') })))
+watch(copied, (value) => value && toast.success(localStore.localData['profile_SuccessCopy']))
 
 async function handleRefresh() {
   await store.refreshApi()
-  toast.success(t('submit.success', { action: t('action.refresh') }))
+  toast.success(localStore.localData['profile_SuccessRefresh'])
 }
 
 function openApiUsageInfo() {
@@ -26,10 +27,10 @@ function openApiUsageInfo() {
       : iStore.settings.apiUsageInfo
 
   xconfirm({
-    title: t('profile.apiKey.info'),
+    title: localStore.localData['profile_APIUsageInstructions'],
     text: apiUsageInfo,
-    confirmText: t('button.confirm'),
-    cancelText: t('button.cancel'),
+    confirmText: localStore.localData['profile_Confirm'],
+    cancelText: localStore.localData['profile_Cancel'],
   })
 }
 </script>
@@ -43,7 +44,7 @@ function openApiUsageInfo() {
         @click="openApiUsageInfo"
       >
         <Icon icon="lucide:info" class="size-4" />
-        <span class="text-sm">{{ t('profile.apiKey.useInfo') }}</span>
+        <span class="text-sm">{{ localStore.localData['profile_UsageGuide'] }}</span>
       </button>
     </div>
 
@@ -56,12 +57,12 @@ function openApiUsageInfo() {
     <div class="flex items-center space-x-2 mt-3">
       <XButton
         icon="lucide:refresh-cw"
-        class="flex-1" :label="t('button.fresh')"
+        class="flex-1" :label="localStore.localData['profile_Refresh']"
         @click="handleRefresh"
       />
       <XButton
         icon="lucide:copy" class="flex-1"
-        color="success" :label="t('button.copy')"
+        color="success" :label="localStore.localData['profile_Copy']"
         @click="copy(store.info.apiKey)"
       />
     </div>

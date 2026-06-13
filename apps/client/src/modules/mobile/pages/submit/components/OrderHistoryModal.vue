@@ -9,7 +9,7 @@ interface OrderHistoryModalProps {
   serviceId: number
 }
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const props = defineProps<OrderHistoryModalProps>()
 
@@ -21,8 +21,8 @@ const orders = ref<OrderListResponse>(createList())
 const refresh = ref<boolean>(false)
 const visibleSearch = ref<boolean>(false)
 const options: any[] = [
-  { label: t('query.previousBatchOrders'), value: 'last', icon: '' },
-  { label: t('query.allOrders'), value: 'all', icon: '' },
+  { label: localStore.localData['submit_PrevOrders'], value: 'last', icon: '' },
+  { label: localStore.localData['submit_AllOrders'], value: 'all', icon: '' },
 ]
 
 const orderTab = ref<string>('last')
@@ -102,7 +102,7 @@ async function handleFilter(params: OrderSearchForm) {
 </script>
 
 <template>
-  <SlideRight v-model="store.visibleHistory" :title="t('query.title.history')" header-class="border-b"
+  <SlideRight v-model="store.visibleHistory" :title="localStore.localData['submit_OrdersHistory']" header-class="border-b"
     ui-body="flex flex-col">
     <template #default>
       <section class="flex justify-evenly mt-2 fixed right-2 -top-0">
@@ -111,7 +111,9 @@ async function handleFilter(params: OrderSearchForm) {
 
       <section class="p-2 flex justify-between border-b">
         <div class="flex items-center space-x-2">
-          <ButtonGroup :layouts="orderTab == 'all'? ['filter', 'export'] : [ 'export']" @export="exportOrder" @filter="openFilter" />
+          <ButtonGroup 
+          :labels="{filter: localStore.localData['submit_Filter'], export: localStore.localData['submit_Export']}"
+          :layouts="orderTab == 'all'? ['filter', 'export'] : [ 'export']" @export="exportOrder" @filter="openFilter" />
         </div>
         <XSimplePagination v-if="orderTab == 'all'" v-model="page" :limit="pageSize" :total="orders.total" />
       </section>

@@ -3,10 +3,11 @@ import authApi from '@auth/api'
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+//const { t } = useI18n()
 const uStore = useUserStore()
+const localStore = useLocalStore()
 
-const prompt = ref(t('auth.ticket.loading'))
+const prompt = ref(localStore.localData['login_Automatically'])
 const loading = ref(false)
 
 const tokenKey = import.meta.env.VITE_ADMIN_TOKEN
@@ -19,7 +20,7 @@ async function handleTicketAuth(ticket: string) {
     const { data } = await authApi.ticketAuth({ code: ticket })
 
     // prompt.value = '登录成功，正在跳转...'
-    prompt.value = t('auth.ticket.success')
+    prompt.value = localStore.localData['login_Redirecting']
 
     sessionStorage.setItem(tokenKey, data)
     uStore.isAdminLogin = true
@@ -29,7 +30,7 @@ async function handleTicketAuth(ticket: string) {
     }, 800)
   } catch (e) {
     // prompt.value = '登录失败，正在跳转登录页...'
-    prompt.value = t('auth.ticket.failed')
+    prompt.value = localStore.localData['login_FailedRedirecting']
     uStore.isAdminLogin = false
 
     setTimeout(() => {

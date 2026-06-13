@@ -15,7 +15,8 @@ const store = inject(AUTH_STORE)!
 
 store.mode = 'phone'
 
-const { t } = useI18n()
+//const { t } = useI18n()
+const localStore = useLocalStore()
 const { count, isRunning, startCountdown, stopCountdown } = useCountdown()
 const router = useRouter()
 
@@ -40,11 +41,11 @@ let captchaId = ""
 const options: XSegmentedOption[] = [
   {
     value: 'phone',
-    label: t('auth.placeholder.phone'),
+    label: localStore.localData['login_Phone'],
   },
   {
     value: 'email',
-    label: t('auth.placeholder.Email'),
+    label: localStore.localData['login_Email'],
   },
 ]
 
@@ -55,19 +56,19 @@ function getRules(isRegister: boolean = true) {
   
   if (visibleMode.value === 'phone') {
     extraRules = [
-      { rule: !!phone, message: t(VERIFY_MSG.PHONE) },
-      { rule: PHONE_REG.test(phone!), message: t(VERIFY_MSG.PHONE_FORMAT) },
+      { rule: !!phone, message: localStore.localData[VERIFY_MSG.PHONE] },
+      { rule: PHONE_REG.test(phone!), message: localStore.localData[VERIFY_MSG.PHONE_FORMAT] },
     ]
   } else {
     extraRules = [
-      { rule: !!email, message: t(VERIFY_MSG.EMAIL) },
-      { rule: (EMAIL_REG).test(email!), message: t(VERIFY_MSG.EMAIL_FORMAT) },
+      { rule: !!email, message: localStore.localData[VERIFY_MSG.EMAIL] },
+      { rule: (EMAIL_REG).test(email!), message: localStore.localData[VERIFY_MSG.EMAIL_FORMAT] },
     ]
   }
 
   if (isRegister) {
     extraRules.push({
-      rule: !!code, message: t(VERIFY_MSG.CODE),
+      rule: !!code, message: localStore.localData[VERIFY_MSG.CODE],
     })
   }
   const rules: ValidRule[] = extraRules
@@ -84,7 +85,7 @@ function vertifyCaptcha(id: string) {
 async function doRegister() {
   try {
     await authApi.register({ ...form, id: captchaId })
-    toast.success(t('auth.toast.registerSuccess'))
+    toast.success(localStore.localData['login_RegistrationSuccessful'])
     stopCountdown()
     store.data = store.mode === 'phone' ? form.phone! : form.email!
     router.push("/auth")
@@ -121,7 +122,7 @@ function initData(data: string | number) {
 <template>
   <div class="flex-1 py-4 sm:py-0 space-y-2">
     <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-bold mb-4">{{ t('auth.loginRegister') }}</h2>
+      <h2 class="text-2xl font-bold mb-4">{{ localStore.localData['login_RegisterAccount'] }}</h2>
       <XSegmented v-model="store.mode"
         :options @change="initData" size="sm" />
     </div>
@@ -139,8 +140,8 @@ function initData(data: string | number) {
         v-model="form" />
         
       <div class="flex items-center space-x-2 mt-4">
-        <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="naviToAccount"></XButton>
-        <XButton class="w-full" :label="t('auth.btnRegister')" @click="onSubmit" />
+        <XButton :label="localStore.localData['login_AccountLogin']" variant="soft" type="button" @click="naviToAccount"></XButton>
+        <XButton class="w-full" :label="localStore.localData['login_Register']" @click="onSubmit" />
       </div>
     </div>
 

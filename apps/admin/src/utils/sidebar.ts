@@ -3,22 +3,23 @@
 import { ua } from "@3un/utils"
 
 export interface SidebarMenu {
-  label      : string
-  icon       : string
-  path       : string
-  badge     ?: (() => number)
-  match     ?: string[] | string
-  children  ?: SidebarMenuChild[]
+  label: string
+  icon: string
+  path: string
+  badge?: (() => number)
+  match?: string[] | string
+  children?: SidebarMenuChild[]
 }
 export interface SidebarMenuChild {
-  match     ?: string[] | string
-  label      : string
-  path       : string
-  icon      ?: string
-  badge     ?: (() => number)
+  match?: string[] | string
+  label: string
+  path: string
+  icon?: string
+  badge?: (() => number)
 }
 
 const mode = import.meta.env.VITE_APP_MODE
+const local = import.meta.env.VITE_APP_LOCAL == 'true'
 
 export const menus: SidebarMenu[] = [
   {
@@ -26,6 +27,26 @@ export const menus: SidebarMenu[] = [
     path: '/dashboard',
     icon: 'lucide:home',
     match: 'yibiaopan',
+  },
+  {
+    label: '前台中英文管理',
+    path: '/local',
+    icon: 'lucide:home',
+    children: [
+      { label: '中英文管理', match: 'local', path: '/local' },
+      { label: '工具栏', match: 'local', path: '/local?q=1' },
+      { label: '侧边栏', match: 'local', path: '/local?q=2' },
+      { label: '登录页面', match: 'local', path: '/local?q=3' },
+      { label: '首页', match: 'local', path: '/local?q=4' },
+      { label: '订单提交', match: 'local', path: '/local?q=5' },
+      { label: '查询打印', match: 'local', path: '/local?q=6' },
+      { label: '我的设备', match: 'local', path: '/local?q=7' },
+      { label: '我的订单', match: 'local', path: '/local?q=8' },
+      { label: '积分充值', match: 'local', path: '/local?q=9' },
+      { label: '消费记录', match: 'local', path: '/local?q=10' },
+      { label: '我的工单', match: 'local', path: '/local?q=11' },
+      { label: '会员中心', match: 'local', path: '/local?q=12' },
+    ],
   },
   {
     label: '用户管理',

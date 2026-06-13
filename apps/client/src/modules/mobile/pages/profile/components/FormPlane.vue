@@ -10,36 +10,37 @@ const visibleForm = ref(false)
 const activeForm = ref<Action | null>(null)
 const inviteCodeVisible = ref<boolean>(false)
 
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 
 const settingOptions = [
   {
-    label: t('profile.mobile.setting.phone'),
+    label: localStore.localData['profile_ChangePhone'],
     icon: 'lucide:smartphone',
     action: 'phone',
   },
   {
-    label: t('profile.mobile.setting.mail'),
+    label: localStore.localData['profile_ChangeEmail'],
     icon: 'lucide:mail',
     action: 'email',
   },
   {
-    label: t('profile.mobile.setting.pwd'),
+    label: localStore.localData['profile_ChangePassword'],
     icon: 'lucide:key',
     action: 'password',
   },
   {
-    label: t('profile.mobile.setting.account'),
+    label: localStore.localData['profile_ChangeAccount'],
     icon: 'lucide:user',
     action: 'account',
   },
   !ua.isWechat && {
-    label: t('profile.mobile.setting.wechat'),
+    label: localStore.localData['profile_BindWeChat'],
     icon: 'hugeicons:wechat',
     action: 'wechat',
   },
   {
-    label: t('profile.mobile.setting.invite'),
+    label: localStore.localData['profile_GenerateInviteCode'],
     icon: 'lucide:qr-code',
     action: 'qrcode',
   },
@@ -61,13 +62,13 @@ watch(
 
 const activeTitle = computed(() => {
   const options = {
-    account: t('profile.mobile.setting.account'),
-    password: t('profile.mobile.setting.pwd'),
-    phone: t('profile.mobile.setting.phone'),
-    email: t('profile.mobile.setting.mail'),
-    wechat: t('profile.mobile.setting.wechat'),
-    qrcode: t('profile.mobile.setting.invite'),
-    shop: t('profile.mobile.setting.shop'),
+    account: localStore.localData['profile_ChangeAccount'],
+    password: localStore.localData['profile_ChangePassword'],
+    phone: localStore.localData['profile_ChangePhone'],
+    email: localStore.localData['profile_ChangeEmail'],
+    wechat: localStore.localData['profile_BindWeChat'],
+    qrcode: localStore.localData['profile_GenerateInviteCode'],
+    shop: localStore.localData['profile_ServiceShop'],
   }
 
   return options[activeForm.value as Action]

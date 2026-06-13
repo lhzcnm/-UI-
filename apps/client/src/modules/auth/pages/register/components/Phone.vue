@@ -10,17 +10,17 @@ interface PhoneProps {
 defineProps<PhoneProps>()
 
 const form = defineModel<RegisterForm>({ required: true })
-
-const { t } = useI18n()
+const localStore=useLocalStore()
+// const { t } = useI18n()
 </script>
 
 <template>
   <form class="space-y-4" @submit.prevent>
-    <XInput v-model="form.phone" :placeholder="t('auth.placeholder.phone')" />
+    <XInput v-model="form.phone" :placeholder="localStore.localData['login_Phone']" />
     <div class="flex items-center space-x-2">
-      <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
+      <XInput v-model="form.code" :placeholder="localStore.localData['login_VerificationCode']" />
       <XButton type="button" @click="sendCaptcha" :disabled="isRunning">
-        {{ isRunning ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
+        {{ isRunning ? localStore.localData['login_Resend'].replace('@',count) : localStore.localData['login_SendCode'] }}
       </XButton>
     </div>
   </form>

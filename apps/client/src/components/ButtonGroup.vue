@@ -25,6 +25,7 @@ interface ButtonGroupProps {
   layouts: ButtonLayout[],
   size?: XBtnSize,
   disabled?: boolean,
+  labels?: Partial<Record<ButtonLayout, string>>,
 }
 
 interface ButtonGroupEmits {
@@ -45,10 +46,11 @@ interface ButtonGroupEmits {
 type ButtonConfig = Record<ButtonLayout, ButtonConfigItem>
 type ButtonLabel = Record<ButtonLayout, string>
 
-withDefaults(
+const props = withDefaults(
   defineProps<ButtonGroupProps>(),
   {
-    size: 'md'
+    size: 'md',
+    labels: () => ({})
   }
 )
 
@@ -82,6 +84,13 @@ const buttonLabels: ButtonLabel = {
   fresh: t('button.fresh')
 }
 
+const mergedLabels = computed(() => {
+  return {
+    ...buttonLabels,
+    ...props.labels
+  }
+})
+
 function handleClick(layout: ButtonLayout) {
   // @ts-ignore
   emits(layout)
@@ -90,13 +99,7 @@ function handleClick(layout: ButtonLayout) {
 
 <template>
   <template v-for="layout in layouts">
-    <XButton
-      :color="buttonConfigs[layout].color"
-      :variant="buttonConfigs[layout].variant"
-      :label="buttonLabels[layout]"
-      :size="size"
-      :disabled="disabled"
-      @click="handleClick(layout)"
-    />
+    <XButton :color="buttonConfigs[layout].color" :variant="buttonConfigs[layout].variant" :label="mergedLabels[layout]"
+      :size="size" :disabled="disabled" @click="handleClick(layout)" />
   </template>
 </template>

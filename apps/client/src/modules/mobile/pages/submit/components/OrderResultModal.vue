@@ -8,7 +8,7 @@ import { SUBMIT_STORE } from '../utils'
 
 const store = inject(SUBMIT_STORE)!
 const exportLoading = ref(false)
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const page = ref(1)
 const pageSize = ref(10)
@@ -28,7 +28,7 @@ const progress = computed<number>(() => {
 function handleExport() {
   const ids = store.rawOrders.map((item) => item.id)
   if (!store.serviceId || !ids?.length) {
-    toast.warning(t('service.select'))
+    toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
     return
   }
 
@@ -47,11 +47,11 @@ function handleExport() {
 </script>
 
 <template>
-  <TheModal v-model="store.visible" :title="t('query.title.mobile.result')">
+  <TheModal v-model="store.visible" :title="localStore.localData['submit_OrderResultTable']">
     <section class="relative px-4 pb-3 flex justify-between items-center">
       <XButton
         color="success"
-        :label="t('button.export')"
+        :label="localStore.localData['submit_Export']"
         :loading="exportLoading"
         @click="handleExport"
       />

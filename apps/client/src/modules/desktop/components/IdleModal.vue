@@ -5,7 +5,7 @@ import { tv } from 'tailwind-variants'
 import { CHECK_INTERVAL, visibleInacvite } from '@/utils/heartBeat'
 import { Icon } from '@iconify/vue'
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const COUNTDOWN = 3 * (CHECK_INTERVAL / 1000)
 
@@ -110,17 +110,14 @@ function watchVisible() {
 <template>
   <Teleport to="body">
     <Transition name="fade-in">
-      <div
-        v-if="visible"
-        :class="b.root()"
-      >
+      <div v-if="visible" :class="b.root()">
         <div :class="b.card()">
           <Icon :class="b.icon()" icon="lucide:alert-triangle" />
-  
+
           <div :class="b.desc()">
-            {{ t('expire') }}
+            {{ localStore.localData['top_Heartbeat'] }}
           </div>
-  
+
           <div :class="b.countdown()">
             {{ count }} s
           </div>

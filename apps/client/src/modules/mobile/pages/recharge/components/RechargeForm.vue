@@ -15,7 +15,8 @@ const selectedAmount = ref(0)
 const selectedPayment = ref<RechargeMethod>('wxpay')
 
 // const amountList = ref<{ label: string; value: number; info?: string }[]>([])
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const isWechat = computed(() => selectedPayment.value === 'wxpay')
 
@@ -68,17 +69,17 @@ function handleCustomAmount(value: any) {
 }
 
 function handleRecharge() {
-  if(!rechargeAmount.value) return toast.warning(t('valid.recharge.amount'))
+  if(!rechargeAmount.value) return toast.warning(localStore.localData['recharge_AmountZero_Toast'])
 
   const minAccount = +iStore.settings.minRechargeAmount
   const maxAccount = +iStore.settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAccount) {
-    return toast.warning(t('recharge.amount.min', { amount: minAccount }))
+    return toast.warning( localStore.localData['recharge_MinRecharge'].replace('@',minAccount))
   }
 
   if (rechargeAmount.value > maxAccount) {
-    return toast.warning(t('recharge.amount.max', { amount: maxAccount }))
+    return toast.warning(localStore.localData['recharge_MaxRecharge'].replace('@',maxAccount))
   }
 
   const response = rechargeApi.create({
@@ -131,7 +132,7 @@ function onBridgeReady(config: WXInvokeConfig) {
   <div class="bg-card border p-4 rounded-md space-y-4">
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">{{ t('recharge.balance.title') }}</h3>
+      <h3 class="text-lg font-medium">{{ localStore.localData['recharge_RechargeAmount'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">
         <button
           v-for="item in amountList" :key="item.value"
@@ -143,20 +144,20 @@ function onBridgeReady(config: WXInvokeConfig) {
           @click="selectedAmount = item.value; customAmount = item.value"
         >
           <span>{{ item.label }}</span>
-          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ t('recharge.handleFee') }}</span>
+          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ localStore.localData['recharge_CostFree'] }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
         <PriceInput
           v-model="customAmount"
-          :placeholder="t('recharge.amount.placeholder')"
+          :placeholder="localStore.localData['recharge_CustomAmount']"
           @update:model-value="handleCustomAmount"
         />
       </div>
     </div>
 
     <div class="space-y-3">
-      <h3 class="text-lg font-medium">{{ t('recharge.method.title') }}</h3>
+      <h3 class="text-lg font-medium">{{ localStore.localData['recharge_PaymentMethod'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
         <button
           :class="twMerge(
@@ -166,7 +167,7 @@ function onBridgeReady(config: WXInvokeConfig) {
           @click="selectedPayment = 'wxpay'"
         >
           <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
-          <span>{{ t('recharge.method.wechat') }}</span>
+          <span>{{ localStore.localData['recharge_WeChatPay'] }}</span>
         </button>
         <button
           :class="twMerge(
@@ -176,7 +177,7 @@ function onBridgeReady(config: WXInvokeConfig) {
           @click="selectedPayment = 'alipay'"
         >
           <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
-          <span>{{ t('recharge.method.ali') }}</span>
+          <span>{{ localStore.localData['recharge_Alipay'] }}</span>
         </button>
       </div>
     </div>
@@ -185,7 +186,7 @@ function onBridgeReady(config: WXInvokeConfig) {
       v-if="iStore.settings.enablePaymentInfo"
       class="bg-muted p-3 rounded-md"
     >
-      <p class="mb-2 font-medium">{{ t('recharge.info.title') }}: </p>
+      <p class="mb-2 font-medium">{{ localStore.localData['recharge_RechargeInfo'] }}: </p>
       <div
         class="tiptap text-sm text-muted-foreground"
         v-html="rechargeInfo"
@@ -194,17 +195,17 @@ function onBridgeReady(config: WXInvokeConfig) {
 
     <div class="space-y-2">
       <div class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.title') }}</span>
+        <span>{{ localStore.localData['recharge_RechargeAmount'] }}</span>
         <span>￥{{ rechargeAmount }}</span>
       </div>
       
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{{ t('recharge.balance.compAmount.handle') }}({{ (+payFee!.fee * 100).toFixed(2) }}%)</span>
+        <span>{{ localStore.localData['recharge_HandlingFee'] }}({{ (+payFee!.fee * 100).toFixed(2) }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
       
       <div class="flex items-center justify-between pt-2 border-t">
-        <span>{{ t('recharge.balance.compAmount.real') }}</span>
+        <span>{{ localStore.localData['recharge_PayableAmount'] }}</span>
         <span class="text-lg font-medium text-danger">
           ￥{{ (rechargeAmount + serviceFee).toFixed(2) }}
         </span>
@@ -213,7 +214,7 @@ function onBridgeReady(config: WXInvokeConfig) {
 
     <div class="flex items-center justify-end">
       <XButton
-        :label="t('recharge.button.balance')"
+        :label="localStore.localData['recharge_RechargeNow']"
         @click="handleRecharge"
       />
     </div>

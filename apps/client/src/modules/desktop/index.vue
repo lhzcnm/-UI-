@@ -31,7 +31,7 @@ await Promise.all([
 
 const isLogout = ref(false)
 
-const { t } = useI18n()
+const localStore=useLocalStore()
 
 const hideDevice =
   import.meta.env.VITE_APP_DEVICE === 'false' ||
@@ -39,30 +39,30 @@ const hideDevice =
   !uStore.info.enableDevice
 
 const menus: SidebarMenu[] = [
-  { label: t('barItem.home'), path: '/', icon: 'iconoir:home-alt-slim-horiz', type: 'basic' as const },
+  { label: localStore.localData['sidebar_Home'], path: '/', icon: 'iconoir:home-alt-slim-horiz', type: 'basic' as const },
   // { label: t('barItem.quote'), path: '/quote', icon: 'circum:receipt' },
-  { label: t('barItem.query'), path: '/submit', icon: 'iconoir:atom', type: 'basic' as const },
-  { label: t('barItem.custom'), path: '/custom-submit', icon: 'iconoir:atom', type: 'basic' as const },
+  { label: localStore.localData['sidebar_OrderSubmit'], path: '/submit', icon: 'iconoir:atom', type: 'basic' as const },
+  { label: localStore.localData['sidebar_PrintQuery'], path: '/custom-submit', icon: 'iconoir:atom', type: 'basic' as const },
   {
-    label: t('barItem.device'),
+    label: localStore.localData['sidebar_Devices'],
     path: '/device',
     icon: 'iconoir:laptop-charging',
     hide: hideDevice,
     type: 'basic' as const
   },
-  { label: t('barItem.history.order'), path: '/history', icon: 'iconoir:page-flip', type: 'basic' as const },
-  { label: t('barItem.recharge'), path: '/recharge', icon: 'iconoir:credit-card', type: 'basic' as const },
-  { label: t('barItem.history.point'), path: '/credits', icon: 'iconoir:bitcoin-rotate-out', type: 'basic' as const },
+  { label: localStore.localData['sidebar_Orders'], path: '/history', icon: 'iconoir:page-flip', type: 'basic' as const },
+  { label: localStore.localData['sidebar_AddFunds'], path: '/recharge', icon: 'iconoir:credit-card', type: 'basic' as const },
+  { label: localStore.localData['sidebar_Consumes'], path: '/credits', icon: 'iconoir:bitcoin-rotate-out', type: 'basic' as const },
   {
-    label: t('barItem.workOrder'),
+    label: localStore.localData['sidebar_Tickets'],
     path: '/ticket',
     icon: 'iconoir:chat-lines',
     hide: !iStore.settings.enableTricket,
     type: 'basic' as const
   },
-  { label: t('barItem.profile'), path: '/profile', icon: 'iconoir:user', type: 'basic' as const },
-  uStore.info.accessLevel === ACCESS_LEVEL.AUCTION && { label: t('barItem.auction'), path: '/auction', icon: 'lucide:laptop-minimal', type: 'extra' as const },
-  { label: t('barItem.logout'), path: '/logout', icon: 'iconoir:log-out', type: 'basic' as const },
+  { label: localStore.localData['sidebar_Profile'], path: '/profile', icon: 'iconoir:user', type: 'basic' as const },
+  uStore.info.accessLevel === ACCESS_LEVEL.AUCTION && { label: localStore.localData['sidebar_AuctionPlat'], path: '/auction', icon: 'lucide:laptop-minimal', type: 'extra' as const },
+  { label: localStore.localData['sidebar_Logout'], path: '/logout', icon: 'iconoir:log-out', type: 'basic' as const },
 ].filter((item) => !!item)
 
 onMounted(async () => {

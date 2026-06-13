@@ -7,60 +7,60 @@ import { h } from 'vue'
 import type { Order } from '@/api/orders'
 
 const serviceStore = useServiceStore()
+const localStore = useLocalStore()
 
 export function getOrderColumns(): XColDef<Order> {
-  const { t } = useI18n()
 
   return [
     { key: 'id', title: 'ID', width: 98 },
     {
       key: 'serviceId',
-      title: t('order.listCol.service'),
+      title: localStore.localData['history_TableHeadServuce'],
       width: 220,
       render: (value) => {
         const service = serviceStore.services.get(value)
         return service
           ? `${service.id} - ${service.title}`
-          : t('service.notFound')
+          : localStore.localData['history_NotFount']
       },
     },
     { key: 'imei', title: 'IMEI/SN', width: 158 },
-    { key: 'credits', title: t('service.point'), width: 58 },
+    { key: 'credits', title: localStore.localData['history_TableHeadPoints'], width: 58 },
     {
       key: 'status',
-      title: t('order.listCol.status'),
+      title: localStore.localData['history_TableHeadOrderStatus'],
       width: 108,
       render: (value: ORDER_STATUS) => {
         return h(XTag, {
-          label: t(ORDER_STATUS_MAP[value].key!),
+          label: localStore.localData[ORDER_STATUS_MAP[value].key!],
           color: ORDER_STATUS_MAP[value].color,
         })
       }
     },
     {
       key: 'verify',
-      title: t('order.listCol.vertify'),
+      title: localStore.localData['history_TableHeadVerifyStatus'],
       width: 108,
       render(value: ORDER_VERIFY) {
         return h(XTag, {
-          label: t(ORDER_VERIFY_MAP[value].key!),
+          label: localStore.localData[ORDER_VERIFY_MAP[value].key!],
           color: ORDER_VERIFY_MAP[value].color,
         })
       }
     },
     {
       key: 'result',
-      title: t('order.listCol.result'),
+      title: localStore.localData['history_TableHeadResult'],
       minWidth: 320,
       render(value: string) {
         return h('div', { innerHTML: value })
       }
     },
-    { key: 'createTime', title: t('order.listCol.creaTime'), width: 148, thClassName: 'text-center' },
-    { key: 'remark', title: t('order.listCol.remark'), width: 168, },
+    { key: 'createTime', title: localStore.localData['history_TableHeadSubmitTime'], width: 148, thClassName: 'text-center' },
+    { key: 'remark', title: localStore.localData['history_TableHeadRemarks'], width: 168, },
     {
       key: 'action',
-      title: t('action.operation'),
+      title: localStore.localData['history_TableHeadOperation'],
       fixed: 'right',
       width: 138,
       render(_, row, index) {

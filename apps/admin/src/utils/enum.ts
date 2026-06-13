@@ -28,3 +28,4 @@ export const QUOTATION_ENUM_LIST = [
   { value: QUOTATION_ENUM.OLD, label: '报价单 - 旧机' },
   { value: QUOTATION_ENUM.NEW, label: '报价单 - 新机' },
 ]
+

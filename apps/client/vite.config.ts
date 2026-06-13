@@ -15,6 +15,9 @@ function resolve(path: string) {
 
 export default defineConfig({
   envDir: './config',
+  optimizeDeps: {
+    include: ['@/stores/local']
+  },
   plugins: [
     vue(),
     Imports({
@@ -32,7 +35,7 @@ export default defineConfig({
       ],
     }),
     I18nPlugin({
-      include: path.resolve(__dirname,'src/locales/locale/**'),
+      include: path.resolve(__dirname, 'src/locales/locale/**'),
       allowDynamic: true,
       runtimeOnly: false,
     }),

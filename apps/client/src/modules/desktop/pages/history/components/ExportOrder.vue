@@ -10,14 +10,15 @@ const store = inject(HISTORY_STORE)!
 const submitLoading = ref(false)
 const headers = ref<string[]>([])
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 async function handleSubmit() {
   await getServiceHeader(store.exportForm.serviceId)
   submitLoading.value = true
 
-  const params = formatOrderParams({...store.exportForm})
-  
+  const params = formatOrderParams({ ...store.exportForm })
+
   try {
     const { data } = await orderApi.export({
       serviceId: store.exportForm.serviceId,
@@ -39,20 +40,16 @@ async function getServiceHeader(id: number) {
 </script>
 
 <template>
-  <XDialog
-    v-model="store.visibleExport"
-    :close-on-esc="false"
-    :mask-closable="false"
-    :title="t('order.title.export')"
-  >
+  <XDialog v-model="store.visibleExport" :close-on-esc="false" :mask-closable="false"
+    :title="localStore.localData['history_ExportOrder']">
     <BaseForm v-model="store.exportForm" />
 
     <template #footer>
       <div class="flex justify-end space-x-2 mt-4">
-        <ButtonGroup
-          :layouts="['cancel', 'confirm']"
-          @cancel="store.visibleExport = false" @confirm="handleSubmit"
-        />
+        <ButtonGroup :layouts="['cancel', 'confirm']" :labels="{
+          cancel: localStore.localData['history_CancelExport'],
+          confirm: localStore.localData['history_ConfirmExport']
+        }" @cancel="store.visibleExport = false" @confirm="handleSubmit" />
       </div>
     </template>
   </XDialog>

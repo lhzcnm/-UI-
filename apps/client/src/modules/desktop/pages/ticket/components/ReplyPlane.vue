@@ -11,6 +11,8 @@ const store = inject(TICKET_STORE)!
 const msg = ref('')
 
 const { t } = useI18n()
+const localStore = useLocalStore()
+
 
 const isSolved = computed(() => {
   const status = currentTicket.value!.statusId
@@ -25,7 +27,7 @@ const currentTicket = computed(() => {
 function handleSubmit() {
   if (isSolved.value) return
   if (msg.value.trim() === '') {
-    toast.warning(t('ticket.prompt.msgNull'))
+    toast.warning(localStore.localData['ticket_msgNull'])
     return
   }
 
@@ -67,7 +69,7 @@ function handleSubmit() {
               :class="twMerge(
                 'size-8 rounded-full object-cover flex-shrink-0',
               )"
-              :alt="reply.replyId ? t('ticket.customer') : t('ticket.user')"
+              :alt="reply.replyId ? localStore.localData['ticket_Customer'] : localStore.localData['ticket_User']"
               draggable="false"
             />
             <div
@@ -90,11 +92,11 @@ function handleSubmit() {
               'w-full h-full pl-2 text-base sm:text-sm bg-transparent',
               'resize-none focus:outline-none'
             )"
-            :placeholder="t('ticket.placeholder.chat')"
+            :placeholder="localStore.localData['ticket_chat']"
             rows="5"
           />
           <XButton
-            :label="t('ticket.title.send')"
+            :label="localStore.localData['ticket_Send']"
             :disabled="isSolved"
             @click="handleSubmit"
           />

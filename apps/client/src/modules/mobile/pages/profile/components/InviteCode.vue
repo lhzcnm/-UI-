@@ -4,6 +4,7 @@ import { Icon } from '@iconify/vue'
 import { ua } from '@3un/utils'
 import axios from 'axios'
 import { twMerge } from 'tailwind-merge'
+import { toast } from 'vue-sonner'
 
 interface SlideRightEmits {
   (e: 'close'): void
@@ -15,7 +16,8 @@ const emit = defineEmits<SlideRightEmits>()
 const visible = defineModel<boolean>({ default: false })
 const inviteImg = ref<string>('')
 
-const { t } = useI18n()
+
+const localStore = useLocalStore()
 
 const baseUrl = import.meta.env.VITE_API_URL
 
@@ -33,7 +35,7 @@ async function generInviteCodeImg() {
 
   inviteImg.value = URL.createObjectURL(data)
 
-  if(ua.isWechat) {
+  if (ua.isWechat) {
     showTip()
   } else {
     downloadFile(inviteImg.value)
@@ -43,8 +45,8 @@ async function generInviteCodeImg() {
 }
 
 function showTip() {
-  if(ua.isMobile && ua.isWechat && ua.os.toLowerCase() !== 'ios') {
-    alert(t('profile.mobile.prompt.download'))
+  if (ua.isMobile && ua.isWechat && ua.os.toLowerCase() !== 'ios') {
+    toast.warning(localStore.localData['profile_PromptDownload'], { duration: 5000 })
   }
 }
 
@@ -64,14 +66,15 @@ onMounted(async () => {
 <template>
   <Teleport to="body">
     <div v-if="visible" class="absolute top-0 bottom-0 left-0 right-0 z-30 flex flex-col bg-background">
-      <section :class="twMerge('relative flex items-center px-3 h-mobile-header border-b border-border justify-between')">
+      <section
+        :class="twMerge('relative flex items-center px-3 h-mobile-header border-b border-border justify-between')">
         <div class="flex items-center">
           <button class="absolute left-3 text-muted-foreground" @click="visible = false">
             <Icon icon="lucide:chevron-left" class="size-6" />
           </button>
-          <div class="pl-9 text-lg font-medium truncate">{{ t('profile.mobile.setting.invite') }}</div>
+          <div class="pl-9 text-lg font-medium truncate">{{ localStore.localData['profile_GenerateInviteCode'] }}</div>
         </div>
-        <XButton size="sm" :label="t('profile.mobile.prompt.inviteCode')" @click="downloadFile" />
+        <XButton size="sm" :label="localStore.localData['profile_SaveImage']" @click="downloadFile" />
       </section>
       <template v-if="inviteImg !== ''">
         <section class="flex-1 overflow-y-auto">

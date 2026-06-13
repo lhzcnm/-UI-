@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const operationOptions = [
-  { label: t('profile.mobile.recharge.point'), icon: 'lucide:wallet', action: 'recharge' },
-  { label: t('profile.mobile.recharge.recharge'), icon: 'lucide:shopping-cart', action: 'bill' },
-  { label: t('profile.mobile.recharge.change'), icon: 'lucide:dollar-sign', action: 'credits' },
+  { label: localStore.localData['profile_PointRecharge'], icon: 'lucide:wallet', action: 'recharge' },
+  { label: localStore.localData['profile_RechargeRecords'], icon: 'lucide:shopping-cart', action: 'bill' },
+  { label: localStore.localData['profile_PointChange'], icon: 'lucide:dollar-sign', action: 'credits' },
 ]
 </script>
 

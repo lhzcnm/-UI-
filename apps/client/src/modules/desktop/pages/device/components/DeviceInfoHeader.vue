@@ -11,7 +11,8 @@ const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
 const deviceStore = useDeviceStore()
 const iStore = useSystemStore()
-const { t, locale } = useI18n()
+const {  locale } = useI18n()
+const localStore = useLocalStore()
 
 const isRecoveryMode = ref(false)
 const isPrinting = ref(false)
@@ -24,13 +25,13 @@ function handleRecoveryMode() {
 
 async function handleEnterRecoveryMode(uniqueId: string) {
   await wsFetch({ type: 'enterRecoveryMode', Uid: uniqueId })
-  toast.success(t('command.title', { action: t('command.success') }))
+  toast.success(localStore.localData['device_CommandSent'])
   isRecoveryMode.value = true
 }
 
 async function handleExitRecoveryMode(uniqueId: string) {
   await wsFetch({ type: 'exitRecoveryMode', Uid: uniqueId })
-  toast.success(t('command.title', { action: t('command.success') }))
+  toast.success(localStore.localData['device_CommandSent'])
   isRecoveryMode.value = false
 }
 
@@ -45,7 +46,7 @@ function handleCopy() {
   const tokens = locale.value === 'zh' ? getCopyToken(device.summary) : getCopyTokenEn(device.summary)
 
   copy(tokens.map(([key, value]) => `${key}: ${value}`).join('\n'))
-  toast.success(t('submit.success', { action: t('action.copy') }))
+  toast.success(localStore.localData['device_CopySucceeded'])
 }
 
 const diskCapacity = computed(() => {
@@ -106,27 +107,27 @@ async function handleGenerate() {
       <XButton
         v-if="deviceStore.deviceMap.size"
         icon="lucide:list"
-        :label="t('device.list.title')" size="sm"
+        :label="localStore.localData['device_DeviceList']" size="sm"
         @click="store.deviceStatus = 'list'"
       />
 
       <XButton
         icon="lucide:camera" size="sm"
-        :label="t('device.button.generate')"
+        :label="localStore.localData['device_GenerateImage']"
         @click="handleGenerate"
       />
 
       <XButton size="sm" color="success" @click="handleRecoveryMode">
-        {{ isRecoveryMode ? t('device.button.outRecover') : t('device.button.inRecover') }}
+        {{ isRecoveryMode ? localStore.localData['device_ExitRecovery'] : localStore.localData['device_EnterRecovery'] }}
       </XButton>
 
       <XButton
         icon="lucide:copy" size="sm"
-        :label="t('device.button.copy')" @click="handleCopy"
+        :label="localStore.localData['device_Copy']" @click="handleCopy"
       />
       <XButton
         icon="lucide:printer"
-        size="sm" :label="t('device.button.print')"
+        size="sm" :label="localStore.localData['device_PrintLabel']"
         :loading="isPrinting"
         @click="handlePrint"
       />

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { t } = useI18n()
+
+
+const localStore = useLocalStore()
 
 function download(platform: string) {
   const baseUrl = import.meta.env.VITE_API_URL
@@ -11,7 +13,7 @@ function download(platform: string) {
 <template>
   <div class="border rounded-lg p-6 mr-6 bg-card">
     <!-- <h3 class="text-lg mb-4">批量查询助手</h3> -->
-    <h3 class="text-lg mb-4">{{ t('profile.software.old') }}</h3>
+    <h3 class="text-lg mb-4">{{ localStore.localData['profile_SoftwareOld'] }}</h3>
     <div class="space-x-2 whitespace-nowrap">
       <XButton
         icon="fa-brands:windows" label="Windows"

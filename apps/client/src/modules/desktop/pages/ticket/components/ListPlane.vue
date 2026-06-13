@@ -4,7 +4,8 @@ import { ticketApi } from '@/api/tickets'
 
 const store = inject(TICKET_STORE)!
 const route = useRoute()
-const { t } = useI18n()
+
+const localStore = useLocalStore()
 
 watch(
   () => route.query,
@@ -38,12 +39,12 @@ function getTicketType(type: number) {
 <template>
   <div class="flex flex-col h-full">
     <section class="px-2">
-      <XButton :label="t('ticket.button')" @click="handleCreate" />
+      <XButton :label="localStore.localData['ticket_new']" @click="handleCreate" />
     </section>
 
     <section class="flex-1 space-y-2 mt-4 px-2 pt-1 overflow-y-auto">
       <div v-if="store.tickets.length === 0" class="flex items-center justify-center h-36">
-        <span class="text-sm text-muted-foreground">{{ t('dataNull') }}</span>
+        <span class="text-sm text-muted-foreground">{{ localStore.localData['ticket_dataNull'] }}</span>
       </div>
 
       <TicketCard

@@ -6,7 +6,7 @@ import { validate, VERIFY_MSG, type ValidRule } from '@/utils'
 import { CAPTCHA_REG, EMAIL_REG, useCountdown } from '@3un/utils'
 
 const router = useRouter()
-const { t } = useI18n()
+const localStore = useLocalStore()
 const store = inject(AUTH_STORE)!
 
 const mode = defineModel<LoginMode>({ required: true })
@@ -22,11 +22,11 @@ const form = reactive<MailLoginForm>({
 function rules(data: typeof form): ValidRule[] {
   const { email, code } = data
   return [
-    { rule: !!email.trim(), message: t(VERIFY_MSG.EMAIL) },
-    { rule: EMAIL_REG.test(email), message: t(VERIFY_MSG.EMAIL_FORMAT) },
+    { rule: !!email.trim(), message: localStore.localData[VERIFY_MSG.EMAIL] },
+    { rule: EMAIL_REG.test(email), message: localStore.localData[VERIFY_MSG.EMAIL_FORMAT] },
     
-    { rule: !!code.trim(), message: t(VERIFY_MSG.CODE) },
-    { rule: CAPTCHA_REG.test(code.trim()), message: t(VERIFY_MSG.CODE_FORMAT)}
+    { rule: !!code.trim(), message: localStore.localData[VERIFY_MSG.CODE] },
+    { rule: CAPTCHA_REG.test(code.trim()), message: localStore.localData[VERIFY_MSG.CODE_FORMAT]}
   ]
 }
 
@@ -36,7 +36,7 @@ function onSubmit() {
 }
 
 async function sendCaptcha() {
-  const validRule = [{ rule: !!form.email, message: t(VERIFY_MSG.EMAIL) }]
+  const validRule = [{ rule: !!form.email, message: localStore.localData[VERIFY_MSG.EMAIL] }]
   if (!validate(validRule) || isRunning.value) return
 
   await authApi.email(form.email)
@@ -65,19 +65,19 @@ defineExpose({
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-4">{{ t('auth.emailLogin') }}</h2>
+    <h2 class="text-2xl font-bold mb-4">{{ localStore.localData['login_EmailLogin'] }}</h2>
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <XInput v-model="form.email" :placeholder="t('auth.placeholder.email')" />
+      <XInput v-model="form.email" :placeholder="localStore.localData['login_Email']" />
       <div class="flex items-center space-x-2">
-        <XInput v-model="form.code" :placeholder="t('auth.placeholder.vertify')" />
+        <XInput v-model="form.code" :placeholder="localStore.localData['login_VerificationCode']" />
         <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-          {{ isRunning ? t('auth.placeholder.countdown', { action: count }) : t('auth.placeholder.sendVerty') }}
+          {{ isRunning ? localStore.localData['login_Resend'].replace('@',count) : localStore.localData['login_SendCode'] }}
         </XButton>
       </div>
 
       <div class="flex items-center space-x-2">
-        <XButton :label="t('auth.method.account')" variant="soft" type="button" @click="naviBack"></XButton>
-        <XButton class="w-full" :label="t('auth.login')" type="submit" />
+        <XButton :label="localStore.localData['login_AccountLogin']" variant="soft" type="button" @click="naviBack"></XButton>
+        <XButton class="w-full" :label="localStore.localData['login_ELogin']" type="submit" />
       </div>
     </form>
   </div>

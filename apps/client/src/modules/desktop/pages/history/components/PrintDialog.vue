@@ -7,7 +7,8 @@ interface PrintDialogEmits {
 
 const store = inject(HISTORY_STORE)!
 
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 const paperSize = ref<string>('')
 
 const emits = defineEmits<PrintDialogEmits>()
@@ -38,13 +39,13 @@ function handleConfirm() {
 <template>
   <XDialog
     v-model="store.visiblePrint"
-    :title="t('order.print.title')"
+    :title="localStore.localData['history_PrintsSettings']"
     @close="handleCancel"
   >
     <template #default>
       <div class="space-y-4">
         <label class="text-sm font-medium">
-          {{ t('order.print.paper') }}
+          {{ localStore.localData['history_PaperSizePrint'] }}
         </label>
         <XSelect
           v-model="paperSize"

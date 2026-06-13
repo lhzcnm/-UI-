@@ -19,7 +19,8 @@ const visible = ref(false)
 
 const { popupAnnc, popupAnncEn, enablePopupAnnc } = iStore.settings
 const anncVisible = useStorage('annc-visible', enablePopupAnnc, sessionStorage)
-const { t, locale } = useI18n()
+const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const confirmText = computed(() => {
   return locale.value === 'zh'
@@ -30,9 +31,9 @@ const confirmText = computed(() => {
 onMounted(async () => {
   if (!anncVisible.value) return
   const result = await xconfirm({
-    title: t('announcement.title'),
+    title: localStore.localData['home_Announcement'],
     text: confirmText.value,
-    confirmText: t('button.confirm'),
+    confirmText: localStore.localData['home_Confirm'],
     cancelText: undefined,
   })
 
@@ -79,7 +80,7 @@ function handleServiceItemClick(event: MouseEvent) {
     </section>
 
     <section v-if="commonList.length" class="my-8">
-      <h2 class="text-xl font-bold mb-3">{{ t('home.service') }}</h2>
+      <h2 class="text-xl font-bold mb-3">{{ localStore.localData['home_Services'] }}</h2>
       <div class="grid gap-2 md:gap-4 grid-cols-[repeat(auto-fill,minmax(280px,_1fr))]" @click="handleServiceItemClick">
         <ServiceItemCard v-for="item in commonList" :key="item.id" :data="item" :data-id="item.id" />
       </div>

@@ -5,7 +5,8 @@ import type { XSelectEmits } from '@3un/ui'
 import { serviceApi, type Service, type ServiceDetail } from '@/api/services'
 
 const store = useServiceStore()
-const { t } = useI18n()
+const localStore = useLocalStore()
+// const { t } = useI18n()
 
 const modal = defineModel<number>()
 const emits = defineEmits<XSelectEmits>()
@@ -88,7 +89,7 @@ onMounted(async () => {
     v-model="modal"
     v-model:input="input"
     v-bind="$attrs"
-    filterable :placeholder="t('service.placeholder')"
+    filterable :placeholder="localStore.localData['history_Service_Select']"
     placement="bottom-start" @selected="emits('selected', $event)"
   >
     <XSelectGroup
