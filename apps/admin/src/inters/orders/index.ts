@@ -5,20 +5,29 @@ import { z } from 'zod/v4'
 export const zOrder = z.object({
   codeId: z.number().default(0),
   userId: z.number().default(0),
-  // phoneLockedOn: z.string().default(''),
-  // modelNo: z.string().default(''),
   imeiNo: z.string().default(''),
   packageId: z.number().default(0),
-  // personalRecord: z.string().default(''),
-  // countryId: z.string().default(''),
   codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
   requestedAt: z.string().default(''),
   credits: z.number().default(0),
   comments: z.string().default(''),
   codeSentToOtherServer: z.number().default(0),
-  messageFromServer: z.string().default(''),
+  messageFromServer: z.string().default('').nullable(),
   code: z.string().default(''),
   orderIdFromServer: z.string().default(''),
+  downloaded: z.boolean().default(false),
+  verify: z.enum(ORDER_VERIFY).default(ORDER_VERIFY.NORMAL),
+  ip: z.string().default('unknown'),
+  verifyIp: z.string().default('').nullable(),
+  showToSupplier: z.boolean().default(false).nullable(),
+  supplierId: z.string().default('').nullable(),
+  updateTime: z.string().default(''),
+  isBulk: z.boolean().nullable().default(false),
+  submitMethod: z.enum(SUBMIT_METHOD).default(SUBMIT_METHOD.WECHAT),
+  // payout: z.number().default(0),
+  // mtype: z.string().default(''),
+  // phoneLockedOn: z.string().default(''),
+  // modelNo: z.string().default(''),
   // checkDuplication: z.boolean().default(false),
   // mep: z.string().default(''),
   // model: z.string().default(''),
@@ -36,20 +45,11 @@ export const zOrder = z.object({
   // zte: z.string().default(''),
   // network: z.string().default(''),
   // locks: z.string().default(''),
-  downloaded: z.boolean().default(false),
+  // personalRecord: z.string().default(''),
+  // countryId: z.string().default(''),
   // archived: z.boolean().default(false),
   // adminArchived: z.boolean().default(false),
   // alternateEmail: z.string().default(''),
-  verify: z.enum(ORDER_VERIFY).default(ORDER_VERIFY.NORMAL),
-  ip: z.string().default('unknown'),
-  verifyIp: z.string().default(''),
-  showToSupplier: z.boolean().default(false),
-  // payout: z.number().default(0),
-  supplierId: z.string().default(''),
-  updateTime: z.string().default(''),
-  isBulk: z.boolean().nullable().default(false),
-  submitMethod: z.enum(SUBMIT_METHOD).default(SUBMIT_METHOD.WECHAT),
-  // mtype: z.string().default(''),
 })
 
 export type Order = z.infer<typeof zOrder>
@@ -94,7 +94,7 @@ export type OrderUpdateParams = {
   code?: string
   codeStatusId?: ORDER_STATUS
   originalStatus?: ORDER_STATUS
-  messageFromServer?: string
+  messageFromServer?: string 
   orderIdFromServer?: string
 }
 
