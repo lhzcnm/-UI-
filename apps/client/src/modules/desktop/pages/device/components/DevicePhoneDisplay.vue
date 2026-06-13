@@ -125,7 +125,7 @@ function getCurrentDate() {
   const month = now.getMonth() + 1
   const weekday = localStore.localData[`device_weekday${now.getDay()}`]
 
-  return localStore.localData['device_date'].replace('@', month).replace('#', day.toString()).replace('&', weekday)
+  return localStore.localData['device_date'].replace('@', month.toString()).replace('#', day.toString()).replace('&', weekday)
 }
 
 async function onRestart() {

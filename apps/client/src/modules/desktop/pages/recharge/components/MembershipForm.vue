@@ -178,12 +178,12 @@ function isSamePrice(item: MemberPackage) {
 
           <div class="flex justify-between space-x-2 mt-1 text-sm">
             <p v-if="item.freeCount" class="text-muted-foreground">
-              <span> {{ localStore.localData['recharge_OriginalPrice'].replace('@',item.price) }}</span>
-              <span class="text-primary font-bold">{{localStore.localData['recharge_Now'].replace('@',item.freeCount)}}</span>
+              <span> {{ localStore.localData['recharge_OriginalPrice'].replace('@', item.price == null ? '0.00' : item.price.toString()) }}</span>
+              <span class="text-primary font-bold">{{localStore.localData['recharge_Now'].replace('@', item.freeCount.toString())}}</span>
               <span>{{ localStore.localData['recharge_FreeQueries'] }}</span>
               <div v-if="!isSamePrice(item)">
-                <span>{{localStore.localData['recharge_Exceeding'].replace('@',item.freeCount)}}</span>
-                <span>{{localStore.localData['recharge_DiscountPrice'].replace('@',item.price)}}</span>
+                <span>{{localStore.localData['recharge_Exceeding'].replace('@', item.freeCount.toString())}}</span>
+                <span>{{localStore.localData['recharge_DiscountPrice'].replace('@', item.price == null ? '0.00' : item.price.toString())}}</span>
               </div>
             </p>
           </div>

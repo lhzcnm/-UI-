@@ -78,11 +78,11 @@ function handleRecharge() {
   const maxAmount = +settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAmount) {
-    return toast.warning(localStore.localData['recharge_MinRecharge'].replace('@',minAmount))
+    return toast.warning(localStore.localData['recharge_MinRecharge'].replace('@', minAmount.toString()))
   }
 
   if (rechargeAmount.value > maxAmount) {
-    return toast.warning(localStore.localData['recharge_MaxRecharge'].replace('@',maxAmount))
+    return toast.warning(localStore.localData['recharge_MaxRecharge'].replace('@', maxAmount.toString()))
   }
 
   const response = rechargeApi.create({

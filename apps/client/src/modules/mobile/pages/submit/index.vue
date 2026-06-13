@@ -88,16 +88,16 @@ const unitPrice = computed(() => {
   const service = serviceStore.services.get(store.serviceId)
 
   if (!service) return "0.00"
-  return service.price
+  return service.price.toString()
 })
 
 const validImeiList = computed(() => handleImei(form.imei))
 const fileInputRef = useTemplateRef('fileInputRef')
 
-const usefulCount = computed(() => {
-  if (!store.service) return
-  return Math.floor(+uStore.info.credits / store.service.price)
-})
+// const usefulCount = computed(() => {
+//   if (!store.service) return
+//   return Math.floor(+uStore.info.credits / store.service.price)
+// })
 
 onBeforeMount(async () => {
   if (!props.id) return
@@ -672,8 +672,6 @@ onMounted(() => {
           </div>
 
           <input ref="fileInputRef" type="file" hidden accept=".xlsx,.xls,.csv,.txt" @change="handleFileChange" />
-
-
         </div>
 
         <div>

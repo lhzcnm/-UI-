@@ -38,7 +38,7 @@ const unitPrice = computed(() => {
   const service = serviceStore.services.get(props.selectedId!)
 
   if (!service) return "0.00"
-  return service.price
+  return service.price.toString()
 })
 
 const servicePrice = computed(() => {
@@ -50,8 +50,8 @@ const servicePrice = computed(() => {
 })
 
 const usefulCount = computed(() => {
-  if(!props.selectedId) return
-  return Math.floor(+uStore.info.credits / servicePrice.value!)
+  if(!props.selectedId) return ""
+  return (Math.floor(+uStore.info.credits / servicePrice.value!).toString())
 })
 
 function handleSubmit() {

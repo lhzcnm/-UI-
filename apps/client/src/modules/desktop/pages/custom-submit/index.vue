@@ -1482,7 +1482,7 @@ onBeforeUnmount(() => {
           <div class="flex justify-between items-center mb-4">
             <div>
               <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['print_ReciveryList'] }}</h2>
-              <p class="text-sm text-muted-foreground">{{ localStore.localData['print_TotalDevices'].replace('@', deviceStore.recoveryDeviceMap.size) }}</p>
+              <p class="text-sm text-muted-foreground">{{ localStore.localData['print_TotalDevices'].replace('@', deviceStore.recoveryDeviceMap.size.toString()) }}</p>
             </div>
           </div>
 

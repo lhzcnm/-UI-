@@ -9,7 +9,7 @@ interface BaseFormProps {
 const props = defineProps<BaseFormProps>()
 const form = defineModel<TicketCreateForm>({ required: true })
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 
 
 function handleDepartName(item: TicketType) {

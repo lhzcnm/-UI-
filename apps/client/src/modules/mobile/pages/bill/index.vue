@@ -41,7 +41,7 @@ watch(
         :total="bills.total"
       />
       <span class="text-sm text-muted-foreground">
-        {{ localStore.localData['recharge_Total'].replace('@',bills.total) }}
+        {{ localStore.localData['recharge_Total'].replace('@', bills.total.toString()) }}
       </span>
     </div>
 

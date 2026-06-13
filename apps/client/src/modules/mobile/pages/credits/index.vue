@@ -50,7 +50,7 @@ watch(
           :total="logs.total"
         />
         <span class="text-sm text-muted-foreground">
-          {{ localStore.localData['credits_Total'].replace('@',logs.total) }}
+          {{ localStore.localData['credits_Total'].replace('@', logs.total.toString()) }}
         </span>
       </div>
 

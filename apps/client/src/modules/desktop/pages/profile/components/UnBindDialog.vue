@@ -58,7 +58,7 @@ async function handleSendCode() {
   }
 
   if (store.isGetCode) {
-    return toast.warning(localStore.localData['profile_PromptWaitGetCode'].replace('@',count))
+    return toast.warning(localStore.localData['profile_PromptWaitGetCode'].replace('@', count.value.toString()))
   }
 
   try {
@@ -152,7 +152,7 @@ async function handleConfirmCode() {
           <div class="flex space-x-2">
             <XInput :placeholder="localStore.localData['profile_VertificationCode']" v-model="store.code" />
             <XButton @click="handleSendCode">
-              {{ store.isGetCode ? localStore.localData['profile_PlaceholderCountdown'].replace('@',count) : localStore.localData['profile_PlaceholderSendVerty'] }}
+              {{ store.isGetCode ? localStore.localData['profile_PlaceholderCountdown'].replace('@', count.toString()) : localStore.localData['profile_PlaceholderSendVerty'] }}
             </XButton>
           </div>
         </div>

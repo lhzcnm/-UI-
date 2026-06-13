@@ -10,7 +10,7 @@ const store = inject(TICKET_STORE)!
 
 const msg = ref('')
 
-const { t } = useI18n()
+// const { t } = useI18n()
 const localStore = useLocalStore()
 
 

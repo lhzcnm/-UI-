@@ -67,7 +67,7 @@ defineExpose({
       <div class="flex items-center space-x-2">
         <XInput v-model="form.code" :placeholder="localStore.localData['login_VerificationCode']" />
         <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-          {{ isRunning ? localStore.localData['login_Resend'].replace('@',count) : localStore.localData['login_SendCode'] }}
+          {{ isRunning ? localStore.localData['login_Resend'].replace('@', count.toString()) : localStore.localData['login_SendCode'] }}
         </XButton>
       </div>
 

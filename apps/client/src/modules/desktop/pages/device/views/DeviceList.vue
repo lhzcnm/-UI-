@@ -19,7 +19,7 @@ const localStore = useLocalStore()
       <div class="flex justify-between items-center mb-4">
         <div>device.list.title
           <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['device_DeviceList'] }}</h2>
-          <p class="text-sm text-muted-foreground">{{ localStore.localData['device_TotalDevices'].replace('@',deviceStore.deviceMap.size) }}
+          <p class="text-sm text-muted-foreground">{{ localStore.localData['device_TotalDevices'].replace('@', deviceStore.deviceMap.size.toString()) }}
           </p>
         </div>
 
