@@ -13,6 +13,7 @@ const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'phone_countdown'
 })
 const { t } = useI18n()
+const localStore = useLocalStore()
 const uStore = useUserStore()
 
 const phoneForm = reactive({
@@ -22,8 +23,8 @@ const phoneForm = reactive({
 
 async function sendCode() {
   const rules = [
-    { rule: !!phoneForm.phone, message: t(VERIFY_MSG.PHONE) },
-    { rule: PHONE_REG.test(phoneForm.phone), message: t(VERIFY_MSG.PHONE_FORMAT) },
+    { rule: !!phoneForm.phone, message: localStore.localData[VERIFY_MSG.PHONE] },
+    { rule: PHONE_REG.test(phoneForm.phone), message: localStore.localData[VERIFY_MSG.PHONE_FORMAT] },
   ]
 
   if (!validate(rules)) return
@@ -34,10 +35,10 @@ async function sendCode() {
 
 async function submitForm() {
   const rules = [
-    { rule: !!phoneForm.phone, message: t(VERIFY_MSG.PHONE) },
-    { rule: PHONE_REG.test(phoneForm.phone), message: t(VERIFY_MSG.PHONE_FORMAT) },
-    { rule: !!phoneForm.code, message: t(VERIFY_MSG.CODE) },
-    { rule: CAPTCHA_REG.test(phoneForm.code), message: t(VERIFY_MSG.CODE_FORMAT) },
+    { rule: !!phoneForm.phone, message: localStore.localData[VERIFY_MSG.PHONE] },
+    { rule: PHONE_REG.test(phoneForm.phone), message: localStore.localData[VERIFY_MSG.PHONE_FORMAT] },
+    { rule: !!phoneForm.code, message: localStore.localData[VERIFY_MSG.CODE] },
+    { rule: CAPTCHA_REG.test(phoneForm.code), message: localStore.localData[VERIFY_MSG.CODE_FORMAT] },
   ]
 
   if (!validate(rules)) return

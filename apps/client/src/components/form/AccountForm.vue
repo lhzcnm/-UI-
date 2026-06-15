@@ -9,13 +9,14 @@ const store = useUserStore()
 const account = ref('')
 
 const { t } = useI18n()
+const localStore = useLocalStore()
 
 async function submitForm() {
   const username = account.value.trim()
   const rules = [
-    { rule: !!username, message: t(VERIFY_MSG.USERNAME) },
-    { rule: username.length >= 6 && username.length <= 16, message: t(VERIFY_MSG.USERNAME_LENGTH) },
-    { rule: USERNAME_REG.test(username), message: t(VERIFY_MSG.USERNAME_FORMAT) },
+    { rule: !!username, message: localStore.localData[VERIFY_MSG.USERNAME] },
+    { rule: username.length >= 6 && username.length <= 16, message: localStore.localData[VERIFY_MSG.USERNAME_LENGTH] },
+    { rule: USERNAME_REG.test(username), message: localStore.localData[VERIFY_MSG.USERNAME_FORMAT] },
   ]
 
   if (!validate(rules)) return

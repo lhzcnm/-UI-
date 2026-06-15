@@ -13,6 +13,7 @@ const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'password_countdown'
 })
 const { t } = useI18n()
+const localStore = useLocalStore()
 const uStore = useUserStore()
 
 const form = reactive({
@@ -26,8 +27,8 @@ async function sendCaptcha() {
   const isPhone = /^1[3-9]\d{9}$/.test(form.target)
   const targetReg = isPhone ? PHONE_REG : EMAIL_REG
   const ruleValid = [
-    { rule: !!form.target, message: VERIFY_MSG.TARGET },
-    { rule: targetReg.test(form.target), message: VERIFY_MSG.TARGET_FORMAT },
+    { rule: !!form.target, message: localStore.localData[VERIFY_MSG.TARGET] },
+    { rule: targetReg.test(form.target), message: localStore.localData[VERIFY_MSG.TARGET_FORMAT] },
   ]
 
   if (!validate(ruleValid)) return
@@ -42,14 +43,14 @@ function rules(data: typeof form) {
   const targetReg = isPhone ? PHONE_REG : EMAIL_REG
 
   return [
-    { rule: !!target, message: t(VERIFY_MSG.TARGET) },
-    { rule: targetReg.test(target), message: t(VERIFY_MSG.TARGET_FORMAT) },
-    { rule: CAPTCHA_REG.test(code), message: t(VERIFY_MSG.CODE) },
+    { rule: !!target, message: localStore.localData[VERIFY_MSG.TARGET] },
+    { rule: targetReg.test(target), message: localStore.localData[VERIFY_MSG.TARGET_FORMAT] },
+    { rule: CAPTCHA_REG.test(code), message: localStore.localData[VERIFY_MSG.CODE] },
 
-    { rule: !!password, message: t(VERIFY_MSG.PASSWORD) },
-    { rule: /\d|\w/.test(password), message: t(VERIFY_MSG.PASSWORD_LESS) },
-    { rule: PASSWORD_REG.test(password), message: t(VERIFY_MSG.PASSWORD_FORMAT) },
-    { rule: password === confirmPassword, message: t(VERIFY_MSG.PASSWORD_CONFIRM) },
+    { rule: !!password, message: localStore.localData[VERIFY_MSG.PASSWORD] },
+    { rule: /\d|\w/.test(password), message: localStore.localData[VERIFY_MSG.PASSWORD_LESS] },
+    { rule: PASSWORD_REG.test(password), message: localStore.localData[VERIFY_MSG.PASSWORD_FORMAT] },
+    { rule: password === confirmPassword, message: localStore.localData[VERIFY_MSG.PASSWORD_CONFIRM] },
   ]
 }
 

@@ -28,7 +28,7 @@ async function deleteLocal() {
 
 <template>
   <div class="flex justify-end items-center space-x-2 border-t p-2">
-    <XButton size="sm" variant="outline" @click="udpate">编辑</XButton>
-    <XButton size="sm" variant="outline" color="danger" @click="deleteLocal">删除</XButton>
+    <XButton  size="sm" variant="outline" @click="udpate">编辑</XButton>
+    <XButton v-if="store.isShow" size="sm" variant="outline" color="danger" @click="deleteLocal">删除</XButton>
   </div>
 </template>

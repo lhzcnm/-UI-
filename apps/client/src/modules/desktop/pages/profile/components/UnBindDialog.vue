@@ -80,7 +80,7 @@ async function handleConfirmCode() {
   }
 
   if (!store.code) {
-    return toast.warning(localStore.localData['profile_PromptNeedCode	'])
+    return toast.warning(localStore.localData['profile_PromptNeedCode'])
   }
 
   if (store.validType !== type.value) {
