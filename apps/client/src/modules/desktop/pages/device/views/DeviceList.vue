@@ -17,9 +17,10 @@ const localStore = useLocalStore()
   <div class="flex flex-col gap-4">
     <div>
       <div class="flex justify-between items-center mb-4">
-        <div>device.list.title
+        <div>
           <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['device_DeviceList'] }}</h2>
-          <p class="text-sm text-muted-foreground">{{ localStore.localData['device_TotalDevices'].replace('@', deviceStore.deviceMap.size.toString()) }}
+          <p class="text-sm text-muted-foreground">
+            {{ localStore.localeSlotVal('device_TotalDevices', { '{count}': deviceStore.deviceMap.size }) }}
           </p>
         </div>
 

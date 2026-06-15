@@ -23,12 +23,12 @@ const isWechat = computed(() => selectedPayment.value === 'wxpay')
 
 const payFee = computed(() => {
   const res = { fee: iStore.handleFee.fee, threshold: iStore.handleFee.threshold }
-  
+
   if (isWechat.value) {
     res.fee = iStore.handleFee.wxFee
     res.threshold = iStore.handleFee.wxThreshold
   }
-  
+
   return res
 })
 
@@ -69,17 +69,17 @@ function handleCustomAmount(value: any) {
 }
 
 function handleRecharge() {
-  if(!rechargeAmount.value) return toast.warning(localStore.localData['recharge_AmountZero_Toast'])
+  if (!rechargeAmount.value) return toast.warning(localStore.localData['recharge_AmountZero_Toast'])
 
   const minAccount = +iStore.settings.minRechargeAmount
   const maxAccount = +iStore.settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAccount) {
-    return toast.warning( localStore.localData['recharge_MinRecharge'].replace('@', minAccount.toString()))
+    return toast.warning(localStore.localeSlotVal('recharge_MinRecharge', { '{minAmount}': minAccount }))
   }
 
   if (rechargeAmount.value > maxAccount) {
-    return toast.warning(localStore.localData['recharge_MaxRecharge'].replace('@', maxAccount.toString()))
+    return toast.warning(localStore.localeSlotVal('recharge_MaxRecharge', { '{maxAmount}': maxAccount }))
   }
 
   const response = rechargeApi.create({
@@ -134,63 +134,45 @@ function onBridgeReady(config: WXInvokeConfig) {
     <div class="space-y-3">
       <h3 class="text-lg font-medium">{{ localStore.localData['recharge_RechargeAmount'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,1fr))] gap-2">
-        <button
-          v-for="item in amountList" :key="item.value"
-          :class="twMerge(
-            'flex flex-col items-center justify-center space-y-1',
-            'h-16 rounded-md bg-card border',
-            customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
-          )"
-          @click="selectedAmount = item.value; customAmount = item.value"
-        >
+        <button v-for="item in amountList" :key="item.value" :class="twMerge(
+          'flex flex-col items-center justify-center space-y-1',
+          'h-16 rounded-md bg-card border',
+          customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
+        )" @click="selectedAmount = item.value; customAmount = item.value">
           <span>{{ item.label }}</span>
-          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ localStore.localData['recharge_CostFree'] }}</span>
+          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{
+            localStore.localData['recharge_CostFree'] }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
-        <PriceInput
-          v-model="customAmount"
-          :placeholder="localStore.localData['recharge_CustomAmount']"
-          @update:model-value="handleCustomAmount"
-        />
+        <PriceInput v-model="customAmount" :placeholder="localStore.localData['recharge_CustomAmount']"
+          @update:model-value="handleCustomAmount" />
       </div>
     </div>
 
     <div class="space-y-3">
       <h3 class="text-lg font-medium">{{ localStore.localData['recharge_PaymentMethod'] }}</h3>
       <div class="grid grid-cols-[repeat(auto-fill,minmax(108px,_1fr))] gap-2">
-        <button
-          :class="twMerge(
-            'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
-            selectedPayment === 'wxpay' && 'ring-2 ring-primary bg-primary/10',
-          )"
-          @click="selectedPayment = 'wxpay'"
-        >
+        <button :class="twMerge(
+          'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
+          selectedPayment === 'wxpay' && 'ring-2 ring-primary bg-primary/10',
+        )" @click="selectedPayment = 'wxpay'">
           <Icon icon="ri:wechat-pay-fill" class="size-6 text-success" />
           <span>{{ localStore.localData['recharge_WeChatPay'] }}</span>
         </button>
-        <button
-          :class="twMerge(
-            'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
-            selectedPayment === 'alipay' && 'ring-2 ring-primary bg-primary/10',
-          )"
-          @click="selectedPayment = 'alipay'"
-        >
+        <button :class="twMerge(
+          'flex flex-col items-center justify-center space-y-1 h-16 rounded-md bg-card border',
+          selectedPayment === 'alipay' && 'ring-2 ring-primary bg-primary/10',
+        )" @click="selectedPayment = 'alipay'">
           <Icon icon="ri:alipay-fill" class="size-6 text-primary" />
           <span>{{ localStore.localData['recharge_Alipay'] }}</span>
         </button>
       </div>
     </div>
-    
-    <div
-      v-if="iStore.settings.enablePaymentInfo"
-      class="bg-muted p-3 rounded-md"
-    >
+
+    <div v-if="iStore.settings.enablePaymentInfo" class="bg-muted p-3 rounded-md">
       <p class="mb-2 font-medium">{{ localStore.localData['recharge_RechargeInfo'] }}: </p>
-      <div
-        class="tiptap text-sm text-muted-foreground"
-        v-html="rechargeInfo"
-      />
+      <div class="tiptap text-sm text-muted-foreground" v-html="rechargeInfo" />
     </div>
 
     <div class="space-y-2">
@@ -198,12 +180,12 @@ function onBridgeReady(config: WXInvokeConfig) {
         <span>{{ localStore.localData['recharge_RechargeAmount'] }}</span>
         <span>￥{{ rechargeAmount }}</span>
       </div>
-      
+
       <div v-if="serviceFee > 0" class="flex items-center justify-between text-sm text-muted-foreground">
         <span>{{ localStore.localData['recharge_HandlingFee'] }}({{ (+payFee!.fee * 100).toFixed(2) }}%)</span>
         <span>￥{{ serviceFee }}</span>
       </div>
-      
+
       <div class="flex items-center justify-between pt-2 border-t">
         <span>{{ localStore.localData['recharge_PayableAmount'] }}</span>
         <span class="text-lg font-medium text-danger">
@@ -213,10 +195,7 @@ function onBridgeReady(config: WXInvokeConfig) {
     </div>
 
     <div class="flex items-center justify-end">
-      <XButton
-        :label="localStore.localData['recharge_RechargeNow']"
-        @click="handleRecharge"
-      />
+      <XButton :label="localStore.localData['recharge_RechargeNow']" @click="handleRecharge" />
     </div>
   </div>
 </template>

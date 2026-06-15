@@ -18,7 +18,7 @@ const selectedAmount = ref(0)
 // const amountList = ref<{ label: string; value: number; info?: string }[]>([])
 const selectedPayment = ref<RechargeMethod>('wxpay')
 
-const {  locale } = useI18n()
+const { locale } = useI18n()
 const localStore = useLocalStore()
 
 const isWechat = computed(() => selectedPayment.value === 'wxpay')
@@ -78,11 +78,13 @@ function handleRecharge() {
   const maxAmount = +settings.maxRechargeAmount
 
   if (rechargeAmount.value < minAmount) {
-    return toast.warning(localStore.localData['recharge_MinRecharge'].replace('@', minAmount.toString()))
+    return toast.warning(localStore.localeSlotVal('recharge_MinRecharge', {'{minAmount}': minAmount}))
+    
   }
 
   if (rechargeAmount.value > maxAmount) {
-    return toast.warning(localStore.localData['recharge_MaxRecharge'].replace('@', maxAmount.toString()))
+
+    return toast.warning(localStore.localeSlotVal('recharge_MaxRecharge', { '{maxAmount}': maxAmount }))
   }
 
   const response = rechargeApi.create({
@@ -93,12 +95,12 @@ function handleRecharge() {
   })
 
   response.then(({ data }) => {
-    if ( selectedPayment.value === 'wxpay') {
+    if (selectedPayment.value === 'wxpay') {
       store.visible = true
       store.url = data
       checkRecharge()
     }
-    if ( selectedPayment.value === 'alipay') {
+    if (selectedPayment.value === 'alipay') {
       window.location.href = data
     }
   })
@@ -131,14 +133,12 @@ function checkRecharge() {
           customAmount === item.value && 'ring-2 ring-primary bg-primary/10',
         )" @click="selectedAmount = item.value; customAmount = item.value">
           <span>{{ item.label }}</span>
-          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{ localStore.localData['recharge_CostFree'] }}</span>
+          <span v-if="item.value >= +(payFee!.threshold)" class="text-sm text-success">{{
+            localStore.localData['recharge_CostFree'] }}</span>
         </button>
       </div>
       <div class="flex items-center space-x-2">
-        <PriceInput
-          v-model="customAmount"
-          :placeholder="localStore.localData['recharge_CustomAmount']"
-        />
+        <PriceInput v-model="customAmount" :placeholder="localStore.localData['recharge_CustomAmount']" />
         <!-- <PriceInput v-model="customAmount" :placeholder="t('recharge.amount.placeholder')"
           @update:model-value="handleCustomAmount" /> -->
       </div>

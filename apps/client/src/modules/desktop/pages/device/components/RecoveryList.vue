@@ -15,7 +15,10 @@ const localStore = useLocalStore()
       <div>
         <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['device_RecoveryList'] }}</h2>
         <p class="text-sm text-muted-foreground">
-          {{ localStore.localData['device_TotalDevicesRecovery'].replace('@', deviceStore.recoveryDeviceMap.size.toString()) }}</p>
+          {{ localStore.localeSlotVal('device_TotalDevicesRecovery', {
+            '{count}': deviceStore.recoveryDeviceMap.size
+          }) }}
+        </p>
       </div>
     </div>
 

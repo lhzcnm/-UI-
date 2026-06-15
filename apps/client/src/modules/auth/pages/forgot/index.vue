@@ -17,14 +17,14 @@ const form: ForgotPswForm = reactive({
   confirmPassword: '',
 })
 
-const localStore=useLocalStore()
+const localStore = useLocalStore()
 
 async function sendCaptcha() {
   const isPhone = /^1[3-9]\d{9}$/.test(form.target)
   const targetReg = isPhone ? PHONE_REG : EMAIL_REG
   const ruleValid = [
-    { rule: !!form.target, message: VERIFY_MSG.TARGET },
-    { rule: targetReg.test(form.target), message: VERIFY_MSG.TARGET_FORMAT },
+    { rule: !!form.target, message: localStore.localData[VERIFY_MSG.TARGET] },
+    { rule: targetReg.test(form.target), message: localStore.localData[VERIFY_MSG.TARGET_FORMAT] },
   ]
 
   if (!validate(ruleValid)) return
@@ -39,16 +39,16 @@ function rules(data: typeof form) {
   const targetReg = isPhone ? PHONE_REG : EMAIL_REG
 
   return [
-    { rule: !!target, message: VERIFY_MSG.TARGET },
-    { rule: targetReg.test(target), message: VERIFY_MSG.TARGET_FORMAT },
+    { rule: !!target, message: localStore.localData[VERIFY_MSG.TARGET] },
+    { rule: targetReg.test(target), message: localStore.localData[VERIFY_MSG.TARGET_FORMAT] },
 
-    { rule: CAPTCHA_REG.test(code), message: VERIFY_MSG.CODE },
+    { rule: CAPTCHA_REG.test(code), message: localStore.localData[VERIFY_MSG.CODE] },
 
-    { rule: !!password, message: VERIFY_MSG.PASSWORD },
-    { rule: /\d|\w/.test(password), message: VERIFY_MSG.PASSWORD_LESS },
-    { rule: PASSWORD_REG.test(password), message: VERIFY_MSG.PASSWORD_FORMAT },
+    { rule: !!password, message: localStore.localData[VERIFY_MSG.PASSWORD] },
+    { rule: /\d|\w/.test(password), message: localStore.localData[VERIFY_MSG.PASSWORD_LESS] },
+    { rule: PASSWORD_REG.test(password), message: localStore.localData[VERIFY_MSG.PASSWORD_FORMAT] },
 
-    { rule: password === confirmPassword, message: VERIFY_MSG.PASSWORD_CONFIRM },
+    { rule: password === confirmPassword, message: localStore.localData[VERIFY_MSG.PASSWORD_CONFIRM] },
   ]
 }
 
@@ -86,14 +86,17 @@ async function resetPassword() {
         <div class="flex items-center space-x-2">
           <XInput v-model="form.code" :placeholder="localStore.localData['login_VerificationCode']" />
           <XButton type="button" @click.prevent="sendCaptcha" :disabled="isRunning">
-            {{ isRunning ? localStore.localData['login_Resend'].replace('@', count.toString()) : localStore.localData['login_SendCode'] }}
+            {{ isRunning ? localStore.localeSlotVal('login_Resend', { '{count}': count }) :
+              localStore.localData['login_SendCode'] }}
           </XButton>
         </div>
         <XInput v-model="form.password" type="password" :placeholder="localStore.localData['login_Password']" />
-        <XInput v-model="form.confirmPassword" type="password" :placeholder="localStore.localData['login_ConfirmPassword']" />
+        <XInput v-model="form.confirmPassword" type="password"
+          :placeholder="localStore.localData['login_ConfirmPassword']" />
 
         <div class="flex items-center space-x-2">
-          <XButton :label="localStore.localData['login_AccountLogin']" variant="soft" type="button" @click="router.push('/auth')"></XButton>
+          <XButton :label="localStore.localData['login_AccountLogin']" variant="soft" type="button"
+            @click="router.push('/auth')"></XButton>
           <XButton class="w-full" type="submit" :label="localStore.localData['login_Reset']" />
         </div>
       </form>

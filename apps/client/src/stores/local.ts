@@ -24,9 +24,19 @@ export const useLocalStore = defineStore('locale', () => {
     localData.value = data
   }
 
+  function localeSlotVal(key: string, slots: Record<string, string | number>) {
+    let res = localData.value[key]
+    for (const [slot, val] of Object.entries(slots)) {
+      const newVal = val.toString()
+      res = res.replace(new RegExp(slot, 'g'), newVal)
+    }
+    return res
+  }
+
   return {
     localData,
-    
+
+    localeSlotVal,
     getLocalData,
   }
 })

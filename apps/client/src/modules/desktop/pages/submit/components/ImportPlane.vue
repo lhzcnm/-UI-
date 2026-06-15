@@ -20,8 +20,8 @@ const emits = defineEmits<ImportPlaneEmits>()
 
 const store = useServiceStore()
 
-const open   = ref(false)
-const imei   = ref('')
+const open = ref(false)
+const imei = ref('')
 const remark = ref('')
 
 const localStore = useLocalStore()
@@ -42,7 +42,7 @@ const unitPrice = computed(() => {
 })
 
 const servicePrice = computed(() => {
-  if(!props.selectedId) return
+  if (!props.selectedId) return
 
   const service = store.services.get(props.selectedId)
 
@@ -50,7 +50,7 @@ const servicePrice = computed(() => {
 })
 
 const usefulCount = computed(() => {
-  if(!props.selectedId) return ""
+  if (!props.selectedId) return ""
   return (Math.floor(+uStore.info.credits / servicePrice.value!).toString())
 })
 
@@ -108,38 +108,32 @@ async function handleFile(file: File) {
     </template>
 
     <div class="space-y-3 w-80 p-4">
-      <XTextarea
-        v-model="imei"
-        rows="10" autofocus
-        @dragover.prevent
-        @drop.prevent="handleDrop"
-        :placeholder="localStore.localData['submit_ImportIMEIPlaceholder']"
-      />
+      <XTextarea v-model="imei" rows="10" autofocus @dragover.prevent @drop.prevent="handleDrop"
+        :placeholder="localStore.localData['submit_ImportIMEIPlaceholder']" />
       <XTextarea v-model="remark" :placeholder="localStore.localData['submit_ImportRemarkPlaceholder']" />
 
       <div class="flex flex-col">
-        
-        <span class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportUnitPrice'].replace('@', unitPrice) }}</span>
-        <span class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportBlance'] }}: ￥{{ uStore.info.credits }}, {{ localStore.localData['submit_ImportSubmitOrder'].replace('@', usefulCount) }}</span>
+
+        <span class="text-sm text-muted-foreground">
+          {{ localStore.localeSlotVal('submit_ImportUnitPrice', { '{price}': unitPrice }) }}
+        </span>
+        <span class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportBlance'] }}: ￥{{
+          uStore.info.credits }},
+          {{ localStore.localeSlotVal('submit_ImportSubmitOrder', { '{count}': usefulCount }) }}</span>
+
       </div>
       <div class="flex items-center justify-between space-x-2">
-        <a
-          href="javascript:void(0)" :title="localStore.localData['submit_ImportValidIMEI']"
+        <a href="javascript:void(0)" :title="localStore.localData['submit_ImportValidIMEI']"
           class="text-sm text-muted-foreground hover:bg-muted rounded-md px-2 py-1 -ml-2"
-          @click="imei = validImeiList.join('\n')"
-        >
+          @click="imei = validImeiList.join('\n')">
           <span class="mr-1">{{ localStore.localData['submit_ImportVaildQuantity'] }}</span>
           <span class="text-primary">{{ validImeiList.length }}</span>
         </a>
         <div class="flex justify-end space-x-2">
-          <ButtonGroup
-            :layouts="['cancel', 'import']" size="sm"
-            :labels="{
-              cancel:localStore.localData['submit_ImportCancel'],
-              import:localStore.localData['submit_ImportButton']
-              }"
-            @cancel="open = false" @import="handleSubmit"
-          />
+          <ButtonGroup :layouts="['cancel', 'import']" size="sm" :labels="{
+            cancel: localStore.localData['submit_ImportCancel'],
+            import: localStore.localData['submit_ImportButton']
+          }" @cancel="open = false" @import="handleSubmit" />
         </div>
       </div>
     </div>

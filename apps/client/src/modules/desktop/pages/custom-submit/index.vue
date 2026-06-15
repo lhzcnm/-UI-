@@ -265,7 +265,7 @@ const itemAlign = computed(() => (
     ? 'left'
     : container.layout === LAYOUT_POSITION.CENTER
       ? 'center'
-      : container.layout === LAYOUT_POSITION.RIGHT 
+      : container.layout === LAYOUT_POSITION.RIGHT
         ? 'right'
         : undefined
 ))
@@ -275,7 +275,7 @@ function handleSelectColumn(id: string, type: TemplateType = 'text') {
     handleFieldFunction(id)
     return
   }
-  
+
   const index = selectCols.value.indexOf(id)
 
   if (index !== -1) {
@@ -409,7 +409,7 @@ async function importTemplateFile(file: File) {
   Object.assign(container, paperContainer)
   templateItems.value = headers
   selectCols.value = selectedCols
-  customLabels.value = template.customLabels|| {}
+  customLabels.value = template.customLabels || {}
   qrcodeKeys.value = selQrcodeKeys
 }
 
@@ -577,7 +577,7 @@ async function getServiceDefaultTemplate(id: number) {
     //   .map(([_, value]) => {
     //     handleCustomCreate(value)
     //   })
-  } catch {}
+  } catch { }
 }
 
 function handleClickPhone(imei: string, isNormal: boolean = true) {
@@ -665,7 +665,7 @@ async function submitOrder(imeiList: string[]) {
     processSubmitedOrder(data)
     submited = true
     await updateCredit()
-  } catch {}
+  } catch { }
 }
 
 function processSubmitOrder(imeiList: string[]) {
@@ -867,7 +867,7 @@ async function handleGenerate() {
   } catch {
     try {
       await handleWebGenerate()
-    } catch(err) {
+    } catch (err) {
       console.error(err)
       toast.warning(localStore.localData['print_FailedPDF'])
     }
@@ -921,7 +921,8 @@ function processPageItem(order: CustomSubmitOrder) {
         y: pxTomm(template.y),
         value: getQrcodeVal({
           ...order.fields,
-          ...{ [hashPrintHeader('imei')]: order.imei } },
+          ...{ [hashPrintHeader('imei')]: order.imei }
+        },
           qrcodeKeys.value,
           processedColumns.value
         ),
@@ -950,7 +951,7 @@ function processPageItem(order: CustomSubmitOrder) {
         align: template.align ? template.align : 'left',
       })
       continue
-    }  else if (template.type === 'device') {
+    } else if (template.type === 'device') {
       if (!hasDeviceSn.value) continue
 
       const device = deviceItems.find(d => d.info.InternationalMobileEquipmentIdentity === order.imei)
@@ -1004,7 +1005,7 @@ async function pluginGeneratePdf() {
   const { data } = await axios.post(
     "http://localhost:9999/generate-pdf",
     body,
-    { responseType: "blob", headers: {'x-token': Date.now().toString(16)}, timeout: 10000 },
+    { responseType: "blob", headers: { 'x-token': Date.now().toString(16) }, timeout: 10000 },
   )
 
   const url = URL.createObjectURL(data)
@@ -1135,7 +1136,7 @@ async function checkPluginInfo() {
     if (checkVersion(deviceStore.version)) {
       deviceStore.pluginMustUpdate = true
     }
-    
+
     if (hasNewVersion(deviceStore.version)) {
       deviceStore.hasNewVersion = true
     }
@@ -1224,20 +1225,15 @@ onBeforeUnmount(() => {
 <template>
   <div class="p-4 h-full w-full flex gap-4 overflow-auto">
     <section class="w-[40%] space-y-4 flex flex-col">
-      <SelectService
-        :services="queryServices"
-        v-model="serviceId"
-        @selected="handleSelected"
-      />
+      <SelectService :services="queryServices" v-model="serviceId" @selected="handleSelected" />
 
       <div class="flex flex-col gap-2">
-        <div class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ getLanuagestring("print_commonly_used_service", iStore.lang) }}</div>
+        <div class="text-sm font-medium text-slate-700 dark:text-slate-200">{{
+          getLanuagestring("print_commonly_used_service", iStore.lang) }}</div>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
-          <button
-            v-for="service in deviceServices" :key="service.id"
+          <button v-for="service in deviceServices" :key="service.id"
             class="inline-flex items-center gap-2 p-3 rounded-lg border border-slate-200 bg-slate-50 dark:border-zinc-700 dark:bg-zinc-900 cursor-pointer"
-            @click="handleSelected(service.id)"
-          >
+            @click="handleSelected(service.id)">
             <!-- <input
               type="checkbox"
               class="w-4 h-4 text-primary rounded"
@@ -1251,12 +1247,14 @@ onBeforeUnmount(() => {
 
       <div class="flex justify-between gap-8">
         <div class="flex-1">
-          <XTextarea v-model="strImeis" :placeholder="localStore.localData['print_Input_IMEI/SN']" rows="8" @change="submited = false" />
+          <XTextarea v-model="strImeis" :placeholder="localStore.localData['print_Input_IMEI/SN']" rows="8"
+            @change="submited = false" />
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ localStore.localData['print_CustomVaildData'] }}: <b class="text-primary">{{ validImeis.length }}</b></span>
+              <span>{{ localStore.localData['print_CustomVaildData'] }}: <b class="text-primary">{{ validImeis.length
+              }}</b></span>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -1266,12 +1264,14 @@ onBeforeUnmount(() => {
           </div>
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ localStore.localData['print_SuccessfulOrders'] }}: <b class="text-success">{{ orderStat.success }}</b></span>
+              <span>{{ localStore.localData['print_SuccessfulOrders'] }}: <b class="text-success">{{ orderStat.success
+              }}</b></span>
             </div>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-full px-4 py-2 bg-card rounded-lg">
-              <span>{{ localStore.localData['print_FailedOrders'] }}: <b class="text-danger">{{ orderStat.failed }}</b></span>
+              <span>{{ localStore.localData['print_FailedOrders'] }}: <b class="text-danger">{{ orderStat.failed
+              }}</b></span>
             </div>
           </div>
         </div>
@@ -1295,32 +1295,20 @@ onBeforeUnmount(() => {
         <span class="flex-1 h-px bg-zinc-500"></span>
       </div>
 
-      <HeaderTagConfig
-        :headers="processedColumns"
-        :select-cols="selectCols"
-        :title="localStore.localData['print_PrintFields']"
-        @selected="handleSelectColumn"
-      />
+      <HeaderTagConfig :headers="processedColumns" :select-cols="selectCols"
+        :title="localStore.localData['print_PrintFields']" @selected="handleSelectColumn" />
 
       <div class="border p-2 space-y-1">
         <div class="font-bold text-sm">{{ localStore.localData['print_Device'] }}</div>
         <div class="flex flex-wrap gap-2">
           <template v-for="item in deviceFields" :key="item.key">
-            <HeaderTag
-              :label="isEn ? item.nameEn : item.name"
-              :id="item.key"
-              :checked="selectCols.includes(item.key)"
-              :type="item.type"
-              @click="handleSelectColumn"
-            />
+            <HeaderTag :label="isEn ? item.nameEn : item.name" :id="item.key" :checked="selectCols.includes(item.key)"
+              :type="item.type" @click="handleSelectColumn" />
           </template>
         </div>
       </div>
 
-      <PaperConfig
-        v-model="container"
-        @select-layout="applyGlobalLayout"
-      />
+      <PaperConfig v-model="container" @select-layout="applyGlobalLayout" />
 
       <div class="min-h-56 max-h-full border rounded-md p-3 space-y-3 bg-muted/30 overflow-y-auto">
         <div class="font-semibold text-sm flex items-center gap-2">
@@ -1339,13 +1327,9 @@ onBeforeUnmount(() => {
 
             <div class="flex items-center gap-3 flex-wrap">
               <template v-if="isTextField(field.type)">
-                <XInput
-                  v-model="field.size"
-                  ui-root="w-16"
-                  :placeholder="localStore.localData['print_FontSize']"
+                <XInput v-model="field.size" ui-root="w-16" :placeholder="localStore.localData['print_FontSize']"
                   @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)"
-                />
+                  @change="(e: Event) => field.size = handleInputChange(e)" />
 
                 <div class="flex border rounded overflow-hidden">
                   <button v-for="alignItem in textAlign" :key="alignItem.key" class="px-2 py-1 hover:bg-muted"
@@ -1400,19 +1384,15 @@ onBeforeUnmount(() => {
                     <Icon :icon="alignItem.icon" />
                   </button>
                 </div>
-                
+
                 <button class="flex items-center gap-1 px-2 py-1 border rounded text-xs"
                   @click="visibleSelQrHeader = true">
                   <Icon icon="lucide:settings" />
                   {{ localStore.localData['print_QRcode'] }}
                 </button>
 
-                <XInput
-                  v-model="field.size"
-                  ui-root="w-16"
-                  @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)"
-                />
+                <XInput v-model="field.size" ui-root="w-16" @input="(e: Event) => field.size = handleInputChange(e)"
+                  @change="(e: Event) => field.size = handleInputChange(e)" />
               </template>
 
               <button class="text-muted-foreground hover:text-destructive" @click="handleSelectColumn(field.key)">
@@ -1425,8 +1405,10 @@ onBeforeUnmount(() => {
 
       <div class="flex flex-col gap-2">
         <div class="flex justify-between space-x-2">
-          <XButton class="flex-1" :label="localStore.localData['print_ExportTemplate']" color="success" @click="exportTemplate" />
-          <XButton color="warning" class="flex-1" :label="localStore.localData['print_ImportTemplate']" @click="openImport" />
+          <XButton class="flex-1" :label="localStore.localData['print_ExportTemplate']" color="success"
+            @click="exportTemplate" />
+          <XButton color="warning" class="flex-1" :label="localStore.localData['print_ImportTemplate']"
+            @click="openImport" />
         </div>
       </div>
 
@@ -1453,7 +1435,7 @@ onBeforeUnmount(() => {
           
         </div>
       </template> -->
-      
+
       <template v-if="deviceStore.deviceMap.size === 0 && deviceStore.recoveryDeviceMap.size === 0">
         <div class="h-36 bg-card flex items-center justify-center rounded-md text-muted-foreground">
           {{ localStore.localData['print_USB_Runing'] }}
@@ -1472,7 +1454,8 @@ onBeforeUnmount(() => {
                   <div class="text-sm text-muted-foreground">
                     <p>{{ localStore.localData['print_SerialNumber'] }}: {{ phone.info.SerialNumber }}</p>
                     <p>imei: {{ phone.info.InternationalMobileEquipmentIdentity }}</p>
-                    <p>{{ localStore.localData['print_Model'] }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo }}</p>
+                    <p>{{ localStore.localData['print_Model'] }}: {{ phone.info.ModelNumber }} {{ phone.info.RegionInfo
+                    }}</p>
                   </div>
                 </div>
               </div>
@@ -1482,7 +1465,9 @@ onBeforeUnmount(() => {
           <div class="flex justify-between items-center mb-4">
             <div>
               <h2 class="text-xl font-bold text-foreground">{{ localStore.localData['print_ReciveryList'] }}</h2>
-              <p class="text-sm text-muted-foreground">{{ localStore.localData['print_TotalDevices'].replace('@', deviceStore.recoveryDeviceMap.size.toString()) }}</p>
+              <p class="text-sm text-muted-foreground">{{ localStore.localeSlotVal('print_TotalDevices', {
+                'count': deviceStore.recoveryDeviceMap.size
+              }) }}</p>
             </div>
           </div>
 
@@ -1511,10 +1496,8 @@ onBeforeUnmount(() => {
           <span class="flex-1 h-px bg-zinc-500"></span>
           <div class="flex items-center gap-2">
             <span>{{ localStore.localData['print_UpdatePlugin'] }}</span>
-            <XButtonSplit
-              :label="localStore.localData['print_DownloadPlugin']" :options="splitOptions"
-              size="sm" :openClick="true"
-            />
+            <XButtonSplit :label="localStore.localData['print_DownloadPlugin']" :options="splitOptions" size="sm"
+              :openClick="true" />
             <XButton size="sm" :label="localStore.localData['print_Refresh']" @click="$router.go(0)" />
           </div>
           <span class="flex-1 h-px bg-zinc-500"></span>
@@ -1538,9 +1521,9 @@ onBeforeUnmount(() => {
             { 'bg-black text-white': item.flip },
             { 'bg-white text-black': !item.flip },
           ]" :style="[
-          { left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' },
-          { fontSize: ptToPx(item.size!) + 'px' }
-        ]" @mousedown.prevent="startDrag($event, item)">
+            { left: item.x + 'px', top: item.y + 'px', maxWidth: '100%' },
+            { fontSize: ptToPx(item.size!) + 'px' }
+          ]" @mousedown.prevent="startDrag($event, item)">
           <template v-if="item.type === 'text' || item.type === 'custom'">
             <template v-if="item.wrap">
               <div v-if="item.showField" class="font-medium leading-tight">
@@ -1579,12 +1562,8 @@ onBeforeUnmount(() => {
 
           <template v-else-if="item.type === 'barcode'">
             <div data-barcode>
-              <BarcodePreview
-                :data="barcodeVal"
-                :size="+filterNumber(item.size!.toString())"
-                :show-field="item.showField!"
-                :module-width-px="+filterNumber(item.barcodeWidth!.toString())"
-              />
+              <BarcodePreview :data="barcodeVal" :size="+filterNumber(item.size!.toString())"
+                :show-field="item.showField!" :module-width-px="+filterNumber(item.barcodeWidth!.toString())" />
             </div>
           </template>
 

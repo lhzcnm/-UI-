@@ -28,7 +28,7 @@ function download(platform: number) {
       三和助手 - 标签|设备信息|批量查询
     </h3> -->
     <h3 class="text-lg mb-4 whitespace-pre text-center">
-      {{ localStore.localData['profile_SoftwareNew'].replace('@',name)}}
+      {{ localStore.localeSlotVal('profile_SoftwareNew', {'{name}': name}) }}
     </h3>
     <div class="space-x-2 whitespace-nowrap flex justify-center">
       <XButton

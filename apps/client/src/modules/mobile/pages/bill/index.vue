@@ -29,33 +29,21 @@ watch(
   <div class="h-full">
     <BackHeader :title="localStore.localData['recharge_RechargeHistory']" />
 
-    <div
-      :class="twJoin(
-        'flex items-center justify-between',
-        'm-3 p-3 rounded-lg bg-card shadow-sm'
-      )"
-    >
-      <XSimplePagination
-        v-model="page"
-        :page-size="limit"
-        :total="bills.total"
-      />
+    <div :class="twJoin(
+      'flex items-center justify-between',
+      'm-3 p-3 rounded-lg bg-card shadow-sm'
+    )">
+      <XSimplePagination v-model="page" :page-size="limit" :total="bills.total" />
       <span class="text-sm text-muted-foreground">
-        {{ localStore.localData['recharge_Total'].replace('@', bills.total.toString()) }}
+        {{ localStore.localeSlotVal('recharge_Total', { '{count}': bills.total }) }}
       </span>
     </div>
 
-    <div 
-      :class="twJoin(
-        'px-3 pb-6 space-y-3 overflow-y-auto',
-        'h-[calc(100%-var(--mobile-header-h)-5.5rem)]'
-      )"
-    >
-      <BillCard
-        v-for="item in bills.list"
-        :key="item.paymentId"
-        :item="item"
-      />
+    <div :class="twJoin(
+      'px-3 pb-6 space-y-3 overflow-y-auto',
+      'h-[calc(100%-var(--mobile-header-h)-5.5rem)]'
+    )">
+      <BillCard v-for="item in bills.list" :key="item.paymentId" :item="item" />
     </div>
   </div>
 </template>

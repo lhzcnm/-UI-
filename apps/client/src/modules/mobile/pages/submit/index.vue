@@ -585,11 +585,11 @@ onMounted(() => {
           </div>
           <div class="flex space-x-2">
             <XNativeSelect v-model="form.groupId" :default="-1" :options="[...serviceStore.details]"
-              @change="form.serviceId = 0" :placeholder="localStore.localData['submit_SelectGroup']" label-key="title" value-key="id"
-              class="w-full" />
+              @change="form.serviceId = 0" :placeholder="localStore.localData['submit_SelectGroup']" label-key="title"
+              value-key="id" class="w-full" />
             <XNativeSelect v-model="form.serviceId" :default="0" :options="options" :disabled="form.groupId === -1"
-              @change="handleServiceChange" :placeholder="localStore.localData['submit_ServicePlaceholderTable']" label-key="title" value-key="id"
-              class="w-full" />
+              @change="handleServiceChange" :placeholder="localStore.localData['submit_ServicePlaceholderTable']"
+              label-key="title" value-key="id" class="w-full" />
           </div>
         </div>
 
@@ -638,32 +638,43 @@ onMounted(() => {
 
           <div class="relative mb-2">
             <div class="flex justify-between space-x-2">
-              <XTextarea v-model="form.imei" rows="5" :placeholder="localStore.localData['submit_ImportIMEIPlaceholder']" />
+              <XTextarea v-model="form.imei" rows="5"
+                :placeholder="localStore.localData['submit_ImportIMEIPlaceholder']" />
 
 
-              <div  class="flex flex-col justify-between py-1">
-                <XButton variant="outline" size="sm" icon="gridicons:aside" :label="localStore.localData['submit_OrdersHistory']" color="primary"
-                  :loading="submitLoading" @click="handleOpenOrder">
+              <div class="flex flex-col justify-between py-1">
+                <XButton variant="outline" size="sm" icon="gridicons:aside"
+                  :label="localStore.localData['submit_OrdersHistory']" color="primary" :loading="submitLoading"
+                  @click="handleOpenOrder">
                 </XButton>
 
-                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="localStore.localData['submit_SelectImg']" color="success"
-                  icon="lucide:image-up" @click="handlePickImage" />
+                <XButton v-if="ua.isWechat" variant="outline" size="sm"
+                  :label="localStore.localData['submit_SelectImg']" color="success" icon="lucide:image-up"
+                  @click="handlePickImage" />
 
-                <XButton v-if="ua.isWechat" variant="outline" size="sm" :label="localStore.localData['submit_TakePhoto']" icon="lucide:camera"
-                  @click="handlePhoto" />
+                <XButton v-if="ua.isWechat" variant="outline" size="sm"
+                  :label="localStore.localData['submit_TakePhoto']" icon="lucide:camera" @click="handlePhoto" />
               </div>
             </div>
 
             <div class="flex flex-col">
 
               <div class="flex space-x-2">
-                <div class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportVaildQuantity'] }}：{{ imeiCount }}</div>
-                
-                <span v-if="store.service" class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportUnitPrice'].replace('@', unitPrice) }}</span>
+                <div class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportVaildQuantity'] }}：{{
+                  imeiCount
+                  }}</div>
+
+                <span v-if="store.service" class="text-sm text-muted-foreground">
+                  {{ localStore.localeSlotVal('submit_ImportUnitPrice', { '{price}': unitPrice }) }}
+                </span>
               </div>
 
-              <span v-if="store.service" class="text-sm text-muted-foreground">{{ localStore.localData['submit_ImportBlance'] }}: ￥{{
-                uStore.info.credits }}, {{ localStore.localData['submit_ImportSubmitOrder'].replace('@', unitPrice) }}</span>
+              <span v-if="store.service" class="text-sm text-muted-foreground">{{
+                localStore.localData['submit_ImportBlance'] }}:
+                ￥{{
+                  uStore.info.credits }},
+                {{ localStore.localeSlotVal('submit_ImportSubmitOrder', { '{count}': unitPrice }) }}
+              </span>
             </div>
             <!-- <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
             <div v-show="formatLoading" class="absolute top-2 right-2 text-sm text-muted-foreground">
@@ -676,12 +687,15 @@ onMounted(() => {
 
         <div>
           <h2 class="font-medium mb-2">{{ localStore.localData['submit_Additional'] }}</h2>
-          <XTextarea v-model="form.remark" :placeholder="localStore.localData['submit_ImportRemarkPlaceholder']" class="mb-3" />
+          <XTextarea v-model="form.remark" :placeholder="localStore.localData['submit_ImportRemarkPlaceholder']"
+            class="mb-3" />
 
-          <XSwitch v-model="form.pushMsg" :label="localStore.localData['submit_PushResultToast']" @change="handlePushMsgChange" />
+          <XSwitch v-model="form.pushMsg" :label="localStore.localData['submit_PushResultToast']"
+            @change="handlePushMsgChange" />
         </div>
 
-        <XButton class="w-full" :label="localStore.localData['submit_Submit']" :loading="submitLoading" @click="handleSubmit" />
+        <XButton class="w-full" :label="localStore.localData['submit_Submit']" :loading="submitLoading"
+          @click="handleSubmit" />
 
         <OrderResultModal />
         <OrderHistoryModal :service-id="store.serviceId" />

@@ -178,12 +178,20 @@ function isSamePrice(item: MemberPackage) {
 
           <div class="flex justify-between space-x-2 mt-1 text-sm">
             <p v-if="item.freeCount" class="text-muted-foreground">
-              <span> {{ localStore.localData['recharge_OriginalPrice'].replace('@', item.price == null ? '0.00' : item.price.toString()) }}</span>
-              <span class="text-primary font-bold">{{localStore.localData['recharge_Now'].replace('@', item.freeCount.toString())}}</span>
+              <span> 
+                {{ localStore.localeSlotVal('recharge_OriginalPrice',{'{price}':item.price == null ? '0.00' : item.price}) }}
+              </span>
+              <span class="text-primary font-bold">
+                {{ localStore.localeSlotVal('recharge_Now', {'{count}': item.freeCount})}}
+              </span>
               <span>{{ localStore.localData['recharge_FreeQueries'] }}</span>
               <div v-if="!isSamePrice(item)">
-                <span>{{localStore.localData['recharge_Exceeding'].replace('@', item.freeCount.toString())}}</span>
-                <span>{{localStore.localData['recharge_DiscountPrice'].replace('@', item.price == null ? '0.00' : item.price.toString())}}</span>
+                <span>
+                  {{ localStore.localeSlotVal('recharge_Exceeding',{'{count}': item.freeCount}) }}
+                </span>
+                <span>
+                  {{ localStore.localeSlotVal('recharge_DiscountPrice',{'{count}': item.price == null ? '0.00' : item.price }) }}
+                </span>
               </div>
             </p>
           </div>

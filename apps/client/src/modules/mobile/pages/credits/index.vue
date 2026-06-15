@@ -38,33 +38,21 @@ watch(
 
     <Fallback v-if="loading" />
     <template v-else>
-      <div
-        :class="twJoin(
-          'flex items-center justify-between',
-          'm-3 p-3 rounded-lg bg-card shadow-sm'
-        )"
-      >
-        <XSimplePagination
-          v-model="page"
-          :page-size="limit"
-          :total="logs.total"
-        />
+      <div :class="twJoin(
+        'flex items-center justify-between',
+        'm-3 p-3 rounded-lg bg-card shadow-sm'
+      )">
+        <XSimplePagination v-model="page" :page-size="limit" :total="logs.total" />
         <span class="text-sm text-muted-foreground">
-          {{ localStore.localData['credits_Total'].replace('@', logs.total.toString()) }}
+          {{ localStore.localeSlotVal('credits_Total', { '{count}': logs.total }) }}
         </span>
       </div>
 
-      <div 
-        :class="twJoin(
-          'px-3 pb-6 space-y-3 overflow-y-auto',
-          'h-[calc(100%-var(--mobile-header-h)-5.5rem)]'
-        )"
-      >
-        <CreditLogCard
-          v-for="item in logs.list"
-          :key="item.historyId"
-          :item="item"
-        />
+      <div :class="twJoin(
+        'px-3 pb-6 space-y-3 overflow-y-auto',
+        'h-[calc(100%-var(--mobile-header-h)-5.5rem)]'
+      )">
+        <CreditLogCard v-for="item in logs.list" :key="item.historyId" :item="item" />
       </div>
     </template>
   </div>
