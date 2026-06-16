@@ -30,9 +30,9 @@ async function submitForm() {
 <template>
   <form class="space-y-4" @submit.prevent="submitForm">
     <div>
-      <p class="mb-3">{{ t('profile.form.title.current') }}: <b>{{ store.info.username }}</b></p>
-      <XInput v-model="account" name="username" :placeholder="t('profile.placeholder.account')" />
+      <p class="mb-3">{{ localStore.localData['top_Current'] }}: <b>{{ store.info.username }}</b></p>
+      <XInput v-model="account" name="username" :placeholder="localStore.localData['login_Account']" />
     </div>
-    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
+    <XButton type="submit" class="w-full">{{ localStore.localData['top_Confirm'] }}</XButton>
   </form>
 </template>

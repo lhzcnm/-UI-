@@ -67,9 +67,9 @@ async function submitForm() {
     <div class="flex space-x-2">
       <XInput v-model="emailForm.code" :placeholder="t('profile.placeholder.vertify')" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCode">
-        {{ isRunning ? t('profile.placeholder.countdown', { action: count }) : t('profile.button.sendVerty') }}
+        {{ isRunning ? localStore.localeSlotVal('login_Resend',{'count':count}) : localStore.localData['login_SendCode'] }}
       </XButton>
     </div>
-    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
+    <XButton type="submit" class="w-full">{{ localStore.localData['profile_Confirm'] }}</XButton>
   </form>
 </template>
