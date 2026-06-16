@@ -10,7 +10,7 @@ export const zOrder = z.object({
   codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
   requestedAt: z.string().default(''),
   credits: z.number().default(0),
-  comments: z.string().default(''),
+  // comments: z.string().default(''),
   codeSentToOtherServer: z.number().default(0),
   messageFromServer: z.string().default('').nullable(),
   code: z.string().default(''),

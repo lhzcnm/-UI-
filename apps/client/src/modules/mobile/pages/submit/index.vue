@@ -690,7 +690,7 @@ onMounted(() => {
           <XTextarea v-model="form.remark" :placeholder="localStore.localData['submit_ImportRemarkPlaceholder']"
             class="mb-3" />
 
-          <XSwitch v-model="form.pushMsg" :label="localStore.localData['submit_PushResultToast']"
+          <XSwitch v-model="form.pushMsg" :label="localStore.localData['submit_PushResult']"
             @change="handlePushMsgChange" />
         </div>
 

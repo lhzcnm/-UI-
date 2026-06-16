@@ -84,7 +84,7 @@ const localStore = useLocalStore()
           </div>
           <div class="text-sm text-muted-foreground">
             <div>{{ localStore.localData['profile_Account']}}: {{ store.info.username }}</div>
-            <div class="font-mono">{{ localStore.localData['profile_WeChat'] }}: {{ localStore.localData['profile_BindUnbound'] }}</div>
+            <div class="font-mono">{{ localStore.localData['profile_WeChat'] }}: {{ store.info.openId ? localStore.localData['profile_BindBinding'] : localStore.localData['profile_BindUnbound'] }}</div>
             <div>{{ localStore.localData['profile_Phone'] }}: {{ store.info.phone || localStore.localData['profile_BindUnbound'] }}</div>
             <div>{{ localStore.localData['profile_InfoEmail'] }}: {{ store.info.email || localStore.localData['profile_BindUnbound'] }}</div>
           </div>
