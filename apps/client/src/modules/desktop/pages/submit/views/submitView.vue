@@ -14,7 +14,7 @@ import {
 } from '@3un/ui'
 import {
   ASYNC_ORDER_STATUS,
-  ASYNC_ORDER_STATUS_MAP,
+  ASYNC_ORDER_STATUS_MAP_LOCALE,
   debounce,
   downloadURL,
   ORDER_STATUS,
@@ -29,7 +29,7 @@ import router from '@/router'
 
 const store = inject(SUBMIT_STORE)!
 
-const { t, locale } = useI18n()
+const { t,locale } = useI18n()
 const serviceStore = useServiceStore()
 const uStore = useUserStore()
 const { connect, close } = useWsStore()
@@ -202,23 +202,23 @@ function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
   const asyncCols: XTableColumn[] = [
     {
       key: 'submitedStatus',
-      title: t('query.listCol.submited'),
+      title: localStore.localData['submit_SubmitStatus'],
       width: 158,
       render: (value, row) => {
         let status
         if (!value) {
-          status = ASYNC_ORDER_STATUS_MAP[ASYNC_ORDER_STATUS.ASYNC_SUBMITED]
+          status = ASYNC_ORDER_STATUS_MAP_LOCALE[ASYNC_ORDER_STATUS.ASYNC_SUBMITED]
 
           if (row.status === ORDER_STATUS.WAIT) {
-            status = ASYNC_ORDER_STATUS_MAP[ASYNC_ORDER_STATUS.WAIT]
+            status = ASYNC_ORDER_STATUS_MAP_LOCALE[ASYNC_ORDER_STATUS.WAIT]
           }
         } else {
-          status = ASYNC_ORDER_STATUS_MAP[value]
+          status = ASYNC_ORDER_STATUS_MAP_LOCALE[value]
         }
 
         return h(XTag, {
           color: status.color,
-          label: t(status.key!),
+          label: localStore.localData[status.key!],
         })
       }
     }
@@ -289,7 +289,7 @@ async function handleSubmitOrder(id: number) {
 
 async function handleImport(imeiList: string[], remark: string) {
   if (!selService.value) return
-  if (disabled.value) return toast.warning(t('query.prompt.importDisable'))
+  if (disabled.value) return toast.warning(localStore.localData['submit_WaitOrder'])
   // if (count > 0 && !selService.value?.isUnlock) return
 
   store.page = 1
@@ -454,11 +454,11 @@ async function handleSubmit() {
     return null
   }).filter(Boolean)
 
-  if (submited.value || submitOrders.length === 0) return toast.warning(t('query.prompt.repeat'))
+  if (submited.value || submitOrders.length === 0) return toast.warning(localStore.localData['submit_Repeatedly'])
   const service = serviceStore.services.get(store.selectId!)
 
-  if (!service) return toast.warning(t('query.prompt.serviveNull'))
-  if (orders.value.length === 0) return toast.warning(t('query.prompt.importNull'))
+  if (!service) return toast.warning(localStore.localData['submit_ServicePlaceholderTable'])
+  if (orders.value.length === 0) return toast.warning(localStore.localData['submit_ExportOrders'])
   submitLoading.value = true
 
   if (count === 0) {
@@ -489,7 +489,7 @@ function submitOrder(service: Service) {
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
-      toast.success(`${t('submit.success', { action: t('action.submit') })}`)
+      toast.success(localStore.localData['submit_SubmitSuccess'])
       disabled.value = false
     }
 
@@ -623,13 +623,13 @@ function handleExport() {
   }
 
   if (!store.selectId || !ids?.length) {
-    toast.warning(t('query.prompt.importNull'))
+    toast.warning(localStore.localData['submit_ExportOrders'])
     return
   }
 
   const service = serviceStore.services.get(store.selectId)
   if (!submited.value && !service?.isUnlock) {
-    toast.warning(t('query.prompt.exportNotSub'))
+    toast.warning(localStore.localData['submit_NoFinshedOrder'])
     return
   }
 
@@ -671,7 +671,7 @@ async function reset() {
 }
 
 async function handleFresh() {
-  if (store.rawOrders.length === 0) return toast.warning(t('query.prompt.importNull'))
+  if (store.rawOrders.length === 0) return toast.warning(localStore.localData['submit_ExportOrders'])
 
   pendingOrders = store.rawOrders.map(item => {
     if (item.status === ORDER_STATUS.PROCESSING || item.status === ORDER_STATUS.WAIT) {
@@ -680,10 +680,10 @@ async function handleFresh() {
     return null
   }).filter((item): item is number => item !== null)
 
-  if (pendingOrders.length === 0) return toast.info(t('query.prompt.refreshNone'))
+  if (pendingOrders.length === 0) return toast.info(localStore.localData['submit_AllOrderFinsh'])
   disabled.value = false
   const data = await getSubmitOrderList(pendingOrders)
-  toast.success(t('submit.success', { action: t('button.fresh') }))
+  toast.success(localStore.localData['submit_SuccessFresh'])
 
   for (let item of data) {
     const index = store.rawOrders.findIndex(order => order.id === item.id)
@@ -700,8 +700,8 @@ async function handleFresh() {
 }
 
 function resetOrder(status: ORDER_STATUS) {
-  if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
-  if (reseted.value) return toast.warning(t('query.prompt.reseted'))
+  if (count > 0) return toast.warning(localStore.localData['submit_ProcessingOrder'])
+  if (reseted.value) return toast.warning(localStore.localData['submit_FirstSubmit'])
   if (!store.rawOrders.some(o => o.status === status)) return
 
   submited.value = false
@@ -748,8 +748,8 @@ function resetOrder(status: ORDER_STATUS) {
 }
 
 function resetNotCoverOrder(status: ORDER_STATUS) {
-  if (count > 0) return toast.warning(t('query.prompt.orderHandle'))
-  if (reseted.value) return toast.warning(t('query.prompt.reseted'))
+  if (count > 0) return toast.warning(localStore.localData['submit_ProcessingOrder'])
+  if (reseted.value) return toast.warning(localStore.localData['submit_FirstSubmit'])
   if (!store.rawOrders.some(o => o.status === status)) return
 
   submited.value = false
@@ -760,10 +760,10 @@ function resetNotCoverOrder(status: ORDER_STATUS) {
 }
 
 function resetSelectRow() {
-  if (count > 0) return toast.warning(t("query.prompt.orderHandle"))
-  if (submitLoading.value) return toast.warning(t("query.prompt.orderHandle"))
+  if (count > 0) return toast.warning(localStore.localData['submit_ProcessingOrder'])
+  if (submitLoading.value) return toast.warning(localStore.localData['submit_ProcessingOrder'])
   if (indexes.value.length === 0) {
-    return toast.warning(t("query.fields.prompt.noSelectRow"))
+    return toast.warning(localStore.localData['submit_Row'])
   }
 
   orderImeis = {}
@@ -792,9 +792,9 @@ function resetSelectRow() {
 
 async function handleMustRead() {
   const result = await xconfirm({
-    title: t('query.service'),
+    title: localStore.localData['submit_ServiceDescription'],
     text: mustRead.value || '',
-    confirmText: t('button.confirm'),
+    confirmText: localStore.localData['submit_FieldsDialogConfirm'],
     cancelText: undefined,
   })
 
@@ -805,7 +805,7 @@ async function handlePushMsgChange(value: boolean) {
   if (value) return
 
   const result = await xconfirm`
-    ${t('query.prompt.pushRes')}
+    ${localStore.localData['submit_PushResultToast']}
   `
   if (!result) pushMsg.value = true
 }

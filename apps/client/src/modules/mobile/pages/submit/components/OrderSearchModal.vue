@@ -12,7 +12,6 @@ interface OrderSearchModalEmits {
   filter: [params: OrderSearchForm]
 }
 
-// const { t } = useI18n()
 const serviceStore = useServiceStore()
 const localStore = useLocalStore()
 

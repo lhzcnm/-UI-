@@ -227,6 +227,12 @@ export const ASYNC_ORDER_STATUS_MAP: StatusMap = {
   [ASYNC_ORDER_STATUS.WAIT] : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'status.unlock.2' },
 }
 
+export const ASYNC_ORDER_STATUS_MAP_LOCALE: StatusMap = {
+  [ASYNC_ORDER_STATUS.ASYNC_SUBMITED] : { color: 'success', label: '提交成功', labelEn: 'Success', key: 'submit_SuccessSubmit' },
+  [ASYNC_ORDER_STATUS.ASYNC_FAILED] : { color: 'danger', label: '提交失败', labelEn: 'Success', key: 'submit_FailedSubmit' },
+  [ASYNC_ORDER_STATUS.WAIT] : { color: 'info', label: '等待提交', labelEn: 'Pending', key: 'submit_WaitSubmit' },
+}
+
 // Order Verify
 export enum ORDER_VERIFY {
   NORMAL    = 0,

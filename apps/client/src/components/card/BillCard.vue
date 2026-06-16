@@ -7,6 +7,7 @@ import { twMerge } from 'tailwind-merge'
 const { item } = defineProps<{ item: InvoiceItem }>()
 
 const { t } = useI18n()
+const localStore = useLocalStore()
 
 const isReduce = item.credits.toString().startsWith("-")
 
@@ -29,7 +30,7 @@ const isReduce = item.credits.toString().startsWith("-")
       <div>
         <div class="flex space-x-1 text-muted-foreground">
           <Icon icon="lucide:credit-card" class="size-4" />
-          <span class="text-xs">{{ t('recharge.history.amount') }}</span>
+          <span class="text-xs">{{ localStore.localData['credits_BillAmount'] }}</span>
         </div>
         <p class="text-xl font-semibold text-primary">
           ￥{{ item.amount }}
@@ -38,7 +39,7 @@ const isReduce = item.credits.toString().startsWith("-")
       <div>
         <div class="flex space-x-1 text-muted-foreground">
           <Icon icon="lucide:coins" class="size-4" />
-          <span class="text-xs">{{ t('recharge.history.real') }}</span>
+          <span class="text-xs">{{ localStore.localData['credits_ActualRecevied'] }}</span>
         </div>
         <p
           :class="twMerge(

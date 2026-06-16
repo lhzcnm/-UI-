@@ -4,7 +4,6 @@ interface modeEmits {
 }
 const emits = defineEmits<modeEmits>()
 const mode = ref('')
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 </script>
