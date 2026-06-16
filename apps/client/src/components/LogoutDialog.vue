@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const iStore = useSystemStore()
 const uStore = useUserStore()
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 function handleLogout() {
   iStore.logout = false
@@ -18,11 +18,11 @@ function handleLogout() {
     v-model="iStore.logout"
   >
     <template #header>
-      <h2 class="text-lg font-semibold text-center text-gray-900 mb-2">{{ t('prompt.title') }}</h2>
+      <h2 class="text-lg font-semibold text-center text-gray-900 mb-2">{{ localStore.localData['top_Prompt'] }}</h2>
     </template>
 
     <template #default>
-      <p class="text-sm text-center text-gray-600 mb-6">{{ t('prompt.confirm', { action: t('barItem.logout') }) }}</p>
+      <p class="text-sm text-center text-gray-600 mb-6">{{ localStore.localData['top_LogOut'] }}</p>
     </template>
 
     <template #footer>

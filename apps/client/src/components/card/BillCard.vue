@@ -6,7 +6,6 @@ import { twMerge } from 'tailwind-merge'
 
 const { item } = defineProps<{ item: InvoiceItem }>()
 
-const { t } = useI18n()
 const localStore = useLocalStore()
 
 const isReduce = item.credits.toString().startsWith("-")
@@ -22,7 +21,7 @@ const isReduce = item.credits.toString().startsWith("-")
       </span>
       <XTag
         :color="PAYMENT_STATUS_MAP[item.paymentStatusId].color"
-        :label="t(PAYMENT_STATUS_MAP[item.paymentStatusId].key!)"
+        :label="localStore.localData[PAYMENT_STATUS_MAP[item.paymentStatusId].key!]"
       />
     </div>
 

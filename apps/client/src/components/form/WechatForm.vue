@@ -6,7 +6,8 @@ import { userApi } from '@/api/user'
 import { toast } from 'vue-sonner'
 
 const imageURL = ref('')
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 const uStore = useUserStore()
 const expiredMask = ref(false)
 
@@ -74,7 +75,7 @@ onUnmounted(() => {
             @click="getQRCode"
           >
             <Icon icon="lucide:rotate-cw" class="size-4" />
-            <span>{{ t('auth.refresh') }}</span>
+            <span>{{ localStore.localData['login_Refresh'] }}</span>
           </a>
         </div>
       </div>
@@ -84,6 +85,6 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <p class="text-sm text-muted-foreground">{{ t('profile.placeholder.wechat') }}</p>
+    <p class="text-sm text-muted-foreground">{{ localStore.localData['profile_WeChatBind'] }}</p>
   </div>
 </template>

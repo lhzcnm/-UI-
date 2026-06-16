@@ -56,7 +56,8 @@ const props = withDefaults(
 
 const emits = defineEmits<ButtonGroupEmits>()
 
-const { t } = useI18n()
+// const { t } = useI18n()
+const localStore = useLocalStore()
 
 const buttonConfigs: ButtonConfig = {
   filter: { color: 'primary', variant: 'solid' },
@@ -72,16 +73,16 @@ const buttonConfigs: ButtonConfig = {
 }
 
 const buttonLabels: ButtonLabel = {
-  filter: t('button.filter'),
-  import: t('button.import'),
-  export: t('button.export'),
-  submit: t('button.submit'),
-  confirm: t('button.confirm'),
-  clear: t('button.clear'),
-  copy: t('button.copy'),
-  add: t('button.add'),
-  cancel: t('button.cancel'),
-  fresh: t('button.fresh')
+  filter: localStore.localData['submit_Filter'],
+  import: localStore.localData['submit_ImportButton'],
+  export: localStore.localData['history_Export'],
+  submit: localStore.localData['submit_Submit'],
+  confirm: localStore.localData['history_ConfirmSearch'],
+  clear: localStore.localData['submit_Clear'],
+  copy: localStore.localData['profile_Copy'],
+  add: localStore.localData['top_Add'],
+  cancel: localStore.localData['profile_Cancel'],
+  fresh: localStore.localData['device_RefreshButton']
 }
 
 const mergedLabels = computed(() => {

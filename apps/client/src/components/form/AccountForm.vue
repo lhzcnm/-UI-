@@ -8,7 +8,6 @@ const props = defineProps<{ onClose: () => void }>()
 const store = useUserStore()
 const account = ref('')
 
-const { t } = useI18n()
 const localStore = useLocalStore()
 
 async function submitForm() {
@@ -22,7 +21,7 @@ async function submitForm() {
   if (!validate(rules)) return
   store.updateName(username)
 
-  toast.success(t('submit.success', { action: t('action.modify') }))
+  toast.success(localStore.localData['top_Modify'])
   props.onClose()
 }
 </script>

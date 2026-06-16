@@ -12,7 +12,6 @@ const props = defineProps<{ onClose: () => void }>()
 const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'password_countdown'
 })
-const { t } = useI18n()
 const localStore = useLocalStore()
 const uStore = useUserStore()
 
@@ -66,7 +65,7 @@ async function submitForm() {
       password: password
     })
   
-    toast.success(t('submit.success', { action: t('action.modify') }))
+    toast.success(localStore.localData['top_Modify'])
     setTimeout(() => {
       uStore.logout()
     }, 1500)
@@ -77,15 +76,15 @@ async function submitForm() {
 
 <template>
   <form class="space-y-4" @submit.prevent="submitForm" autocomplete="off">
-    <XInput v-model="form.target" name="phone" :placeholder="t('profile.placeholder.pwd')" />
+    <XInput v-model="form.target" name="phone" :placeholder="localStore.localData['profile_PhoneEmail']" />
     <div class="flex space-x-2">
-      <XInput v-model="form.code" name="code" :placeholder="t('profile.placeholder.vertify')" />
+      <XInput v-model="form.code" name="code" :placeholder="localStore.localData['profile_PromptNeedCode']" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCaptcha">
-        {{ isRunning ? t('profile.placeholder.countdown', { action: count }) : t('profile.button.sendVerty') }}
+        {{ isRunning ? localStore.localeSlotVal('profile_PlaceholderCountdown',{'{count}':count}) : localStore.localData['profile_PlaceholderSendVerty'] }}
       </XButton>
     </div>
-    <XInput v-model="form.password" name="password" type="password" :placeholder="t('profile.placeholder.newPwd')" />
-    <XInput v-model="form.confirmPassword" name="confirmPassword" type="password" :placeholder="t('profile.placeholder.confirmPwd')" />
-    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
+    <XInput v-model="form.password" name="password" type="password" :placeholder="localStore.localData['profile_NewPassword']" />
+    <XInput v-model="form.confirmPassword" name="confirmPassword" type="password" :placeholder="localStore.localData['profile_ConfirmPassword']" />
+    <XButton type="submit" class="w-full">{{ localStore.localData['submit_FieldsDialogConfirm'] }}</XButton>
   </form>
 </template>

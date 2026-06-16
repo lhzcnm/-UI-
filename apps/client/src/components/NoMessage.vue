@@ -3,14 +3,14 @@ interface NoMessageProps {
   title?: string
 }
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const props = withDefaults(
   defineProps<NoMessageProps>(),
   { title: '' }
 )
 
-const title = computed(() => props.title || t('dataNull'))
+const title = computed(() => props.title || localStore.localData['top_NoRecords'])
 </script>
 
 <template>

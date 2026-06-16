@@ -18,7 +18,6 @@ const emailForm = reactive({
   code: '',
 })
 
-const { t } = useI18n()
 const localStore = useLocalStore()
 const uStore = useUserStore()
 
@@ -51,7 +50,7 @@ async function submitForm() {
       code: emailForm.code,
     })
   
-    toast.success(t('submit.success', { action: t('action.bind') }))
+    toast.success(localStore.localData['profile_SuccessBind'])
     setTimeout(() => {
       uStore.logout()
     }, 1500)
@@ -63,9 +62,9 @@ async function submitForm() {
 
 <template>
   <form class="space-y-4" @submit.prevent="submitForm">
-    <XInput v-model="emailForm.email" type="email" :placeholder="t('profile.placeholder.email')" />
+    <XInput v-model="emailForm.email" type="email" :placeholder="localStore.localData['profile_ImportEmail']" />
     <div class="flex space-x-2">
-      <XInput v-model="emailForm.code" :placeholder="t('profile.placeholder.vertify')" />
+      <XInput v-model="emailForm.code" :placeholder="localStore.localData['profile_PromptCodeError']" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCode">
         {{ isRunning ? localStore.localeSlotVal('login_Resend',{'count':count}) : localStore.localData['login_SendCode'] }}
       </XButton>

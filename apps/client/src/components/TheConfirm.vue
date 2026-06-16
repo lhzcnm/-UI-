@@ -3,12 +3,12 @@ import type { ConfirmOptions } from '@3un/utils'
 import { registerConfirm } from '@3un/utils'
 import { isString } from '@3un/ui'
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const defaultOptions = {
-  title: t('prompt.title'),
-  cancelText: t('button.cancel'),
-  confirmText: t('button.confirm'),
+  title: localStore.localData['top_Prompt'],
+  cancelText: localStore.localData['profile_Cancel'],
+  confirmText: localStore.localData['top_Confirm'],
   text: '',
 }
 

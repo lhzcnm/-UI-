@@ -6,7 +6,7 @@ import { type PluginInfo } from '@/types/plugin'
 import { checkPluginVersion, getPluginInfo } from '@/utils/plugin'
 import { tv } from 'tailwind-variants'
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const isNotLatest = ref<boolean>(false)
 
@@ -67,14 +67,14 @@ const b = style()
   <div v-if="isNotLatest" :class="b.root()">
     <div :class="b.container()">
       <div class="flex-1 space-y-1 flex gap-2 items-center flex-wrap">
-        <h4>{{ t('print.plugin.tip') }}</h4>
+        <h4>{{ localStore.localData['print_Optimal'] }}</h4>
         <XButtonSplit
           size="sm"
           :options="splitOptions"
-          :label="t('device.button.download')"
+          :label="localStore.localData['device_DownloadPlugin']"
           :open-click="true"
         />
-        <XButton size="sm" :label="t('button.fresh')" @click="$router.go(0)" />
+        <XButton size="sm" :label="localStore.localData['device_RefreshButton']" @click="$router.go(0)" />
       </div>
     </div>
   </div>

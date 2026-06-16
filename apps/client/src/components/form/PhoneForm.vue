@@ -12,7 +12,7 @@ const props = defineProps<{ onClose(): void }>()
 const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'phone_countdown'
 })
-const { t } = useI18n()
+// const { t } = useI18n()
 const localStore = useLocalStore()
 const uStore = useUserStore()
 
@@ -49,7 +49,7 @@ async function submitForm() {
       code: phoneForm.code
     })
   
-    toast.success(t('submit.success', { action: t("action.bind") }))
+    toast.success(localStore.localData['profile_SuccessBind'])
     setTimeout(() => {
       uStore.logout()
     }, 1500)
@@ -60,13 +60,13 @@ async function submitForm() {
 
 <template>
   <form class="space-y-4" @submit.prevent="submitForm">
-    <XInput v-model="phoneForm.phone" type="tel" :placeholder="t('profile.placeholder.phone')" />
+    <XInput v-model="phoneForm.phone" type="tel" :placeholder="localStore.localData['profile_ImportPhone']" />
     <div class="flex space-x-2">
-      <XInput v-model="phoneForm.code" :placeholder="t('profile.placeholder.vertify')" />
+      <XInput v-model="phoneForm.code" :placeholder="localStore.localData['profile_PromptNeedCode']" />
       <XButton type="button" :disabled="isRunning" @click.prevent="sendCode">
-        {{ isRunning ? t('profile.placeholder.countdown', { action: count }) : t('profile.button.sendVerty') }}
+        {{ isRunning ? localStore.localeSlotVal('profile_PlaceholderCountdown', {'{count}': count}) : localStore.localData['profile_PlaceholderSendVerty'] }}
       </XButton>
     </div>
-    <XButton type="submit" class="w-full">{{ t('button.confirm') }}</XButton>
+    <XButton type="submit" class="w-full">{{ localStore.localData['print_DialogConfirmButton'] }}</XButton>
   </form>
 </template>
