@@ -97,8 +97,6 @@ async function handleFilter(params: OrderSearchForm) {
     pageSize: pageSize.value,
   })
 }
-
-
 </script>
 
 <template>
@@ -118,7 +116,7 @@ async function handleFilter(params: OrderSearchForm) {
         <XSimplePagination v-if="orderTab == 'all'" v-model="page" :limit="pageSize" :total="orders.total" />
       </section>
 
-      <section class="mt-2 p-3 flex flex-col space-y-2 overflow-y-auto">
+      <section class="mt-2 p-3 flex flex-col space-y-2 overflow-y-auto" @touchmove.stop>
         <NoMessage v-if="orders.list.length === 0" class="bg-card border rounded-lg" />
 
         <template v-else>
