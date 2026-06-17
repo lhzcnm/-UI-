@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { localApi } from '@/api/local';
 import type { ServiceDetail } from '@/api/services'
 import { twMerge } from 'tailwind-merge'
 
