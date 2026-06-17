@@ -11,7 +11,7 @@ const { copy } = useClipboard({ legacy: true })
 const store = inject(STORE)!
 const deviceStore = useDeviceStore()
 const iStore = useSystemStore()
-const {  locale } = useI18n()
+const { locale } = useI18n()
 const localStore = useLocalStore()
 
 const isRecoveryMode = ref(false)

@@ -5,7 +5,6 @@ import { Icon } from '@iconify/vue'
 const store = useSettingStore()
 const route = useRoute()
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 const routes = [

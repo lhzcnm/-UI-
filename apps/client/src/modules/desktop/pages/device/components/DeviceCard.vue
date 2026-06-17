@@ -15,7 +15,7 @@ const { info, memory, product, summary, deviceId } = props.device
 const currentKey = `${deviceId}:${info.UniqueDeviceID}`
 
 const { copy } = useClipboard({ legacy: true })
-const {  locale } = useI18n()
+const { locale } = useI18n()
 const localStore = useLocalStore()
 
 const store = inject(STORE)!

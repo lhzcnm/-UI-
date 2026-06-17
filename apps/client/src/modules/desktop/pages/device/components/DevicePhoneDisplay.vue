@@ -14,7 +14,6 @@ const b = tv({
   ],
 })
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 const currentTime = ref(getCurrentTime())
 const currentDate = ref(getCurrentDate())

@@ -7,7 +7,6 @@ interface PrintDialogEmits {
 
 const store = inject(HISTORY_STORE)!
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 const paperSize = ref<string>('')
 

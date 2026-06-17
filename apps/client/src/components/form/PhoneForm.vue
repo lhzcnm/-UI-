@@ -12,7 +12,6 @@ const props = defineProps<{ onClose(): void }>()
 const { count, isRunning, startCountdown } = useCountdown({
   storageKey: 'phone_countdown'
 })
-// const { t } = useI18n()
 const localStore = useLocalStore()
 const uStore = useUserStore()
 

@@ -11,7 +11,6 @@ defineProps<PhoneProps>()
 
 const form = defineModel<RegisterForm>({ required: true })
 const localStore=useLocalStore()
-// const { t } = useI18n()
 </script>
 
 <template>

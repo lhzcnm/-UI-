@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { settings } = useSettingStore()
-// const { t, locale } = useI18n()
 
 // const displayTitle = computed(() => {
 //   return locale.value === 'zh' ? settings.title : settings.titleEn ? settings.titleEn : settings.title
