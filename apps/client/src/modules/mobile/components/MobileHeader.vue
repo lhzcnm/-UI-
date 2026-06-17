@@ -4,7 +4,6 @@ import FuntionButtonGroup from './FuntionButtonGroup.vue'
 // import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
-// const { t, locale } = useI18n()
 
 // const isEn = computed(() => locale.value === 'en')
 

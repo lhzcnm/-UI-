@@ -20,7 +20,6 @@ const memberPkg = ref<MemberPackage[]>([])
 const memberList = ref<MemberItem[]>([])
 const pkgTotalAmount = ref<string>('')
 const localStore = useLocalStore()
-//const { t } = useI18n()
 
 const store = inject(RECHARGE_STORE)!
 

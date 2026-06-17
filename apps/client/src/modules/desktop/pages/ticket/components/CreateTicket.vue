@@ -6,7 +6,6 @@ import { ticketApi } from '@/api/tickets'
 const store = inject(TICKET_STORE)!
 const submitLoading = ref(false)
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 function handleSubmit() {

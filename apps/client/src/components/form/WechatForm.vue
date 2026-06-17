@@ -6,7 +6,6 @@ import { userApi } from '@/api/user'
 import { toast } from 'vue-sonner'
 
 const imageURL = ref('')
-// const { t } = useI18n()
 const localStore = useLocalStore()
 const uStore = useUserStore()
 const expiredMask = ref(false)

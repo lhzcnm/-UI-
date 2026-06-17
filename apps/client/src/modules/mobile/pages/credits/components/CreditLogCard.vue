@@ -4,7 +4,6 @@ import { twMerge, twJoin } from 'tailwind-merge'
 
 const { item } = defineProps<{ item: CreditLogItem }>()
 const store = useServiceStore()
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 // const isSubmit = /提交订单|order|订单提交|Code Request/.test(item.description)

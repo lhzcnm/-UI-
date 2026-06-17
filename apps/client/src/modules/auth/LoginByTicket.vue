@@ -3,7 +3,6 @@ import authApi from '@auth/api'
 
 const route = useRoute()
 const router = useRouter()
-//const { t } = useI18n()
 const uStore = useUserStore()
 const localStore = useLocalStore()
 

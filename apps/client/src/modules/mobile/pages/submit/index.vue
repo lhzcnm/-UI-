@@ -550,7 +550,6 @@ onMounted(() => {
   favoriteClick(undefined)
 })
 
-// const { t } = useI18n()
 </script>
 
 <template>

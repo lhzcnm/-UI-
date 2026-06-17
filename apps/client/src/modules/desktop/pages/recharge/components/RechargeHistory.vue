@@ -9,7 +9,6 @@ const loading = ref(false)
 const store = inject(RECHARGE_STORE)!
 
 const localStore = useLocalStore()
-//const { t } = useI18n()
 
 watch(() => store.isComplete, () => getList())
 watch(

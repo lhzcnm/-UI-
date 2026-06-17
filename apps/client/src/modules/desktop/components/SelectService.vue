@@ -6,7 +6,6 @@ import { serviceApi, type Service, type ServiceDetail } from '@/api/services'
 
 const store = useServiceStore()
 const localStore = useLocalStore()
-// const { t } = useI18n()
 
 const modal = defineModel<number>()
 const emits = defineEmits<XSelectEmits>()

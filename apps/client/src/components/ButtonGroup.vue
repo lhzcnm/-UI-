@@ -56,7 +56,6 @@ const props = withDefaults(
 
 const emits = defineEmits<ButtonGroupEmits>()
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 const buttonConfigs: ButtonConfig = {

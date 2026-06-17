@@ -29,7 +29,7 @@ const chatVisible = ref(false)
 const inviteVisible = ref(false)
 const inviteImg = ref('')
 
-const { t } = useI18n()
+const localStore = useLocalStore()
 
 const mode = import.meta.env.VITE_APP_MODE
 
@@ -55,7 +55,7 @@ await Promise.all([
 <template>
   <div class="p-4">
     <div class="flex items-center justify-between mb-3">
-      <h2 class="text-xl">{{ t('profile.title') }}</h2>
+      <h2 class="text-xl">{{ localStore.localData['profile_Profile'] }}</h2>
 
       <div class="flex items-center space-x-2">
         <XPopover
@@ -63,7 +63,7 @@ await Promise.all([
           ui-content="p-4" closeOnClickOutside
         >
           <template #trigger>
-            <XButton icon="lucide:qr-code" :label="t('profile.button.invite')" @click="generInviteCode" />
+            <XButton icon="lucide:qr-code" :label="localStore.localData['profile_GenerateInviteCode']" @click="generInviteCode" />
           </template>
           <div class="w-64 border rounded overflow-hidden">
             <img v-if="inviteImg" :src="inviteImg" alt="推荐码" draggable="false" class="size-full">
@@ -74,7 +74,7 @@ await Promise.all([
           ui-content="p-4" closeOnClickOutside
         >
           <template #trigger>
-            <XButton icon="lucide:headset" :label="t('profile.button.customer')" />
+            <XButton icon="lucide:headset" :label="localStore.localData['ticket_Customer']" />
           </template>
 
           <div class="w-64 border rounded overflow-hidden">
@@ -82,7 +82,7 @@ await Promise.all([
           </div>
         </XPopover>
         <XButton
-          :label="t('profile.button.quit')" color="danger"
+          :label="localStore.localData['sidebar_Logout']" color="danger"
           @click="ustore.logout"
         />
       </div>

@@ -5,7 +5,6 @@ import { Icon } from '@iconify/vue'
 
 const store = useUserStore()
 const localStore = useLocalStore()
-// const { t } = useI18n()
 </script>
 
 <template>

@@ -10,7 +10,6 @@ const store = inject(STORE)!
 const deviceStore = useDeviceStore()
 
 const localStore = useLocalStore()
-// const { t } = useI18n()
 </script>
 
 <template>

@@ -19,7 +19,7 @@ const style = tv({
 const store = inject(STORE)!
 // const uStore = useUserStore()
 const deviceStore = useDeviceStore()
-const {  locale } = useI18n()
+const { locale } = useI18n()
 const localStore = useLocalStore()
 
 const { copy } = useClipboard({ legacy: true })

@@ -13,7 +13,6 @@ const emits = defineEmits<XSelectEmits>()
 
 const input = ref('')
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 const filteredServices = computed(() => {

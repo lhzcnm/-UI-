@@ -15,7 +15,6 @@ const store = inject(AUTH_STORE)!
 
 store.mode = 'phone'
 
-//const { t } = useI18n()
 const localStore = useLocalStore()
 const { count, isRunning, startCountdown, stopCountdown } = useCountdown()
 const router = useRouter()

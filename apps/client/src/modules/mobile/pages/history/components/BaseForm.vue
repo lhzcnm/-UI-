@@ -10,7 +10,6 @@ import { getSubmitImei } from '@/utils'
 const form = defineModel<OrderSearchForm>({ required: true })
 const serviceStore = useServiceStore()
 const groupId = ref(-1)
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 const fileInputRef = useTemplateRef('fileInputRef')

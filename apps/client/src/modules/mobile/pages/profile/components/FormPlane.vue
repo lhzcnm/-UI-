@@ -10,7 +10,6 @@ const visibleForm = ref(false)
 const activeForm = ref<Action | null>(null)
 const inviteCodeVisible = ref<boolean>(false)
 
-// const { t } = useI18n()
 const localStore = useLocalStore()
 
 const settingOptions = [
