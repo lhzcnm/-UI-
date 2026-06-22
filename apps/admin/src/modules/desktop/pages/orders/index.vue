@@ -11,7 +11,7 @@ import { hash } from 'ohash'
 import type { Order, OrderListParams } from '@/inters/orders'
 import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
 import { exportOrder, getOrders, pushOrder, reSubmitOrder, updateCodeStatus } from '@/api/orders'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 
 import type { OrderStore } from './utils'
 import { columns } from './utils/column'
@@ -32,7 +32,7 @@ const store: OrderStore = reactive({
   refresh: false,
   index  : undefined,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(ORDER_STORE, store)
@@ -245,6 +245,7 @@ const handleBatchEdit = selectDecorator(() => {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.orders.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

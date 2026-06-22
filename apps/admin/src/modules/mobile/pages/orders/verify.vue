@@ -6,7 +6,7 @@ import { ORDER_VERIFY } from '@3un/utils'
 import type { OrderListParams } from '@/inters/orders'
 import { zOrderSearchForm } from '@/inters/orders'
 import { getOrders } from '@/api/orders'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { VerifyStore } from './utils'
 import { VERIFY_STORE } from './utils'
@@ -16,7 +16,7 @@ const store: VerifyStore = reactive({
 
   refresh: false,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(VERIFY_STORE, store)

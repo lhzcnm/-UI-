@@ -1,13 +1,15 @@
 <script setup lang="ts">
 // import { execFile } from 'child_process';
-import CreateDialog from './components/CreateDialog.vue';
-import SearchDialog from './components/SearchDialog.vue';
-import UpdateDialog from './components/UpdateDialog.vue';
-import { localListTable } from './utils/localTable.ts';
-import { createLocalForm, useLocalStore } from './utils/store.ts'
+import CreateDialog from './components/CreateDialog.vue'
+import SearchDialog from './components/SearchDialog.vue'
+import UpdateDialog from './components/UpdateDialog.vue'
+
+import { pageSizes } from '@/utils/common'
+import { localListTable } from './utils/localTable'
+import { createLocalForm, useLocalStore } from './utils/store'
 
 const store = useLocalStore()
-const size = ref<number[]>([50, 100, 200, 300, 500])
+// const size = ref<number[]>([50, 100, 200, 300, 500])
 
 watch(
   () => [store.searchForm.page, store.searchForm.pageSize],
@@ -80,8 +82,12 @@ onMounted(() => {
           variant="outline" />
       </div>
 
-      <XPagination :sizes="size" v-model="store.searchForm.page" v-model:limit="store.searchForm.pageSize"
-        :total="store.total" :layouts="[
+      <XPagination
+        :sizes="pageSizes"
+        v-model="store.searchForm.page"
+        v-model:limit="store.searchForm.pageSize"
+        :total="store.total"
+        :layouts="[
           'total',
           'prev',
           'pager',

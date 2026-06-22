@@ -8,7 +8,7 @@ import { hash } from 'ohash'
 import type { LogListParams } from '@/inters/logs'
 import { zLogSearchForm } from '@/inters/logs'
 import { deleteLogs, getLogs } from '@/api/logs'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 
 import type { LogStore } from './utils'
 import { columns } from './utils/column'
@@ -23,7 +23,7 @@ const store: LogStore = reactive({
 
   refresh: false,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(LOG_STORE, store)
@@ -130,6 +130,7 @@ async function handleDelete() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.logs.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

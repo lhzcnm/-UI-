@@ -7,7 +7,7 @@ import { hash } from 'ohash'
 import type { LogListParams } from '@/inters/logs'
 import { zLogSearchForm } from '@/inters/logs'
 import { getLogs } from '@/api/logs'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { LogStore } from './utils'
 import { LOG_STORE } from './utils'
@@ -20,7 +20,7 @@ const store: LogStore = reactive({
 
   refresh: false,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(LOG_STORE, store)

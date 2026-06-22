@@ -6,7 +6,7 @@ import { zRechargeSearchForm, type RechargeListParams } from '@/inters/recharge'
 import { ACTIVITY_RECHARGE_STORE, type ActivityRecharge } from './utils'
 import { getActivitys, getActivyRecharges } from '@/api/activity'
 import type { Activity } from '@/inters/activity'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 import { columns } from "./utils/columnRecharge"
 import type { XTableExpose } from '@3un/ui'
 import { zActivyRecharge } from '@/inters/activity/recharge'
@@ -31,7 +31,7 @@ const store: ActivityRecharge = reactive({
 
   refresh: false,
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 })
 
 provide(ACTIVITY_RECHARGE_STORE, store)
@@ -163,6 +163,7 @@ await getActivityList()
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.recharges.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

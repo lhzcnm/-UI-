@@ -10,7 +10,7 @@ import { hash } from 'ohash'
 import type { OrderListParams } from '@/inters/orders'
 import { zOrderSearchForm, zOrderUpdateForm } from '@/inters/orders'
 import { getOrders } from '@/api/orders'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { OrderStore } from './utils'
 import { ORDER_STORE } from './utils'
@@ -29,7 +29,7 @@ const store: OrderStore = reactive({
   refresh: false,
   index  : undefined,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(ORDER_STORE, store)

@@ -5,7 +5,7 @@ import FieldCard from './components/FieldCard.vue'
 import type { ServiceFieldListParams } from '@/inters/services'
 import { zServiceFieldForm } from '@/inters/services'
 import { getServiceFields } from '@/api/services'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import { FIELD_STORE, type ServiceFieldStore } from './utils'
 import FieldCreate from './components/FieldCreate.vue'
@@ -24,7 +24,7 @@ const store: ServiceFieldStore = reactive({
   loading: false,
   index  : undefined,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
   serviceId: undefined
 })
 

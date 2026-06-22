@@ -7,6 +7,7 @@ import { zServiceForm } from '@/inters/services'
 import { getUpstreams } from '@/api/upstream'
 
 import { SERVICE_STORE, type ServiceStore } from './utils'
+import { defaultPageSize } from '@/utils/common.ts'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
@@ -25,7 +26,7 @@ const store: ServiceStore = reactive({
 
   index: undefined,
   page: 1,
-  limit: 10,
+  limit: defaultPageSize,
 })
 
 provide(SERVICE_STORE, store)

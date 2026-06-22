@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { zMonitorForm, zMonitorSearch, type MonitorServerSearchForm } from '@/inters/monitor/server';
 import { MONITOR_SERVER_STORE, type MonitorServerStore } from './utils'
-import { createList } from '@/utils';
+import { createList, defaultPageSize } from '@/utils';
 import { getMonitorServers } from '@/api/monitor';
 import MonitorServerCard from './components/MonitorServerCard.vue';
 import MonitorServerModal from './components/MonitorServerModal.vue';
@@ -16,7 +16,7 @@ const store: MonitorServerStore = reactive({
   servers: createList(),
 
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
   refresh: false,
   serverId: undefined,
   domainId: undefined,

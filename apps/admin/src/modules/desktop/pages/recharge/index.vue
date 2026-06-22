@@ -12,7 +12,7 @@ import { hash } from 'ohash'
 import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
 import { deleteRecharges, getRecharges } from '@/api/recharge'
 import { zRechargeHandleFee, zRechargeSearchForm } from '@/inters/recharge'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { columns } from './utils/column'
@@ -32,7 +32,7 @@ const store: RechargeStore = reactive({
   refresh: false,
   index: undefined,
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 
 })
 
@@ -149,6 +149,7 @@ async function handleDelete() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.recharges.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

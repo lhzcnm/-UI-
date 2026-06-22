@@ -10,7 +10,7 @@ import { hash } from 'ohash'
 import type { RechargeListParams, RechargeUpdateParams } from '@/inters/recharge'
 import { zRechargeHandleFee, zRechargeSearchForm } from '@/inters/recharge'
 import { getRecharges } from '@/api/recharge'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { RechargeStore } from './utils'
 import { RECHARGE_STORE } from './utils'
@@ -29,7 +29,7 @@ const store: RechargeStore = reactive({
   refresh: false,
   index: undefined,
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 })
 
 provide(RECHARGE_STORE, store)
