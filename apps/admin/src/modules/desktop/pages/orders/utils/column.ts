@@ -71,7 +71,7 @@ export const columns: XColDef<Order> = [
   {
     key: 'code',
     title: '订单结果',
-    minWidth: 280,
+    minWidth: 140,
     render(value) {
       return h('span', { innerHTML: value })
     }
@@ -116,6 +116,11 @@ export const columns: XColDef<Order> = [
         h('div', `更新：${row.updateTime.slice(5)}`),
       ]
     }
+  },
+  {
+    key: 'comments',
+    title: '备注',
+    width: 120,
   },
   {
     key: 'action',

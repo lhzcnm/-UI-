@@ -32,7 +32,7 @@ export interface Service {
   taken: string
   imeiType: IMEI_TYPE
   domesticSerialType: DOMESTIC_IMEI_TYPE
-  mustRead: string
+  mustRead: string | null
   isNew: boolean
   isHot: boolean
   isUnlock: boolean

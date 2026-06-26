@@ -15,7 +15,7 @@ export const zUser = z.object({
   // lastName: z.string().nullable().default(null),
   userPassword: z.string().default(''),
   // countryId: z.number().default(0),
-  phone: z.string().nullable().default(null),
+  phone: z.string().nullable().default(''),
 
   addedAt: z.string().nullable().default(''),
   // updatedAt: z.string().default(''),
@@ -42,7 +42,7 @@ export const zUser = z.object({
   // currencyId: z.number().default(0),
   pricePlanId: z.number().default(0),
   // listId: z.number().default(0),
-  apiKey: z.string().nullable().default(null),
+  apiKey: z.string().nullable().default(''),
   // prPlanOfferId: z.number().nullable().default(null),
   allowNegativeCredits: z.boolean().default(false),
   // currencyConversion: z.boolean().default(false),
@@ -51,7 +51,7 @@ export const zUser = z.object({
   // 登录白名单
   ip: z.string()
     .transform((val) => val.replace(',', '\n'))
-    .nullable().default(null),
+    .nullable().default(''),
 
   allowApi: z.boolean().default(false),
   loginAttempts: z.boolean().default(false),
@@ -66,15 +66,15 @@ export const zUser = z.object({
   pushMsg: z.boolean().default(true),
   // oldPricePlanId: z.number().default(0),
   memberExp: z.string().nullable().default(null),
-  bulkCheckApi: z.string().nullable().default(null),
-  headImgUrl: z.string().nullable().default(null),
-  nickName: z.string().nullable().default(null),
+  bulkCheckApi: z.string().nullable().default(''),
+  headImgUrl: z.string().nullable().default(''),
+  nickName: z.string().nullable().default(''),
   role: z.enum(USER_ROLE).default(USER_ROLE.USER),
 
   // API 白名单
   ips: z.string()
     .transform((val) => val.replace(',', '\n'))
-    .nullable().default(null),
+    .nullable().default(''),
 
   // opanStartDt: z.string().nullable().default(null),
   // opanEndDt: z.string().nullable().default(null),

@@ -90,7 +90,7 @@ function validIp(ip: string) {
 }
 
 function formatIp(ip: string | null) {
-  if (!ip) return null
+  if (!ip) return ''
   return ip.trim()
     .split('\n')
     .filter(Boolean)

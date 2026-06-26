@@ -11,7 +11,7 @@ export const zRecharge = z.object({
   paymentMethod: z.enum(PAYMENT_METHOD).default(PAYMENT_METHOD.ADMIN),
   paymentStatus: z.enum(PAYMENT_STATUS).default(PAYMENT_STATUS.UNPAID),
   paymentDtTm: z.string().default(''),
-  transactionId: z.string().nullable().default(null),
+  transactionId: z.string().nullable().default(''),
   creditsTransferred: z.boolean().default(false),
   comments: z.string().nullable(),
   updatedAt: z.string().default(''),

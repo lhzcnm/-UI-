@@ -18,8 +18,8 @@ export const zCredit = z.object({
    */
   voucherCreditsLeft: z.string().default(''),
   unlockedCreditsLeft: z.string().default(""),
-  comments: z.string().nullable(),
-  ip: z.string().nullable(),
+  comments: z.string().nullable().default(''),
+  ip: z.string().nullable().default(''),
 })
 
 export type Credit = z.infer<typeof zCredit>
