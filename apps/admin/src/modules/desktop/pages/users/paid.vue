@@ -4,7 +4,7 @@ import PaidSearch from './components/PaidSearch.vue'
 import type { UserPaidListParams } from '@/inters/users'
 import { zUserPaidSearchForm } from '@/inters/users'
 import { getUserPaidList } from '@/api/users'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 
 import type { PaidStore } from './utils'
 import { columns } from './utils/columnPaid'
@@ -17,7 +17,7 @@ const store: PaidStore = reactive({
   visibleSearch: false,
   refresh      : false,
   page         : 1,
-  limit        : 20,
+  limit        : defaultPageSize,
 })
 
 provide(PAID_STORE, store)
@@ -80,6 +80,7 @@ function resetSearch() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.users.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

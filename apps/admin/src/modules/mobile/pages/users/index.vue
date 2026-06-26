@@ -12,7 +12,7 @@ import { hash } from 'ohash'
 import type { UserListParams } from '@/inters/users'
 import { zUserExtraInfo, zUserForm, zUserSearchForm, zUserPointForm, zUserServiceForm } from '@/inters/users'
 import { getUsers } from '@/api/users'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import { USER_STORE, type UsersStore } from './utils'
 
@@ -36,7 +36,7 @@ const store: UsersStore = reactive({
   refresh: false,
   index: undefined,
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 })
 
 provide(USER_STORE, store)

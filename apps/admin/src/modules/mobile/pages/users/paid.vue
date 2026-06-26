@@ -5,7 +5,7 @@ import PaidSearch from './components/PaidSearch.vue'
 import type { UserPaidListParams } from '@/inters/users'
 import { zUserPaidSearchForm } from '@/inters/users'
 import { getUserPaidList } from '@/api/users'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { PaidStore } from './utils'
 import { PAID_STORE } from './utils'
@@ -16,7 +16,7 @@ const store: PaidStore = reactive({
   visibleSearch: false,
   refresh      : false,
   page         : 1,
-  limit        : 20,
+  limit        : defaultPageSize,
 })
 
 provide(PAID_STORE, store)

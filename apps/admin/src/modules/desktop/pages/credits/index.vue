@@ -8,7 +8,7 @@ import { getCreditList } from '@/api/credits'
 
 import type { CreditStore } from './utils'
 import { CREDIT_STORE, columns } from './utils'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 import { hash } from 'ohash'
 import type { XTableExpose } from '@3un/ui'
 
@@ -23,7 +23,7 @@ const store: CreditStore = reactive({
 
   refresh: false,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(CREDIT_STORE, store)
@@ -129,6 +129,7 @@ function resetSearch() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.credits.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

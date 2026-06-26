@@ -1,5 +1,8 @@
 import { filterByRegex, useCopyFn } from '@3un/utils'
 
+export const pageSizes = [50, 100, 150, 200, 300, 500]
+export const defaultPageSize = 50
+
 /**
  * 生成随机数
  * @param min 最小值

@@ -5,7 +5,7 @@ import { toast } from 'vue-sonner'
 import type { Order, OrderListParams } from '@/inters/orders'
 import { getOrders, updateOrderVerify } from '@/api/orders'
 import { zOrderSearchForm } from '@/inters/orders'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 
 import type { VerifyStore } from './utils'
 import { columns } from './utils/columnVerify'
@@ -17,7 +17,7 @@ const store: VerifyStore = reactive({
 
   refresh: false,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(VERIFY_STORE, store)
@@ -97,6 +97,7 @@ function handleReply(verify: number) {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.orders.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

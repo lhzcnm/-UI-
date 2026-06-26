@@ -14,7 +14,7 @@ const title = computed(() => props.title || localStore.localData['top_NoRecords'
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-full p-4 text-zinc-500 select-none">
+  <div class="flex flex-col items-center justify-center h-full p-4 text-zinc-500 select-none" @touchmove.prevent>
     <svg width="236" viewBox="0 0 118 102" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path class="fill-zinc-100 dark:fill-zinc-800" d="M79.451 34.558c-8.37 0-16.89-.34-24.86-2.56-7.82-2.17-15-6.38-21.4-11.25-4.19-3.17-8-5.7-13.44-5.32a24.91 24.91 0 0 0-14.52 5.67c-6.92 6.06-5.88 17.29-3.11 25.15 4.16 11.87 16.82 20.14 27.58 25.49 12.43 6.21 26.08 9.82 39.78 11.89 12 1.83 27.42 3.15 37.82-4.68 9.55-7.21 12.17-23.65 9.83-34.75a13.652 13.652 0 0 0-4.91-8.32c-6.71-4.91-16.72-1.63-24.26-1.47-2.8.06-5.65.13-8.51.15Z"/>
       <path class="fill-zinc-200 dark:fill-zinc-600" fill="#CFCFCF" d="M93.03 24.16a.98.98 0 1 0 0-1.96.98.98 0 0 0 0 1.96ZM22.7 74.3a.98.98 0 1 0 0-1.96.98.98 0 0 0 0 1.96Z"/>

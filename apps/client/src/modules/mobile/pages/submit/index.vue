@@ -94,10 +94,10 @@ const unitPrice = computed(() => {
 const validImeiList = computed(() => handleImei(form.imei))
 const fileInputRef = useTemplateRef('fileInputRef')
 
-// const usefulCount = computed(() => {
-//   if (!store.service) return
-//   return Math.floor(+uStore.info.credits / store.service.price)
-// })
+const usefulCount = computed(() => {
+  if (!store.service) return '0'
+  return Math.floor(+uStore.info.credits / store.service.price)
+})
 
 onBeforeMount(async () => {
   if (!props.id) return
@@ -553,7 +553,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="w-full flex flex-col">
     <!-- 收藏服务 -->
     <div v-if="favoriteData.length > 0" class="flex flex-col m-2 max-h-56 bg-card rounded-lg">
       <div @click="favoriteClick(undefined)" class="font-bold w-full h-8 border-b text-center pt-1">
@@ -670,9 +670,8 @@ onMounted(() => {
 
               <span v-if="store.service" class="text-sm text-muted-foreground">{{
                 localStore.localData['submit_ImportBlance'] }}:
-                ￥{{
-                  uStore.info.credits }},
-                {{ localStore.localeSlotVal('submit_ImportSubmitOrder', { '{count}': unitPrice }) }}
+                ￥{{ uStore.info.credits }},
+                {{ localStore.localeSlotVal('submit_ImportSubmitOrder', { '{count}': usefulCount }) }}
               </span>
             </div>
             <!-- <span v-if="store.service" class="text-sm text-muted-foreground">{{ t('query.prompt.balance') }}: ￥{{ uStore.info.credits }}, {{ t('query.submitCount', { count: usefulCount }) }}</span> -->
@@ -712,5 +711,4 @@ onMounted(() => {
       <ExportDialog @update-mode="handSubmit" />
     </XDialog>
   </div>
-
 </template>

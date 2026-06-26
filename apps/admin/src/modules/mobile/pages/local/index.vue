@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // import { execFile } from 'child_process';
-import Action from './components/Action.vue';
-import CreateDialog from './components/CreateDialog.vue';
-import SearchDialog from './components/SearchDialog.vue';
-import UpdateDialog from './components/UpdateDialog.vue';
+import Action from './components/Action.vue'
+import CreateDialog from './components/CreateDialog.vue'
+import SearchDialog from './components/SearchDialog.vue'
+import UpdateDialog from './components/UpdateDialog.vue'
+
 import { createLocalForm, useLocalStore } from './utils/store.ts'
 
 const store = useLocalStore()
@@ -28,7 +29,7 @@ function clearForm() {
     en: '',
     fullKey: '',
     module: Number(store.query) == -1 ? undefined : Number(store.query)
-  };
+  }
   store.getData()
 }
 
@@ -65,7 +66,6 @@ function clearCreateForm() {
 
 onMounted(() => {
   store.isShow = import.meta.env.VITE_APP_LOCAL == 'true'
-
 })
 </script>
 

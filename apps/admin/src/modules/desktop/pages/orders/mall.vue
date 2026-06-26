@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { getMallOrders } from '@/api/orders'
 import { MALL_STORE, type MallStore } from './utils'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 import { columns } from './utils/columnMall'
 
 const store: MallStore = reactive({
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 
   mallOrders: createList(),
 })
@@ -66,6 +66,7 @@ async function getMallOderList(page: number, pageSize: number) {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.mallOrders.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

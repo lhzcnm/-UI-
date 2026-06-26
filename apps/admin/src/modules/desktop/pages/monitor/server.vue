@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import ServerSearch from './components/ServerSearch.vue'
+import ServerDialog from './components/ServerDialog.vue'
+
 import type { XTableExpose } from '@3un/ui'
 
 import { zMonitorForm, zMonitorSearch, type MonitorServerSearchForm } from '@/inters/monitor/server'
 import { MONITOR_SERVER_STORE, type MonitorServerStore } from './utils'
 import { getMonitorServers } from '@/api/monitor'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 import { columns } from "./utils/columnServer"
-import ServerSearch from './components/ServerSearch.vue'
-import ServerDialog from './components/ServerDialog.vue'
 
 const store: MonitorServerStore = reactive({
   visibleSearch: false,
@@ -18,7 +19,7 @@ const store: MonitorServerStore = reactive({
   servers: createList(),
 
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
   refresh: false,
   domainId: undefined,
 })
@@ -74,6 +75,7 @@ function initSearchData() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.servers.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

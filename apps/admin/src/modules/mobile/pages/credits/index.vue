@@ -8,7 +8,7 @@ import { hash } from 'ohash'
 import type { CreditListParams } from '@/inters/credits'
 import { zCreditSearchForm } from '@/inters/credits'
 import { getCreditList } from '@/api/credits'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { CreditStore } from './utils'
 import { CREDIT_STORE } from './utils'
@@ -24,7 +24,7 @@ const store: CreditStore = reactive({
 
   refresh: false,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
 })
 
 provide(CREDIT_STORE, store)

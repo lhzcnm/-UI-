@@ -97,13 +97,15 @@ async function handleFilter(params: OrderSearchForm) {
     pageSize: pageSize.value,
   })
 }
-
-
 </script>
 
 <template>
-  <SlideRight v-model="store.visibleHistory" :title="localStore.localData['submit_OrdersHistory']" header-class="border-b"
-    ui-body="flex flex-col">
+  <SlideRight
+    v-model="store.visibleHistory"
+    :title="localStore.localData['submit_OrdersHistory']"
+    header-class="border-b"
+    ui-body="flex flex-col"
+  >
     <template #default>
       <section class="flex justify-evenly mt-2 fixed right-2 -top-0">
         <XSegmented v-model="orderTab" :options="options" class="bg-card text" />
@@ -118,7 +120,7 @@ async function handleFilter(params: OrderSearchForm) {
         <XSimplePagination v-if="orderTab == 'all'" v-model="page" :limit="pageSize" :total="orders.total" />
       </section>
 
-      <section class="mt-2 p-3 flex flex-col space-y-2 overflow-y-auto">
+      <section class="mt-2 p-3 flex flex-col space-y-2 overflow-y-auto" @touchmove.stop>
         <NoMessage v-if="orders.list.length === 0" class="bg-card border rounded-lg" />
 
         <template v-else>

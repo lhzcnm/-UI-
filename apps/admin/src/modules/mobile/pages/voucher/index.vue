@@ -2,7 +2,7 @@
 import VoucherCard from './components/VoucherCard.vue'
 import VoucherCreate from './components/VoucherCreate.vue'
 
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 import { VOUCHER_STORE, type VoucherStore } from './utils'
 import { deleteVoucher, getVouchers } from '@/api/voucher'
 import { zVoucherCreate, type VoucherListForm } from '@/inters/voucher'
@@ -18,7 +18,7 @@ const store: VoucherStore = reactive({
   createForm: zVoucherCreate.parse({}),
 
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 })
 
 provide(VOUCHER_STORE, store)

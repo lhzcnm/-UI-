@@ -1,5 +1,6 @@
 import { localApi } from '@/api/local'
 import type { getLocalParams, localList, putLocalParams } from '@/types/local'
+import { defaultPageSize } from '@/utils'
 import { defineStore } from 'pinia'
 
 
@@ -34,7 +35,7 @@ export const useLocalStore = defineStore('useLocalStore', {
 
 export const searchForm: getLocalParams = {
   page: 1,
-  pageSize: 50,
+  pageSize: defaultPageSize,
   ch: '',
   en: '',
   fullKey: '',

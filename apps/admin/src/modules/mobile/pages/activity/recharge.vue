@@ -5,7 +5,7 @@ import { ACTIVITY_STATUS } from '@3un/utils'
 
 import { zRechargeSearchForm, type RechargeListParams } from '@/inters/recharge'
 import { ACTIVITY_RECHARGE_STORE, type ActivityRechargeStore } from './utils'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 import { zActivyVoucherForm } from '@/inters/voucher/activity'
 import { zActivyRecharge } from '@/inters/activity/recharge'
 import { getActivitys, getActivyRecharges } from '@/api/activity'
@@ -26,7 +26,7 @@ const store: ActivityRechargeStore = reactive({
 
   refresh: false,
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 })
 
 provide(ACTIVITY_RECHARGE_STORE, store)

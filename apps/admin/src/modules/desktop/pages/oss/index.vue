@@ -5,7 +5,7 @@ import type { IPage } from '@3un/shared'
 import type { XTableExpose } from '@3un/ui'
 
 import { deleteOssData, getOssDataList } from '@/api/oss'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 import { columns } from './utils/column'
 import { OSS_STORE, type OssStore } from './utils'
 import { toast } from 'vue-sonner'
@@ -16,7 +16,7 @@ const store = reactive<OssStore>({
   ossData: createList(),
 
   page: 1,
-  pageSize: 20,
+  pageSize: defaultPageSize,
   refresh: false,
 })
 provide(OSS_STORE, store)
@@ -88,6 +88,7 @@ async function handleBatchDelete() {
         v-model="store.page"
         v-model:limit="store.pageSize"
         :total="store.ossData.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

@@ -9,6 +9,7 @@ import { isNullish } from '@3un/ui'
 
 import type { UpstreamStore } from './utils'
 import { UPSTREAM_STORE } from './utils'
+import { defaultPageSize } from '@/utils/common.ts'
 
 const store: UpstreamStore = reactive({
   upstreams: await getUpstreams(),
@@ -18,7 +19,7 @@ const store: UpstreamStore = reactive({
 
   index: undefined,
   page: 1,
-  limit: 10,
+  limit: defaultPageSize,
 })
 
 provide(UPSTREAM_STORE, store)

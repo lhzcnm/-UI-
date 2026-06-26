@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 import { VOUCHER_STORE, type VoucherStore } from './utils'
 import { zVoucherCreate, type VoucherListForm } from '@/inters/voucher'
 import { deleteVoucher, getVouchers } from '@/api/voucher'
@@ -13,7 +13,7 @@ const store: VoucherStore = reactive({
   refresh: false,
 
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 
   vouchers: createList(),
 
@@ -91,6 +91,7 @@ async function batchDelete() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.vouchers.total"
+        :sizes="pageSizes"
         :layouts="[
           'total',
           'prev',

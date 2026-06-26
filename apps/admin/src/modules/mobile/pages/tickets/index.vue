@@ -7,7 +7,7 @@ import TicketCard from './components/TicketCard.vue'
 import type { TicketListParams } from '@/inters/ticket'
 import { getTicketReplies, getTickets, getTicketTypes } from '@/api/ticket'
 import { zTicketType } from '@/inters/ticket'
-import { createList } from '@/utils'
+import { createList, defaultPageSize } from '@/utils'
 
 import type { TicketStore } from './utils'
 import { TICKET_STORE } from './utils'
@@ -26,7 +26,7 @@ const store: TicketStore = reactive({
 
   refresh: false,
   index  : undefined,
-  limit  : 20,
+  limit  : defaultPageSize,
   page   : 1,
 })
 

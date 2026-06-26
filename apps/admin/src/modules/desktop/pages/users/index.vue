@@ -9,7 +9,7 @@ import { USER_ROLE } from '@3un/utils'
 import { hash } from 'ohash'
 
 import type { UserListParams } from '@/inters/users'
-import { createList, toUndef } from '@/utils'
+import { createList, defaultPageSize, pageSizes, toUndef } from '@/utils'
 import { getUsers } from '@/api/users'
 import {
   zUserExtraInfo,
@@ -46,7 +46,7 @@ const store: UsersStore = reactive({
   refresh: false,
   index: undefined,
   page: 1,
-  limit: 20,
+  limit: defaultPageSize,
 })
 
 provide(USER_STORE, store)
@@ -141,14 +141,20 @@ function resetSearch() {
         <XButton label="新增" color="success" icon="lucide:plus" @click="openCreate" />
       </div>
 
-      <XPagination v-model="store.page" v-model:limit="store.limit" :total="store.users.total" :layouts="[
-        'total',
-        'prev',
-        'pager',
-        'next',
-        'sizes',
-        'jumper',
-      ]" />
+      <XPagination
+        v-model="store.page"
+        v-model:limit="store.limit"
+        :total="store.users.total"
+        :sizes="pageSizes"
+        :layouts="[
+          'total',
+          'prev',
+          'pager',
+          'next',
+          'sizes',
+          'jumper',
+        ]"
+      />
     </section>
 
     <div class="p-3 pb-0">

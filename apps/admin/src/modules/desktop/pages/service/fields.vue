@@ -6,7 +6,7 @@ import { toast } from 'vue-sonner'
 import type { ServiceFieldListParams } from '@/inters/services'
 import { zServiceFieldForm } from '@/inters/services'
 import { deleteServiceField, getServiceFields } from '@/api/services'
-import { createList } from '@/utils'
+import { createList, defaultPageSize, pageSizes } from '@/utils'
 
 import { FIELD_STORE, type ServiceFieldStore } from './utils'
 import { columns } from './utils/columnField'
@@ -27,7 +27,7 @@ const store: ServiceFieldStore = reactive({
   loading: false,
   index  : undefined,
   page   : 1,
-  limit  : 20,
+  limit  : defaultPageSize,
   serviceId: undefined,
 })
 
@@ -116,6 +116,7 @@ function handleDelete() {
         v-model="store.page"
         v-model:limit="store.limit"
         :total="store.fields.total"
+        :sizes="pageSizes"
         :layouts="['total', 'prev', 'pager', 'next', 'sizes']"
       />
     </section>
