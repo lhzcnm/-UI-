@@ -83,7 +83,7 @@ export const zOrderUpdateForm = z.object({
   codeStatusId: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
   originalStatus: z.enum(ORDER_STATUS).default(ORDER_STATUS.WAIT),
   code: z.string().default(''),
-  messageFromServer: z.string().default(''),
+  messageFromServer: z.string().default('').nullable(),
   orderIdFromServer: z.string().default(''),
 })
 
@@ -94,7 +94,7 @@ export type OrderUpdateParams = {
   code?: string
   codeStatusId?: ORDER_STATUS
   originalStatus?: ORDER_STATUS
-  messageFromServer?: string 
+  messageFromServer?: string | null
   orderIdFromServer?: string
 }
 
