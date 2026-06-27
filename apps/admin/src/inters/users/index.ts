@@ -92,6 +92,7 @@ export const zUserSearchForm = z.object({
   planId: z.number().optional(),
   username: z.string().optional(),
   nickname: z.string().optional(),
+  allowApi: z.union([z.number(),z.boolean(),z.undefined()]).optional().default(-1),
   openId: z.string().optional(),
   isAdmin: z.boolean().default(false),
   heartbeatEnabled: z.union([z.number(),z.boolean(),z.undefined()]).optional().default(-1),
