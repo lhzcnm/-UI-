@@ -60,6 +60,16 @@ const levelStore = useLevelStore()
     </div>
 
     <div class="flex justify-between">
+      <label class="block text-label text-sm mb-1">开通API</label>
+      <div class="flex justify-between w-2/3">
+        <XRadio v-model="form.allowApi" :value="-1" label="全部" />
+        <XRadio v-model="form.allowApi" :value="0" label="现未开通" />
+        <XRadio v-model="form.allowApi" :value="1" label="现已开通" />
+      </div>
+    </div>
+
+
+    <div class="flex justify-between">
       <label class="block text-label text-sm mb-1">仅看管理员</label>
       <XSwitch v-model="form.isAdmin" />
     </div>

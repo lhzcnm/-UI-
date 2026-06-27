@@ -72,12 +72,16 @@ watch(
     const disableUser = store.formSearch.disableUser == -1 ? undefined :
       store.formSearch.disableUser == 0 ? false : true
 
+    const allowApi = store.formSearch.allowApi == -1 ? undefined :
+      store.formSearch.allowApi == 0 ? false : true
+
     const params = {
       page: pageValue,
       pageSize: limitValue,
       ...store.formSearch,
       heartbeatEnabled,
       disableUser,
+      allowApi,
       planId: toUndef(store.formSearch.planId),
     } as UserListParams
 
