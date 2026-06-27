@@ -22,13 +22,13 @@ async function handleOpenBulkCheckApi() {
     return
   }
 
-  await store.openBulkApi()
+  await store.openAllApi()
   toast.success(localStore.localData['profile_ActionActivate'])
 }
 </script>
 
 <template>
-  <section v-if="store.info.bulkCheckApi" class="mb-3 p-4 bg-card rounded-lg">
+  <section v-if="store.info.bulkCheckApi.trim()" class="mb-3 p-4 bg-card rounded-lg">
     <h3 class="text-base font-medium mb-3">{{ localStore.localData['profile_ApiKeyTitle'] }}</h3>
     <div class="flex items-center space-x-2 px-3 h-10 bg-muted rounded-lg">
       <Icon icon="lucide:key-round" class=" size-4 text-muted-foreground" />

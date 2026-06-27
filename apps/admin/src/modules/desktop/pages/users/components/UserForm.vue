@@ -73,8 +73,16 @@ const levelStore = useLevelStore()
     </FormField>
 
     <FormField
+      label="ApiKey状态"
+      desc="关闭后, 用户无法查看ApiKey"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.showApi" />
+    </FormField>
+
+    <FormField
       label="心跳检测"
-      desc="关闭后, 该用户前台不做心跳检测"
+      desc="关闭后, 用户前台不做心跳检测"
       :content-flex="false"
     >
       <XSwitch v-model="form.heartbeatEnabled" />

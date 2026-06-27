@@ -25,7 +25,7 @@ async function handleOpenBulkCheckApi() {
     return
   }
 
-  await store.openBulkApi()
+  await store.openAllApi()
   toast.success(localStore.localData['profile_ActionActivate'])
 }
 </script>
@@ -34,7 +34,7 @@ async function handleOpenBulkCheckApi() {
   <div class="border rounded-lg p-6 mr-6 bg-card">
     <h3 class="text-lg mb-4">{{localStore.localData['profile_ApiKeyTitle']}}</h3>
 
-    <div v-if="store.info.bulkCheckApi" class="space-y-2">
+    <div v-if="store.info.bulkCheckApi.trim()" class="space-y-2">
       <div class="flex items-center space-x-2 px-3 h-10 bg-muted rounded-lg">
         <Icon icon="lucide:key-round" class=" size-4 text-muted-foreground" />
         <span class="text-sm font-mono">{{ maskText(store.info.bulkCheckApi, 8, 18) }}</span>
@@ -43,7 +43,7 @@ async function handleOpenBulkCheckApi() {
       <div class="space-x-2">
         <XButton icon="lucide:refresh-cw" :label="localStore.localData['profile_Refresh']" @click="handleRefresh" />
         <XButton icon="lucide:copy" :label="localStore.localData['profile_Copy']" color="success" @click="handleCopy" />
-      </div>      
+      </div>
     </div>
 
     <div v-else class="flex justify-center">

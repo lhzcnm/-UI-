@@ -36,7 +36,7 @@ function openApiUsageInfo() {
 </script>
 
 <template>
-  <section v-if="store.info.allowApi" class="mb-3 p-4 bg-card rounded-lg">
+  <section v-if="store.info.allowApi && store.info.showApi" class="mb-3 p-4 bg-card rounded-lg">
     <div class="flex items-center justify-between mb-3">
       <h3 class="text-base font-medium">API KEY</h3>
       <button

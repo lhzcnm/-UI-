@@ -58,18 +58,34 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   async function openBulkApi() {
-    const [bulkKey, _] = await Promise.all([
-      userApi.apiBulkKey(),
-      userApi.apiKey(),
-    ])
+    // const [bulkKey, _] = await Promise.all([
+    //   userApi.apiBulkKey(),
+    //   userApi.apiKey(),
+    // ])
 
-    info.value.bulkCheckApi = bulkKey.data
+    const { data } = await userApi.apiBulkKey()
+    info.value.bulkCheckApi = data
+
     saveInfo()
   }
 
+  async function openApiKey() {
+    const { data } = await userApi.apiKey()
+    info.value.allowApi = true
+    info.value.apiKey = data
+
+    saveInfo()
+  }
+
+  async function openAllApi()
+  {
+    await openBulkApi()
+    await openApiKey()
+  }
+
   async function refreshBulkApi() {
-    const bulkKey = await userApi.apiBulkKey()
-    info.value.bulkCheckApi = bulkKey.data
+    const { data } = await userApi.apiBulkKey()
+    info.value.bulkCheckApi = data
     saveInfo()
   }
 
@@ -107,5 +123,7 @@ export const useUserStore = defineStore('userStore', () => {
     refreshApi,
     saveInfo,
     logout,
+    openApiKey,
+    openAllApi,
   }
 })

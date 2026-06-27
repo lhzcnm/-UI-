@@ -49,6 +49,7 @@ export interface UserInfo {
   enableDevice: boolean
   apiKey: string
   allowApi: boolean
+  showApi: boolean
   bulkCheckApi: string
   rechargeCount: string
   totalReceipts: string

@@ -79,6 +79,9 @@ export const zUser = z.object({
   // opanStartDt: z.string().nullable().default(null),
   // opanEndDt: z.string().nullable().default(null),
   heartbeatEnabled: z.boolean().default(true),
+
+  // 用户是否允许用户使用api
+  showApi: z.boolean().default(false),
 })
 
 export type User = z.infer<typeof zUser>

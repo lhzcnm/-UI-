@@ -118,6 +118,30 @@ export const columns: XColDef<User> = [
     }
   },
   {
+    key: 'showApi',
+    title: '是否显示ApiKey',
+    width: 128,
+    render(_, row) {
+      return h(XSwitch, {
+        modelValue: row.showApi,
+        "onUpdate:modelValue": async (val: boolean) => {
+          const oldVal = row.showApi
+          try {
+            await updateUser({
+              ...row,
+              userId: row.userId,
+              showApi: val
+            })
+
+            row.showApi = val
+          } catch {
+            setTimeout(() => row.showApi = oldVal, 1000)
+          }
+        }
+      })
+    }
+  },
+  {
     key: 'heartbeatEnabled',
     title: '心跳检测',
     width: 128,

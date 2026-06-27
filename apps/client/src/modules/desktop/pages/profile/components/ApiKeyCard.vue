@@ -34,7 +34,7 @@ async function handleRefresh() {
 </script>
 
 <template>
-  <div v-if="store.info.allowApi" class="border rounded-lg p-6 mr-6 bg-card">
+  <div v-if="store.info.allowApi && store.info.showApi" class="border rounded-lg p-6 mr-6 bg-card">
     <div class="flex items-center justify-between mb-3">
       <h3 class="text-base font-medium">API KEY</h3>
       <button
