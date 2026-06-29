@@ -24,7 +24,9 @@ await Promise.all([
   iStore.getThreads(),
   iStore.getConfig(),
   isAdmin === 'true' && iStore.getIllustrateList(),
-]) 
+])
+
+iStore.startTodoTimer()
 
 async function getRemind() {
   try {
