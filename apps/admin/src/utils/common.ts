@@ -50,6 +50,9 @@ export function filterNumber(input: string) {
 
 export function handleInputChange(e: Event) {
   const target = e.target as HTMLInputElement
+  if (target.value.trim() === '') {
+    return undefined
+  }
   return Number(filterNumber(target.value))
 }
 
