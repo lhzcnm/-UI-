@@ -13,8 +13,8 @@ const form = defineModel<VoucherCreateForm>({ required: true })
       <XInput
         v-model="form.amount"
         placeholder="请输入金额"
-        @input="(e: Event) => form.amount = handleInputChange(e)"
-        @change="(e: Event) => form.amount = handleInputChange(e)"
+        @input="(e: Event) => form.amount = handleInputChange(e, 0)!"
+        @change="(e: Event) => form.amount = handleInputChange(e, 0)!"
       />
     </FormField>
     <FormField class="py-2" label="积分券类型" desc="只允许该积分处理的服务" required>

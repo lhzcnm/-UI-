@@ -48,9 +48,11 @@ export function filterNumber(input: string) {
   return filterByRegex(input, /[0-9]/)
 }
 
-export function handleInputChange(e: Event) {
+export function handleInputChange(e: Event, defaultVal?: number) {
   const target = e.target as HTMLInputElement
-  if (target.value.trim() === '') {
+  if (target.value.trim() === '' && defaultVal !== undefined) {
+    return defaultVal
+  } else if (target.value.trim() === '' && defaultVal === undefined) {
     return undefined
   }
   return Number(filterNumber(target.value))

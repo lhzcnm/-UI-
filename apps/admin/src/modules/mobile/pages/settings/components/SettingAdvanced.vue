@@ -220,8 +220,8 @@ function handleSubmit() {
           <XInput
             ui-root="w-20"
             v-model="form.orderRetainDays"
-            @input="(e: Event) => form.orderRetainDays = handleInputChange(e)"
-            @change="(e: Event) => form.orderRetainDays = handleInputChange(e)"
+            @input="(e: Event) => form.orderRetainDays = handleInputChange(e, 0)!"
+            @change="(e: Event) => form.orderRetainDays = handleInputChange(e, 0)!"
           />
           <span>天</span>
         </div>
@@ -236,8 +236,8 @@ function handleSubmit() {
           <XInput
             ui-root="w-20"
             v-model="form.creditsRetainDays"
-            @input="(e: Event) => form.creditsRetainDays = handleInputChange(e)"
-            @change="(e: Event) => form.creditsRetainDays = handleInputChange(e)"
+            @input="(e: Event) => form.creditsRetainDays = handleInputChange(e, 0)!"
+            @change="(e: Event) => form.creditsRetainDays = handleInputChange(e, 0)!"
           />
           <span>天</span>
         </div>

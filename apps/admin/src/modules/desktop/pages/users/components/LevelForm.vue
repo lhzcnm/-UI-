@@ -40,8 +40,8 @@ defineExpose({
     >
       <XInput
         v-model="form.thresholdAmount" placeholder="累计充值"
-        @input="(e: Event) => form.thresholdAmount = handleInputChange(e)"
-        @change="(e: Event) => form.thresholdAmount = handleInputChange(e)"
+        @input="(e: Event) => form.thresholdAmount = handleInputChange(e, 0)!"
+        @change="(e: Event) => form.thresholdAmount = handleInputChange(e, 0)!"
       />
     </XFormItem>
 

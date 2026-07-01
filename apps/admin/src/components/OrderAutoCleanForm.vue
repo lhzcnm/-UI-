@@ -32,8 +32,8 @@ const form = defineModel<AutoCleanSettings>({ required: true })
           class="w-32"
           placeholder="例如 30"
           v-model="form.retainDays"
-          @input="(e: Event) => form.retainDays = handleInputChange(e)"
-          @change="(e: Event) => form.retainDays = handleInputChange(e)"
+          @input="(e: Event) => form.retainDays = handleInputChange(e, 0)!"
+          @change="(e: Event) => form.retainDays = handleInputChange(e, 0)!"
         />
         <!-- <span class="text-sm text-gray-500">天</span> -->
       </div>
