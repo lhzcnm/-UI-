@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OrderSearchForm } from '@/inters/orders'
-import { ORDER_STATUS_LIST, ORDER_VERIFY_LIST } from '@3un/utils'
+import { ORDER_SEARCH_SUBMIT_METHOD_LIST, ORDER_STATUS_LIST, ORDER_VERIFY_LIST } from '@3un/utils'
 import { handleInputChange } from '@/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
@@ -53,6 +53,18 @@ const form = defineModel<OrderSearchForm>({ required: true })
     <div>
       <label class="block text-sm text-label mb-1">服务</label>
       <NativeSelectService v-model="form.serviceId" />
+    </div>
+
+    <div>
+      <label class="block text-sm text-label mb-1">提交方式</label>
+      <XNativeSelect
+        v-model="form.submitMethod"
+        :options="ORDER_SEARCH_SUBMIT_METHOD_LIST"
+        :default="undefined"
+        placeholder="选择提交方式"
+        value-key="value"
+        label-key="label"
+      />
     </div>
 
     <div class="flex space-x-2">

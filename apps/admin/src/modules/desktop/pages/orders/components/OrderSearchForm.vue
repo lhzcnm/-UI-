@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OrderSearchForm } from '@/inters/orders'
-import { ORDER_STATUS_LIST, ORDER_VERIFY_LIST } from '@3un/utils'
+import { ORDER_SEARCH_SUBMIT_METHOD_LIST, ORDER_STATUS_LIST, ORDER_VERIFY_LIST } from '@3un/utils'
 import { handleInputChange } from '@/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
@@ -46,9 +46,21 @@ const form = defineModel<OrderSearchForm>({ required: true })
       </div>
     </div>
 
-    <div>
-      <label class="block text-sm text-label mb-1">服务</label>
-      <SelectService v-model="form.serviceId" clearable />
+    <div class="flex space-x-2">
+      <div class="w-1/2">
+        <label class="block text-sm text-label mb-1">服务</label>
+        <SelectService v-model="form.serviceId" clearable />
+      </div>
+      <div class="w-1/2">
+        <label class="block text-sm text-label mb-1">提交方式</label>
+        <!-- <SelectService v-model="form.serviceId" clearable /> -->
+        <XSelect v-model="form.submitMethod" placeholder="选择提交方式" clearable>
+          <XSelectItem 
+            v-for="method in ORDER_SEARCH_SUBMIT_METHOD_LIST" :key="method.value"
+            :value="method.value" :label="method.label"
+          />
+        </XSelect>
+      </div>
     </div>
 
     <div>

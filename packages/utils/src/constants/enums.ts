@@ -179,6 +179,21 @@ export const SUBMIT_METHOD_LIST = [
   { value: SUBMIT_METHOD.STORE, label: '商城' },
 ]
 
+export enum ORDER_SEARCH_SUBMIT_METHOD {
+  API     = 1,
+  DESKTOP = 2,
+  WECHAT  = 3,
+  WEB     = 4,
+  APP     = 5,
+}
+export const ORDER_SEARCH_SUBMIT_METHOD_LIST = [
+  { value: ORDER_SEARCH_SUBMIT_METHOD.API, label: 'API提交' },
+  { value: ORDER_SEARCH_SUBMIT_METHOD.DESKTOP, label: 'qt桌面端提交' },
+  { value: ORDER_SEARCH_SUBMIT_METHOD.WECHAT, label: '公众号提交' },
+  { value: ORDER_SEARCH_SUBMIT_METHOD.WEB, label: '网页端提交' },
+  { value: ORDER_SEARCH_SUBMIT_METHOD.APP, label: 'go桌面端提交' },
+]
+
 // API Type
 export enum API_TYPE {
   REALTIME = 0,

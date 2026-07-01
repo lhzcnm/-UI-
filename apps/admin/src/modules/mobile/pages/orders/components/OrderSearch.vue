@@ -15,7 +15,8 @@ watch(
 function handleSubmit() {
   store.formSearch = {
     ...copied.value,
-    userId: !!copied.value.userId ? copied.value.userId : undefined
+    userId: !!copied.value.userId ? copied.value.userId : undefined,
+    serviceId: !!copied.value.serviceId ? copied.value.serviceId : undefined,
   }
   store.visibleSearch = false
   store.refresh = !store.refresh

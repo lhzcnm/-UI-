@@ -1,5 +1,5 @@
 import type { IList, IPage } from '@3un/shared'
-import { ORDER_STATUS, ORDER_VERIFY, SUBMIT_METHOD } from '@3un/utils'
+import { ORDER_STATUS, ORDER_VERIFY, SUBMIT_METHOD, ORDER_SEARCH_SUBMIT_METHOD } from '@3un/utils'
 import { z } from 'zod/v4'
 
 export const zOrder = z.object({
@@ -65,6 +65,7 @@ export const zOrderSearchForm = z.object({
   verify: z.enum(ORDER_VERIFY).optional(),
   startTime: z.string().optional(),
   endTime: z.string().optional(),
+  submitMethod: z.enum(ORDER_SEARCH_SUBMIT_METHOD).optional(),
 })
 
 export type OrderSearchForm = z.infer<typeof zOrderSearchForm>
