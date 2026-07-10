@@ -3,23 +3,41 @@ import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 import { useClipboard } from '@vueuse/core'
 
-import { maskText } from '@/utils'
+import { maskText, stringReplace } from '@/utils'
 
 const store = useUserStore()
 const iStore = useSettingStore()
+const systemStore = useSystemStore()
 const showApiUsageInfo = ref(false)
 
 const { copy } = useClipboard({ legacy: true })
-const { locale } = useI18n()
 const localStore = useLocalStore()
 
+const zhContent = stringReplace(
+  iStore.settings.apiUsageInfo,
+  {
+    name: store.info.username,
+    key: store.info.apiKey,
+    srv: '1046',
+    imei: '356715082630875'
+  }
+)
+const enContent = stringReplace(
+  iStore.settings.apiUsageInfoEn,
+  {
+    name: store.info.username,
+    key: store.info.apiKey,
+    srv: '1046',
+    imei: '356715082630875'
+  }
+)
 
 const apiUsageContent = computed(() => {
-  return locale.value === 'zh'
-    ? iStore.settings.apiUsageInfo
-    : iStore.settings.apiUsageInfoEn
-      ? iStore.settings.apiUsageInfoEn
-      : iStore.settings.apiUsageInfo
+  return systemStore.isEn
+    ? enContent
+      ? enContent
+      : zhContent
+    : zhContent
 })
 
 async function handleCopy() {

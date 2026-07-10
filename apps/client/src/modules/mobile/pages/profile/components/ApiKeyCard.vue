@@ -4,15 +4,44 @@ import { Icon } from '@iconify/vue'
 import { toast } from 'vue-sonner'
 import { xconfirm } from '@3un/utils'
 
-import { maskText } from '@/utils'
+import { maskText, stringReplace } from '@/utils'
 
 const store = useUserStore()
 const iStore = useSettingStore()
-const {  locale } = useI18n()
+// const { locale } = useI18n()
+const systemStore = useSystemStore()
 const localStore = useLocalStore()
 
 const { copy, copied } = useClipboard({ legacy: true })
+
+const zhContent = stringReplace(
+  iStore.settings.apiUsageInfo,
+  {
+    name: store.info.username,
+    key: store.info.apiKey,
+    srv: '1046',
+    imei: '356715082630875'
+  }
+)
+const enContent = stringReplace(
+  iStore.settings.apiUsageInfoEn,
+  {
+    name: store.info.username,
+    key: store.info.apiKey,
+    srv: '1046',
+    imei: '356715082630875'
+  }
+)
+
 watch(copied, (value) => value && toast.success(localStore.localData['profile_SuccessCopy']))
+
+const apiUsageContent = computed(() => {
+  return systemStore.isEn
+    ? enContent
+      ? enContent
+      : zhContent
+    : zhContent
+})
 
 async function handleRefresh() {
   await store.refreshApi()
@@ -20,15 +49,9 @@ async function handleRefresh() {
 }
 
 function openApiUsageInfo() {
-  const apiUsageInfo = locale.value === 'zh'
-    ? iStore.settings.apiUsageInfo
-    : iStore.settings.apiUsageInfoEn
-      ? iStore.settings.apiUsageInfoEn
-      : iStore.settings.apiUsageInfo
-
   xconfirm({
     title: localStore.localData['profile_APIUsageInstructions'],
-    text: apiUsageInfo,
+    text: apiUsageContent.value,
     confirmText: localStore.localData['profile_Confirm'],
     cancelText: localStore.localData['profile_Cancel'],
   })
