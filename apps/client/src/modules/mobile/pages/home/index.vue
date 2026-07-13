@@ -53,7 +53,7 @@ onMounted(async () => {
 })
 
 const commonList = getCommonList(store.services)
-const { totalPages, currentPage, pages, handleScroll, scrollToPage, isScrolling } = usePage()
+const { totalPages, currentPage, pages, handleScroll, scrollToPage, isScrolling, carouselRef } = usePage()
 
 const router = useRouter()
 
