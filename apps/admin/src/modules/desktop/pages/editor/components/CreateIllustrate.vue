@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { type IllustrateItem, zIllustrate } from '@/inters/illustrate';
+import { toast } from 'vue-sonner'
+
+import { type IllustrateCreate, zIllustrate, zIllustrateForm } from '@/inters/illustrate'
 import { EDITOR_STORE } from '../utils'
-import { toast } from 'vue-sonner';
 
 const store = inject(EDITOR_STORE)!
 
 const iStore = useSystemStore()
 
-const form = ref<IllustrateItem>(zIllustrate.parse({}))
+const form = ref<IllustrateCreate>(zIllustrateForm.parse({}))
 
 watch(
   () => store.visibleIllustrateCreate,
   (val) => {
-    if (val) form.value = zIllustrate.parse({})
+    if (val) form.value = zIllustrateForm.parse({})
   }
 )
 

@@ -11,6 +11,8 @@ import monitors from './desktop/monitor'
 import print from './desktop/print'
 import local from './desktop/local'
 
+const mode = import.meta.env.VITE_APP_MODE
+
 const desktop: RouteRecordRaw = {
   path: '/',
   name: 'Desktop',
@@ -63,12 +65,17 @@ const desktop: RouteRecordRaw = {
       name: 'Voucher',
       component: () => import('@desktop/pages/voucher/index.vue'),
     },
-    {
+    (mode === 'LuShen' || mode === 'SanHe') && {
       path: 'oss',
       name: 'Oss',
       component: () => import('@desktop/pages/oss/index.vue'),
     },
-  ],
+    mode === 'LuShen' && {
+      path: 'docx',
+      name: 'Docx',
+      component: () => import('@desktop/pages/docx/index.vue'),
+    },
+  ].filter(item => !!item),
 }
 
 export default desktop

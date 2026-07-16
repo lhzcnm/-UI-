@@ -162,8 +162,14 @@ function resetSearch() {
     </section>
 
     <div class="p-3 pb-0">
-      <XTable ref="tableRef" :columns="columns" :data="store.users.list" :loading="loading" row-key="userId"
-        class="border h-[calc(100vh-8.75rem)]" />
+      <XTable
+        ref="tableRef"
+        :columns="columns"
+        :data="store.users.list"
+        :loading="loading"
+        row-key="userId"
+        class="border h-[calc(100vh-8.75rem)]"
+      />
     </div>
 
     <UserSearch :key="queryHash" />

@@ -82,3 +82,16 @@
   display: block;
   margin-left: auto;
 }
+
+.tiptap a {
+  cursor: pointer;
+  text-decoration-color: currentColor;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tiptap a span {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  cursor: pointer;
+}

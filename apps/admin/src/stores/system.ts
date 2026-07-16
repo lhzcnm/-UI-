@@ -22,6 +22,7 @@ export const useSystemStore = defineStore('system', () => {
   const settings = ref<Record<string, any>>({})
   const configs = ref<Configs>({} as Configs)
   const illustrates = ref<IllustrateMap>(new Map<string, IllustrateItem>())
+  const illustrateList = ref<IllustrateItem[]>([])
 
   const todoCount = reactive({
     ticket    : 0,
@@ -85,6 +86,7 @@ export const useSystemStore = defineStore('system', () => {
 
   async function getIllustrateList() {
     const illustrateData = await getIllustrates()
+    illustrateList.value =  illustrateData
     for (const illustrate of illustrateData) {
       // illustrates.value[illustrate.serviceCode] = illustrate
       illustrates.value.set(illustrate.serviceCode, illustrate)
@@ -102,6 +104,8 @@ export const useSystemStore = defineStore('system', () => {
     settings,
     configs,
     illustrates,
+    illustrateList,
+
     toggleSidebar,
     getTodoMsg,
     startTodoTimer,

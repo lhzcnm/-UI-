@@ -7,6 +7,11 @@ import { XButton, XInputNumber, XSwitch, type XColDef } from '@3un/ui'
 import { h } from 'vue'
 import { toast } from 'vue-sonner'
 
+async function updataServiceItem(row: Service) {
+  await updateService(row)
+  toast.success('更新成功')
+}
+
 export const columns: XColDef<Service> = [
   {
     key: 'packageId',
@@ -27,12 +32,16 @@ export const columns: XColDef<Service> = [
     key: 'tmpTitle',
     title: '服务简称',
     minWidth: 220,
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, tmpTitle: val }
-      await updateService(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true
+      },
+      async onSaveEdit(row, val) {
+        row.tmpTitle = val
+        await updataServiceItem(zService.parse(row))
+      }
     },
     render(value) {
       return h('div', value)
@@ -42,12 +51,16 @@ export const columns: XColDef<Service> = [
     key: 'packageTitle',
     title: '服务名称',
     minWidth: 220,
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, packageTitle: val }
-      await updateService(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true
+      },
+      async onSaveEdit(row, val) {
+        row.packageTitle = val
+        await updataServiceItem(zService.parse(row))
+      }
     },
     render(value) {
       return h('div', value)
@@ -59,12 +72,16 @@ export const columns: XColDef<Service> = [
     minWidth: 220,
     tdClassName: 'break-words',
     cellEmpty: '-',
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, packageTitleLocal: val }
-      await updateService(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true
+      },
+      async onSaveEdit(row, val) {
+        row.packageTitleLocal = val
+        await updataServiceItem(zService.parse(row))
+      }
     },
     render(value) {
       return h('div', value)
@@ -74,33 +91,27 @@ export const columns: XColDef<Service> = [
     key: 'packagePrice',
     title: '服务价格',
     width: 88,
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      let price = Number(val)
-
-      if (isNaN(price) || price < 0.01) {
-        price = 0.1
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'price',
+      outside: {
+        close: true,
+        save: true,
+      },
+      decimalPrecision: 6,
+      async onSaveEdit(row, val) {
+        row.packagePrice = Number(val)
+        await updataServiceItem(zService.parse(row))
       }
-
-      price = Number(price.toFixed(2))
-
-      const body = {
-        ...row,
-        packagePrice: price
-      }
-
-      await updateService(body)
-      toast.success('更新成功')
     },
-    render(value) {
-      let price = Number(value)
+    render(_, row) {
+      let price = Number(row.packagePrice)
 
       if (isNaN(price) || price < 0.01) {
         price = 0.1
       }
 
-      return h('div', price.toString())
+      return h('div', row.packagePrice)
     }
   },
   {
@@ -213,6 +224,7 @@ export const columns: XColDef<Service> = [
       const serviceStore = useServiceStore()
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
+        console.log(row)
         store.formBase = zService.parse(row)
         store.index = serviceStore.items
           .findIndex(item => item.packageId === row.packageId)

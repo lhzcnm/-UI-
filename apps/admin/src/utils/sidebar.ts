@@ -170,6 +170,12 @@ export const menus: SidebarMenu[] = [
       { label: '活动充值', match: 'huodongchongzhi', path: '/activity/recharge' },
     ],
   },
+  mode === "LuShen" && {
+    label: "说明文档管理",
+    path: "/docx",
+    icon: "lucide:receipt-text",
+    match: "ClientDocx"
+  },
   mode === "SanHe" && {
     label: "监控服务器",
     path: "/on-monitor/servers",

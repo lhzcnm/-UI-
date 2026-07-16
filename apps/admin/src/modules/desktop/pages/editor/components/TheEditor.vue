@@ -12,8 +12,12 @@ import TextStyle   from '@tiptap/extension-text-style'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign   from '@tiptap/extension-text-align'
 import Image from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
 
 import { EDITOR_STORE } from '../utils'
+import SetLinkDialog from './SetLinkDialog.vue'
+import { setLinkConfirm } from '../utils/setLinkConfirm.ts'
+import { toast } from 'vue-sonner'
 
 const store = inject(EDITOR_STORE)!
 
@@ -93,6 +97,9 @@ const editor = new Editor({
     Placeholder.configure({
       placeholder: 'Write something …',
     }),
+    Link.configure({
+      autolink: false,
+    })
   ],
   editorProps: {
     attributes: {
@@ -128,6 +135,27 @@ function setAlign(align: 'left' | 'center' | 'right') {
   } else {
     editor.chain().focus().setTextAlign(align).run()
   }
+}
+
+async function addLink() {
+  const { from, to } = editor.state.selection
+  if (from === to) {
+    toast.warning("请选择需要设置超链接的文本")
+    return
+  }
+
+  const url = await setLinkConfirm({})
+
+  if (!url) return 
+
+  editor
+    .chain()
+    .focus()
+    .extendMarkRange('link')
+    .setLink({
+      href: url
+    })
+    .run()
 }
 
 onBeforeUnmount(() => editor.destroy())
@@ -273,8 +301,26 @@ defineExpose({
         <FontSizePicker :editor="editor" />
         <TextColorPicker :editor="editor" />
       </div>
+
+      <hr class="h-5 w-px mx-3 bg-border" />
+
+      <!-- <div class="space-x-1/2">
+        <Icon icon="line-md:link" class="size-5" />
+        <div class="x-tooltip-text top120">设置超链接</div>
+      </div> -->
+
+      <button
+        class="x-tooltip hover:bg-muted rounded p-1.5"
+        :class="{'bg-muted': editor.isActive({ textAlign: 'right' })}"
+        @click="addLink"
+      >
+        <Icon icon="line-md:link" class="size-5" />
+        <div class="x-tooltip-text top120">设置超链接</div>
+      </button>
     </div>
 
     <EditorContent :editor="editor" class="p-3 overflow-y-auto" />  
+
+    <SetLinkDialog />
   </div>
 </template>
