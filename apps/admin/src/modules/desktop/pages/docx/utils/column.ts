@@ -20,11 +20,14 @@ export const columns: XColDef<IllustrateItem> = [
     key: 'description',
     title: '说明文档描述',
     width: 188,
-    cellEmpty: "暂无描述"
+    cellEmpty: "暂无描述",
+    render(value) {
+      return value ? value : '暂无描述'
+    }
   },
   {
     key: 'serviceDesc',
-    title: '效果预览',
+    title: '文档预览',
     width: 88,
     render(value) {
       function handleClick() {

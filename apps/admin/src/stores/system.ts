@@ -86,6 +86,7 @@ export const useSystemStore = defineStore('system', () => {
 
   async function getIllustrateList() {
     const illustrateData = await getIllustrates()
+    illustrates.value.clear()
     illustrateList.value =  illustrateData
     for (const illustrate of illustrateData) {
       // illustrates.value[illustrate.serviceCode] = illustrate

@@ -123,11 +123,22 @@ export function hashPrintHeader(str: string): string {
  * @param data 
  * @returns 
  */
-export function createFormData(data: object) {
+export function createFormData(data: any) {
   const body = new FormData()
 
   Object.entries(data).forEach(([key, value]) => {
-    body.append(key, value)
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        Object.entries(item).forEach(([childKey, childValue]) => {
+          body.append(
+            `${key}[${index}].${childKey}`,
+            childValue as any
+          )
+        })
+      })
+    } else {
+      body.append(key, value as any)
+    }
   })
 
   return body

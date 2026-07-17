@@ -54,11 +54,15 @@ function handleAdd() {
         />
 
         <button
-          class="delete-button"
+          class="
+            flex items-center justify-center
+            absolute top-2 right-2 w-7 h-7 border-none rounded-[50%]
+            bg-zinc-900/50  cursor-pointer hover:bg-zinc-800
+          "
           type="button"
           @click.stop="handleDelete(index)"
         >
-          ×
+          <Icon icon="lucide:x" class="size-6" />
         </button>
       </div>
     </VueDraggable>
@@ -82,34 +86,13 @@ function handleAdd() {
 
 <style scoped>
 /**
- * 删除
- */
-.delete-button {
-  position:absolute;
-  top:6px;
-  right:6px;
-  width:28px;
-  height:28px;
-  border:none;
-  border-radius:50%;
-  background:rgba(0,0,0,.55);
-  color:#fff;
-  font-size:20px;
-  cursor:pointer;
-}
-
-.delete-button:hover {
-  background:#ef4444;
-}
-
-/**
  * 拖动效果
  */
 .drag-ghost {
-  opacity:.3;
+  opacity: .3;
 }
 
 .drag-chosen {
-  transform:scale(1.05);
+  transform: scale(1.05);
 }
 </style>

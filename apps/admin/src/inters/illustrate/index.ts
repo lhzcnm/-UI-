@@ -33,6 +33,6 @@ export const zIllustrateImageItem = z.object({
 })
 
 export type IllustrateItem = z.infer<typeof zIllustrate>
-export type IllustrateCreate = z.infer<typeof zIllustrateForm>
+export type IllustrateSubmitForm = z.infer<typeof zIllustrateForm>
 export type GetIllustrateImagesParams = z.infer<typeof zGetIllustrateImagesParams>
 export type IllustrateImageItem = z.infer<typeof zIllustrateImageItem>

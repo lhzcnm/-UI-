@@ -8,12 +8,20 @@ const store = reactive<DocxStore>({
 
   visibleImage: false,
 
-  index: undefined
+  index: undefined,
+  refresh: false,
 })
 
 provide(DOCX_STORE, store)
 
 const iStore = useSystemStore()
+
+watch(
+  () => store.refresh,
+  async () => {
+    await iStore.getIllustrateList()
+  }
+)
 
 await iStore.getIllustrateList()
 </script>

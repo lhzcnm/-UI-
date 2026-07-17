@@ -7,6 +7,7 @@ export interface DocxStore {
   visibleImage: boolean
   
   index: number | undefined
+  refresh: boolean,
 }
 
 export const DOCX_STORE: IK<DocxStore> = Symbol('docx-store')
