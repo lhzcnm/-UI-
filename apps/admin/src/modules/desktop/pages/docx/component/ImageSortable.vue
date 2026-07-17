@@ -18,13 +18,6 @@ function handleDelete(index: number) {
   imageLinks.value.splice(index, 1)
 }
 
-async function handleSort() {
-  imageLinks.value.forEach((item, index) => {
-    item.sort = index + 1
-  })
-  await nextTick()
-}
-
 function handleAdd() {
   emit('add')
 }
@@ -40,12 +33,11 @@ function handleAdd() {
       :animation="200"
       ghost-class="drag-ghost"
       chosen-class="drag-chosen"
-      @end="handleSort"
     >
       <div
         v-for="(item,index) in imageLinks"
         :key="item.id"
-        class="relative cursor-move aspect-square rounded-xl"
+        class="relative cursor-move aspect-square rounded-xl border border-border"
       >
         <img
           :src="item.imageUrl"

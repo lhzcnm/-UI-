@@ -27,6 +27,24 @@ const store: EditorStore = reactive({
 
 provide(EDITOR_STORE, store)
 
+const route = useRoute()
+
+watch(
+  () => route.params,
+  async () => {
+    if (
+      typeof route.params.type === 'string' &&
+      route.params.type === 'docx' &&
+      typeof route.params.code === 'string' &&
+      route.params.code
+    ) {
+      store.selectedType = 'illustrateDocx'
+      store.selectIllustrate = route.params.code
+    }
+  },
+  { immediate: true }
+)
+
 const allowTypes = [
   'image/png',
   'image/jpeg',

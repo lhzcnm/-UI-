@@ -1,9 +1,11 @@
-import type { IllustrateItem } from '@/inters/illustrate'
-import { XButton, type XColDef } from '@3un/ui'
-import { xconfirm } from '@3un/utils'
+import IllustrateAction from '../component/IllustrateAction.vue'
+
 import { h } from 'vue'
 import { toast } from 'vue-sonner'
-import { DOCX_STORE } from '.'
+import { XButton, type XColDef } from '@3un/ui'
+
+import type { IllustrateItem } from '@/inters/illustrate'
+import { illustrateConfirm } from './index'
 
 export const columns: XColDef<IllustrateItem> = [
   {
@@ -15,6 +17,18 @@ export const columns: XColDef<IllustrateItem> = [
     key: 'serviceCode',
     title: '说明文档模块',
     width: 128,
+    render(value) {
+      const router = useRouter()
+
+      function naviRoute() {
+        router.push(`/editor/docx/${value}`)
+      }
+
+      return h('button', {
+        class: 'underline hover:text-success',
+        onClick: naviRoute
+      }, value)
+    }
   },
   {
     key: 'description',
@@ -27,28 +41,33 @@ export const columns: XColDef<IllustrateItem> = [
   },
   {
     key: 'serviceDesc',
-    title: '文档预览',
+    title: '富文本预览',
     width: 88,
-    render(value) {
-      function handleClick() {
+    render(value, row) {
+      const router = useRouter()
+
+      async function handleClick() {
         if (!value) {
           toast.warning('该模块暂无文本')
           return
         }
-        xconfirm(value)
+        if (await illustrateConfirm(value)) {
+          router.push(`/editor/docx/${row.serviceCode}`)
+        }
       }
       return h(XButton, {
         size: 'sm',
         label: '效果预览',
+        variant: 'ghost',
         onClick: handleClick
       })
     }
   },
-  {
-    key: 'createTime',
-    title: '创建时间',
-    width: 128,
-  },
+  // {
+  //   key: 'createTime',
+  //   title: '创建时间',
+  //   width: 128,
+  // },
   {
     key: 'updateTime',
     title: '最新更新时间',
@@ -57,19 +76,12 @@ export const columns: XColDef<IllustrateItem> = [
   {
     key: 'action',
     title: '操作',
-    width: 88,
-    render(_, __, index) {
-      const store = inject(DOCX_STORE)!
-
-      function handleClick() {
-        store.index = index
-        store.visibleImage = true
-      }
-
-      return h(XButton, {
-        size: 'sm',
-        label: '图片预览',
-        onClick: handleClick
+    width: 58,
+    fixed: 'right',
+    render(_, row, index) {
+      return h(IllustrateAction, {
+        row,
+        index,
       })
     }
   },

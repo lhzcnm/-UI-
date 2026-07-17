@@ -9,7 +9,10 @@ import { updateSetting } from '@/api/settings'
 
 import { EDITOR_STORE } from '../utils'
 import { updateActivity } from '@/api/activity'
-import { updateIllustrate } from '@/api/illustrate'
+import { getIllustrateImages, updateIllustrate } from '@/api/illustrate'
+import type { IllustrateImageItem } from '@/inters/illustrate/index.ts'
+import { buildIllustrateBody } from '@/utils/illustrate.ts'
+import { createFormData } from '@3un/utils'
 
 interface TheProps {
   getHtml?: () => string
@@ -29,6 +32,8 @@ const mode = import.meta.env.VITE_APP_MODE
 
 const store = inject(EDITOR_STORE)!
 const previewHtml = ref('')
+
+const docxImageMap: Map<string, IllustrateImageItem[]> = new Map<string, IllustrateImageItem[]>()
 
 const options: OptionItem[] = [
   mode === "SanHe" && { label: '更新公告', value: 'adminRemainder', icon: 'solar:diploma-verified-outline' },
@@ -100,11 +105,15 @@ async function handleSave() {
       description: html,
     })
   } else if (store.selectedType.startsWith('illustrate')) {
+    if (!store.illustrates.has(store.selectIllustrate)) return
+
     const illustrate = store.illustrates.get(store.selectIllustrate)!
-    await updateIllustrate({
-      serviceCode: illustrate.serviceCode,
-      serviceDesc: html,
-    })
+    illustrate.serviceDesc = html
+    const images = await getImages(store.selectIllustrate)
+    const updateBody = await buildIllustrateBody(illustrate, images)
+    const formData = createFormData(updateBody)
+
+    await updateIllustrate(formData)
   } else {
     try {
       await updateSetting([
@@ -132,6 +141,28 @@ function handleSelectActivity(value: number) {
 function handleRefresh() {
   previewHtml.value = props.getHtml!() || ''
 }
+
+async function getImages(code: string) {
+  if (docxImageMap.has(code)) {
+    return docxImageMap.get(code)!
+  }
+
+  const imageItems = await getIllustrateImages({ serviceCode: code })
+
+  if (imageItems.length > 0) {
+    docxImageMap.set(code, imageItems)
+  }
+
+  return imageItems
+}
+
+onMounted(async () => {
+  await nextTick()
+  
+  if (store.illustrates.has(store.selectIllustrate)) {
+    handleSelectIlustrate(store.illustrates.get(store.selectIllustrate)!.serviceCode)
+  }
+})
 </script>
 
 <template>
@@ -184,8 +215,11 @@ function handleRefresh() {
         <label class="mb-2 block text-sm text-label">说明文档</label>
 
         <div class="flex gap-2 items-center">
-          <SelectIllustrate v-model="store.selectIllustrate" @selected="handleSelectIlustrate" />
-          <XButton color="success" icon="mingcute:add-line" label="添加说明" variant="outline" @click="store.visibleIllustrateCreate = true" />
+          <SelectIllustrate
+            v-model="store.selectIllustrate"
+            @selected="handleSelectIlustrate"
+          />
+          <!-- <XButton color="success" icon="mingcute:add-line" label="添加说明" variant="outline" @click="store.visibleIllustrateCreate = true" /> -->
         </div>
       </div>
     </div>

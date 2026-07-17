@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch, onUnmounted, nextTick } from 'vue'
 import { Icon } from '@iconify/vue'
 import { MenuItem, menus } from '../../utils/menu'
-import { api } from '@/utils/api'
+import { getDocxInfo, QueryType } from '@/utils/api'
 
 // 类型定义
 interface ContentItem {
@@ -60,7 +60,10 @@ async function fetchGroupContent(group: MenuItem): Promise<ContentItem[]> {
   if (!codes.length) return []
 
   try {
-    const res = await api.getGuide(codes)
+    const res = await getDocxInfo([{
+      serviceCode: 'submit',
+      queryType: QueryType.Prefix
+    }])
     return res?.data?.data?.map((item: any) => ({
       value: item.serviceCode,
       content: item.serviceDesc

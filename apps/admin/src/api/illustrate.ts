@@ -29,3 +29,8 @@ export const getIllustrateImages: IllustrateGetImagesFn = async (params) => {
   const { data } = await http.get<IllustrateImageItem[]>('serviceSpec/SpecImageList', { params: params })
   return data.map(item => zIllustrateImageItem.parse(item))
 }
+
+type IllustrateDeleteItemsFn = (body: string[]) => Promise<void>
+export const DeleteIllustrate: IllustrateDeleteItemsFn = async (body) => {
+  await http.delete("serviceSpec/remove", { data: body })
+}

@@ -2,7 +2,7 @@ import z from 'zod/v4'
 
 
 export const zIllustrate = z.object({
-  id: z.number(),
+  id: z.number().default(0),
   serviceCode: z.string().default(''),
   description: z.string().nullable(),
   serviceDesc: z.string().default(''),

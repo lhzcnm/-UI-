@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const tools: RouteRecordRaw[] = [
   {
-    path: 'editor',
+    path: 'editor/:type?/:code?',
     name: 'Editor',
     component: () => import('@desktop/pages/editor/index.vue'),
   },

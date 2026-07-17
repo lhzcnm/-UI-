@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 
-import { type IllustrateCreate, zIllustrate, zIllustrateForm } from '@/inters/illustrate'
+import { type IllustrateSubmitForm, zIllustrate, zIllustrateForm } from '@/inters/illustrate'
 import { EDITOR_STORE } from '../utils'
 
 const store = inject(EDITOR_STORE)!
 
 const iStore = useSystemStore()
 
-const form = ref<IllustrateCreate>(zIllustrateForm.parse({}))
+const form = ref<IllustrateSubmitForm>(zIllustrateForm.parse({}))
 
 watch(
   () => store.visibleIllustrateCreate,

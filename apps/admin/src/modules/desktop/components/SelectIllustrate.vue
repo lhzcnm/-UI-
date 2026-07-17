@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { IllustrateItem } from '@/inters/illustrate';
 import { type XSelectEmits } from '@3un/ui'
 
 const iStore = useSystemStore()
@@ -9,18 +10,19 @@ const emits = defineEmits<XSelectEmits>()
 
 const input = ref<string>('')
 
-const illustrateKeys = computed(() => {
-  return [...iStore.illustrates.keys()]
-})
+const illustrateList = computed(() => iStore.illustrateList)
 
 const filteredIllustrate = computed(() => {
   const keyword = input.value.trim().toLowerCase()
-  if (!keyword) return illustrateKeys.value
+  if (!keyword) return illustrateList.value
 
-  const illustrates: string[] = []
+  const illustrates: IllustrateItem[] = []
 
-  for (let illustrate of illustrateKeys.value) {
-    if (illustrate.toLowerCase().includes(keyword)) {
+  for (let illustrate of illustrateList.value) {
+    if (
+      illustrate.description?.toLowerCase().includes(keyword)
+      || illustrate.serviceCode.toLowerCase().includes(keyword)
+    ) {
       illustrates.push(illustrate)
     }
   }
@@ -52,10 +54,10 @@ function highlightText(text: string, keyword: string) {
     placement="bottom-start"
     placeholder="请选择说明文档"
     @selected="emits('selected', $event)">
-    <XSelectItem v-for="key in filteredIllustrate" :key="key"
-      :value="key" :label="key">
+    <XSelectItem v-for="item in filteredIllustrate" :key="item.serviceCode"
+      :value="item.serviceCode" :label="item.description ? item.description : item.serviceCode">
       <template #default>
-        <span v-html="getDisplayText(key)"></span>
+        <span v-html="getDisplayText(item.description ? item.description : item.serviceCode)"></span>
       </template>
     </XSelectItem>
   </XSelect>

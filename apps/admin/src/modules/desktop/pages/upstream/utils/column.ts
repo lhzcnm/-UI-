@@ -4,9 +4,22 @@ import { XSwitch, type XColDef, XTag } from '@3un/ui'
 import { API_TYPE_MAP } from '@3un/utils'
 import { h } from 'vue'
 
-import type { Upstream } from '@/inters/upstream'
+import { zUpstream, type Upstream } from '@/inters/upstream'
 import { updateUpstream } from '@/api/upstream'
 import { toast } from 'vue-sonner'
+
+async function updateApiItem(row: Upstream) {
+  await updateUpstream({
+    apiId: row.apiId,
+    apiTitle: row.apiTitle,
+    disableApi: row.disableApi,
+    apiKey: row.apiKey,
+    serverUrl: row.serverUrl,
+    accountId: row.accountId,
+    apiType: row.apiType
+  })
+  toast.success('更新成功')
+}
 
 export const columns: XColDef<Upstream> = [
   { key: 'apiId', title: 'APIID', width: 68 },
@@ -14,12 +27,17 @@ export const columns: XColDef<Upstream> = [
     key: 'apiTitle',
     title: 'API名称',
     width: 225,
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, apiTitle: val }
-      await updateUpstream(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true,
+        save: true,
+      },
+      async onSaveEdit(row, val) {
+        row.apiTitle = val
+        await updateApiItem(zUpstream.parse(row))
+      }
     },
     render(value) {
       return h('div', value)
@@ -29,12 +47,17 @@ export const columns: XColDef<Upstream> = [
     key: 'serverUrl',
     title: 'API地址',
     minWidth: 350,
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, serverUrl: val }
-      await updateUpstream(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true,
+        save: true,
+      },
+      async onSaveEdit(row, val) {
+        row.serverUrl = val
+        await updateApiItem(zUpstream.parse(row))
+      }
     },
     render(value) {
       const [url, query] = value.split('?')
@@ -57,12 +80,17 @@ export const columns: XColDef<Upstream> = [
     title: '用户名',
     width: 108,
     cellEmpty: '--',
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, accountId: val }
-      await updateUpstream(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true,
+        save: true,
+      },
+      async onSaveEdit(row, val) {
+        row.accountId = val
+        await updateApiItem(zUpstream.parse(row))
+      }
     },
     render(value) {
       return h('div', value)
@@ -73,12 +101,17 @@ export const columns: XColDef<Upstream> = [
     title: 'API密钥',
     width: 300,
     cellEmpty: '--',
-    isTwoClick: true,
-    isTwoClickType: 'input',
-    async onSave(val, row) {
-      const body = { ...row, apiKey: val }
-      await updateUpstream(body)
-      toast.success('更新成功')
+    edit: {
+      trigger: 'dblclick',
+      dataType: 'string',
+      outside: {
+        close: true,
+        save: true,
+      },
+      async onSaveEdit(row, val) {
+        row.apiKey = val
+        await updateApiItem(zUpstream.parse(row))
+      }
     },
     render(value) {
       return h('div', value)

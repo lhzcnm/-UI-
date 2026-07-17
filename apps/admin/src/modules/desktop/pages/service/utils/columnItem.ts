@@ -36,7 +36,8 @@ export const columns: XColDef<Service> = [
       trigger: 'dblclick',
       dataType: 'string',
       outside: {
-        close: true
+        close: true,
+        save: true,
       },
       async onSaveEdit(row, val) {
         row.tmpTitle = val
