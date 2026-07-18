@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ConfirmOptions } from '@3un/utils'
-import { register } from 'module';
-import type { boolean } from 'zod/v4';
-import { registerIllustrateConfirm } from '../utils';
+
+import { registerIllustrateConfirm } from '../utils'
+
 
 const defaultOptions: ConfirmOptions = {
   title: '富文本预览',

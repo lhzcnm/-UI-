@@ -49,12 +49,12 @@ function handleAdd() {
           class="
             flex items-center justify-center
             absolute top-2 right-2 w-7 h-7 border-none rounded-[50%]
-            bg-zinc-900/50  cursor-pointer hover:bg-zinc-800
+            bg-zinc-300 dark:bg-zinc-900/50  cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800
           "
           type="button"
           @click.stop="handleDelete(index)"
         >
-          <Icon icon="lucide:x" class="size-6" />
+          <Icon icon="lucide:x" class="size-6 text-zinc-600 dark:text-zinc-200" />
         </button>
       </div>
     </VueDraggable>
