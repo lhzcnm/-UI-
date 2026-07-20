@@ -69,13 +69,19 @@ function handleCreate() {
 }
 
 function handleUpdate() {
-  const item = serviceStore.items[store.index!]
-  const body = { ...store.formBase, packageId: item.packageId }
+  if (!store.selectId) return
+
+  // const item = serviceStore.items[store.index!]
+  const index = serviceStore.items.findIndex(x => x.packageId === store.selectId)
+
+  if (index === -1) return
+
+  const body = { ...store.formBase, packageId: store.selectId }
 
   const response = updateService(body)
 
   response.then(() => {
-    serviceStore.items[store.index!] = body
+    serviceStore.items[index] = body
     store.visibleBase = false
   })
 
@@ -87,17 +93,23 @@ function handleUpdate() {
 async function handleDelete() {
   if (!await xconfirm('确定要删除该服务吗？')) return
 
-  const item = serviceStore.items[store.index!]
+  const index = serviceStore.items.findIndex(x => x.packageId === store.selectId)
+  if (index === -1) return
+  const item = serviceStore.items[index]
   deleteService(item.packageId).then(() => {
-    serviceStore.items.splice(store.index!, 1)
+    serviceStore.items.splice(index, 1)
     store.visibleBase = false
   })
 }
 
 async function handleResetPrice() {
-  const item = serviceStore.items[store.index!]
+  const index = serviceStore.items.findIndex(x => x.packageId === store.selectId)
+  if (index === -1) return
+
+  const item = serviceStore.items[index]
   await resetServicePrice(item.packageId)
   toast.success('重置服务价格成功')
+  store.visibleBase = false
 }
 </script>
 

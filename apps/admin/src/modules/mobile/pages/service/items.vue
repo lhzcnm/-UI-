@@ -25,6 +25,7 @@ const store: ServiceStore = reactive({
   visibleUpstream: false,
 
   index: undefined,
+  selectId: undefined,
   page: 1,
   limit: defaultPageSize,
 })

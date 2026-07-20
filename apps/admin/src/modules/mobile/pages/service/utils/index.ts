@@ -12,6 +12,7 @@ export interface ServiceStore {
   visibleBase: boolean
   visibleUpstream: boolean
   index: number | undefined
+  selectId: number | undefined
   page: number
   limit: number
 }

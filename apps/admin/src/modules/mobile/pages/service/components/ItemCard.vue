@@ -3,7 +3,7 @@ import { Icon } from '@iconify/vue'
 import { twJoin } from 'tailwind-merge'
 
 import type { Service } from '@/inters/services'
-import { zService } from '@/inters/services'
+import { zServiceForm } from '@/inters/services'
 import { SERVICE_STORE } from '../utils'
 import { toUndef } from '@/utils'
 
@@ -31,7 +31,8 @@ const apiName = computed(() => {
 })
 
 function handleEdit() {
-  store.formBase = zService.parse(props.item)
+  store.formBase = zServiceForm.parse(props.item)
+  store.selectId = props.item.packageId
   store.index = props.index
   store.visibleBase = true
 }
