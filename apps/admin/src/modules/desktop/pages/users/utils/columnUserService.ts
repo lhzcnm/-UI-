@@ -1,9 +1,9 @@
-import { XButton, type XColDef, XInputNumber } from '@3un/ui'
+import UserServiceAction from '../components/UserServiceAction.vue'
+
+import { type XColDef, XInputNumber } from '@3un/ui'
 import { h } from 'vue'
 
-import { deleteUserService } from '@/api/users'
 import type { UserService } from '@/inters/users'
-import { USER_STORE } from '.'
 
 export const columns: XColDef<UserService> = [
   {
@@ -28,35 +28,29 @@ export const columns: XColDef<UserService> = [
   },
   {
     key: 'price',
-    title: '价格',
+    title: '修改价格',
     width: 120,
-    render: (value) => {
+    render: (_, row) => {
       return h(XInputNumber, {
-        modelValue: value,
+        modelValue: row.price,
         step: 0.01,
         precision: 2,
         size: 'sm',
+        "onUpdate:modelValue": (val) => {
+          row.price = val
+        }
       })
     },
   },
   {
     key: 'actions',
     title: '操作',
-    width: 80,
+    width: 138,
+    fixed: 'right',
     render: (_, row, index) => {
-      const store = inject(USER_STORE)!
-      function handleDelete() {
-        deleteUserService([row.id]).then(() => {
-          store.services.splice(index, 1)
-        })
-      }
-
-      return h(XButton, {
-        size: 'sm',
-        label: '删除',
-        color: 'danger',
-        icon: 'lucide:trash-2',
-        onClick: handleDelete,
+      return h(UserServiceAction, {
+        row,
+        index,
       })
     },
   },

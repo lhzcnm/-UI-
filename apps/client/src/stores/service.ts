@@ -1,8 +1,9 @@
 import type { ServiceDetail, Service } from '@/api/services'
 
 import { defineStore } from 'pinia'
-import { serviceApi } from '@/api/services'
 import { useFetchWithCache } from '@3un/utils'
+
+import { serviceApi } from '@/api/services'
 
 export const useServiceStore = defineStore('serviceStore', () => {
   /** 文件导入数据弹窗数据类型选择 */

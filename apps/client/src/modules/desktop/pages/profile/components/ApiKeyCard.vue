@@ -22,15 +22,20 @@ const zhContent = stringReplace(
     imei: '356715082630875'
   }
 )
-const enContent = stringReplace(
-  iStore.settings.apiUsageInfoEn,
-  {
-    name: store.info.username,
-    key: store.info.apiKey,
-    srv: '1046',
-    imei: '356715082630875'
-  }
-)
+
+let enContent = ""
+
+if (iStore.settings.apiUsageInfoEn) {
+  enContent = stringReplace(
+    iStore.settings.apiUsageInfoEn,
+    {
+      name: store.info.username,
+      key: store.info.apiKey,
+      srv: '1046',
+      imei: '356715082630875'
+    }
+  )
+}
 
 const apiUsageContent = computed(() => {
   return systemStore.isEn

@@ -4,9 +4,10 @@ import ServiceCard from './ServiceCard.vue'
 import type { XNativeSelectValue } from '@3un/ui'
 import { toast } from 'vue-sonner'
 
-import { createUserService, deleteUserService } from '@/api/users'
+import { createUserService, deleteUserService, updateUserService } from '@/api/users'
 import { VERIFY_MSG } from '@/utils'
 import { USER_STORE } from '../utils'
+import type { UserServiceUpdateParams } from '@/inters/users/service.ts'
 
 const store = inject(USER_STORE)!
 const loading = ref(false)
@@ -47,6 +48,25 @@ function handleDelete(id: number, index: number) {
     store.services.splice(index, 1)
   })
 }
+
+async function handleUpdate(
+  serviceId: number,
+  index: number,
+  price: number,
+  _: number,
+) {
+  if (store.index === undefined) return
+
+  const body: UserServiceUpdateParams = {
+    id: store.services[index].id,
+    userId: store.users.list[store.index].userId,
+    packageId: serviceId,
+    price: price
+  }
+
+  await updateUserService(body)
+  toast.success("更新成功")
+}
 </script>
 
 <template>
@@ -81,7 +101,7 @@ function handleDelete(id: number, index: number) {
         <ServiceCard
           v-for="(service, index) in store.services" :key="service.id"
           :service="service" :index="index"
-          @delete="handleDelete"
+          @delete="handleDelete" @update="handleUpdate"
         />
       </template>
     </div>

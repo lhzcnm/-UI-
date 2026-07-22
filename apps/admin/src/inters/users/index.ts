@@ -38,7 +38,7 @@ export const zUser = z.object({
   voucherCredits: z.string().default(''),
   unlockCredits: z.string().default(""),
   
-  autoFillCredits: z.boolean().default(false),
+  // autoFillCredits: z.boolean().default(false),
   // currencyId: z.number().default(0),
   pricePlanId: z.number().default(0),
   // listId: z.number().default(0),
@@ -82,6 +82,9 @@ export const zUser = z.object({
 
   // 用户是否允许用户使用api
   showApi: z.boolean().default(false),
+
+  // 用户是否能使用隐藏服务
+  showHiddenService: z.boolean().default(false),
 })
 
 export type User = z.infer<typeof zUser>

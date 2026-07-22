@@ -9,7 +9,7 @@ import { getCommonList } from '@/utils'
 
 const store = useServiceStore()
 const iStore = useSettingStore()
-await store.getServices()
+// await store.getServices()
 
 const router = useRouter()
 

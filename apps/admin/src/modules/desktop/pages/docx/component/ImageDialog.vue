@@ -93,6 +93,8 @@ async function handleConfirm() {
 
   const submitBody = await buildIllustrateBody(illustrateItem, allImages)
 
+  // console.log(submitBody)
+
   try {
     await confirmUpdate(submitBody)
   } finally {

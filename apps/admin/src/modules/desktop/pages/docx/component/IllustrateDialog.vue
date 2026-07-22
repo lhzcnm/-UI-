@@ -51,11 +51,13 @@ async function handleCreate() {
   const illustrateItem = zIllustrate.parse(store.formBase)
   const submitBody = await buildIllustrateBody(illustrateItem, [])
 
-  try {
-    await confirmUpdate(submitBody)
-    toast.success('添加成功')
-    store.visibleBase = false
-  } catch {}
+  console.log(submitBody)
+
+  // try {
+  //   await confirmUpdate(submitBody)
+  //   toast.success('添加成功')
+  //   store.visibleBase = false
+  // } catch {}
 }
 
 async function handleUpdate() {

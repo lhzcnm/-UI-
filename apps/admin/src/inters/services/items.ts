@@ -30,6 +30,7 @@ export const zService = z.object({
   duplicateImeiNotAllowed: z.boolean().default(true),
   disablePackage: z.boolean().default(false),
   pushMsg: z.boolean().default(true),
+  isHide: z.boolean().default(false),
 
   isNew: z.boolean().default(false),
   isHot: z.boolean().default(false),

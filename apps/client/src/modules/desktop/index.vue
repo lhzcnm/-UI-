@@ -14,7 +14,7 @@ const route = useRoute()
 const iStore = useSettingStore()
 const uStore = useUserStore()
 const systemStore = useSystemStore()
-// const serviceStore = useServiceStore()
+const serviceStore = useServiceStore()
 
 await Promise.all([
   iStore.getSettings(),
@@ -23,6 +23,11 @@ await Promise.all([
   setVersion(),
   !route.meta.noAuthRequired && uStore.getInfo(),
 ])
+
+if (!route.meta.noAuthRequired) {
+  await uStore.getInfo()
+  await serviceStore.getServices()
+}
 
 // watch(visibility, (cur) => {
 //   if ((cur === 'visible') && !route.meta.noAuthRequired) {

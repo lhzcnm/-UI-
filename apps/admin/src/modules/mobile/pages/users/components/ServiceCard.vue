@@ -23,12 +23,21 @@ function getLabel(id: number) {
         </p>
       </div>
 
-      <XButton
-        label="删除"
-        icon="lucide:trash-2"
-        size="sm" color="danger"
-        @click="$emit('delete', service.id, index)"
-      />
+      <div class="flex items-center gap-2">
+        <XButton
+          label="更新"
+          icon="lucide:edit"
+          size="sm"
+          @click="$emit('update', service.packageId, index, service.price, service.freeCount)"
+        />
+
+        <XButton
+          label="删除"
+          icon="lucide:trash-2"
+          size="sm" color="danger"
+          @click="$emit('delete', service.id, index)"
+        />
+      </div>
     </div>
 
     <div class="flex justify-between px-3 py-2 bg-muted border-t border-dashed">

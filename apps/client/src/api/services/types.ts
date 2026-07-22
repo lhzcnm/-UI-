@@ -71,6 +71,7 @@ export interface ServiceCols {
 export interface ServiceListParams {
   isUnlock?: boolean
   isDeviceShow?: boolean
+  isHide?: boolean
 }
 
 export interface FieldMap {

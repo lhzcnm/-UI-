@@ -4,9 +4,10 @@ import ServiceCard from './ServiceCard.vue'
 import type { XNativeSelectValue } from '@3un/ui'
 import { toast } from 'vue-sonner'
 
-import { createLevelService, deleteLevelService } from '@/api/level'
+import { createLevelService, deleteLevelService, updateLevelService } from '@/api/level'
 import { LEVEL_STORE } from '../utils'
 import { VERIFY_MSG } from '@/utils'
+import type { LevelServiceUpdateParams } from '@/inters/level/service.ts'
 
 const serviceStore = useServiceStore()
 const store = inject(LEVEL_STORE)!
@@ -51,6 +52,26 @@ function handleDelete(id: number, index: number) {
   deleteLevelService(id).then(() => {
     store.services.splice(index, 1)
   })
+}
+
+async function handleUpdate(
+  serviceId: number,
+  index: number,
+  price: number,
+  freeCount: number,
+) {
+  if (store.index === undefined) return
+
+  const body: LevelServiceUpdateParams = {
+    id: store.services[index].id,
+    serviceId: serviceId,
+    price: price.toString(),
+    planId: store.services[store.index].planId,
+    freeCount: freeCount
+  }
+
+  await updateLevelService(body)
+  toast.success("更新成功")
 }
 </script>
 
@@ -102,7 +123,7 @@ function handleDelete(id: number, index: number) {
         <ServiceCard
           v-for="(service, index) in store.services" :key="service.id"
           :service="service" :index="index"
-          @delete="handleDelete"
+          @delete="handleDelete" @update="handleUpdate"
         />
       </template>
     </div>

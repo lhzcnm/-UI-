@@ -60,7 +60,8 @@ export interface UserInfo {
     failed: number
     success: number
     total: number
-  }
+  },
+  showHiddenService: boolean
 }
 
 /** User Service Price */

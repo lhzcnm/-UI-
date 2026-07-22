@@ -45,7 +45,7 @@ function handleSelect(id: number) {
 <template>
   <XDialog
     v-model="store.visibleService"
-    ui-root="sm:max-w-xl"
+    ui-root="sm:max-w-2xl"
     title="服务价格配置"
     draggable
   >

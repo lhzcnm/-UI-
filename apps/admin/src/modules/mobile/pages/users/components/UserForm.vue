@@ -73,6 +73,14 @@ const levelStore = useLevelStore()
     </FormField>
 
     <FormField
+      label="隐藏服务显示"
+      desc="开启后, 该用户可以查看并提交隐藏服务"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.showHiddenService" />
+    </FormField>
+
+    <FormField
       label="ApiKey状态"
       desc="关闭后, 用户无法查看ApiKey"
       :content-flex="false"

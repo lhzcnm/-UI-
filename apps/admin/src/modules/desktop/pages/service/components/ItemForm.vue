@@ -127,6 +127,14 @@ const store = useServiceStore()
     </FormField>
 
     <FormField
+      label="隐藏服务"
+      desc="启用后, 仅部分用户可以查看并提交该服务"
+      :content-flex="false"
+    >
+      <XSwitch v-model="form.isHide" />
+    </FormField>
+
+    <FormField
       label="禁止重复提交"
       desc="不允许重复的 IMEI 提交"
       :content-flex="false"

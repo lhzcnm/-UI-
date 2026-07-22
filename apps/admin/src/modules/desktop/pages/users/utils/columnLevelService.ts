@@ -1,9 +1,9 @@
-import { XButton, type XColDef, XInputNumber } from '@3un/ui'
+import LevelServiceAction from '../components/LevelServiceAction.vue'
+
+import { type XColDef, XInputNumber } from '@3un/ui'
 import { h } from 'vue'
 
 import type { LevelService } from '@/inters/level'
-import { deleteLevelService } from '@/api/level'
-import { LEVEL_STORE } from '.'
 
 export const columns: XColDef<LevelService> = [
   {
@@ -30,12 +30,15 @@ export const columns: XColDef<LevelService> = [
     key: 'price',
     title: '价格',
     width: 120,
-    render: (value) => {
+    render: (_, row) => {
       return h(XInputNumber, {
-        modelValue: value,
+        modelValue: row.price,
         step: 0.01,
         precision: 2,
         size: 'sm',
+        "onUpdate:modelValue": (val) => {
+          row.price = val
+        }
       })
     },
   },
@@ -43,33 +46,27 @@ export const columns: XColDef<LevelService> = [
     key: 'freeCount',
     title: '免费次数',
     width: 120,
-    render: (value) => {
+    render: (_, row) => {
       return h(XInputNumber, {
-        modelValue: value,
-        step: 0.01,
+        modelValue: row.freeCount,
+        step: 1,
         precision: 2,
         size: 'sm',
+        "onUpdate:modelValue": (val) => {
+          row.freeCount = val
+        }
       })
     },
   },
   {
     key: 'actions',
     title: '操作',
-    width: 80,
+    width: 138,
+    fixed: 'right',
     render: (_, row, index) => {
-      const store = inject(LEVEL_STORE)!
-      function handleDelete() {
-        deleteLevelService(row.id).then(() => {
-          store.services.splice(index, 1)
-        })
-      }
-
-      return h(XButton, {
-        size: 'sm',
-        label: '删除',
-        color: 'danger',
-        icon: 'lucide:trash-2',
-        onClick: handleDelete,
+      return h(LevelServiceAction, {
+        row,
+        index
       })
     },
   },
