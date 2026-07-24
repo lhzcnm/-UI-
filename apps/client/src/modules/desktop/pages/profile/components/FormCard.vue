@@ -118,7 +118,7 @@ function openUnbind(type: PROFILE_TYPE) {
               class="text-sm text-primary hover:underline"
               @click="showForm('phone')"
             >
-              {{ ustore.info.phone ? localStore.localData['profile_edit'] : localStore.localData['profile_BindTitle	'] }}
+              {{ ustore.info.phone ? localStore.localData['profile_edit'] : localStore.localData['profile_BindTitle'] }}
             </a>
           </div>
         </div>
