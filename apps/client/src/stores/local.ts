@@ -26,14 +26,17 @@ export const useLocalStore = defineStore('locale', () => {
 
   function localeSlotVal(key: string, slots: Record<string, string | number>) {
     let res = localData.value[key]
-    
     if (!res) return ''
 
     for (const [slot, val] of Object.entries(slots)) {
       const newVal = val.toString()
-      res = res.replace(new RegExp(`{${slot}}`, 'g'), newVal)
+      const placeholder = slot.startsWith('{') && slot.endsWith('}')
+        ? slot
+        : `{${slot}}`
+
+      res = res.replace(new RegExp(placeholder, 'g'), newVal)
     }
-    
+
     return res
   }
 
