@@ -30,11 +30,10 @@ export const useLocalStore = defineStore('locale', () => {
 
     for (const [slot, val] of Object.entries(slots)) {
       const newVal = val.toString()
-      const placeholder = slot.startsWith('{') && slot.endsWith('}')
-        ? slot
-        : `{${slot}}`
-
-      res = res.replace(new RegExp(placeholder, 'g'), newVal)
+      res = res.replace(
+        new RegExp(`\\{?${slot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\}?`, 'g'),
+        newVal
+      )
     }
 
     return res
