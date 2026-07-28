@@ -1,517 +1,142 @@
-<script setup lang="ts">
-import { ref, computed, onMounted, watch, onUnmounted, nextTick } from 'vue'
-import { Icon } from '@iconify/vue'
-import { MenuItem, menusAdmin } from '../../utils/menu'
-import { api } from '@/utils/api'
-
-interface ContentItem {
-  value: string
-  content: string
-}
-
-interface PreviewState {
-  visible: boolean
-  currentImg: string
-  images: string[]
-  currentIndex: number
-}
-
-const active = ref('')
-const mobileMenu = ref(false)
-const openMenus = ref<string[]>([])
-const searchKeyword = ref('')
-const contentList = ref<ContentItem[]>([])
-const contentRef = ref<HTMLElement | null>(null)
-
-const previewState = ref<PreviewState>({
-  visible: false,
-  currentImg: '',
-  images: [],
-  currentIndex: 0
-})
-
-let scrollFrame: number | null = null
-
-// 获取菜单名称
-function getMenuNameByValue(value: string): string {
-
-  for (const menu of menusAdmin) {
-
-    if (menu.value === value) return menu.name
-
-    if (menu.children) {
-
-      const child = menu.children.find(item => item.value === value)
-
-      if (child) return child.name
-
-    }
-
-  }
-
-  return ''
-
-}
-
-// API 请求
-async function fetchGroupContent(group: MenuItem): Promise<ContentItem[]> {
-
-  const codes: string[] = []
-
-  if (group.children) {
-    codes.push(...group.children.map(i => i.value!).filter(Boolean))
-  } else if (group.value) {
-    codes.push(group.value)
-  }
-
-  if (!codes.length) return []
-
-  try {
-
-    const res = await api.getGuide(codes)
-
-    return res?.data?.data?.map((item: any) => ({
-      value: item.serviceCode,
-      content: item.serviceDesc
-    })) || []
-
-  } catch (error) {
-
-    console.error('获取文档失败:', error)
-    return []
-
-  }
-
-}
-
-// 滚动到指定菜单
-async function scrollToMenu(value?: string): Promise<void> {
-
-  if (!value || !contentRef.value) return
-
-  await nextTick()
-
-  const el = document.getElementById(value)
-
-  if (!el) return
-
-  const top = el.offsetTop - 48
-
-  contentRef.value.scrollTo({
-    top,
-    behavior: 'smooth'
-  })
-
-}
-
-// 一级菜单点击
-async function clickMenu(group: MenuItem): Promise<void> {
-
-  const isOpen = openMenus.value.includes(group.name)
-
-  if (group.children) {
-
-    if (isOpen) {
-
-      openMenus.value = []
-      return
-
-    }
-
-    openMenus.value = [group.name]
-
-    const data = await fetchGroupContent(group)
-
-    contentList.value = data
-
-    if (data.length) {
-
-      active.value = data[0].value
-      await scrollToMenu(active.value)
-
-    }
-
-  } else if (group.value) {
-
-    openMenus.value = []
-    active.value = group.value
-
-    const data = await fetchGroupContent(group)
-
-    contentList.value = data
-
-    await scrollToMenu(group.value)
-
-  }
-
-}
-
-// 二级菜单点击
-async function selectMenu(value?: string): Promise<void> {
-
-  if (!value) return
-
-  active.value = value
-
-  await scrollToMenu(value)
-
-}
-
-// 搜索
-const filteredMenus = computed<MenuItem[]>(() => {
-
-  if (!searchKeyword.value.trim()) return menusAdmin
-
-  const keyword = searchKeyword.value.toLowerCase()
-
-  return menusAdmin
-    .map(menu => {
-
-      if (menu.children) {
-
-        if (menu.name.toLowerCase().includes(keyword)) return menu
-
-        const children = menu.children.filter(child =>
-          child.name.toLowerCase().includes(keyword)
-        )
-
-        if (children.length) return { ...menu, children }
-
-      } else if (menu.name.toLowerCase().includes(keyword)) {
-
-        return menu
-
-      }
-
-      return null
-
-    })
-    .filter(Boolean) as MenuItem[]
-
-})
-
-watch(searchKeyword, () => {
-
-  openMenus.value = []
-  active.value = ''
-  contentList.value = []
-
-})
-
-//
-// 滚动联动
-//
-function updateActiveMenuOnScroll(): void {
-
-  if (!contentRef.value) return
-
-  const scrollTop = contentRef.value.scrollTop
-
-  const sections = contentList.value.map(item => ({
-    id: item.value,
-    element: document.getElementById(item.value)
-  }))
-
-  let current = sections[0]?.id
-
-  for (let i = 0; i < sections.length; i++) {
-
-    const el = sections[i].element
-
-    if (!el) continue
-
-    const offsetTop = el.offsetTop - 60
-
-    if (scrollTop >= offsetTop) {
-
-      current = sections[i].id
-
-    }
-
-  }
-
-  if (current && active.value !== current) {
-
-    active.value = current
-    expandParentMenu(current)
-
-  }
-
-}
-
-function expandParentMenu(value: string): void {
-
-  for (const menu of menusAdmin) {
-
-    if (menu.children) {
-
-      const hasChild = menu.children.some(child => child.value === value)
-
-      if (hasChild && !openMenus.value.includes(menu.name)) {
-
-        openMenus.value = [menu.name]
-        break
-
-      }
-
-    }
-
-  }
-
-}
-
-// scroll 监听
-function handleScroll() {
-
-  if (scrollFrame) cancelAnimationFrame(scrollFrame)
-
-  scrollFrame = requestAnimationFrame(updateActiveMenuOnScroll)
-
-}
-
-// 图片预览
-function handleContentClick(e: MouseEvent): void {
-
-  const target = e.target as HTMLElement
-
-  if (target.tagName === 'IMG' && contentRef.value) {
-
-    const imgs = Array.from(contentRef.value.querySelectorAll('img')) as HTMLImageElement[]
-
-    const img = target as HTMLImageElement
-
-    previewState.value = {
-
-      visible: true,
-      currentImg: img.src,
-      images: imgs.map(i => i.src),
-      currentIndex: imgs.findIndex(i => i.src === img.src)
-
-    }
-
-  }
-
-}
-
-function prevImg() {
-
-  const { images, currentIndex } = previewState.value
-
-  const index = (currentIndex - 1 + images.length) % images.length
-
-  previewState.value.currentIndex = index
-  previewState.value.currentImg = images[index]
-
-}
-
-function nextImg() {
-
-  const { images, currentIndex } = previewState.value
-
-  const index = (currentIndex + 1) % images.length
-
-  previewState.value.currentIndex = index
-  previewState.value.currentImg = images[index]
-
-}
-
-function closePreview() {
-
-  previewState.value.visible = false
-
-}
-
-// 初始化
-async function initializeFirstMenu(): Promise<void> {
-
-  const first = menusAdmin[0]
-
-  if (first.children) {
-
-    openMenus.value = [first.name]
-
-    const data = await fetchGroupContent(first)
-
-    contentList.value = data
-
-    if (data.length) {
-
-      active.value = data[0].value
-
-    }
-
-  } else if (first.value) {
-
-    active.value = first.value
-
-    const data = await fetchGroupContent(first)
-
-    contentList.value = data
-
-  }
-
-}
-
-// 生命周期
-onMounted(async () => {
-
-  await initializeFirstMenu()
-
-  if (contentRef.value) {
-    contentRef.value.addEventListener('scroll', handleScroll)
-  }
-
-})
-
-onUnmounted(() => {
-
-  if (scrollFrame) cancelAnimationFrame(scrollFrame)
-
-  if (contentRef.value) {
-    contentRef.value.removeEventListener('scroll', handleScroll)
-  }
-
-})
-
-watch(contentList, async () => {
-
-  await nextTick()
-
-  updateActiveMenuOnScroll()
-
-})
-</script>
 <template>
-  <div class="flex h-screen font-sans text-gray-700 select-none">
-
-    <!-- 手机顶部栏 -->
-    <div class="fixed top-0 left-0 right-0 h-12 bg-white border-b flex justify-between w-full items-center px-3 z-40">
-      <div class="text-xl flex"> 
-        <img src="../../../public/favicon.png" alt="logo" class="w-6 h-6 mr-2">
-        <div class="font-semibold">使用说明</div>
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans antialiased">
+    <header class="fixed top-0 left-0 right-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-800/50">
+      <div class="flex items-center h-14 px-4 max-w-3xl mx-auto">
+        <button @click="drawerOpen = true" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <span class="flex-1 text-center font-semibold text-gray-900 dark:text-white text-sm truncate">{{ getMenuNameById(activeId) || '产品说明书' }}</span>
+        <div class="w-10"></div>
       </div>
-      <button @click="mobileMenu = true" class="text-xl">☰</button>
-    </div>
+    </header>
 
-    <!-- 手机菜单遮罩 -->
-    <div v-if="mobileMenu" class="fixed inset-0 bg-black/40 z-40 md:hidden" @click="mobileMenu = false"></div>
+    <Drawer
+      ref="drawerRef"
+      :open="drawerOpen"
+      @close="drawerOpen = false"
+      @select="handleMenuSelect"
+    />
 
-    <!-- 左侧菜单 -->
-    <aside
-      class="flex flex-col w-64 p-4 border-r h-full bg-white md:static fixed top-0 left-0 z-50 transform transition-transform"
-      :class="mobileMenu ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
-
-      <!-- 标题 -->
-      <div class="flex flex-col items-center mb-6">
-        <div class="text-xl font-bold text-gray-600">使用说明</div>
-        <div class="w-16 h-1 bg-gradient-to-r from-gray-400 to-gray-300 rounded-full mt-1"></div>
+    <main class="pt-14 max-w-3xl mx-auto px-4 py-6">
+      <div v-if="loading" class="flex items-center justify-center py-20">
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
-
-      <!-- 搜索 -->
-      <div class="relative mb-3">
-        <input v-model="searchKeyword" placeholder="关键字搜索..."
-          class="w-full pl-10 pr-3 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-sm" />
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-        <span v-if="searchKeyword !== ''" @click="searchKeyword = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-          <Icon icon="uil:trash-alt" class="size-5"/>
-        </span>
+      <div v-else-if="!contentList.length" class="text-center text-gray-500 py-20">
+        <p class="text-sm">请从左侧目录选择功能</p>
       </div>
-
-      <!-- 菜单 -->
-      <div class="flex-1 overflow-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-
-        <div v-for="group in filteredMenus" :key="group.name" class="mb-3">
-
-          <!-- 一级菜单 -->
-          <div class="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
-            @click="clickMenu(group); mobileMenu = false" :class="[
-              active === group.value
-                ? 'text-gray-600 bg-gray-50 font-semibold shadow-inner'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-            ]">
-            <span>{{ group.name }}</span>
-
-            <span v-if="group.children" class="text-xs" :class="openMenus.includes(group.name) ? 'rotate-90' : ''">
-              <Icon icon="ci:chevron-right" />
-            </span>
-          </div>
-
-          <!-- 二级菜单 -->
-          <div v-if="group.children && openMenus.includes(group.name)"
-            class="ml-4 mt-1 border-l border-gray-200 pl-3 space-y-1">
-
-            <div v-for="item in group.children" :key="item.value" @click="selectMenu(item.value); mobileMenu = false"
-              class="relative px-2 py-2 text-sm rounded-lg cursor-pointer" :class="[
-                active === item.value
-                  ? 'bg-gray-50 text-gray-600 font-medium shadow-inner'
-                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-              ]">
-              {{ item.name }}
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </aside>
-
-
-    <!-- 右侧内容 -->
-    <main ref="contentRef" @click="handleContentClick" class="flex-1 overflow-auto pt-12 md:pt-0 content-scroll">
-
-      <template v-if="contentList.length">
-
-        <div v-for="item in contentList" :key="item.value" :id="item.value" class="bg-white w-full pt-4 scroll-mt-12">
-
-          <div
-            class="text-xl md:text-2xl font-bold text-black/80 text-center border-b border-dashed border-gray-300 pb-4">
-            {{ getMenuNameByValue(item.value) }} - 使用说明
-          </div>
-
-          <div
-            class="text-gray-700 leading-relaxed [&_img]:max-w-full [&_img]:rounded-lg [&_img]:cursor-zoom-in [&_img]:my-4 px-4 md:px-6 border-b"
-            v-html="item.content"></div>
-
-        </div>
-
-      </template>
-
-      <div v-else class="text-center text-xl text-gray-400 py-10">
-        暂无内容(请点击菜单)
-      </div>
-
+      <ContentRenderer
+        v-else
+        ref="contentRendererRef"
+        :content-list="contentList"
+        @preview="openPreview"
+        @link-click="handleLinkClick"
+      />
     </main>
 
-
-    <!-- 图片预览 -->
-    <div v-if="previewState.visible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
-
-      <img :src="previewState.currentImg" class="max-h-[85vh] max-w-[95vw] object-contain" />
-
-      <!-- 上一张 -->
-      <div @click="prevImg" class="absolute left-3 md:left-10 text-white text-4xl cursor-pointer">
-        ‹
-      </div>
-
-      <!-- 下一张 -->
-      <div @click="nextImg" class="absolute right-3 md:right-10 text-white text-4xl cursor-pointer">
-        ›
-      </div>
-
-      <!-- 关闭 -->
-      <div @click="closePreview" class="absolute top-5 right-5 text-white text-xl cursor-pointer">
-        ✕
-      </div>
-
-    </div>
-
+    <MobileImagePreview ref="previewRef" />
   </div>
 </template>
 
-<style>
-.content-scroll {
-  -webkit-overflow-scrolling: touch;
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import Drawer from '../common/components/Drawer.vue'
+import ContentRenderer from '../common/components/ContentRenderer.vue'
+import MobileImagePreview from '../common/components/MobileImagePreview.vue'
+import { useMenu } from '../common/composables/useMenu.js'
+import { useContent } from '../common/composables/useContent.js'
+import { menusAdminMobile } from '@/utils/menu'
+import '../common/styles/doc-content.css'
+
+const drawerRef = ref<InstanceType<typeof Drawer>>()
+const contentRendererRef = ref<InstanceType<typeof ContentRenderer>>()
+const previewRef = ref<InstanceType<typeof MobileImagePreview>>()
+const drawerOpen = ref(false)
+
+const { activeId, getMenuNameById, setActive } = useMenu(menusAdminMobile)
+const { contentList, loading, loadContent } = useContent()
+
+function openPreview(images: string[], index: number) {
+  previewRef.value?.openPreview(images, index)
 }
+
+// ===== 修复：移除清除所有容器的代码，支持多个容器同时展开 =====
+function handleLinkClick(payload: { id: string; linkElement: HTMLElement }) {
+  const { id, linkElement } = payload
+  const item = contentList.value.find(item => item.value === id)
+  if (!item || !item.images || !item.images.length) return
+
+  // 检查该链接后面是否已有图片容器
+  let existing = linkElement.nextElementSibling as HTMLElement | null
+  while (existing && existing.classList?.contains('image-gallery-container')) {
+    existing.remove()
+    return // 已存在则移除（收起），不操作其他容器
+  }
+
+  // 插入新容器（不移除其他已存在的容器）
+  const html = buildGalleryHTML(item, id)
+  linkElement.insertAdjacentHTML('afterend', html)
+}
+// ===== 修复结束 =====
+
+// 构建图片容器 HTML（与原移动端逻辑一致）
+function buildGalleryHTML(item: any, id: string): string {
+  if (!item.images || !item.images.length) return ''
+  const imagesHtml = item.images.map((img: any, idx: number) => `
+    <div class="flex-shrink-0 w-full snap-center cursor-pointer gallery-image" data-src="${img.imageUrl}" data-index="${idx}">
+      <img src="${img.imageUrl}" alt="截图 ${idx + 1}" class="w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition" loading="lazy" onerror="this.style.display='none'" />
+    </div>
+  `).join('')
+
+  return `
+    <div class="image-gallery-container relative bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 mt-2 mb-2" data-item-id="${id}">
+      <button class="close-gallery absolute -top-2 -right-2 z-10 w-8 h-8 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-md transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">手机截图（左右滑动查看）</p>
+      <div class="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+        ${imagesHtml}
+      </div>
+    </div>
+  `
+}
+
+function handleMenuSelect(id: string) {
+  setActive(id)
+  loadContent(id)
+}
+
+watch(() => drawerRef.value?.activeId, (newId) => {
+  if (newId && activeId.value !== newId) {
+    setActive(newId)
+    loadContent(newId)
+  }
+}, { immediate: true })
+
+function handleKey(e: KeyboardEvent) {
+  if (!previewRef.value?.previewState?.visible) return
+  switch (e.key) {
+    case 'ArrowRight': (previewRef.value as any).nextImg(); break
+    case 'ArrowLeft': (previewRef.value as any).prevImg(); break
+    case 'Escape': (previewRef.value as any).closePreview(); break
+  }
+}
+
+onMounted(async () => {
+  const defaultId = 'phoneadminHeader'
+  if (defaultId) {
+    setActive(defaultId)
+    await loadContent(defaultId)
+  }
+  window.addEventListener('keydown', handleKey)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKey)
+})
+</script>
+
+<style scoped>
+/* 移动端特有样式（若有） */
 </style>

@@ -1,7 +1,9 @@
 import http from './http'
 
 export async function getDocxInfo(body: GetDocxBody[]) {
+  // await axios.post() response response.data
   const { data } = await http.post<DocxInfo[]>('serviceSpec', body)
+  // console.log(data)
   return data
 }
 

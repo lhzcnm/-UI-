@@ -4,239 +4,283 @@ export interface MenuItem {
   children?: MenuItem[]
 }
 
-export const menus: MenuItem[] = [
+export const menusClientDesktop: MenuItem[] = [
   {
-    name: '首页', value: 'home'
+    name: '快速上手', value: 'desktopclienthome'
   },
   {
-    name: '订单查询',
+    name: '核心功能操作',
     children: [
-      { name: '服务选择', value: 'serviceSelection' },
-      { name: '导入按钮', value: 'serviceImport' },
-      { name: '提交按钮', value: 'serviceSubmit' },
-      { name: '导出按钮', value: 'serviceExport' },
-      { name: '推送结果', value: 'servicePush' },
-      { name: '线程设置', value: 'serviceThread' },
-      { name: '字段筛选', value: 'serviceFilter' },
-      { name: '重置按钮', value: 'serviceReset' },
+      { name: '首页快捷功能', value: 'desktopclientquickhome' },
+      { name: '订单查询', value: 'desktopclientorderquery' },
+      { name: '查询打印', value: 'desktopclientqueryprint' },
+      { name: '我的设备', value: 'desktopclientdevices' },
+      { name: '我的订单', value: 'desktopclientmyorder' },
     ]
   },
   {
-    name: '查询打印',
-    value: 'queryPrint',
-  },
-  {
-    name: '我的设备',
-    value: 'myDevice',
-  },
-  {
-    name: '我的订单',
+    name: '账户与会员',
     children: [
-      { name: '筛选按钮', value: 'orderFillter' },
-      { name: '导出按钮', value: 'orderExport' },
-      { name: '打印结果', value: 'orderPrint' },
-      { name: '复制IMEI', value: 'orderCopyImei' },
-      { name: '生成图片', value: 'orderGenerateImage' },
-      { name: '开启验证', value: 'orderEnableValidation' },
+      { name: '余额充值', value: 'desktopclientrecharge' },
+      { name: '开通会员', value: 'desktopclientvip' },
+      { name: '积分券兑换', value: 'desktopclientredeem' },
+      { name: '导出消费记录', value: 'desktopclientpurchases' },
     ]
   },
   {
-    name: '积分充值',
-    children: [
-      { name: '余额充值', value: 'recharge' },
-      { name: '开通会员', value: 'member' },
-      { name: '积分卷兑换', value: 'coupon' },
-    ]
-  },
-  {
-    name: '我的工单',
-    value: 'workOrder',
+    name: '问题反馈（我的工单）',
+    value: 'desktopclientTicket',
   },
   {
     name: '会员中心',
     children: [
-      { name: '账号操作', value: 'account' },
-      { name: '微信操作', value: 'wechat' },
-      { name: '手机号/邮箱操作', value: 'phone' },
-      { name: '密码操作', value: 'password' },
-      { name: '数据统计区', value: 'statistics' },
-      { name: '查询助手', value: 'assistant' },
-      { name: '联系客服/推荐码', value: 'customerService' },
+      { name: '账户与密码管理', value: 'desktopclientAccount' },
+      { name: '数据统计', value: 'desktopclientstats' },
     ]
   },
   {
-    name: '竞价平台',
-    children: [
-      { name: '首页', value: 'auctionHome' },
-      { name: '数据导出', value: 'actionExport' },
-      { name: '设置', value: 'auctionSettings' },
-    ]
-  }
+    name: '常见问题',
+    value: 'desktopclientFAQ',
+  },
+
+
 ]
 
-export const menusClient: MenuItem[] = [
-  { name: '顶部功能', value: 'topFunction' },
+export const menusClientMobile: MenuItem[] = [
+  { name: '顶部功能', value: 'phoneclientHeader' },
   {
     name: '首页',
-    value: 'homeClient',
+    value: 'phoneclientHome',
   },
   {
     name: '订单',
     children: [
-      { name: '筛选按钮', value: 'orderFilterClient' },
-      { name: '导出按钮', value: 'orderExportClient' },
-      { name: '开启验证/复制', value: 'orderEnableValidationClient' },
-      { name: '生成图片', value: 'orderGenerateImageClient' },
+      { name: '筛选功能', value: 'phoneclientOrderfilter' },
+      { name: '导出功能', value: 'phoneclientOrderexport' },
+      { name: '开启验证功能', value: 'phoneclientOrderverify' },
+      { name: '复制功能', value: 'phoneclientOrdercopy' },
+      { name: '生成图片', value: 'phoneclientOrderimages' },
     ]
   },
   {
     name: '提交订单',
-    value: 'orderSubmitClient',
+    value: 'phoneclientsubmit',
   },
   {
     name: '反馈',
-    value: 'feedbackClient',
+    value: 'phoneclientfeedback',
   },
   {
     name: '我的',
     children: [
-      { name: '我的账户/充值/包月会员', value: 'accountClient' },
-      { name: '修改手机号/邮箱', value: 'phoneClient' },
-      { name: '修改账号/密码', value: 'passwordClient' },
+      { name: '我的账户/账单/充值', value: 'phoneclientprofileaccount' },
+      { name: 'API管理', value: 'phoneclientprofileAPI' },
+      { name: '修改信息', value: 'phoneclientprofileupdate' },
     ]
   },
   {
     name: '公众号关键字',
-    value: 'wxIpt'
+    value: 'phoneclientpublic'
+  },
+  {
+    name: '使用注意事项',
+    value: 'phoneclientTip'
   },
 ]
 
-export const menusAdmin: MenuItem[] = [
-  { name: '顶部功能', value: 'topFunctionAdmin' },
+export const menusAdminDesktop: MenuItem[] = [
+  { name: '顶部功能', value: 'desktopadminHeader' },
   {
     name: '用户管理 - 会员/管理员/包月会员',
     children: [
-      { name: '筛选按钮', value: 'userFilterAdmin' },
-      { name: '新增按钮', value: 'userCreateAdmin' },
-      { name: '编辑按钮', value: 'userEditAdmin' },
-      { name: '其他功能', value: 'userOtherFunctionAdmin' }
+      { name: '筛选功能', value: 'desktopadminUserManagerfilter' },
+      { name: '新增功能', value: 'desktopadminUserManageradd' },
+      { name: '编辑功能', value: 'desktopadminUserManagerupdate' },
+      { name: '其他功能', value: 'desktopadminUserManagerother' }
     ]
   },
-
   {
     name: '用户管理 - 会员等级',
     children: [
-      { name: '新增等级', value: 'memberLevelCreateAdmin' },
-      { name: '编辑按钮', value: 'memberLevelEditAdmin' },
-      { name: '服务价格', value: 'memberServicePriceAdmin' },
+      { name: '新增等级', value: 'desktopadminUserleveladd' },
+      { name: '编辑功能', value: 'desktopadminUserlevelupdate' },
+      { name: '服务价格', value: 'desktopadminUserlevelprice' },
     ]
   },
-
   {
     name: '服务管理 - 字段分割',
     children: [
-      { name: '新增按钮', value: 'fieldSplitCreateAdmin' },
-      { name: '编辑按钮', value: 'fieldSplitEditAdmin' },
+      { name: '新增功能', value: 'desktopadminserversplitadd' },
+      { name: '编辑功能', value: 'desktopadminserversplitupdate' },
     ]
   },
-
   {
     name: '服务管理 - 解锁推荐',
     children: [
-      { name: '新增按钮', value: 'unlockRecommendCreateAdmin' },
-      { name: '编辑按钮', value: 'unlockRecommendEditAdmin' },
-      { name: '转换码编辑', value: 'unlockConvertCodeEditAdmin' },
+      { name: '新增功能', value: 'desktopadminserverunlockadd' },
+      { name: '编辑功能', value: 'desktopadminserverunlockupdate' },
+      // { name: '转换码编辑', value: 'unlockConvertCodeEditAdmin' },
     ]
   },
-
   {
     name: '服务管理 - 服务组',
-    value: 'serviceGroupAdmin',
+    value: 'desktopadminservergroup',
   },
-
   {
     name: '服务管理 - 服务',
-    value: 'serviceAdmin',
+    value: 'desktopadminservers',
   },
-
   {
     name: '服务管理 - 打印模版',
-    value: 'printTemplateAdmin',
+    value: 'desktopadminserverprint',
   },
-
   {
     name: '订单管理 - 全部订单/等待处理/正在处理',
     children: [
-      { name: '筛选按钮', value: 'orderFilterAdmin' },
-      { name: '清理订单', value: 'orderClearAdmin' },
-      { name: '编辑按钮', value: 'orderEditAdmin' },
-      { name: '导出订单', value: 'orderExportAdmin' },
-      { name: '复制IMEI', value: 'orderCopyImeiAdmin' },
-      { name: '批量编辑', value: 'orderBatchEditAdmin' },
+      { name: '筛选功能', value: 'desktopadminorderFilter' },
+      { name: '清理订单', value: 'desktopadminorderClear' },
+      { name: '编辑功能', value: 'desktopadminorderEdit' },
+      { name: '导出订单', value: 'desktopadminorderExport' },
+      { name: '复制IMEI', value: 'desktopadminorderCopy' },
+      { name: '批量编辑', value: 'desktopadminorderBatch' },
     ]
   },
-
   {
     name: '订单管理 - 订单验证',
-    value: 'orderVerifyAdmin',
+    value: 'desktopadminorderVerify',
   },
-
   {
     name: '充值管理 - 会员/管理员/今日充值',
     children: [
-      { name: '手续费设置', value: 'rechargeFilterAdmin' },
+      { name: '手续费设置', value: 'desktopadminRechange' },
     ]
   },
   {
     name: '微信管理 - 菜单栏',
-    value: 'wechatMenuAdmin',
+    value: 'desktopadminwechatMenu',
   },
-
   {
     name: '微信管理 - 客服消息',
-    value: 'wechatMessageAdmin',
+    value: 'desktopadminwechatMessage',
   },
-
   {
     name: '活动管理 - 活动列表',
     children: [
-      { name: '活动', value: 'activityAdmin' },
-      { name: '活动规则', value: 'activityRuleAdmin' },
+      { name: '活动', value: 'desktopadminactivitys' },
+      { name: '活动规则', value: 'desktopadminactivityRule' },
     ]
   },
-
   {
     name: '活动管理 - 活动充值',
-    value: 'activityRechargeAdmin',
+    value: 'desktopadminactivityRecharge',
   },
-
   {
     name: '积分卷管理',
-    value: 'pointsCouponManageAdmin'
+    value: 'desktopadminactivityCoupon'
   },
-
   {
     name: '工单管理',
-    value: 'workOrderAdmin'
+    value: 'desktopadminworkorder'
   },
-
   {
     name: 'API管理',
-    value: 'apiAdmin'
+    value: 'desktopadminAPI'
   },
-
   {
     name: '拦截管理',
-    value: 'interceptManageAdmin'
+    value: 'desktopadminintercept'
   },
-
   {
     name: '批量编辑订单',
-    value: 'toolBatchEditOrderAdmin'
+    value: 'desktopadmintoolBatch'
   },
-
   {
     name: '富文本编辑',
-    value: 'toolRichTextEditorAdmin'
+    value: 'desktopadmintoolRich'
+  },
+]
+
+export const menusAdminMobile: MenuItem[] = [
+  { name: '顶部功能', value: 'phoneadminHeader' },
+  {
+    name: '用户管理 - 会员/管理员/包月会员',
+    children: [
+      { name: '筛选功能', value: 'phoneadminUserManagerfilter' },
+      { name: '新增功能', value: 'phoneadminUserManageradd' },
+      { name: '编辑功能', value: 'phoneadminUserManageredit' },
+      { name: '其他功能', value: 'phoneadminUserManagerother' }
+    ]
+  },
+  {
+    name: '用户管理 - 会员等级',
+    children: [
+      { name: '新增等级', value: 'phoneadminUserleveladd' },
+      { name: '编辑功能', value: 'phoneadminUserlevelupdate' },
+      { name: '服务价格', value: 'phoneadminUserlevelprice' },
+    ]
+  },
+  {
+    name: '服务管理 - 字段分割',
+    children: [
+      { name: '新增功能', value: 'phoneadminserversplitadd' },
+      { name: '编辑功能', value: 'phoneadminserversplitupdate' },
+    ]
+  },
+  {
+    name: '服务管理 - 解锁推荐',
+    children: [
+      { name: '新增功能', value: 'phoneadminserverunlockadd' },
+      { name: '编辑功能', value: 'phoneadminserverunlockupdate' },
+    ]
+  },
+  {
+    name: '服务管理 - 服务组',
+    value: 'phoneadminservergroup',
+  },
+  {
+    name: '服务管理 - 服务',
+    value: 'phoneadminservers',
+  },
+  {
+    name: '订单管理 - 全部订单/等待处理/正在处理',
+    children: [
+      { name: '筛选功能', value: 'phoneadminorderFilter' },
+      { name: '清理订单', value: 'phoneadminorderClear' },
+      { name: '编辑功能', value: 'phoneadminorderEdit' },
+    ]
+  },
+  {
+    name: '充值管理',
+    children: [
+      { name: '会员/管理员/今日充值', value: 'phoneadminRechanges' },
+      { name: '包月套餐', value: 'phoneadminRechangePlan' },
+    ]
+  },
+  {
+    name: '微信管理 - 菜单栏',
+    value: 'phoneadminwechatMenu',
+  },
+  {
+    name: '微信管理 - 客服消息',
+    value: 'phoneadminwechatMessage',
+  },
+  {
+    name: '活动管理 - 活动列表',
+    children: [
+      { name: '活动', value: 'phoneadminactivitys' },
+      { name: '活动规则', value: 'phoneadminactivityRule' },
+    ]
+  },
+  {
+    name: '工单管理',
+    value: 'phoneadminworkorder'
+  },
+  {
+    name: 'API管理',
+    value: 'phoneadminAPI'
+  },
+  {
+    name: '拦截管理',
+    value: 'phoneadminintercept.introduction'
   },
 ]

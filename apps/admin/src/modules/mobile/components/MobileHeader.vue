@@ -21,7 +21,7 @@ const style = tv({
 const b = style()
 
 function goToInstruction() {
-  window.open('http://docx.3unlocked.com/#/admin', '_blank')
+  window.open('http://docx.3unlocked.com/admin', '_blank')
 }
 </script>
 
