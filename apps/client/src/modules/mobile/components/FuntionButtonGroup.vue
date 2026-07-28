@@ -54,7 +54,7 @@ async function handleRefresh()  {
 }
 
 function goToInstruction() {
-  window.open('http://docx.3unlocked.com/#/', '_blank')
+  window.open('http://docx.3unlocked.com', '_blank')
   visible.value = false
 }
 </script>
