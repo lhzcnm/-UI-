@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 
-import { createUserService } from '@/api/users'
+import { createUserService, updateUserService } from '@/api/users'
 import { VERIFY_MSG } from '@/utils'
 
 import { columns } from '../utils/columnUserService'
@@ -26,6 +26,26 @@ function handleSubmit() {
 
   loading.value = true
 
+  const index = store.services.findIndex(x => x.packageId === packageId)
+
+  if (index !== -1) {
+    const item = store.services[index]
+    const response = updateUserService({
+      id: item.id,
+      userId: item.userId,
+      price: price,
+      packageId: item.packageId
+    })
+
+    response.then(() => {
+      toast.success("更新成功")
+      store.services[index].price = price || 0
+    })
+    response.finally(() => loading.value = false)
+    
+    return
+  }
+  
   const response = createUserService({
     packageId: store.formService.packageId,
     userId: store.formService.userId,

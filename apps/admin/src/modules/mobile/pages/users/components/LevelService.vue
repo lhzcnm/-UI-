@@ -7,7 +7,7 @@ import { toast } from 'vue-sonner'
 import { createLevelService, deleteLevelService, updateLevelService } from '@/api/level'
 import { LEVEL_STORE } from '../utils'
 import { VERIFY_MSG } from '@/utils'
-import type { LevelServiceUpdateParams } from '@/inters/level/service.ts'
+import type { LevelServiceUpdateParams } from '@/inters/level/service'
 
 const serviceStore = useServiceStore()
 const store = inject(LEVEL_STORE)!
@@ -31,6 +31,28 @@ function handleSubmit() {
   }
 
   loading.value = true
+
+  const index = store.services.findIndex(x => x.packageId === packageId)
+
+  if (index !== -1) {
+    const item = store.services[index]
+    const response = updateLevelService({
+      id: item.id,
+      planId: item.planId,
+      price: price?.toString(),
+      serviceId: item.packageId,
+      freeCount: store.formService.freeCount || 0,
+    })
+
+    response.then(() => {
+      toast.success("更新成功")
+      store.services[index].price = price || 0
+      store.services[index].freeCount = freeCount || 0
+    })
+    response.finally(() => loading.value = false)
+    
+    return
+  }
 
   const response = createLevelService({
     packageId: store.formService.packageId,

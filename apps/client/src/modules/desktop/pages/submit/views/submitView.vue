@@ -296,7 +296,7 @@ async function handleImport(imeiList: string[], remark: string) {
   tableRef.value?.initFilter()
   close()
 
-  imeis.value = [...new Set([...imeiList, ...imeis.value,])]
+  imeis.value = [...new Set([...imeiList, ...imeis.value])]
   // console.log(imeis.value)
   const submitedOrders = processWaitList(store.selectId!, imeis.value, remark)
   store.rawOrders.splice(0, getWaitingOrderLength(store.rawOrders), ...submitedOrders)
