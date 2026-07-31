@@ -16,7 +16,7 @@ const props = defineProps<OrderVoucherProps>()
     <div class="bg-background shadow-md border border-border p-6 mx-auto">
       <div class="relative flex justify-center items-center">
         <div class="scale-95">
-            <component :is="props.component" :order />
+          <component :is="props.component" :order />
         </div>
       </div>
     </div>

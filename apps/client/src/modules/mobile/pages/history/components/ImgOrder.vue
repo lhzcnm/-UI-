@@ -20,11 +20,14 @@ const { imgOrder } = defineProps<ImgOrderProps>()
 
 <template>
   <SlideRight
-    :title="localStore.localData['history_OrderImage']" v-model="store.visibleImg"
+    :title="localStore.localData['history_OrderImage']"
+    v-model="store.visibleImg"
+    ui-body="flex flex-col"
     @close="emits('close')"
+    :touch-prevent-default="false"
   >
     <template #default>
-      <div class="px-2">
+      <div class="flex flex-col px-2 max-h-[calc(100vh-100px)] overflow-y-auto">
         <img :src="imgOrder.img" alt="">
   
         <div class="my-4 flex justify-center">

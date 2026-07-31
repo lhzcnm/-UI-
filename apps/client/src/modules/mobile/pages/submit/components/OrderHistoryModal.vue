@@ -105,6 +105,7 @@ async function handleFilter(params: OrderSearchForm) {
     :title="localStore.localData['submit_OrdersHistory']"
     header-class="border-b"
     ui-body="flex flex-col"
+    :touch-prevent-default="true"
   >
     <template #default>
       <section class="flex justify-evenly mt-2 fixed right-2 -top-0">
