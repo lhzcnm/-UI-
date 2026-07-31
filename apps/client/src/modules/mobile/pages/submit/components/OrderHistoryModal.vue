@@ -13,6 +13,8 @@ const localStore = useLocalStore()
 
 const props = defineProps<OrderHistoryModalProps>()
 
+const exportDialog = ref<boolean>(false)
+const fileName = ref<string | undefined>()
 const store = inject(SUBMIT_STORE)!
 
 const page = ref<number>(1)
@@ -72,9 +74,12 @@ async function exportOrder() {
     const { data } = await orderApi.export({
       serviceId: props.serviceId,
       orderIdList: orderIds,
+      fileName: fileName.value
     })
 
     downloadURL(data)
+    exportDialog.value = false
+    fileName.value = undefined
   } catch { }
 }
 
@@ -116,7 +121,7 @@ async function handleFilter(params: OrderSearchForm) {
         <div class="flex items-center space-x-2">
           <ButtonGroup 
           :labels="{filter: localStore.localData['submit_Filter'], export: localStore.localData['submit_Export']}"
-          :layouts="orderTab == 'all'? ['filter', 'export'] : [ 'export']" @export="exportOrder" @filter="openFilter" />
+          :layouts="orderTab == 'all'? ['filter', 'export'] : [ 'export']" @export="exportDialog = true" @filter="openFilter" />
         </div>
         <XSimplePagination v-if="orderTab == 'all'" v-model="page" :limit="pageSize" :total="orders.total" />
       </section>
@@ -133,4 +138,30 @@ async function handleFilter(params: OrderSearchForm) {
       <OrderSearchModal v-model="visibleSearch" @filter="handleFilter" />
     </template>
   </SlideRight>
+  
+
+  <XDialog v-model="exportDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]"
+      :title="localStore.localData['history_SelectFileTypes']" draggable>
+
+      <template #header>
+        <div class="p-2 border-b">
+          <div class="w-full text-center">{{ localStore.localData['history_ExportName'] }}</div>
+          <div @click="exportDialog = false" class="fixed top-1 right-4">x</div>
+        </div>
+      </template>
+
+      <section class="flex flex-col justify-center items-center space-y-2 mx-auto px-6 py-2">
+
+        <XInput v-model="fileName" class="w-2/3" :placeholder="localStore.localData['history_ExportFileName']" />
+        <div class="text-sm text-center text-muted-foreground mb-2">{{ localStore.localData['history_CustomFileName'] }}</div>
+
+      </section>
+
+
+      <div class="p-2 border-t">
+        <XButton class="w-full" variant="soft"  @click="exportOrder">{{
+          localStore.localData['history_ExportOrder'] }}
+        </XButton>
+      </div>
+    </XDialog>
 </template>
