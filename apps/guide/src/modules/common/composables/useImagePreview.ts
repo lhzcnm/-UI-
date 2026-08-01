@@ -1,29 +1,13 @@
-import { ref, watch, type Ref } from 'vue'
-import type { PreviewState } from '../types'
+import { ref, watch, onMounted, onUnmounted, type Ref } from 'vue'
 
-export function useImagePreview(): {
-  previewState: Ref<PreviewState>
-  scale: Ref<number>
-  translateX: Ref<number>
-  translateY: Ref<number>
-  isDragging: Ref<boolean>
-  imageContainer: Ref<HTMLDivElement | null>
-  openPreview: (images: string[], index: number) => void
-  closePreview: () => void
-  prevImg: (e?: MouseEvent) => void
-  nextImg: (e?: MouseEvent) => void
-  goToIndex: (index: number) => void
-  onWheel: (e: WheelEvent) => void
-  onDoubleClick: (e: MouseEvent) => void
-  onMouseDown: (e: MouseEvent) => void
-  onTouchStart: (e: TouchEvent) => void
-  onTouchMove: (e: TouchEvent) => void
-  onTouchEnd: () => void
-  onTouchCancel: () => void
-  handleKey: (e: KeyboardEvent) => void
-  bindGlobalEvents: () => void
-  unbindGlobalEvents: () => void
-} {
+export interface PreviewState {
+  visible: boolean
+  currentImg: string
+  images: string[]
+  currentIndex: number
+}
+
+export function useImagePreview() {
   const previewState = ref<PreviewState>({
     visible: false,
     currentImg: '',
@@ -35,57 +19,63 @@ export function useImagePreview(): {
   const translateX = ref(0)
   const translateY = ref(0)
   const isDragging = ref(false)
-  const dragStartX = ref(0)
-  const dragStartY = ref(0)
-  const dragStartTranslateX = ref(0)
-  const dragStartTranslateY = ref(0)
   const imageContainer = ref<HTMLDivElement | null>(null)
 
+  // 拖拽状态
+  let dragStartX = 0
+  let dragStartY = 0
+  let dragStartTranslateX = 0
+  let dragStartTranslateY = 0
+  let isMouseDown = false
+  
+  // 触摸状态
   let lastTouchDistance = 0
   let lastScale = 1
-  let wheelRafId: number | null = null
-  let mouseMoveTicking = false
+  let isTouching = false
 
-  // ---- 核心方法 ----
+  // 重置所有状态
+  function resetAllStates() {
+    scale.value = 1
+    translateX.value = 0
+    translateY.value = 0
+    isDragging.value = false
+    isMouseDown = false
+    isTouching = false
+  }
+
+  // 打开预览
   function openPreview(images: string[], index: number) {
     if (!images.length) return
-    const isSameGroup = previewState.value.images.join() === images.join()
-    if (isSameGroup) {
-      previewState.value.currentIndex = index
-      previewState.value.currentImg = images[index]
-      previewState.value.visible = true
-      resetZoom()
-      return
-    }
+    
+    // 完全重置
+    resetAllStates()
+    
     previewState.value = {
       visible: true,
       currentImg: images[index],
-      images,
+      images: images,
       currentIndex: index
     }
-    resetZoom()
-    bindGlobalEvents()
   }
 
+  // 关闭预览
   function closePreview() {
     previewState.value.visible = false
-    resetZoom()
-    unbindGlobalEvents()
+    resetAllStates()
   }
 
+  // 切换图片
   function prevImg(e?: MouseEvent) {
     e?.stopPropagation()
-    const { images, currentIndex } = previewState.value
-    if (!images.length) return
-    const newIndex = (currentIndex - 1 + images.length) % images.length
+    if (!previewState.value.images.length) return
+    const newIndex = (previewState.value.currentIndex - 1 + previewState.value.images.length) % previewState.value.images.length
     updateCurrentImage(newIndex)
   }
 
   function nextImg(e?: MouseEvent) {
     e?.stopPropagation()
-    const { images, currentIndex } = previewState.value
-    if (!images.length) return
-    const newIndex = (currentIndex + 1) % images.length
+    if (!previewState.value.images.length) return
+    const newIndex = (previewState.value.currentIndex + 1) % previewState.value.images.length
     updateCurrentImage(newIndex)
   }
 
@@ -99,161 +89,212 @@ export function useImagePreview(): {
     if (index < 0 || index >= images.length) return
     previewState.value.currentIndex = index
     previewState.value.currentImg = images[index]
-    resetZoom()
+    resetAllStates()
   }
 
-  // ---- 缩放拖拽 ----
-  function clampPosition(x: number, y: number, s: number): [number, number] {
-    if (s <= 1) return [0, 0]
-    const container = imageContainer.value
-    if (container) {
-      const rect = container.getBoundingClientRect()
-      const imgWidth = rect.width * s
-      const imgHeight = rect.height * s
-      const maxX = (imgWidth - rect.width) / 2
-      const maxY = (imgHeight - rect.height) / 2
-      return [
-        Math.min(maxX, Math.max(-maxX, x)),
-        Math.min(maxY, Math.max(-maxY, y))
-      ]
-    }
-    const maxOffset = (s - 1) * 50
-    return [
-      Math.min(maxOffset, Math.max(-maxOffset, x)),
-      Math.min(maxOffset, Math.max(-maxOffset, y))
-    ]
-  }
-
+  // 边界限制
   function applyBoundaries() {
-    const [clampedX, clampedY] = clampPosition(translateX.value, translateY.value, scale.value)
-    translateX.value = clampedX
-    translateY.value = clampedY
+    if (scale.value <= 1) {
+      translateX.value = 0
+      translateY.value = 0
+      return
+    }
+
+    const container = imageContainer.value
+    if (!container) return
+
+    const rect = container.getBoundingClientRect()
+    const maxX = (rect.width * (scale.value - 1)) / 2
+    const maxY = (rect.height * (scale.value - 1)) / 2
+    
+    translateX.value = Math.max(-maxX, Math.min(maxX, translateX.value))
+    translateY.value = Math.max(-maxY, Math.min(maxY, translateY.value))
   }
 
-  function resetZoom() {
-    scale.value = 1
-    translateX.value = 0
-    translateY.value = 0
-  }
-
+  // 滚轮缩放
   function onWheel(e: WheelEvent) {
     e.preventDefault()
-    if (wheelRafId !== null) return
-    wheelRafId = window.requestAnimationFrame(() => {
-      const delta = e.deltaY > 0 ? -0.2 : 0.2
-      const newScale = Math.min(3, Math.max(1, scale.value + delta))
+    e.stopPropagation()
+    
+    const delta = e.deltaY > 0 ? -0.1 : 0.1
+    const newScale = Math.max(1, Math.min(3, scale.value + delta))
+    
+    if (newScale !== scale.value) {
+      // 以鼠标位置为中心缩放
+      const container = imageContainer.value
+      if (container) {
+        const rect = container.getBoundingClientRect()
+        const x = e.clientX - rect.left - rect.width / 2
+        const y = e.clientY - rect.top - rect.height / 2
+        
+        const ratio = newScale / scale.value
+        translateX.value = translateX.value * ratio + x * (1 - ratio)
+        translateY.value = translateY.value * ratio + y * (1 - ratio)
+      }
+      
       scale.value = newScale
       applyBoundaries()
-      wheelRafId = null
-    })
+    }
   }
 
+  // 双击重置
   function onDoubleClick(e: MouseEvent) {
     e.preventDefault()
-    resetZoom()
+    resetAllStates()
   }
 
+  // 鼠标事件
   function onMouseDown(e: MouseEvent) {
-    if (scale.value <= 1 || e.button !== 0) return
+    if (scale.value <= 1 || e.button !== 0) {
+      return
+    }
+    
+    isMouseDown = true
     isDragging.value = true
-    dragStartX.value = e.clientX
-    dragStartY.value = e.clientY
-    dragStartTranslateX.value = translateX.value
-    dragStartTranslateY.value = translateY.value
+    dragStartX = e.clientX
+    dragStartY = e.clientY
+    dragStartTranslateX = translateX.value
+    dragStartTranslateY = translateY.value
+    
     e.preventDefault()
   }
 
   function onMouseMove(e: MouseEvent) {
-    if (!isDragging.value) return
-    if (!mouseMoveTicking) {
-      window.requestAnimationFrame(() => {
-        const dx = e.clientX - dragStartX.value
-        const dy = e.clientY - dragStartY.value
-        const [clampedX, clampedY] = clampPosition(
-          dragStartTranslateX.value + dx,
-          dragStartTranslateY.value + dy,
-          scale.value
-        )
-        translateX.value = clampedX
-        translateY.value = clampedY
-        mouseMoveTicking = false
-      })
-      mouseMoveTicking = true
+    if (!isMouseDown || !isDragging.value) {
+      return
     }
+    
+    const dx = e.clientX - dragStartX
+    const dy = e.clientY - dragStartY
+    
+    translateX.value = dragStartTranslateX + dx
+    translateY.value = dragStartTranslateY + dy
+    
+    applyBoundaries()
   }
 
   function onMouseUp(e: MouseEvent) {
-    if (isDragging.value) {
+    if (isMouseDown) {
+      isMouseDown = false
       isDragging.value = false
-      mouseMoveTicking = false
-      e.preventDefault()
     }
   }
 
+  // 触摸事件
   function onTouchStart(e: TouchEvent) {
-    if (e.touches.length === 2) {
-      const t1 = e.touches[0]; const t2 = e.touches[1]
+    const touches = e.touches
+    
+    if (touches.length === 1 && scale.value > 1) {
+      // 单指拖拽
+      isTouching = true
+      isDragging.value = true
+      const touch = touches[0]
+      dragStartX = touch.clientX
+      dragStartY = touch.clientY
+      dragStartTranslateX = translateX.value
+      dragStartTranslateY = translateY.value
+    } else if (touches.length === 2) {
+      // 双指缩放
+      const t1 = touches[0]
+      const t2 = touches[1]
       lastTouchDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY)
       lastScale = scale.value
       isDragging.value = false
-    } else if (e.touches.length === 1 && scale.value > 1) {
-      const touch = e.touches[0]
-      isDragging.value = true
-      dragStartX.value = touch.clientX
-      dragStartY.value = touch.clientY
-      dragStartTranslateX.value = translateX.value
-      dragStartTranslateY.value = translateY.value
     }
+    
     e.preventDefault()
   }
 
   function onTouchMove(e: TouchEvent) {
-    if (e.touches.length === 2) {
-      const t1 = e.touches[0]; const t2 = e.touches[1]
+    const touches = e.touches
+    
+    if (touches.length === 1 && isTouching) {
+      // 单指拖拽
+      const touch = touches[0]
+      const dx = touch.clientX - dragStartX
+      const dy = touch.clientY - dragStartY
+      
+      translateX.value = dragStartTranslateX + dx
+      translateY.value = dragStartTranslateY + dy
+      
+      applyBoundaries()
+    } else if (touches.length === 2) {
+      // 双指缩放
+      const t1 = touches[0]
+      const t2 = touches[1]
       const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY)
       const scaleFactor = distance / lastTouchDistance
-      const newScale = Math.min(3, Math.max(1, lastScale * scaleFactor))
-      scale.value = newScale
-      applyBoundaries()
-      e.preventDefault()
-    } else if (e.touches.length === 1 && isDragging.value) {
-      const touch = e.touches[0]
-      const dx = touch.clientX - dragStartX.value
-      const dy = touch.clientY - dragStartY.value
-      const [clampedX, clampedY] = clampPosition(
-        dragStartTranslateX.value + dx,
-        dragStartTranslateY.value + dy,
-        scale.value
-      )
-      translateX.value = clampedX
-      translateY.value = clampedY
-      e.preventDefault()
+      const newScale = Math.max(1, Math.min(3, lastScale * scaleFactor))
+      
+      if (newScale !== scale.value) {
+        // 以触摸点中心缩放
+        const container = imageContainer.value
+        if (container) {
+          const rect = container.getBoundingClientRect()
+          const cx = (t1.clientX + t2.clientX) / 2 - rect.left - rect.width / 2
+          const cy = (t1.clientY + t2.clientY) / 2 - rect.top - rect.height / 2
+          
+          const ratio = newScale / scale.value
+          translateX.value = translateX.value * ratio + cx * (1 - ratio)
+          translateY.value = translateY.value * ratio + cy * (1 - ratio)
+        }
+        
+        scale.value = newScale
+        applyBoundaries()
+      }
     }
+    
+    e.preventDefault()
   }
 
-  function onTouchEnd() { isDragging.value = false }
-  function onTouchCancel() { isDragging.value = false }
-
-  function bindGlobalEvents() {
-    window.addEventListener('mousemove', onMouseMove)
-    window.addEventListener('mouseup', onMouseUp)
+  function onTouchEnd() {
+    isTouching = false
+    isDragging.value = false
   }
 
-  function unbindGlobalEvents() {
-    window.removeEventListener('mousemove', onMouseMove)
-    window.removeEventListener('mouseup', onMouseUp)
+  function onTouchCancel() {
+    isTouching = false
+    isDragging.value = false
   }
 
+  // 键盘事件
   function handleKey(e: KeyboardEvent) {
     if (!previewState.value.visible) return
+    
     switch (e.key) {
-      case 'ArrowRight': nextImg(); break
-      case 'ArrowLeft': prevImg(); break
-      case 'Escape': closePreview(); break
+      case 'ArrowLeft':
+        e.preventDefault()
+        prevImg()
+        break
+      case 'ArrowRight':
+        e.preventDefault()
+        nextImg()
+        break
+      case 'Escape':
+        e.preventDefault()
+        closePreview()
+        break
     }
   }
 
-  watch(scale, applyBoundaries)
+  // 监听 scale 变化，应用边界
+  watch(scale, () => {
+    applyBoundaries()
+  })
+
+  // 组件挂载时绑定全局事件
+  onMounted(() => {
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('keydown', handleKey)
+  })
+
+  // 组件卸载时移除全局事件
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('mouseup', onMouseUp)
+    window.removeEventListener('keydown', handleKey)
+  })
 
   return {
     previewState,
@@ -275,7 +316,6 @@ export function useImagePreview(): {
     onTouchEnd,
     onTouchCancel,
     handleKey,
-    bindGlobalEvents,
-    unbindGlobalEvents
+    applyBoundaries
   }
 }
