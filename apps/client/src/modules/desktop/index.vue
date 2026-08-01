@@ -7,6 +7,7 @@ import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
 import { closeChannel, startChannel } from '@/utils/heartBeat'
 import { setDataSets, setVersion } from '@/utils/device'
+import path from 'path'
 
 const route = useRoute()
 // const visibility = useDocumentVisibility()
@@ -65,8 +66,11 @@ const menus: SidebarMenu[] = [
     hide: !iStore.settings.enableTricket,
     type: 'basic' as const
   },
+
   { label: localStore.localData['sidebar_Profile'], path: '/profile', icon: 'iconoir:user', type: 'basic' as const },
   uStore.info.accessLevel === ACCESS_LEVEL.AUCTION && { label: localStore.localData['sidebar_AuctionPlat'], path: '/auction', icon: 'lucide:laptop-minimal', type: 'extra' as const },
+  { label: '', path: '/exe', icon: '',type: 'basic' as const , hide: true},
+
   { label: localStore.localData['sidebar_Logout'], path: '/logout', icon: 'iconoir:log-out', type: 'basic' as const },
 ].filter((item) => !!item)
 

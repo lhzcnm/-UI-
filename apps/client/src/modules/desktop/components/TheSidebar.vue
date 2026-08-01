@@ -3,6 +3,9 @@ import type { SidebarMenu } from '../types'
 import { twMerge } from 'tailwind-merge'
 import { Icon } from '@iconify/vue'
 
+import AppCard from './AppCard.vue'
+import AppCardNew from './AppCardNew.vue'
+
 const props = defineProps<{ menus: SidebarMenu[] }>()
 
 const route = useRoute()
@@ -10,6 +13,7 @@ const router = useRouter()
 const wsStore = useWsStore()
 const iStore = useSystemStore()
 
+const mode = import.meta.env.VITE_APP_MODE
 // const isLogout = defineModel({ required: true })
 
 const currentPath = computed(() => {
@@ -29,7 +33,7 @@ const currentPath = computed(() => {
 })
 
 function handle(menu: SidebarMenu) {
-  if(menu.path.includes('logout')) {
+  if (menu.path.includes('logout')) {
     iStore.logout = true
     return
   } else if (menu.type === 'extra') {
@@ -46,22 +50,26 @@ function handle(menu: SidebarMenu) {
 <template>
   <aside class="w-sidebar p-4 flex flex-col">
     <template v-for="menu in menus" :key="menu.path">
-      <a
-        v-if="!menu.hide"
-        href="javascript:void(0)"
-        :class="twMerge(
-          'flex items-center space-x-2 px-3 py-2 mb-1',
-          'rounded-lg whitespace-nowrap text-muted-foreground',
-          'cursor-pointer transition-all duration-200',
-          'hover:bg-primary/20 hover:text-primary',
-          currentPath === menu.path && 'bg-primary/20 dark:bg-primary/30 text-primary',
-          menu.path.includes('logout') && 'mt-auto hover:bg-danger/20 hover:text-danger'
-        )"
-        @click="handle(menu)"
-      >
+      <a v-if="!menu.hide" href="javascript:void(0)" :class="twMerge(
+        'flex items-center space-x-2 px-3 py-2 mb-1',
+        'rounded-lg whitespace-nowrap text-muted-foreground',
+        'cursor-pointer transition-all duration-200',
+        'hover:bg-primary/20 hover:text-primary',
+        currentPath === menu.path && 'bg-primary/20 dark:bg-primary/30 text-primary',
+        menu.path.includes('logout') && 'mt-auto hover:bg-danger/20 hover:text-danger'
+      )" @click="handle(menu)">
         <Icon :icon="menu.icon" class="size-5" />
         <span>{{ menu.label }}</span>
       </a>
+
+      <div  v-if="menu.hide" class="space-y-2 w-full mt-2">
+        <AppCard :is-sidebar="true" v-if="mode === 'SanHe'" />
+        <AppCardNew :is-sidebar="true"/>
+      </div>
+
     </template>
+
+
+
   </aside>
 </template>
