@@ -23,7 +23,7 @@ async function handleDelete() {
 async function handleUpdate() {
   const body: UserServiceUpdateParams = {
     id: props.row.id,
-    userId: store.users.list[props.index].userId,
+    userId: store.users.list[store.index!].userId,
     packageId: props.row.packageId,
     price: props.row.price
   }

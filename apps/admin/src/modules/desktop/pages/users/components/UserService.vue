@@ -26,10 +26,12 @@ function handleSubmit() {
 
   loading.value = true
 
+  console.log(store.services)
   const index = store.services.findIndex(x => x.packageId === packageId)
 
   if (index !== -1) {
     const item = store.services[index]
+    console.log(item)
     const response = updateUserService({
       id: item.id,
       userId: item.userId,

@@ -21,6 +21,7 @@ export const zLevel = z.object({
   // 会员等级升级所需充值金额
   thresholdAmount: z.number().default(0),
   upgradeType: z.enum(PLAN_TYPE_ENUM).default(PLAN_TYPE_ENUM.SUBSCRIPTION),
+  showHiddenService: z.boolean().optional().default(false),
 })
 
 export type Level = z.infer<typeof zLevel>

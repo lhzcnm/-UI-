@@ -13,7 +13,8 @@ export const zServiceGroup = z.object({
     .default(''),
 
   orderBy: z.number().default(0),
-  disableCategory: z.number().default(0), 
+  disableCategory: z.number().default(0),
+  isHide: z.boolean().optional().default(false),
 
   // ⬇️ 废弃字段
   // htmlTitle: z.string().default(''),

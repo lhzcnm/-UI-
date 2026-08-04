@@ -43,6 +43,10 @@ defineExpose({
       />
     </XFormItem>
 
+    <XFormItem label="允许访问隐藏服务">
+      <XSwitch v-model="form.showHiddenService" />
+    </XFormItem>
+
     <XFormItem label="允许访问设备页面">
       <XSwitch v-model="form.enableDevice" />
     </XFormItem>

@@ -25,6 +25,14 @@ defineExpose({
       <XInputNumber v-model="form.orderBy" :step="1" placeholder="排序数值" />
     </XFormItem>
 
+    <XFormItem label="隐藏服务组">
+      <XSwitch
+        v-model="form.isHide"
+        :active-value="true"
+        :inactive-value="false"
+      />
+    </XFormItem>
+
     <XFormItem label="禁用服务组">
       <XSwitch
         v-model="form.disableCategory"
