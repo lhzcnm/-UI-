@@ -47,19 +47,21 @@ router.beforeEach(async (to) => {
 
   // handle wx auth
   const code = to.query.code as string
-  if (ua.isWechat && code) {
+  if (ua.isWechat && code && !token) {
     const iStore = useSettingStore()
     iStore.originUrl = window.location.href
     await handleWxAuthCallback(code)
     if (isOtherPath) return true
 
-    const { code: _code, ...restQuery } = to.query
+    return
+
+    // const { code: _code, ...restQuery } = to.query
     
-    return {
-      path: to.path,
-      query: restQuery,
-      replace: true
-    }
+    // return {
+    //   path: to.path,
+    //   query: restQuery,
+    //   replace: true
+    // }
   }
 
   // handle other path

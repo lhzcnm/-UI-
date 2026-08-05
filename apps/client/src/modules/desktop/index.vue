@@ -7,7 +7,6 @@ import type { SidebarMenu } from './types'
 import { ACCESS_LEVEL } from '@3un/utils'
 import { closeChannel, startChannel } from '@/utils/heartBeat'
 import { setDataSets, setVersion } from '@/utils/device'
-import path from 'path'
 
 const route = useRoute()
 // const visibility = useDocumentVisibility()
