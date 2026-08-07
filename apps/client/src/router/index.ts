@@ -53,15 +53,14 @@ router.beforeEach(async (to) => {
     await handleWxAuthCallback(code)
     if (isOtherPath) return true
 
-    return
-
-    // const { code: _code, ...restQuery } = to.query
+    // return
+    const { code: _code, ...restQuery } = to.query
     
-    // return {
-    //   path: to.path,
-    //   query: restQuery,
-    //   replace: true
-    // }
+    return {
+      path: to.path,
+      query: restQuery,
+      replace: true
+    }
   }
 
   // handle other path
