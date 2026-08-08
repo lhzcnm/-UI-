@@ -47,7 +47,7 @@ router.beforeEach(async (to) => {
 
   // handle wx auth
   const code = to.query.code as string
-  if (ua.isWechat && code && !token) {
+  if (ua.isWechat && code) {
     const iStore = useSettingStore()
     iStore.originUrl = window.location.href
     await handleWxAuthCallback(code)
