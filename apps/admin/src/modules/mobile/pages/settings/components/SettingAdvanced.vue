@@ -2,7 +2,7 @@
 import type { Configs, Settings } from '@/inters/settings'
 import { updateSetting, updateConfig, updateThread } from '@/api/settings'
 import { toast } from 'vue-sonner'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 interface TheProps {
   settings: Settings
@@ -220,8 +220,8 @@ function handleSubmit() {
           <XInput
             ui-root="w-20"
             v-model="form.orderRetainDays"
-            @input="(e: Event) => form.orderRetainDays = handleInputChange(e, 0)!"
-            @change="(e: Event) => form.orderRetainDays = handleInputChange(e, 0)!"
+            @input="(e: Event) => form.orderRetainDays = handleInputNumberChange(e, 0)!"
+            @change="(e: Event) => form.orderRetainDays = handleInputNumberChange(e, 0)!"
           />
           <span>天</span>
         </div>
@@ -236,8 +236,8 @@ function handleSubmit() {
           <XInput
             ui-root="w-20"
             v-model="form.creditsRetainDays"
-            @input="(e: Event) => form.creditsRetainDays = handleInputChange(e, 0)!"
-            @change="(e: Event) => form.creditsRetainDays = handleInputChange(e, 0)!"
+            @input="(e: Event) => form.creditsRetainDays = handleInputNumberChange(e, 0)!"
+            @change="(e: Event) => form.creditsRetainDays = handleInputNumberChange(e, 0)!"
           />
           <span>天</span>
         </div>

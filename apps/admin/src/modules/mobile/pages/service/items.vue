@@ -8,6 +8,7 @@ import { getUpstreams } from '@/api/upstream'
 
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { defaultPageSize } from '@/utils/common.ts'
+import ServiceFieldModal from './components/ServiceFieldModal.vue'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
@@ -23,6 +24,7 @@ const store: ServiceStore = reactive({
 
   visibleBase: false,
   visibleUpstream: false,
+  visibleField: false,
 
   index: undefined,
   selectId: undefined,
@@ -152,5 +154,6 @@ function handleClear(type: ClearType) {
 
     <ItemModal />
     <ItemUpstream />
+    <ServiceFieldModal />
   </div>
 </template>

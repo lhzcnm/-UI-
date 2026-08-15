@@ -10,6 +10,7 @@ export const zServiceGroup = z.object({
 
   categoryLocal: z.string()
     .min(1, VERIFY_MSG.REQ_CATEGORY_EN)
+    .nullable()
     .default(''),
 
   orderBy: z.number().default(0),

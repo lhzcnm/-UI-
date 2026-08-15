@@ -99,6 +99,10 @@ async function handleResetPrice() {
   await resetServicePrice(item.packageId)
   toast.success('重置服务价格成功')
 }
+
+function openFiled() {
+  store.visibleField = true
+}
 </script>
 
 <template>
@@ -117,7 +121,7 @@ async function handleResetPrice() {
       class="max-h-[75vh] p-4 overflow-y-auto"
     />
     <template #footer>
-      <div class="flex justify-between p-4 border-t">
+      <div class="flex justify-between p-4 border-t gap-2">
         <XButton
           v-show="!isCreate"
           color="danger"
@@ -125,6 +129,13 @@ async function handleResetPrice() {
           @click="handleDelete"
         >
           删除服务
+        </XButton>
+
+        <XButton
+          icon="lucide:menu"
+          @click="openFiled"
+        >
+          服务字段
         </XButton>
 
         <div class="ml-auto space-x-2">

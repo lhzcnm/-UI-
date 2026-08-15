@@ -11,6 +11,7 @@ export interface ServiceStore {
   formUpstream: UpstreamServiceForm
   visibleBase: boolean
   visibleUpstream: boolean
+  visibleField: boolean
   index: number | undefined
   selectId: number | undefined
   page: number

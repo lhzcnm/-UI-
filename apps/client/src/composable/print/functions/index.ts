@@ -4,8 +4,6 @@ import type { ContainerItem, PrintTemplateJson, TemplateItem, TemplateType } fro
 import type { HeaderTag } from "@/types/print"
 import { mmToPx, pxToMM, stripHtmlTags } from "@/utils"
 import { xconfirm } from "@3un/utils"
-// import { GetTemplate, SaveTemplate } from "~/go/main/App"
-// import type { model } from "~/go/models"
 
 function qrcodeStr(object: FieldValue | Record<string, string>) {
   const data = objectToString(object)
@@ -28,19 +26,6 @@ function objectToString(object: FieldValue | Record<string, string>) {
     .filter(Boolean)
     .join('\n')
 }
-
-// function processServiceTemplate(data: model.TemplateResp[]) {
-//   const savedTemplates: TemplateResp[] = []
-
-//   for (let item of data) {
-//     savedTemplates.push({
-//       id: item.id,
-//       template: JSON.parse(item.template) as PrintTemplateJson,
-//       name: item.name,
-//     })
-//   }
-//   return savedTemplates
-// }
 
 export function printComposable() {
   const { t } = useI18n()

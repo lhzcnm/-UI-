@@ -30,9 +30,14 @@ async function handleDelete() {
   })
 }
 
-const service = computed(() =>
-  serviceStore.itemMap.get(props.item.serviceId)
-)
+const serviceTitle = computed(() => {
+  if (props.item.serviceId === 0) {
+    return '默认服务'
+  }
+  const service = serviceStore.itemMap.get(props.item.serviceId)
+
+  return service ? service.packageTitle : '服务不存在'
+})
 </script>
 
 <template>
@@ -44,11 +49,9 @@ const service = computed(() =>
       <div class="flex items-center justify-between">
         <h3>{{ item.id }}|{{ item.name }}</h3>
         <XTag :label="item.status ? '显示' : '隐藏'" color="success" size="sm" />
-
-
       </div>
       <span class="text-sm text-muted-foreground">
-        {{ service ? service.packageTitle : '服务不存在' }}
+        {{ serviceTitle }}
       </span>
     </div>
 

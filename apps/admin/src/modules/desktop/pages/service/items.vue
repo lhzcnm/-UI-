@@ -9,6 +9,7 @@ import { getUpstreams } from '@/api/upstream'
 
 import { SERVICE_STORE, type ServiceStore } from './utils'
 import { columns } from './utils/columnItem'
+import ServiceFieldDialog from './components/ServiceFieldDialog.vue'
 
 const serviceStore = useServiceStore()
 const store: ServiceStore = reactive({
@@ -24,6 +25,7 @@ const store: ServiceStore = reactive({
 
   visibleBase: false,
   visibleUpstream: false,
+  visibleField: false,
 
   index: undefined,
 })
@@ -127,5 +129,6 @@ function handleClear(type: ClearType) {
 
     <ItemDialog />
     <ItemUpstream />
+    <ServiceFieldDialog />
   </div>
 </template>

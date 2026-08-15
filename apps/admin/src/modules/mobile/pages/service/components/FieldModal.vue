@@ -20,8 +20,9 @@ async function handleUpdate() {
   }
 
   await updateServiceField(body)
-  store.fields.list[store.index!] = body
+  // store.fields.list[store.index!] = body
   store.visibleBase = false
+  store.refresh = !store.refresh
 }
 </script>
 

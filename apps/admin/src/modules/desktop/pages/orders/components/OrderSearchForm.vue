@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OrderSearchForm } from '@/inters/orders'
 import { ORDER_SEARCH_SUBMIT_METHOD_LIST, ORDER_STATUS_LIST, ORDER_VERIFY_LIST } from '@3un/utils'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 const form = defineModel<OrderSearchForm>({ required: true })
 </script>
@@ -14,8 +14,8 @@ const form = defineModel<OrderSearchForm>({ required: true })
         <XInput
           v-model="form.userId"
           placeholder="用户ID"
-          @input="(e: Event) => form.userId = handleInputChange(e)"
-          @change="(e: Event) => form.userId = handleInputChange(e)"
+          @input="(e: Event) => form.userId = handleInputNumberChange(e)"
+          @change="(e: Event) => form.userId = handleInputNumberChange(e)"
         />
       </div>
       <div class="w-1/2">

@@ -1,38 +1,48 @@
 <script setup lang="ts">
+import OrderProgress from '../components/OrderProgress.vue'
 import SelectService from '@desktop/components/SelectService.vue'
 import ImportPlane from '../components/ImportPlane.vue'
 import TableColumnDialog from '../components/TableColumnDialog.vue'
-import UnlockRecommendDialog from '../components/UnlockRecommendDialog.vue'
 
-import { h } from 'vue'
 import { toast } from 'vue-sonner'
 import {
-  XTag,
+  isNumeric,
+  XTableV2,
+  type XTableV2Expose,
+  type RowKey,
   type XBtnSplitOptions,
-  type XTableColumn,
-  type XTableExpose
+  type XTableExpose,
+  type XTableV2Column
 } from '@3un/ui'
 import {
   ASYNC_ORDER_STATUS,
-  ASYNC_ORDER_STATUS_MAP_LOCALE,
   debounce,
   downloadURL,
   ORDER_STATUS,
-  ORDER_VERIFY, xconfirm
+  ORDER_VERIFY, ServiceFieldType, xconfirm
 } from '@3un/utils'
 
 import { SUBMIT_STORE } from '../utils'
-import { getDefaultColumns, getDefaultResultColumns } from '../utils/columns'
 import { serviceApi, type FieldMap, type Service, type ServiceCols } from '@/api/services'
-import { orderApi, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
+import { orderApi, type DeleteImeiPrams, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
 import router from '@/router'
+import { getSubmitImei, normalizeFilterValue } from '@/utils/common'
+import { processedServiceFields } from '../utils/serviceFieldUtils'
+import type { DeleteDataItem } from '../utils/types.ts'
 
 const store = inject(SUBMIT_STORE)!
+
+store.onClickHeaderDelete = handleDeleteHeader
 
 const { t,locale } = useI18n()
 const serviceStore = useServiceStore()
 const uStore = useUserStore()
 const { connect, close } = useWsStore()
+const iStore = useSystemStore()
+const localStore = useLocalStore()
+const route = useRoute()
+
+const orderTableRef = ref<XTableV2Expose | null>(null)
 
 const disabled = ref(false)
 const selService = ref<Service>()
@@ -49,9 +59,8 @@ const pushMsg = ref(true)
 const reseted = ref<boolean>(false)
 const exportLoading = ref(false)
 const indexes = ref<number[]>([])
-const localStore = useLocalStore()
 
-const columns = shallowRef<XTableColumn[]>(getDefaultColumns())
+const columns = shallowRef<XTableV2Column<OrderTableView>[]>([])
 
 const threadKey = import.meta.env.VITE_THREAD_STORAGE
 
@@ -77,22 +86,42 @@ const btnSplitOpts: XBtnSplitOptions = [
     command: () => resetNotCoverOrder(ORDER_STATUS.FAILED),
   },
 ]
-const sizes = [50, 150, 200, 300, 500]
+// const sizes = [50, 150, 200, 300, 500]
+const defaultColumns = await getDefaultColumns()
+
+columns.value = defaultColumns.columns
+triggerRef(columns)
 
 let count = 0
 let headers: string[] = []
 let cacheImei: boolean = false
 let pendingOrders: number[] = []
 let orderImeis: Record<string, number> = {}
-let deletedColumns: XTableColumn[] = []
+let deletedColumns: XTableV2Column<OrderTableView>[] = []
+let lastServiceId: number | undefined = undefined
 
 watch(
-  () => store.selectId,
-  (val) => {
-    if (val !== undefined) {
-      handleSelected(val)
+  () => route.params,
+  async (params) => {
+    const id = params.id
+
+    if (isNumeric(id)) {
+      store.selectId = +id
+      const service = serviceStore.services.get(store.selectId)
+      
+      await handleSelected(store.selectId)
+      
+      if (service) {
+        const imei = params.imei as string
+        const imeis = getSubmitImei(imei, service.imeiType, service?.domesticSerialType)
+        handleImport(imeis, '')
+      }
     }
-  }, { immediate: true }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
 )
 
 watch(
@@ -103,18 +132,27 @@ watch(
   }
 )
 
-watch(
-  () => store.limit,
-  () => store.page = 1
-)
-
-const isEn = computed(() => locale.value === 'en')
-
 const orders = computed(() => {
-  return store.rawOrders.slice(
-    (store.page - 1) * store.limit,
-    store.page * store.limit
-  )
+  return store.rawOrders.filter(row => {
+    return columns.value.every(col => {
+      if (!col.identifier?.isFilter) return true
+
+      const key = col.key
+      const rawValue = row[key]
+      const value = normalizeFilterValue(rawValue)
+
+      if (store.visibleFilters[key] && !store.visibleFilters[key].includes(value)) {
+        return false
+      }
+
+      const keyword = store.filterData[key]
+      if (keyword && !value.includes(keyword)) {
+        return false
+      }
+
+      return true
+    })
+  })
 })
 
 const mustRead = computed(() => {
@@ -122,10 +160,31 @@ const mustRead = computed(() => {
   return service ? service.mustRead : null
 })
 
+async function getDefaultColumns() {
+  const data = await processedServiceFields(0)
+
+  return data
+}
+
 async function handleSelected(value: number) {
-  if (!value) return
-  store.page = 1
+  // if (value) return
   close()
+
+  if (lastServiceId) {
+    const rejectedOrders = getSubmitedRejectOrder()
+
+    if (rejectedOrders.length > 0) {
+      const deleteData: DeleteImeiPrams = {
+        serviceId: lastServiceId,
+        imeiList: rejectedOrders.map(x => x.imei),
+        idList: [],
+      }
+  
+      await orderApi.deleteCacheImei(deleteData)
+    }
+  }
+
+  lastServiceId = value
 
   store.rawOrders.length = 0
   count = 0
@@ -148,118 +207,32 @@ async function handleSelected(value: number) {
   }
 }
 
-async function handleServiceCols(value: number) {
-  const { data } = await serviceApi.header(value)
-
-  headers = data.map(item => (isEn.value ? (item.nameEn ? item.nameEn : item.name) : item.name))
-  serviceColumns.value = data.map(item => ({ name: item.name, nameEn: item.nameEn }))
-  store.serviceCols = data.map(item => ({
-    key: isEn.value ? (item.nameEn ? item.nameEn : item.name) : item.name,
-    title: isEn.value ? (item.nameEn ? item.nameEn : item.name) : item.name,
-    width: item.width,
-    minWidth: item.width,
-    isDynamic: true,
-  }))
-
-  if (selService.value?.isUnlock) {
-    columns.value = asyncServiceMergeColumns(generateColumns(store.serviceCols))
-  } else {
-    columns.value = mergeColumns(generateColumns(store.serviceCols))
-  }
-
-  store.selectHeaders = columns.value.filter(c => c.isColDel).map(c => c.key.toString())
+function getSubmitedRejectOrder() {
+  return store.rawOrders.filter(x => x.status === ORDER_STATUS.FAILED && !x.id)
 }
 
-function generateColumns(headers: ServiceCols[]) {
-  const columns: XTableColumn[] = []
+async function handleServiceCols(value: number) {
+  const { columns: _columns, fields } = await processedServiceFields(value)
+  columns.value = _columns
 
-  for (let item of headers) {
-    columns.push({
+  headers = fields.filter(x => x.type === ServiceFieldType.Dynamic).map(item => iStore.isEn ? (item.nameEn ? item.nameEn : item.name) : item.name)
+  serviceColumns.value = fields.map(item => ({ name: item.name, nameEn: item.nameEn }))
+  store.serviceCols = columns.value
+    .filter(x => x.identifier && x.identifier['isDelCol'])
+    .map(item => ({
       key: item.key,
       title: item.title,
-      minWidth: item.width,
-      isColDel: true,
-      isFilter: true,
-      isDrag: item.isDynamic ? true : false,
-      showNullOrWhitespace: true,
-      render: (value) => {
-        return h("div", {
-          innerHTML: value
-        })
-      }
+      width: item.width ? +item.width : 180,
+      minWidth: item.width ? +item.width : 180,
+      isDynamic: true,
     })
-  }
+  )
 
-  return columns
-}
+  store.selectHeaders = columns.value
+    .filter(x => x.identifier && x.identifier['isDelCol'])
+    .map(c => c.key)
 
-function asyncServiceMergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
-  const defaultCols = getDefaultColumns()
-  const len = defaultCols.length
-  const frontCols = defaultCols.slice(0, serviceCols.length > 0 ? len - 3 : len - 2)
-  const endCols = defaultCols.slice(-2, -1)
-
-  const asyncCols: XTableColumn[] = [
-    {
-      key: 'submitedStatus',
-      title: localStore.localData['submit_SubmitStatus'],
-      width: 158,
-      render: (value, row) => {
-        let status
-        if (!value) {
-          status = ASYNC_ORDER_STATUS_MAP_LOCALE[ASYNC_ORDER_STATUS.ASYNC_SUBMITED]
-
-          if (row.status === ORDER_STATUS.WAIT) {
-            status = ASYNC_ORDER_STATUS_MAP_LOCALE[ASYNC_ORDER_STATUS.WAIT]
-          }
-        } else {
-          status = ASYNC_ORDER_STATUS_MAP_LOCALE[value]
-        }
-
-        return h(XTag, {
-          color: status.color,
-          label: localStore.localData[status.key!],
-        })
-      }
-    }
-  ]
-
-  frontCols.splice(4, 0, ...asyncCols)
-
-  return [
-    ...frontCols,
-    ...serviceCols,
-    ...endCols,
-  ]
-}
-
-function mergeColumns(serviceCols: XTableColumn[]): XTableColumn[] {
-  const defaultCols = getDefaultColumns()
-
-  const len = defaultCols.length
-  let frontCols = defaultCols
-  let end = len - 2
-  if (serviceCols.length > 0) {
-    end = len - 3
-  }
-  frontCols = defaultCols.slice(0, end)
-  const endCols = defaultCols.slice(-2)
-
-  store.serviceCols = [
-    ...store.serviceCols,
-    ...endCols.filter(c => c.isColDel).map(c => ({
-      key: c.key.toString(),
-      title: c.title!,
-      minWidth: c.minWidth,
-      isDynamic: false,
-    }))
-  ]
-
-  return [
-    ...frontCols,
-    ...serviceCols,
-    ...endCols
-  ]
+  triggerRef(columns)
 }
 
 async function handleSubmitOrder(id: number) {
@@ -290,13 +263,13 @@ async function handleSubmitOrder(id: number) {
 async function handleImport(imeiList: string[], remark: string) {
   if (!selService.value) return
   if (disabled.value) return toast.warning(localStore.localData['submit_WaitOrder'])
+  if (imeiList.length === 0) return
   // if (count > 0 && !selService.value?.isUnlock) return
 
-  store.page = 1
   tableRef.value?.initFilter()
   close()
 
-  imeis.value = [...new Set([...imeiList, ...imeis.value])]
+  imeis.value = [...new Set([...imeis.value, ...store.rawOrders.map(x => x.imei).filter(x => !!x), ...imeiList])]
   // console.log(imeis.value)
   const submitedOrders = processWaitList(store.selectId!, imeis.value, remark)
   store.rawOrders.splice(0, getWaitingOrderLength(store.rawOrders), ...submitedOrders)
@@ -356,7 +329,7 @@ function processOrderResult(content: string) {
   const keyMap = getFieldsMap(serviceColumns.value)
 
   if (items.length === 1 && serviceColumns.value.length === 1) {
-    const key = isEn.value ? (serviceColumns.value[0].nameEn ?? serviceColumns.value[0].name) : serviceColumns.value[0].name
+    const key = iStore.isEn ? (serviceColumns.value[0].nameEn ?? serviceColumns.value[0].name) : serviceColumns.value[0].name
     result[key] = content
   } else {
     for (const item of items) {
@@ -367,7 +340,7 @@ function processOrderResult(content: string) {
       const mapped = keyMap[rawKey]
       if (!mapped) continue
 
-      const finalKey = isEn.value ? mapped.en ? mapped.en : mapped.cn : mapped.cn
+      const finalKey = iStore.isEn ? mapped.en ? mapped.en : mapped.cn : mapped.cn
       result[finalKey] = value
     }
   }
@@ -402,7 +375,7 @@ function processWaitList(id: number, imeiList: string[], remark: string) {
     }
 
     serviceColumns.value.forEach(item => {
-      const name = isEn.value ? item.nameEn : item.name
+      const name = iStore.isEn ? item.nameEn : item.name
       initData[name!] = ""
     })
 
@@ -446,6 +419,7 @@ function judgeOrderStatus(fields: ServiceColumnItem[], items: string[]) {
 
 async function handleSubmit() {
   if (submitLoading.value) return
+  close()
 
   const submitOrders = store.rawOrders.map(item => {
     if (item.status === ORDER_STATUS.WAIT) {
@@ -468,6 +442,8 @@ async function handleSubmit() {
   disabled.value = true
 
   await serviceApi.setThread(threads.value)
+
+  imeis.value = [...new Set([...imeis.value, ...store.rawOrders.filter(x => x.status === ORDER_STATUS.WAIT).map(x => x.imei).filter(x => !!x)])]
 
   if (service.isUnlock) return submitOrder(service)
   submitQueryOrder(service)
@@ -499,6 +475,10 @@ function submitOrder(service: Service) {
 
     uStore.updateCredit()
     renderSubmitOrderResult(data)
+
+    if (service.isUnlock) {
+      store.refreshProgress = !store.refreshProgress
+    }
   })
 
   response.catch((err) => {
@@ -585,8 +565,8 @@ function handleOrder(rawData: string) {
     index = orderImeis[data.imei]
   }
 
-  const resultCol = columns.value[5].key
-  const hasResult = resultCol === 'result'
+  const resultCol = columns.value.find(x => x.key === 'result')
+  const hasResult = resultCol && resultCol.key === 'result'
 
   store.rawOrders[index] = {
     ...store.rawOrders[index],
@@ -651,23 +631,79 @@ function handleExport() {
 }
 
 async function reset() {
-  router.replace({ query: {} })
-
-  imeis.value = []
-  store.rawOrders = []
-  submited.value = false
-  comments.value = ''
-  count = 0
-  store.page = 1
+  const neededDeleteData = indexes.value.length > 0 ? buildDeletedData(indexes.value) : []
 
   if (selService.value) {
     const key = import.meta.env.VITE_SUBMIT_STORGE
     const id = selService.value.id
-    localStorage.removeItem(`${key}_${id}`)
-    await orderApi.deleteCacheImei({ serviceId: selService.value.id })
+    const storageOrderIdsStr: string | null = localStorage.getItem(`${key}_${id}`) as string | null
+
+    try {
+      await orderApi.deleteCacheImei({
+        serviceId: selService.value.id,
+        imeiList: neededDeleteData.map(x => x.imei),
+        idList: neededDeleteData.map(x => x.codeId).filter(x => x !== null)
+      })
+
+      if (indexes.value.length > 0) {
+        const deleteSet = new Set(indexes.value)
+        if (storageOrderIdsStr !== null) {
+          const storageOrderIds: string[] = JSON.parse(storageOrderIdsStr)
+          const needRemoveOrder = store.rawOrders.filter(x => deleteSet.has(x.index)).map(x => x.id?.toString())  
+          const needStoragedIds = storageOrderIds.filter(x => !needRemoveOrder.includes(x.toString()))
+
+          localStorage.setItem(`${key}_${id}`, JSON.stringify(needStoragedIds))
+        }
+        store.rawOrders = store.rawOrders
+          .filter(item => !deleteSet.has(item.index))
+          .map((item, index) => ({
+            ...item,
+            ...({index: index + 1})
+          }))
+      } else {
+        store.rawOrders = []
+        localStorage.removeItem(`${key}_${id}`)
+        showAll.value = false
+      }
+      indexes.value = []
+      disabled.value = false
+      orderTableRef.value?.initCheckedRows()
+
+      store.refreshProgress = !store.refreshProgress
+    } catch(ex) {
+      // console.log(ex)
+    } 
   }
 
+  router.replace({ query: {} })
+
+  imeis.value = []
+  // store.rawOrders = []
+  submited.value = false
+  comments.value = ''
+  count = 0
+  // showAll.value = false
   close()
+}
+
+function buildDeletedData(data: number[]) {
+  const result: DeleteDataItem[] = []
+  for (let index of data) {
+    const item = store.rawOrders.find(x => x.index === index)
+
+    const data: DeleteDataItem | undefined = item
+      ? {
+          imei: item.imei,
+          codeId: item.id
+        }
+      : undefined
+
+    if (data) {
+      result.push(data)
+    }
+  }
+
+  return result
 }
 
 async function handleFresh() {
@@ -683,7 +719,7 @@ async function handleFresh() {
   if (pendingOrders.length === 0) return toast.info(localStore.localData['submit_AllOrderFinsh'])
   disabled.value = false
   const data = await getSubmitOrderList(pendingOrders)
-  toast.success(localStore.localData['submit_SuccessFresh'])
+  // toast.success(localStore.localData['submit_SuccessFresh'])
 
   for (let item of data) {
     const index = store.rawOrders.findIndex(order => order.id === item.id)
@@ -693,6 +729,7 @@ async function handleFresh() {
     store.rawOrders[index] = {
       ...store.rawOrders[index],
       ...(processOrderResult(item.result)),
+      ...({result: item.result}),
       status: item.status,
     }
   }
@@ -732,7 +769,7 @@ function resetOrder(status: ORDER_STATUS) {
       }
 
       for (let column of serviceColumns.value) {
-        const label = isEn.value ? column.nameEn : column.name
+        const label = iStore.isEn ? column.nameEn : column.name
         if (label === null) continue
 
         (store.rawOrders[index] as any)[label] = ""
@@ -781,7 +818,7 @@ function resetSelectRow() {
     }
 
     for (let column of serviceColumns.value) {
-      const label = isEn.value ? column.nameEn : column.name
+      const label = iStore.isEn ? column.nameEn : column.name
       if (label === null) continue
       (store.rawOrders[arrIndex] as any)[label] = ""
     }
@@ -810,7 +847,7 @@ async function handlePushMsgChange(value: boolean) {
   if (!result) pushMsg.value = true
 }
 
-function handleDeleteHeader(column: XTableColumn) {
+function handleDeleteHeader(column: XTableV2Column<OrderTableView>) {
   const headerIndex = store.selectHeaders.findIndex(item => item === column.key.toString())
   const columnIndex = columns.value.findIndex(c => c.key === column.key)
   if (headerIndex !== -1) {
@@ -830,7 +867,8 @@ function handleDeleteHeader(column: XTableColumn) {
 function processResultColumns() {
   const deleteKeys = deletedColumns.map(c => c.key)
   const isAllServiceColsDel = headers.every(c => deleteKeys.includes(c))
-  const resultCol = getDefaultResultColumns()
+  const resultCol = defaultColumns.columns.find(x => x.key === 'result')
+  if (!resultCol) return
 
   const index = columns.value.findIndex(c => c.key === resultCol.key)
   if (isAllServiceColsDel) {
@@ -848,8 +886,8 @@ function processHeaderConfirm(headers: ServiceCols[]) {
   const selectableKeys = store.serviceCols.map(c => c.key.toString())
   const selectedKeys = headers.map(h => h.key.toString())
 
-  const nextColumns: XTableColumn[] = []
-  const nextDeleted: XTableColumn[] = []
+  const nextColumns: XTableV2Column<OrderTableView>[] = []
+  const nextDeleted: XTableV2Column<OrderTableView>[] = []
 
   for (const col of columns.value) {
     const key = col.key.toString()
@@ -880,6 +918,28 @@ function processHeaderConfirm(headers: ServiceCols[]) {
   processResultColumns()
 }
 
+function handleSelectedIndex(keys: RowKey[]) {
+  if (keys.every(x => typeof x === "number")) {
+    indexes.value = keys
+  }
+}
+
+async function cleanup() {
+  if (lastServiceId) {
+    const rejectedOrders = getSubmitedRejectOrder()
+
+    if (rejectedOrders.length > 0) {
+      const deleteData: DeleteImeiPrams = {
+        serviceId: lastServiceId,
+        imeiList: rejectedOrders.map(x => x.imei),
+        idList: [],
+      }
+  
+      await orderApi.deleteCacheImei(deleteData)
+    }
+  }
+}
+
 const handleThreadChange = debounce(async () => {
   localStorage.setItem(`${threadKey}_${uStore.info.userId}`, threads.value.toString())
   await serviceApi.setThread(threads.value)
@@ -904,31 +964,62 @@ onMounted(() => {
 
   threads.value = result
 })
+
+onBeforeUnmount(() => {
+  cleanup().finally()
+})
 </script>
 
 <template>
-  <div class="p-4 h-full">
-    <section class="w-full flex items-center justify-between mb-3">
-      <div class="flex items-center space-x-2">
+  <div class="p-4 h-full pb-4 flex flex-col">
+    <section class=
+      "
+        w-full flex items-center justify-between flex-wrap mb-3 space-y-2
+      "
+    >
+      <div class="flex items-center space-x-2 flex-wrap gap-y-2">
         <SelectService v-model="store.selectId" ui-trigger="w-52" @selected="handleSelected" />
 
         <ImportPlane :selected-id="store.selectId" @submit="handleImport" />
 
-        <ButtonGroup :labels="{
-          submit: localStore.localData['submit_Submit'],
-          export: localStore.localData['submit_Export'],
-          clear: localStore.localData['submit_Clear']
-        }" :layouts="['submit', 'export', 'clear']" @submit="handleSubmit" @export="handleExport" @clear="reset" />
+        <ButtonGroup
+          :labels="{
+            submit: localStore.localData['submit_Submit'],
+            export: localStore.localData['submit_Export'],
+            clear: localStore.localData['submit_Clear']
+          }"
+          :layouts="[
+            'submit',
+            'export',
+            'clear'
+          ]"
+          @submit="handleSubmit"
+          @export="handleExport"
+          @clear="reset"
+        />
 
-        <XButton v-if="selService" :label="localStore.localData['submit_QueryResult']" color="warning" :disabled="disabled" :loading="loading"
-          @click="handleFresh" />
+        <XButton
+          v-if="selService"
+          :label="localStore.localData['submit_QueryResult']"
+          color="warning"
+          :disabled="disabled"
+          :loading="loading"
+          @click="handleFresh"
+        />
 
-        <!-- <XButton label="打印标签" @click="handleChange" /> -->
+        <XButton
+          v-show="serviceColumns.length !== 0"
+          variant="outline"
+          :label="localStore.localData['submit_FieldsFilter']"
+          color="primary"
+          @click="store.visibleHeaderFilter = true"
+        />
 
-        <XButton v-show="serviceColumns.length !== 0" variant="outline" :label="localStore.localData['submit_FieldsFilter']"
-          color="primary" @click="store.visibleHeaderFilter = true" />
-
-        <XButtonSplit :label="localStore.localData['submit_Reset']" :options="btnSplitOpts" @click="resetSelectRow" />
+        <XButtonSplit
+          :label="localStore.localData['submit_Reset']"
+          :options="btnSplitOpts"
+          @click="resetSelectRow"
+        />
 
         <XButton v-show="mustRead" variant="outline" :label="localStore.localData['submit_ServiceDescription']" color="warning"
           @click="handleMustRead" />
@@ -942,21 +1033,20 @@ onMounted(() => {
           <XInputNumber v-model="threads" :step="1" :precision="0" :min="1" :max="10" @change="handleThreadChange" />
         </label>
       </div>
-
-      <XPagination v-model="store.page" v-model:limit="store.limit" :total="store.rawOrders.length" :sizes :layouts="[
-        'total',
-        'prev',
-        'pager',
-        'next',
-        'sizes',
-      ]" />
     </section>
 
-    <!-- <section class="flex-1 flex "> -->
-    <XTable ref="tableRef" :data="orders" :columns="columns" row-key="id" class="h-[calc(100%-3rem)] max-w-full border"
-      selection selected-key="index" @select-change="indexes = $event" @column-delete="handleDeleteHeader" />
-    <!-- </section> -->
+    <section class="flex-1 min-h-0">
+      <XTableV2
+        ref="orderTableRef"
+        :columns="columns"
+        :data="orders"
+        selection
+        select-key="index"
+        @selected="handleSelectedIndex"
+      />
+    </section>
 
+    <OrderProgress @changed="handleFresh" />
     <TableColumnDialog @confirm="processHeaderConfirm" />
     <UnlockRecommendDialog />
   </div>

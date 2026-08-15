@@ -29,7 +29,7 @@ function download(platform: number) {
 </script>
 
 <template>
-  <div class="border rounded-lg p-4 bg-card" :class="prop.isSidebar? 'p-4' : 'p-6 mr-6'">
+  <div class="border rounded-lg p-4 bg-zinc-100/20 dark:bg-zinc-800/50" :class="prop.isSidebar? 'p-4' : 'p-6 mr-6'">
     <!-- <h3 class="text-lg mb-4">
       三和助手 - 标签|设备信息|批量查询
     </h3> -->

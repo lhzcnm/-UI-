@@ -3,7 +3,7 @@ import SelectLevelType from '@desktop/components/SelectLevelType.vue'
 
 import type { LevelCreateParams } from '@/inters/level'
 import { zLevelForm } from '@/inters/level'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 import { PLAN_TYPE_ENUM } from '@/utils/enum'
 
 const form = defineModel<LevelCreateParams>({ required: true })
@@ -40,8 +40,8 @@ defineExpose({
     >
       <XInput
         v-model="form.thresholdAmount" placeholder="累计充值"
-        @input="(e: Event) => form.thresholdAmount = handleInputChange(e, 0)!"
-        @change="(e: Event) => form.thresholdAmount = handleInputChange(e, 0)!"
+        @input="(e: Event) => form.thresholdAmount = handleInputNumberChange(e, 0)!"
+        @change="(e: Event) => form.thresholdAmount = handleInputNumberChange(e, 0)!"
       />
     </XFormItem>
 

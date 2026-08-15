@@ -219,20 +219,32 @@ export const columns: XColDef<Service> = [
   {
     key: 'action',
     title: '操作',
-    width: 64,
+    width: 128,
     fixed: 'right',
     render: (_, row) => {
       const serviceStore = useServiceStore()
       const store = inject(SERVICE_STORE)!
       const onClick = () => {
-        console.log(row)
         store.formBase = zService.parse(row)
         store.index = serviceStore.items
           .findIndex(item => item.packageId === row.packageId)
         store.visibleBase = true
       }
 
-      return h(XButton, { size: 'sm', label: '编辑', onClick })
+      const onClickFields = () => {
+        store.index = serviceStore.items
+          .findIndex(x => x.packageId === row.packageId)
+
+        store.visibleField = true
+      }
+
+      // return h(XButton, { size: 'sm', label: '编辑', onClick })
+      return h("div", {
+        class: 'flex gap-2'
+      }, [
+        h(XButton, { size: 'sm', label: '编辑', onClick }),
+        h(XButton, { size: 'sm', color: 'success', label: '服务字段', onClick: onClickFields })
+      ])
     }
   }
 ]

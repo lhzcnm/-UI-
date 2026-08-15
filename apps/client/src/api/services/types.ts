@@ -1,4 +1,4 @@
-import type { DOMESTIC_IMEI_TYPE, IMEI_TYPE } from '@3un/utils'
+import type { DOMESTIC_IMEI_TYPE, IMEI_TYPE, ServiceFieldType } from '@3un/utils'
 import type { R } from '@3un/shared'
 
 export interface ServiceApi {
@@ -58,6 +58,9 @@ export interface ServiceHeader {
   nameEn: string
   width?: number
   sortNum?: number
+  renderType?: string | null
+  itemKey?: string | null
+  type?: ServiceFieldType
 }
 
 export interface ServiceCols {

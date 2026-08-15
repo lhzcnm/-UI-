@@ -21,6 +21,7 @@ export const columns: XColDef<ServiceGroup> = [
     key: 'categoryLocal',
     title: '服务组名称EN',
     minWidth: 320,
+    cellEmpty: '--',
   },
   {
     key: 'orderBy',

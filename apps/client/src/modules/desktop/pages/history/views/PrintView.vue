@@ -8,7 +8,7 @@ import { hashPrintHeader, ORDER_STATUS, xconfirm, textAlign } from '@3un/utils'
 import { toast } from 'vue-sonner'
 import axios from 'axios'
 
-import { handleInputChange, mmToPx, openIframe, ptToPx, pxTomm, readTemplateFile, stripHtmlTags } from '@/utils'
+import { handleInputNumberChange, mmToPx, openIframe, ptToPx, pxTomm, readTemplateFile, stripHtmlTags } from '@/utils'
 import { HISTORY_STORE } from '../utils'
 import { serviceApi, type FieldMap, type ServiceHeader } from '@/api/services'
 import { type CustomSubmitOrder, type FieldValue, type Order, type ServiceColumnItem } from '@/api/orders'
@@ -381,7 +381,7 @@ function processResult(content: string) {
   const result: FieldValue = {}
   const items = content.split("<br>")
 
-  const keyMap = getFieldsMap(serviceCols.value)
+  const keyMap = getFieldsMap(serviceCols.value.map(x => ({ name: x.name, nameEn: x.nameEn })))
 
   if (items.length === 1 && serviceCols.value.length === 1) {
     const key = isEn.value ? (serviceCols.value[0].nameEn ?? serviceCols.value[0].name) : serviceCols.value[0].name
@@ -877,8 +877,8 @@ onBeforeUnmount(() => {
                   v-model="field.size"
                   ui-root="w-16"
                   placeholder="字号"
-                  @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)"
+                  @input="(e: Event) => field.size = handleInputNumberChange(e)"
+                  @change="(e: Event) => field.size = handleInputNumberChange(e)"
                 />
 
                 <div class="flex border rounded overflow-hidden">
@@ -944,8 +944,8 @@ onBeforeUnmount(() => {
                 <XInput
                   v-model="field.size"
                   ui-root="w-16"
-                  @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)"
+                  @input="(e: Event) => field.size = handleInputNumberChange(e)"
+                  @change="(e: Event) => field.size = handleInputNumberChange(e)"
                 />
               </template>
 

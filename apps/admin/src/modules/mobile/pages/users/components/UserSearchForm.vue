@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { UserSearchForm } from '@/inters/users'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 const form = defineModel<UserSearchForm>({ required: true })
 const levelStore = useLevelStore()
@@ -11,8 +11,8 @@ const levelStore = useLevelStore()
     <div class="flex space-x-3">
       <div class="w-1/2">
         <label class="block text-label text-sm mb-1">用户ID</label>
-        <XInput v-model="form.userId" placeholder="用户ID" @input="(e: Event) => form.userId = handleInputChange(e)"
-          @change="(e: Event) => form.userId = handleInputChange(e)" />
+        <XInput v-model="form.userId" placeholder="用户ID" @input="(e: Event) => form.userId = handleInputNumberChange(e)"
+          @change="(e: Event) => form.userId = handleInputNumberChange(e)" />
       </div>
 
       <div class="w-1/2">

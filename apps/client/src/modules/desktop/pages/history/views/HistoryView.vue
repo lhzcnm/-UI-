@@ -24,6 +24,7 @@ const store = inject(HISTORY_STORE)!
 
 const { copy } = useClipboard({ legacy: true })
 const { locale } = useI18n()
+const localStore = useLocalStore()
 
 const page = ref(1)
 const limit = ref(20)
@@ -237,8 +238,6 @@ function handleOpenWindow(url: string) {
       }
     }
 }
-
-const localStore = useLocalStore()
 
 onUnmounted(() => {
   handleClose()

@@ -10,6 +10,7 @@ export interface ServiceStore {
   formSearch: ServiceSearch
   formUpstream: UpstreamServiceForm
   visibleBase: boolean
+  visibleField: boolean
   visibleUpstream: boolean
   index: number | undefined
 }

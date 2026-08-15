@@ -11,7 +11,7 @@ import axios from 'axios'
 
 import type { LabelCreateForm, PrintHeader, PrintTemplateJson, TemplateItem, TemplateType } from '@/types'
 import { formatSize, STORE } from '../utils'
-import { filterNumber, handleInputChange, mmToPx, openIframe, ptToPx, pxTomm, readTemplateFile, stripHtmlTags } from '@/utils'
+import { filterNumber, handleInputNumberChange, mmToPx, openIframe, ptToPx, pxTomm, readTemplateFile, stripHtmlTags } from '@/utils'
 import { LAYOUT_POSITION, type PageItem, type PluginPdfRequest } from '@/types/print'
 import usePrinter from '@/composable/print'
 import { generatePDF } from '@/utils/print'
@@ -788,8 +788,8 @@ onBeforeUnmount(() => {
                   v-model="field.size"
                   ui-root="w-16"
                   placeholder="字号"
-                  @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)"
+                  @input="(e: Event) => field.size = handleInputNumberChange(e)"
+                  @change="(e: Event) => field.size = handleInputNumberChange(e)"
                 />
 
                 <div class="flex border rounded overflow-hidden">
@@ -855,8 +855,8 @@ onBeforeUnmount(() => {
                 <XInput
                   v-model="field.size"
                   ui-root="w-16"
-                  @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)"
+                  @input="(e: Event) => field.size = handleInputNumberChange(e)"
+                  @change="(e: Event) => field.size = handleInputNumberChange(e)"
                 />
               </template>
 

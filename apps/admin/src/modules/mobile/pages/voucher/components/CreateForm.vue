@@ -2,7 +2,7 @@
 import { VOUCHER_TYPE_LIST } from "@3un/utils"
 
 import type { VoucherCreateForm } from '@/inters/voucher'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 const form = defineModel<VoucherCreateForm>({ required: true })
 </script>
@@ -10,7 +10,7 @@ const form = defineModel<VoucherCreateForm>({ required: true })
 <template>
   <form class="divide-y" @submit.prevent>
     <FormField class="py-2" label="金额" desc="" required variant="vertical">
-      <XInput v-model="form.amount" placeholder="请输入金额" @input="(e: Event) => form.amount = handleInputChange(e, 0)!" />
+      <XInput v-model="form.amount" placeholder="请输入金额" @input="(e: Event) => form.amount = handleInputNumberChange(e, 0)!" />
     </FormField>
   
     <!-- <FormField class="py-2" label="用户ID" desc="" variant="vertical">

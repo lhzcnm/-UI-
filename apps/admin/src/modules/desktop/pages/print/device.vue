@@ -5,7 +5,7 @@ import HeaderTagConfig from './component/HeaderTagConfig.vue'
 import BarcodePreview from './component/BarcodePreview.vue'
 import QrPreview from './component/QrPreview.vue'
 
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 import type { ContainerItem, HeaderTag, PrintHeader, PrintTemplateJson, TemplateItem, TemplateType } from './type'
 import { getQrcodeVal, initContainer, isTextField, mmToPx, ptToPx, pxToMM, scaleOptions, stripHtmlTags } from './utils'
@@ -554,7 +554,7 @@ onMounted(() => {
               <div class="flex items-center gap-3 flex-wrap">
                 <template v-if="isTextField(field.type)">
                   <XInput v-model="field.size" ui-root="w-16" placeholder="字号"
-                    @change="(e: Event) => field.size = handleInputChange(e)" />
+                    @change="(e: Event) => field.size = handleInputNumberChange(e)" />
 
                   <div class="flex border rounded overflow-hidden">
                     <button v-for="alignItem in textAlign" :key="alignItem.key" class="px-2 py-1 hover:bg-muted"
@@ -618,7 +618,7 @@ onMounted(() => {
                   </button>
 
                   <XInput v-model="field.size" ui-root="w-16"
-                    @change="(e: Event) => field.size = handleInputChange(e)" />
+                    @change="(e: Event) => field.size = handleInputNumberChange(e)" />
                 </template>
 
                 <button class="text-muted-foreground hover:text-destructive" @click="handleSelectColumn(field.key)">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CreditSearchForm } from '@/inters/credits'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 const form = defineModel<CreditSearchForm>({ required: true })
 </script>
@@ -16,8 +16,8 @@ const form = defineModel<CreditSearchForm>({ required: true })
       <XInput
         v-model.number="form.userId"
         placeholder="用户ID"
-        @input="(e: Event) => form.userId = handleInputChange(e)"
-        @change="(e: Event) => form.userId = handleInputChange(e)"
+        @input="(e: Event) => form.userId = handleInputNumberChange(e)"
+        @change="(e: Event) => form.userId = handleInputNumberChange(e)"
       />
     </div>
     <div>

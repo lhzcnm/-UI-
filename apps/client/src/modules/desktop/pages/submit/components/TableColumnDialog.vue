@@ -9,7 +9,6 @@ interface TableColumnDialogEmits {
 const store = inject(SUBMIT_STORE)!
 const localStore = useLocalStore()
 
-
 const emit = defineEmits<TableColumnDialogEmits>()
 
 const filteredHeaders = ref<string[]>([])

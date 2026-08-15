@@ -1,5 +1,6 @@
 import type { Service } from '@/api/services'
 import type { PrintTemplateJson } from '@/types'
+import { isEmptyValue } from '@3un/ui'
 
 import { DOMESTIC_IMEI_MAP, DOMESTIC_IMEI_TYPE, filterByRegex, IMEI_AND_SN_REG, IMEI_TYPE_MAP, IMEIValidator, SNDomestic, SNValidator, useCopyFn } from '@3un/utils'
 import { IMEI_TYPE } from '@3un/utils'
@@ -170,7 +171,7 @@ export function filterNumber(input: string) {
   return filterByRegex(input, /[0-9]/)
 }
 
-export function handleInputChange(e: Event) {
+export function handleInputNumberChange(e: Event) {
   const target = e.target as HTMLInputElement
   return Number(filterNumber(target.value))
 }
@@ -226,4 +227,8 @@ export function stringReplace(template: string, params: Record<string, string>)
       result.replace(new RegExp(`\\{${key}\\}`, 'g'), value),
     template
   )
+}
+
+export function normalizeFilterValue(val: any) {
+  return isEmptyValue(val) ? '' : String(val)
 }

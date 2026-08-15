@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AutoCleanSettings } from '@/inters/settings'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 const form = defineModel<AutoCleanSettings>({ required: true })
 </script>
@@ -32,8 +32,8 @@ const form = defineModel<AutoCleanSettings>({ required: true })
           class="w-32"
           placeholder="例如 30"
           v-model="form.retainDays"
-          @input="(e: Event) => form.retainDays = handleInputChange(e, 0)!"
-          @change="(e: Event) => form.retainDays = handleInputChange(e, 0)!"
+          @input="(e: Event) => form.retainDays = handleInputNumberChange(e, 0)!"
+          @change="(e: Event) => form.retainDays = handleInputNumberChange(e, 0)!"
         />
         <!-- <span class="text-sm text-gray-500">天</span> -->
       </div>

@@ -1,4 +1,4 @@
-import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams, UpstreamServiceSyncParams, ServiceSearch } from '@/inters/services'
+import type { Service, ServiceGroup, ServiceCreateParams, ServiceUpdateParams, ServiceGroupCreateParams, ServiceGroupUpdateParams, ServiceField, ServiceFieldCreateParams, ServiceFieldUpdateParams, ServiceFieldListParams, ServiceFieldList, Unlock, UnlockCreateParams, UnlockUpdateParams, UpstreamServiceSyncParams, ServiceSearch, ServiceFieldSyncBody } from '@/inters/services'
 import type { AxiosResponse } from 'axios'
 
 import { zService, zServiceField, zServiceGroup, zUnlock } from '@/inters/services'
@@ -106,4 +106,15 @@ export const updateUnlock: UnlockUpdateFn = async (body) => {
 type UnlockDeleteFn = (id: number) => Promise<void>
 export const deleteUnlock: UnlockDeleteFn = async (id) => {
   await http.delete(`/recommend/${id}`)
+}
+
+type ServiceFieldNotPageFn = (serviceId: number) => Promise<ServiceField[]>
+export const getServcieFieldNotPage: ServiceFieldNotPageFn = async (serviceId) => {
+  const { data } = await http.get<ServiceField[]>('services/field/list', { params: { serviceId } })
+  return data.map(x => zServiceField.parse(x))
+}
+
+type SaveServiceFieldsFn = (body: ServiceFieldSyncBody) => Promise<void>
+export const saveServiceFields: SaveServiceFieldsFn = async (body) => {
+  await http.post('services/field/save', body)
 }

@@ -13,7 +13,7 @@ import { toast } from 'vue-sonner'
 import { useThrottleFn, watchOnce } from '@vueuse/core'
 
 import type { LabelCreateForm, PrintHeader, PrintTemplateJson, TemplateItem, TemplateType } from '@/types'
-import { filterNumber, getSubmitImei, handleInputChange, mmToPx, openIframe, ptToPx, pxTomm, readTemplateFile, stripHtmlTags } from '@/utils'
+import { filterNumber, getSubmitImei, handleInputNumberChange, mmToPx, openIframe, ptToPx, pxTomm, readTemplateFile, stripHtmlTags } from '@/utils'
 import { serviceApi, type FieldMap, type Service, type ServiceDetail, type ServiceHeader } from '@/api/services'
 import { orderApi, type CustomSubmitOrder, type FieldValue, type Order, type OrderSubmitParams, type OrderSubmitResult, type ServiceColumnItem } from '@/api/orders'
 import { LAYOUT_POSITION, type PageItem, type PluginPdfRequest } from '@/types/print'
@@ -1328,8 +1328,8 @@ onBeforeUnmount(() => {
             <div class="flex items-center gap-3 flex-wrap">
               <template v-if="isTextField(field.type)">
                 <XInput v-model="field.size" ui-root="w-16" :placeholder="localStore.localData['print_FontSize']"
-                  @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)" />
+                  @input="(e: Event) => field.size = handleInputNumberChange(e)"
+                  @change="(e: Event) => field.size = handleInputNumberChange(e)" />
 
                 <div class="flex border rounded overflow-hidden">
                   <button v-for="alignItem in textAlign" :key="alignItem.key" class="px-2 py-1 hover:bg-muted"
@@ -1391,8 +1391,8 @@ onBeforeUnmount(() => {
                   {{ localStore.localData['print_QRcode'] }}
                 </button>
 
-                <XInput v-model="field.size" ui-root="w-16" @input="(e: Event) => field.size = handleInputChange(e)"
-                  @change="(e: Event) => field.size = handleInputChange(e)" />
+                <XInput v-model="field.size" ui-root="w-16" @input="(e: Event) => field.size = handleInputNumberChange(e)"
+                  @change="(e: Event) => field.size = handleInputNumberChange(e)" />
               </template>
 
               <button class="text-muted-foreground hover:text-destructive" @click="handleSelectColumn(field.key)">

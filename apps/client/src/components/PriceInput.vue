@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { handleInputChange } from '@/utils';
+import { handleInputNumberChange } from '@/utils';
 import type { ClassNameValue } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
 
@@ -22,7 +22,7 @@ const input = defineModel<number>({ required: true })
 
 function handleInput(e: Event) {
   if (!priceInputRef.value) return
-  const value = handleInputChange(e)
+  const value = handleInputNumberChange(e)
   input.value = value
   priceInputRef.value.value = input.value.toString()
 }

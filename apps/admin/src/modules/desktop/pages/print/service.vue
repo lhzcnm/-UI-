@@ -26,7 +26,7 @@ import {
   type TemplateType
 } from './type'
 import { functionItems, getQrcodeVal, initContainer, isTextField, ptToPx, pxToMM, scaleOptions } from './utils'
-import { handleInputChange, mmToPx } from '@/utils'
+import { handleInputNumberChange, mmToPx } from '@/utils'
 import { stripHtmlTags } from './utils'
 
 const isOverflowMap = reactive<Record<string, boolean>>({})
@@ -601,7 +601,7 @@ await getQueryService()
               <div class="flex items-center gap-3 flex-wrap">
                 <template v-if="isTextField(field.type)">
                   <XInput v-model="field.size" ui-root="w-16" placeholder="字号"
-                    @change="(e: Event) => field.size = handleInputChange(e)" />
+                    @change="(e: Event) => field.size = handleInputNumberChange(e)" />
 
                   <div class="flex border rounded overflow-hidden">
                     <button v-for="alignItem in textAlign" :key="alignItem.key" class="px-2 py-1 hover:bg-muted"
@@ -665,7 +665,7 @@ await getQueryService()
                   </button>
 
                   <XInput v-model="field.size" ui-root="w-16"
-                    @change="(e: Event) => field.size = handleInputChange(e)" />
+                    @change="(e: Event) => field.size = handleInputNumberChange(e)" />
                 </template>
 
                 <button class="text-muted-foreground hover:text-destructive" @click="handleSelectColumn(field.key)">

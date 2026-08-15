@@ -16,7 +16,7 @@ function download(platform: string) {
 </script>
 
 <template>
-  <div class="border rounded-lg bg-card" :class="prop.isSidebar? 'p-4' : 'p-6 mr-6'">
+  <div class="border rounded-lg bg-zinc-100/20 dark:bg-zinc-800/50" :class="prop.isSidebar? 'p-4' : 'p-6 mr-6'">
     <!-- <h3 class="text-lg mb-4">批量查询助手</h3> -->
     <h3 class="text-center mb-4" :class="prop.isSidebar? 'text-sm' : 'text-lg'">{{ localStore.localData['profile_SoftwareOld'] }}</h3>
     <div class="whitespace-nowrap" :class="prop.isSidebar? 'flex space-y-2 flex-col' : 'space-x-2'">

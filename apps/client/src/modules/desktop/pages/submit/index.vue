@@ -24,9 +24,16 @@ const store = reactive<SubmitStore>({
 
   selectId: 0,
   selectOrderId: undefined,
-  page: 1,
-  limit: 50,
+  // page: 1,
+  // limit: 50,
   view: 'submit',
+
+  refreshProgress: false,
+  
+  filterData: {},
+  visibleFilters: {},
+  popoverVisible: {},
+  userChangedFilters: {},
 })
 
 provide(SUBMIT_STORE, store)
@@ -73,7 +80,7 @@ async function handleImport(imeiList: string[], remark: string) {
   if (!selService.value) return
   if (count > 0 && !selService.value?.isUnlock) return
 
-  store.page = 1
+  // store.page = 1
 
   if (!cacheImei) {
     await orderApi.cacheImei({ imeiList, serviceId: selService.value.id })

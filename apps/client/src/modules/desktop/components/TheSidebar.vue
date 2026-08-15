@@ -48,7 +48,7 @@ function handle(menu: SidebarMenu) {
 </script>
 
 <template>
-  <aside class="w-sidebar p-4 flex flex-col">
+  <aside class="w-sidebar p-4 flex flex-col overflow-y-auto">
     <template v-for="menu in menus" :key="menu.path">
       <a v-if="!menu.hide" href="javascript:void(0)" :class="twMerge(
         'flex items-center space-x-2 px-3 py-2 mb-1',
@@ -68,8 +68,5 @@ function handle(menu: SidebarMenu) {
       </div>
 
     </template>
-
-
-
   </aside>
 </template>

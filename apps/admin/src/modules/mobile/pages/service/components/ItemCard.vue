@@ -45,6 +45,14 @@ function handleConfigApi() {
     externalNetworkId: props.item.externalNetworkId,
   }
 }
+
+function openFiled() {
+  store.selectId = props.item.packageId
+  
+  if (store.index !== -1) {
+    store.visibleField = true
+  }
+}
 </script>
 
 <template>
@@ -92,16 +100,29 @@ function handleConfigApi() {
           <span>配置API</span>
         </button>
 
-        <button
-          :class="twJoin(
-            'flex items-center space-x-1 text-sm',
-            'text-primary hover:text-primary/80 transition-colors'
-          )"
-          @click="handleEdit"
-        >
-          <Icon icon="lucide:edit" class="size-4" />
-          <span>编辑</span>
-        </button>
+        <div class="flex space-x-2">
+          <button
+            :class="twJoin(
+              'flex items-center space-x-1 text-sm',
+              'text-success hover:text-primary/80 transition-colors'
+            )"
+            @click="openFiled"
+          >
+            <Icon icon="lucide:menu" class="size-4" />
+            <span>服务字段</span>
+          </button>
+  
+          <button
+            :class="twJoin(
+              'flex items-center space-x-1 text-sm',
+              'text-primary hover:text-primary/80 transition-colors'
+            )"
+            @click="handleEdit"
+          >
+            <Icon icon="lucide:edit" class="size-4" />
+            <span>编辑</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

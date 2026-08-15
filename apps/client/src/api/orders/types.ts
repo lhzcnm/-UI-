@@ -21,6 +21,8 @@ export interface OrderApi {
   salesRegion(): R<string>
 
   hasProcessing(): R<boolean>
+
+  orderProgress(params: OrderProgressRequest): R<OrderProgressResp>
 }
 
 export interface Order {
@@ -57,7 +59,8 @@ export interface OrderTableView {
   createTime: string
   recommends: OrderRecommend[] | null
   isStorage: boolean
-  [key: string]: any}
+  [key: string]: any
+}
 
 export interface CustomSubmitOrder {
   id: number | null,
@@ -177,6 +180,8 @@ export interface CacheImeiParams {
 
 export interface DeleteImeiPrams {
   serviceId: number,
+  imeiList: string[],
+  idList: number[],
 }
 
 export interface QrcodeImageParams {
@@ -186,4 +191,17 @@ export interface QrcodeImageParams {
 export interface VertifyParams {
   isUnlock: boolean
   serviceId: number
+}
+
+export interface OrderProgressRequest {
+  serviceId: number
+}
+
+export interface OrderProgressResp {
+  total: number
+  waiting: number
+  processing: number
+  success: number
+  failed: number
+  reject: number
 }

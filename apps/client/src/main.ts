@@ -10,16 +10,12 @@ import i18n from './locales'
 const app = createApp(App)
 const pinia = createPinia()
 
+
 app.use(router)
 app.use(pinia)
 app.use(i18n)
 
-import { useLocalStore } from './stores/local.ts'
-
-const store = useLocalStore()
-
-
-
-store.getLocalData()
+const localeStore = useLocalStore()
+localeStore.getLocalData()
 
 app.mount('#app')

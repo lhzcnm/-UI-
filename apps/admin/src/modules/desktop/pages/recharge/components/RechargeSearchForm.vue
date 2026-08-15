@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RechargeSearchForm } from '@/inters/recharge'
 import { PAYMENT_METHOD_LIST, PAYMENT_STATUS_LIST } from '@3un/utils'
-import { handleInputChange } from '@/utils'
+import { handleInputNumberChange } from '@/utils'
 
 const form = defineModel<RechargeSearchForm>({ required: true })
 </script>
@@ -42,8 +42,8 @@ const form = defineModel<RechargeSearchForm>({ required: true })
       <XInput
         v-model="form.userId"
         placeholder="用户ID"
-        @input="(e: Event) => form.userId = handleInputChange(e)"
-        @change="(e: Event) => form.userId = handleInputChange(e)"
+        @input="(e: Event) => form.userId = handleInputNumberChange(e)"
+        @change="(e: Event) => form.userId = handleInputNumberChange(e)"
       />
     </div>
     <div>

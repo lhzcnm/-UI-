@@ -18,6 +18,9 @@ export const columns: XColDef<ServiceField> = [
     // minWidth: 250,
     width: 300,
     render(_, row) {
+      if (row.serviceId === 0) {
+        return '默认字段(不允许删除)'
+      }
       const serviceStore = useServiceStore()
       const service = serviceStore.itemMap.get(row.serviceId)!
       if (!service) return '服务不存在'
