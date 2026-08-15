@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { orderApi, type OrderProgressResp } from '@/api/orders'
 import { defaultGress, SUBMIT_STORE } from '../utils'
+import { Icon } from '@iconify/vue';
 
 interface CompareDataItem {
   success: number,
@@ -99,7 +100,7 @@ async function getProgressStatus() {
       startTimer()
       store.visibleGress = true
     }
-  
+
     compareData(data)
   } catch {
     stopTimer()
@@ -176,7 +177,7 @@ function compareData(data: OrderProgressResp) {
 
   if (
     (successChanged !== 0
-    || failedChanged !== 0)
+      || failedChanged !== 0)
     && store.rawOrders.length > 0
   ) {
     hasChange.value = true
@@ -243,6 +244,33 @@ onMounted(() => {
   )
 })
 
+const orderStatusData = computed(() => {
+  const localData = localStore.localData || {}
+  
+  return [
+    {
+      label: localData["submit_ordergress_success"] || '成功',
+      value: progressData.value!.success || 0,
+      class: 'text-success bg-green-400/10'
+    },
+    {
+      label: localData["submit_ordergress_failed"] || '失败',
+      value: progressData.value!.failed || 0,
+      class: 'text-danger bg-red-400/10'
+    },
+    {
+      label: localData["submit_ordergress_processing"] || '处理中',
+      value: progressData.value!.processing || 0,
+      class: 'text-primary bg-blue-400/10'
+    },
+    {
+      label: localData["submit_ordergress_waiting"] || '待处理',
+      value: progressData.value!.waiting || 0,
+      class: 'text-warning bg-yellow-400/10'
+    }
+  ]
+})
+
 onUnmounted(() => {
   stopTimer()
 
@@ -260,26 +288,21 @@ onUnmounted(() => {
     class="fixed z-50 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]"
     :class="{
       'scale-[0.97]': dragging,
-    }"
-    :style="{
+    }" :style="{
       left: `${position.x}px`,
       top: `${position.y}px`,
       backgroundColor: dragging
         ? 'color-mix(in srgb, hsl(var(--card)) 70%, transparent)'
         : undefined,
-    }"
-  >
-    <div
-      class="flex items-center justify-between px-4 py-3 border-b cursor-move select-none"
-      @mousedown="startDrag"
-    >
+    }">
+    <div class="flex items-center justify-center px-4 py-3 border-b border-dashed cursor-move select-none relative"
+      @mousedown="startDrag">
       <span class="font-semibold">
         {{ localStore.localData["submit_ordergress_title"] }}
       </span>
 
-      <button class="text-gray-400" @click="collapsed = !collapsed">
-        {{ collapsed ? '□' : '−' }}
-      </button>
+      <Icon @click="collapsed = !collapsed" :icon="collapsed ? 'gridicons:plus-small' : 'gridicons:minus-small'"
+        class="text-gray-400 absolute right-4 size-5" />
     </div>
 
     <div v-if="!collapsed" class="p-4 space-y-3">
@@ -321,14 +344,19 @@ onUnmounted(() => {
       <p class="text-sm text-center">{{ localStore.localData["submit_ordergress_autoclean_tip"] }}</p>
 
       <div class="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-        <div
-          class="h-full bg-primary"
-          :style="{
+        <div class="h-full bg-primary" :style="{
           width:
             `${((store.progressData.success + store.progressData.failed)
               / store.progressData.total * 100) || 0}%`
         }" />
       </div>
+    </div>
+
+     <div class="flex justify-between bg-sky-500/10 px-4 py-2 border-b text-sky-500 rounded-md m-2">
+      <span>{{ localStore.localData["submit_ordergress_total"] }}</span>
+      <b>
+        {{ progressData.total }}
+      </b>
     </div>
   </div>
 </template>
