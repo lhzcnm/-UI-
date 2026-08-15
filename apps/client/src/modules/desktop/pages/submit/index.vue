@@ -17,6 +17,7 @@ interface TheProps {
 const store = reactive<SubmitStore>({
   visibleHeaderFilter: false,
   visibleUnlockRecommend: false,
+  visibleGress: false,
   
   selectHeaders: [],
   serviceCols: [],

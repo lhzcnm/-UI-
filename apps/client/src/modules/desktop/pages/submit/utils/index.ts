@@ -9,6 +9,7 @@ export const SUBMIT_STORE: IK<SubmitStore> = Symbol("submit")
 export interface SubmitStore {
   visibleHeaderFilter: boolean,
   visibleUnlockRecommend: boolean,
+  visibleGress: boolean,
 
   serviceCols: ServiceCols[],
   selectHeaders: string[],

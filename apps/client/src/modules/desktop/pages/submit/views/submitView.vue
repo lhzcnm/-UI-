@@ -462,6 +462,7 @@ function submitOrder(service: Service) {
   const response = orderApi.submit(params)
   submited.value = true
   response.then(({ data }) => {
+    store.visibleGress = true
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {

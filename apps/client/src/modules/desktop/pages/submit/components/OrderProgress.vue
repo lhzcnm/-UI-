@@ -81,8 +81,7 @@ watch(
 )
 
 async function getProgressStatus() {
-  if (!service.value?.isUnlock)
-    return
+  if (!service.value) return
 
   try {
     const { data } = await orderApi.orderProgress({
@@ -92,8 +91,10 @@ async function getProgressStatus() {
     progressData.value = data
     if (data.total === 0 || (data.processing === 0 && data.waiting === 0)) {
       stopTimer()
+      store.visibleGress = false
     } else {
       startTimer()
+      store.visibleGress = true
     }
   
     compareData(data)
@@ -254,7 +255,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    v-if="service?.isUnlock && progressData"
+    v-if="progressData && store.visibleGress"
     ref="cardRef"
     class="fixed z-50 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]"
     :class="{
