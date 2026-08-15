@@ -290,6 +290,8 @@ async function handleImport(imeiList: string[], remark: string) {
   comments.value = remark
   count = imeis.value.length
   cacheImei = false
+
+  orderTableRef.value?.scrollToTop()
 }
 
 function processRawOrder() {
@@ -561,15 +563,7 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
-  if (data.status === ORDER_STATUS.SUCCESS) {
-    store.progressData.success += 1
-    store.progressData.waiting -= 1
-    store.progressData.processing -= 1
-  } else {
-    store.progressData.failed += 1
-    store.progressData.waiting -= 1
-    store.progressData.processing -= 1
-  }
+  store.refreshProgress = !store.refreshProgress
 
   let index = store.rawOrders.findIndex(order => order.imei === data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
@@ -684,9 +678,9 @@ async function reset() {
 
       store.refreshProgress = !store.refreshProgress
 
-      if (store.rawOrders.length === 0) {
-        store.visibleGress = false
-      }
+      // if (store.rawOrders.length === 0) {
+      //   store.visibleGress = false
+      // }
     } catch(ex) {
       // console.log(ex)
     } 
