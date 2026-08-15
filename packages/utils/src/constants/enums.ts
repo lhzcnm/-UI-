@@ -532,3 +532,29 @@ export const PRICE_TYPE_LIST = [
   { value: PRICE_TYPE.ADD, label: '增加' },
   { value: PRICE_TYPE.MIUM, label: '减少' }
 ]
+
+const fieldRenderType = [
+  "index",
+  "service",
+  "status",
+  "html",
+  "recommend",
+  "text"
+] as const
+
+export type FieldRenderType = (typeof fieldRenderType)[number]
+
+export enum ServiceFieldType {
+  Default = 1,
+  Dynamic = 2
+}
+
+export const SERVICE_FIELD_MAP = {
+  [ServiceFieldType.Default]: { value: ServiceFieldType.Default, label: '默认字段(不允许删除)' },
+  [ServiceFieldType.Dynamic]: { value: ServiceFieldType.Dynamic, label: '服务动态字段' },
+}
+
+export const SERVICE_FIELD_LIST = [
+  { value: ServiceFieldType.Default, label: '默认字段(不允许删除)' },
+  { value: ServiceFieldType.Dynamic, label: '服务动态字段' },
+]
