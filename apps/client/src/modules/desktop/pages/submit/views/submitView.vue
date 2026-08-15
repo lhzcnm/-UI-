@@ -248,6 +248,7 @@ async function handleSubmitOrder(id: number) {
   store.rawOrders = data.map((item, i) => ({
     ...item,
     ...(processOrderResult(item.result)),
+    ...({result: item.result}),
     index: i + 1,
     isStorage: true,
   }))
@@ -280,6 +281,9 @@ async function handleImport(imeiList: string[], remark: string) {
   if (!cacheImei) {
     await orderApi.cacheImei({ imeiList: imeis.value, serviceId: selService.value.id })
   }
+
+  store.visibleGress = true
+  store.progressData.waiting = imeis.value.length
 
   submited.value = false
   comments.value = remark
@@ -463,6 +467,7 @@ function submitOrder(service: Service) {
   submited.value = true
   response.then(({ data }) => {
     store.visibleGress = true
+    store.refreshProgress = !store.refreshProgress
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
@@ -476,10 +481,6 @@ function submitOrder(service: Service) {
 
     uStore.updateCredit()
     renderSubmitOrderResult(data)
-
-    if (service.isUnlock) {
-      store.refreshProgress = !store.refreshProgress
-    }
   })
 
   response.catch((err) => {
@@ -671,6 +672,10 @@ async function reset() {
       orderTableRef.value?.initCheckedRows()
 
       store.refreshProgress = !store.refreshProgress
+
+      if (store.rawOrders.length === 0) {
+        store.visibleGress = false
+      }
     } catch(ex) {
       // console.log(ex)
     } 

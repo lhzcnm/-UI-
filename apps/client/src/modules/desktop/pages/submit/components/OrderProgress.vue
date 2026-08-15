@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { orderApi, type OrderProgressResp } from '@/api/orders'
-import { SUBMIT_STORE } from '../utils'
+import { defaultGress, SUBMIT_STORE } from '../utils'
 
 interface CompareDataItem {
   success: number,
@@ -19,8 +19,9 @@ const serviceStore = useServiceStore()
 const localStore = useLocalStore()
 
 const cardRef = ref<HTMLElement | null>(null)
+const hasChange = ref<boolean>(true)
 
-const progressData = ref<OrderProgressResp>()
+// const progressData = ref<OrderProgressResp>()
 
 const position = reactive({
   x: window.innerWidth - 300,
@@ -53,14 +54,18 @@ if (cache) {
 }
 
 const service = computed(() => {
+  console.log(serviceStore.services.get(store.selectId))
   return serviceStore.services.get(store.selectId)
 })
+
+const visible = computed(() => store.visibleGress && hasChange.value)
 
 watch(
   () => store.selectId,
   async () => {
     stopTimer()
-    progressData.value = undefined
+    store.visibleGress = false
+    store.progressData = defaultGress
     lastProgress = { success: 0, failed: 0 }
     await getProgressStatus()
   },
@@ -73,7 +78,6 @@ watch(
   () => store.refreshProgress,
   async () => {
     stopTimer()
-    progressData.value = undefined
     lastProgress = { success: 0, failed: 0 }
     await getProgressStatus()
   },
@@ -88,10 +92,9 @@ async function getProgressStatus() {
       serviceId: store.selectId
     })
   
-    progressData.value = data
+    store.progressData = data
     if (data.total === 0 || (data.processing === 0 && data.waiting === 0)) {
       stopTimer()
-      store.visibleGress = false
     } else {
       startTimer()
       store.visibleGress = true
@@ -171,15 +174,12 @@ function compareData(data: OrderProgressResp) {
   const successChanged = data.success - lastSuccess
   const failedChanged = data.failed - lastFailed
 
-  console.log(successChanged)
-  console.log(failedChanged)
-
   if (
     (successChanged !== 0
     || failedChanged !== 0)
     && store.rawOrders.length > 0
   ) {
-    console.log("has Change")
+    hasChange.value = true
     emits('changed')
   }
 
@@ -255,7 +255,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    v-if="progressData && store.visibleGress"
+    v-if="visible"
     ref="cardRef"
     class="fixed z-50 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]"
     :class="{
@@ -286,35 +286,35 @@ onUnmounted(() => {
       <div class="flex justify-between">
         <span>{{ localStore.localData["submit_ordergress_total"] }}</span>
         <b>
-          {{ progressData.total }}
+          {{ store.progressData.total }}
         </b>
       </div>
 
       <div class="flex justify-between text-success">
         <span>{{ localStore.localData["submit_ordergress_success"] }}</span>
         <b>
-          {{ progressData.success }}
+          {{ store.progressData.success }}
         </b>
       </div>
 
       <div class="flex justify-between text-danger">
         <span>{{ localStore.localData["submit_ordergress_failed"] }}</span>
         <b>
-          {{ progressData.failed }} / {{ progressData.reject }}
+          {{ store.progressData.failed }} / {{ store.progressData.reject }}
         </b>
       </div>
 
       <div class="flex justify-between text-primary">
         <span>{{ localStore.localData["submit_ordergress_processing"] }}</span>
         <b>
-          {{ progressData.processing }}
+          {{ store.progressData.processing }}
         </b>
       </div>
 
       <div class="flex justify-between text-warning">
         <span>{{ localStore.localData["submit_ordergress_waiting"] }}</span>
         <b>
-          {{ progressData.waiting }}
+          {{ store.progressData.waiting }}
         </b>
       </div>
 
@@ -325,8 +325,8 @@ onUnmounted(() => {
           class="h-full bg-primary"
           :style="{
           width:
-            `${((progressData.success + progressData.failed)
-              / progressData.total * 100) || 0}%`
+            `${((store.progressData.success + store.progressData.failed)
+              / store.progressData.total * 100) || 0}%`
         }" />
       </div>
     </div>

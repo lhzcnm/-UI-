@@ -7,7 +7,7 @@ import { type Component } from 'vue'
 import type { Service } from '@/api/services'
 import type { OrderTableView } from '@/api/orders'
 import { orderApi, type ServiceColumnItem } from '@/api/orders'
-import { SUBMIT_STORE, type SubmitStore } from './utils'
+import { defaultGress, SUBMIT_STORE, type SubmitStore } from './utils'
 
 interface TheProps {
   id: string
@@ -22,6 +22,7 @@ const store = reactive<SubmitStore>({
   selectHeaders: [],
   serviceCols: [],
   rawOrders: [],
+  progressData: defaultGress,
 
   selectId: 0,
   selectOrderId: undefined,
