@@ -255,7 +255,7 @@ const orderStatusData = computed(() => {
     },
     {
       label: localData["submit_ordergress_failed"] || '失败',
-      value: store.progressData.failed || 0,
+      value: store.progressData.failed + '/' + store.progressData.reject || 0,
       class: 'text-danger bg-red-400/10'
     },
     {
