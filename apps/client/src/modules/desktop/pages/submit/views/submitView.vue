@@ -270,7 +270,7 @@ async function handleImport(imeiList: string[], remark: string) {
   tableRef.value?.initFilter()
   close()
 
-  imeis.value = [...new Set([...imeis.value, ...store.rawOrders.map(x => x.imei).filter(x => !!x), ...imeiList])]
+  imeis.value = [...new Set([...imeis.value, ...store.rawOrders.filter(x => x.status === ORDER_STATUS.WAIT).map(x => x.imei).filter(x => !!x), ...imeiList])]
   // console.log(imeis.value)
   const submitedOrders = processWaitList(store.selectId!, imeis.value, remark)
   store.rawOrders.splice(0, getWaitingOrderLength(store.rawOrders), ...submitedOrders)
@@ -283,7 +283,8 @@ async function handleImport(imeiList: string[], remark: string) {
   }
 
   store.visibleGress = true
-  store.progressData.waiting = imeis.value.length
+  // store.progressData.waiting = imeis.value.length
+  store.refreshProgress = !store.refreshProgress
 
   submited.value = false
   comments.value = remark
@@ -560,6 +561,16 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
+  if (data.status === ORDER_STATUS.SUCCESS) {
+    store.progressData.success += 1
+    store.progressData.waiting -= 1
+    store.progressData.processing -= 1
+  } else {
+    store.progressData.failed += 1
+    store.progressData.waiting -= 1
+    store.progressData.processing -= 1
+  }
+
   let index = store.rawOrders.findIndex(order => order.imei === data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
 
@@ -722,7 +733,7 @@ async function handleFresh() {
     return null
   }).filter((item): item is number => item !== null)
 
-  if (pendingOrders.length === 0) return toast.info(localStore.localData['submit_AllOrderFinsh'])
+  if (!store.visibleGress && pendingOrders.length === 0) return toast.info(localStore.localData['submit_AllOrderFinsh'])
   disabled.value = false
   const data = await getSubmitOrderList(pendingOrders)
   // toast.success(localStore.localData['submit_SuccessFresh'])
@@ -740,6 +751,8 @@ async function handleFresh() {
     }
   }
   disabled.value = true
+
+  // store.refreshProgress = !store.refreshProgress
 }
 
 function resetOrder(status: ORDER_STATUS) {

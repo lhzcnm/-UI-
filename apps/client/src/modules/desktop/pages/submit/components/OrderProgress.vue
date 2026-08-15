@@ -250,22 +250,22 @@ const orderStatusData = computed(() => {
   return [
     {
       label: localData["submit_ordergress_success"] || '成功',
-      value: progressData.value!.success || 0,
+      value: store.progressData.success || 0,
       class: 'text-success bg-green-400/10'
     },
     {
       label: localData["submit_ordergress_failed"] || '失败',
-      value: progressData.value!.failed || 0,
+      value: store.progressData.failed || 0,
       class: 'text-danger bg-red-400/10'
     },
     {
       label: localData["submit_ordergress_processing"] || '处理中',
-      value: progressData.value!.processing || 0,
+      value: store.progressData.processing || 0,
       class: 'text-primary bg-blue-400/10'
     },
     {
       label: localData["submit_ordergress_waiting"] || '待处理',
-      value: progressData.value!.waiting || 0,
+      value: store.progressData.waiting || 0,
       class: 'text-warning bg-yellow-400/10'
     }
   ]
@@ -282,11 +282,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    v-if="visible"
+  <div v-if="visible"
     ref="cardRef"
-    class="fixed z-50 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]"
-    :class="{
+    class="fixed z-50 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]" :class="{
       'scale-[0.97]': dragging,
     }" :style="{
       left: `${position.x}px`,
@@ -305,43 +303,20 @@ onUnmounted(() => {
         class="text-gray-400 absolute right-4 size-5" />
     </div>
 
-    <div v-if="!collapsed" class="p-4 space-y-3">
-      <div class="flex justify-between">
-        <span>{{ localStore.localData["submit_ordergress_total"] }}</span>
-        <b>
-          {{ store.progressData.total }}
-        </b>
-      </div>
+    <div v-if="!collapsed" class="p-4 pb-0 space-y-2 select-none">
+      <section class="grid-cols-2 gap-2 grid">
+        <div class="flex flex-col justify-center items-center  rounded-md p-2" v-for="item in orderStatusData" :key="item.label" :class="item.class">
+          <span class="text-sm">
+            {{ item.label }}
+          </span>
+          <b>
+            {{ item.value }}
+          </b>
+        </div>  
+      </section>
 
-      <div class="flex justify-between text-success">
-        <span>{{ localStore.localData["submit_ordergress_success"] }}</span>
-        <b>
-          {{ store.progressData.success }}
-        </b>
-      </div>
-
-      <div class="flex justify-between text-danger">
-        <span>{{ localStore.localData["submit_ordergress_failed"] }}</span>
-        <b>
-          {{ store.progressData.failed }} / {{ store.progressData.reject }}
-        </b>
-      </div>
-
-      <div class="flex justify-between text-primary">
-        <span>{{ localStore.localData["submit_ordergress_processing"] }}</span>
-        <b>
-          {{ store.progressData.processing }}
-        </b>
-      </div>
-
-      <div class="flex justify-between text-warning">
-        <span>{{ localStore.localData["submit_ordergress_waiting"] }}</span>
-        <b>
-          {{ store.progressData.waiting }}
-        </b>
-      </div>
-
-      <p class="text-sm text-center">{{ localStore.localData["submit_ordergress_autoclean_tip"] }}</p>
+      <p class="text-sm text-center text-muted-foreground">{{ localStore.localData["submit_ordergress_autoclean_tip"] }}
+      </p>
 
       <div class="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
         <div class="h-full bg-primary" :style="{
@@ -352,10 +327,10 @@ onUnmounted(() => {
       </div>
     </div>
 
-     <div class="flex justify-between bg-sky-500/10 px-4 py-2 border-b text-sky-500 rounded-md m-2">
+     <div class="flex justify-between bg-sky-500/10 px-4 py-2 border-b text-sky-500 rounded-md m-2 select-none">
       <span>{{ localStore.localData["submit_ordergress_total"] }}</span>
       <b>
-        {{ progressData.total }}
+        {{ store.progressData.total }}
       </b>
     </div>
   </div>
