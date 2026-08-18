@@ -438,6 +438,8 @@ function submitOrder(service: Service) {
       xconfirm({
         title: localStore.localData['submit_OrderResultTable'],
         text: errorOrders.join('<br>'),
+        confirmText: localStore.localData['top_Confirm'],
+        cancelText: localStore.localData['profile_Cancel'],
       })
 
       return
@@ -527,10 +529,6 @@ function handleOpenOrder() {
   store.visibleHistory = true
 }
 
-onBeforeMount(() => { })
-
-
-
 async function favoriteClick(serviceId: number | undefined) {
   try {
     const res = await serviceApi.favorite(serviceId)
@@ -549,7 +547,6 @@ const imeiCount = computed(() => {
 onMounted(() => {
   favoriteClick(undefined)
 })
-
 </script>
 
 <template>
@@ -629,9 +626,7 @@ onMounted(() => {
               )" @click="favoriteClick(form.serviceId)">
                 <Icon :icon="favoriteIds.includes(form.serviceId) ? 'tabler:star-filled' : 'tabler:star'"
                   :class="favoriteIds?.includes(form.serviceId) ? 'text-yellow-500' : 'text-gray-400'" />
-
               </button>
-
             </div>
           </div>
 
@@ -639,7 +634,6 @@ onMounted(() => {
             <div class="flex justify-between space-x-2">
               <XTextarea v-model="form.imei" rows="5"
                 :placeholder="localStore.localData['submit_ImportIMEIPlaceholder']" />
-
 
               <div class="flex flex-col justify-between py-1">
                 <XButton variant="outline" size="sm" icon="gridicons:aside"

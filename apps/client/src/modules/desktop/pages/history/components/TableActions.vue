@@ -8,7 +8,7 @@ import { toast } from 'vue-sonner'
 import type { Order } from '@/api/orders'
 import { orderApi } from '@/api/orders'
 import { HISTORY_STORE } from '../utils'
-import { getLanuagestring } from '@/utils/constant'
+// import { getLanuagestring } from '@/utils/constant'
 
 interface TableActionProps {
   index: number
@@ -41,7 +41,7 @@ const { copy, copied } = useClipboard({ legacy: true })
 watch(copied, (value) => value && toast.success(localStore.localData['history_TableCopySuccess']))
 
 const iStore = useSettingStore()
-const systemStore = useSystemStore()
+// const systemStore = useSystemStore()
 
 const isUnlockService = computed(() => {
   const service = services.get(row.serviceId)
@@ -106,28 +106,28 @@ function handleCopy() {
   copy(items.map(stripHtml).join('\n'))
 }
 
-async function getOrderDetail() {
-  const { data } = await orderApi.item(row.id)
-  store.orders.list[index] = {
-    ...store.orders.list[index],
-    recommends: data.recommends,
-  }
-}
+// async function getOrderDetail() {
+//   const { data } = await orderApi.item(row.id)
+//   store.orders.list[index] = {
+//     ...store.orders.list[index],
+//     recommends: data.recommends,
+//   }
+// }
 
-async function openUplockRecommend() {
-  if (row.status !== ORDER_STATUS.SUCCESS) {
-    toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
-    return
-  }
-  await getOrderDetail()
-  if (row.recommends?.length === 0) {
-    toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
-    return
-  }
+// async function openUplockRecommend() {
+//   if (row.status !== ORDER_STATUS.SUCCESS) {
+//     toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
+//     return
+//   }
+//   await getOrderDetail()
+//   if (row.recommends?.length === 0) {
+//     toast.warning(getLanuagestring('no_unlock_recommend', systemStore.lang))
+//     return
+//   }
 
-  store.index = index
-  store.visibleUnlockRecommend = true
-}
+//   store.index = index
+//   store.visibleUnlockRecommend = true
+// }
 </script>
 
 <template>
@@ -135,7 +135,7 @@ async function openUplockRecommend() {
     <XButton
       :label="localStore.localData['history_TableCopy']"
       size="sm"
-      class="flex-1 min-w-[120px]"
+      class="min-w-fit"
       @click="handleCopy"
     />
 
@@ -144,7 +144,7 @@ async function openUplockRecommend() {
       :label="localStore.localData['history_Verification']"
       size="sm"
       color="warning"
-      class="flex-1 min-w-[120px]"
+      class="min-w-fit"
       @click="handleVerify"
     />
 
@@ -152,16 +152,16 @@ async function openUplockRecommend() {
       v-if="status.isProcessing"
       :label="localStore.localData['history_TableRefresh']"
       size="sm"
-      class="flex-1 min-w-[120px]"
+      class="min-w-fit"
       @click="handleRefresh"
     />
 
-    <XButton
+    <!-- <XButton
       v-if="!isUnlockService && status.isSuccess"
       :label="getLanuagestring('unlock_recommend_column', systemStore.lang)"
       size="sm"
       class="w-full"
       @click="openUplockRecommend"
-    />
+    /> -->
   </div>
 </template>

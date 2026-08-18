@@ -112,18 +112,13 @@ export enum PAYMENT_STATUS {
   PAID   = 2,
 }
 export const PAYMENT_STATUS_MAP: StatusMap = {
-  [PAYMENT_STATUS.UNPAID] : { color: 'info', label: '未支付', key: 'status.payment.1' },
-  [PAYMENT_STATUS.PAID]   : { color: 'success', label: '已支付', key: 'status.payment.2' },
-}
-
-export const PAYMENT_STATUS_MAP_LOCALE: StatusMap = {
   [PAYMENT_STATUS.UNPAID] : { color: 'info', label: '未支付', key: 'recharge_Unpaid' },
   [PAYMENT_STATUS.PAID]   : { color: 'success', label: '已支付', key: 'recharge_Paid' },
 }
 
 export const PAYMENT_STATUS_LIST = [
-  { value: PAYMENT_STATUS.UNPAID, label: '未支付', key: 'status.payment.1' },
-  { value: PAYMENT_STATUS.PAID, label: '已支付', key: 'status.payment.2' },
+  { value: PAYMENT_STATUS.UNPAID, label: '未支付', key: 'recharge_Unpaid' },
+  { value: PAYMENT_STATUS.PAID, label: '已支付', key: 'recharge_Paid' },
 ]
 
 // Payment Method

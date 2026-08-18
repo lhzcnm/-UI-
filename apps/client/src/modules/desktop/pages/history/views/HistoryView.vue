@@ -246,8 +246,8 @@ onUnmounted(() => {
 
 <template>
   <div class="p-4 h-full">
-    <section class="flex justify-between space-x-2 mb-3">
-      <div class="space-x-2 whitespace-nowrap">
+    <section class="flex justify-between flex-wrap space-x-2 mb-3 gap-y-2">
+      <div class="space-x-2 whitespace-nowrap flex flex-wrap gap-y-2">
         <ButtonGroup
           :layouts="['filter', 'export']"
           :labels="{filter: localStore.localData['history_Filter'],export: localStore.localData['history_Export']}"
@@ -262,6 +262,7 @@ onUnmounted(() => {
         v-model="page"
         v-model:limit="limit"
         :total="store.orders.total"
+        class="flex-wrap gap-y-2"
         :layouts="[
           'total',
           'prev',

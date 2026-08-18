@@ -10,7 +10,6 @@ const serviceStore = useServiceStore()
 const localStore = useLocalStore()
 
 export function getOrderColumns(): XColDef<Order> {
-
   return [
     { key: 'id', title: 'ID', width: 98 },
     {
@@ -62,7 +61,7 @@ export function getOrderColumns(): XColDef<Order> {
       key: 'action',
       title: localStore.localData['history_TableHeadOperation'],
       fixed: 'right',
-      width: 138,
+      width: 158,
       render(_, row, index) {
         return h(TableActions, { row, index })
       }

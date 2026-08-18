@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { orderApi, type OrderProgressResp } from '@/api/orders'
-import { defaultGress, SUBMIT_STORE } from '../utils'
-import { Icon } from '@iconify/vue';
+import { SUBMIT_STORE } from '../utils'
+import { Icon } from '@iconify/vue'
 
 interface CompareDataItem {
   success: number,
@@ -23,6 +23,8 @@ const cardRef = ref<HTMLElement | null>(null)
 const hasChange = ref<boolean>(true)
 
 // const progressData = ref<OrderProgressResp>()
+
+// let progressData: OrderProgressResp = defaultGress
 
 const position = reactive({
   x: window.innerWidth - 300,
@@ -55,7 +57,6 @@ if (cache) {
 }
 
 const service = computed(() => {
-  console.log(serviceStore.services.get(store.selectId))
   return serviceStore.services.get(store.selectId)
 })
 
@@ -66,7 +67,7 @@ watch(
   async () => {
     stopTimer()
     store.visibleGress = false
-    store.progressData = defaultGress
+    // store.progressData = defaultGress
     lastProgress = { success: 0, failed: 0 }
     await getProgressStatus()
   },
@@ -79,7 +80,6 @@ watch(
   () => store.refreshProgress,
   async () => {
     stopTimer()
-    lastProgress = { success: 0, failed: 0 }
     await getProgressStatus()
   },
   { immediate: true }
@@ -93,7 +93,7 @@ async function getProgressStatus() {
       serviceId: store.selectId
     })
   
-    store.progressData = data
+    // progressData = data
     if (data.total === 0 || (data.processing === 0 && data.waiting === 0)) {
       stopTimer()
     } else {
@@ -282,9 +282,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="visible"
+  <div
+    v-if="visible"
     ref="cardRef"
-    class="fixed z-50 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]" :class="{
+    class="fixed z-30 w-64 rounded-xl bg-card shadow-xl border hover:scale-[1.03]" :class="{
       'scale-[0.97]': dragging,
     }" :style="{
       left: `${position.x}px`,
@@ -299,8 +300,28 @@ onUnmounted(() => {
         {{ localStore.localData["submit_ordergress_title"] }}
       </span>
 
-      <Icon @click="collapsed = !collapsed" :icon="collapsed ? 'gridicons:plus-small' : 'gridicons:minus-small'"
-        class="text-gray-400 absolute right-4 size-5" />
+      <button
+        class="flex items-center hover:bg-zinc-100"
+        @mousedown.stop
+      >
+        <Icon
+          @click="collapsed = !collapsed"
+          :icon="collapsed ? 'fluent:maximize-16-regular' : 'mingcute:minimize-line'"
+          class="text-gray-400 absolute right-12 size-5"
+        />
+      </button>
+      
+      <button
+        class="flex items-center hover:bg-zinc-100"
+        @mousedown.stop
+        @click="store.visibleGress = false"
+      >
+        <Icon
+          @click="collapsed = !collapsed"
+          icon="ic:round-close"
+          class="text-gray-400 absolute right-4 size-5"
+        />
+      </button>
     </div>
 
     <div v-if="!collapsed" class="p-4 pb-0 space-y-2 select-none">
@@ -319,11 +340,13 @@ onUnmounted(() => {
       </p>
 
       <div class="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-        <div class="h-full bg-primary" :style="{
-          width:
-            `${((store.progressData.success + store.progressData.failed)
-              / store.progressData.total * 100) || 0}%`
-        }" />
+        <div
+          class="h-full bg-primary"
+          :style="{
+            width:
+              `${((store.progressData.success + store.progressData.failed + store.progressData.reject) / store.progressData.total * 100) || 0}%`
+          }"
+        />
       </div>
     </div>
 

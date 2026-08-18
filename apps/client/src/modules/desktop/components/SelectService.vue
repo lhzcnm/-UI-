@@ -103,7 +103,7 @@ onMounted(async () => {
         ui-root="py-1"
       >
         <div class="flex-1 flex items-center justify-between space-x-3">
-          <span class="text-left" v-html="getDisplayText(service)"></span>
+          <span class="text-left max-w-96" v-html="getDisplayText(service)"></span>
 
           <div class="space-x-2 flex justify-center items-center" @click.stop="favoriteClick(service.id)">
             <span class="text-primary">￥{{ service.price }}</span>

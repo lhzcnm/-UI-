@@ -50,7 +50,7 @@ export type ServiceFieldList = IList<ServiceField>
 export interface ServiceFieldListParams extends IPage, ServiceFieldSearchParams {}
 
 // Form
-export const zServiceFieldForm = zServiceField.omit({ id: true, itemKey: true, renderType: true, type: true })
+export const zServiceFieldForm = zServiceField.omit({ id: true, itemKey: true, renderType: true })
 
 export type ServiceFieldForm = z.infer<typeof zServiceFieldForm>
 // Create

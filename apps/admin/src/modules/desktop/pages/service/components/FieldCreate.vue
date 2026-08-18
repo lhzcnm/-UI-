@@ -50,6 +50,7 @@ async function handleSave() {
     await createServiceField(body)
     
     store.refresh = !store.refresh
+    toast.success("新增成功")
     store.visibleCreate = false
   } finally {}
 }

@@ -2,8 +2,6 @@
 import HistoryView from './views/HistoryView.vue'
 import PrintView from './views/PrintView.vue'
 
-import { type Component } from 'vue'
-
 import type { HistoryStore } from './utils'
 import { HISTORY_STORE, form } from './utils'
 import type { ImgOrderItem } from './types'

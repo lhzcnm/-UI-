@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import OrderSearchModal from './OrderSearchModal.vue'
+
+import { downloadURL } from '@3un/utils'
+
 import { orderApi, type OrderListParams, type OrderListResponse, type OrderSearchForm } from '@/api/orders'
 import { SUBMIT_STORE } from '../utils'
 import { createList } from '@/utils'
-import { downloadURL } from '@3un/utils'
-import OrderSearchModal from './OrderSearchModal.vue'
 
 interface OrderHistoryModalProps {
   serviceId: number
@@ -22,12 +24,14 @@ const pageSize = ref<number>(50)
 const orders = ref<OrderListResponse>(createList())
 const refresh = ref<boolean>(false)
 const visibleSearch = ref<boolean>(false)
+  
 const options: any[] = [
   { label: localStore.localData['submit_PrevOrders'], value: 'last', icon: '' },
   { label: localStore.localData['submit_AllOrders'], value: 'all', icon: '' },
 ]
 
 const orderTab = ref<string>('last')
+
 watch(
   () => store.visibleHistory,
   (val) => val && (initData())
@@ -83,8 +87,6 @@ async function exportOrder() {
   } catch { }
 }
 
-
-
 function openFilter() {
   visibleSearch.value = true
 }
@@ -139,7 +141,6 @@ async function handleFilter(params: OrderSearchForm) {
     </template>
   </SlideRight>
   
-
   <XDialog v-model="exportDialog" :maskClosable="false" ui-root="p-0 sm:p-0 sm:max-w-[450px]"
       :title="localStore.localData['history_SelectFileTypes']" draggable>
 
@@ -151,12 +152,9 @@ async function handleFilter(params: OrderSearchForm) {
       </template>
 
       <section class="flex flex-col justify-center items-center space-y-2 mx-auto px-6 py-2">
-
         <XInput v-model="fileName" class="w-2/3" :placeholder="localStore.localData['history_ExportFileName']" />
         <div class="text-sm text-center text-muted-foreground mb-2">{{ localStore.localData['history_CustomFileName'] }}</div>
-
       </section>
-
 
       <div class="p-2 border-t">
         <XButton class="w-full" variant="soft"  @click="exportOrder">{{

@@ -24,11 +24,11 @@ import {
 
 import { SUBMIT_STORE } from '../utils'
 import { serviceApi, type FieldMap, type Service, type ServiceCols } from '@/api/services'
-import { orderApi, type DeleteImeiPrams, type Order, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
+import { orderApi, type DeleteImeiPrams, type Order, type OrderProgressResp, type OrderSubmitResult, type OrderTableView, type ServiceColumnItem, type SubmitOrderListParams } from '@/api/orders'
 import router from '@/router'
 import { getSubmitImei, normalizeFilterValue } from '@/utils/common'
 import { processedServiceFields } from '../utils/serviceFieldUtils'
-import type { DeleteDataItem } from '../utils/types.ts'
+import type { DeleteDataItem } from '../utils/types'
 
 const store = inject(SUBMIT_STORE)!
 
@@ -99,6 +99,7 @@ let pendingOrders: number[] = []
 let orderImeis: Record<string, number> = {}
 let deletedColumns: XTableV2Column<OrderTableView>[] = []
 let lastServiceId: number | undefined = undefined
+let isUseStoraged: boolean = false
 
 watch(
   () => route.params,
@@ -167,7 +168,7 @@ async function getDefaultColumns() {
 }
 
 async function handleSelected(value: number) {
-  // if (value) return
+  if (!value) return
   close()
 
   if (lastServiceId) {
@@ -198,12 +199,35 @@ async function handleSelected(value: number) {
   const isStoraged = localStorage.getItem(`${key}_${value}`)
   if (isStoraged || showAll.value) {
     await handleSubmitOrder(value)
+
+    if (
+      store.rawOrders.some(x => x.status === ORDER_STATUS.PROCESSING)
+      || store.rawOrders.some(x => x.status === ORDER_STATUS.WAIT)
+    )
+    {
+      isUseStoraged = true
+    }
   }
 
   const { data } = await orderApi.cacheImei({ serviceId: value })
   if (data.length > 0) {
     cacheImei = true
     await handleImport(data, '')
+  }
+
+  refreshStatOrders()
+}
+
+function statRawOrder(): OrderProgressResp {
+  const orders = store.rawOrders
+
+  return {
+    total: orders.length,
+    waiting: orders.filter(x => x.status === ORDER_STATUS.WAIT).length,
+    processing: orders.filter(x => x.status === ORDER_STATUS.PROCESSING).length,
+    success: orders.filter(x => x.status === ORDER_STATUS.SUCCESS).length,
+    failed: orders.filter(x => x.status === ORDER_STATUS.FAILED && !!x.id).length,
+    reject: orders.filter(x => x.status === ORDER_STATUS.FAILED && !x.id).length
   }
 }
 
@@ -259,6 +283,8 @@ async function handleSubmitOrder(id: number) {
     }
     return null
   }).filter((item): item is number => item !== null)
+
+  refreshStatOrders()
 }
 
 async function handleImport(imeiList: string[], remark: string) {
@@ -270,7 +296,15 @@ async function handleImport(imeiList: string[], remark: string) {
   tableRef.value?.initFilter()
   close()
 
-  imeis.value = [...new Set([...imeis.value, ...store.rawOrders.filter(x => x.status === ORDER_STATUS.WAIT).map(x => x.imei).filter(x => !!x), ...imeiList])]
+  imeis.value = [...
+    new Set([
+      ...imeis.value,
+      ...store.rawOrders
+        .filter(x => x.status === ORDER_STATUS.WAIT)
+        .map(x => x.imei).filter(x => !!x),
+      ...imeiList
+    ])
+  ]
   // console.log(imeis.value)
   const submitedOrders = processWaitList(store.selectId!, imeis.value, remark)
   store.rawOrders.splice(0, getWaitingOrderLength(store.rawOrders), ...submitedOrders)
@@ -283,8 +317,8 @@ async function handleImport(imeiList: string[], remark: string) {
   }
 
   store.visibleGress = true
-  // store.progressData.waiting = imeis.value.length
-  store.refreshProgress = !store.refreshProgress
+
+  refreshStatOrders()
 
   submited.value = false
   comments.value = remark
@@ -470,7 +504,7 @@ function submitOrder(service: Service) {
   submited.value = true
   response.then(({ data }) => {
     store.visibleGress = true
-    store.refreshProgress = !store.refreshProgress
+    // store.refreshProgress = !store.refreshProgress
     serviceStore.addRecentService(service.id)
 
     if (service.isUnlock) {
@@ -484,6 +518,8 @@ function submitOrder(service: Service) {
 
     uStore.updateCredit()
     renderSubmitOrderResult(data)
+
+    refreshStatOrders()
   })
 
   response.catch((err) => {
@@ -563,8 +599,6 @@ function renderSubmitOrderResult(data: OrderSubmitResult[]) {
 function handleOrder(rawData: string) {
   const data = JSON.parse(rawData) as Order
 
-  store.refreshProgress = !store.refreshProgress
-
   let index = store.rawOrders.findIndex(order => order.imei === data.imei)
   if (index === -1) return console.error('[3un] IMEI 不存在', data)
 
@@ -584,6 +618,8 @@ function handleOrder(rawData: string) {
     result: data.result,
     recommends: data.recommends,
   }
+
+  store.progressData = statRawOrder()
 }
 
 function handleCount() {
@@ -676,11 +712,7 @@ async function reset() {
       disabled.value = false
       orderTableRef.value?.initCheckedRows()
 
-      store.refreshProgress = !store.refreshProgress
-
-      // if (store.rawOrders.length === 0) {
-      //   store.visibleGress = false
-      // }
+      refreshStatOrders()
     } catch(ex) {
       // console.log(ex)
     } 
@@ -746,7 +778,7 @@ async function handleFresh() {
   }
   disabled.value = true
 
-  // store.refreshProgress = !store.refreshProgress
+  refreshStatOrders()
 }
 
 function resetOrder(status: ORDER_STATUS) {
@@ -795,6 +827,7 @@ function resetOrder(status: ORDER_STATUS) {
   }
 
   imeis.value = Object.keys(orderImeis)
+  refreshStatOrders()
 }
 
 function resetNotCoverOrder(status: ORDER_STATUS) {
@@ -807,6 +840,8 @@ function resetNotCoverOrder(status: ORDER_STATUS) {
   imeis.value = [...new Set(data.map(item => item.imei))]
   reseted.value = true
   handleImport(imeis.value, "")
+
+  refreshStatOrders()
 }
 
 function resetSelectRow() {
@@ -838,6 +873,8 @@ function resetSelectRow() {
   }
 
   imeis.value = Object.keys(orderImeis)
+
+  refreshStatOrders()
 }
 
 async function handleMustRead() {
@@ -953,6 +990,21 @@ async function cleanup() {
   }
 }
 
+function refreshStatOrders() {
+  store.progressData = statRawOrder()
+  if (store.rawOrders.length > 0) {
+    store.refreshProgress = !store.refreshProgress
+    store.visibleGress = true
+  }
+}
+
+function processHasChange() {
+  const service = serviceStore.services.get(store.selectId)
+  if (service?.isUnlock || isUseStoraged) {
+    handleFresh()
+  }
+}
+
 const handleThreadChange = debounce(async () => {
   localStorage.setItem(`${threadKey}_${uStore.info.userId}`, threads.value.toString())
   await serviceApi.setThread(threads.value)
@@ -1059,7 +1111,7 @@ onBeforeUnmount(() => {
       />
     </section>
 
-    <OrderProgress @changed="handleFresh" />
+    <OrderProgress @changed="processHasChange" />
     <TableColumnDialog @confirm="processHeaderConfirm" />
     <UnlockRecommendDialog />
   </div>
