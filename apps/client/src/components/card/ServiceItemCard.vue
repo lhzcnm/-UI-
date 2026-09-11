@@ -38,32 +38,39 @@ onMounted(() => {
   <a
     href="javascript:void(0)"
     :class="twJoin(
-      'block p-3 bg-card space-y-1',
-      'hover:border-primary hover:bg-border/60',
-      'border border-border rounded-lg transition-colors')"
+      'group relative flex flex-col justify-between block bg-white p-4 md:p-5 rounded-xl border border-slate-100',
+      'shadow-[0_1px_3px_rgba(0,0,0,0.04)]',
+      'hover:shadow-[0_8px_24px_-6px_rgba(199,0,11,0.12)] hover:border-[#C7000B]/25 hover:-translate-y-0.5',
+      'transition-all duration-250 cursor-pointer h-full'
+    )"
   >
-    <div class="flex items-center justify-between space-x-2">
-      <h3 class="flex items-center space-x-2">
-        <span class="font-bold" v-html="data.idHighlight || data.id" />
+    <!-- 顶部：ID、新标签、积分与时间 -->
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 overflow-hidden">
+        <span class="font-bold text-slate-800 text-[15px]" v-html="data.idHighlight || data.id" />
         <span
           v-if="data.isNew"
-          :class="twJoin(
-            'px-2 py-0.5 text-xs font-semibold text-white',
-            'bg-gradient-to-b from-primary to-blue-600 rounded-full shadow-sm'
-          )"
+          class="shrink-0 px-1.5 py-0.5 text-[10px] font-bold text-white bg-gradient-to-r from-[#C7000B] to-red-500 rounded-full"
         >
-          {{ localStore.localData['home_New'] }} !
+          {{ localStore.localData['home_New'] }}
         </span>
-      </h3>
-      <div class="flex justify-end text-xs">
-        <XTag color="danger">{{ localStore.localData['history_TableHeadPoints'] }}: {{ data.price }}</XTag>
-        <XTag color="success" class="ml-1">{{ data.taken }}</XTag>
+      </div>
+      
+      <!-- 胶囊标签 -->
+      <div class="flex justify-end shrink-0 gap-1.5">
+        <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#C7000B]/8 text-[#C7000B]">
+          {{ localStore.localData['history_TableHeadPoints'] }}: {{ data.price }}
+        </span>
+        <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-teal-50 text-teal-600">
+          {{ data.taken }}
+        </span>
       </div>
     </div>
 
-    <div class="flex justify-between">
+    <!-- 底部：标题和收藏按钮 -->
+    <div class="flex justify-between items-end mt-3 gap-3">
       <div
-        class="text-sm text-muted-foreground mt-1 text-ellipsis overflow-hidden"
+        class="text-[13px] text-slate-500 font-medium line-clamp-1 flex-1"
         v-html="data.title"
       />
 
@@ -73,6 +80,7 @@ onMounted(() => {
         @click.stop="favoriteClick(data.id)"
         :variant="favoriteBool ? 'soft' : 'outline'"
         :color="favoriteBool ? 'warning' : 'primary'" size="sm"
+        class="shrink-0"
       >
         {{ 
           favoriteBool

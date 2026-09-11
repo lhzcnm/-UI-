@@ -17,6 +17,7 @@ declare module 'vue' {
     SelectServices: typeof import('./src/modules/desktop/components/SelectServices.vue')['default']
     StoreCard: typeof import('./src/components/cards/StoreCard.vue')['default']
     TheBack: typeof import('./src/modules/desktop/components/TheBack.vue')['default']
+    TheConfirm: typeof import('./src/components/TheConfirm.vue')['default']
     TheFooter: typeof import('./src/modules/desktop/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/modules/desktop/components/TheHeader.vue')['default']
     TheLogo: typeof import('./src/components/TheLogo.vue')['default']
